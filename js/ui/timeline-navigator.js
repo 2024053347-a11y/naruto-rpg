@@ -64,6 +64,8 @@ class TimelineNavigator extends HTMLElement {
         :host { display: block; height: 100%; overflow: hidden; position: relative; }
         .tl {
           display: flex; flex-direction: column; height: 100%; overflow-y: auto; padding: 24px 16px;
+          box-sizing: border-box;
+          padding-bottom: calc(24px + var(--statusbar-h, 30px));
           background: transparent;
           scrollbar-width: none;
         }
@@ -155,13 +157,17 @@ class TimelineNavigator extends HTMLElement {
           margin-bottom: 16px; font-family: var(--font-body); opacity: 0.85;
         }
 
-        .jump-btn {
-          width: 100%; padding: 12px; background: transparent;
-          border: 1px solid rgba(255,255,255,0.15); color: var(--text-secondary); border-radius: 2px;
-          font-family: var(--font-title); font-weight: normal; letter-spacing: 4px;
+        .node-actions { display: flex; gap: 8px; align-items: center; }
+        .jump-btn, .reroll-btn {
+          flex: 1; padding: 10px; background: transparent;
+          border: 1px solid rgba(255,255,255,0.15); border-radius: 2px;
+          font-family: var(--font-title); font-weight: normal; letter-spacing: 2px;
           cursor: pointer; transition: all 0.2s;
         }
+        .jump-btn { color: var(--text-secondary); }
+        .reroll-btn { color: var(--c-shuiro); border-color: rgba(235,97,63,0.3); }
         .jump-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .reroll-btn:hover { background: rgba(235,97,63,0.1); color: var(--text-primary); }
         
         .cur-text {
           color: var(--c-shuiro); font-size: 11px; font-family: var(--font-title); letter-spacing: 2px;
@@ -257,7 +263,10 @@ class TimelineNavigator extends HTMLElement {
               ${this._selectedId === n.id ? `
                 <div class="node-details">
                   <div class="node-full-summary">${this._esc(n.summary || n.player_input || '这段记忆已经模糊不清...')}</div>
-                  ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${n.id}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
+                  <div class="node-actions">
+                    ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${n.id}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
+                    <button class="reroll-btn" data-id="${n.id}">平行推衍本回</button>
+                  </div>
                 </div>
               ` : ''}
             </div>`).join('')}</div>
@@ -273,7 +282,10 @@ class TimelineNavigator extends HTMLElement {
                 ${this._selectedId === n.id ? `
                   <div class="node-details">
                   <div class="node-full-summary">${this._esc(n.clean_response || n.ai_response_summary || n.summary || '这段记忆已经模糊不清...')}</div>
+                  <div class="node-actions">
                     ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${n.id}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
+                    <button class="reroll-btn" data-id="${n.id}">平行推衍本回</button>
+                  </div>
                   </div>
                 ` : ''}
               </div>`).join('')}</div>
@@ -312,8 +324,8 @@ class TimelineNavigator extends HTMLElement {
 
     this.shadowRoot.querySelectorAll('.node').forEach(n=>{
       n.addEventListener('click', (e) => { 
-        // Prevent click if we clicked the jump button inside
-        if (e.target.classList.contains('jump-btn')) return;
+        // Prevent click if we clicked the jump or reroll button inside
+        if (e.target.closest('button')) return;
         this._selectedId = n.dataset.id;
         const nodeData = this._nodes.find(nd => nd.id === this._selectedId);
         if (nodeData) {
@@ -327,6 +339,14 @@ class TimelineNavigator extends HTMLElement {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         eventBus.emit('timeline:jump-request', { nodeId: btn.dataset.id });
+        this._selectedId = null;
+      });
+    });
+
+    this.shadowRoot.querySelectorAll('.reroll-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        eventBus.emit('timeline:reroll-request', { nodeId: btn.dataset.id });
         this._selectedId = null;
       });
     });

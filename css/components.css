@@ -330,6 +330,12 @@
   box-shadow: var(--shadow-lg); text-align: center; min-width: 480px;
   transition: all 0.3s var(--ease-out);
 }
+.desktop-lyrics.dragging {
+  transition: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  will-change: transform;
+}
 .desktop-lyrics:hover {
   background: rgba(7, 10, 14, 0.9);
   border-color: var(--border-strong);
@@ -342,6 +348,49 @@
 .desktop-lyrics .lyric-controls {
   margin-top: 20px; display: flex; gap: 24px; justify-content: center;
 }
+.lyric-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;
+}
+.lyric-drag-handle {
+  flex-grow: 1; height: 28px; cursor: move;
+  background: transparent;
+  display: flex; align-items: center; justify-content: flex-start;
+}
+.lyric-drag-handle::before {
+  content: '忍者手记 - 音乐播放器'; font-size: var(--text-xs); color: var(--text-tertiary); font-weight: bold; letter-spacing: 1px;
+}
+.lyric-window-controls {
+  display: flex; gap: 8px;
+}
+.lyric-win-btn {
+  background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-secondary);
+  border-radius: var(--r-sm); transition: all 0.2s;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+}
+.lyric-win-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.lyric-win-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.desktop-lyrics.minimized .lyric-slider-wrap,
+.desktop-lyrics.minimized .lyric-time,
+.desktop-lyrics.minimized .lyric-controls { display: none; }
+.desktop-lyrics.minimized { padding: 8px 16px; min-width: 0; background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.desktop-lyrics.minimized:hover { background: rgba(7, 10, 14, 0.4); border-color: var(--border-subtle); backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm); }
+.desktop-lyrics.minimized .lyric-text { font-size: 20px; text-shadow: 0 1px 8px rgba(0,0,0,1); }
+.desktop-lyrics.minimized .lyric-header { display: none; margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+.desktop-lyrics.minimized:hover .lyric-header { display: flex; }
+.lyric-btn {
+  background: none; border: none; padding: 8px; cursor: pointer; color: var(--text-secondary);
+  border-radius: 50%; transition: all 0.2s;
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+}
+.lyric-btn svg { width: 24px; height: 24px; fill: currentColor; }
+.lyric-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.lyric-btn.active { color: var(--color-primary); }
+.lyric-play-btn { color: var(--text-primary); transform: scale(1.1); }
+.lyric-play-btn:hover { transform: scale(1.2); }
+.lyric-slider-wrap { margin: 16px 0 8px; }
+.lyric-slider { width: 100%; cursor: pointer; accent-color: var(--color-primary); }
+.lyric-time { font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 16px; }
 
 /* ── Specific Overrides / Media Queries ──── */
 @media (max-width: 900px) {

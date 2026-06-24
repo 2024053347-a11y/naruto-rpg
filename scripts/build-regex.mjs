@@ -22,15 +22,12 @@ function main() {
 
   // 构建酒馆正则 JSON 结构
   // 触发词：起物
-  // 替换内容：触发词本身 + Markdown代码块包裹的 HTML
-  // 重要：必须把 HTML 中的 $ 替换为 $$，否则酒馆的原生 JS replace() 会把 $1、$2 等当成正则捕获组导致代码损坏
-  const safeHtmlContent = htmlContent.replace(/\$/g, '$$$$');
-
+  // 替换内容：Markdown代码块包裹的 HTML
   const regexJson = {
     "id": crypto.randomUUID(),
     "scriptName": "正文-忍者手记-起物单文件版",
     "findRegex": "起物",
-    "replaceString": "起物\n```\n" + safeHtmlContent + "\n```",
+    "replaceString": "\n```html\n" + htmlContent + "\n```",
     "trimStrings": [],
     "placement": [
         2

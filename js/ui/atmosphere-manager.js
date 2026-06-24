@@ -54,13 +54,16 @@ class AtmosphereManager {
   }
 
   _handleResize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    if (!this.canvas) return;
+    const parentRect = this.canvas.parentElement?.getBoundingClientRect();
+    this.canvas.width = parentRect ? parentRect.width : window.innerWidth;
+    this.canvas.height = parentRect ? parentRect.height : window.innerHeight;
   }
 
   _initParticles() {
     this.particles = [];
-    const count = Math.min(Math.floor(window.innerWidth / 20), 60);
+    const width = this.canvas ? this.canvas.width : window.innerWidth;
+    const count = Math.min(Math.floor(width / 20), 60);
     for (let i = 0; i < count; i++) {
       this.particles.push(this._createParticle());
     }
@@ -144,7 +147,7 @@ class AtmosphereManager {
       z-index: 9999; pointer-events: none; opacity: 1;
       transition: opacity ${duration}ms var(--ease-shunshin);
     `;
-    document.body.appendChild(flashEl);
+    (document.getElementById('app') || document.body).appendChild(flashEl);
     requestAnimationFrame(() => {
       flashEl.style.opacity = '0';
       setTimeout(() => flashEl.remove(), duration);

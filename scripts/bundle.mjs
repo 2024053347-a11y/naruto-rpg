@@ -297,12 +297,54 @@ function generateHTML({ css, js, svgIcons }) {
 
   <script>
     (function() {
+      const getParentWidth = () => { try { return parent.window.innerWidth; } catch(e) { return window.innerWidth; } };
+      const syncIframeHeight = () => {
+        try {
+          if (window !== window.parent) {
+            try {
+              const frames = parent.document.querySelectorAll('iframe');
+              for (const f of frames) {
+                if (f.contentWindow === window) {
+                  const targetHeight = getParentWidth() <= 768 ? '550px' : '680px';
+                  if (f.style.height !== targetHeight) {
+                    f.style.height = targetHeight;
+                  }
+                  break;
+                }
+              }
+            } catch (err) {}
+            
+            const targetHeightNum = getParentWidth() <= 768 ? 550 : 680;
+            window.parent.postMessage({ type: 'setHeight', height: targetHeightNum }, '*');
+            window.parent.postMessage({ type: 'resize-iframe', height: targetHeightNum }, '*');
+            window.parent.postMessage({ action: 'resize', height: targetHeightNum }, '*');
+          }
+        } catch (e) {
+          console.warn('[NarutoRPG] Failed to sync iframe height:', e);
+        }
+      };
       const sync = () => {
-        const isMobile = window.innerWidth <= 768 || document.body.classList.contains('is-mobile-forced');
+        const isMobile = getParentWidth() <= 768 || document.body.classList.contains('is-mobile-forced');
         document.body.classList.toggle('is-mobile-view', isMobile);
+        
+        // 检测是否为独立网页运行模式 (非 iframe 嵌入)
+        const isStandalone = window === window.parent;
+        document.body.classList.toggle('standalone-mode', isStandalone);
+
+        // 动态修正 viewport meta，让 iframe 内 CSS px 与父窗口一致
+        const vp = document.querySelector('meta[name="viewport"]');
+        if (vp) {
+          const pw = getParentWidth();
+          vp.setAttribute('content', 'width=' + pw + ', initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
+        syncIframeHeight();
       };
       window.addEventListener('resize', sync);
-      document.addEventListener('DOMContentLoaded', sync);
+      try { parent.window.addEventListener('resize', sync); } catch(e) {}
+      document.addEventListener('DOMContentLoaded', () => {
+        sync();
+        setInterval(syncIframeHeight, 1000);
+      });
     })();
   </script>
 
@@ -313,10 +355,10 @@ ${css}
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x5370;</text></svg>" />
 </head>
 <body>
-  <div id="app"></div>
-
-  <!-- 背景粒子系统 -->
-  <canvas id="chakra-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;"></canvas>
+  <div id="app">
+    <!-- 背景粒子系统移入 #app 内部，确保在原生全屏模式下仍能被正确渲染且不会超出容器 -->
+    <canvas id="chakra-canvas" style="position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0.4;"></canvas>
+  </div>
 
   <!-- SVG 图标集 -->
   ${svgIcons}

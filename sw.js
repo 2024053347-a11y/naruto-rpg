@@ -1,4 +1,4 @@
-const CACHE_NAME = 'naruto-rpg-v3';
+const CACHE_NAME = 'naruto-rpg-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',

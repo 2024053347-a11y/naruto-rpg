@@ -1,0 +1,24 @@
+{
+  "name": "naruto-rpg",
+  "version": "1.0.0",
+  "description": "一个以火影忍者世界观为背景的 **AI 单人文字跑团游戏**（PWA），由多智能体叙事管道驱动，支持角色养成、战斗、人际关系、世界状态等完整 RPG 系统。",
+  "main": "find-undeclared.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2024053347-a11y/naruto-rpg.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/2024053347-a11y/naruto-rpg/issues"
+  },
+  "homepage": "https://github.com/2024053347-a11y/naruto-rpg#readme"
+}

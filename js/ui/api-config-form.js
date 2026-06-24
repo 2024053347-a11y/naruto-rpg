@@ -69,8 +69,8 @@ export class ApiConfigForm extends HTMLElement {
           ${!this._showAdvanced ? '<div class="settings-hint">支持 OpenAI / Anthropic / DeepSeek / 自定义兼容 API</div>' : ''}
         </div>
         <div class="settings-row">
-          <label for="settings-api-key">API Key</label>
-          <input class="settings-input" id="settings-api-key" type="password" value="${this._escAttr(config.apiKey || '')}" placeholder="sk-..." autocomplete="new-password" autocapitalize="off" spellcheck="false" />
+          <label for="settings-api-key">API Key (本地免密模型可留空)</label>
+          <input class="settings-input" id="settings-api-key" type="password" value="${this._escAttr(config.apiKey || '')}" placeholder="输入密钥 (本地免密可留空)" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
         </div>
         <div class="settings-row">
           <label for="settings-api-model">模型名称</label>
@@ -156,8 +156,8 @@ export class ApiConfigForm extends HTMLElement {
 
     fetchBtn?.addEventListener('click', async () => {
       const config = this.getConfig(true);
-      if (!config?.apiUrl || !config?.apiKey) {
-        eventBus.emit('app:toast', '请先填写 API 地址和 Key。');
+      if (!config?.apiUrl) {
+        eventBus.emit('app:toast', '请先填写 API 地址。');
         return;
       }
       fetchBtn.disabled = true;
@@ -194,7 +194,7 @@ export class ApiConfigForm extends HTMLElement {
     const model = root.querySelector('#settings-api-model')?.value.trim();
     const backend = root.querySelector('#settings-api-backend')?.value;
 
-    if (!apiUrl || !apiKey || (!allowEmptyModel && !model)) return null;
+    if (!apiUrl || (!allowEmptyModel && !model)) return null;
 
     let finalApiUrl = apiUrl;
     if (backend === 'deepseek' && !apiUrl) finalApiUrl = 'https://api.deepseek.com/v1';

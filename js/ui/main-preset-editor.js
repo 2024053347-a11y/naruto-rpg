@@ -34,7 +34,7 @@ class MainPresetEditor extends HTMLElement {
     const entries = this._preset.entries || [];
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: flex; position: fixed; inset: 0; background: rgba(7,10,14,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; font-family: 'Noto Sans SC',system-ui,sans-serif; color: #e8e4d9; justify-content: center; align-items: center; padding: 20px; }
+        :host { display: flex; position: fixed; inset: 0; background: rgba(7,10,14,0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100001; font-family: 'Noto Sans SC',system-ui,sans-serif; color: #e8e4d9; justify-content: center; align-items: center; padding: 20px; }
         .mpe-container { width: 100%; max-width: 1000px; height: 100%; max-height: 85vh; background: #111418; border: 1px solid rgba(198,156,109,0.2); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
         .mpe-header { padding: 14px 18px; border-bottom: 1px solid rgba(198,156,109,0.15); display: flex; justify-content: space-between; align-items: center; background: rgba(20,25,30,0.8); flex-shrink: 0; }
         .mpe-title { font-size: 16px; font-weight: 700; color: #f4efe4; font-family: 'Noto Serif SC',serif; letter-spacing: 2px; }

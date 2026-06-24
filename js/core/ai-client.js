@@ -163,7 +163,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   validateConfig(config) {
-    return !!(config.apiKey && config.apiUrl && config.model);
+    return !!(config.apiUrl && config.model);
   }
 
   static async listModels(config) {
@@ -179,7 +179,11 @@ class OpenAICompatibleAdapter extends AIAdapter {
       throw new Error(`模型列表读取失败 ${response.status}: ${err}`);
     }
     const data = await response.json();
-    const models = Array.isArray(data.data) ? data.data : [];
+    let models = [];
+    if (data && Array.isArray(data.data)) models = data.data;
+    else if (data && Array.isArray(data.models)) models = data.models;
+    else if (Array.isArray(data)) models = data;
+    
     return models
       .map(item => typeof item === 'string' ? item : item?.id || item?.name)
       .filter(Boolean)
@@ -364,7 +368,7 @@ class ClaudeAdapter extends AIAdapter {
   }
 
   validateConfig(config) {
-    return !!(config.apiKey && config.model);
+    return !!(config.model);
   }
 
   static async listModels(config) {
@@ -451,7 +455,7 @@ export class AIClient {
     const backend = config.backend || 'openai';
     if (!config.apiUrl && backend === 'deepseek') config = { ...config, apiUrl: 'https://api.deepseek.com/v1' };
     if (!config.apiUrl && backend === 'claude') config = { ...config, apiUrl: 'https://api.anthropic.com/v1' };
-    if (!config.apiUrl || !config.apiKey) throw new Error('请先填写 API 地址和 Key');
+    if (!config.apiUrl) throw new Error('请先填写 API 地址');
     if (backend === 'claude') return ClaudeAdapter.listModels(config);
     return OpenAICompatibleAdapter.listModels(config);
   }

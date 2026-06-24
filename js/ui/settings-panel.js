@@ -71,11 +71,13 @@ class SettingsPanel extends HTMLElement {
     bindCustomSelects(this.shadowRoot);
   }
 
+  disconnectedCallback() {}
+
   render() {
     const s = this._settings;
     this.shadowRoot.innerHTML = `
       <style>
-        :host { position: fixed; inset: 0; z-index: 900; color: var(--text-primary); font-family: var(--font-body); }
+        :host { position: fixed; inset: 0; z-index: 100000; color: var(--text-primary); font-family: var(--font-body); }
         
         .backdrop {
           position: absolute; inset: 0; background: rgba(3,4,6,0.85);
@@ -276,8 +278,10 @@ class SettingsPanel extends HTMLElement {
         
         .music-result-list {
           display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;
-          max-height: 240px; overflow-y: auto; padding-right: 8px;
+          min-height: 0; max-height: 240px; overflow-y: auto; padding-right: 8px;
           scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
+          overscroll-behavior: contain;
+          -webkit-overflow-scrolling: touch;
         }
         .music-empty-hint { text-align: center; color: var(--text-tertiary); padding: 32px 16px; font-family: var(--font-body); font-size: 12px; line-height: 1.7; grid-column: 1/-1; }
         
@@ -652,13 +656,13 @@ class SettingsPanel extends HTMLElement {
     
     if (action === 'open-main-preset-editor') {
       const editor = document.createElement('main-preset-editor');
-      document.body.appendChild(editor);
+      (document.getElementById('app') || document.body).appendChild(editor);
       return;
     }
 
     if (action === 'open-worldbook-editor') {
       const editor = document.createElement('worldbook-editor');
-      document.body.appendChild(editor);
+      (document.getElementById('app') || document.body).appendChild(editor);
       return;
     }
 
@@ -1068,8 +1072,8 @@ class SettingsPanel extends HTMLElement {
     if (!el) {
       const div = document.createElement('div');
       div.id = 'naruto-desktop-lyrics'; div.className = 'desktop-lyrics';
-      document.body.appendChild(div);
-      this._makeDraggable(div); this._buildLyricControls(div);
+      (document.getElementById('app') || document.body).appendChild(div);
+      this._buildLyricControls(div); this._makeDraggable(div);
       this._lyricEl = div;
       this._lyricTextEl = div.querySelector('.lyric-text');
       this._lyricSliderEl = div.querySelector('.lyric-slider');
@@ -1109,19 +1113,40 @@ class SettingsPanel extends HTMLElement {
       play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
       pause: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`,
       next: `<svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>`,
-      loop: `<svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>`
+      loop: `<svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>`,
+      minimize: `<svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>`,
+      close: `<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`
     };
     return icons[name] || '';
   }
 
   _buildLyricControls(el) {
-    el.innerHTML = `<div class="lyric-text">🎵</div><div class="lyric-slider-wrap"><input type="range" class="lyric-slider" min="0" max="100" value="0" step="1"></div><div class="lyric-time">0:00 / 0:00</div><div class="lyric-controls">
-      <button class="lyric-btn" data-lyric="shuffle" title="随机播放">${this._getSvgIcon('shuffle')}</button>
-      <button class="lyric-btn" data-lyric="prev" title="上一首">${this._getSvgIcon('prev')}</button>
-      <button class="lyric-btn lyric-play-btn" data-lyric="play" title="播放/暂停">${this._getSvgIcon('pause')}</button>
-      <button class="lyric-btn" data-lyric="next" title="下一首">${this._getSvgIcon('next')}</button>
-      <button class="lyric-btn" data-lyric="loop" title="列表循环">${this._getSvgIcon('loop')}</button>
+    el.innerHTML = `
+    <div class="lyric-header">
+      <div class="lyric-drag-handle"></div>
+      <div class="lyric-window-controls">
+        <button class="lyric-win-btn" data-lyric="minimize" title="最小化/恢复">${this._getSvgIcon('minimize')}</button>
+        <button class="lyric-win-btn" data-lyric="close" title="关闭">${this._getSvgIcon('close')}</button>
+      </div>
+    </div>
+    <div class="lyric-body">
+      <div class="lyric-text">🎵</div><div class="lyric-slider-wrap"><input type="range" class="lyric-slider" min="0" max="100" value="0" step="1"></div><div class="lyric-time">0:00 / 0:00</div><div class="lyric-controls">
+        <button class="lyric-btn" data-lyric="shuffle" title="随机播放">${this._getSvgIcon('shuffle')}</button>
+        <button class="lyric-btn" data-lyric="prev" title="上一首">${this._getSvgIcon('prev')}</button>
+        <button class="lyric-btn lyric-play-btn" data-lyric="play" title="播放/暂停">${this._getSvgIcon('pause')}</button>
+        <button class="lyric-btn" data-lyric="next" title="下一首">${this._getSvgIcon('next')}</button>
+        <button class="lyric-btn" data-lyric="loop" title="列表循环">${this._getSvgIcon('loop')}</button>
+      </div>
     </div>`;
+
+    el.querySelector('[data-lyric="minimize"]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      el.classList.toggle('minimized');
+    });
+    el.querySelector('[data-lyric="close"]')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this._toggleLyrics();
+    });
 
     if (this._getShuffle()) el.querySelector('[data-lyric="shuffle"]').classList.add('active');
     if (this._getLoop()) el.querySelector('[data-lyric="loop"]').classList.add('active');
@@ -1181,6 +1206,9 @@ class SettingsPanel extends HTMLElement {
     this._lyricsHidden = !this._lyricsHidden;
     const el = this._lyricEl || document.getElementById('naruto-desktop-lyrics');
     if (el) { el.style.display = this._lyricsHidden ? 'none' : 'block'; this._syncPlayBtn(); }
+    if (this._lyricsHidden && localAudio.bgm) {
+      localAudio.bgm.pause();
+    }
   }
 
   _presetKeys = { default: 'DEFAULT_PROMPT' };
@@ -1260,16 +1288,28 @@ class SettingsPanel extends HTMLElement {
   _pause(type) { /* empty: old API */ }
 
   close() {
-    this._cleanupDragHandlers();
+    this.remove();
+  }
+
+  _stopAllAudio() {
     if (localAudio.bgm) {
-      try {
-        localAudio.bgm.pause();
-        localAudio.bgm.src = '';
-        localAudio.bgm.load();
-      } catch { /* ignore */ }
+      localAudio.bgm.pause();
+      localAudio.bgm.src = '';
+      localAudio.bgm.load();
       localAudio.bgm = null;
     }
-    this.remove();
+    if (localAudio.ambient) {
+      localAudio.ambient.pause();
+      localAudio.ambient.src = '';
+      localAudio.ambient.load();
+      localAudio.ambient = null;
+    }
+    const el = this._lyricEl || document.getElementById('naruto-desktop-lyrics');
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+    this._lyricEl = null;
+    this._lyricTextEl = null;
+    this._lyricSliderEl = null;
+    this._lyricTimeEl = null;
   }
 
   _cleanupDragHandlers() {
@@ -1280,23 +1320,53 @@ class SettingsPanel extends HTMLElement {
   }
 
   _makeDraggable(el) {
-    let dragging = false, sx, sy, ix, iy;
+    let dragging = false, sx, sy, dx, dy, raf;
     const onDown = e => {
-      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
-      dragging = true; const r = el.getBoundingClientRect();
-      el.style.transform = 'none'; el.style.left = r.left+'px'; el.style.top = r.top+'px'; el.style.bottom = 'auto';
-      sx = e.clientX; sy = e.clientY; ix = r.left; iy = r.top;
+      if (e.target.closest('button') || e.target.tagName === 'INPUT') return;
+      dragging = true;
+      el.classList.add('dragging');
+      const r = el.getBoundingClientRect();
+      // Pick up current transform offset
+      const t = el.style.transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
+      dx = t ? parseFloat(t[1]) : 0;
+      dy = t ? parseFloat(t[2]) : 0;
+      const evt = e.touches ? e.touches[0] : e;
+      sx = evt.clientX;
+      sy = evt.clientY;
     };
-    const onMove = e => { if (!dragging) return; el.style.left = (ix+e.clientX-sx)+'px'; el.style.top = (iy+e.clientY-sy)+'px'; };
-    const onUp = () => { dragging = false; };
+    const onMove = e => {
+      if (!dragging) return;
+      e.preventDefault();
+      const evt = e.touches ? e.touches[0] : e;
+      const nx = dx + evt.clientX - sx;
+      const ny = dy + evt.clientY - sy;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        el.style.transform = `translate(${nx}px, ${ny}px)`;
+        raf = null;
+      });
+    };
+    const onUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('dragging');
+    };
+
     el.addEventListener('mousedown', onDown);
+    el.addEventListener('touchstart', onDown, { passive: false });
     document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: false });
     document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchend', onUp);
+
     this._dragCleanup = this._dragCleanup || [];
     this._dragCleanup.push(
       () => el.removeEventListener('mousedown', onDown),
+      () => el.removeEventListener('touchstart', onDown),
       () => document.removeEventListener('mousemove', onMove),
-      () => document.removeEventListener('mouseup', onUp)
+      () => document.removeEventListener('touchmove', onMove),
+      () => document.removeEventListener('mouseup', onUp),
+      () => document.removeEventListener('touchend', onUp)
     );
   }
 }

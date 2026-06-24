@@ -128,6 +128,14 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     }
   ],
 
+  getDefaultEntries() {
+    const worldTitles = new Set(WORLD_BOOK_ENTRIES.map(entry => entry.title));
+    return [
+      ...this.entries.filter(entry => !worldTitles.has(entry.title)),
+      ...WORLD_BOOK_ENTRIES
+    ];
+  },
+
   get allEntries() {
     try {
       if (typeof localStorage !== 'undefined') {
@@ -135,11 +143,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
         if (saved) return JSON.parse(saved);
       }
     } catch { console.warn('[KnowledgeBase] Failed to load worldbook, using defaults'); }
-    const worldTitles = new Set(WORLD_BOOK_ENTRIES.map(entry => entry.title));
-    return [
-      ...this.entries.filter(entry => !worldTitles.has(entry.title)),
-      ...WORLD_BOOK_ENTRIES
-    ];
+    return this.getDefaultEntries();
   },
 
   buildContext({ query = '', state = {}, memory = {}, maxEntries = 8, budget = 5600 } = {}) {
@@ -315,6 +319,14 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       }
     };
 
+    // 自动添加所有“蓝灯（常驻）”条目
+    const all = this.allEntries;
+    for (const entry of all) {
+      if (entry.isAlwaysOn) {
+        add(entry);
+      }
+    }
+
     add(this.getEntry('火影时间线总览'));
     add(this.getEntry('九尾之乱与木叶48年'));
     add(this.getEntry('忍者能力分类') || this.getEntry('基础忍术体系'));
@@ -327,7 +339,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       add(locationHit);
     }
 
-    return entries.slice(0, 4);
+    return entries;
   },
 
   _getEraSensitiveFacts(state, searchText) {

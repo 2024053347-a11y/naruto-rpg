@@ -110,7 +110,7 @@ class GameModal extends HTMLElement {
   static confirm({ title, message, okLabel = '确定', cancelLabel = '取消' }) {
     return new Promise(resolve => {
       const m = new GameModal();
-      document.body.appendChild(m);
+      (document.getElementById('app') || document.body).appendChild(m);
       m.show({
         title, content: `<p>${message}</p>`,
         buttons: [
@@ -124,7 +124,7 @@ class GameModal extends HTMLElement {
   static alert({ title, message, okLabel = '确定' }) {
     return new Promise(resolve => {
       const m = new GameModal();
-      document.body.appendChild(m);
+      (document.getElementById('app') || document.body).appendChild(m);
       m.show({
         title, content: `<p>${message}</p>`,
         buttons: [
@@ -137,7 +137,7 @@ class GameModal extends HTMLElement {
   static prompt({ title, message = '', value = '', placeholder = '', okLabel = '确定', cancelLabel = '取消', multiline = false, rows = 6 }) {
     return new Promise(resolve => {
       const m = new GameModal();
-      document.body.appendChild(m);
+      (document.getElementById('app') || document.body).appendChild(m);
       const inputId = 'gm-input';
       const inputHtml = multiline
         ? `<textarea id="${inputId}" rows="${rows}" placeholder="${placeholder}" style="width:100%;min-height:120px;resize:vertical;padding:10px 12px;background:rgba(7,10,14,0.6);border:1px solid rgba(232,228,217,0.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font-family:'JetBrains Mono','Fira Code',monospace;font-size:12px;line-height:1.6;outline:none;">${value}</textarea>`

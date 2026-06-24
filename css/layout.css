@@ -363,7 +363,8 @@ body[data-bg-mode="image"] {
   .app-sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: var(--statusbar-h); width: 85vw; transform: translateX(0); border-right: 1px solid rgba(244,241,234,0.1); z-index: var(--z-overlay); }
   .app-sidebar--collapsed { transform: translateX(-100%); opacity: 1; width: 85vw; }
   .app-panel { position: fixed; top: var(--topbar-h); right: 0; bottom: var(--statusbar-h); width: 85vw; transform: translateX(100%); z-index: var(--z-overlay); }
-  .app-panel.panel-open { transform: translateX(0); }
+  .app-panel.panel-open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+  .app-panel--collapsed { transform: translateX(100%); opacity: 1; width: 85vw; pointer-events: none; }
   
   .chat-messages { padding: var(--sp-6) var(--sp-4) calc(100px + env(safe-area-inset-bottom, 0px)); }
   .chat-input-area { 
@@ -373,9 +374,22 @@ body[data-bg-mode="image"] {
   .input-wrapper { border-radius: var(--r-lg); }
   #btn-send { min-width: 60px; padding: 0 16px; }
   
-  /* 在真实手机端隐藏“手机预览”和全屏按钮（手机浏览器很多不支持或自己接管全屏） */
-  .topbar-btn--mobile { display: none !important; }
-  #btn-mobile + .topbar-divider { display: none !important; }
+  /* 允许手机端顶部按钮栏横向滑动，防止按钮被挤出或缩水，保留全部按钮 */
+  .topbar-right {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
+    margin-left: auto;
+    max-width: calc(100% - 60px); /* 留出左侧 Logo 空间 */
+  }
+  .topbar-right::-webkit-scrollbar {
+    display: none; /* 隐藏 Chrome/Safari 滚动条 */
+  }
+  .topbar-btn,
+  .topbar-divider {
+    flex-shrink: 0 !important;
+  }
   
   .app-statusbar {
     height: calc(var(--statusbar-h) + env(safe-area-inset-bottom, 0px));

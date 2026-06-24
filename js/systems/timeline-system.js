@@ -520,7 +520,8 @@ class TimelineSystem {
       safety++;
     }
 
-    // 找到 chain 中最近的、有 state_snapshot 且未归档的节点作为重放起点
+    // 找到 chain 中最近的、有 state_snapshot 的节点作为重放起点
+    // 优先使用未归档节点，但归档节点同样保留了 state_snapshot 可直接使用
     let startIdx = -1;
     for (let i = chain.length - 1; i >= 0; i--) {
       if (chain[i].state_snapshot && !chain[i].archived) {
@@ -529,7 +530,15 @@ class TimelineSystem {
       }
     }
     if (startIdx === -1) {
-      throw new Error('无法找到未归档的祖先快照,无法精确恢复此回合');
+      for (let i = chain.length - 1; i >= 0; i--) {
+        if (chain[i].state_snapshot) {
+          startIdx = i;
+          break;
+        }
+      }
+    }
+    if (startIdx === -1) {
+      throw new Error('无法找到祖先快照,无法精确恢复此回合');
     }
 
     // 用起点快照恢复

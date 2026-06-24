@@ -237,8 +237,8 @@ class MessagePipeline {
         max_tokens: 2048
       });
       const cleaned = this._sanitizeVariableUpdaterOutput(variableTags);
-      if (!cleaned) return narrativeResponse;
-      return `${narrativeResponse}\n\n${cleaned}`;
+      if (!cleaned) return null;
+      return cleaned;
     } catch (error) {
       console.warn('[Pipeline] Secondary variable updater failed:', error.message);
       eventBus.emit('pipeline:warning', { warning: `二次变量更新失败: ${error.message}` });
@@ -263,7 +263,7 @@ class MessagePipeline {
 - 不要输出 <status_query />、普通文本、Markdown、代码块。
 - 不要改写叙事，不要重复主模型已经写过的等价变量。
 - 只记录本回合实际发生的变化。
-- 遵守成长封顶: 普通行动不加属性上限；训练或战斗优先使用 op="add" 增加 attributes.exp（历练值），每次 +5~+20。严禁直接提升属性上限（如 chakra, stamina, spirit 等），只有当 exp >= 100 触发系统突破时才允许！单回合 mastery 提升不超过 +8。
+- 遵守成长封顶: 只在专门的修炼、战斗、完成任务时使用 op="add" 增加 progression.exp（历练值），每次 +10~+30。闲聊、赶路、观察等非成长行为【绝对禁止】增加历练值。严禁直接提升属性上限（如 chakra, stamina, spirit 等），只有当 exp >= 100 触发系统突破时才允许！单回合 mastery 提升不超过 +8。
 - 不要直接覆盖 missions.active；任务变化使用 <mission>。
 - memory.summary 必须只总结本回合关键事实，约250-400个中文字符，包含: 玩家具体行动、所在场景、参与NPC与态度变化、发现的线索、任务/战斗/关系结果、资源或伤势变化、下回合必须承接的待办。不要只写一句话。
 - memory.facts/clues/pins/npc_notes 只在确有长期价值时填写，不要堆砌普通景色。
@@ -271,7 +271,7 @@ class MessagePipeline {
 可用变量协议摘要:
 - 消耗资源: attributes.chakra_current/stamina_current/spirit_current/willpower_current 用 sub。
 - 恢复资源: 只恢复 *_current，不增加上限。
-- 历练值: attributes.exp 用 add，日常行动+5~10，训练+10~20，激烈战斗+15~25。
+- 历练值: progression.exp 用 add。【严禁对日常闲聊、走路、观察环境等无实质成长的行为增加历练值】。仅以下情况可奖励: 训练+10~20，战斗+15~25，完成任务+10~30。回合内无上述事件则【禁止】输出 progression.exp 变量。
 - 技能熟练度: skills.jutsu/taijutsu/genjutsu.{名称}.mastery 用 add，小幅+3到+8。
 - 人物目标/位置: player.current_goal、world_state.current_location。
 - 任务: <mission>{"id":"...","status":"active|progress|completed|failed",...}</mission>
@@ -369,7 +369,7 @@ class MessagePipeline {
     if (state.player.name) {
       summaries.push(`角色: ${state.player.name} | ${state.player.rank} | ${state.player.chakra_nature?.join('/') || '未选择'}`);
       summaries.push(`查克拉${state.attributes.chakra_current}/${state.attributes.chakra} | 体力${state.attributes.stamina_current}/${state.attributes.stamina}`);
-      const exp = state.attributes.exp || 0;
+      const exp = (state.progression && state.progression.exp) || 0;
       const track = state.progression?.promotion?.track || '均衡';
       summaries.push(`历练值: ${exp}/100 | 晋升路线: ${track} | 精神力${state.attributes.spirit || 0} | 意志力${state.attributes.willpower || 0} | 速度${state.attributes.speed || 0}`);
       summaries.push(`位置: ${state.world_state.current_location || '木叶隐村'} | ${formatGameTime(state.world_state.calendar)}`);

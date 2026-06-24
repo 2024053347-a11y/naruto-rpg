@@ -67,8 +67,11 @@ class NarutoRPGApp {
     memorySystem.bindEvents();
 
     const apiConfig = stateManager.getAPIConfig();
-    if (apiConfig?.apiKey) {
+    if (apiConfig) {
       aiClient.configure(apiConfig);
+    }
+    const isConfigured = aiClient.isConfigured();
+    if (isConfigured) {
       if (dbOk) {
         try {
           await this._checkSavedGame();
@@ -131,8 +134,7 @@ class NarutoRPGApp {
 
       if (player.persona) {
         try {
-          const saved = localStorage.getItem('naruto_worldbook');
-          let entries = saved ? JSON.parse(saved) : [];
+          let entries = KNOWLEDGE_BASE.allEntries || [];
           const personaIndex = entries.findIndex(e => e.title === '玩家人设');
           const newContent = `[玩家人设]\n名字：${player.name || '玩家'}\n${player.persona}`;
           
@@ -251,6 +253,35 @@ class NarutoRPGApp {
 
     eventBus.on('pipeline:cancel', () => {
       this.pipeline?.cancel();
+    });
+
+    eventBus.on('timeline:reroll-request', async ({ nodeId }) => {
+      try {
+        const node = await stateManager.dbGet('timeline_nodes', nodeId);
+        if (!node) return;
+        const parentId = node.parent_id;
+        if (!parentId) {
+          this._sendSystemMessage('初始节点无法快速重推衍，如需重新开局请点击底部重置按钮。');
+          return;
+        }
+        if (!node.player_input) {
+          this._sendSystemMessage('该节点缺少玩家输入，无法重推衍。');
+          return;
+        }
+        
+        await timelineSystem.jumpToNode(parentId);
+        timelineSystem._pendingBranchFrom = parentId;
+        
+        const parentNode = await timelineSystem.getCurrentNode();
+        const history = await timelineSystem._reconstructChatHistory(parentNode);
+        this.pipeline?.setHistory(history);
+        
+        this._sendSystemMessage(`正在平行重推衍：${node.player_input}`);
+        await this.pipeline.process(node.player_input);
+      } catch (error) {
+        console.error('[App] Reroll failed:', error);
+        this._sendSystemMessage(`重推衍失败: ${error.message}`);
+      }
     });
 
     eventBus.on('timeline:jump-request', async ({ nodeId }) => {
@@ -379,7 +410,7 @@ class NarutoRPGApp {
 
     eventBus.on('app:open-settings', () => {
       const panel = new SettingsPanel();
-      document.body.appendChild(panel);
+      (document.getElementById('app') || document.body).appendChild(panel);
     });
 
     eventBus.on('app:open-api-settings', () => {
@@ -388,16 +419,23 @@ class NarutoRPGApp {
   }
 
   async _checkSavedGame() {
+    console.log('[NarutoRPG] Checking for saved game...');
     const meta = await stateManager.dbGet('timeline_meta', 'root');
+    console.log('[NarutoRPG] Retrieved timeline_meta:', meta);
     if (meta?.value?.current_id) {
+      console.log('[NarutoRPG] Found current_id in meta:', meta.value.current_id);
       const currentNode = await stateManager.dbGet('timeline_nodes', meta.value.current_id);
+      console.log('[NarutoRPG] Retrieved currentNode:', currentNode);
       if (currentNode) {
         try {
           if (currentNode.state_snapshot) {
+            console.log('[NarutoRPG] Restoring state from state_snapshot...');
             stateManager.restore(currentNode.state_snapshot);
           } else {
+            console.log('[NarutoRPG] Replaying state from ancestors...');
             await timelineSystem._replayStateFromAncestor(currentNode);
           }
+          console.log('[NarutoRPG] Reconstructing chat history...');
           const history = await timelineSystem._reconstructChatHistory(currentNode);
           this.pipeline?.setHistory(history);
           stateManager.update([{ path: '_meta.current_node_id', op: 'set', value: meta.value.current_id }]);
@@ -406,12 +444,48 @@ class NarutoRPGApp {
             appShell.renderSinglePage(currentNode.clean_response);
           }
           this._sendSystemMessage('欢迎回来！已恢复上次冒险。');
+          console.log('[NarutoRPG] Saved game restored successfully!');
           return;
         } catch (err) {
-          console.warn('[NarutoRPG] Restore saved game failed:', err.message);
+          console.error('[NarutoRPG] Restore saved game failed:', err);
+          // 恢复过程出错，但仍然显示游戏界面，让用户能看到存档内容
+          // 而不是悄无声息地回退到角色创建界面
+          appShell.showGame();
+          appShell.renderSinglePage(currentNode.clean_response || currentNode.ai_response_summary || '存档数据存在但恢复过程遇到问题。\n\n请尝试：\n1. 刷新页面重试\n2. 从时间线中选择其他节点\n3. 导出存档后重新导入');
+          this._sendSystemMessage(`存档恢复异常: ${err.message}。部分状态可能未能完全恢复，建议检查角色面板。`);
+          stateManager.update([{ path: '_meta.current_node_id', op: 'set', value: meta.value.current_id }]);
+          return;
+        }
+      } else {
+        console.warn('[NarutoRPG] Save game node not found in timeline_nodes.');
+        // 元数据存在但节点丢失：尝试查找任意可用的节点
+        const allNodes = await stateManager.dbGetAll('timeline_nodes');
+        if (allNodes && allNodes.length > 0) {
+          console.log('[NarutoRPG] Attempting recovery using fallback node...');
+          const fallbackNode = allNodes.sort((a, b) => (b.turn_number || 0) - (a.turn_number || 0))[0];
+          try {
+            if (fallbackNode.state_snapshot) {
+              stateManager.restore(fallbackNode.state_snapshot);
+            }
+            const history = await timelineSystem._reconstructChatHistory(fallbackNode);
+            this.pipeline?.setHistory(history);
+            stateManager.update([{ path: '_meta.current_node_id', op: 'set', value: fallbackNode.id }]);
+            // 更新 meta 以指向这个恢复节点
+            meta.value.current_id = fallbackNode.id;
+            await stateManager.dbPut('timeline_meta', meta);
+            appShell.showGame();
+            appShell.renderSinglePage(fallbackNode.clean_response || fallbackNode.ai_response_summary || '已恢复到最近的存档节点。');
+            this._sendSystemMessage('元数据丢失，已自动恢复到最近的存档节点。');
+            return;
+          } catch (e) {
+            console.error('[NarutoRPG] Fallback recovery also failed:', e.message);
+          }
         }
       }
+    } else {
+      console.log('[NarutoRPG] No saved game metadata found.');
     }
+    console.log('[NarutoRPG] Showing character creator.');
     appShell.showCharacterCreator();
   }
 
@@ -431,7 +505,7 @@ class NarutoRPGApp {
     const Modal = customElements.get('game-modal');
     if (!Modal) return;
     const modal = new Modal();
-    document.body.appendChild(modal);
+    (document.getElementById('app') || document.body).appendChild(modal);
     modal.show({
       title: '结印失败',
       content: `
@@ -475,7 +549,7 @@ class NarutoRPGApp {
 
     const config = stateManager.getAPIConfig() || {};
     const modal = new Modal();
-    document.body.appendChild(modal);
+    (document.getElementById('app') || document.body).appendChild(modal);
     modal.show({
       title: 'API 设置',
       content: `
@@ -550,7 +624,7 @@ class NarutoRPGApp {
   async _showBranchChoice() {
     return new Promise(resolve => {
       const modal = document.createElement('game-modal');
-      document.body.appendChild(modal);
+      (document.getElementById('app') || document.body).appendChild(modal);
       modal.show({
         title: '时间线分叉',
         content: `<p>当前回合已有后续剧情。<br/>请选择你希望如何处理：</p>`,
@@ -566,7 +640,7 @@ class NarutoRPGApp {
   async _showImportModeChoice(existingCount) {
     return new Promise(resolve => {
       const modal = document.createElement('game-modal');
-      document.body.appendChild(modal);
+      (document.getElementById('app') || document.body).appendChild(modal);
       modal.show({
         title: '导入时间线存档',
         content: `<p>当前已有 ${existingCount} 个回合的游戏进度。请选择导入方式:</p>

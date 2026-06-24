@@ -38,6 +38,8 @@ class InfoPanel extends HTMLElement {
   render() {
     const s = stateManager.get();
     const tab = s.ui_prefs?.panel_tab || this._tab;
+    const appEl = document.getElementById('app') || document.body;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || appEl.classList.contains('is-mobile-forced') || appEl.classList.contains('is-mobile-view');
     this.shadowRoot.innerHTML = `
       <style>
         :host { display: block; height: 100%; }
@@ -46,6 +48,26 @@ class InfoPanel extends HTMLElement {
           background: transparent;
           color: var(--text-primary);
           position: relative;
+        }
+
+        /* ── Mobile Panel Header ──── */
+        .panel-header-mobile {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 14px 16px 12px 20px; border-bottom: 1px solid var(--border-hairline);
+          background: rgba(255,255,255,0.02);
+        }
+        .panel-title-mobile {
+          font-family: var(--font-title); font-size: 13px; font-weight: 800;
+          color: var(--text-primary); letter-spacing: 2px;
+        }
+        .panel-close-btn-mobile {
+          background: transparent; border: none; color: var(--text-secondary);
+          font-size: 18px; cursor: pointer; padding: 4px; display: flex;
+          align-items: center; justify-content: center; transition: all 0.2s;
+          line-height: 1;
+        }
+        .panel-close-btn-mobile:hover {
+          color: var(--text-primary); transform: scale(1.1);
         }
 
         /* ── 标签页 (Shinobi Tanzaku) ──── */
@@ -374,6 +396,12 @@ class InfoPanel extends HTMLElement {
         .btn-sleek.active { background: rgba(255,255,255,0.1); border-color: var(--text-primary); color: var(--c-void); background: var(--text-primary); }
       </style>
       <div class="panel">
+        ${isMobile ? `
+        <div class="panel-header-mobile">
+          <span class="panel-title-mobile">角色面板</span>
+          <button class="panel-close-btn-mobile" id="panel-close-btn-mobile" title="关闭面板">✕</button>
+        </div>
+        ` : ''}
         <div class="tabs">
           <button class="tab${tab==='attributes'?' on':''}" data-t="attributes">属性</button>
           <button class="tab${tab==='skills'?' on':''}" data-t="skills">技能</button>
@@ -384,6 +412,13 @@ class InfoPanel extends HTMLElement {
         <div class="content">${this._renderTab(tab,s)}</div>
       </div>
     `;
+    const closeBtn = this.shadowRoot.getElementById('panel-close-btn-mobile');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.dispatchEvent(new CustomEvent('panel:close', { bubbles: true, composed: true }));
+      });
+    }
+
     this.shadowRoot.querySelectorAll('.tab').forEach(t=>{
       t.addEventListener('click',()=>{
         this._tab=t.dataset.t;
@@ -609,13 +644,19 @@ class InfoPanel extends HTMLElement {
 
   _renderSkills(s){
     const sk=s.skills, ju=sk?.jutsu||{}, tai=sk?.taijutsu||{}, gen=sk?.genjutsu||{}, support=sk?.support||{}, talents=sk?.talents||{};
-    const isNormalBloodline = !sk?.kekkei_genkai || sk.kekkei_genkai === '普通血脉';
+    let kgText = '普通血脉';
+    if (sk?.kekkei_genkai) {
+      if (typeof sk.kekkei_genkai === 'string') kgText = sk.kekkei_genkai;
+      else if (Array.isArray(sk.kekkei_genkai)) kgText = sk.kekkei_genkai.map(k => typeof k === 'string' ? k : (k.name || '')).filter(Boolean).join('、') || '普通血脉';
+      else if (typeof sk.kekkei_genkai === 'object') kgText = sk.kekkei_genkai.name || Object.keys(sk.kekkei_genkai).join('、') || '普通血脉';
+    }
+    const isNormalBloodline = kgText === '普通血脉';
     
     return `
       <div class="sec">
         <div class="sec-title">血继限界</div>
         <div class="skill-card bloodline ${isNormalBloodline ? 'normal' : ''}">
-          <div class="skill-title">${this._esc(sk?.kekkei_genkai||'普通血脉')}</div>
+          <div class="skill-title">${this._esc(kgText)}</div>
         </div>
       </div>
       <div class="sec">
@@ -904,7 +945,7 @@ class InfoPanel extends HTMLElement {
     const Modal = customElements.get('game-modal');
     if (!Modal) return;
     const modal = new Modal();
-    document.body.appendChild(modal);
+    (document.getElementById('app') || document.body).appendChild(modal);
 
     const coreKeys = ['affection','trust','respect','info','history','inner_thoughts','role','faction','status','tags','known_secrets','promises','debts', 'last_interaction', 'last_interaction_at'];
     let extraStatsHtml = '';

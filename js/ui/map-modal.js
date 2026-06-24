@@ -248,6 +248,19 @@ class MapModal extends HTMLElement {
         .empty-intel { text-align: center; padding: 32px 20px; color: rgba(232, 228, 217, 0.15); font-size: 12px; }
 
         #selected-intel:empty { display: none; }
+
+        @media (max-width: 768px) {
+          .overlay { flex-direction: column; }
+          .map-area { flex: 0 0 55%; min-height: 0; }
+          .intel-sidebar {
+            width: 100%; min-width: 100%; height: 45%; flex: 1;
+            border-left: none; border-top: 1px solid rgba(232, 228, 217, 0.08);
+          }
+          .close-btn { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 16px; }
+          .zoom-controls { bottom: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; transform: scale(0.9); transform-origin: bottom right; }
+          .intel-header { padding: 12px 16px 8px; }
+          .intel-section { padding: 12px 16px; }
+        }
       </style>
 
       <div class="overlay">

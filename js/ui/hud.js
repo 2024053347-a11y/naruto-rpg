@@ -97,7 +97,7 @@ class StatusHUD extends HTMLElement {
       'attributes.taijutsu': '体术',
       'attributes.genjutsu': '幻术',
       'attributes.luck': '运气',
-      'attributes.exp': '历练值',
+      'progression.exp': '历练值',
       'world_state.current_location': '当前所在地',
       'world_state.time': '当前时间',
       'map.explored_regions': '新探索区域',

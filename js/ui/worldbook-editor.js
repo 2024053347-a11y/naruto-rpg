@@ -95,7 +95,7 @@ export class WorldbookEditor extends HTMLElement {
           background: rgba(7, 10, 14, 0.95);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
-          z-index: 1000;
+          z-index: 100002;
           font-family: 'Noto Sans SC', system-ui, sans-serif;
           color: #e8e4d9;
           justify-content: center;
@@ -152,8 +152,11 @@ export class WorldbookEditor extends HTMLElement {
         }
         .wb-item:hover { background: rgba(255,255,255,0.02); }
         .wb-item.active { background: rgba(255,255,255,0.04); border-left-color: #eb613f; }
-        .wb-item-title { font-weight: bold; font-size: 14px; color: #f4efe4; }
+        .wb-item-title { font-weight: bold; font-size: 14px; color: #f4efe4; display: flex; align-items: center; gap: 6px; }
         .wb-item-keys { font-size: 11px; color: #a39f98; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .wb-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        .wb-indicator.blue { background-color: #4fc3f7; box-shadow: 0 0 5px #4fc3f7; }
+        .wb-indicator.green { background-color: #81c784; box-shadow: 0 0 5px #81c784; }
         
         .wb-editor { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow-y: auto; background: #070a0e; }
         .wb-editor::-webkit-scrollbar { width: 6px; }
@@ -181,6 +184,7 @@ export class WorldbookEditor extends HTMLElement {
         <div class="wb-header">
           <h2 class="wb-title">世界书编辑器</h2>
           <div class="wb-actions">
+            <button class="btn" id="btn-restore-default" title="恢复不小心被删除的自带默认世界书">恢复默认</button>
             <button class="btn" id="btn-import">导入</button>
             <button class="btn" id="btn-export">导出</button>
             <button class="btn" id="btn-close">返回</button>
@@ -196,7 +200,10 @@ export class WorldbookEditor extends HTMLElement {
             <div class="wb-list" id="entry-list">
               ${filteredEntries.map(e => `
                 <div class="wb-item ${e.originalIndex === this._selectedIndex ? 'active' : ''}" data-index="${e.originalIndex}">
-                  <div class="wb-item-title">${this._esc(e.title || '无标题')}</div>
+                  <div class="wb-item-title">
+                    <span class="wb-indicator ${e.isAlwaysOn ? 'blue' : 'green'}" title="${e.isAlwaysOn ? '蓝灯: 常驻启用' : '绿灯: 按关键词触发'}"></span>
+                    ${this._esc(e.title || '无标题')}
+                  </div>
                   <div class="wb-item-keys">${this._esc((e.keys || []).join(', '))}</div>
                 </div>
               `).join('')}
@@ -211,8 +218,15 @@ export class WorldbookEditor extends HTMLElement {
                 <label class="wb-form-label">标题 (Title)</label>
                 <input type="text" class="wb-input" id="entry-title" value="${this._escAttr(currentEntry.title || '')}" placeholder="条目的显示名称">
               </div>
+              <div class="wb-form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label class="wb-form-label" style="margin: 0;">触发模式:</label>
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;">
+                  <input type="checkbox" id="entry-always-on" ${currentEntry.isAlwaysOn ? 'checked' : ''}>
+                  <span class="wb-indicator blue" style="width: 10px; height: 10px;"></span> 常驻启用 (蓝灯) - 无视关键词，必定发送给 AI
+                </label>
+              </div>
               <div class="wb-form-group">
-                <label class="wb-form-label">触发关键词 (Keys) - 以英文逗号分隔</label>
+                <label class="wb-form-label">触发关键词 (Keys) - 以英文逗号分隔 (绿灯模式下生效)</label>
                 <input type="text" class="wb-input" id="entry-keys" value="${this._escAttr((currentEntry.keys || []).join(', '))}" placeholder="关键词1, 关键词2">
               </div>
               <div class="wb-form-group" style="flex: 1; display: flex; flex-direction: column;">
@@ -246,13 +260,40 @@ export class WorldbookEditor extends HTMLElement {
       const titleEl = root.querySelector('#entry-title');
       const keysEl = root.querySelector('#entry-keys');
       const contentEl = root.querySelector('#entry-content');
+      const alwaysOnEl = root.querySelector('#entry-always-on');
       if (titleEl && keysEl && contentEl) {
         this._entries[this._selectedIndex] = {
           title: titleEl.value.trim(),
           keys: keysEl.value.split(',').map(s => s.trim()).filter(Boolean),
-          content: contentEl.value
+          content: contentEl.value,
+          isAlwaysOn: alwaysOnEl ? alwaysOnEl.checked : false
         };
       }
+    }
+  }
+
+  _restoreDefaults() {
+    this._saveCurrentEntry();
+    const defaults = typeof KNOWLEDGE_BASE.getDefaultEntries === 'function' ? KNOWLEDGE_BASE.getDefaultEntries() : (KNOWLEDGE_BASE.entries || []);
+    let restoredCount = 0;
+    
+    for (const defEntry of defaults) {
+      const exists = this._entries.some(e => e.title === defEntry.title);
+      if (!exists) {
+        this._entries.push(JSON.parse(JSON.stringify(defEntry)));
+        restoredCount++;
+      }
+    }
+    
+    if (restoredCount > 0) {
+      this._searchQuery = '';
+      this._selectedIndex = this._entries.length > 0 ? 0 : -1;
+      this._saveEntries();
+      this._render();
+      this._bindEvents();
+      customElements.get('game-modal').alert({ title: '恢复成功', message: `成功找回并恢复了 ${restoredCount} 条缺失的默认世界书条目！` });
+    } else {
+      customElements.get('game-modal').alert({ title: '无需恢复', message: '当前世界书已包含所有默认条目，没有发现被删除的条目。' });
     }
   }
 
@@ -270,6 +311,7 @@ export class WorldbookEditor extends HTMLElement {
       this.remove();
     });
 
+    root.querySelector('#btn-restore-default')?.addEventListener('click', () => this._restoreDefaults());
     root.querySelector('#btn-export')?.addEventListener('click', () => this._exportEntries());
     
     const fileInput = root.querySelector('#file-import');

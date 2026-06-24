@@ -1,3 +1,8 @@
+import { eventBus } from '../core/event-bus.js';
+import { stateManager } from '../core/state-manager.js';
+import { icon } from '../utils/icons.js';
+import { escHtml, escAttr } from '../utils/format.js';
+
 class AppShell {
   constructor() {
     this.element = null;
@@ -19,10 +24,6 @@ class AppShell {
       <header class="app-topbar">
         <div class="topbar-left">
           <span class="topbar-logo"><img src="https://i.postimg.cc/HxrmZwpz/file-000000001608720ba6b31150e6493597.png" class="logo-image-small" alt="忍者手记"></span>
-          <span id="branch-indicator" class="branch-indicator" hidden></span>
-        </div>
-        <div class="topbar-center">
-          <span id="turn-display" class="turn-display">序章</span>
         </div>
         <div class="topbar-right" aria-label="界面切换">
           <button class="topbar-btn topbar-btn--panel" id="btn-panel" title="角色面板" aria-pressed="true">${icon('panel')}<span class="topbar-btn-label">面板</span></button>
@@ -94,13 +95,14 @@ class AppShell {
     this.element.querySelector('#btn-fullscreen').addEventListener('click', () => this._toggleFullscreen());
     this.element.querySelector('#btn-map').addEventListener('click', () => {
       if (!document.querySelector('map-modal')) {
-        document.body.appendChild(document.createElement('map-modal'));
+        (this.element ? (this.element.closest('#app') || document.body) : document.body).appendChild(document.createElement('map-modal'));
       }
     });
     this.element.querySelector('#btn-settings').addEventListener('click', () => {
       eventBus.emit('app:open-settings');
     });
     this.element.querySelector('#mobile-scrim')?.addEventListener('click', () => this._closeMobileDrawers());
+    this.element.addEventListener('panel:close', () => this._closeMobileDrawers());
 
     this._bindGlobalShortcuts();
 
@@ -113,7 +115,7 @@ class AppShell {
       const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
       if (!isFs) {
         this.element.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', 'false');
-        document.body.classList.remove('immersive-fullscreen');
+        (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.remove('immersive-fullscreen');
       }
     };
     document.addEventListener('fullscreenchange', onFsChange);
@@ -460,7 +462,7 @@ class AppShell {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = text;
-    document.body.appendChild(toast);
+    (this.element ? (this.element.closest('#app') || document.body) : document.body).appendChild(toast);
     window.setTimeout(() => toast.remove(), 2600);
   }
 
@@ -480,6 +482,9 @@ class AppShell {
   }
 
   _finalizeMessage(text, _rawText, thinkContent, isPartial = false) {
+    if (!this._streamingEl) {
+      this._updateStreaming(text);
+    }
     if (this._streamingEl) {
       this._streamingEl.classList.remove('is-streaming');
       const cursor = this._streamingEl.querySelector('.typing-cursor');
@@ -746,9 +751,9 @@ class AppShell {
 
   /* 网页全屏：用 CSS 把 #app 撑满视口，隐藏顶栏/状态栏/侧栏（不依赖浏览器 Fullscreen API） */
   _toggleZenMode() {
-    const app = document.getElementById('app');
+    const app = this.element.closest('#app') || this.element;
     if (!app) return;
-    const isZen = document.body.classList.toggle('web-fullscreen');
+    const isZen = (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.toggle('web-fullscreen');
     this.element.querySelector('#btn-zen')?.setAttribute('aria-pressed', String(isZen));
     if (isZen) {
       // 保存旧样式
@@ -768,14 +773,24 @@ class AppShell {
 
     if (!isFullscreen) {
       // 如果当前处于网页全屏，先退出
-      if (document.body.classList.contains('web-fullscreen')) {
+      if ((this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('web-fullscreen')) {
         this._toggleZenMode();
       }
       const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
       if (rfs) {
         rfs.call(el).then(() => {
-          document.body.classList.add('immersive-fullscreen');
+          (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.add('immersive-fullscreen');
           this._closeMobileDrawers();
+          
+          const sidebar = this.element.querySelector('#app-sidebar');
+          if (sidebar && !sidebar.classList.contains('app-sidebar--collapsed')) {
+            this._toggleSidebar();
+          }
+          const panel = this.element.querySelector('#app-panel');
+          if (panel && !panel.classList.contains('app-panel--collapsed') && !panel.classList.contains('panel-open')) {
+            this._togglePanel();
+          }
+
           this.element.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', 'true');
         }).catch(err => {
           console.warn('[AppShell] 屏幕全屏失败:', err.message);
@@ -783,7 +798,7 @@ class AppShell {
         });
       }
     } else {
-      document.body.classList.remove('immersive-fullscreen');
+      (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.remove('immersive-fullscreen');
       const efs = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
       if (efs) efs.call(document);
       this.element.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', 'false');
@@ -791,7 +806,7 @@ class AppShell {
   }
 
   _toggleMobileView() {
-    const isForced = document.body.classList.toggle('is-mobile-forced');
+    const isForced = (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.toggle('is-mobile-forced');
     this.element.querySelector('#btn-mobile')?.setAttribute('aria-pressed', String(isForced));
     this._syncResponsiveState();
   }
@@ -799,11 +814,17 @@ class AppShell {
   _togglePanel() {
     const panel = this.element.querySelector('#app-panel');
     const btn = this.element.querySelector('#btn-panel');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || document.body.classList.contains('is-mobile-forced');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
     let isOpen;
     if (isMobile) {
-      isOpen = panel.classList.toggle('panel-open');
-      if (isOpen) {
+      if (panel.classList.contains('panel-open')) {
+        panel.classList.remove('panel-open');
+        panel.classList.add('app-panel--collapsed');
+        isOpen = false;
+      } else {
+        panel.classList.remove('app-panel--collapsed');
+        panel.classList.add('panel-open');
+        isOpen = true;
         const sidebar = this.element.querySelector('#app-sidebar');
         const timelineBtn = this.element.querySelector('#btn-timeline');
         sidebar?.classList.add('app-sidebar--collapsed');
@@ -820,7 +841,7 @@ class AppShell {
   _toggleSidebar() {
     const sidebar = this.element.querySelector('#app-sidebar');
     const btn = this.element.querySelector('#btn-timeline');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || document.body.classList.contains('is-mobile-forced');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
     const isCollapsed = sidebar.classList.toggle('app-sidebar--collapsed');
     sidebar.setAttribute('aria-hidden', String(isCollapsed));
     btn?.setAttribute('aria-pressed', String(!isCollapsed));
@@ -828,6 +849,7 @@ class AppShell {
       const panel = this.element.querySelector('#app-panel');
       const panelBtn = this.element.querySelector('#btn-panel');
       panel?.classList.remove('panel-open');
+      panel?.classList.add('app-panel--collapsed');
       panelBtn?.setAttribute('aria-pressed', 'false');
     }
     this._syncMobileScrim();
@@ -839,13 +861,19 @@ class AppShell {
     const panelBtn = this.element.querySelector('#btn-panel');
     const sidebar = this.element.querySelector('#app-sidebar');
     const timelineBtn = this.element.querySelector('#btn-timeline');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || document.body.classList.contains('is-mobile-forced');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
     
-    document.body.classList.toggle('is-mobile-view', isMobile);
+    (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.toggle('is-mobile-view', isMobile);
 
     if (isMobile) {
+      if (panel && !panel.classList.contains('app-panel--collapsed')) {
+        panel.classList.add('panel-open');
+      }
       panelBtn?.setAttribute('aria-pressed', String(panel?.classList.contains('panel-open')));
     } else if (panel) {
+      if (panel.classList.contains('panel-open')) {
+        panel.classList.remove('app-panel--collapsed');
+      }
       panel.classList.remove('panel-open');
       panelBtn?.setAttribute('aria-pressed', String(!panel.classList.contains('app-panel--collapsed')));
     }
@@ -865,6 +893,7 @@ class AppShell {
     const panelBtn = this.element?.querySelector('#btn-panel');
     const timelineBtn = this.element?.querySelector('#btn-timeline');
     panel?.classList.remove('panel-open');
+    panel?.classList.add('app-panel--collapsed');
     sidebar?.classList.add('app-sidebar--collapsed');
     sidebar?.setAttribute('aria-hidden', 'true');
     panelBtn?.setAttribute('aria-pressed', 'false');
@@ -875,7 +904,7 @@ class AppShell {
   _syncMobileScrim() {
     const scrim = this.element?.querySelector('#mobile-scrim');
     if (!scrim) return;
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || document.body.classList.contains('is-mobile-forced');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
     const panelOpen = this.element?.querySelector('#app-panel')?.classList.contains('panel-open');
     const timelineOpen = !this.element?.querySelector('#app-sidebar')?.classList.contains('app-sidebar--collapsed');
     scrim.classList.toggle('is-visible', Boolean(isMobile && (panelOpen || timelineOpen)));
@@ -988,4 +1017,4 @@ class AppShell {
   }
 
   getShell() { return this.element; }
-}const appShell = new AppShell();/* export default */ appShell;
+}export const appShell = new AppShell();

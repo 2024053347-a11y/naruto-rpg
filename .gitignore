@@ -12,3 +12,8 @@ Thumbs.db
 ~/
 .claude/
 .playwright-mcp/
+temp.js
+test_screenshots/
+find-undeclared.js
+patch-*.cjs
+启动实时同步.bat

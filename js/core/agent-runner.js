@@ -193,7 +193,7 @@ class AgentRunner {
 
     try { return JSON.parse(text); } catch {}
 
-    const jsonBlock = text.match(/```json\s*([\s\S]*?)\s*```/);
+    const jsonBlock = text.match(/\x60\x60\x60json\s*([\s\S]*?)\s*\x60\x60\x60/);
     if (jsonBlock) { try { return JSON.parse(jsonBlock[1]); } catch {} }
 
     const braceMatch = text.match(/(\{[\s\S]*\})/);
