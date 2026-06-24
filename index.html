@@ -67,7 +67,7 @@
   <link rel="stylesheet" href="css/components.css" />
 
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>'&#x5370;</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E印%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
   <div id="app">
@@ -96,6 +96,11 @@
   </svg>
 
   <script type="module" src="js/app.js"></script>
+
+  <!-- 降级提示：不支持 ES Module 的浏览器 -->
+  <script nomodule>
+    document.getElementById('app').innerHTML = '<div style="padding:40px;text-align:center;color:#e8e4d9;font-family:serif;"><h1>忍者手记</h1><p>您的浏览器版本过低，不支持运行此游戏。</p><p style="font-size:14px;margin-top:16px;">请使用 Chrome、Edge 或 Firefox 打开</p></div>';
+  </script>
 
   <noscript>
     <div style="padding:40px;text-align:center;color:#e8e4d9;font-family:serif;">
