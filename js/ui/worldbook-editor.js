@@ -2,68 +2,74 @@ import { KNOWLEDGE_BASE } from '../data/knowledge-base.js';
 import { eventBus } from '../core/event-bus.js';
 import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
+import { worldbookStyles } from '../../css/components/worldbook-editor.css.js';
 
 export class WorldbookEditor extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._entries = [];
+    this._builtin = [];
+    this._custom = [];
+    this._selectedType = null;
     this._selectedIndex = -1;
     this._searchQuery = '';
+    this._builtinExpanded = false;
   }
 
   connectedCallback() {
-    this._loadEntries();
-    if (this._entries.length > 0) this._selectedIndex = 0;
+    this._load();
     this._render();
     this._bindEvents();
   }
 
-  _loadEntries() {
-    try {
-      const saved = localStorage.getItem('naruto_worldbook');
-      if (saved) {
-        this._entries = JSON.parse(saved);
-      } else {
-        this._entries = JSON.parse(JSON.stringify(KNOWLEDGE_BASE.allEntries || KNOWLEDGE_BASE.entries || []));
-      }
-    } catch (e) {
-      console.error('Failed to load worldbook:', e);
-      this._entries = [];
-    }
+  _load() {
+    this._builtin = KNOWLEDGE_BASE.getDefaultEntries();
+    this._custom = KNOWLEDGE_BASE.getCustomEntries().map((e, i) => ({ ...e, _idx: i }));
   }
 
-  _saveEntries() {
-    try {
-      localStorage.setItem('naruto_worldbook', JSON.stringify(this._entries));
-      eventBus.emit('app:toast', `已保存 ${this._entries.length} 条世界书条目 (下次游戏加载生效)`);
-    } catch (e) {
-      GameModal.alert({ title: '保存失败', message: e.message });
-    }
+  _save() {
+    KNOWLEDGE_BASE.saveCustomEntries(this._custom.map(e => {
+      const { _idx, ...entry } = e;
+      return entry;
+    }));
+    eventBus.emit('app:toast', `已保存 ${this._custom.length} 条自定义世界书 (下次加载生效)`);
   }
 
-  _exportEntries() {
-    const data = JSON.stringify(this._entries, null, 2);
+  _export() {
+    const data = JSON.stringify({
+      builtinCount: this._builtin.length,
+      custom: this._custom.map(e => { const { _idx, ...entry } = e; return entry; })
+    }, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `worldbook_${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `worldbook_custom_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
 
-  _importEntries(file) {
+  _import(file) {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const imported = JSON.parse(reader.result);
-        if (!Array.isArray(imported)) throw new Error('无效的 JSON 格式：应为数组');
-        this._entries = imported;
-        this._selectedIndex = this._entries.length > 0 ? 0 : -1;
-        this._saveEntries();
+        const json = JSON.parse(reader.result);
+        const imported = Array.isArray(json) ? json : (json.custom || json.entries || []);
+        if (!Array.isArray(imported)) throw new Error('无效格式');
+        let added = 0, updated = 0;
+        for (const entry of imported) {
+          if (!entry.title) continue;
+          const clean = { ...entry, source: 'custom', enabled: entry.enabled !== false, _idx: this._custom.length };
+          delete clean.isAlwaysOn;
+          const existed = this._custom.findIndex(e => e.title === clean.title);
+          if (existed >= 0) { this._custom[existed] = clean; updated++; }
+          else { this._custom.push(clean); added++; }
+        }
+        this._custom.forEach((e, i) => e._idx = i);
+        this._save();
         this._render();
         this._bindEvents();
+        GameModal.alert({ title: '导入完成', message: `新增 ${added} 条，更新 ${updated} 条自定义条目。` });
       } catch (e) {
         GameModal.alert({ title: '导入失败', message: e.message });
       }
@@ -71,302 +77,254 @@ export class WorldbookEditor extends HTMLElement {
     reader.readAsText(file);
   }
 
-  _render() {
-    const listEl = this.shadowRoot?.querySelector('#entry-list');
-    const scrollTop = listEl ? listEl.scrollTop : 0;
+  _toggleCustom(entry) {
+    entry.enabled = !entry.enabled;
+    this._save();
+    this._render();
+    this._bindEvents();
+  }
 
-    const filteredEntries = this._entries.map((e, i) => ({ ...e, originalIndex: i })).filter(e => {
-      if (!this._searchQuery) return true;
-      const q = this._searchQuery.toLowerCase();
-      return (e.title || '').toLowerCase().includes(q) || (e.keys || []).some(k => k.toLowerCase().includes(q));
+  _toggleAllCustom(enable) {
+    this._custom.forEach(e => e.enabled = enable);
+    this._save();
+    this._render();
+    this._bindEvents();
+  }
+
+  _restoreDefaults() {
+    GameModal.confirm({
+      title: '恢复默认',
+      message: '这将删除所有自定义世界书条目并恢复内置条目。确定继续？',
+      okLabel: '确定', cancelLabel: '取消'
+    }).then(confirmed => {
+      if (confirmed) {
+        this._custom = [];
+        this._save();
+        this._render();
+        this._bindEvents();
+      }
     });
+  }
 
-    let currentEntry = null;
-    if (this._selectedIndex >= 0 && this._selectedIndex < this._entries.length) {
-      currentEntry = this._entries[this._selectedIndex];
-    }
+  _render() {
+    const builtinSearch = this._searchQuery ? this._builtin.filter(b =>
+      (b.title || '').toLowerCase().includes(this._searchQuery.toLowerCase()) ||
+      (b.keys || []).some(k => k.toLowerCase().includes(this._searchQuery.toLowerCase()))
+    ) : this._builtin;
+    const customSearch = this._searchQuery ? this._custom.filter(c =>
+      (c.title || '').toLowerCase().includes(this._searchQuery.toLowerCase()) ||
+      (c.keys || []).some(k => k.toLowerCase().includes(this._searchQuery.toLowerCase()))
+    ) : this._custom;
+    const enabledCount = this._custom.filter(e => e.enabled !== false).length;
+
+    const selectedEntry = this._selectedType === 'custom' && this._selectedIndex >= 0 && this._selectedIndex < this._custom.length
+      ? this._custom[this._selectedIndex] : (this._selectedType === 'builtin' && this._selectedIndex >= 0 && this._selectedIndex < this._builtin.length
+      ? this._builtin[this._selectedIndex] : null);
+    const isBuiltin = this._selectedType === 'builtin';
 
     this.shadowRoot.innerHTML = `
-      <style>
-        :host {
-          display: flex;
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(7, 10, 14, 0.95);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          z-index: 100002;
-          font-family: 'Noto Sans SC', system-ui, sans-serif;
-          color: #e8e4d9;
-          justify-content: center;
-          align-items: center;
-          padding: 20px;
-        }
-        .wb-container {
-          width: 100%; max-width: 1100px; height: 100%; max-height: 800px;
-          background: #111418; border: 1px solid rgba(198,156,109,0.2);
-          border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-          display: flex; flex-direction: column; overflow: hidden;
-        }
-        .wb-header {
-          padding: 16px 20px; border-bottom: 1px solid rgba(198,156,109,0.15);
-          display: flex; justify-content: space-between; align-items: center;
-          background: linear-gradient(180deg, rgba(20,25,30,0.8), rgba(17,20,24,0.8));
-        }
-        .wb-title { margin: 0; font-size: 18px; font-weight: 700; color: #f4efe4; font-family: 'Noto Serif SC', serif; letter-spacing: 2px; }
-        .wb-actions { display: flex; gap: 8px; }
-        .btn {
-          padding: 6px 14px; background: rgba(232,228,217,0.05); color: #e8e4d9;
-          border: 1px solid rgba(232,228,217,0.15); border-radius: 6px; cursor: pointer;
-          font-size: 13px; transition: all 0.2s;
-        }
-        .btn:hover { background: rgba(232,228,217,0.1); border-color: rgba(198,156,109,0.5); }
-        .btn.primary { background: #eb613f; border-color: #eb613f; color: #fff; font-weight: bold; }
-        .btn.primary:hover { background: #d65130; }
-        .btn.danger { background: transparent; border-color: #ef5350; color: #ef5350; }
-        .btn.danger:hover { background: rgba(239,83,80,0.1); }
-        
-        .wb-body {
-          display: flex; flex: 1; min-height: 0;
-        }
-        .wb-sidebar {
-          width: 280px; border-right: 1px solid rgba(255,255,255,0.03);
-          display: flex; flex-direction: column; background: rgba(0,0,0,0.2);
-        }
-        .wb-search-bar { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .wb-search-input {
-          width: 100%; box-sizing: border-box; padding: 8px 12px;
-          background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 0;
-          color: #e8e4d9; font-size: 13px; outline: none; transition: border-color 0.2s;
-        }
-        .wb-search-input:focus { border-bottom-color: #eb613f; }
-        
-        .wb-list { flex: 1; overflow-y: auto; padding: 8px; }
-        .wb-list::-webkit-scrollbar { width: 6px; }
-        .wb-list::-webkit-scrollbar-thumb { background: rgba(232,228,217,0.2); border-radius: 3px; }
-        
-        .wb-item {
-          padding: 10px 12px; border-radius: 0; cursor: pointer;
-          margin-bottom: 2px; transition: background 0.2s;
-          display: flex; flex-direction: column; gap: 4px; border-left: 2px solid transparent;
-        }
-        .wb-item:hover { background: rgba(255,255,255,0.02); }
-        .wb-item.active { background: rgba(255,255,255,0.04); border-left-color: #eb613f; }
-        .wb-item-title { font-weight: bold; font-size: 14px; color: #f4efe4; display: flex; align-items: center; gap: 6px; }
-        .wb-item-keys { font-size: 11px; color: #a39f98; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .wb-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-        .wb-indicator.blue { background-color: #4fc3f7; box-shadow: 0 0 5px #4fc3f7; }
-        .wb-indicator.green { background-color: #81c784; box-shadow: 0 0 5px #81c784; }
-        
-        .wb-editor { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow-y: auto; background: #070a0e; }
-        .wb-editor::-webkit-scrollbar { width: 6px; }
-        .wb-editor::-webkit-scrollbar-thumb { background: rgba(232,228,217,0.2); border-radius: 3px; }
-        
-        .wb-form-group { margin-bottom: 16px; }
-        .wb-form-label { display: block; font-size: 12px; font-weight: bold; color: #c69c6d; margin-bottom: 6px; letter-spacing: 1px; }
-        .wb-input {
-          width: 100%; box-sizing: border-box; padding: 10px 12px;
-          background: rgba(0,0,0,0.15); border: none; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 4px 4px 0 0;
-          color: #e8e4d9; font-size: 14px; outline: none; font-family: inherit; transition: border-color 0.2s;
-        }
-        .wb-input:focus { border-bottom-color: #eb613f; }
-        .wb-textarea { resize: vertical; min-height: 200px; font-family: ui-monospace, Consolas, monospace; line-height: 1.5; font-size: 13px; }
-        
-        .wb-empty { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: #6e6a65; font-size: 14px; }
-        
-        @media (max-width: 768px) {
-          .wb-body { flex-direction: column; }
-          .wb-sidebar { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid rgba(198,156,109,0.15); }
-          .wb-editor { padding: 16px; }
-        }
-      </style>
+      <style>${worldbookStyles}</style>
       <div class="wb-container">
         <div class="wb-header">
-          <h2 class="wb-title">世界书编辑器</h2>
+          <h2 class="wb-title">世界书编辑器 <span>| 内置 ${this._builtin.length} 条 + 自定义 ${this._custom.length} 条${enabledCount !== this._custom.length ? ` (启用 ${enabledCount}/${this._custom.length})` : ''}</span></h2>
           <div class="wb-actions">
-            <button class="btn" id="btn-restore-default" title="恢复不小心被删除的自带默认世界书">恢复默认</button>
-            <button class="btn" id="btn-import">导入</button>
             <button class="btn" id="btn-export">导出</button>
+            <button class="btn" id="btn-import">导入</button>
+            <button class="btn danger sm" id="btn-restore">恢复默认</button>
             <button class="btn" id="btn-close">返回</button>
-            <button class="btn primary" id="btn-save">保存所有</button>
             <input type="file" id="file-import" accept=".json" hidden />
           </div>
         </div>
         <div class="wb-body">
           <div class="wb-sidebar">
             <div class="wb-search-bar">
-              <input type="text" class="wb-search-input" id="search-input" placeholder="搜索条目或关键词..." value="${this._escAttr(this._searchQuery)}">
+              <input type="text" class="wb-search-input" id="search-input" placeholder="搜索条目..." value="${escAttr(this._searchQuery)}">
             </div>
             <div class="wb-list" id="entry-list">
-              ${filteredEntries.map(e => `
-                <div class="wb-item ${e.originalIndex === this._selectedIndex ? 'active' : ''}" data-index="${e.originalIndex}">
-                  <div class="wb-item-title">
-                    <span class="wb-indicator ${e.isAlwaysOn ? 'blue' : 'green'}" title="${e.isAlwaysOn ? '蓝灯: 常驻启用' : '绿灯: 按关键词触发'}"></span>
-                    ${this._esc(e.title || '无标题')}
-                  </div>
-                  <div class="wb-item-keys">${this._esc((e.keys || []).join(', '))}</div>
-                </div>
-              `).join('')}
+              <div class="wb-section-hdr" id="toggle-builtin">
+                内置世界书 <span class="count">${builtinSearch.length} 条 · 只读</span>
+                <span style="font-size:10px;color:rgba(232,228,217,0.3);">${this._builtinExpanded ? '▾' : '▸'}</span>
+              </div>
+              ${this._builtinExpanded ? builtinSearch.map(e => `
+                <div class="wb-item${this._selectedType === 'builtin' && this._selectedIndex === this._builtin.indexOf(e) ? ' active' : ''}" data-type="builtin" data-title="${escAttr(e.title)}">
+                  <span class="wb-builtin-tag">内置</span>
+                  <span class="wb-item-title">${escHtml(e.title || '无标题')}</span>
+                  <span class="wb-item-meta">${(e.keys||[]).length} 关键词</span>
+                </div>`).join('') : ''}
+              <div class="wb-section-hdr" style="margin-top:2px;">
+                自定义世界书 <span class="count">${customSearch.length} 条${customSearch.length ? ` · 启用 ${customSearch.filter(e=>e.enabled!==false).length}` : ''}</span>
+              </div>
+              ${customSearch.map(e => `
+                <div class="wb-item${this._selectedType === 'custom' && this._selectedIndex === e._idx ? ' active' : ''}" data-type="custom" data-idx="${e._idx}">
+                  <div class="wb-item-toggle ${e.enabled !== false ? 'on' : ''}" data-action="toggle" data-idx="${e._idx}" title="${e.enabled !== false ? '已启用' : '已禁用'}"></div>
+                  <span class="wb-item-title">${escHtml(e.title || '无标题')}</span>
+                  <span class="wb-item-meta">${(e.keys||[]).length} 关键词</span>
+                </div>`).join('')}
+              ${customSearch.length === 0 ? '<div style="padding:12px;text-align:center;color:rgba(232,228,217,0.15);font-size:12px;">暂无自定义条目<br>点击「导入」或下方按钮添加</div>' : ''}
             </div>
-            <div style="padding: 12px; border-top: 1px solid rgba(232,228,217,0.05);">
-              <button class="btn" id="btn-add" style="width: 100%;">+ 新增条目</button>
+            <div class="wb-sidebar-foot">
+              <button class="btn sm" id="btn-add">+ 新建</button>
+              <button class="btn sm good" id="btn-enable-all">全部启用</button>
+              <button class="btn sm" id="btn-disable-all" style="opacity:0.6;">全部禁用</button>
             </div>
           </div>
-          <div class="wb-editor" id="editor-pane">
-            ${currentEntry ? `
+          <div class="wb-editor">
+            ${selectedEntry ? `
+              ${isBuiltin ? `<div class="wb-readonly-banner">🔒 这是内置条目，无法编辑。如需修改可复制内容到自定义条目。</div>` : ''}
               <div class="wb-form-group">
-                <label class="wb-form-label">标题 (Title)</label>
-                <input type="text" class="wb-input" id="entry-title" value="${this._escAttr(currentEntry.title || '')}" placeholder="条目的显示名称">
+                <label class="wb-form-label">标题</label>
+                <input type="text" class="wb-input" id="entry-title" value="${escAttr(selectedEntry.title || '')}" placeholder="条目名称" ${isBuiltin ? 'disabled' : ''}>
               </div>
-              <div class="wb-form-group" style="display: flex; align-items: center; gap: 10px;">
-                <label class="wb-form-label" style="margin: 0;">触发模式:</label>
-                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;">
-                  <input type="checkbox" id="entry-always-on" ${currentEntry.isAlwaysOn ? 'checked' : ''}>
-                  <span class="wb-indicator blue" style="width: 10px; height: 10px;"></span> 常驻启用 (蓝灯) - 无视关键词，必定发送给 AI
-                </label>
-              </div>
+              ${!isBuiltin ? `
+              <div class="wb-form-group" style="display:flex;align-items:center;gap:12px;">
+                <label class="wb-form-label" style="margin:0;">挂载状态:</label>
+                <div class="wb-item-toggle ${selectedEntry.enabled !== false ? 'on' : ''}" id="entry-toggle" style="cursor:pointer;" title="${selectedEntry.enabled !== false ? '已启用挂载' : '已禁用挂载'}"></div>
+                <span style="font-size:12px;color:rgba(232,228,217,0.5);">${selectedEntry.enabled !== false ? '已挂载 · AI 可匹配此条目' : '未挂载 · AI 不会读取此条目'}</span>
+              </div>` : ''}
               <div class="wb-form-group">
-                <label class="wb-form-label">触发关键词 (Keys) - 以英文逗号分隔 (绿灯模式下生效)</label>
-                <input type="text" class="wb-input" id="entry-keys" value="${this._escAttr((currentEntry.keys || []).join(', '))}" placeholder="关键词1, 关键词2">
+                <label class="wb-form-label">触发关键词 (逗号分隔)</label>
+                <input type="text" class="wb-input" id="entry-keys" value="${escAttr((selectedEntry.keys || []).join(', '))}" placeholder="关键词1, 关键词2" ${isBuiltin ? 'disabled' : ''}>
               </div>
-              <div class="wb-form-group" style="flex: 1; display: flex; flex-direction: column;">
-                <label class="wb-form-label">内容 (Content)</label>
-                <textarea class="wb-input wb-textarea" id="entry-content" style="flex: 1;" placeholder="当触发关键词时，插入给AI的上下文信息">${this._esc(currentEntry.content || '')}</textarea>
+              <div class="wb-form-group" style="flex:1; display:flex; flex-direction:column;">
+                <label class="wb-form-label">内容</label>
+                <textarea class="wb-input wb-textarea" id="entry-content" style="flex:1;" placeholder="条目内容..." ${isBuiltin ? 'disabled' : ''}>${escHtml(selectedEntry.content || '')}</textarea>
               </div>
-              <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+              ${!isBuiltin ? `
+              <div style="display:flex; gap:8px; margin-top:8px;">
                 <button class="btn danger" id="btn-delete">删除此条目</button>
-              </div>
-            ` : `
-              <div class="wb-empty">
-                <p>请选择左侧条目进行编辑，或点击新增条目。</p>
-              </div>
-            `}
+              </div>` : ''}
+            ` : `<div class="wb-editor-empty">选择左侧条目查看详情<br><span style="font-size:11px;color:rgba(232,228,217,0.1);">内置条目只读 · 自定义条目可编辑</span></div>`}
           </div>
         </div>
       </div>
     `;
-    const newListEl = this.shadowRoot.querySelector('#entry-list');
-    if (newListEl) newListEl.scrollTop = scrollTop;
-  }
-
-  _esc(text) {
-    return escHtml(text);
-  }
-  _escAttr(text) { return escAttr(text); }
-
-  _saveCurrentEntry() {
-    if (this._selectedIndex >= 0 && this._selectedIndex < this._entries.length) {
-      const root = this.shadowRoot;
-      const titleEl = root.querySelector('#entry-title');
-      const keysEl = root.querySelector('#entry-keys');
-      const contentEl = root.querySelector('#entry-content');
-      const alwaysOnEl = root.querySelector('#entry-always-on');
-      if (titleEl && keysEl && contentEl) {
-        this._entries[this._selectedIndex] = {
-          title: titleEl.value.trim(),
-          keys: keysEl.value.split(',').map(s => s.trim()).filter(Boolean),
-          content: contentEl.value,
-          isAlwaysOn: alwaysOnEl ? alwaysOnEl.checked : false
-        };
-      }
-    }
-  }
-
-  _restoreDefaults() {
-    this._saveCurrentEntry();
-    const defaults = typeof KNOWLEDGE_BASE.getDefaultEntries === 'function' ? KNOWLEDGE_BASE.getDefaultEntries() : (KNOWLEDGE_BASE.entries || []);
-    let restoredCount = 0;
-    
-    for (const defEntry of defaults) {
-      const exists = this._entries.some(e => e.title === defEntry.title);
-      if (!exists) {
-        this._entries.push(JSON.parse(JSON.stringify(defEntry)));
-        restoredCount++;
-      }
-    }
-    
-    if (restoredCount > 0) {
-      this._searchQuery = '';
-      this._selectedIndex = this._entries.length > 0 ? 0 : -1;
-      this._saveEntries();
-      this._render();
-      this._bindEvents();
-      customElements.get('game-modal').alert({ title: '恢复成功', message: `成功找回并恢复了 ${restoredCount} 条缺失的默认世界书条目！` });
-    } else {
-      customElements.get('game-modal').alert({ title: '无需恢复', message: '当前世界书已包含所有默认条目，没有发现被删除的条目。' });
-    }
   }
 
   _bindEvents() {
     const root = this.shadowRoot;
-    
+
     root.querySelector('#btn-close')?.addEventListener('click', () => {
-      this._saveCurrentEntry();
-      this.remove();
-    });
-    
-    root.querySelector('#btn-save')?.addEventListener('click', () => {
-      this._saveCurrentEntry();
-      this._saveEntries();
+      this._saveCurrentEdit();
       this.remove();
     });
 
-    root.querySelector('#btn-restore-default')?.addEventListener('click', () => this._restoreDefaults());
-    root.querySelector('#btn-export')?.addEventListener('click', () => this._exportEntries());
-    
+    root.querySelector('#btn-export')?.addEventListener('click', () => this._export());
+    root.querySelector('#btn-restore')?.addEventListener('click', () => this._restoreDefaults());
+
     const fileInput = root.querySelector('#file-import');
     root.querySelector('#btn-import')?.addEventListener('click', () => fileInput?.click());
     fileInput?.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        this._importEntries(e.target.files[0]);
-      }
+      if (e.target.files?.[0]) this._import(e.target.files[0]);
       e.target.value = '';
     });
 
     root.querySelector('#search-input')?.addEventListener('input', (e) => {
+      this._saveCurrentEdit();
       this._searchQuery = e.target.value;
-      this._saveCurrentEntry();
       this._render();
       this._bindEvents();
-      root.querySelector('#search-input').focus();
+      root.querySelector('#search-input')?.focus();
+    });
+
+    root.querySelector('#toggle-builtin')?.addEventListener('click', () => {
+      this._saveCurrentEdit();
+      this._builtinExpanded = !this._builtinExpanded;
+      this._render();
+      this._bindEvents();
     });
 
     root.querySelector('#btn-add')?.addEventListener('click', () => {
-      this._saveCurrentEntry();
-      this._entries.push({ title: '新条目', keys: [], content: '' });
-      this._selectedIndex = this._entries.length - 1;
+      this._saveCurrentEdit();
+      this._custom.push({ title: '新条目', keys: [], content: '', source: 'custom', enabled: true, _idx: this._custom.length });
+      this._selectedType = 'custom';
+      this._selectedIndex = this._custom.length - 1;
       this._searchQuery = '';
+      this._save();
       this._render();
       this._bindEvents();
     });
 
-    const listItems = root.querySelectorAll('.wb-item');
-    listItems.forEach(item => {
-      item.addEventListener('click', () => {
-        this._saveCurrentEntry();
-        this._selectedIndex = parseInt(item.dataset.index, 10);
-        this._render();
-        this._bindEvents();
-      });
-    });
+    root.querySelector('#btn-enable-all')?.addEventListener('click', () => this._toggleAllCustom(true));
+    root.querySelector('#btn-disable-all')?.addEventListener('click', () => this._toggleAllCustom(false));
 
     root.querySelector('#btn-delete')?.addEventListener('click', async () => {
-      const confirmed = await customElements.get('game-modal').confirm({
-        title: '删除条目',
-        message: '确定要删除此世界书条目吗？此操作不可撤销。',
-        okLabel: '删除',
-        cancelLabel: '取消'
-      });
+      if (this._selectedType !== 'custom' || this._selectedIndex < 0) return;
+      const confirmed = await GameModal.confirm({ title: '删除条目', message: '确定删除此自定义条目？不可撤销。', okLabel: '删除', cancelLabel: '取消' });
       if (confirmed) {
-        this._entries.splice(this._selectedIndex, 1);
-        this._selectedIndex = Math.min(this._selectedIndex, this._entries.length - 1);
+        this._custom.splice(this._selectedIndex, 1);
+        this._custom.forEach((e, i) => e._idx = i);
+        this._selectedIndex = Math.min(this._selectedIndex, this._custom.length - 1);
+        if (this._custom.length === 0) { this._selectedType = null; this._selectedIndex = -1; }
+        this._save();
         this._render();
         this._bindEvents();
       }
     });
-    
-    // Auto-save entry content on blur/input if needed, but saving before switching is handled above.
+
+    root.querySelector('#entry-toggle')?.addEventListener('click', () => {
+      if (this._selectedType !== 'custom' || this._selectedIndex < 0) return;
+      this._custom[this._selectedIndex].enabled = !this._custom[this._selectedIndex].enabled;
+      this._save();
+      this._render();
+      this._bindEvents();
+    });
+
+    const allItems = root.querySelectorAll('.wb-item');
+    allItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        const toggleEl = e.target.closest('.wb-item-toggle');
+        if (toggleEl) return;
+        this._saveCurrentEdit();
+        const type = item.dataset.type;
+        if (type === 'builtin') {
+          const title = item.dataset.title;
+          const idx = this._builtin.findIndex(b => b.title === title);
+          if (idx >= 0) { this._selectedType = 'builtin'; this._selectedIndex = idx; }
+        } else if (type === 'custom') {
+          const idx = parseInt(item.dataset.idx, 10);
+          if (idx >= 0 && idx < this._custom.length) { this._selectedType = 'custom'; this._selectedIndex = idx; }
+        }
+        this._render();
+        this._bindEvents();
+      });
+    });
+
+    const toggles = root.querySelectorAll('.wb-item-toggle');
+    toggles.forEach(t => {
+      t.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(t.dataset.idx, 10);
+        if (idx >= 0 && idx < this._custom.length) {
+          this._custom[idx].enabled = !this._custom[idx].enabled;
+          if (this._selectedType === 'custom' && this._selectedIndex === idx) {
+            this._selectedEntry = this._custom[idx];
+          }
+          this._save();
+          this._render();
+          this._bindEvents();
+        }
+      });
+    });
+  }
+
+  _saveCurrentEdit() {
+    if (this._selectedType !== 'custom' || this._selectedIndex < 0 || this._selectedIndex >= this._custom.length) return;
+    const root = this.shadowRoot;
+    const titleEl = root.querySelector('#entry-title');
+    const keysEl = root.querySelector('#entry-keys');
+    const contentEl = root.querySelector('#entry-content');
+    if (titleEl && keysEl && contentEl) {
+      this._custom[this._selectedIndex] = {
+        ...this._custom[this._selectedIndex],
+        title: titleEl.value.trim(),
+        keys: keysEl.value.split(',').map(s => s.trim()).filter(Boolean),
+        content: contentEl.value
+      };
+      this._save();
+    }
   }
 }
 
 customElements.define('worldbook-editor', WorldbookEditor);
+
+

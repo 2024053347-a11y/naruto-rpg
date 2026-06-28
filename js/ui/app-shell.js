@@ -1,13 +1,17 @@
 import { eventBus } from '../core/event-bus.js';
 import { stateManager } from '../core/state-manager.js';
 import { icon } from '../utils/icons.js';
-import { escHtml, escAttr } from '../utils/format.js';
+import { escHtml, escAttr, formatGameTime } from '../utils/format.js';
+import { getAgentConfig } from '../data/agent-config.js';
+import { instructionParser } from '../core/instruction-parser.js';
 
 class AppShell {
   constructor() {
     this.element = null;
     this._streamingEl = null;
     this._isProcessing = false;
+    this._recentInputs = [];
+    this._recentInputIdx = -1;
   }
 
   init(container) {
@@ -15,6 +19,7 @@ class AppShell {
     this.element.className = 'app-shell';
     this.element.id = 'app-shell';
     container.appendChild(this.element);
+    this._loadRecentInputs();
     this._renderShell();
     this._bindEvents();
   }
@@ -52,6 +57,7 @@ class AppShell {
             <div class="chat-messages" id="chat-messages"></div>
           </div>
           <div class="chat-input-area" id="chat-input-area" style="display:none;">
+            <div class="recent-inputs" id="recent-inputs"></div>
             <div class="input-wrapper">
               <textarea id="chat-input" placeholder="提笔写下你的决断..." rows="1" aria-label="输入行动"></textarea>
               <button id="btn-cancel">✕ 解印</button>
@@ -68,6 +74,8 @@ class AppShell {
         <span id="status-location">木叶隐村</span><span class="sep"></span>
         <span id="status-time">木叶四十八年</span><span class="sep"></span>
         <span id="status-weather">晴</span><span class="sep"></span>
+        <span id="status-dice" class="dice-pool" title="本回合卦值" style="display:none;"></span>
+        <span class="sep dice-sep" style="display:none;"></span>
         <span id="status-cache" title="缓存命中率" style="cursor:default;">--</span>
       </footer>
     `;
@@ -83,6 +91,12 @@ class AppShell {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         this._sendMessage();
+        return;
+      }
+      if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+        if (e.key === 'ArrowUp') this._cycleRecentInput(-1);
+        else this._cycleRecentInput(1);
       }
     });
 
@@ -102,24 +116,41 @@ class AppShell {
       eventBus.emit('app:open-settings');
     });
     this.element.querySelector('#mobile-scrim')?.addEventListener('click', () => this._closeMobileDrawers());
-    this.element.addEventListener('panel:close', () => this._closeMobileDrawers());
+    eventBus.on('panel:close', () => this._closeMobileDrawers());
 
     this._bindGlobalShortcuts();
 
+    this._renderRecentInputs();
+    this.element.querySelector('#recent-inputs')?.addEventListener('click', (e) => {
+      const chip = e.target.closest('.recent-chip');
+      if (chip) {
+        const textarea = this.element.querySelector('#chat-input');
+        if (textarea) {
+          textarea.value = chip.dataset.text || '';
+          textarea.focus();
+          this._resizeInput();
+        }
+      }
+    });
+
     this._syncResponsiveState();
     this._updateBranchIndicator();
-    window.addEventListener('resize', () => this._debouncedResponsiveSync());
+    window.addEventListener('resize', () => this._debouncedResponsiveSync(), { passive: true });
 
     // 监听浏览器全屏状态变化（用户按 ESC 退出时自动同步按钮状态）
-    const onFsChange = () => {
-      const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-      if (!isFs) {
-        this.element.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', 'false');
-        (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.remove('immersive-fullscreen');
-      }
-    };
+    const onFsChange = () => this._syncFullscreenState();
     document.addEventListener('fullscreenchange', onFsChange);
     document.addEventListener('webkitfullscreenchange', onFsChange);
+
+    const onPageShow = (event) => {
+      if (event.persisted) this._syncFullscreenState();
+    };
+    window.addEventListener('pageshow', onPageShow);
+
+    const onVisibilityChange = () => {
+      if (!document.hidden) this._syncFullscreenState();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
   }
 
   _bindGlobalShortcuts() {
@@ -160,8 +191,11 @@ class AppShell {
       if (btn && !this._isProcessing) {
         const action = btn.dataset.action;
         if (action) {
-          this._addUserMessage(action);
-          eventBus.emit('user:input', action);
+          const input = this.element.querySelector('#chat-input');
+          if (input) {
+            input.value = action;
+            input.focus();
+          }
         }
       }
     });
@@ -201,7 +235,7 @@ class AppShell {
 
     eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError }) => {
       this._finalizeMessage(cleanResponse, rawResponse, thinkContent, isPartial);
-      this._updateTurn(turnCount);
+      // this._updateTurn(turnCount); removed
       this._setProcessing(false);
       if (hasHUD) {
         const msgs = this.element.querySelector('#chat-messages');
@@ -216,55 +250,92 @@ class AppShell {
       }
     });
 
-    eventBus.on('pipeline:error', ({ error, lastUserInput }) => {
+    eventBus.on('pipeline:error', ({ error, isTruncated, partialResponse, lastUserInput }) => {
       this._setProcessing(false);
       if (this._streamingEl) {
         const cursor = this._streamingEl.querySelector('.typing-cursor');
         if (cursor) cursor.remove();
         this._streamingEl = null;
       }
-      const msgs = this.element.querySelector('#chat-messages');
-      if (msgs) {
-        const errDiv = document.createElement('div');
-        errDiv.className = 'chat-message chat-message--system chat-message--error';
-        let errorMsg = String(error || '时空乱流干扰了感知...');
-        if (errorMsg.includes('Failed to fetch')) {
-          errorMsg = '【连接中断】感知的查克拉连接已断开，请检查网络是否稳定。';
-        } else if (errorMsg.includes('API')) {
-          errorMsg = '【API 异常】异界传送门不稳定，请稍后重试。';
-        } else {
-          errorMsg = '【系统异常】' + errorMsg;
-        }
-        
-        errDiv.innerHTML = `<div class="chat-bubble" style="background: rgba(239, 83, 80, 0.08); border: 1px solid rgba(239, 83, 80, 0.25); border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; margin: 8px 0; max-width: 85%;">
-          <div style="color: #ef5350; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            ${this._esc(errorMsg)}
-          </div>
-          ${safeInput ? `
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-top: 8px; border-top: 1px dashed rgba(239, 83, 80, 0.15);">
-            <span style="font-size: 11px; color: rgba(232, 228, 217, 0.4);">您可以重新结印，或使用原本的行动再次尝试突破干扰。</span>
-            <button class="retry-btn" data-retry="${safeInput}" style="background: rgba(239, 83, 80, 0.15); border: 1px solid rgba(239, 83, 80, 0.4); color: #ef5350; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/></svg>
-              重新结印 (重试)
-            </button>
-          </div>` : `
-          <span style="font-size: 11px; color: rgba(232, 228, 217, 0.4);">请输入新的行动以继续。</span>
-          `}
-        </div>`;
-        const retryBtn = errDiv.querySelector('.retry-btn');
-        retryBtn?.addEventListener('click', () => {
-          const retryText = retryBtn.dataset.retry;
-          errDiv.remove();
-          if (retryText) eventBus.emit('user:input', retryText);
-        });
-        msgs.appendChild(errDiv);
-        this._scroll();
+      const container = this.element?.querySelector('#chat-messages') || this.element;
+      if (!container) return;
+
+      const safeInput = lastUserInput ? this._escAttr(lastUserInput) : '';
+      const rawErr = String(error || '');
+      let errTitle, errDetail, errHint;
+
+      if (rawErr.includes('Failed to fetch') || rawErr.includes('NetworkError')) {
+        errTitle = '【连接中断】';
+        errDetail = '感知的查克拉连接已断开，请检查网络或 API 地址是否可达。';
+        errHint = '常见原因：API 地址填写错误、后端未启动、浏览器 CORS 限制。';
+      } else if (rawErr.includes('429') || rawErr.includes('rate')) {
+        errTitle = '【请求限流】';
+        errDetail = '短时间内请求过多，API 限流中，请稍等片刻后重试。';
+        errHint = '等待 1-2 分钟后重试，或切换到更大的模型限额。';
+      } else if (rawErr.includes('401') || rawErr.includes('403') || rawErr.includes('Auth')) {
+        errTitle = '【鉴权失败】';
+        errDetail = 'API Key 无效或已过期，请检查密钥是否正确。';
+        errHint = '前往设置面板确认 API Key，或更换有效的密钥。';
+      } else if (rawErr.includes('timeout') || rawErr.includes('超时') || rawErr.includes('AbortError')) {
+        errTitle = '【生成超时】';
+        errDetail = 'AI 响应时间过长，可能是模型负载过高或生成量过大。';
+        errHint = '可尝试：1. 减少 max_tokens  2. 换用更快的模型  3. 稍后重试';
+      } else if (isTruncated) {
+        errTitle = '【生成截断】';
+        errDetail = `已收到 ${partialResponse?.length || 0} 字后中断，回复不完整。`;
+        errHint = '已保存部分内容到界面，变量可能未完全更新。可继续游戏或重试。';
+      } else if (rawErr.includes('500') || rawErr.includes('502') || rawErr.includes('503')) {
+        errTitle = '【服务器异常】';
+        errDetail = 'API 服务端暂时不可用，请稍后重试。';
+        errHint = '服务端临时故障，等待几分钟后再试。';
+      } else {
+        errTitle = '【系统异常】';
+        errDetail = rawErr || '时空乱流干扰了感知...';
+        errHint = '请检查控制台日志获取更多信息。';
       }
+
+      const errDiv = document.createElement('div');
+      errDiv.className = 'chat-message chat-message--system chat-message--error';
+      errDiv.innerHTML = `<div style="background:rgba(239,83,80,0.06);border:1px solid rgba(239,83,80,0.2);border-radius:10px;padding:14px 18px;margin:8px 0;max-width:85%;box-shadow:inset 0 0 20px rgba(239,83,80,0.03);">
+        <div style="color:#ef5350;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          ${this._esc(errTitle)}
+        </div>
+        <div style="font-size:12px;color:#a39f98;line-height:1.6;margin-bottom:4px;">${this._esc(errDetail)}</div>
+        <div style="font-size:11px;color:rgba(163,159,152,0.5);line-height:1.5;">${this._esc(errHint)}</div>
+        ${safeInput ? `
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed rgba(239,83,80,0.12);">
+          <button class="retry-btn" data-retry="${safeInput}" style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.35);color:#ef5350;padding:5px 14px;border-radius:5px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/></svg>
+            重新结印 (重试)
+          </button>
+        </div>` : `
+        <div style="font-size:11px;color:rgba(163,159,152,0.4);margin-top:8px;">请重新输入行动继续。</div>
+        `}
+      </div>`;
+      const retryBtn = errDiv.querySelector('.retry-btn');
+      retryBtn?.addEventListener('click', () => {
+        const retryText = retryBtn.dataset.retry;
+        errDiv.remove();
+        if (retryText) eventBus.emit('user:input', retryText);
+      });
+      container.appendChild(errDiv);
+      this._scroll();
     });
 
     eventBus.on('pipeline:retrying', ({ attempt, maxRetries }) => {
       this._showToast(`AI 请求失败，第 ${attempt}/${maxRetries} 次重试中...`);
+    });
+
+    eventBus.on('pipeline:dice', ({ values }) => {
+      this._updateDicePool(values);
+    });
+    eventBus.on('pipeline:processing', () => {
+      this._updateDicePool(null);
+    });
+
+    eventBus.on('player:died', ({ cause, alreadyDead }) => {
+      this._showDeathScreen(cause, alreadyDead);
     });
 
     eventBus.on('state:changed', ({ path }) => {
@@ -355,8 +426,10 @@ class AppShell {
     if (!text) return;
     textarea.value = '';
     this._resizeInput();
+    this._addToRecentInputs(text);
     this._addUserMessage(text);
     eventBus.emit('user:input', text);
+    this._recentInputIdx = -1;
   }
 
   _setProcessing(isProcessing) {
@@ -399,6 +472,68 @@ class AppShell {
     if (!textarea) return;
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.min(textarea.scrollHeight, 140)}px`;
+  }
+
+  _addToRecentInputs(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    if (this._recentInputs[0] === trimmed) return;
+    this._recentInputs = [trimmed, ...this._recentInputs.filter(t => t !== trimmed)].slice(0, 2);
+    this._saveRecentInputs();
+    this._renderRecentInputs();
+  }
+
+  _saveRecentInputs() {
+    try {
+      localStorage.setItem('naruto_recent_inputs', JSON.stringify(this._recentInputs));
+    } catch { /* ignore */ }
+  }
+
+  _loadRecentInputs() {
+    try {
+      const raw = localStorage.getItem('naruto_recent_inputs');
+      this._recentInputs = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(this._recentInputs)) this._recentInputs = [];
+      this._recentInputs = [...new Set(this._recentInputs.filter(Boolean))].slice(0, 2);
+    } catch { this._recentInputs = []; }
+  }
+
+  _cycleRecentInput(direction) {
+    const textarea = this.element?.querySelector('#chat-input');
+    if (!textarea || !this._recentInputs.length) return;
+    if (this._recentInputIdx === -1) {
+      this._savedInput = textarea.value;
+    }
+    const max = this._recentInputs.length - 1;
+    this._recentInputIdx += direction;
+    if (this._recentInputIdx > max) {
+      this._recentInputIdx = -1;
+      textarea.value = this._savedInput || '';
+    } else if (this._recentInputIdx < 0) {
+      this._recentInputIdx = max;
+      textarea.value = this._recentInputs[this._recentInputIdx];
+    } else {
+      textarea.value = this._recentInputs[this._recentInputIdx];
+    }
+    this._resizeInput();
+  }
+
+  _renderRecentInputs() {
+    const container = this.element?.querySelector('#recent-inputs');
+    if (!container) return;
+    if (!this._recentInputs.length) {
+      container.innerHTML = '';
+      container.style.display = 'none';
+      return;
+    }
+    container.style.display = 'flex';
+    container.innerHTML = this._recentInputs.map((text, i) => {
+      const chipLabel = i === 0 ? '上回' : '上上回';
+      const textLabel = text.length > 50 ? text.slice(0, 50) + '…' : text;
+      return `<span class="recent-chip" data-text="${this._escAttr(text)}" title="${this._escAttr(text)}">
+        <span class="recent-chip-label">${chipLabel}</span>${this._esc(textLabel)}
+      </span>`;
+    }).join('');
   }
 
   _addUserMessage(text) {
@@ -493,8 +628,7 @@ class AppShell {
       const contentEl = this._streamingEl.querySelector('.chat-content');
 
       if (thinkContent) {
-        const prefs = typeof stateManager.getUIPrefs === 'function' ? stateManager.getUIPrefs() : {};
-        const isOpen = prefs?.settings?.reasoningOpen !== false;
+        const isOpen = stateManager.get('ui_prefs.settings.reasoningOpen') !== false;
         const thinkBlock = document.createElement('div');
         thinkBlock.className = `think-block${isOpen ? '' : ' think-collapsed'}`;
         thinkBlock.innerHTML = `
@@ -586,19 +720,7 @@ class AppShell {
     } catch { console.warn('[AppShell] Failed to save game state'); }
   }
 
-  _updateTurn(turn) {
-    const el = this.element.querySelector('#turn-display');
-    if (!el) return;
-    if (turn == null) { el.textContent = '序章'; return; }
-    const state = stateManager.get();
-    const chapter = state.world_state?.chapter;
-    const scene = state.world_state?.current_scene;
-    const parts = [];
-    if (chapter) parts.push(chapter);
-    parts.push(`第${turn}回`);
-    if (scene) parts.push(scene);
-    el.textContent = parts.join(' · ');
-  }
+  // _updateTurn removed
 
   _updateStatusBar() {
     const state = stateManager.get();
@@ -607,10 +729,26 @@ class AppShell {
     const weather = this.element.querySelector('#status-weather');
     if (loc) loc.textContent = state.world_state?.current_location || '木叶隐村';
     if (time) {
-      const cal = state.world_state?.calendar;
-      time.textContent = cal ? `${cal.year || ''}·${cal.season || ''}·第${cal.day||1}天·${cal.time_of_day||''}` : '';
+      time.textContent = formatGameTime(state.world_state?.calendar) || '';
     }
     if (weather) weather.textContent = state.world_state?.weather || '晴';
+  }
+
+  _updateDicePool(values) {
+    const diceEl = this.element?.querySelector('#status-dice');
+    const sepEl = this.element?.querySelector('.dice-sep');
+    if (!diceEl) return;
+    if (!values || !values.length) {
+      diceEl.style.display = 'none';
+      if (sepEl) sepEl.style.display = 'none';
+      return;
+    }
+    const names = ['壹', '贰', '叁', '肆', '伍', '陆'];
+    diceEl.style.display = '';
+    if (sepEl) sepEl.style.display = '';
+    diceEl.innerHTML = names.map((n, i) =>
+      `<span style="display:inline-block;padding:0 4px;border-radius:3px;margin:0 1px;background:rgba(198,156,109,0.08);border:1px solid rgba(198,156,109,0.2);font-size:10px;">${n}:${values[i]}</span>`
+    ).join('');
   }
 
   async _updateBranchIndicator() {
@@ -644,9 +782,9 @@ class AppShell {
     html = html.replace(/\n\n+/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
     html = '<p>' + html + '</p>';
-    html = html.replace(/【(.+?)】/g, '<span style="color:var(--c-kin);font-size:12px;font-family:var(--font-title);">【' + '$' + '1】</span>');
-
     html = this._unescapeSafeHtml(html);
+
+    html = html.replace(/(?![^<]*>)【(.+?)】/g, (match, content) => '<span style="color:var(--c-kin);font-size:12px;font-family:var(--font-title);">【' + content + '】</span>');
 
     if (styles.length) {
       const sanitized = styles.map(s => this._sanitizeStyle(s)).filter(Boolean);
@@ -662,18 +800,20 @@ class AppShell {
       }
     }
 
-    html = html.replace(/\[行动\]\s*([^<]+)/g, (match, option) => {
-      return `<button class="action-option" data-action="${this._escAttr(option.trim())}">
+    html = html.replace(/\[行动\]\s*(.*?)(?=<br>|<\/p>|$)/g, (match, option) => {
+      const plain = option.replace(/<[^>]+>/g, '');
+      return `<button class="action-option" data-action="${this._escAttr(plain.trim())}">
                 <span class="action-option__icon">忍</span>
-                <span class="action-option__text">${this._esc(option.trim())}</span>
+                <span class="action-option__text">${option.trim()}</span>
               </button>`;
     });
 
     // 兼容旧存档的选项格式，允许末尾句号但防止跨越多重引号匹配
     html = html.replace(/(<br>|<p>)\s*「([^「」]+)」\s*(?=<br>|<\/p>|$)/g, (match, prefix, option) => {
-      return `${prefix}<button class="action-option" data-action="${this._escAttr(option.trim())}">
+      const plain = option.replace(/<[^>]+>/g, '');
+      return `${prefix}<button class="action-option" data-action="${this._escAttr(plain.trim())}">
                 <span class="action-option__icon">忍</span>
-                <span class="action-option__text">${this._esc(option.trim())}</span>
+                <span class="action-option__text">${option.trim()}</span>
               </button>`;
     });
 
@@ -779,7 +919,7 @@ class AppShell {
       const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
       if (rfs) {
         rfs.call(el).then(() => {
-          (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.add('immersive-fullscreen');
+          document.body.classList.add('immersive-fullscreen');
           this._closeMobileDrawers();
           
           const sidebar = this.element.querySelector('#app-sidebar');
@@ -798,7 +938,7 @@ class AppShell {
         });
       }
     } else {
-      (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.remove('immersive-fullscreen');
+      document.body.classList.remove('immersive-fullscreen');
       const efs = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
       if (efs) efs.call(document);
       this.element.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', 'false');
@@ -880,11 +1020,19 @@ class AppShell {
 
     timelineBtn?.setAttribute('aria-pressed', String(!sidebar?.classList.contains('app-sidebar--collapsed')));
     this._syncMobileScrim();
+    this._syncFullscreenState();
   }
 
   _debouncedResponsiveSync() {
     window.clearTimeout(this._resizeTimer);
     this._resizeTimer = window.setTimeout(() => this._syncResponsiveState(), 160);
+  }
+
+  _syncFullscreenState() {
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    const target = this.element ? (this.element.closest('#app') || document.body) : document.body;
+    target.classList.toggle('immersive-fullscreen', !!isFs);
+    this.element?.querySelector('#btn-fullscreen')?.setAttribute('aria-pressed', String(!!isFs));
   }
 
   _closeMobileDrawers() {
@@ -1017,4 +1165,29 @@ class AppShell {
   }
 
   getShell() { return this.element; }
+
+  _showDeathScreen(cause, alreadyDead) {
+    this._setProcessing(false);
+    const inputArea = this.element?.querySelector('#chat-input-area');
+    if (inputArea) { inputArea.style.display = 'none'; }
+    const sendBtn = this.element?.querySelector('#btn-send');
+    if (sendBtn) sendBtn.disabled = true;
+
+    const msgs = this.element?.querySelector('#chat-messages');
+    if (!msgs) return;
+    const div = document.createElement('div');
+    div.className = 'chat-message chat-message--system';
+    div.innerHTML = `<div style="text-align:center;padding:40px 20px;margin:20px 0;background:rgba(239,83,80,0.06);border:2px solid rgba(239,83,80,0.3);border-radius:12px;">
+      <div style="font-size:48px;margin-bottom:16px;">忍</div>
+      <div style="font-size:20px;font-weight:800;color:#ef5350;letter-spacing:4px;margin-bottom:12px;">忍者之道，止于此处</div>
+      <div style="font-size:13px;color:#a39f98;margin-bottom:8px;">死因：${this._esc(cause || '不明')}</div>
+      <div style="font-size:11px;color:rgba(163,159,152,0.5);margin-bottom:20px;">${alreadyDead ? '你已倒下，无法继续行动。' : '你的查克拉消散，生命之火熄灭。'}</div>
+      <button class="restart-btn" style="background:rgba(239,83,80,0.15);border:1px solid rgba(239,83,80,0.5);color:#ef5350;padding:8px 24px;border-radius:6px;font-size:14px;cursor:pointer;letter-spacing:2px;">重新开始</button>
+    </div>`;
+    div.querySelector('.restart-btn')?.addEventListener('click', () => {
+      eventBus.emit('app:reset');
+    });
+    msgs.appendChild(div);
+    this._scroll();
+  }
 }export const appShell = new AppShell();

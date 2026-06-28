@@ -2,13 +2,21 @@ import { stateManager } from '../core/state-manager.js';
 import { escHtml } from '../utils/format.js';
 import { MAP_MARKERS, MAP_BOUNDARIES } from '../data/map-annotations.js';
 
+const VILLAGE_COUNTRY = { '音隐村':'田之国', '雨隐村':'雨之国', '草隐村':'草之国', '砂隐村':'风之国', '木叶隐村':'火之国', '雾隐村':'水之国', '云隐村':'雷之国', '岩隐村':'土之国', '泷隐村':'泷之国', '汤隐村':'汤之国', '霜隐村':'霜之国', '谷隐村':'风之国', '石隐村':'石之国', '匠隐村':'匠之国' };
+
 function findLocation(name) {
   if (!name) return null;
   const n = name.trim();
   let match = MAP_MARKERS.find(m => m.name === n);
   if (match) return match;
   match = MAP_MARKERS.find(m => n.includes(m.name) || m.name.includes(n));
-  return match || null;
+  if (match) return match;
+  const country = VILLAGE_COUNTRY[n];
+  if (country) {
+    match = MAP_MARKERS.find(m => m.name === country);
+    if (match) return { ...match, name: n, desc: `位于${country}境内。${match.desc||''}`, fallbackCountry: true };
+  }
+  return { name: n, x: 0, y: 0, tier: 'unknown', desc: '暂无此地的精确坐标与情报。', noCoords: true };
 }
 
 class MapModal extends HTMLElement {
@@ -29,7 +37,7 @@ class MapModal extends HTMLElement {
   render() {
     const s = stateManager.get();
     const currentLoc = s.world_state?.current_location || '木叶隐村';
-    const mapData = s.world_state?.map || {};
+    const mapData = s.world_state?.map || s.map || {};
     const explored = mapData.explored_regions || ['火之国', '木叶隐村'];
     const known = mapData.known_locations || {};
     const pins = mapData.active_pins || [];
@@ -396,7 +404,7 @@ class MapModal extends HTMLElement {
       }
     }
 
-    if (currentCoord) {
+    if (currentCoord && !currentCoord.noCoords) {
       const px = (currentCoord.x / nw) * 100;
       const py = (currentCoord.y / nh) * 100;
       html += `<div class="map-pin current" style="left:${px}%;top:${py}%;" data-label="${escHtml(currentLoc)}"></div>`;
@@ -407,11 +415,12 @@ class MapModal extends HTMLElement {
 
   _renderCurrentIntel(currentLoc, coord) {
     const desc = coord?.desc || '目前尚未掌握该地区的详细情报背景。';
+    const noCoords = coord?.noCoords;
     return `
       <div class="intel-section">
-        <div class="intel-section-title">当前所在区域</div>
+        <div class="intel-section-title">当前所在区域${noCoords ? ' (无精确坐标)' : ''}</div>
         <div class="intel-item">
-          <div class="intel-dot explored" style="background: #ffd54f;"></div>
+          <div class="intel-dot explored" style="background: ${noCoords ? '#b0bec5' : '#ffd54f'};"></div>
           <div>
             <div class="intel-name">${escHtml(currentLoc)}</div>
             <div class="intel-desc">${escHtml(desc)}</div>

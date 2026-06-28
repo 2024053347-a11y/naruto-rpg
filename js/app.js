@@ -1,5 +1,5 @@
 import { stateManager } from './core/state-manager.js';
-import { aiClient } from './core/ai-client.js';
+import { aiClient, isTavernEnv } from './core/ai-client.js';
 import { eventBus } from './core/event-bus.js';
 import { MessagePipeline } from './core/pipeline.js';
 import { timelineSystem } from './systems/timeline-system.js';
@@ -8,6 +8,46 @@ import { missionSystem } from './systems/mission-system.js';
 import { relationshipSystem } from './systems/relationship-system.js';
 import { memorySystem } from './systems/memory-system.js';
 import { worldStateSystem } from './systems/world-state-system.js';
+
+// ═══════════════════════════════════════
+// 版本号 — 更新时递增，自动清理旧缓存
+// ═══════════════════════════════════════
+const APP_VERSION = 20250625;
+
+function checkVersionAndMigrate() {
+  const storedVersion = parseInt(localStorage.getItem('naruto_app_version') || '0', 10);
+  if (storedVersion >= APP_VERSION) return;
+
+  console.log(`[NarutoRPG] 版本更新 ${storedVersion} → ${APP_VERSION}，清理旧缓存...`);
+
+  // 清除可安全重建的缓存（保留用户数据）
+  const keysToClear = [
+    'naruto_ui_prefs',           // UI 偏好 — 新版本默认值更优
+    'naruto_worldbook',          // 世界书缓存 — 从 JS 重建
+    'naruto_main_preset',        // 预设缓存 — 从 JS 重建
+    'naruto_main_preset_version',// 预设版本
+    'naruto_agent_config',       // Agent 配置 — 从 JS 重建
+    'naruto_timeline_summary',   // 时间线摘要 — 从 DB 重建
+    'naruto_bg_image',           // 背景图缓存
+    'naruto_music_playlist',     // 播放列表缓存
+    'naruto_music_favorites',    // 收藏列表缓存
+  ];
+
+  for (const key of keysToClear) {
+    try { localStorage.removeItem(key); } catch (e) {}
+  }
+
+  // 保存新版本号
+  localStorage.setItem('naruto_app_version', String(APP_VERSION));
+  console.log('[NarutoRPG] 缓存已清理，版本:', APP_VERSION);
+
+  // 显示更新提示
+  if (storedVersion > 0 && typeof eventBus !== 'undefined') {
+    setTimeout(() => {
+      eventBus.emit('app:toast', `已更新至最新版本，缓存已自动清理`);
+    }, 2000);
+  }
+}
 import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
 import { escAttr } from './utils/format.js';
@@ -33,6 +73,9 @@ class NarutoRPGApp {
   }
 
   async init() {
+    // 启动时检查版本并清理旧缓存
+    checkVersionAndMigrate();
+
     const container = document.getElementById('app');
     if (!container) {
       console.error('[NarutoRPG] #app element not found');
@@ -41,15 +84,21 @@ class NarutoRPGApp {
 
     appShell.init(container);
     atmosphereManager.init();
-    stateManager.loadUIPrefs();
-    applyLocalSettings();
-    this._bindEvents();
-
+    
     let dbOk = false;
     try {
       await stateManager.initDB();
-      await timelineSystem.init();
       dbOk = true;
+    } catch(e) {
+      console.error('[NarutoRPG] Failed to init DB:', e);
+    }
+
+    await stateManager.loadUIPrefs();
+    applyLocalSettings();
+    this._bindEvents();
+
+    try {
+      await timelineSystem.init();
     } catch (e) {
       console.warn('[NarutoRPG] IndexedDB init failed, running without persistence:', e.message);
     }
@@ -69,6 +118,11 @@ class NarutoRPGApp {
     const apiConfig = stateManager.getAPIConfig();
     if (apiConfig) {
       aiClient.configure(apiConfig);
+    } else if (isTavernEnv) {
+      // 酒馆环境自动使用酒馆模型，无需手动配置 API
+      const tavernConfig = { backend: 'tavern', model: 'tavern-default', apiUrl: '', apiKey: '' };
+      aiClient.configure(tavernConfig);
+      console.log('[NarutoRPG] 酒馆环境检测到，自动使用酒馆模型');
     }
     const isConfigured = aiClient.isConfigured();
     if (isConfigured) {
@@ -268,15 +322,25 @@ class NarutoRPGApp {
           this._sendSystemMessage('该节点缺少玩家输入，无法重推衍。');
           return;
         }
-        
+
+        const choice = await this._showRerollChoice();
+        if (choice === 'cancel') return;
+
         await timelineSystem.jumpToNode(parentId);
-        timelineSystem._pendingBranchFrom = parentId;
-        
+
+        if (choice === 'prune') {
+          await timelineSystem.pruneForward(parentId);
+          timelineSystem._pendingBranchFrom = null;
+        } else {
+          timelineSystem._pendingBranchFrom = parentId;
+        }
+
         const parentNode = await timelineSystem.getCurrentNode();
         const history = await timelineSystem._reconstructChatHistory(parentNode);
         this.pipeline?.setHistory(history);
-        
-        this._sendSystemMessage(`正在平行重推衍：${node.player_input}`);
+
+        const actionLabel = choice === 'prune' ? '重新推衍' : '平行重推衍';
+        this._sendSystemMessage(`正在${actionLabel}：${node.player_input}`);
         await this.pipeline.process(node.player_input);
       } catch (error) {
         console.error('[App] Reroll failed:', error);
@@ -369,6 +433,24 @@ class NarutoRPGApp {
       localStorage.removeItem('naruto_ui_prefs');
       localStorage.removeItem('naruto_rpg_state');
       window.location.reload();
+    });
+
+    eventBus.on('app:reset', async () => {
+      try {
+        await timelineSystem.emergencyReset();
+        this.pipeline?.clearHistory();
+        appShell.element.innerHTML = '';
+        appShell.element.classList.add('app-shell--setup');
+        const center = appShell.element.querySelector('#app-center');
+        if (center) {
+          center.classList.add('app-center--setup');
+          const inputArea = center.querySelector('#chat-input-area');
+          if (inputArea) inputArea.style.display = 'none';
+        }
+        appShell.showCharacterCreator();
+      } catch (err) {
+        window.location.reload();
+      }
     });
 
     eventBus.on('timeline:delete-branch', async ({ branchId }) => {
@@ -632,6 +714,22 @@ class NarutoRPGApp {
           { label: '取消', onClick: () => resolve('cancel') },
           { label: '回退并删除后续', onClick: () => resolve('prune') },
           { label: '创建新的IF线', primary: true, onClick: () => resolve('branch') }
+        ]
+      });
+    });
+  }
+
+  async _showRerollChoice() {
+    return new Promise(resolve => {
+      const modal = document.createElement('game-modal');
+      (document.getElementById('app') || document.body).appendChild(modal);
+      modal.show({
+        title: '平行推衍',
+        content: `<p>你选择重新推衍本回合。<br/>请选择如何处理当前回合的剧情：</p>`,
+        buttons: [
+          { label: '取消', onClick: () => resolve('cancel') },
+          { label: '不保存本回', primary: true, onClick: () => resolve('prune') },
+          { label: '保存为IF线', onClick: () => resolve('branch') }
         ]
       });
     });

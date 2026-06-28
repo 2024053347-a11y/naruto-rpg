@@ -1,10 +1,76 @@
 import { eventBus } from './event-bus.js';
 
+// 检测是否在酒馆 iframe 环境中
+export const isTavernEnv = typeof globalThis !== 'undefined' && typeof globalThis.generate === 'function';
+
 export class AIAdapter {
   async chat(messages, options) { throw new Error('Not implemented'); }
   async chatStream(messages, options, onChunk) { throw new Error('Not implemented'); }
   getModelInfo() { return { name: 'unknown', contextWindow: 4096 }; }
   validateConfig(config) { return true; }
+}
+
+// ── 酒馆适配器：用 generateRaw 直调 API，完全绕过酒馆预设和世界书 ──
+class TavernAdapter extends AIAdapter {
+  constructor(config) {
+    super();
+    this.model = config.model || 'tavern-default';
+    this.proxyPreset = config.proxyPreset || null;
+  }
+
+  getModelInfo() { return { name: this.model, contextWindow: 128000 }; }
+  validateConfig() { return true; }
+
+  _buildOptions(userInput, combinedSystem, stream) {
+    const opts = {
+      user_input: userInput,
+      should_stream: stream,
+      ordered_prompts: [
+        { role: 'system', content: combinedSystem },
+        'world_info_before',
+      ],
+    };
+    if (this.proxyPreset) {
+      opts.custom_api = { proxy_preset: this.proxyPreset, model: this.model };
+    } else if (this.model && this.model !== 'tavern-default') {
+      opts.custom_api = { model: this.model };
+    }
+    return opts;
+  }
+
+  async chat(messages, options = {}) {
+    const userMsg = [...messages].reverse().find(m => m.role === 'user');
+    const userInput = userMsg?.content || '';
+    const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
+    const opts = this._buildOptions(userInput, combinedSystem, false);
+    try {
+      const result = await globalThis.generateRaw(opts);
+      return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
+    } catch (e) {
+      throw new Error(`酒馆生成失败: ${e.message}`);
+    }
+  }
+
+  async chatStream(messages, options = {}, onChunk) {
+    const userMsg = [...messages].reverse().find(m => m.role === 'user');
+    const userInput = userMsg?.content || '';
+    const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
+
+    const EV = 'iframe_events.STREAM_TOKEN_RECEIVED_FULLY';
+    const h = (t) => { if (onChunk) onChunk(t); };
+    const eo = globalThis.eventOn;
+    if (eo) eo(EV, h);
+
+    const opts = this._buildOptions(userInput, combinedSystem, true);
+    try {
+      const result = await globalThis.generateRaw(opts);
+      if (eo) eo(EV, h);
+      return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
+    } catch (e) {
+      if (eo) eo(EV, h);
+      throw new Error(`酒馆流式生成失败: ${e.message}`);
+    }
+  }
 }
 
 class OpenAICompatibleAdapter extends AIAdapter {
@@ -414,6 +480,9 @@ export class AIClient {
     this._config = config;
     const backend = config.backend || 'openai';
     switch (backend) {
+      case 'tavern':
+        this.adapter = new TavernAdapter(config);
+        break;
       case 'claude':
         this.adapter = new ClaudeAdapter(config);
         break;
@@ -465,6 +534,7 @@ export class AIClient {
   }
 
   isConfigured() {
+    if (this.adapter instanceof TavernAdapter) return true;
     return this.adapter?.validateConfig(this._config || {}) ?? false;
   }
 }

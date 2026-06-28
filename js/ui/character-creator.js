@@ -396,12 +396,12 @@ class CharacterCreator extends HTMLElement {
   _renderTimeline() {
     const presets = GAME_DATA.timelinePresets;
     const sel = this._choices.timeline;
-    const customYear = this._choices.customTimelineYear || '48';
+    const customYear = this._choices.customTimelineYear || '52';
     const isCustom = sel === '__custom_timeline__';
     const presetEntries = Object.values(presets).filter(p => p.id !== '__custom_timeline__');
     return `
       <div class="hint">选择你的忍者故事从哪个时代开始。AI 会根据所选年代自动判断人物年龄、组织状态与事件进度</div>
-      <div class="selected-info">${sel && sel !== '__custom_timeline__' ? `已选: ${presets[sel]?.label || '木叶48年'}` : isCustom ? `已选: 木叶${this._esc(customYear)}年` : '默认木叶48年'}</div>
+      <div class="selected-info">${sel && sel !== '__custom_timeline__' ? `已选: ${presets[sel]?.label || '木叶52年'}` : isCustom ? `已选: 木叶${this._esc(customYear)}年` : '默认木叶52年'}</div>
       <div class="options">${presetEntries.map(p=>`
         <div class="opt${p.id===sel?' sel':''}" data-val="${p.id}">
           <div class="opt-name">${this._esc(p.label)}</div>
@@ -416,7 +416,7 @@ class CharacterCreator extends HTMLElement {
         <div class="custom-title">自定义年代卷轴</div>
         <div class="field">
           <label>木叶纪年 (1~100)</label>
-          <input class="text-input custom-field" data-key="customTimeline.year" maxlength="3" placeholder="输入数字，例如：48" value="${this._esc(customYear)}" type="number" min="1" max="100" />
+          <input class="text-input custom-field" data-key="customTimeline.year" maxlength="3" placeholder="输入数字，例如：52" value="${this._esc(customYear)}" type="number" min="1" max="100" />
         </div>
       </div>`;
   }
@@ -721,23 +721,19 @@ class CharacterCreator extends HTMLElement {
     
     s.world_state.current_location = bg.location||'木叶隐村';
 
-    const timelinePreset = GAME_DATA.getTimelinePreset(this._choices.timeline || 'konoha_48');
+    const timelinePreset = GAME_DATA.getTimelinePreset(this._choices.timeline || 'konoha_52');
     const customYear = Number(this._choices.customTimelineYear);
     const resolveYear = () => {
       if (this._choices.timeline === '__custom_timeline__' && Number.isFinite(customYear) && customYear >= 1 && customYear <= 100) {
         return customYear;
       }
-      return timelinePreset.year || 48;
+      return timelinePreset.year || 52;
     };
     const year = resolveYear();
     const yearLabel = `木叶${year}年`;
     s.world_state.timeline = yearLabel;
-    s.world_state.calendar = {
-      year: yearLabel,
-      season: timelinePreset.season || '春',
-      day: 1,
-      time_of_day: '清晨'
-    };
+    s.world_state.month = timelinePreset.month || 1;
+    s.world_state.calendar = `木叶${year}年${timelinePreset.month || 1}月1日·清晨`;
     if (timelinePreset.era_summary) {
       s.memory.recent_summary = `[开局时代] ${timelinePreset.era_summary}`;
     }

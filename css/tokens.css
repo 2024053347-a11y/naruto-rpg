@@ -80,6 +80,13 @@
   --chat-font-size: 1.0625rem; /* 正文适当增大 */
   --chat-line-height: 1.9;     /* 舒适的阅读行高 */
 
+  /* ── 对话/心理/正文 美化配色（默认适配深色背景，避免在酒馆 iframe 内被同色背景吃掉）── */
+  --chat-text-color:    rgba(255, 255, 255, 0.85);      /* 正文段落 */
+  --chat-strong-color:  var(--text-primary);            /* 强调（粗体） */
+  --chat-em-color:      var(--text-secondary);          /* 斜体 */
+  --chat-dialogue-color: #FFB74D;                       /* 「对话」中文/英文双引号包裹的台词 */
+  --chat-thought-color:  #81d4fa;                       /* （内心独白）全角括号包裹的心理描写 */
+
   --fw-normal:   400;
   --fw-medium:   500;
   --fw-semibold: 600;
@@ -143,5 +150,12 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --blur-xl: blur(12px) saturate(100%);
+    --blur-lg: blur(8px) saturate(100%);
   }
 }

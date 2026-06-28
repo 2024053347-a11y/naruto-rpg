@@ -1,5 +1,6 @@
 import { eventBus } from '../core/event-bus.js';
 import { stateManager } from '../core/state-manager.js';
+import { worldStateSystem } from '../systems/world-state-system.js';
 
 /**
  * AtmosphereManager
@@ -22,11 +23,19 @@ class AtmosphereManager {
     if (this._initialized) return;
     this.canvas = document.getElementById('chakra-canvas');
     if (!this.canvas) return;
+
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      this.canvas.style.display = 'none';
+      this._initialized = true;
+      return;
+    }
+
     this.ctx = this.canvas.getContext('2d');
 
     this._handleResize();
     this._resizeHandler = () => this._handleResize();
-    window.addEventListener('resize', this._resizeHandler);
+    window.addEventListener('resize', this._resizeHandler, { passive: true });
 
     this._initParticles();
     this._animate();
@@ -63,7 +72,7 @@ class AtmosphereManager {
   _initParticles() {
     this.particles = [];
     const width = this.canvas ? this.canvas.width : window.innerWidth;
-    const count = Math.min(Math.floor(width / 20), 60);
+    const count = Math.min(Math.floor(width / 40), 30);
     for (let i = 0; i < count; i++) {
       this.particles.push(this._createParticle());
     }
@@ -113,7 +122,8 @@ class AtmosphereManager {
   updateAtmosphere() {
     const state = stateManager.get();
     const combat = state.combat?.is_active;
-    const timeOfDay = state.world_state?.calendar?.time_of_day || '午后';
+    const cal = worldStateSystem.getCalendar();
+    const timeOfDay = cal?.time_of_day || '午后';
     const weather = state.world_state?.weather || '晴';
 
     // 1. 确定粒子颜色

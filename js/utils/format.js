@@ -5,12 +5,14 @@ export function formatPercentage(value, total) {
 
 export function formatGameTime(calendar) {
   if (!calendar) return '未知时间';
+  if (typeof calendar === 'string') return calendar;
   const parts = [];
   if (calendar.year) parts.push(calendar.year);
-  if (calendar.season) parts.push(calendar.season);
-  if (calendar.day) parts.push(`第${calendar.day}天`);
-  if (calendar.time_of_day) parts.push(calendar.time_of_day);
-  return parts.join('·');
+  if (calendar.month) parts.push(`${calendar.month}月${calendar.day || 1}日`);
+  else if (calendar.day) parts.push(`第${calendar.day}天`);
+  if (calendar.time_of_day && !calendar.month) parts.push(calendar.time_of_day);
+  if (calendar.time_of_day && calendar.month) parts.push('·' + calendar.time_of_day);
+  return parts.join('') || parts.join('·') || '未知时间';
 }
 
 export function truncate(str, maxLen = 30) {

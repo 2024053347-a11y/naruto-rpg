@@ -12,7 +12,9 @@ body {
   font-weight: var(--fw-normal);
   line-height: var(--leading-normal);
   color: var(--text-primary);
-  background-color: var(--surface-0);
+  /* 显式 fallback：在酒馆 iframe 沙箱里 CSS 变量若未加载时也保证深色底，避免白底吃掉白字 */
+  background-color: var(--surface-0, #030406);
+  background-color: #030406;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
@@ -180,10 +182,11 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
 .chat-messages {
   padding: var(--sp-10) var(--sp-6) 160px; /* 给底部输入框留出足够的空间 */
   max-width: var(--chat-max-w); width: 100%; margin: 0 auto;
+  contain: layout style;
 }
 
 /* ── Chat Messages (无界排版) ──── */
-.chat-message { margin-bottom: var(--sp-10); opacity: 0; animation: fadeUp var(--dur-base) var(--ease-out) forwards; }
+.chat-message { margin-bottom: var(--sp-10); opacity: 0; animation: fadeUp var(--dur-base) var(--ease-out) forwards; content-visibility: auto; contain-intrinsic-size: auto 200px; }
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -205,7 +208,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
 
 /* 史诗排版细节 */
 .chat-content p { margin: 0 0 1.5em; overflow-wrap: anywhere; word-break: break-word; color: rgba(255,255,255,0.85); }
-.chat-content strong { color: var(--text-primary); font-family: var(--font-title); font-weight: var(--fw-bold); }
+.chat-content strong { color: #CE93D8; font-family: var(--font-title); font-weight: var(--fw-bold); }
 .chat-content em { color: var(--text-secondary); font-style: italic; }
 
 .think-block {
@@ -251,7 +254,29 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
   position: absolute; bottom: 0; left: 0; right: 0;
   padding: var(--sp-6) var(--sp-8) calc(var(--sp-10) + var(--statusbar-h)); /* 提升底部留白，制造悬浮感 */
   background: linear-gradient(to top, rgba(3,4,6,0.95) 10%, rgba(3,4,6,0.5) 60%, transparent);
-  display: flex; justify-content: center; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; pointer-events: none;
+}
+
+/* ── 近期输入胶囊 ──── */
+.recent-inputs {
+  pointer-events: auto; display: flex; gap: var(--sp-2); margin-bottom: var(--sp-3);
+  width: 100%; max-width: var(--chat-max-w); flex-wrap: wrap; justify-content: flex-end;
+}
+.recent-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: var(--r-full);
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-tertiary); font-size: 12px; font-family: var(--font-title);
+  letter-spacing: 1px; cursor: pointer; transition: all 0.2s var(--ease-out);
+  max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.recent-chip:hover {
+  background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2);
+  color: var(--text-primary); transform: translateY(-1px);
+}
+.recent-chip:active { transform: scale(0.97); }
+.recent-chip-label {
+  color: var(--c-shuiro); font-size: 10px; letter-spacing: 2px; flex-shrink: 0;
 }
 
 .input-wrapper {
@@ -323,15 +348,15 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
 
 /* ── Web Fullscreen (网页全屏) ──── */
 body.web-fullscreen .app-statusbar { display: none !important; }
-body.web-fullscreen .app-sidebar,
-body.web-fullscreen .app-panel { opacity: 0; width: 0 !important; border: none; pointer-events: none; }
+body.web-fullscreen .app-sidebar.app-sidebar--collapsed,
+body.web-fullscreen .app-panel.app-panel--collapsed { opacity: 0; width: 0 !important; border: none; pointer-events: none; }
 
 /* ── Immersive Fullscreen (屏幕全屏/极致沉浸) ──── */
-body.immersive-fullscreen .app-topbar { display: none !important; }
 body.immersive-fullscreen .app-statusbar { display: none !important; }
-body.immersive-fullscreen .app-sidebar,
-body.immersive-fullscreen .app-panel { opacity: 0; width: 0 !important; border: none; pointer-events: none; }
+body.immersive-fullscreen .app-sidebar.app-sidebar--collapsed,
+body.immersive-fullscreen .app-panel.app-panel--collapsed { opacity: 0; width: 0 !important; border: none; pointer-events: none; }
 body.immersive-fullscreen .chat-messages { padding-top: var(--sp-8); }
+body.immersive-fullscreen[data-bg-mode="image"] { background-attachment: initial; }
 
 /* ── Background Modes ──── */
 :root {
@@ -371,8 +396,9 @@ body[data-bg-mode="image"] {
     padding: var(--sp-4); 
     padding-bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px)); 
   }
-  .input-wrapper { border-radius: var(--r-lg); }
-  #btn-send { min-width: 60px; padding: 0 16px; }
+  .input-wrapper { border-radius: var(--r-lg); padding: 6px 8px; gap: 6px; }
+  #btn-send { min-width: 44px; padding: 0 8px; font-size: 11px; letter-spacing: 0; gap: 4px; }
+  #btn-cancel { padding: 0 8px; gap: 3px; }
   
   /* 允许手机端顶部按钮栏横向滑动，防止按钮被挤出或缩水，保留全部按钮 */
   .topbar-right {
@@ -398,6 +424,8 @@ body[data-bg-mode="image"] {
   
   .mobile-scrim { display: block; position: fixed; inset: var(--topbar-h) 0 0; background: rgba(0,0,0,0.6); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: calc(var(--z-overlay) - 1); }
   .mobile-scrim.is-visible { opacity: 1; pointer-events: auto; }
+
+  body[data-bg-mode="image"] { background-attachment: scroll; }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

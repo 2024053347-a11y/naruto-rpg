@@ -33,7 +33,7 @@ export const WORLD_BOOK_ENTRIES = [
 
 export const WORLD_BOOK_META = {
   version: '1.8',
-  defaultEra: '木叶48年',
+  defaultEra: '木叶52年',
   sources: [
     'Naruto / 火影忍者公开剧情资料',
     'Wikipedia: Naruto',

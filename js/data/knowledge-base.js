@@ -21,14 +21,14 @@ export const KNOWLEDGE_BASE = {
 左眼移植了宇智波带土赠予的写轮眼，能复制上千种忍术。
 性格慵懒，经常迟到，看《亲热天堂》，但实力强悍。
 称号"拷贝忍者卡卡西"、"写轮眼的卡卡西"。
-当前状态(木叶48年): 暗部成员，尚未成为第七班导师。`
+当前状态(木叶52年): 暗部成员，尚未成为第七班导师。`
     },
     {
       keys: ['鸣人', '漩涡鸣人', '九尾人柱力'],
       title: '漩涡鸣人',
       content: `[漩涡鸣人]
 四代火影波风水门之子，九尾人柱力。
-当前(木叶48年): 约1岁，尚在襁褓之中。
+当前(木叶52年): 约1岁，尚在襁褓之中。
 村民大多不知道他的真实身份，只知道他是九尾人柱力而远离他。
 由三代火影安排照顾。`
     },
@@ -37,7 +37,7 @@ export const KNOWLEDGE_BASE = {
       title: '宇智波佐助',
       content: `[宇智波佐助]
 宇智波一族族长宇智波富岳的次子，宇智波鼬的弟弟。
-当前(木叶48年): 约1岁，尚在宇智波族地。`
+当前(木叶52年): 约1岁，尚在宇智波族地。`
     },
     {
       keys: ['自来也', '蛤蟆仙人', '亲热天堂'],
@@ -46,7 +46,7 @@ export const KNOWLEDGE_BASE = {
 传说中的三忍之一，三代火影的弟子。
 妙木山的蛤蟆仙人，擅长仙术、螺旋丸、通灵术。
 好色，喜欢偷窥女浴池，著有《亲热天堂》系列。
-当前(木叶48年): 在外游历，监视大蛇丸和晓组织的动向。
+当前(木叶52年): 在外游历，监视大蛇丸和晓组织的动向。
 不在木叶村内。`
     },
     {
@@ -56,7 +56,7 @@ export const KNOWLEDGE_BASE = {
 传说中的三忍之一，初代火影千手柱间的孙女。
 忍界最强的医疗忍者，擅长怪力、创造再生。
 患有恐血症(因弟弟绳树和爱人断的死亡)。
-当前(木叶48年): 离开木叶在外游历，以赌博闻名。`
+当前(木叶52年): 离开木叶在外游历，以赌博闻名。`
     },
     {
       keys: ['大蛇丸', '蛇之仙人'],
@@ -64,7 +64,7 @@ export const KNOWLEDGE_BASE = {
       content: `[大蛇丸]
 传说中的三忍之一，天才科学家。
 痴迷于忍术研究和长生不老，进行了大量人体实验。
-当前(木叶48年): 已叛逃木叶，具体行踪不明；其人体实验和禁术研究可作为暗线威胁。
+当前(木叶52年): 已叛逃木叶，具体行踪不明；其人体实验和禁术研究可作为暗线威胁。
 暗地里建立了音隐村，仍在进行各种禁术研究。`
     },
     {
@@ -89,7 +89,7 @@ export const KNOWLEDGE_BASE = {
       keys: ['晓', '晓组织'],
       title: '晓组织',
       content: `[晓组织]
-当前(木叶48年): 尚未正式浮出水面。
+当前(木叶52年): 尚未正式浮出水面。
 最初由弥彦、长门、小南三人创立，以和平为理念。
 后来被带土和绝渗透，逐渐转变为收集尾兽的邪恶组织。
 目前处于地下活动阶段，不为世人所知。`
@@ -137,13 +137,41 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
   },
 
   get allEntries() {
+    const builtin = this.getDefaultEntries();
+    const custom = this._loadCustomEntries().filter(e => e.enabled !== false);
+    return [...builtin, ...custom];
+  },
+
+  _loadCustomEntries() {
     try {
-      if (typeof localStorage !== 'undefined') {
-        const saved = localStorage.getItem('naruto_worldbook');
-        if (saved) return JSON.parse(saved);
+      if (typeof localStorage === 'undefined') return [];
+      let saved = localStorage.getItem('naruto_worldbook_custom');
+      if (saved) return JSON.parse(saved);
+      const legacy = localStorage.getItem('naruto_worldbook');
+      if (legacy) {
+        const all = JSON.parse(legacy);
+        const builtin = new Map(this.getDefaultEntries().map(e => [e.title, e]));
+        const custom = all.filter(e => {
+          const b = builtin.get(e.title);
+          if (!b) return true;
+          return JSON.stringify(e.keys) !== JSON.stringify(b.keys) || e.content !== b.content;
+        }).map(e => ({ ...e, source: 'custom', enabled: true }));
+        if (custom.length) {
+          localStorage.setItem('naruto_worldbook_custom', JSON.stringify(custom));
+          console.log('[KnowledgeBase] Migrated', custom.length, 'custom entries from legacy worldbook');
+        }
+        return custom;
       }
-    } catch { console.warn('[KnowledgeBase] Failed to load worldbook, using defaults'); }
-    return this.getDefaultEntries();
+    } catch { console.warn('[KnowledgeBase] Failed to load custom worldbook'); }
+    return [];
+  },
+
+  saveCustomEntries(entries) {
+    try { localStorage.setItem('naruto_worldbook_custom', JSON.stringify(entries)); } catch {}
+  },
+
+  getCustomEntries() {
+    return this._loadCustomEntries();
   },
 
   buildContext({ query = '', state = {}, memory = {}, maxEntries = 8, budget = 5600 } = {}) {
@@ -328,7 +356,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     }
 
     add(this.getEntry('火影时间线总览'));
-    add(this.getEntry('九尾之乱与木叶48年'));
+    add(this.getEntry('九尾之乱与木叶52年'));
     add(this.getEntry('忍者能力分类') || this.getEntry('基础忍术体系'));
 
     const location = state.world_state?.current_location || '';
@@ -355,7 +383,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
         `[年代敏感事实: 冰遁与雪之一族]
 当前判定年份: 木叶${year}年。
 规则: 不得把疾风传或波之国篇时的结果倒灌到更早时间线。
-木叶48年前后: 雾隐血雾政策和血继限界迫害正在造成雪之一族/冰遁血脉的衰落、隐匿和逃亡，但不能默认整个冰遁家族已经完全灭亡。可存在幸存分支、隐姓埋名者、流亡家庭、被雾隐追捕或被地方村落排斥的血继后裔。
+木叶52年前后: 雾隐血雾政策和血继限界迫害正在造成雪之一族/冰遁血脉的衰落、隐匿和逃亡，但不能默认整个冰遁家族已经完全灭亡。可存在幸存分支、隐姓埋名者、流亡家庭、被雾隐追捕或被地方村落排斥的血继后裔。
 波之国篇之前: 白可以仍年幼或处于被迫害/流亡/被再不斩收留前后，具体状态应由当前时间线和玩家行动决定。
 波之国篇及之后: 才可引用“白与再不斩悲剧结局”等结果；在早期时间线只能作为未来可能性或伏笔。`
       );
@@ -367,7 +395,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
         ['宇智波灭族', '宇智波一族', '鼬', '佐助'],
         `[年代敏感事实: 宇智波灭族尚未发生]
 当前判定年份: 木叶${year}年。
-木叶55年前，宇智波灭族尚未发生。佐助不应具有灭族后的复仇人格；鼬不应已经作为灭族叛忍加入晓。可以描写族内压力、政变倾向和高层监视作为伏笔。`
+木叶59年前，宇智波灭族尚未发生。佐助不应具有灭族后的复仇人格；鼬不应已经作为灭族叛忍加入晓。可以描写族内压力、政变倾向和高层监视作为伏笔。`
       );
     }
 
@@ -377,7 +405,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
         ['晓', '晓组织', '佩恩', '尾兽捕捉'],
         `[年代敏感事实: 晓尚未公开捕捉尾兽]
 当前判定年份: 木叶${year}年。
-晓可以作为雨隐、地下情报或幕后阴影存在，但不应在木叶48年前后公开以跨国恐怖组织姿态捕捉尾兽。普通NPC通常不知道晓的真实目的。`
+晓可以作为雨隐、地下情报或幕后阴影存在，但不应在木叶52年前后公开以跨国恐怖组织姿态捕捉尾兽。普通NPC通常不知道晓的真实目的。`
       );
     }
 
@@ -412,12 +440,12 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     }
     if (calendar?.year) {
       const parts = [String(calendar.year)];
-      if (calendar.season) parts.push(calendar.season);
-      if (calendar.day) parts.push(`第${calendar.day}天`);
+      if (calendar.month) parts.push(`${calendar.month}月${calendar.day || 1}日`);
+      else if (calendar.day) parts.push(`第${calendar.day}天`);
       if (calendar.time_of_day) parts.push(calendar.time_of_day);
-      return parts.join('·');
+      return parts.join('');
     }
-    return state.world_state?.timeline || '木叶48年';
+    return state.world_state?.timeline || '木叶52年';
   },
 
   _categoryCap(category) {

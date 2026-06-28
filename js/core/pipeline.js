@@ -43,7 +43,14 @@ class MessagePipeline {
     try {
       const state = stateManager.get();
 
-      const enrichedInput = this._preprocessInput(userInput, state);
+      if (state.player?.alive === false) {
+        this.isProcessing = false;
+        eventBus.emit('player:died', { cause: state.player.death_cause || '不明原因', alreadyDead: true });
+        return null;
+      }
+
+      const dice = this._rollDice();
+      const enrichedInput = this._preprocessInput(userInput, state) + this._formatDiceBlock(dice);
 
       const messages = this._buildPrompt(enrichedInput, state, userInput);
 
@@ -103,7 +110,7 @@ class MessagePipeline {
         return { cancelled: true, partialResponse: fullResponse };
       }
 
-      const displayResponse = fullResponse;
+      const displayResponse = fullResponse.replace(/极其|共犯/g, '');
 
       const instructions = instructionParser.parse(fullResponse);
       this._applyInstructions(instructions);
@@ -132,7 +139,11 @@ class MessagePipeline {
 
       const hasHUD = instructionParser.hasStatusQuery(displayResponse);
       const cleanResponse = instructionParser.cleanupResponse(displayResponse);
-      const thinkContent = instructionParser.extractThinkContent(displayResponse);
+      let thinkContent = instructionParser.extractThinkContent(displayResponse);
+      const varThinkContent = instructionParser.extractVarThinkContent(displayResponse);
+      if (varThinkContent) {
+        thinkContent = (thinkContent ? thinkContent + '\n\n' : '') + '### 变量自检\n' + varThinkContent;
+      }
 
       this.chatHistory.push({ role: 'user', content: this._lastFullUserContent });
       this.chatHistory.push({ role: 'assistant', content: displayResponse });
@@ -201,10 +212,14 @@ class MessagePipeline {
   }
 
   _displayPartialResponse(partial) {
-    const cleanResponse = instructionParser.cleanupResponse(partial);
-    const thinkContent = instructionParser.extractThinkContent(partial);
+    const cleanResponse = instructionParser.cleanupResponse(partial.replace(/极其|共犯/g, ''));
+    let thinkContent = instructionParser.extractThinkContent(partial);
+    const varThinkContent = instructionParser.extractVarThinkContent(partial);
+    if (varThinkContent) {
+      thinkContent = (thinkContent ? thinkContent + '\n\n' : '') + '### 变量自检\n' + varThinkContent;
+    }
     eventBus.emit('pipeline:complete', {
-      rawResponse: partial,
+      rawResponse: partial.replace(/极其|共犯/g, ''),
       cleanResponse,
       thinkContent,
       hasHUD: instructionParser.hasStatusQuery(partial),
@@ -254,12 +269,12 @@ class MessagePipeline {
 
 你的任务:
 1. 阅读玩家输入、当前状态、主模型叙事回复。
-2. 补充主模型遗漏的 <variable>、<mission>、<relationship>、<memory> 标签。
-3. 每回合必须输出一个 <memory> 标签，其中 summary 是约300字的本回合详细小结，防止下回合遗忘刚发生的事。
-4. 如果没有其他变量变化，也至少输出 <memory>{"summary":"..."}</memory>。
+2. 首先必须输出 `<variable_thinking>` 标签，严格按照【变量自检协议】进行四步检查。
+3. 根据自检结果，补充主模型遗漏的 `<variable>`、`<mission>`、`<relationship>`、`<memory>` 标签。
+4. 每回合必须输出一个 `<memory>` 标签，其中 summary 是约300字的本回合详细小结。
 
 严格限制:
-- 只能输出以下标签: <variable>...</variable> <mission>...</mission> <relationship>...</relationship> <memory>...</memory>
+- 只能输出以下标签: <variable_thinking>...</variable_thinking> <variable>...</variable> <mission>...</mission> <relationship>...</relationship> <memory>...</memory>
 - 不要输出 <status_query />、普通文本、Markdown、代码块。
 - 不要改写叙事，不要重复主模型已经写过的等价变量。
 - 只记录本回合实际发生的变化。
@@ -269,18 +284,40 @@ class MessagePipeline {
 - memory.facts/clues/pins/npc_notes 只在确有长期价值时填写，不要堆砌普通景色。
 
 可用变量协议摘要:
-- 消耗资源: attributes.chakra_current/stamina_current/spirit_current/willpower_current 用 sub。
-- 恢复资源: 只恢复 *_current，不增加上限。
-- 历练值: progression.exp 用 add。【严禁对日常闲聊、走路、观察环境等无实质成长的行为增加历练值】。仅以下情况可奖励: 训练+10~20，战斗+15~25，完成任务+10~30。回合内无上述事件则【禁止】输出 progression.exp 变量。
-- 技能熟练度: skills.jutsu/taijutsu/genjutsu.{名称}.mastery 用 add，小幅+3到+8。
+- 变量格式: <variable>{"updates":[{"path":"路径","op":"操作","value":值}]}</variable>
+  op: set(覆盖整个节点) | add(数值增加) | sub(数值扣除) | assign(修改对象中的单个key) | push(追加到数组) | remove(删除对象键或数组项)
+  提示: op="assign" 只改单个字段不会覆盖其他字段；op="set" 必须提供完整对象。op="remove" 需加 "key" 字段指定要删除的键名。
+- 属性消耗: attributes.chakra_current/stamina_current/spirit_current/willpower_current 用 sub。
+  【生命警戒】stamina_current 是角色的生命值，不是普通消耗品。严禁无充分战斗/重伤剧情就随意扣减。30以下为濒死，10以下为垂危禁止再扣，0为死亡。
+- 属性恢复: 只恢复 *_current，不增加上限。休息可恢复5~15体力，医疗忍术15~40。
+- 属性上限: attributes.chakra/stamina/spirit/willpower/speed 用 add 提升，单回合总和 <= 6（重大突破 <= 15）。
+- 时间流逝: world_state.calendar 用 op="set" 写入完整时间字符串（如"木叶48年7月15日·正午"）。本回合时间有推进时才输出。
+- 历练值: progression.exp 用 add。【严禁日常闲聊/走路/观察环境增加历练值】。仅以下情况: 训练+10~20，战斗+15~25，完成任务+10~30。无上述事件则【禁止】输出。
+- 突破标记: progression.pending_breakthrough 用 add(触发) 或 sub(完成)。
+- 声望: progression.reputation.木叶隐村 用 add 或 sub。
+- 任务完成数: progression.missions_done 用 add。
+- 技能熟练度: skills.jutsu/taijutsu/genjutsu/support.{名称}.mastery 用 add，小幅+3到+8。
+- 忍术新建: {"path":"skills.jutsu.火遁·豪火球","op":"set","value":{"name":"火遁·豪火球","rank":"C","element":"火","cost":25,"power":40,"mastery":0,"description":"从口中喷出巨大火球"}}
+  op="set" 在 skills.* 路径下会自动合并(保留已有字段)，但建议提供完整对象。
+- 忍术升阶: {"path":"skills.jutsu.火遁·豪火球","op":"assign","key":"rank","value":"B"}
+- 忍术删除: {"path":"skills.jutsu","op":"remove","key":"火遁·豪火球"}
+- 血继限界: {"path":"skills.kekkei_genkai","op":"set","value":"写轮眼·单勾玉"}
+- 天赋: skills.talents.{天赋名} 同上
+- 物品获取: {"path":"equipment.consumables.绷带","op":"set","value":{"quantity":2,"quality":"普通"}}
+- 物品消耗: {"path":"equipment.consumables.绷带.quantity","op":"sub","value":1}
+- 物品删除: {"path":"equipment.consumables","op":"remove","key":"绷带"}
+- 金钱: equipment.ryo 用 add 或 sub
 - 人物目标/位置: player.current_goal、world_state.current_location。
-- 任务: <mission>{"id":"...","status":"active|progress|completed|failed",...}</mission>
-- 关系: <relationship>{"npc":"...","affection_change":0,"trust_change":0,"respect_change":0,"reason":"..."}</relationship>
+- 地图探索: world_state.map.explored_regions（首次进入用push）；world_state.map.known_locations（用assign添加地标key和description）
+- 删除任何对象键: {"path":"父级路径","op":"remove","key":"要删除的键名"}
+- 任务: <mission>{"id":"任务唯一ID","status":"active|progress|completed|failed","rank":"D","title":"任务名称","description":"任务描述","objective":"目标","location":"地点","client":"委托人","type":"任务类型","risk":"低|中|高","reward_ryo":500,"reward_exp":10}</mission>
+  新建任务必须包含 id/title/rank/objective 全部字段；更新已有任务只需 id + 变更字段。
+- 关系: <relationship>{"npc":"...","affection_change":0,"trust_change":0,"respect_change":0,"reason":"...","inner_thoughts":"该NPC对主角当前的真实内心想法（仅写本回合，系统自动累积历史）","history":"本回合互动摘要（仅写当前回合，系统自动按时间轴累积，【禁止】重复拼接旧历史）"}</relationship>
 - 记忆: <memory>{"summary":"本回合玩家在...采取...行动；现场...NPC表现出...态度；直接结果是...；发现/确认的线索包括...；任务、关系、资源或伤势变化为...；下回合必须承接...，不要遗忘...。","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>`
       },
       {
         role: 'user',
-        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state)).slice(0, 6000)}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}\n\n请只输出XML变量标签。即使没有数值变化，也必须输出一个 <memory> 标签作为本回合小结；summary 约300字，必须足够详细，让下回合能准确承接。`
+        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state)).slice(0, 6000)}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}\n\n【强制要求】：请首先输出 <variable_thinking> 标签，严格执行以下7段自检（必须逐段回答，不可省略任何一段）：\n1. 人物与关系：本回合涉及的NPC？主模型是否已输出 <relationship> 标签？若遗漏则补充。\n2. 技能变动：本回合是否学习/创造/练习/升级了忍术/体术/幻术/血继/天赋？主模型的 <variable> 是否已包含？若遗漏则补充。\n3. 物品与装备：本回合是否获得/消耗/使用/丢弃了物品/武器/防具/忍具/金钱？遗漏则补充。\n4. 任务与历练：本回合是否推进了任务？是否应有 exp/突破/声望变化？遗漏则补充。\n5. 地图与探索：本回合是否移动到了新场景/新区域/新地标？遗漏则补充。\n6. 状态与位置：时间流逝？查克拉/体力/精神/意志力消耗或恢复？异常状态变化？遗漏则补充。\n7. 战斗状态：是否触发/进行/结束了战斗？（仅战斗回合）\n完成自检后，输出实际变动的XML变量标签。无论有无数值变化，都必须输出 <memory> 标签。`
       }
     ];
   }
@@ -303,8 +340,15 @@ class MessagePipeline {
   _applyInstructions(instructions, silent = false) {
     if (instructions.variables.length > 0) {
       const applied = [];
+      const seenHashes = new Set();
       for (const v of instructions.variables) {
         if (v && typeof v.path === 'string' && v.path.trim() && ['set','add','sub','assign','push','remove'].includes(v.op)) {
+          const hash = `${v.path}|${v.op}|${JSON.stringify(v.value)}`;
+          if (seenHashes.has(hash)) {
+            console.warn('[Pipeline] Ignored duplicate variable instruction:', v);
+            continue;
+          }
+          seenHashes.add(hash);
           applied.push(v);
         }
       }
@@ -383,6 +427,18 @@ class MessagePipeline {
     return summaries.join('\n');
   }
 
+  _rollDice() {
+    const values = Array.from({ length: 6 }, () => Math.floor(Math.random() * 100) + 1);
+    window.__naruto_last_dice = values;
+    eventBus.emit('pipeline:dice', { values });
+    return values;
+  }
+
+  _formatDiceBlock(dice) {
+    const names = ['壹', '贰', '叁', '肆', '伍', '陆'];
+    return `\n\n〈卦象·本回合命运〉\n${dice.map((v, i) => `${names[i]}:[${v}]`).join('\n')}\n——取用需严格按序，已取之卦不可复用——`;
+  }
+
   _buildPrompt(enrichedInput, state, userInput) {
     const messages = [];
 
@@ -429,7 +485,7 @@ class MessagePipeline {
 1. 提升必须有侧重点（比如幻术路线重点加spirit和幻术造诣），绝不能所有属性平庸地平均加一点。如果不专精拔高至少一项能力，其战力评级将永远卡在低段位！
 2. 提升幅度要克制，需多次突破才能跨阶。
 3. 在底部的 <variable> 标签中，必须将对应的能力上限（或mastery）用 op="add" 增加！
-4. 【极其重要】必须在 <variable> 标签中，将 progression.pending_breakthrough 用 op="sub" 扣除 1 ！` 
+4. 【非常重要】必须在 <variable> 标签中，将 progression.pending_breakthrough 用 op="sub" 扣除 1 ！` 
       });
     }
 
@@ -482,13 +538,21 @@ class MessagePipeline {
 
       // Resolve all entries together so {{setvar}}/{{getvar}} work across groups
       const allResolved = resolvePresetMacros(preset.entries, context);
+      
+      const enableCoT = stateManager.getAPIConfig()?.enableVariableCoT !== false;
 
       const top = [];
       const bottomRaw = [];
 
       for (const entry of allResolved) {
         const role = entry.role === 'assistant' ? 'assistant' : (entry.role === 'user' ? 'user' : 'system');
-        const msg = { role, content: entry.content };
+        let content = entry.content;
+        
+        if (!enableCoT) {
+           content = content.replace(/<variable_thinking>[\s\S]*?<\/variable_thinking>\s*/g, '');
+        }
+
+        const msg = { role, content };
 
         if (bottomIds.has(entry.id)) {
           bottomRaw.push(msg);
@@ -584,6 +648,8 @@ ${this._summarizeRelationships(state.relationships)}
 - 位置: ${state.world_state.current_location || '木叶隐村'}
 - 天气: ${state.world_state.weather || '晴'}
 - 进行中的世界事件: ${this._summarizeEvents(state.world_state.active_events)}
+- 已探索区域: ${(state.world_state.map?.explored_regions || []).join('、') || '无'}
+- 已知地标: ${Object.keys(state.world_state.map?.known_locations || {}).join('、') || '无'}
 
 ## 战斗状态
 ${state.combat?.is_active ? `【战斗中】对手: ${state.combat.enemy_name} | 查克拉: ${state.combat.enemy_chakra}/${state.combat.enemy_chakra_max}` : '无战斗'}
@@ -592,7 +658,7 @@ ${state.combat?.is_active ? `【战斗中】对手: ${state.combat.enemy_name} |
 
   _buildTimelineContext(state) {
     const world = state.world_state || {};
-    const calendar = world.calendar || {};
+    const calendar = world.calendar || '';
     const timeline = world.timeline || '木叶48年';
     const label = formatGameTime(calendar);
     const year = this._currentKonohaYear(state);

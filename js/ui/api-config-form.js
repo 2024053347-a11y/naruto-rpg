@@ -1,4 +1,4 @@
-import { aiClient } from '../core/ai-client.js';
+import { aiClient, isTavernEnv } from '../core/ai-client.js';
 import { PROMPTS } from '../data/prompts.js';
 import { eventBus } from '../core/event-bus.js';
 import { escAttr } from '../utils/format.js';
@@ -85,7 +85,8 @@ export class ApiConfigForm extends HTMLElement {
         <div class="settings-row">
           <label for="settings-api-backend">术式类型</label>
           <select class="settings-select" id="settings-api-backend">
-            ${this._option('openai', 'OpenAI 兼容 (推荐)', backend)}
+            ${isTavernEnv ? this._option('tavern', '🍺 酒馆模型 (推荐)', backend) : ''}
+            ${this._option('openai', 'OpenAI 兼容', backend)}
             ${this._option('claude', 'Claude / Anthropic', backend)}
             ${this._option('deepseek', 'DeepSeek', backend)}
             ${this._option('custom', '自定义兼容', backend)}
@@ -156,6 +157,11 @@ export class ApiConfigForm extends HTMLElement {
 
     fetchBtn?.addEventListener('click', async () => {
       const config = this.getConfig(true);
+      if (!config) return;
+      if (config.backend === 'tavern') {
+        status.textContent = '酒馆模型无需读取，使用当前 API 连接即可。';
+        return;
+      }
       if (!config?.apiUrl) {
         eventBus.emit('app:toast', '请先填写 API 地址。');
         return;
@@ -193,6 +199,12 @@ export class ApiConfigForm extends HTMLElement {
     const apiKey = root.querySelector('#settings-api-key')?.value.trim();
     const model = root.querySelector('#settings-api-model')?.value.trim();
     const backend = root.querySelector('#settings-api-backend')?.value;
+
+    // 酒馆模型不需要 API 地址和密钥
+    if (backend === 'tavern') {
+      if (!allowEmptyModel && !model) return null;
+      return { backend: 'tavern', model: model || 'tavern-default', apiUrl: '', apiKey: '', disableStreaming: false };
+    }
 
     if (!apiUrl || (!allowEmptyModel && !model)) return null;
 

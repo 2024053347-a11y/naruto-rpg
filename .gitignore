@@ -17,3 +17,4 @@ test_screenshots/
 find-undeclared.js
 patch-*.cjs
 启动实时同步.bat
+terminal-output.png

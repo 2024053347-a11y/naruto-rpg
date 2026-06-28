@@ -1,7 +1,10 @@
-import { stateManager } from '../core/state-manager.js';
+﻿import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { formatPercentage, escHtml, escAttr } from '../utils/format.js';
 import { equipmentSystem } from '../systems/equipment-system.js';
+import { relationshipSystem } from '../systems/relationship-system.js';
+import GameModal from './modal.js';
+import { panelStyles } from '../../css/components/panel.css.js';
 
 class InfoPanel extends HTMLElement {
   constructor() {
@@ -10,6 +13,11 @@ class InfoPanel extends HTMLElement {
     this._tab = 'attributes';
     this._renderPending = false;
     this._unsubs = [];
+    this._skillSearch = '';
+    this._skillTypeFilter = null;
+    this._skillSort = 'default';
+    this._skillCompact = false;
+    this._collapsedSections = {};
   }
 
   connectedCallback() {
@@ -36,365 +44,18 @@ class InfoPanel extends HTMLElement {
   }
 
   render() {
+    // 保存滚动位置，避免展开/收起时跳回顶部
+    const contentEl = this.shadowRoot?.querySelector('.content');
+    const scrollTop = contentEl ? contentEl.scrollTop : 0;
+
     const s = stateManager.get();
     const tab = s.ui_prefs?.panel_tab || this._tab;
     const appEl = document.getElementById('app') || document.body;
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || appEl.classList.contains('is-mobile-forced') || appEl.classList.contains('is-mobile-view');
+    const isMobile = (() => {
+      try { return parent.window.innerWidth <= 768; } catch(e) { return window.innerWidth <= 768; }
+    })() || appEl.classList.contains('is-mobile-forced') || appEl.classList.contains('is-mobile-view');
     this.shadowRoot.innerHTML = `
-      <style>
-        :host { display: block; height: 100%; }
-        .panel {
-          display: flex; flex-direction: column; height: 100%; overflow: hidden;
-          background: transparent;
-          color: var(--text-primary);
-          position: relative;
-        }
-
-        /* ── Mobile Panel Header ──── */
-        .panel-header-mobile {
-          display: flex; justify-content: space-between; align-items: center;
-          padding: 14px 16px 12px 20px; border-bottom: 1px solid var(--border-hairline);
-          background: rgba(255,255,255,0.02);
-        }
-        .panel-title-mobile {
-          font-family: var(--font-title); font-size: 13px; font-weight: 800;
-          color: var(--text-primary); letter-spacing: 2px;
-        }
-        .panel-close-btn-mobile {
-          background: transparent; border: none; color: var(--text-secondary);
-          font-size: 18px; cursor: pointer; padding: 4px; display: flex;
-          align-items: center; justify-content: center; transition: all 0.2s;
-          line-height: 1;
-        }
-        .panel-close-btn-mobile:hover {
-          color: var(--text-primary); transform: scale(1.1);
-        }
-
-        /* ── 标签页 (Shinobi Tanzaku) ──── */
-        .tabs {
-          display: flex; gap: 8px; padding: 0 16px;
-          border-bottom: 1px solid var(--border-hairline);
-          z-index: 5;
-        }
-        .tab {
-          flex: 1; padding: 16px 2px 12px; font-size: 11px; text-align: center; color: var(--text-tertiary);
-          cursor: pointer; border: none; background: transparent; border-bottom: 2px solid transparent;
-          transition: all 0.2s; letter-spacing: 2px;
-          font-family: var(--font-title); margin-bottom: -1px;
-        }
-        .tab:hover { color: var(--text-secondary); }
-        .tab.on { 
-          color: var(--text-primary); font-weight: 800; border-bottom-color: var(--text-primary);
-        }
-
-        @keyframes content-enter {
-          from { opacity: 0; transform: translateY(16px) scale(0.98); filter: blur(4px); }
-          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        .content { 
-          flex: 1; overflow-y: auto; padding: 24px 20px; 
-          scrollbar-width: none; -ms-overflow-style: none;
-          mask-image: linear-gradient(to bottom, transparent, #000 24px, #000 calc(100% - 24px), transparent);
-          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24px, #000 calc(100% - 24px), transparent);
-          animation: content-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .content::-webkit-scrollbar { display: none; }
-
-        /* ── 章节容器 (Scroll Section) ──── */
-        .sec {
-          margin-bottom: 40px; position: relative;
-        }
-        
-        .sec-title {
-          font-size: 10px; font-weight: 800; color: var(--text-tertiary); text-transform: uppercase;
-          letter-spacing: 4px; margin-bottom: 24px; font-family: var(--font-title);
-          display: flex; align-items: center; gap: 12px;
-        }
-        .sec-title::after {
-          content: ''; flex: 1; height: 1px; 
-          background: var(--border-hairline);
-        }
-
-        /* ── 数据行 (Shinobi Stats) ──── */
-        .row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border-hairline); position: relative; }
-        .row-l { 
-          font-size: 11px; color: var(--text-tertiary); font-family: var(--font-title); 
-          letter-spacing: 2px; text-transform: uppercase;
-        }
-        .row-v {
-          font-size: 13px; color: var(--text-primary); font-family: var(--font-body); font-weight: 500; letter-spacing: 1px;
-        }
-
-        /* ── 属性面板 (Attribute Bento) ──── */
-        .chakra-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; margin-bottom: 8px; }
-        .chakra-badge { 
-          display: inline-flex; align-items: center; justify-content: center;
-          padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; letter-spacing: 2px;
-          border: 1px solid currentColor; background: rgba(0,0,0,0.2);
-          box-shadow: inset 0 0 8px currentColor;
-        }
-
-        .attr-bento { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .attr-card {
-          background: var(--surface-bento); box-shadow: var(--shadow-inner);
-          border-radius: var(--r-md); padding: 16px; position: relative; overflow: hidden;
-          display: flex; flex-direction: column; justify-content: center;
-        }
-        .attr-card.full-span { grid-column: 1 / -1; }
-        .attr-card:hover { background: var(--surface-bento-hover); }
-        .attr-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
-        .attr-value { font-family: var(--font-title); font-size: 16px; font-weight: 800; color: var(--text-primary); letter-spacing: 1px; }
-        
-        .attr-id-badge {
-          display: flex; justify-content: space-between; align-items: center; flex-direction: row;
-          padding: 24px; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-          border-left: 2px solid var(--c-kin-bright);
-        }
-        .attr-id-name { 
-          font-family: var(--font-brush); font-size: 32px; color: var(--c-kin-bright); line-height: 1; margin-top: 4px; 
-          background: linear-gradient(90deg, var(--c-kin-bright) 0%, #fff 50%, var(--c-kin-bright) 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shine-name 4s linear infinite;
-        }
-        @keyframes shine-name { to { background-position: 200% center; } }
-        
-        .attr-id-rank { font-size: 12px; font-weight: 800; letter-spacing: 4px; color: var(--text-secondary); opacity: 0.8; }
-        
-        .attr-threat { 
-          position: absolute; inset: 0; background: radial-gradient(circle at right bottom, var(--threat-color, rgba(255,255,255,0.1)) 0%, transparent 70%); 
-          opacity: 0.1; pointer-events: none; 
-          animation: pulse-threat-bg 4s ease-in-out infinite alternate;
-        }
-        @keyframes pulse-threat-bg { from { opacity: 0.1; } to { opacity: 0.25; } }
-        
-        .attr-threat-val { 
-          font-family: var(--font-mono); font-size: 24px; font-weight: 900; color: var(--threat-color, var(--text-primary)); 
-          text-shadow: 0 0 16px var(--threat-color, transparent); display: flex; align-items: baseline; gap: 4px; 
-          white-space: nowrap;
-          animation: pulse-threat 3s ease-in-out infinite alternate;
-        }
-        @keyframes pulse-threat {
-          from { text-shadow: 0 0 8px var(--threat-color, transparent); }
-          to { text-shadow: 0 0 24px var(--threat-color, transparent), 0 0 40px var(--threat-color, transparent); transform: scale(1.02) translateX(1%); }
-        }
-        .attr-bar-wrap { margin-bottom: 16px; }
-        .attr-bar-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 1px; }
-        .attr-bar-track { height: 2px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
-        .attr-bar-fill { height: 100%; box-shadow: 0 0 8px currentColor; transition: width 1s var(--ease-out); }
-
-        /* ── 查克拉条 (Liquid Chakra Bars - Old fallback) ──── */
-        .bar-wrap { margin: 12px 0 20px; position: relative; }
-        .bar { 
-          height: 2px; background: rgba(255,255,255,0.05);
-          overflow: hidden; 
-        }
-        .bar-fill { 
-          height: 100%; border-radius: 0; 
-          transition: width 1s var(--ease-out); 
-        }
-
-        /* ── 技能与装备卡片 (Bento Grid Items) ──── */
-        .grid-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .item-card {
-          padding: 16px; border-radius: var(--r-md);
-          box-shadow: var(--shadow-inner); background: var(--surface-bento);
-          transition: all 0.3s var(--ease-out); position: relative; overflow: hidden;
-        }
-        .item-card:hover { 
-          background: var(--surface-bento-hover); box-shadow: var(--shadow-inner-hover);
-          transform: translateY(-1px);
-        }
-        /* 法阵边缘装饰 */
-        .item-card::before {
-          content: ''; position: absolute; top: 0; left: 0; width: 12px; height: 12px;
-          border-top: 1.5px solid var(--c-shuiro); border-left: 1.5px solid var(--c-shuiro);
-          border-top-left-radius: var(--r-md); opacity: 0; transition: opacity 0.3s; pointer-events: none;
-        }
-        .item-card:hover::before { opacity: 0.8; }
-        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-        .item-name { font-family: var(--font-title); font-size: 16px; font-weight: 800; color: var(--text-primary); letter-spacing: 1px; }
-        .item-tag { font-size: 9px; color: var(--text-secondary); padding: 2px 6px; border: 1px solid var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .item-desc { font-size: 12px; color: var(--text-tertiary); line-height: 1.6; font-family: var(--font-body); max-width: 90%; }
-
-        /* ── 任务勋章 (Mission Seals) ──── */
-        .mission-seal {
-          padding: 16px; margin-bottom: 0; display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: start;
-          box-shadow: var(--shadow-inner); background: var(--surface-bento); border-radius: var(--r-md); transition: all 0.2s;
-        }
-        .mission-seal:hover { background: var(--surface-bento-hover); box-shadow: var(--shadow-inner-hover); transform: translateY(-1px); }
-        .mission-seal .rank-badge {
-          font-family: var(--font-title); font-size: 20px; font-weight: 800; opacity: 0.8;
-          text-align: center; border-bottom: 2px solid currentColor; padding-bottom: 4px;
-        }
-        /* ── 技能与天赋 (Skills) ──── */
-        .skill-card {
-          background: var(--surface-bento); box-shadow: var(--shadow-inner);
-          border-radius: var(--r-md); padding: 16px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          position: relative; overflow: hidden; border-left: 2px solid var(--border-subtle);
-        }
-        .skill-card:hover { transform: translateY(-2px); background: var(--surface-bento-hover); border-left-color: var(--text-primary); }
-        .skill-card.bloodline {
-          text-align: center; border-left: none; padding: 24px;
-          background: radial-gradient(circle at center, rgba(239,83,80,0.1) 0%, var(--surface-bento) 100%);
-          box-shadow: inset 0 0 0 1px rgba(239,83,80,0.2), var(--shadow-inner);
-        }
-        .skill-card.bloodline.normal { background: var(--surface-bento); box-shadow: var(--shadow-inner); }
-        .skill-title { font-family: var(--font-title); font-size: 16px; font-weight: 800; letter-spacing: 1px; color: var(--text-primary); }
-        .bloodline .skill-title { font-size: 20px; color: #ef5350; text-shadow: 0 0 10px rgba(239,83,80,0.5); letter-spacing: 4px; }
-        .bloodline.normal .skill-title { color: var(--text-secondary); text-shadow: none; letter-spacing: 2px; }
-        
-        .skill-mastery-tag {
-          font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px;
-          background: rgba(198,156,109,0.1); color: var(--c-kin-bright); border: 1px solid rgba(198,156,109,0.3);
-        }
-        
-        .skill-empty {
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 12px; padding: 32px 16px; min-height: 100px;
-          background: rgba(0,0,0,0.2); border-radius: var(--r-md); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
-          color: var(--text-tertiary); font-size: 11px; letter-spacing: 1px;
-        }
-        .skill-empty svg { width: 32px; height: 32px; opacity: 0.15; color: var(--text-primary); }
-        .skill-empty em { font-style: normal; color: var(--text-secondary); font-weight: bold; }
-
-        .mission-seal { border-left: 4px solid var(--border-subtle); padding-left: 12px; }
-        .mission-seal.S .rank-badge { color: #ef5350; }
-        .mission-seal.A .rank-badge { color: #eb613f; }
-        .mission-seal.B .rank-badge { color: #c69c6d; }
-        .mission-seal.C .rank-badge { color: #42A5F5; }
-        .mission-seal.D .rank-badge { color: #81c784; }
-
-        /* ── 关系印记 (Fate Link) ──── */
-        .rel-card-wrap {
-          background: var(--surface-bento); box-shadow: var(--shadow-inner);
-          border-radius: var(--r-md); padding: 16px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          position: relative; overflow: hidden; cursor: pointer;
-        }
-        .rel-card-wrap:hover { transform: translateY(-2px); background: var(--surface-bento-hover); }
-        .rel-expand-hint { text-align: center; font-size: 10px; color: var(--text-tertiary); margin-top: 12px; opacity: 0.5; transition: opacity 0.2s; }
-        .rel-card-wrap:hover .rel-expand-hint { opacity: 0.8; }
-        
-        .rel-header {
-          display: flex; gap: 16px; align-items: center; margin-bottom: 16px;
-        }
-        
-        /* Hexagon Avatar */
-        .rel-avatar-ring {
-          position: relative; width: 56px; height: 56px;
-          display: flex; align-items: center; justify-content: center;
-          filter: drop-shadow(0 0 8px rgba(198,156,109,0.2));
-        }
-        .rel-avatar-ring::before {
-          content: ''; position: absolute; inset: 0;
-          background: conic-gradient(from 0deg, transparent, rgba(198,156,109,0.8), transparent);
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          padding: 1px; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
-          animation: spin 6s linear infinite;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        .rel-avatar {
-          width: 50px; height: 50px; background: var(--surface-0);
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          display: flex; align-items: center; justify-content: center;
-          font-family: var(--font-brush); color: var(--c-kin-bright); font-size: 24px; font-weight: bold;
-        }
-        
-        .rel-info { min-width: 0; flex: 1; }
-        .rel-info-title { font-size: 16px; font-family: var(--font-title); font-weight: 800; color: var(--text-primary); letter-spacing: 1px; }
-        .rel-info-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; display: flex; gap: 8px; align-items: center; }
-        
-        /* Dashboard Stats */
-        .rel-dashboard {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-          background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--r-sm);
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.02);
-        }
-        .dash-stat { display: flex; flex-direction: column; gap: 6px; }
-        .dash-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; }
-        .dash-value { font-size: 16px; font-family: var(--font-mono); font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline; gap: 4px; }
-        .dash-bar-bg { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
-        .dash-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease-out; }
-        
-        /* Glass Pill Tags */
-        .rel-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-        .glass-pill {
-          padding: 4px 10px; font-size: 10px; font-weight: 600; letter-spacing: 1px;
-          background: rgba(255,255,255,0.05); color: var(--text-secondary);
-          border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-          backdrop-filter: blur(4px); display: inline-flex; align-items: center;
-        }
-
-        .tag {
-          display: inline-block; padding: 2px 0; font-size: 10px; border-radius: 0; border-bottom: 1px solid var(--border-subtle);
-          background: transparent; color: var(--text-secondary);
-          font-family: var(--font-title); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-right: 8px;
-        }
-        .gold { color: var(--c-kin-bright); }
-        .empty { padding: 40px 20px; text-align: center; color: var(--text-tertiary); font-family: var(--font-body); font-size: 12px; line-height: 1.8; opacity: 0.8; }
-        .empty em { font-style: normal; color: var(--text-primary); font-family: var(--font-title); }
-
-        /* ── 装备栏阶梯视觉系统 ──── */
-        .eq-svg { width: 1.2em; height: 1.2em; display: inline-block; vertical-align: middle; }
-        
-        .eq-empty-slot {
-          background: rgba(0, 0, 0, 0.4);
-          box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.02);
-          border-radius: var(--r-md); padding: 12px;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 8px; min-height: 80px; transition: all 0.2s;
-        }
-        .eq-empty-slot svg {
-          width: 28px; height: 28px; opacity: 0.15; color: var(--text-primary);
-        }
-        .eq-empty-slot span { font-size: 10px; color: var(--text-tertiary); letter-spacing: 2px; opacity: 0.5; }
-        
-        .eq-card {
-          padding: 12px; border-radius: var(--r-md); position: relative; overflow: hidden;
-          background: var(--surface-bento); box-shadow: var(--shadow-inner);
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .eq-card:hover { transform: translateY(-2px); }
-        
-        /* 阶梯化品质特质 */
-        /* 普通: --surface-bento 默认无光效 */
-        /* 精良 */
-        .eq-card[data-quality="精良"] { border-left: 2px solid #66BB6A; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(102,187,106,0.15); }
-        /* 优秀 */
-        .eq-card[data-quality="优秀"] { border-left: 2px solid #42A5F5; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(66,165,245,0.2); }
-        /* 史诗 */
-        .eq-card[data-quality="史诗"] { 
-          border-left: 2px solid #c69c6d;
-          background: radial-gradient(circle at right bottom, rgba(198,156,109,0.1) 0%, var(--surface-bento) 70%);
-          box-shadow: inset 0 0 0 1px rgba(198,156,109,0.2), -4px 0 20px -2px rgba(198,156,109,0.25);
-        }
-        /* 传说 */
-        @keyframes legendaryPulse { 0% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } 50% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.5), 0 0 25px rgba(239,83,80,0.4); } 100% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } }
-        .eq-card[data-quality="传说"] {
-          border-left: 2px solid #ef5350;
-          background: radial-gradient(circle at right bottom, rgba(239,83,80,0.15) 0%, rgba(14,18,24,0.9) 80%);
-          animation: legendaryPulse 3s infinite;
-        }
-        
-        .eq-watermark {
-          position: absolute; right: -10%; bottom: -20%; font-family: var(--font-brush);
-          font-size: 64px; color: currentColor; opacity: 0.04; pointer-events: none;
-          transform: rotate(-15deg); font-weight: 900;
-        }
-        .eq-card[data-quality="史诗"] .eq-watermark { opacity: 0.08; color: #c69c6d; }
-        .eq-card[data-quality="传说"] .eq-watermark { opacity: 0.12; color: #ef5350; font-size: 80px; }
-        
-        .btn-sleek {
-          background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
-          color: var(--text-secondary); border-radius: var(--r-md);
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; transition: all 0.2s; font-size: 11px; font-weight: 700;
-        }
-        .btn-sleek:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
-        .btn-sleek.active { background: rgba(255,255,255,0.1); border-color: var(--text-primary); color: var(--c-void); background: var(--text-primary); }
-      </style>
+      <style>${panelStyles}</style>
       <div class="panel">
         ${isMobile ? `
         <div class="panel-header-mobile">
@@ -412,6 +73,11 @@ class InfoPanel extends HTMLElement {
         <div class="content">${this._renderTab(tab,s)}</div>
       </div>
     `;
+    // 恢复滚动位置
+    const newContent = this.shadowRoot.querySelector('.content');
+    if (newContent && scrollTop > 0) {
+      requestAnimationFrame(() => { newContent.scrollTop = scrollTop; });
+    }
     const closeBtn = this.shadowRoot.getElementById('panel-close-btn-mobile');
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
@@ -466,6 +132,53 @@ class InfoPanel extends HTMLElement {
         this.showRelModal(card.dataset.relName);
       });
     });
+
+    this.shadowRoot.querySelectorAll('.rel-actions [data-action]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const npc = btn.dataset.relNpc;
+        if (!npc) return;
+        if (btn.dataset.action === 'pin') {
+          relationshipSystem.togglePin(npc);
+          console.log('[Panel] pin clicked for', npc);
+          this.render();
+        } else if (btn.dataset.action === 'delete') {
+          e.preventDefault();
+          const confirmed = await GameModal.confirm({
+            title: '解除羁绊',
+            message: `确定要断开与「${npc}」的羁绊记录吗？<br><span style="font-size:11px;color:var(--text-tertiary);">此操作不可撤回，所有互动历史与好感度将被清除。</span>`,
+            okLabel: '确认解除',
+            cancelLabel: '保留羁绊'
+          });
+          if (!confirmed) return;
+          relationshipSystem.deleteRelationship(npc);
+          this.render();
+        }
+      });
+    });
+
+    if (this._tab === 'skills') {
+      const search = this.shadowRoot.getElementById('skill-search');
+      if (search) {
+        search.addEventListener('input', () => { this._skillSearch = search.value; this.render(); });
+      }
+      this.shadowRoot.querySelectorAll('[data-action="skill-type"]').forEach(btn => {
+        btn.addEventListener('click', () => { this._skillTypeFilter = btn.dataset.val || null; this.render(); });
+      });
+      this.shadowRoot.querySelectorAll('[data-action="skill-sort"]').forEach(btn => {
+        btn.addEventListener('click', () => { this._skillSort = btn.dataset.val; this.render(); });
+      });
+      this.shadowRoot.querySelectorAll('[data-action="skill-compact"]').forEach(btn => {
+        btn.addEventListener('click', () => { this._skillCompact = !this._skillCompact; this.render(); });
+      });
+      this.shadowRoot.querySelectorAll('[data-action="toggle-section"]').forEach(el => {
+        el.addEventListener('click', () => {
+          const key = el.dataset.section;
+          this._collapsedSections[key] = !this._collapsedSections[key];
+          this.render();
+        });
+      });
+    }
   }
 
   _renderTab(t,s){
@@ -578,7 +291,16 @@ class InfoPanel extends HTMLElement {
 
   _calcThreat(s) {
     const a = s.attributes || {}, sk = s.skills || {};
-    const best = g => Math.max(0, ...Object.values(g || {}).map(x => Number(x?.mastery) || 0));
+    const normalizeSkillGroup = g => {
+      if (!g) return {};
+      if (Array.isArray(g)) {
+        const obj = {};
+        g.forEach(item => { if (item && item.name) obj[item.name] = item; });
+        return obj;
+      }
+      return g;
+    };
+    const best = g => Math.max(0, ...Object.values(normalizeSkillGroup(g)).map(x => Number(x?.mastery) || 0));
     
     const nin = Math.round((a.chakra || 0) * 0.45 + (a.spirit || 0) * 0.25 + best(sk.jutsu) * 0.7);
     const tai = Math.round((a.stamina || 0) * 0.25 + (a.speed || 0) * 0.9 + (a.willpower || 0) * 0.2 + best(sk.taijutsu) * 0.9);
@@ -642,8 +364,35 @@ class InfoPanel extends HTMLElement {
       </div>`;
   }
 
+  _normalizeSkillGroup(g) {
+    if (!g) return {};
+    if (Array.isArray(g)) {
+      const obj = {};
+      g.forEach(item => {
+        if (item && typeof item === 'object' && item.name) {
+          obj[item.name] = item;
+        }
+      });
+      return obj;
+    }
+    return g;
+  }
+
   _renderSkills(s){
-    const sk=s.skills, ju=sk?.jutsu||{}, tai=sk?.taijutsu||{}, gen=sk?.genjutsu||{}, support=sk?.support||{}, talents=sk?.talents||{};
+    const sk=s.skills;
+    const ju=this._normalizeSkillGroup(sk?.jutsu);
+    const tai=this._normalizeSkillGroup(sk?.taijutsu);
+    const gen=this._normalizeSkillGroup(sk?.genjutsu);
+    const support=this._normalizeSkillGroup(sk?.support);
+    const talents=sk?.talents||{};
+    // Also normalize non-standard categories AI may create
+    const extraNin = this._normalizeSkillGroup(sk?.ninjutsu);
+    const auxiliary = this._normalizeSkillGroup(sk?.auxiliary);
+    const knowledge = this._normalizeSkillGroup(sk?.knowledge);
+    // Merge extra categories into main ones
+    Object.assign(ju, extraNin);
+    Object.assign(support, auxiliary, knowledge);
+
     let kgText = '普通血脉';
     if (sk?.kekkei_genkai) {
       if (typeof sk.kekkei_genkai === 'string') kgText = sk.kekkei_genkai;
@@ -651,16 +400,36 @@ class InfoPanel extends HTMLElement {
       else if (typeof sk.kekkei_genkai === 'object') kgText = sk.kekkei_genkai.name || Object.keys(sk.kekkei_genkai).join('、') || '普通血脉';
     }
     const isNormalBloodline = kgText === '普通血脉';
-    
-    return `
-      <div class="sec">
-        <div class="sec-title">血继限界</div>
+
+    const cats = [['秘传忍术', ju, 'element', 'jutsu'], ['体术造诣', tai, null, 'taijutsu'], ['幻术解析', gen, null, 'genjutsu'], ['辅助技能', support, null, 'support']];
+    const allSkills = [];
+    cats.forEach(([, skills, , type]) => { Object.entries(skills).forEach(([n,d]) => { allSkills.push({ ...d, name: n, _type: type }); }); });
+
+    const bar = `<div class="skill-bar">
+      <input class="skill-search" id="skill-search" placeholder="搜索技能..." value="${this._escAttr(this._skillSearch)}" data-action="skill-search">
+      <button class="skill-btn ${!this._skillTypeFilter?'active':''}" data-action="skill-type" data-val="">全部</button>
+      <button class="skill-btn ${this._skillTypeFilter==='jutsu'?'active':''}" data-action="skill-type" data-val="jutsu">忍</button>
+      <button class="skill-btn ${this._skillTypeFilter==='taijutsu'?'active':''}" data-action="skill-type" data-val="taijutsu">体</button>
+      <button class="skill-btn ${this._skillTypeFilter==='genjutsu'?'active':''}" data-action="skill-type" data-val="genjutsu">幻</button>
+      <button class="skill-btn ${this._skillTypeFilter==='support'?'active':''}" data-action="skill-type" data-val="support">辅</button>
+      <button class="skill-btn ${this._skillSort==='mastery'?'active':''}" data-action="skill-sort" data-val="mastery">熟练度↓</button>
+      <button class="skill-btn ${this._skillSort==='default'?'active':''}" data-action="skill-sort" data-val="default">默认</button>
+      <button class="skill-btn ${this._skillCompact?'active':''}" data-action="skill-compact">紧凑</button>
+    </div>`;
+
+    const visible = this._getFilteredSortedSkills(allSkills);
+    const totalStr = allSkills.length !== visible.length
+      ? `显示 ${visible.length} / 总计 ${allSkills.length} 个技能`
+      : `总计 ${allSkills.length} 个技能`;
+
+    return `<div class="sec">
+        <div class="sec-title" style="cursor:default;">血继限界</div>
         <div class="skill-card bloodline ${isNormalBloodline ? 'normal' : ''}">
           <div class="skill-title">${this._esc(kgText)}</div>
         </div>
       </div>
       <div class="sec">
-        <div class="sec-title">特殊天赋</div>
+        <div class="sec-title" style="cursor:default;">特殊天赋</div>
         <div class="grid-list">
           ${Object.entries(talents).length?Object.entries(talents).map(([n,d])=>`
             <div class="skill-card">
@@ -675,15 +444,40 @@ class InfoPanel extends HTMLElement {
               <span>血继限界尚未显现，<em>结印发起遭遇</em> 或可唤醒沉睡血脉</span>
             </div>`}
         </div>
-      </div>
-      ${this._skillSection('秘传忍术', ju, 'element', 'jutsu')}
-      ${this._skillSection('体术造诣', tai, null, 'taijutsu')}
-      ${this._skillSection('幻术解析', gen, null, 'genjutsu')}
-      ${this._skillSection('辅助技能', support, null, 'support')}`;
+      </div>`
+      + bar + `<div class="skill-summary">${totalStr}</div>`
+      + this._skillSection('秘传忍术', ju, 'element', 'jutsu')
+      + this._skillSection('体术造诣', tai, null, 'taijutsu')
+      + this._skillSection('幻术解析', gen, null, 'genjutsu')
+      + this._skillSection('辅助技能', support, null, 'support');
+  }
+
+  _getFilteredSortedSkills(all) {
+    let list = all;
+    if (this._skillSearch) {
+      const q = this._skillSearch.toLowerCase();
+      list = list.filter(s => (s.name||'').toLowerCase().includes(q));
+    }
+    if (this._skillTypeFilter) {
+      list = list.filter(s => s._type === this._skillTypeFilter);
+    }
+    if (this._skillSort === 'mastery') {
+      list = [...list].sort((a, b) => (b.mastery||0) - (a.mastery||0));
+    }
+    return list;
   }
 
   _skillSection(title, skills, metaKey, type) {
-    const list = Object.entries(skills);
+    const normalized = this._normalizeSkillGroup(skills);
+    const entries = Object.entries(normalized);
+    let list = entries.map(([n,d]) => ({ ...d, name: n }));
+    if (this._skillSearch) {
+      const q = this._skillSearch.toLowerCase();
+      list = list.filter(s => (s.name||'').toLowerCase().includes(q));
+    }
+    if (this._skillTypeFilter && this._skillTypeFilter !== type) list = [];
+    if (this._skillSort === 'mastery') list.sort((a, b) => (b.mastery||0) - (a.mastery||0));
+
     const getThemeColor = (t) => {
       if(t==='jutsu') return '#42A5F5';
       if(t==='taijutsu') return '#66BB6A';
@@ -691,15 +485,21 @@ class InfoPanel extends HTMLElement {
       return 'var(--text-primary)';
     };
     const color = getThemeColor(type);
-    
-    return `
-      <div class="sec">
-        <div class="sec-title">${title}</div>
-        <div class="grid-list">
-          ${list.length?list.map(([n,d])=>`
-            <div class="skill-card" style="border-left-color: ${color};">
+
+    const sectionKey = type;
+    const isCollapsed = this._collapsedSections[sectionKey] || false;
+
+    const bodyHtml = !list.length ? `
+      <div class="skill-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="14" height="18" x="5" y="3" rx="2"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h4"/></svg>
+        <span>尚未习得任何术，<em>修行或拜师</em> 方能掌握</span>
+      </div>` : (this._skillCompact
+        ? list.map(d => this._compactSkillRow(d, color, metaKey)).join('')
+        : `<div class="grid-list">${list.map(d => {
+            const mColor = (m) => { if(m>=80) return '#ef5350'; if(m>=60) return '#eb613f'; if(m>=40) return '#c69c6d'; if(m>=20) return '#e8c87a'; return '#a39f98'; };
+            return `<div class="skill-card" style="border-left-color: ${color};">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                <div class="skill-title">${this._esc(n)}</div>
+                <div class="skill-title">${this._esc(d.name)}</div>
                 <div class="skill-mastery-tag">${this._mt(d?.mastery||0)}</div>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
@@ -709,13 +509,29 @@ class InfoPanel extends HTMLElement {
                 </div>
                 <div style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono);">造诣 ${d.mastery||0}</div>
               </div>
-            </div>`).join(''):`
-            <div class="skill-empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="14" height="18" x="5" y="3" rx="2"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h4"/></svg>
-              <span>尚未习得任何术，<em>修行或拜师</em> 方能掌握</span>
-            </div>`}
+            </div>`;
+          }).join('')}</div>`);
+
+    return `
+      <div class="sec">
+        <div class="sec-title skill-collapse-title" data-action="toggle-section" data-section="${sectionKey}">
+          <span class="arrow${isCollapsed?'':' open'}">▶</span>
+          ${title}<span class="skill-collapse-badge">(${list.length})</span>
+        </div>
+        <div class="skill-section-body${isCollapsed?' collapsed':''}" style="max-height:${isCollapsed?'0':'2000px'}">
+          ${bodyHtml}
         </div>
       </div>`;
+  }
+
+  _compactSkillRow(d, color, metaKey) {
+    const el = d[metaKey] ? `<span style="color:${color};font-weight:bold;font-size:10px;">${this._esc(d[metaKey])}</span>` : '';
+    const rank = `<span style="font-size:10px;color:var(--text-tertiary);">${this._esc(d.rank||'E')}</span>`;
+    return `<div class="skill-compact-row" data-action="expand-skill" data-skill="${this._escAttr(d.name)}" data-type="${this._escAttr(d._type||'')}">
+      <span class="skill-name" title="${this._escAttr(d.name)}">${this._esc(d.name)}</span>
+      <span class="skill-meta">${el}${rank}<span style="font-size:10px;color:var(--text-secondary);">${this._mt(d.mastery||0)}</span></span>
+      <span class="skill-mastery-num">造诣 ${d.mastery||0}</span>
+    </div>`;
   }
 
   _mt(v){ return v>=100?'极意':v>=80?'精纯':v>=60?'老练':v>=40?'熟稔':v>=20?'初成':'入门'; }
@@ -947,7 +763,7 @@ class InfoPanel extends HTMLElement {
     const modal = new Modal();
     (document.getElementById('app') || document.body).appendChild(modal);
 
-    const coreKeys = ['affection','trust','respect','info','history','inner_thoughts','role','faction','status','tags','known_secrets','promises','debts', 'last_interaction', 'last_interaction_at'];
+    const coreKeys = ['affection','trust','respect','info','history','inner_thoughts','role','faction','status','tags','known_secrets','promises','debts', 'last_interaction', 'last_interaction_at', 'pinned', 'location'];
     let extraStatsHtml = '';
     let extraSkillsHtml = '';
     
@@ -1017,21 +833,9 @@ class InfoPanel extends HTMLElement {
         ${extraSkillsHtml ? `<div>${extraSkillsHtml}</div>` : ''}
       </div>` : ''}
 
-      ${d.inner_thoughts ? `
-      <div style="margin-bottom:24px;">
-        <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">实时心理剖析</div>
-        <div style="padding: 16px; background: linear-gradient(90deg, rgba(198,156,109,0.08), transparent); border-left: 3px solid #c69c6d; font-size: 13px; color: #d4b48f; font-style: italic; line-height: 1.7; border-radius: 0 8px 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          「${this._esc(d.inner_thoughts)}」
-        </div>
-      </div>` : ''}
+      ${this._renderTimeline(d.inner_thoughts, '实时心理剖析', 'c69c6d')}
       
-      ${d.history ? `
-      <div style="margin-bottom:16px;">
-        <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">羁绊历史记录</div>
-        <div style="font-size:13px; color:#a39f98; line-height:1.7; background: rgba(0,0,0,0.3); padding:16px; border-radius:8px; border: 1px solid rgba(255,255,255,0.04); box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);">
-          ${this._esc(d.history)}
-        </div>
-      </div>` : ''}
+      ${this._renderTimeline(d.history, '羁绊历史记录', '6aa4ff')}
       
       ${tagsHtml}
     `;
@@ -1044,22 +848,32 @@ class InfoPanel extends HTMLElement {
   }
 
   _renderRel(s){
-    const r=s.relationships||{}, e=Object.entries(r).sort((a,b)=>(b[1]?.affection||0)-(a[1]?.affection||0));
+    const r=s.relationships||{};
+    const e=Object.entries(r).sort((a,b) => {
+      const p1 = !!a[1]?.pinned;
+      const p2 = !!b[1]?.pinned;
+      if (p1 !== p2) return p1 ? -1 : 1;
+      return (b[1]?.affection||0)-(a[1]?.affection||0);
+    });
     return `
       <div class="sec">
         <div class="sec-title">羁绊印记</div>
         <div class="grid-list">
           ${e.length?e.map(([n,d])=>`
-            <div class="rel-card-wrap" data-rel-name="${escAttr(n)}">
+            <div class="rel-card-wrap${d.pinned?' rel-pinned':''}" data-rel-name="${escAttr(n)}">
+              <div class="rel-actions">
+                <button class="rel-action-btn pin-btn ${d.pinned?'pin-active':''}" data-action="pin" data-rel-npc="${escAttr(n)}" title="${d.pinned?'取消置顶':'置顶'}">📌</button>
+                <button class="rel-action-btn pin-btn del-hover" data-action="delete" data-rel-npc="${escAttr(n)}" title="删除羁绊">✖</button>
+              </div>
               <div class="rel-header">
                 <div class="rel-avatar-ring">
                   <div class="rel-avatar">${n[0]}</div>
                 </div>
                 <div class="rel-info">
-                  <div class="rel-info-title">${this._esc(n)}</div>
+                  <div class="rel-info-title">${this._esc(n)}${d.pinned?'<span class="rel-pin-tag">📌</span>':''}</div>
                   <div class="rel-info-sub">
-                    <span class="glass-pill" style="padding: 2px 8px; font-size: 9px; background:rgba(198,156,109,0.1); color:var(--c-kin-bright); border-color:rgba(198,156,109,0.2);">${this._esc(d.faction)}</span>
-                    ${this._esc(d.role)}
+                    ${d.faction ? `<span class="glass-pill" style="padding: 2px 8px; font-size: 9px; background:rgba(198,156,109,0.1); color:var(--c-kin-bright); border-color:rgba(198,156,109,0.2);">${this._esc(d.faction)}</span>` : ''}
+                    ${this._esc(d.role || '')}
                   </div>
                 </div>
               </div>
@@ -1096,7 +910,34 @@ class InfoPanel extends HTMLElement {
     return escHtml(value);
   }
   _escAttr(value) { return escAttr(value); }
+
+  _renderTimeline(data, title, accentColor) {
+    let entries = Array.isArray(data) ? data : (typeof data === 'string' && data.trim() ? [{ turn: 0, time: '', summary: data }] : []);
+    // Normalize: if entries are plain strings, wrap them into objects
+    entries = entries.map(e => {
+      if (typeof e === 'string') return { turn: 0, time: '', summary: e };
+      return e;
+    }).filter(e => e && (e.summary || '').toString().trim());
+    if (!entries.length) return '';
+    const html = entries.slice(0, 10).map((e, i) => {
+      const isLatest = i === 0;
+      const timeStr = e.time ? `<span style="font-size:10px;color:rgba(255,255,255,0.25);margin-right:8px;">${this._esc(e.time)}</span>` : '';
+      return `<div style="display:flex;align-items:flex-start;padding:${isLatest ? '10px 0' : '6px 0'};${!isLatest ? 'border-bottom:1px solid rgba(255,255,255,0.03);' : ''}">
+        <div style="flex-shrink:0;width:8px;height:8px;border-radius:50%;background:#${accentColor};margin:5px 10px 0 0;opacity:${isLatest ? '1' : '0.4'};${isLatest ? 'box-shadow:0 0 6px #' + accentColor : ''};"></div>
+        <div style="flex:1;min-width:0;">
+          ${timeStr}
+          <span style="font-size:${isLatest ? '13' : '12'}px;color:${isLatest ? '#e8e4d9' : '#a39f98'};line-height:1.6;${isLatest ? 'font-weight:500' : ''};">${this._esc(e.summary)}</span>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:24px;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">${title}</div>
+      <div style="background:rgba(0,0,0,0.25);border-radius:8px;padding:8px 16px;border:1px solid rgba(255,255,255,0.04);">${html}</div>
+    </div>`;
+  }
 }
 
 customElements.define('info-panel', InfoPanel);
 export default InfoPanel;
+
+

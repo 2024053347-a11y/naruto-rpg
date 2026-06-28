@@ -211,6 +211,7 @@ export class InstructionParser {
     }
 
     return text
+      .replace(/极其|共犯/g, '')
       .replace(/<variable>[\s\S]*?<\/variable>/g, '')
       .replace(/<combat[^>]*>[\s\S]*?<\/combat>/g, '')
       .replace(/<mission>[\s\S]*?<\/mission>/g, '')
@@ -223,7 +224,7 @@ export class InstructionParser {
       .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
       .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
       .replace(/<思维链>[\s\S]*?<\/思维链>/gi, '')
-      .replace(/<[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>[\s\S]*?<\/[a-zA-Z][\w.\-~]*>/g, '')
+      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }
@@ -245,9 +246,16 @@ export class InstructionParser {
     return think;
   }
 
+  extractVarThinkContent(text) {
+    if (!text) return '';
+    const m = text.match(/<variable_thinking>([\s\S]*?)<\/variable_thinking>/i);
+    return m ? m[1].trim() : '';
+  }
+
   cleanupPartialResponse(text) {
     if (!text) return '';
     return text
+      .replace(/极其|共犯/g, '')
       .replace(/<variable>[\s\S]*?(?:<\/variable>|$)/g, '')
       .replace(/<combat[^>]*>[\s\S]*?(?:<\/combat>|$)/g, '')
       .replace(/<mission>[\s\S]*?(?:<\/mission>|$)/g, '')
@@ -260,7 +268,7 @@ export class InstructionParser {
       .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')
       .replace(/<reasoning>[\s\S]*?(?:<\/reasoning>|$)/gi, '')
       .replace(/<思维链>[\s\S]*?(?:<\/思维链>|$)/gi, '')
-      .replace(/<[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>[\s\S]*?(?:<\/[a-zA-Z][\w.\-~]*>|$)/g, '')
+      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }

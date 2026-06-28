@@ -36,7 +36,9 @@ class StateManager {
         public_identity: '忍校学生',
         current_goal: '',
         reputation_tags: [],
-        flags: {}
+        flags: {},
+        alive: true,
+        death_cause: ''
       },
       attributes: {
         chakra: 10, chakra_current: 10,
@@ -124,12 +126,17 @@ class StateManager {
       },
       world_state: {
         timeline: '木叶48年',
-        calendar: { year: '木叶48年', season: '春', day: 1, time_of_day: '清晨' },
+        calendar: '木叶48年1月1日·清晨',
         current_location: '木叶隐村',
-        season: '春',
+        month: 1,
         weather: '晴',
         active_events: [],
-        event_log: []
+        event_log: [],
+        map: {
+          explored_regions: ['火之国', '木叶隐村'],
+          known_locations: {},
+          active_pins: []
+        }
       },
       timeline: null,
       ui_prefs: {
@@ -152,7 +159,7 @@ class StateManager {
           aiCardStyle: 'line',
           paragraphIndent: false,
           showVariableSummary: true,
-          reasoningOpen: false,
+          reasoningOpen: true,  /* 思维链默认展开，避免在酒馆环境下默认折叠导致内心想法文字不可见 */
           musicEnabled: true,
           musicVolume: 45,
           musicLoop: true,
@@ -194,10 +201,16 @@ class StateManager {
         continue;
       }
       switch (update.op) {
-        case 'set':
-          setValueByPath(this.state, update.path, update.value);
+        case 'set': {
+          let value = update.value;
+          const current = getValueByPath(this.state, update.path);
+          if (update.path.startsWith('skills.') && current && typeof current === 'object' && !Array.isArray(current) && value && typeof value === 'object' && !Array.isArray(value)) {
+            value = { ...current, ...value };
+          }
+          setValueByPath(this.state, update.path, value);
           applied.push(update);
           break;
+        }
         case 'add': {
           const existing = getValueByPath(this.state, update.path);
           if (existing !== undefined && typeof existing !== 'number') {
@@ -277,10 +290,12 @@ class StateManager {
     }
     this._enforceStateBounds();
     for (const update of applied) {
+      update.oldValue = oldValues[update.path];
+      update.finalValue = getValueByPath(this.state, update.path);
       eventBus.emit('state:changed', {
         path: update.path,
-        value: getValueByPath(this.state, update.path),
-        oldValue: oldValues[update.path]
+        value: update.finalValue,
+        oldValue: update.oldValue
       });
     }
     this._notifySubscribers(applied);
@@ -466,6 +481,14 @@ class StateManager {
       rel.trust = Math.max(-100, Math.min(100, Number(rel.trust) || 0));
       rel.respect = Math.max(0, Math.min(100, Number(rel.respect) || 0));
     }
+
+    const player = this.state.player || {};
+    if (player.alive !== false && this.state.attributes?.stamina_current <= 0) {
+      player.alive = false;
+      player.death_cause = player.death_cause || '体力耗尽';
+      console.warn('[StateManager] Player died:', player.death_cause);
+      eventBus.emit('player:died', { cause: player.death_cause });
+    }
   }
 
   _normalizeEquipment(equipment, source = {}) {
@@ -532,16 +555,24 @@ class StateManager {
   _normalizeRelationships(relationships) {
     const result = {};
     if (!relationships || typeof relationships !== 'object') return result;
+    const toArray = v => {
+      if (typeof v === 'string' && v.trim()) return [{ turn: 0, time: '', summary: v.trim() }];
+      if (Array.isArray(v)) return v;
+      return [];
+    };
     for (const [name, value] of Object.entries(relationships)) {
       if (typeof value === 'number') {
-        result[name] = { affection: value, trust: 0, respect: 0, info: '' };
+        result[name] = { affection: value, trust: 0, respect: 0, info: '', history: [], inner_thoughts: [] };
       } else if (value && typeof value === 'object') {
         result[name] = {
           ...value,
           affection: Number(value.affection) || 0,
           trust: Number(value.trust) || 0,
           respect: Number(value.respect) || 0,
-          info: value.info || ''
+          info: value.info || '',
+          pinned: value.pinned ?? false,
+          history: toArray(value.history),
+          inner_thoughts: toArray(value.inner_thoughts)
         };
       }
     }
@@ -676,7 +707,7 @@ class StateManager {
     }
   }
 
-  loadUIPrefs() {
+  async loadUIPrefs() {
     try {
       const saved = JSON.parse(localStorage.getItem('naruto_ui_prefs') || 'null');
       if (!saved) return;
@@ -684,14 +715,26 @@ class StateManager {
       eventBus.emit('state:changed', { path: 'ui_prefs', value: this.get('ui_prefs'), oldValue: null });
 
       if (!this.state.ui_prefs?.settings?.backgroundImage) {
-        const large = localStorage.getItem('naruto_bg_image');
-        if (large) {
+        // First try to migrate from localStorage if exists
+        const legacyBg = localStorage.getItem('naruto_bg_image');
+        if (legacyBg) {
           try {
-            const decoded = JSON.parse(large);
+            const decoded = JSON.parse(legacyBg);
             if (decoded && this.state.ui_prefs?.settings) {
               this.state.ui_prefs.settings.backgroundImage = decoded;
+              // Migrate to IDB and clear from LS
+              await this.dbPut(STORE_META, { key: 'naruto_bg_image', value: decoded });
+              localStorage.removeItem('naruto_bg_image');
             }
-          } catch { console.warn('[StateManager] Failed to decode background image'); }
+          } catch { }
+        } else {
+          // Load from IndexedDB
+          try {
+            const meta = await this.dbGet(STORE_META, 'naruto_bg_image');
+            if (meta && meta.value && this.state.ui_prefs?.settings) {
+              this.state.ui_prefs.settings.backgroundImage = meta.value;
+            }
+          } catch { }
         }
       }
     } catch (e) {
@@ -704,34 +747,21 @@ class StateManager {
       const uiPrefs = this.state.ui_prefs || {};
       const bg = uiPrefs.settings?.backgroundImage;
 
-      if (bg && bg.length > 100000) {
+      if (bg && bg.length > 50000) {
         const small = { ...uiPrefs, settings: { ...uiPrefs.settings, backgroundImage: '' } };
         localStorage.setItem('naruto_ui_prefs', JSON.stringify(small));
-        localStorage.setItem('naruto_bg_image', JSON.stringify(bg));
+        await this.dbPut(STORE_META, { key: 'naruto_bg_image', value: bg });
       } else {
         localStorage.setItem('naruto_ui_prefs', JSON.stringify(uiPrefs));
+        await this.dbPut(STORE_META, { key: 'naruto_bg_image', value: null });
       }
     } catch (e) {
-      console.warn('[StateManager] Failed to save UI prefs to localStorage:', e.message);
+      console.warn('[StateManager] Failed to save UI prefs:', e.message);
     }
   }
 
   async saveLargeUIPrefs() {
-    try {
-      const uiPrefs = this.state.ui_prefs || {};
-      const bg = uiPrefs.settings?.backgroundImage;
-      if (bg && bg.length > 50000) {
-        const small = { ...uiPrefs, settings: { ...uiPrefs.settings, backgroundImage: '' } };
-        localStorage.setItem('naruto_ui_prefs', JSON.stringify(small));
-        try {
-          localStorage.setItem('naruto_bg_image', JSON.stringify(bg));
-        } catch {
-          console.warn('[StateManager] Background image still too large for localStorage');
-        }
-      }
-    } catch (e) {
-      console.warn('[StateManager] Failed to save large UI prefs:', e.message);
-    }
+    await this.saveUIPrefs();
   }
 
   getDB() {

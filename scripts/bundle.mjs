@@ -189,6 +189,21 @@ function topologicalSort(graph) {
 function stripImportsExports(code, filePath) {
   let result = code;
 
+  // Intercept CSS imports and convert to inline strings
+  // e.g. import hudStyles from '../../css/components/hud.css';
+  result = result.replace(/^\s*import\s+(\w+)\s+from\s+['"]([^'"]+\.css)['"]\s*;?\s*$/gm, (match, varName, cssPath) => {
+    try {
+      const fullPath = path.resolve(path.dirname(filePath), cssPath);
+      let cssContent = fs.readFileSync(fullPath, 'utf-8');
+      // basic minification
+      cssContent = cssContent.replace(/\s+/g, ' ').replace(/\/\*.*?\*\//g, '').trim();
+      return `const ${varName} = \`${cssContent}\`;`;
+    } catch(e) {
+      console.warn(`  ⚠ Failed to inline CSS module: ${cssPath} at ${filePath}`);
+      return match;
+    }
+  });
+
   // 移除 import 语句
   result = result.replace(/^\s*import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)(?:\s*,\s*(?:\{[^}]*\}|\*\s+as\s+\w+))?)\s+from\s+['"][^'"]+['"]\s*;?\s*$/gm, '');
   result = result.replace(/^\s*import\s+['"][^'"]+['"]\s*;?\s*$/gm, '');
