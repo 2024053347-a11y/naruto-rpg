@@ -207,10 +207,9 @@ export class InstructionParser {
       .replace(/<memory>[\s\S]*?<\/memory>/g, '')
       .replace(/<status_query\s*\/>/g, '')
       .replace(/<system_info>[\s\S]*?<\/system_info>/g, '')
-      .replace(/<think>[\s\S]*?<\/think>/gi, '')
-      .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
-      .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
-      .replace(/<思维链>[\s\S]*?<\/思维链>/gi, '')
+      .replace(/<(think|thinking|reasoning|思维链)>([\s\S]*?)<\/\1>/gi, (match, p1, p2) => {
+        return `> 💭 **思维过程**\n${p2.split('\\n').map(l => '> ' + l).join('\\n')}\n\n`;
+      })
       .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
@@ -249,10 +248,9 @@ export class InstructionParser {
       .replace(/<memory>[\s\S]*?(?:<\/memory>|$)/g, '')
       .replace(/<status_query\s*\/?\s*>?/g, '')
       .replace(/<system_info>[\s\S]*?(?:<\/system_info>|$)/g, '')
-      .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
-      .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')
-      .replace(/<reasoning>[\s\S]*?(?:<\/reasoning>|$)/gi, '')
-      .replace(/<思维链>[\s\S]*?(?:<\/思维链>|$)/gi, '')
+      .replace(/<(think|thinking|reasoning|思维链)>([\s\S]*?)(?:<\/\1>|$)/gi, (match, p1, p2) => {
+        return `> 💭 **思维过程**\n${p2.split('\\n').map(l => '> ' + l).join('\\n')}\n\n`;
+      })
       .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
