@@ -24,7 +24,7 @@ router.get('/discord', (req, res) => {
   // 将 state 存入 Cookie 以进行 CSRF 验证（有效时间 10 分钟）
   res.cookie('discord_oauth_state', state, {
     httpOnly: true,
-    secure: config.nodeEnv === 'production',
+    secure: config.nodeEnv === 'production' && req.secure,
     sameSite: 'lax',
     path: '/',
     maxAge: 10 * 60 * 1000
@@ -155,7 +155,7 @@ router.get('/discord/callback', async (req, res) => {
     // 8. 将 JWT 写入 HttpOnly Cookie
     res.cookie('naruto_token', token, {
       httpOnly: true,
-      secure: config.nodeEnv === 'production',
+      secure: config.nodeEnv === 'production' && req.secure,
       sameSite: 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 天
