@@ -211,6 +211,11 @@ export class InstructionParser {
       .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
       .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
       .replace(/<思维链>[\s\S]*?<\/思维链>/gi, '')
+      // Modern model thinking tags (DeepSeek R1, Claude extended thinking, etc.)
+      .replace(/<anthropic_thinking>[\s\S]*?<\/anthropic_thinking>/gi, '')
+      .replace(/<anthropic_think>[\s\S]*?<\/anthropic_think>/gi, '')
+      .replace(/<deepseek_thinking>[\s\S]*?<\/deepseek_thinking>/gi, '')
+      .replace(/<analysis>[\s\S]*?<\/analysis>/gi, '')
       .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
@@ -219,7 +224,7 @@ export class InstructionParser {
   extractThinkContent(text) {
     if (!text) return '';
     let think = '';
-    for (const tag of ['think', 'thinking', 'reasoning', '思维链']) {
+    for (const tag of ['think', 'thinking', 'reasoning', '思维链', 'anthropic_thinking', 'anthropic_think', 'deepseek_thinking', 'analysis']) {
       const m = text.match(new RegExp(`<${tag}>[\\s\\S]*?<\\/${tag}>`, 'i'));
       if (m) { think = m[0].replace(new RegExp(`</?${tag}>`, 'gi'), '').trim(); break; }
     }
@@ -253,6 +258,10 @@ export class InstructionParser {
       .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')
       .replace(/<reasoning>[\s\S]*?(?:<\/reasoning>|$)/gi, '')
       .replace(/<思维链>[\s\S]*?(?:<\/思维链>|$)/gi, '')
+      .replace(/<anthropic_thinking>[\s\S]*?(?:<\/anthropic_thinking>|$)/gi, '')
+      .replace(/<anthropic_think>[\s\S]*?(?:<\/anthropic_think>|$)/gi, '')
+      .replace(/<deepseek_thinking>[\s\S]*?(?:<\/deepseek_thinking>|$)/gi, '')
+      .replace(/<analysis>[\s\S]*?(?:<\/analysis>|$)/gi, '')
       .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
