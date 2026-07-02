@@ -3,6 +3,23 @@ import { eventBus } from './event-bus.js';
 // 检测是否在酒馆 iframe 环境中
 export const isTavernEnv = typeof globalThis !== 'undefined' && typeof globalThis.generate === 'function';
 
+// 代理检测：qiwu.asia 走代理，本地/GitHub 直连
+const USE_PROXY = typeof location !== 'undefined' && location.hostname.includes('qiwu.asia');
+function _aiFetch(url, body, apiKey, extraHeaders, signal) {
+  if (USE_PROXY) {
+    return fetch('/api/ai-proxy', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(extraHeaders||{}) }, body: JSON.stringify(body), signal });
+  }
+  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }, body: JSON.stringify(body), signal });
+}
+
+const USE_PROXY = typeof location !== 'undefined' && location.hostname.includes('qiwu.asia');
+function _aiFetch(url, body, apiKey, extraHeaders, signal) {
+  if (USE_PROXY) {
+    return fetch('/api/ai-proxy', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(extraHeaders||{}) }, body: JSON.stringify(body), signal });
+  }
+  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }, body: JSON.stringify(body), signal });
+}
+
 export class AIAdapter {
   async chat(messages, options) { throw new Error('Not implemented'); }
   async chatStream(messages, options, onChunk) { throw new Error('Not implemented'); }
@@ -86,24 +103,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const response = await fetch(`/api/ai-proxy`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-target-url': `${this.apiUrl}/chat/completions`,
-        'x-user-api-key': this.apiKey,
-        'x-api-key-header': 'Authorization'
-      },
-      body: JSON.stringify({
-        model: this.model,
-        messages,
-        temperature: options.temperature ?? 0.9,
-        max_tokens: options.max_tokens ?? 4096,
-        top_p: options.top_p ?? 0.9,
-        frequency_penalty: options.frequency_penalty ?? 0.2,
-        stream: false
-      })
-    });
+    const response = await _aiFetch(`${this.apiUrl}/chat/completions`, { model: this.model, messages, temperature: options.temperature ?? 0.9, max_tokens: options.max_tokens ?? 4096, top_p: options.top_p ?? 0.9, frequency_penalty: options.frequency_penalty ?? 0.2, stream: false }, this.apiKey, {}, undefined)
     if (!response.ok) {
       const err = await response.text();
       throw new Error(`API Error ${response.status}: ${err}`);
@@ -135,26 +135,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
         let fullContent = '';
         try {
-          const response = await fetch(`/api/ai-proxy`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-target-url': `${this.apiUrl}/chat/completions`,
-              'x-user-api-key': this.apiKey,
-              'x-api-key-header': 'Authorization'
-            },
-            body: JSON.stringify({
-              model: this.model,
-              messages,
-              temperature: options.temperature ?? 0.9,
-              max_tokens: options.max_tokens ?? 4096,
-              top_p: options.top_p ?? 0.9,
-              frequency_penalty: options.frequency_penalty ?? 0.2,
-              stream: true,
-              stream_options: { include_usage: true }
-            }),
-            signal: signal
-          });
+          const response = await _aiFetch(`${this.apiUrl}/chat/completions`, {}, this.apiKey, {}, signal)
           clearTimeout(timer);
 
           if (!response.ok) {
@@ -250,14 +231,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
-    const response = await fetch(`/api/ai-proxy`, {
-      method: 'GET',
-      headers: {
-        'x-target-url': `${apiUrl}/models`,
-        'x-user-api-key': config.apiKey || '',
-        'x-api-key-header': 'Authorization'
-      }
-    });
+    const response = await _aiFetch(`${apiUrl}/models`, {}, this.apiKey, {}, undefined)
     if (!response.ok) {
       const err = await response.text();
       throw new Error(`模型列表读取失败 ${response.status}: ${err}`);
@@ -314,18 +288,7 @@ class ClaudeAdapter extends AIAdapter {
         messages: chatMsgs
       };
       if (system) body.system = system;
-      const response = await fetch(`/api/ai-proxy`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-target-url': `${this.apiUrl}/messages`,
-          'x-user-api-key': this.apiKey,
-          'x-api-key-header': 'x-api-key',
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify(body),
-        signal: controller.signal
-      });
+      const response = await _aiFetch(`${this.apiUrl}/messages`, {}, this.apiKey, {}, undefined)
       clearTimeout(timer);
       if (!response.ok) {
         const err = await response.text();
@@ -372,18 +335,7 @@ class ClaudeAdapter extends AIAdapter {
             stream: true
           };
           if (system) body.system = system;
-          const response = await fetch(`/api/ai-proxy`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-target-url': `${this.apiUrl}/messages`,
-              'x-user-api-key': this.apiKey,
-              'x-api-key-header': 'x-api-key',
-              'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify(body),
-            signal: signal
-          });
+          const response = await _aiFetch(`${this.apiUrl}/messages`, {}, this.apiKey, {}, signal)
           clearTimeout(timer);
 
           if (!response.ok) {
@@ -474,15 +426,7 @@ class ClaudeAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
-    const response = await fetch(`/api/ai-proxy`, {
-      method: 'GET',
-      headers: {
-        'x-target-url': `${apiUrl}/models`,
-        'x-user-api-key': config.apiKey || '',
-        'x-api-key-header': 'x-api-key',
-        'anthropic-version': '2023-06-01'
-      }
-    });
+    const response = await _aiFetch(`${apiUrl}/models`, {}, this.apiKey, {}, undefined)
     if (!response.ok) {
       const err = await response.text();
       throw new Error(`模型列表读取失败 ${response.status}: ${err}`);

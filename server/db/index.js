@@ -19,14 +19,26 @@ if (!fs.existsSync(savesDir)) {
 
 // 辅助函数：安全的读取 JSON 文件
 function readJsonFile(filePath, defaultVal = {}) {
-  try {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(content);
+  let lastErr;
+  for (let i = 0; i < 5; i++) {
+    try {
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        // 如果文件因为正在被写入而暂时为空，抛出错误以触发重试
+        if (!content.trim()) {
+          throw new Error('File is empty (possibly being written)');
+        }
+        return JSON.parse(content);
+      }
+      return defaultVal;
+    } catch (err) {
+      lastErr = err;
+      // 遇到文件锁定或为空的情况，同步阻塞等待 50ms 后再试
+      const start = Date.now();
+      while (Date.now() - start < 50) {}
     }
-  } catch (err) {
-    console.error(`[DB] Error reading JSON file ${filePath}:`, err);
   }
+  console.error(`[DB] Error reading JSON file ${filePath} after 5 retries:`, lastErr);
   return defaultVal;
 }
 
