@@ -20,8 +20,8 @@ export const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   },
   saves: {
-    maxSlots: parseInt(process.env.MAX_SAVE_SLOTS || '5', 10),
-    maxSizeMb: parseInt(process.env.MAX_SAVE_SIZE_MB || '10', 10)
+    maxSlots: parseInt(process.env.MAX_SAVE_SLOTS || '1', 10),
+    maxSizeMb: parseInt(process.env.MAX_SAVE_SIZE_MB || '200', 10)
   },
   proxy: {
     enabled: process.env.PROXY_ENABLED === 'true',

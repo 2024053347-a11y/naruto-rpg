@@ -61,6 +61,12 @@ export async function requireHtmlAuth(req, res, next) {
   }
   const token = extractToken(req);
 
+  // 禁用 HTML 页面和重定向的缓存，防止 CDN 缓存导致无限重定向
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+
   if (!token) {
     return res.redirect('/login.html');
   }

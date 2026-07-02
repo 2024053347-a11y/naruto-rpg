@@ -37,7 +37,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       connectSrc: ["'self'", "https:", "wss:"],
-      mediaSrc: ["'self'", "https:"],
+      mediaSrc: ["'self'", "https:", "http:"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
@@ -50,8 +50,8 @@ app.use(helmet({
 
 app.use(compression());
 app.use(cookieParser());
-// JSON body 限制降至 5MB（单存档上限 10MB 走二进制流，不走 JSON body）
-app.use(express.json({ limit: '5mb' }));
+// JSON body 限制降至 5MB（单存档上限 10MB 走二进制流，不走 JSON body）- 现提升至 200MB 以支持超大存档
+app.use(express.json({ limit: '200mb' }));
 
 // 3. 速率限制中间件 (防暴破/恶意请求)
 const authLimiter = rateLimit({

@@ -1,5 +1,27 @@
 # 更新日志
 
+## [v2.1.0] — 2026-07-02
+
+### 新增
+- **测试环境**：`https://www.qiwu.asia:8080/` 独立测试站，SSL 加密，与正式站共用后端
+- **一键部署脚本** `deploy.sh`：`bash deploy.sh` 测试站，`bash deploy.sh production` 正式站
+- 自动版本号（每次部署生成唯一 `?v=` 参数，CDN/浏览器缓存强制刷新）
+
+### 修复
+- **云存档上传失败**：文件路径部署 bug 修复
+- **个人中心面板不更新**：`public/js/` 文件未正确提升到 Web 根目录
+- **413 Request Entity Too Large**：Nginx `client_max_body_size` 提升到 200m
+- **国产浏览器 SSL 兼容**：添加 TLSv1.1 + 更多加密套件
+- **API 请求超时**：`/api/ai-proxy` 超时从 60s 提升到 300s，关闭 buffering
+
+### 优化
+- 云存档容量提升：单档最大 200MB
+- Discord 登录代理优化（Cloudflare Worker）
+- Service Worker v8 网络优先策略 + 自动检测更新
+- 登录页缓存控制（no-store），修复新用户登录循环跳转
+
+---
+
 ## [v1.2.0] — 2026-06-24
 
 ### 新增

@@ -872,7 +872,7 @@ class InfoPanel extends HTMLElement {
                   </div>
                   <div style="font-size:11px; color:var(--text-tertiary); display:flex; gap:12px;">
                     <span style="color:${qColor};">${this._esc(i.quality||'普通')}</span>
-                    <span>持有: ${i.quantity||1}</span>
+                    <span>持有: ${typeof i.quantity === 'object' ? (i.quantity?.value || i.quantity?.amount || i.quantity?.count || i.quantity?.quantity || 1) : (i.quantity || 1)}</span>
                   </div>
                 </div>
                 <div style="display:flex; gap:8px;">
