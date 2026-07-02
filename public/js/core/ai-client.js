@@ -624,7 +624,7 @@ export class AIClient {
         while (true) {
           const { done, value } = await reader.read();
           buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
-          const parts = buffer.split('\n\n');
+          const parts = buffer.split(/\r?\n\r?\n/);
           buffer = parts.pop() || '';
           if (done && buffer.trim()) { parts.push(buffer); buffer = ''; }
           
