@@ -99,7 +99,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await _fetch(`/api/ai-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
         let fullContent = '';
         try {
-          const response = await this._fetch(`/api/ai-proxy`, {
+          const response = await _fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -327,7 +327,7 @@ class ClaudeAdapter extends AIAdapter {
         messages: chatMsgs
       };
       if (system) body.system = system;
-      const response = await this._fetch(`/api/ai-proxy`, {
+      const response = await _fetch(`/api/ai-proxy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -385,7 +385,7 @@ class ClaudeAdapter extends AIAdapter {
             stream: true
           };
           if (system) body.system = system;
-          const response = await this._fetch(`/api/ai-proxy`, {
+          const response = await _fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

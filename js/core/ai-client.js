@@ -4,19 +4,20 @@ import { eventBus } from './event-bus.js';
 const USE_PROXY = typeof location !== 'undefined' && location.hostname.includes('qiwu.asia');
 export const isTavernEnv = typeof globalThis !== 'undefined' && typeof globalThis.generate === 'function';
 
-export class AIAdapter {
-  _fetch(url, init) {
-    if (!USE_PROXY && init && init.headers) {
-      const h = init.headers;
-      const realUrl = h['x-target-url'];
-      if (realUrl) {
-        const nh = { 'Content-Type': 'application/json' };
-        if (h['x-user-api-key']) nh['Authorization'] = 'Bearer ' + h['x-user-api-key'];
-        return fetch(realUrl, { ...init, headers: nh });
-      }
+function _fetch(url, init) {
+  if (!USE_PROXY && init && init.headers) {
+    const h = init.headers;
+    const realUrl = h['x-target-url'];
+    if (realUrl) {
+      const nh = { 'Content-Type': 'application/json' };
+      if (h['x-user-api-key']) nh['Authorization'] = 'Bearer ' + h['x-user-api-key'];
+      return fetch(realUrl, { ...init, headers: nh });
     }
-    return fetch(url, init);
   }
+  return fetch(url, init);
+}
+
+export class AIAdapter {
   async chat(messages, options) { throw new Error('Not implemented'); }
   async chatStream(messages, options, onChunk) { throw new Error('Not implemented'); }
   getModelInfo() { return { name: 'unknown', contextWindow: 4096 }; }
@@ -99,7 +100,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await _fetch(`/api/ai-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +149,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
         let fullContent = '';
         try {
-          const response = await this._fetch(`/api/ai-proxy`, {
+          const response = await _fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -263,7 +264,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await _fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
         'x-target-url': `${apiUrl}/models`,
@@ -327,7 +328,7 @@ class ClaudeAdapter extends AIAdapter {
         messages: chatMsgs
       };
       if (system) body.system = system;
-      const response = await this._fetch(`/api/ai-proxy`, {
+      const response = await _fetch(`/api/ai-proxy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -385,7 +386,7 @@ class ClaudeAdapter extends AIAdapter {
             stream: true
           };
           if (system) body.system = system;
-          const response = await this._fetch(`/api/ai-proxy`, {
+          const response = await _fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -487,7 +488,7 @@ class ClaudeAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await _fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
         'x-target-url': `${apiUrl}/models`,
@@ -603,7 +604,7 @@ export class AIClient {
     if (options.top_p !== undefined) body.top_p = options.top_p;
 
     try {
-      const response = await this._fetch('/api/ai-proxy', {
+      const response = await _fetch('/api/ai-proxy', {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
