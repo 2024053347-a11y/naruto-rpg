@@ -12,13 +12,7 @@ function _aiFetch(url, body, apiKey, extraHeaders, signal) {
   return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }, body: JSON.stringify(body), signal });
 }
 
-const USE_PROXY = typeof location !== 'undefined' && location.hostname.includes('qiwu.asia');
-function _aiFetch(url, body, apiKey, extraHeaders, signal) {
-  if (USE_PROXY) {
-    return fetch('/api/ai-proxy', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(extraHeaders||{}) }, body: JSON.stringify(body), signal });
-  }
-  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey }, body: JSON.stringify(body), signal });
-}
+
 
 export class AIAdapter {
   async chat(messages, options) { throw new Error('Not implemented'); }
