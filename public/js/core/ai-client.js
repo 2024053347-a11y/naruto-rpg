@@ -263,7 +263,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await new AIAdapter()._fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
         'x-target-url': `${apiUrl}/models`,
@@ -487,7 +487,7 @@ class ClaudeAdapter extends AIAdapter {
 
   static async listModels(config) {
     const apiUrl = (config.apiUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
-    const response = await this._fetch(`/api/ai-proxy`, {
+    const response = await new AIAdapter()._fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
         'x-target-url': `${apiUrl}/models`,
