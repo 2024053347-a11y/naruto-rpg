@@ -603,7 +603,7 @@ export class AIClient {
     if (options.top_p !== undefined) body.top_p = options.top_p;
 
     try {
-      const response = await this._fetch('/api/ai-proxy', {
+      const response = await new AIAdapter()._fetch('/api/ai-proxy', {
         method: 'POST',
         headers,
         body: JSON.stringify(body),

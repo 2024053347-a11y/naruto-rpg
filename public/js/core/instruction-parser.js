@@ -57,10 +57,33 @@ export class InstructionParser {
     while ((match = variableRegex.exec(text)) !== null) {
       try {
         let content = match[1].trim();
-        // Handle possible multiple objects separated by newline without commas
-        const jsonBlocks = content.split(/\r?\n/).filter(line => line.trim().startsWith('{'));
+        // Robustly extract all JSON objects using brace matching
+        let jsonBlocks = [];
+        let braceCount = 0;
+        let inString = false;
+        let escapeNext = false;
+        let startIdx = -1;
+        for (let i = 0; i < content.length; i++) {
+          const char = content[i];
+          if (escapeNext) { escapeNext = false; continue; }
+          if (char === '\\') { escapeNext = true; continue; }
+          if (char === '"') { inString = !inString; continue; }
+          if (!inString) {
+            if (char === '{') {
+              if (braceCount === 0) startIdx = i;
+              braceCount++;
+            } else if (char === '}') {
+              braceCount--;
+              if (braceCount === 0 && startIdx !== -1) {
+                jsonBlocks.push(content.substring(startIdx, i + 1));
+                startIdx = -1;
+              }
+            }
+          }
+        }
+        if (jsonBlocks.length === 0) jsonBlocks = [content];
         
-        for (const jsonStr of (jsonBlocks.length > 0 ? jsonBlocks : [content])) {
+        for (const jsonStr of jsonBlocks) {
           if (!jsonStr.trim()) continue;
           try {
             const data = JSON.parse(jsonStr.trim());
