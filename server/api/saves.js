@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import zlib from 'zlib';
-import { randomUUID } from 'crypto';
+import zlib from 'node:zlib';
+import { promisify } from 'node:util';
+import { randomUUID } from 'node:crypto';
 import { config } from '../config.js';
 import * as db from '../db/index.js';
 import { requireAuth } from '../middleware/auth.js';
+
+// 存档可达数百 MB，同步 gzip 会长时间冻结事件循环，故使用异步版本
+const gzip = promisify(zlib.gzip);
+const gunzip = promisify(zlib.gunzip);
 
 const router = Router();
 
@@ -18,9 +23,9 @@ function validateSaveId(id) {
 /**
  * GET /api/saves - 获取当前用户的所有存档元数据列表
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const saves = db.getUserSaves(req.user.id);
+    const saves = await db.getUserSaves(req.user.id);
     res.json(saves);
   } catch (err) {
     console.error('[API SAVES] Get list error:', err);
@@ -31,11 +36,11 @@ router.get('/', (req, res) => {
 /**
  * GET /api/saves/:id - 下载指定存档的完整数据
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   if (!validateSaveId(id)) return res.status(400).json({ error: '无效的存档 ID' });
   try {
-    const save = db.getSaveById(id);
+    const save = await db.getSaveById(id);
     if (!save) {
       return res.status(404).json({ error: '未找到指定存档' });
     }
@@ -45,7 +50,7 @@ router.get('/:id', (req, res) => {
     }
 
     // 从 gzip 压缩的二进制 BLOB 数据解压
-    const decompressed = zlib.gunzipSync(save.save_data).toString('utf8');
+    const decompressed = (await gunzip(save.save_data)).toString('utf8');
     const saveData = JSON.parse(decompressed);
 
     res.json({
@@ -65,7 +70,7 @@ router.get('/:id', (req, res) => {
 /**
  * POST /api/saves - 新增云端存档
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { slot_name, save_data, preview_data } = req.body;
   const userId = req.user.id;
 
@@ -75,7 +80,7 @@ router.post('/', (req, res) => {
 
   try {
     // 1. 检查槽位数量限制
-    const currentCount = db.getUserSaveCount(userId);
+    const currentCount = await db.getUserSaveCount(userId);
     if (currentCount >= config.saves.maxSlots) {
       return res.status(400).json({ error: `云存档已满！每个用户最多允许创建 ${config.saves.maxSlots} 个存档。请先删除部分旧存档。` });
     }
@@ -84,17 +89,17 @@ router.post('/', (req, res) => {
     const jsonString = JSON.stringify(save_data);
     const sizeBytes = Buffer.byteLength(jsonString, 'utf8');
     const maxSizeBytes = config.saves.maxSizeMb * 1024 * 1024;
-    
+
     if (sizeBytes > maxSizeBytes) {
       return res.status(400).json({ error: `存档过大！最大允许 ${config.saves.maxSizeMb}MB，当前为 ${(sizeBytes / 1024 / 1024).toFixed(2)}MB` });
     }
 
     // 3. gzip 压缩存档内容
-    const compressedData = zlib.gzipSync(jsonString);
+    const compressedData = await gzip(jsonString);
 
     // 4. 生成唯一 ID 并存入数据库
     const saveId = randomUUID();
-    db.insertSave({
+    await db.insertSave({
       id: saveId,
       user_id: userId,
       slot_name: slot_name.substring(0, 50), // 截断名称防溢出
@@ -118,14 +123,15 @@ router.post('/', (req, res) => {
 /**
  * PUT /api/saves/:id - 覆盖/更新指定存档
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   if (!validateSaveId(id)) return res.status(400).json({ error: '无效的存档 ID' });
   const { slot_name, save_data, preview_data } = req.body;
   const userId = req.user.id;
 
   try {
-    const save = db.getSaveById(id);
+    // 权限校验只需元数据，避免为此读入整个存档正文
+    const save = await db.getSaveMetaById(id);
     if (!save) {
       return res.status(404).json({ error: '未找到指定存档' });
     }
@@ -147,16 +153,16 @@ router.put('/:id', (req, res) => {
       const jsonString = JSON.stringify(save_data);
       const sizeBytes = Buffer.byteLength(jsonString, 'utf8');
       const maxSizeBytes = config.saves.maxSizeMb * 1024 * 1024;
-      
+
       if (sizeBytes > maxSizeBytes) {
         return res.status(400).json({ error: `存档过大！最大允许 ${config.saves.maxSizeMb}MB` });
       }
 
-      updates.save_data = zlib.gzipSync(jsonString);
+      updates.save_data = await gzip(jsonString);
       updates.size_bytes = sizeBytes;
     }
 
-    db.updateSave(id, updates);
+    await db.updateSave(id, updates);
     console.log(`[API SAVES] User ${req.user.username} updated save ${id}`);
     res.json({ id, message: '云存档已成功覆盖更新' });
   } catch (err) {
@@ -168,13 +174,14 @@ router.put('/:id', (req, res) => {
 /**
  * DELETE /api/saves/:id - 删除存档
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   if (!validateSaveId(id)) return res.status(400).json({ error: '无效的存档 ID' });
   const userId = req.user.id;
 
   try {
-    const save = db.getSaveById(id);
+    // 权限校验只需元数据，避免为此读入整个存档正文
+    const save = await db.getSaveMetaById(id);
     if (!save) {
       return res.status(404).json({ error: '未找到指定存档' });
     }
@@ -183,7 +190,7 @@ router.delete('/:id', (req, res) => {
       return res.status(403).json({ error: '无权删除此存档' });
     }
 
-    db.deleteSave(id);
+    await db.deleteSave(id);
     console.log(`[API SAVES] User ${req.user.username} deleted save ${id}`);
     res.json({ message: '云存档已成功删除' });
   } catch (err) {

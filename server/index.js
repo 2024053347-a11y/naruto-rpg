@@ -15,8 +15,8 @@ import { requireHtmlAuth } from './middleware/auth.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// 1. 初始化数据库
-initDb();
+// 1. 初始化数据库（ESM 顶层 await：持久层就绪前不接收任何请求）
+await initDb();
 
 const app = express();
 app.set('trust proxy', 1); // 允许 Nginx 反向代理正确识别客户端 IP 和 HTTPS 协议
@@ -41,11 +41,14 @@ app.use(helmet({
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
-      frameAncestors: ["'self'", "https://discord.com"]
+      // Superconductor preview is embedded in an authenticated iframe during development.
+      frameAncestors: ["'self'", "https://discord.com", "https://superconductor.com", "https://*.superconductor.com"]
     }
   },
   crossOriginEmbedderPolicy: false, // 允许加载跨域图片/音乐资源
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  // CSP frame-ancestors controls embedding; X-Frame-Options cannot allow Superconductor.
+  xFrameOptions: false
 }));
 
 app.use(compression());
