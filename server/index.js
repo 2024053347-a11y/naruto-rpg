@@ -41,11 +41,14 @@ app.use(helmet({
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
-      frameAncestors: ["'self'", "https://discord.com"]
+      // Superconductor preview is embedded in an authenticated iframe during development.
+      frameAncestors: ["'self'", "https://discord.com", "https://superconductor.com", "https://*.superconductor.com"]
     }
   },
   crossOriginEmbedderPolicy: false, // 允许加载跨域图片/音乐资源
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  // CSP frame-ancestors controls embedding; X-Frame-Options cannot allow Superconductor.
+  xFrameOptions: false
 }));
 
 app.use(compression());
