@@ -1,135 +1,109 @@
 #!/usr/bin/env node
 /**
- * 忍者手记 — 酒馆实时映射脚本
- * 监听项目源码变化，自动打包并同步到酒馆
+ * watch-and-sync.mjs — 忍者手记 · 酒馆实时映射
+ * 监听项目源码变化，自动打包并同步到酒馆。
  *
- * 用法: node scripts/watch-and-sync.mjs
+ * 用法: node scripts/watch-and-sync.mjs  （或 npm run watch）
  *
- * 功能：
- *   1. 监听 js/css/img/index.html 文件变化
+ * 流程：
+ *   1. 监听 js/css/img/index.html 变化（防抖合并连续保存）
  *   2. 自动执行 bundle + build-regex
- *   3. 将生成的 regex JSON 同步到酒馆目录
- *   4. 可选：自动更新角色卡 PNG
+ *   3. 将生成的 regex JSON 同步到酒馆角色卡 PNG（更新已有脚本或追加）
+ *   4. 如配置了 MANUAL_EXPORT_DIR，另存一份 JSON 供手动导入
+ *
+ * 酒馆目录等外部路径通过环境变量配置（见 .env.example）。
  */
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { execFileSync } from 'node:child_process';
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const ROOT = path.resolve(__dirname, '..');
+import {
+  PROJECT_ROOT,
+  TAVERN_DIR,
+  TAVERN_CARD_PATH,
+  TAVERN_CARD_NAME,
+  REGEX_TRIGGER_JSON,
+  MANUAL_EXPORT_DIR,
+  MANUAL_EXPORT_REGEX_NAME,
+} from './lib/project-paths.mjs';
+import { readTextChunks, replaceTextChunks, decodeCardPayload, encodeCardPayload } from './lib/png-card.mjs';
+import { log } from './lib/logger.mjs';
 
 // ═══════════════════════════════════
 // 配置
 // ═══════════════════════════════════
 const CONFIG = {
-  // 监听的文件/目录（相对于项目根目录）
-  watchDirs: ['js', 'css', 'img', 'index.html'],
-
-  // 忽略的文件模式
+  /** 监听的文件/目录（相对项目根目录） */
+  watchTargets: ['js', 'css', 'img', 'index.html'],
+  /** 忽略的文件模式 */
   ignorePatterns: [/node_modules/, /\.git/, /dist/, /test\.html/, /test\.js/, /\.bak$/],
-
-  // 酒馆安装目录（根据实际情况修改）
-  tavernDir: 'D:/SillyTavern/SillyTavern',
-
-  // 防抖延迟（毫秒）— 文件变更后等待此时间再打包
+  /** 防抖延迟（毫秒）— 文件变更后等待此时间再打包，合并编辑器的连续保存 */
   debounceMs: 800,
-
-  // 是否同步到角色卡 PNG
-  syncToPNG: true,
-
-  // 角色卡文件名
-  charCardName: '忍者手记.png',
-
-  // 是否显示详细日志
+  /** 是否同步到角色卡 PNG */
+  syncToPNG: process.env.SYNC_TO_PNG !== 'false',
+  /** 是否显示详细日志 */
   verbose: true,
+  /** 单步构建超时（毫秒） */
+  bundleTimeoutMs: 30_000,
+  regexTimeoutMs: 10_000,
 };
 
-// ═══════════════════════════════════
-// 路径
-// ═══════════════════════════════════
-const PATHS = {
-  bundle: path.join(ROOT, 'scripts', 'bundle.mjs'),
-  buildRegex: path.join(ROOT, 'scripts', 'build-regex.mjs'),
-  distHtml: path.join(ROOT, 'dist', 'naruto-rpg-bundle.html'),
-  distRegex: path.join(ROOT, 'dist', 'regex-正文-火影忍者-起物单文件版.json'),
-  tavernChars: path.join(CONFIG.tavernDir, 'data', 'default-user', 'characters'),
-  tavernWorlds: path.join(CONFIG.tavernDir, 'data', 'default-user', 'worlds'),
-};
-
-// ═══════════════════════════════════
-// 工具函数
-// ═══════════════════════════════════
-function log(msg, type = 'info') {
-  const icons = { info: '📦', success: '✅', error: '❌', watch: '👁️', sync: '🔄' };
-  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false });
-  console.log(`[${time}] ${icons[type] || '•'} ${msg}`);
-}
-
-function shouldIgnore(filePath) {
-  const rel = path.relative(ROOT, filePath);
-  return CONFIG.ignorePatterns.some(p => p.test(rel));
-}
+const BUILD_STEPS = [
+  { name: 'bundle', script: path.join(PROJECT_ROOT, 'scripts', 'bundle.mjs'), timeout: CONFIG.bundleTimeoutMs },
+  { name: 'build-regex', script: path.join(PROJECT_ROOT, 'scripts', 'build-regex.mjs'), timeout: CONFIG.regexTimeoutMs },
+];
 
 // ═══════════════════════════════════
 // 打包
 // ═══════════════════════════════════
+/** @returns {boolean} 全部构建步骤是否成功 */
 function runBuild() {
   log('开始打包...', 'info');
   const start = Date.now();
 
-  try {
-    // 1. Bundle HTML
-    execSync(`node "${PATHS.bundle}"`, {
-      cwd: ROOT,
-      stdio: CONFIG.verbose ? 'pipe' : 'ignore',
-      timeout: 30000,
-    });
-
-    // 2. Build regex JSON
-    execSync(`node "${PATHS.buildRegex}"`, {
-      cwd: ROOT,
-      stdio: CONFIG.verbose ? 'pipe' : 'ignore',
-      timeout: 10000,
-    });
-
-    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-    log(`打包完成 (${elapsed}s)`, 'success');
-    return true;
-  } catch (err) {
-    log(`打包失败: ${err.message}`, 'error');
-    if (CONFIG.verbose) console.error(err.stderr?.toString() || err.message);
-    return false;
+  for (const step of BUILD_STEPS) {
+    try {
+      // execFileSync 传参数组，路径含空格/特殊字符时不会被 shell 二次解释
+      execFileSync(process.execPath, [step.script], {
+        cwd: PROJECT_ROOT,
+        stdio: CONFIG.verbose ? 'pipe' : 'ignore',
+        timeout: step.timeout,
+      });
+    } catch (err) {
+      log(`打包失败（${step.name}）: ${err.message}`, 'error');
+      if (CONFIG.verbose && err.stderr) console.error(err.stderr.toString());
+      return false;
+    }
   }
+
+  const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+  log(`打包完成 (${elapsed}s)`, 'success');
+  return true;
 }
 
 // ═══════════════════════════════════
 // 同步到酒馆
 // ═══════════════════════════════════
+/** @returns {boolean} 同步是否成功 */
 function syncToTavern() {
-  if (!fs.existsSync(PATHS.distRegex)) {
+  if (!fs.existsSync(REGEX_TRIGGER_JSON)) {
     log('dist regex 文件不存在，跳过同步', 'error');
     return false;
   }
 
   try {
-    // 1. 复制 regex JSON 到酒馆字符目录（作为独立正则文件）
-    const regexContent = fs.readFileSync(PATHS.distRegex, 'utf-8');
-    const regexJson = JSON.parse(regexContent);
+    const regexJson = JSON.parse(fs.readFileSync(REGEX_TRIGGER_JSON, 'utf-8'));
 
-    // 2. 同步到角色卡 PNG
     if (CONFIG.syncToPNG) {
       syncToCharCard(regexJson);
     }
 
-    // 3. 保存一份独立的 regex JSON 到 忍者手记 下载目录方便手动导入
-    const manualImportDir = path.join(ROOT, '..', '..', '忍者手记');
-    if (fs.existsSync(manualImportDir)) {
-      const destRegex = path.join(manualImportDir, 'regex-正文-忍者手记.json');
-      fs.copyFileSync(PATHS.distRegex, destRegex);
-      log(`已同步: regex JSON → ${path.relative(ROOT, destRegex)}`, 'sync');
+    // 另存一份独立 JSON 到手动导入目录（未配置或不存在则静默跳过）
+    if (MANUAL_EXPORT_DIR && fs.existsSync(MANUAL_EXPORT_DIR)) {
+      const dest = path.join(MANUAL_EXPORT_DIR, MANUAL_EXPORT_REGEX_NAME);
+      fs.copyFileSync(REGEX_TRIGGER_JSON, dest);
+      log(`已同步: regex JSON → ${dest}`, 'sync');
     }
 
     return true;
@@ -139,33 +113,32 @@ function syncToTavern() {
   }
 }
 
+/**
+ * 更新角色卡 PNG 中的正则脚本：
+ * 已存在「忍者手记」脚本则原地更新 findRegex/replaceString，否则追加一条。
+ * （与 sync-to-card.mjs 的“整体重建”不同，watch 模式保留卡上其他正则脚本。）
+ * @param {{ findRegex: string, replaceString: string }} regexJson
+ */
 function syncToCharCard(regexJson) {
-  const cardPath = path.join(PATHS.tavernChars, CONFIG.charCardName);
-  if (!fs.existsSync(cardPath)) {
-    log(`角色卡不存在: ${cardPath}`, 'error');
+  if (!fs.existsSync(TAVERN_CARD_PATH)) {
+    log(`角色卡不存在: ${TAVERN_CARD_PATH}（可通过 TAVERN_DIR/TAVERN_CARD_NAME 环境变量配置）`, 'error');
     return;
   }
 
-  // 读取 PNG 中的 ccv3 数据
-  const pngData = fs.readFileSync(cardPath);
-  const texts = extractPNGTexts(pngData);
-  if (!texts.ccv3) {
+  const pngData = fs.readFileSync(TAVERN_CARD_PATH);
+  const ccv3Value = readTextChunks(pngData).get('ccv3');
+  if (!ccv3Value) {
     log('角色卡中未找到 ccv3 数据', 'error');
     return;
   }
 
-  // 解码 ccv3
-  const raw = Buffer.from(texts.ccv3, 'base64').toString('utf-8');
-  const card = JSON.parse(raw);
+  const card = decodeCardPayload(ccv3Value);
+  card.data ??= {};
+  card.data.extensions ??= {};
+  card.data.extensions.regex_scripts ??= [];
 
-  // 更新 regex_scripts
-  if (!card.data) card.data = {};
-  if (!card.data.extensions) card.data.extensions = {};
-  if (!card.data.extensions.regex_scripts) card.data.extensions.regex_scripts = [];
-
-  // 查找并更新或添加正则脚本
   const existing = card.data.extensions.regex_scripts.find(
-    r => r.scriptName && r.scriptName.includes('忍者手记')
+    (script) => script.scriptName && script.scriptName.includes('忍者手记')
   );
   if (existing) {
     existing.findRegex = regexJson.findRegex;
@@ -177,147 +150,83 @@ function syncToCharCard(regexJson) {
     });
   }
 
-  // 重新编码
-  const newRaw = JSON.stringify(card, null, 2);
-  const newCCv3 = Buffer.from(newRaw, 'utf-8').toString('base64');
+  const { json, base64 } = encodeCardPayload(card);
+  // 历史行为：ccv3 写 base64，chara 写明文 JSON（如卡上存在 chara chunk）
+  const { png: newPNG } = replaceTextChunks(pngData, {
+    ccv3: base64,
+    chara: Buffer.from(json, 'utf-8'),
+  });
+  fs.writeFileSync(TAVERN_CARD_PATH, newPNG);
 
-  // 重建 PNG
-  const newPNG = rebuildPNG(pngData, { ccv3: newCCv3, chara: newRaw });
-  fs.writeFileSync(cardPath, newPNG);
-
-  log(`已同步: 角色卡 PNG → ${CONFIG.charCardName}`, 'sync');
-}
-
-// PNG 工具函数
-function extractPNGTexts(buffer) {
-  const texts = {};
-  let pos = 8; // skip PNG signature
-  while (pos < buffer.length) {
-    const length = buffer.readUInt32BE(pos);
-    const type = buffer.slice(pos + 4, pos + 8).toString('ascii');
-    const data = buffer.slice(pos + 8, pos + 8 + length);
-
-    if (type === 'tEXt') {
-      const nullIdx = data.indexOf(0);
-      const key = data.slice(0, nullIdx).toString('latin1');
-      const value = data.slice(nullIdx + 1);
-      texts[key] = value.toString('latin1');
-    }
-
-    pos += 12 + length;
-  }
-  return texts;
-}
-
-function rebuildPNG(original, texts) {
-  const signature = original.slice(0, 8);
-  const chunks = [];
-
-  let pos = 8;
-  while (pos < original.length) {
-    const length = original.readUInt32BE(pos);
-    const type = original.slice(pos + 4, pos + 8).toString('ascii');
-    const data = original.slice(pos + 8, pos + 8 + length);
-    const crc = original.slice(pos + 8 + length, pos + 12 + length);
-    chunks.push({ type, data, crc });
-    pos += 12 + length;
-  }
-
-  const result = [signature];
-  for (const chunk of chunks) {
-    let data = chunk.data;
-    if (chunk.type === 'tEXt') {
-      const nullIdx = data.indexOf(0);
-      const key = data.slice(0, nullIdx).toString('latin1');
-      if (texts[key] != null) {
-        const newValue = Buffer.from(texts[key], 'utf-8');
-        data = Buffer.concat([Buffer.from(key + '\0', 'latin1'), newValue]);
-      }
-    }
-    // Recalculate CRC
-    const crcInput = Buffer.concat([Buffer.from(chunk.type, 'ascii'), data]);
-    const newCRC = crc32(crcInput);
-
-    const lenBuf = Buffer.alloc(4);
-    lenBuf.writeUInt32BE(data.length);
-    const crcBuf = Buffer.alloc(4);
-    crcBuf.writeUInt32BE(newCRC);
-
-    result.push(lenBuf, Buffer.from(chunk.type, 'ascii'), data, crcBuf);
-  }
-
-  return Buffer.concat(result);
-}
-
-function crc32(buf) {
-  let crc = 0xFFFFFFFF;
-  for (let i = 0; i < buf.length; i++) {
-    crc ^= buf[i];
-    for (let j = 0; j < 8; j++) {
-      crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
-    }
-  }
-  return (crc ^ 0xFFFFFFFF) >>> 0;
+  log(`已同步: 角色卡 PNG → ${TAVERN_CARD_NAME}`, 'sync');
 }
 
 // ═══════════════════════════════════
-// 文件监听
+// 文件监听（防抖 + 构建期间变更重新排队，保证不丢失任何一次变更）
 // ═══════════════════════════════════
 let debounceTimer = null;
 let isBuilding = false;
+let rebuildQueued = false;
 
 function scheduleBuild() {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(async () => {
-    if (isBuilding) return;
-    isBuilding = true;
-    const ok = runBuild();
-    if (ok) syncToTavern();
-    isBuilding = false;
-  }, CONFIG.debounceMs);
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(runBuildCycle, CONFIG.debounceMs);
 }
 
+function runBuildCycle() {
+  if (isBuilding) {
+    // 构建期间又有变更：排队待本轮结束后再跑一轮，而不是直接丢弃
+    rebuildQueued = true;
+    return;
+  }
+  isBuilding = true;
+  try {
+    const ok = runBuild();
+    if (ok) syncToTavern();
+  } finally {
+    isBuilding = false;
+    if (rebuildQueued) {
+      rebuildQueued = false;
+      scheduleBuild();
+    }
+  }
+}
+
+function shouldIgnore(filePath) {
+  const rel = path.relative(PROJECT_ROOT, filePath);
+  return CONFIG.ignorePatterns.some((pattern) => pattern.test(rel));
+}
+
+/** @returns {fs.FSWatcher[]} 已启动的 watcher 列表（用于退出时清理） */
 function startWatching() {
-  for (const dir of CONFIG.watchDirs) {
-    const fullPath = path.resolve(ROOT, dir);
+  const watchers = [];
+
+  for (const target of CONFIG.watchTargets) {
+    const fullPath = path.resolve(PROJECT_ROOT, target);
     if (!fs.existsSync(fullPath)) {
       log(`目录不存在: ${fullPath}`, 'error');
       continue;
     }
 
-    const stat = fs.statSync(fullPath);
-    if (stat.isDirectory()) {
-      watchDir(fullPath);
-    } else if (stat.isFile()) {
-      watchFile(fullPath);
-    }
+    const isDirectory = fs.statSync(fullPath).isDirectory();
+    const watcher = fs.watch(
+      fullPath,
+      isDirectory ? { recursive: true } : undefined,
+      (eventType, filename) => {
+        const changedPath = filename ? path.join(fullPath, filename) : fullPath;
+        if (isDirectory && shouldIgnore(changedPath)) return;
+        if (CONFIG.verbose) {
+          log(`${eventType}: ${path.relative(PROJECT_ROOT, changedPath)}`, 'watch');
+        }
+        scheduleBuild();
+      }
+    );
+    watchers.push(watcher);
   }
 
   log('开始监听项目文件变化...', 'watch');
   log('按 Ctrl+C 退出', 'info');
-}
-
-function watchDir(dirPath) {
-  fs.watch(dirPath, { recursive: true }, (eventType, filename) => {
-    if (!filename) return;
-    const fullPath = path.join(dirPath, filename);
-    if (shouldIgnore(fullPath)) return;
-
-    if (CONFIG.verbose) {
-      const rel = path.relative(ROOT, fullPath);
-      log(`${eventType}: ${rel}`, 'watch');
-    }
-    scheduleBuild();
-  });
-}
-
-function watchFile(filePath) {
-  fs.watch(filePath, (eventType) => {
-    if (CONFIG.verbose) {
-      log(`${eventType}: ${path.relative(ROOT, filePath)}`, 'watch');
-    }
-    scheduleBuild();
-  });
+  return watchers;
 }
 
 // ═══════════════════════════════════
@@ -329,18 +238,24 @@ function main() {
   console.log('  忍者手记 — 酒馆实时映射');
   console.log('  ═══════════════════════════════════════');
   console.log('');
-  console.log(`  项目目录: ${ROOT}`);
-  console.log(`  酒馆目录: ${CONFIG.tavernDir}`);
+  console.log(`  项目目录: ${PROJECT_ROOT}`);
+  console.log(`  酒馆目录: ${TAVERN_DIR}`);
   console.log(`  防抖延迟: ${CONFIG.debounceMs}ms`);
   console.log(`  同步角色卡: ${CONFIG.syncToPNG ? '是' : '否'}`);
   console.log('');
 
-  // 首次打包
+  // 首次全量打包
   const ok = runBuild();
   if (ok) syncToTavern();
 
-  // 开始监听
-  startWatching();
+  const watchers = startWatching();
+
+  process.on('SIGINT', () => {
+    log('收到退出信号，停止监听', 'info');
+    clearTimeout(debounceTimer);
+    for (const watcher of watchers) watcher.close();
+    process.exit(0);
+  });
 }
 
 main();

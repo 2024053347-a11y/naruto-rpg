@@ -8,7 +8,9 @@
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "bundle": "node scripts/bundle.mjs",
-    "build-regex": "node scripts/build-regex.mjs"
+    "build-regex": "node scripts/build-regex.mjs",
+    "sync-card": "node scripts/sync-to-card.mjs",
+    "watch": "node scripts/watch-and-sync.mjs"
   },
   "dependencies": {
     "express": "^4.21.0",

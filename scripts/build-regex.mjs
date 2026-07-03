@@ -1,63 +1,61 @@
 #!/usr/bin/env node
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import crypto from 'crypto';
+/**
+ * build-regex.mjs — 将单文件打包产物包装为酒馆正则 JSON
+ *
+ * 前置条件：先运行 `npm run bundle` 生成 dist/naruto-rpg-bundle.html。
+ * 产出两份正则（内容一致，仅触发器与 placement 不同）：
+ *   1. 起物单文件版 — 仅由「起物」触发，注入 AI 输出（placement [2]）
+ *   2. 单文件全量版 — 捕获组触发，注入用户输入 + AI 输出（placement [1, 2]）
+ *
+ * 用法: node scripts/build-regex.mjs
+ */
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import process from 'node:process';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const ROOT = path.resolve(__dirname, '..');
+import { BUNDLE_HTML, REGEX_TRIGGER_JSON, REGEX_FULL_JSON } from './lib/project-paths.mjs';
+import { createRegexScript, wrapHtmlAsReplaceString } from './lib/tavern-regex.mjs';
+import { log } from './lib/logger.mjs';
 
-const htmlFile = path.join(ROOT, 'dist', 'naruto-rpg-bundle.html');
-
-// 输出两份正则：仅触发器、placement 不同，HTML 内容一致
+/** 两份产物仅在这三个字段上有差异，集中声明便于对照 */
 const TARGETS = [
   {
-    outFile: path.join(ROOT, 'dist', 'regex-正文-火影忍者-起物单文件版.json'),
+    outFile: REGEX_TRIGGER_JSON,
     scriptName: '正文-忍者手记-起物单文件版',
     findRegex: '起物',
     placement: [2],
   },
   {
-    outFile: path.join(ROOT, 'dist', 'regex-正文-火影忍者-单文件版.json'),
+    outFile: REGEX_FULL_JSON,
     scriptName: '正文-忍者手记(单文件全量版)',
     findRegex: '(起物)',
     placement: [1, 2],
   },
 ];
 
-function main() {
-  if (!fs.existsSync(htmlFile)) {
-    console.error(`❌ 找不到 HTML 文件: ${htmlFile}`);
-    process.exit(1);
+async function main() {
+  let htmlContent;
+  try {
+    htmlContent = await fs.readFile(BUNDLE_HTML, 'utf-8');
+  } catch {
+    log(`找不到 HTML 文件: ${BUNDLE_HTML}，请先运行 npm run bundle`, 'error');
+    process.exitCode = 1;
+    return;
   }
 
-  console.log('📦 开始生成酒馆正则 JSON...');
-  const htmlContent = fs.readFileSync(htmlFile, 'utf-8');
+  log('开始生成酒馆正则 JSON...');
+  const replaceString = wrapHtmlAsReplaceString(htmlContent);
 
-  for (const target of TARGETS) {
-    // 构建酒馆正则 JSON 结构
-    // 替换内容：Markdown 代码块包裹的 HTML（酒馆助手据此自动渲染为沙箱 iframe）
-    const regexJson = {
-      "id": crypto.randomUUID(),
-      "scriptName": target.scriptName,
-      "findRegex": target.findRegex,
-      "replaceString": "\n```\n" + htmlContent + "\n```",
-      "trimStrings": [],
-      "placement": target.placement,
-      "disabled": false,
-      "markdownOnly": true,
-      "promptOnly": false,
-      "runOnEdit": true,
-      "substituteRegex": false,
-      "minDepth": null,
-      "maxDepth": null
-    };
-
-    fs.writeFileSync(target.outFile, JSON.stringify(regexJson, null, 4), 'utf-8');
-    const size = fs.statSync(target.outFile).size;
-    console.log(`✅ 正则生成完毕: ${path.basename(target.outFile)} (大小: ${(size/1024/1024).toFixed(2)} MB)`);
+  for (const { outFile, ...scriptFields } of TARGETS) {
+    const regexScript = createRegexScript({ ...scriptFields, replaceString });
+    // 4 空格缩进为既有产物格式，保持不变
+    await fs.writeFile(outFile, JSON.stringify(regexScript, null, 4), 'utf-8');
+    const { size } = await fs.stat(outFile);
+    log(`正则生成完毕: ${path.basename(outFile)} (大小: ${(size / 1024 / 1024).toFixed(2)} MB)`, 'success');
   }
 }
 
-main();
+main().catch((err) => {
+  log(`生成失败: ${err.message}`, 'error');
+  process.exitCode = 1;
+});

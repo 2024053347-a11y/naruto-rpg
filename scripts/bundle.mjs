@@ -1,37 +1,50 @@
 #!/usr/bin/env node
 /**
  * ═══════════════════════════════════════════
- *   忍者手记 — 单文件打包脚本 v2.0
- *   将整个 naruto-rpg 项目打包为单个自包含 HTML
- *   所有图片 base64 内联，可独立运行
- *   用法: node scripts/bundle.mjs
+ *   忍者手记 — 单文件打包脚本 v2.1
+ *   将整个 naruto-rpg 项目打包为单个自包含 HTML：
+ *   解析 ES Module 依赖图 → 拓扑排序 → 剥离 import/export →
+ *   合并为 IIFE，图片内联为 base64，可独立运行。
+ *   用法: node scripts/bundle.mjs  （或 npm run bundle）
  * ═══════════════════════════════════════════
  */
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const ROOT = path.resolve(__dirname, '..');
+import { PROJECT_ROOT as ROOT, DIST_DIR, BUNDLE_HTML } from './lib/project-paths.mjs';
 
 // ── 配置 ──────────────────────────────────
 const CONFIG = {
   entryHtml: path.join(ROOT, 'index.html'),
   entryJs: path.join(ROOT, 'js', 'app.js'),
+  // 顺序即层叠顺序：tokens（变量）→ layout（骨架）→ components（皮肤）
   cssFiles: [
     path.join(ROOT, 'css', 'tokens.css'),
     path.join(ROOT, 'css', 'layout.css'),
     path.join(ROOT, 'css', 'components.css'),
   ],
   svgIcons: path.join(ROOT, 'img', 'icons.svg'),
-  outDir: path.join(ROOT, 'dist'),
-  outFile: path.join(ROOT, 'dist', 'naruto-rpg-bundle.html'),
+  outDir: DIST_DIR,
+  outFile: BUNDLE_HTML,
 };
 
+/**
+ * 走外部图床而非 base64 内联的大图（首页背景等）：
+ * 内联会让单文件体积暴涨且这些图对离线运行非必需。
+ * 键为源码中引用的相对路径，值为图床 URL。
+ */
+const EXTERNAL_IMAGE_URLS = new Map([
+  ['img/logo-text.png', 'https://i.postimg.cc/HxrmZwpz/file-000000001608720ba6b31150e6493597.png'],
+  ['img/bg-home-pc.png', 'https://i.postimg.cc/0j14YDrB/file-00000000d184720bb5b33b578c88aed8.png'], // PC端背景
+  ['img/bg-home.png', 'https://i.postimg.cc/FRYvWy9P/ren-zhe-ri-ji.png'], // 移动端背景
+]);
+
+/** 必须离线可用、以 base64 内联进单文件的本地资源 */
+const INLINE_IMAGE_PATHS = ['assets/map.jpg'];
+
 // ── MIME 类型映射 ──────────────────────────
-const MIME_MAP = {
+const MIME_MAP = Object.freeze({
   '.png':  'image/png',
   '.jpg':  'image/jpeg',
   '.jpeg': 'image/jpeg',
@@ -39,26 +52,27 @@ const MIME_MAP = {
   '.svg':  'image/svg+xml',
   '.webp': 'image/webp',
   '.ico':  'image/x-icon',
-};
+});
 
 // ── 工具函数 ──────────────────────────────
+/** @param {string} filepath @returns {string} */
 function readFile(filepath) {
   return fs.readFileSync(filepath, 'utf-8');
 }
 
-function ensureDir(dirPath) {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-}
-
+/** 统一为正斜杠，保证依赖图的 key 在 Windows/Unix 上一致 @param {string} p */
 function normalizePath(p) {
   return p.replace(/\\/g, '/');
 }
 
+/**
+ * 解析相对 import 为绝对文件路径（无扩展名时补 .js）。
+ * @param {string} importPath import 语句中的路径
+ * @param {string} fromFile 发起 import 的文件
+ * @returns {string}
+ */
 function resolveModulePath(importPath, fromFile) {
-  const dir = path.dirname(fromFile);
-  let resolved = path.resolve(dir, importPath);
+  let resolved = path.resolve(path.dirname(fromFile), importPath);
   if (!path.extname(resolved)) {
     resolved += '.js';
   }
@@ -66,7 +80,9 @@ function resolveModulePath(importPath, fromFile) {
 }
 
 /**
- * 将图片文件转为 base64 data URI
+ * 将图片文件转为 base64 data URI。
+ * @param {string} filePath
+ * @returns {string|null} 文件缺失或类型未知时返回 null（打包继续，仅告警）
  */
 function imageToDataURI(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -81,34 +97,33 @@ function imageToDataURI(filePath) {
   }
   const buffer = fs.readFileSync(filePath);
   const base64 = buffer.toString('base64');
-  const size = buffer.length;
-  console.log(`     📎 ${normalizePath(path.relative(ROOT, filePath))} (${(size / 1024).toFixed(0)} KB → ${(base64.length / 1024).toFixed(0)} KB base64)`);
+  console.log(`     📎 ${normalizePath(path.relative(ROOT, filePath))} (${(buffer.length / 1024).toFixed(0)} KB → ${(base64.length / 1024).toFixed(0)} KB base64)`);
   return `data:${mime};base64,${base64}`;
 }
 
 /**
- * 构建资源路径 → URI 映射表
- * 可以是外部链接，也可以是 base64 内联
+ * 构建资源路径 → URI 映射表（外部图床链接 + base64 内联）。
+ * @returns {Map<string, string>}
  */
 function buildAssetMap() {
-  const assetMap = new Map();
+  const assetMap = new Map(EXTERNAL_IMAGE_URLS);
 
-  // 外部图床链接
-  assetMap.set('img/logo-text.png', 'https://i.postimg.cc/HxrmZwpz/file-000000001608720ba6b31150e6493597.png');
-  assetMap.set('img/bg-home-pc.png', 'https://i.postimg.cc/0j14YDrB/file-00000000d184720bb5b33b578c88aed8.png'); // PC端背景
-  assetMap.set('img/bg-home.png', 'https://i.postimg.cc/FRYvWy9P/ren-zhe-ri-ji.png'); // 移动端背景
-
-  // 本地内联 (地图)
-  const mapPath = path.join(ROOT, 'assets/map.jpg');
-  const mapDataURI = imageToDataURI(mapPath);
-  if (mapDataURI) {
-    assetMap.set('assets/map.jpg', mapDataURI);
+  for (const relPath of INLINE_IMAGE_PATHS) {
+    const dataURI = imageToDataURI(path.join(ROOT, relPath));
+    if (dataURI) {
+      assetMap.set(relPath, dataURI);
+    }
   }
 
   return assetMap;
 }
 
 // ── 第一步：解析所有 JS 模块的依赖图 ──────
+/**
+ * 提取单个文件的相对 import 依赖（绝对路径列表）。
+ * @param {string} filePath
+ * @returns {string[]}
+ */
 function parseImports(filePath) {
   const content = readFile(filePath);
   const imports = [];
@@ -117,6 +132,7 @@ function parseImports(filePath) {
   let match;
   while ((match = importRegex.exec(content)) !== null) {
     const importPath = match[1];
+    // 仅处理项目内相对/绝对路径导入；裸模块名（npm 包）不参与打包
     if (importPath.startsWith('.') || importPath.startsWith('/')) {
       const resolvedPath = resolveModulePath(importPath, filePath);
       if (fs.existsSync(resolvedPath)) {
@@ -130,6 +146,11 @@ function parseImports(filePath) {
   return imports;
 }
 
+/**
+ * 从入口出发 BFS 收集完整依赖图。
+ * @param {string} entryFile
+ * @returns {Map<string, string[]>} 文件（normalized）→ 依赖列表
+ */
 function buildDependencyGraph(entryFile) {
   const graph = new Map();
   const visited = new Set();
@@ -156,6 +177,12 @@ function buildDependencyGraph(entryFile) {
 }
 
 // ── 第二步：拓扑排序 ──────────────────────
+/**
+ * DFS 后序拓扑排序：被依赖者排在前，保证合并后先定义再使用。
+ * 循环依赖不致命（函数提升可救），仅告警并按已访问处理。
+ * @param {Map<string, string[]>} graph
+ * @returns {string[]}
+ */
 function topologicalSort(graph) {
   const sorted = [];
   const visited = new Set();
@@ -169,8 +196,7 @@ function topologicalSort(graph) {
     }
 
     visiting.add(node);
-    const deps = graph.get(node) || [];
-    for (const dep of deps) {
+    for (const dep of graph.get(node) || []) {
       dfs(dep);
     }
     visiting.delete(node);
@@ -186,16 +212,22 @@ function topologicalSort(graph) {
 }
 
 // ── 第三步：清除 import/export 语句 ──────
+/**
+ * 剥离 ES Module 语法，使各模块能在同一个 IIFE 作用域内直接拼接。
+ * @param {string} code
+ * @param {string} filePath 用于解析 CSS import 的相对路径
+ * @returns {string}
+ */
 function stripImportsExports(code, filePath) {
   let result = code;
 
-  // Intercept CSS imports and convert to inline strings
-  // e.g. import hudStyles from '../../css/components/hud.css';
+  // CSS import 拦截：转为内联字符串常量（当前 js/ 下暂无此用法，
+  // 保留以兼容未来的 `import styles from './x.css'` 组件样式写法）
   result = result.replace(/^\s*import\s+(\w+)\s+from\s+['"]([^'"]+\.css)['"]\s*;?\s*$/gm, (match, varName, cssPath) => {
     try {
       const fullPath = path.resolve(path.dirname(filePath), cssPath);
       let cssContent = fs.readFileSync(fullPath, 'utf-8');
-      // basic minification
+      // 简易压缩：先折叠空白使注释变为单行，再移除注释（顺序不可颠倒）
       cssContent = cssContent.replace(/\s+/g, ' ').replace(/\/\*.*?\*\//g, '').trim();
       return `const ${varName} = \`${cssContent}\`;`;
     } catch(e) {
@@ -208,7 +240,7 @@ function stripImportsExports(code, filePath) {
   result = result.replace(/^\s*import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)(?:\s*,\s*(?:\{[^}]*\}|\*\s+as\s+\w+))?)\s+from\s+['"][^'"]+['"]\s*;?\s*$/gm, '');
   result = result.replace(/^\s*import\s+['"][^'"]+['"]\s*;?\s*$/gm, '');
 
-  // 处理 export
+  // 处理 export：保留声明本体，仅剥掉 export 关键字
   result = result.replace(/^\s*export\s+default\s+(class|function)\s/gm, '$1 ');
   result = result.replace(/^\s*export\s+default\s+/gm, '/* export default */ ');
   result = result.replace(/^\s*export\s+\{[^}]*\}\s*;?\s*$/gm, '');
@@ -219,6 +251,12 @@ function stripImportsExports(code, filePath) {
 }
 
 // ── 第 3.5 步：将图片路径替换为 base64 data URI ──
+/**
+ * 替换 JS 源码中的图片引用（src 属性、转义引号、url(...)）。
+ * @param {string} code
+ * @param {Map<string, string>} assetMap
+ * @returns {string}
+ */
 function inlineAssetsInJS(code, assetMap) {
   let result = code;
 
@@ -226,7 +264,6 @@ function inlineAssetsInJS(code, assetMap) {
     const escaped = relPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     // 1. 替换 HTML 模板中的 src="img/xxx" 或 src='img/xxx'
-    //    匹配: src="img/logo-text.png"  src='assets/map.jpg'
     const srcRegex = new RegExp(`(src\\s*=\\s*)(["'\`])${escaped}\\2`, 'g');
     result = result.replace(srcRegex, `$1$2${dataURI}$2`);
 
@@ -242,13 +279,18 @@ function inlineAssetsInJS(code, assetMap) {
   return result;
 }
 
-
+/**
+ * 替换 CSS 中的图片引用。CSS 文件位于 css/ 目录，
+ * 引用项目根资源时带 ../ 前缀，故匹配时需补上。
+ * @param {string} code
+ * @param {Map<string, string>} assetMap
+ * @returns {string}
+ */
 function inlineAssetsInCSS(code, assetMap) {
   let result = code;
 
   for (const [relPath, dataURI] of assetMap) {
-    // CSS 中 url("../img/xxx") — 从 css/ 目录引用，路径带 ../
-    const cssPath = '../' + relPath; // css/ 目录用 ../ 前缀访问项目根
+    const cssPath = '../' + relPath;
     const escaped = cssPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`url\\(["']?${escaped}["']?\\)`, 'g');
     result = result.replace(regex, `url("${dataURI}")`);
@@ -258,6 +300,11 @@ function inlineAssetsInCSS(code, assetMap) {
 }
 
 // ── 第四步：合并所有 JS 为一个 IIFE ──────
+/**
+ * @param {string[]} sortedFiles 拓扑序模块列表
+ * @param {Map<string, string>} assetMap
+ * @returns {string}
+ */
 function bundleJS(sortedFiles, assetMap) {
   const parts = [];
 
@@ -281,25 +328,36 @@ ${parts.join('\n')}
 }
 
 // ── 第五步：合并所有 CSS ──────────────────
+/**
+ * @param {string[]} cssFiles
+ * @param {Map<string, string>} assetMap
+ * @returns {string}
+ */
 function bundleCSS(cssFiles, assetMap) {
   return cssFiles
     .filter(f => fs.existsSync(f))
     .map(f => {
       const relPath = normalizePath(path.relative(ROOT, f));
-      let content = readFile(f);
-      content = inlineAssetsInCSS(content, assetMap);
+      const content = inlineAssetsInCSS(readFile(f), assetMap);
       return `/* ── ${relPath} ── */\n${content}`;
     })
     .join('\n\n');
 }
 
 // ── 第六步：读取 SVG icons ──────────────────
+/** @param {string} svgPath @returns {string} */
 function getSvgIcons(svgPath) {
   if (!fs.existsSync(svgPath)) return '';
   return readFile(svgPath);
 }
 
 // ── 第七步：生成最终 HTML ─────────────────
+/**
+ * 生成自包含单文件 HTML。模板中的 iframe 高度同步脚本
+ * 服务于酒馆嵌入场景，postMessage 发送三种消息格式以兼容不同宿主。
+ * @param {{ css: string, js: string, svgIcons: string }} parts
+ * @returns {string}
+ */
 function generateHTML({ css, js, svgIcons }) {
   const html = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -418,7 +476,7 @@ ${js}
 function main() {
   console.log('');
   console.log('  ═══════════════════════════════════════');
-  console.log('  忍者手记 — 单文件打包器 v2.0');
+  console.log('  忍者手记 — 单文件打包器 v2.1');
   console.log('  ═══════════════════════════════════════');
   console.log('');
 
@@ -443,14 +501,12 @@ function main() {
   // 3. 合并 JS（含图片内联）
   console.log('  ⚡ 合并 JavaScript...');
   const bundledJs = bundleJS(sorted, assetMap);
-  const jsSize = Buffer.byteLength(bundledJs, 'utf-8');
-  console.log(`     JS 大小: ${(jsSize / 1024).toFixed(1)} KB`);
+  console.log(`     JS 大小: ${(Buffer.byteLength(bundledJs, 'utf-8') / 1024).toFixed(1)} KB`);
 
   // 4. 合并 CSS（含图片内联）
   console.log('  🎨 合并 CSS...');
   const bundledCss = bundleCSS(CONFIG.cssFiles, assetMap);
-  const cssSize = Buffer.byteLength(bundledCss, 'utf-8');
-  console.log(`     CSS 大小: ${(cssSize / 1024).toFixed(1)} KB`);
+  console.log(`     CSS 大小: ${(Buffer.byteLength(bundledCss, 'utf-8') / 1024).toFixed(1)} KB`);
 
   // 5. 内联 SVG icons
   console.log('  🔷 内联 SVG 图标...');
@@ -465,7 +521,7 @@ function main() {
   });
 
   // 7. 写入输出
-  ensureDir(CONFIG.outDir);
+  fs.mkdirSync(CONFIG.outDir, { recursive: true });
   fs.writeFileSync(CONFIG.outFile, finalHtml, 'utf-8');
   const totalSize = Buffer.byteLength(finalHtml, 'utf-8');
 
@@ -479,4 +535,9 @@ function main() {
   console.log('');
 }
 
-main();
+try {
+  main();
+} catch (err) {
+  console.error(`\n  ❌ 打包失败: ${err.message}\n`);
+  process.exit(1);
+}
