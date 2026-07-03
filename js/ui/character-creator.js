@@ -693,13 +693,10 @@ class CharacterCreator extends HTMLElement {
     const av = this._choices.attributes || this._attrs || {chakra:5,spirit:5,willpower:5,speed:5,luck:5};
     const tb = talent?.statBonus||{};
     const s = stateManager.getDefaultState();
-    // 伪娘生理为男 / 假小子生理为女，AI 需要真实性别
-    const rawGender = this._choices.gender === '__custom_gender__'
+    // 直接使用原始性别，防止 AI 遗忘特殊设定（如伪娘、假小子）
+    const finalGender = this._choices.gender === '__custom_gender__'
       ? (this._choices.customGender || '未知性别')
       : (this._choices.gender || '男性');
-    const finalGender = rawGender === '伪娘' ? '男性'
-      : rawGender === '假小子' ? '女性'
-      : rawGender;
 
     s['玩家·姓名'] = this._choices.name.trim();
     s['玩家·忍阶'] = '忍校学生';
@@ -710,10 +707,11 @@ class CharacterCreator extends HTMLElement {
     s['玩家·查克拉属性'] = this._choices.chakraNature||['火'];
     s['玩家·难度'] = diff.id;
     s['玩家·性别'] = finalGender;
-    // 伪娘/假小子公开表现为反性别外貌，但实际性别不变
-    s['玩家·公开身份'] = rawGender === '女性' ? '少女'
-      : rawGender === '伪娘' ? '少女'
-      : rawGender === '假小子' ? '少年'
+    
+    // 公开身份表现，如果是伪娘表现为少女，假小子表现为少年
+    s['玩家·公开身份'] = finalGender === '女性' ? '少女'
+      : finalGender === '伪娘' ? '少女'
+      : finalGender === '假小子' ? '少年'
       : '少年';
     s['玩家·个性'] = this._choices.persona || '';
     s['玩家·当前目标'] = '顺利通过忍校考核';
@@ -827,16 +825,17 @@ class CharacterCreator extends HTMLElement {
     }
     if (isCustomTalent || isCustomBackground || customSkill) {
       const memSub = s['_memory'] || {};
-      if (!memSub.facts) memSub.facts = [];
-      memSub.facts.push({
-        id: `custom_origin_${Date.now()}`,
-        text: [
-          isCustomTalent ? `自定义天赋: ${talent.id} - ${talent.description}` : '',
-          isCustomBackground ? `自定义出身: ${bg.id} - ${bg.description}` : '',
-          customSkill ? `自定义初始技能: ${customSkill.name} - ${customSkill.description}` : ''
-        ].filter(Boolean).join('\n'),
-        source: '角色创建'
-      });
+      const textToAppend = [
+        isCustomTalent ? `自定义天赋: ${talent.id} - ${talent.description}` : '',
+        isCustomBackground ? `自定义出身: ${bg.id} - ${bg.description}` : '',
+        customSkill ? `自定义初始技能: ${customSkill.name} - ${customSkill.description}` : ''
+      ].filter(Boolean).join('\n');
+      
+      if (!memSub.facts) memSub.facts = '';
+      else memSub.facts += '\n';
+      
+      memSub.facts += textToAppend;
+      
       s['_memory'] = memSub;
     }
     if(bg.relationships) {

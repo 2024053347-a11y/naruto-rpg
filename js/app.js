@@ -7,6 +7,7 @@ import { combatSystem } from './systems/combat-system.js';
 import { missionSystem } from './systems/mission-system.js';
 import { relationshipSystem } from './systems/relationship-system.js';
 import { memorySystem } from './systems/memory-system.js';
+import { cloudSave } from './core/cloud-save.js';
 import { worldStateSystem } from './systems/world-state-system.js';
 import { errorHandler } from './utils/error-handler.js';
 import { loadingIndicator } from './utils/loading-indicator.js';
@@ -190,26 +191,28 @@ class NarutoRPGApp {
 
       if (player.persona) {
         try {
-          let entries = KNOWLEDGE_BASE.allEntries || [];
-          const personaIndex = entries.findIndex(e => e.title === '玩家人设');
+          let customEntries = KNOWLEDGE_BASE.getCustomEntries() || [];
+          const personaIndex = customEntries.findIndex(e => e.title === '玩家人设');
           const newContent = `[玩家人设]\n名字：${player.name || '玩家'}\n${player.persona}`;
           
           if (personaIndex >= 0) {
-            if (entries[personaIndex].content !== newContent) {
+            if (customEntries[personaIndex].content !== newContent || !customEntries[personaIndex].isAlwaysOn) {
                if (confirm('世界书中已存在玩家人设，是否用当前的新人设覆盖？')) {
-                 entries[personaIndex].content = newContent;
-                 localStorage.setItem('naruto_worldbook', JSON.stringify(entries));
+                 customEntries[personaIndex].content = newContent;
+                 customEntries[personaIndex].isAlwaysOn = true;
+                 KNOWLEDGE_BASE.saveCustomEntries(customEntries);
                  this._sendSystemMessage('玩家人设已更新至世界书。');
                }
             }
           } else {
-             entries.push({
+             customEntries.push({
                keys: ['玩家人设', player.name || '玩家', '人设', '外貌', '性格'],
                title: '玩家人设',
                content: newContent,
-               category: 'character_detail'
+               category: 'character_detail',
+               isAlwaysOn: true
              });
-             localStorage.setItem('naruto_worldbook', JSON.stringify(entries));
+             KNOWLEDGE_BASE.saveCustomEntries(customEntries);
              this._sendSystemMessage('玩家人设已写入世界书，防止AI遗忘。');
           }
         } catch(e) {
@@ -317,6 +320,21 @@ class NarutoRPGApp {
           this._pendingStartPrompt = null;
         } else {
           await this.pipeline.process(text);
+        }
+
+        if (localStorage.getItem('naruto_auto_cloud_sync') === 'true') {
+          try {
+            const data = await timelineSystem.getExportData({ includeArchive: false });
+            const preview = { 
+              name: stateManager.get().player?.name || '未知',
+              location: stateManager.get().world_state?.current_location || '未知',
+              time: Date.now()
+            };
+            await cloudSave.quickSave('默认云存档', data, preview);
+            console.log('[CloudSave] 自动同步成功');
+          } catch (err) {
+            console.error('[CloudSave] 自动同步失败', err);
+          }
         }
       } catch (error) {
         if (this._pendingStartPrompt) {
@@ -676,8 +694,8 @@ class NarutoRPGApp {
     const attrs = state.attributes || {};
     const prog = state.progression || {};
     const world = state.world_state || {};
-    const missions = state._missions || {};
     const apiConfig = stateManager.getAPIConfig() || {};
+    let autoSync = localStorage.getItem('naruto_auto_cloud_sync') === 'true';
 
     const modal = new Modal();
     (document.getElementById('app') || document.body).appendChild(modal);
@@ -710,12 +728,40 @@ class NarutoRPGApp {
             </div>
           </div>
           <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:14px;">
-            <div style="font-size:10px;color:#a39f98;letter-spacing:1px;margin-bottom:8px;">云存档与同步</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn btn-sm btn-secondary" id="btn-export-save" type="button" style="font-size:11px;">导出存档</button>
-              <button class="btn btn-sm btn-secondary" id="btn-import-cloud" type="button" style="font-size:11px;">导入存档</button>
-              <button class="btn btn-sm btn-secondary" id="btn-api-config" type="button" style="font-size:11px;">API设置</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <div style="font-size:12px;color:#e8e4d9;font-weight:600;letter-spacing:1px;">云存档与同步</div>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                <input type="checkbox" id="cb-auto-sync" ${autoSync ? 'checked' : ''} style="accent-color:var(--c-shuiro);">
+                <span style="font-size:11px;color:#a39f98;">开启自动云同步</span>
+              </label>
             </div>
+            
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;color:#a39f98;" id="cloud-size-text">
+                <span>云端容量 (最高 200MB)</span>
+                <span>加载中...</span>
+              </div>
+              <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+                <div id="cloud-size-bar" style="width:0%;height:100%;background:var(--c-kin);transition:width 0.3s ease;"></div>
+              </div>
+              <div id="cloud-size-warning" style="font-size:10px;color:#ef5350;margin-top:4px;display:none;">容量即将耗尽，请及时清理或精简冗余记忆。</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+              <button class="btn btn-sm btn-primary" id="btn-cloud-upload" type="button" style="font-size:11px;background:rgba(198,156,109,0.15);border-color:rgba(198,156,109,0.3);color:var(--c-kin);">↑ 上传/覆盖</button>
+              <button class="btn btn-sm btn-secondary" id="btn-cloud-download" type="button" style="font-size:11px;">↓ 恢复</button>
+              <button class="btn btn-sm btn-secondary" id="btn-cloud-delete" type="button" style="font-size:11px;color:#ef5350;display:none;">× 删除</button>
+            </div>
+
+            <div style="height:1px;background:rgba(255,255,255,0.05);margin:12px 0;"></div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <span style="font-size:10px;color:#a39f98;margin-right:4px;">本地管理:</span>
+              <button class="btn btn-sm btn-secondary" id="btn-export-save" type="button" style="font-size:10px;padding:4px 8px;">导出本地</button>
+              <button class="btn btn-sm btn-secondary" id="btn-import-cloud" type="button" style="font-size:10px;padding:4px 8px;">导入本地</button>
+              <button class="btn btn-sm btn-secondary" id="btn-api-config" type="button" style="font-size:10px;padding:4px 8px;margin-left:auto;">API设置</button>
+            </div>
+            
             <div style="margin-top:10px;font-size:10px;color:rgba(163,159,152,0.5);">
               ${apiConfig.model ? '已连接: ' + this._escAttr(apiConfig.model) : '未配置API连接'}
             </div>
@@ -728,8 +774,114 @@ class NarutoRPGApp {
     });
 
     setTimeout(() => {
+      // Fetch cloud save size asynchronously
+      cloudSave.listSaves().then(saves => {
+        let sizeBytes = 0;
+        let saveId = null;
+        if (saves && saves.length > 0) {
+          sizeBytes = saves[0].size_bytes || 0;
+          saveId = saves[0].id;
+        }
+        const sizeMb = (sizeBytes / (1024 * 1024)).toFixed(2);
+        const percent = Math.min(100, (sizeBytes / (200 * 1024 * 1024)) * 100);
+        const isWarning = percent > 80;
+        
+        const root = modal.shadowRoot;
+        if (!root) return;
+        const txt = root.querySelector('#cloud-size-text');
+        const bar = root.querySelector('#cloud-size-bar');
+        const warn = root.querySelector('#cloud-size-warning');
+        const delBtn = root.querySelector('#btn-cloud-delete');
+        
+        if (txt) {
+          txt.children[1].textContent = `${sizeMb} MB / 200 MB`;
+          if (isWarning) txt.style.color = '#ef5350';
+        }
+        if (bar) {
+          bar.style.width = `${percent}%`;
+          if (isWarning) bar.style.background = '#ef5350';
+        }
+        if (warn && isWarning) {
+          warn.style.display = 'block';
+        }
+        if (delBtn && saveId) {
+          delBtn.dataset.saveId = saveId;
+          delBtn.style.display = 'inline-block';
+        }
+      }).catch(e => {
+        const txt = modal.shadowRoot?.querySelector('#cloud-size-text');
+        if (txt) txt.children[1].textContent = '获取失败';
+      });
+
+      modal.shadowRoot?.querySelector('#cb-auto-sync')?.addEventListener('change', (e) => {
+        localStorage.setItem('naruto_auto_cloud_sync', e.target.checked);
+        if (e.target.checked) this._sendSystemMessage('已开启自动云同步，将在剧情推进时自动保存。');
+        else this._sendSystemMessage('已关闭自动云同步。');
+      });
+
+      modal.shadowRoot?.querySelector('#btn-cloud-upload')?.addEventListener('click', async (e) => {
+        const btn = e.currentTarget;
+        try {
+          if (btn) {
+            btn.textContent = '上传中...';
+            btn.disabled = true;
+          }
+          const data = await timelineSystem.getExportData({ includeArchive: false });
+          const preview = { 
+            name: stateManager.get().player?.name || '未知',
+            location: stateManager.get().world_state?.current_location || '未知',
+            time: Date.now()
+          };
+          await cloudSave.quickSave('默认云存档', data, preview);
+          this._sendSystemMessage('云存档上传成功！');
+          modal.close();
+          this._openProfilePanel(); 
+        } catch(err) {
+          this._sendSystemMessage('上传失败: ' + err.message);
+          if (btn) {
+            btn.textContent = '↑ 上传/覆盖';
+            btn.disabled = false;
+          }
+        }
+      });
+
+      modal.shadowRoot?.querySelector('#btn-cloud-download')?.addEventListener('click', async (e) => {
+        if (!confirm('确定要从云端恢复存档吗？当前未保存的本地进度将会丢失！')) return;
+        try {
+          const saves = await cloudSave.listSaves();
+          if (!saves || saves.length === 0) {
+            return this._sendSystemMessage('未找到云端存档。');
+          }
+          this._sendSystemMessage('正在下载云存档...');
+          const fullSave = await cloudSave.downloadSave(saves[0].id);
+          const file = new File([JSON.stringify(fullSave.save_data)], 'cloud_save.json', { type: 'application/json' });
+          eventBus.emit('app:timeline-import-file', { file });
+          modal.close();
+        } catch(e) {
+          this._sendSystemMessage('恢复失败: ' + e.message);
+        }
+      });
+
+      modal.shadowRoot?.querySelector('#btn-cloud-delete')?.addEventListener('click', async (e) => {
+        const saveId = e.target.dataset.saveId;
+        if (!saveId) return;
+        if (!confirm('确定要彻底删除该云存档吗？此操作无法撤销。')) return;
+        try {
+          e.target.textContent = '删除中...';
+          e.target.disabled = true;
+          await cloudSave.deleteSave(saveId);
+          this._sendSystemMessage('云存档已删除。您可以重新上传了。');
+          modal.close();
+          this._openProfilePanel();
+        } catch(err) {
+          this._sendSystemMessage('删除失败: ' + err.message);
+          e.target.textContent = '× 删除';
+          e.target.disabled = false;
+        }
+      });
+
       modal.shadowRoot?.querySelector('#btn-export-save')?.addEventListener('click', async () => {
-        try { await timelineSystem.exportTimeline(); this._sendSystemMessage('存档已导出。'); }
+        try { await timelineSystem.exportTimeline(); this._sendSystemMessage('本地存档已导出。'); }
         catch(e) { this._sendSystemMessage('导出失败: ' + e.message); }
       });
       modal.shadowRoot?.querySelector('#btn-import-cloud')?.addEventListener('click', () => {

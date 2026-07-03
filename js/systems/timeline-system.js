@@ -608,7 +608,7 @@ class TimelineSystem {
     } catch { console.warn('[Timeline] Failed to cache tree summary'); }
   }
 
-  async exportTimeline({ includeArchive = false } = {}) {
+  async getExportData({ includeArchive = false } = {}) {
     const allNodes = await this.getAllNodes();
     const branches = await this.getAllBranches();
     const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
@@ -623,7 +623,7 @@ class TimelineSystem {
           return { ...rest, chat_history: null };
         });
 
-    const data = {
+    return {
       export_version: '2.0',
       exported_at: new Date().toISOString(),
       include_archive: includeArchive,
@@ -631,6 +631,10 @@ class TimelineSystem {
       branches,
       nodes
     };
+  }
+
+  async exportTimeline({ includeArchive = false } = {}) {
+    const data = await this.getExportData({ includeArchive });
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
