@@ -6,25 +6,50 @@ const router = Router();
 // 强制验证登录状态，防止未授权用户盗用代理
 router.use(requireAuth);
 
-// 私有/内网地址黑名单
-const BLOCKED_HOSTNAMES = [
-  'localhost', '127.0.0.1', '[::1]', '0.0.0.0',
-  '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
-  '169.254.0.0/16', 'fc00::/7', 'fe80::/10'
-];
+/** 仅转发白名单内的请求头，避免把 Cookie / 内部头泄露给上游 */
+const FORWARDABLE_REQUEST_HEADERS = ['content-type', 'accept', 'anthropic-version', 'anthropic-beta', 'user-agent'];
+/** 仅回传白名单内的响应头 */
+const FORWARDABLE_RESPONSE_HEADERS = ['content-type', 'cache-control'];
 
+/**
+ * SSRF 防护：判断主机名是否指向本机或 IPv4 内网地址段。
+ * 注意：按主机名字面判断，不做 DNS 解析（域名解析到内网的 DNS Rebinding 不在此层防护范围）。
+ * @param {string} hostname
+ * @returns {boolean}
+ */
 function isPrivateHost(hostname) {
-  // Direct matches
   if (['localhost', '127.0.0.1', '[::1]', '0.0.0.0'].includes(hostname)) return true;
-  // IPv4 private ranges
-  const ipv4 = hostname.split('.').map(Number);
-  if (ipv4.length === 4 && ipv4.every(n => !isNaN(n))) {
-    if (ipv4[0] === 10) return true;
-    if (ipv4[0] === 172 && ipv4[1] >= 16 && ipv4[1] <= 31) return true;
-    if (ipv4[0] === 192 && ipv4[1] === 168) return true;
-    if (ipv4[0] === 169 && ipv4[1] === 254) return true;
+
+  const octets = hostname.split('.').map(Number);
+  if (octets.length === 4 && octets.every((n) => !Number.isNaN(n))) {
+    if (octets[0] === 10) return true; // 10.0.0.0/8
+    if (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) return true; // 172.16.0.0/12
+    if (octets[0] === 192 && octets[1] === 168) return true; // 192.168.0.0/16
+    if (octets[0] === 169 && octets[1] === 254) return true; // 169.254.0.0/16 链路本地
   }
   return false;
+}
+
+/**
+ * 校验目标 URL：必须是合法的 HTTPS 公网地址。
+ * @param {string} targetUrl
+ * @returns {{url?: URL, errorStatus?: number, errorBody?: {error: string}}}
+ */
+function validateTargetUrl(targetUrl) {
+  let parsed;
+  try {
+    parsed = new URL(targetUrl);
+  } catch {
+    return { errorStatus: 400, errorBody: { error: '无效的目标 URL' } };
+  }
+  if (parsed.protocol !== 'https:') {
+    return { errorStatus: 403, errorBody: { error: '仅允许 HTTPS 目标' } };
+  }
+  if (isPrivateHost(parsed.hostname)) {
+    console.warn(`[AI PROXY] Blocked internal target: ${targetUrl}`);
+    return { errorStatus: 403, errorBody: { error: '禁止代理到内网地址' } };
+  }
+  return { url: parsed };
 }
 
 /**
@@ -49,39 +74,31 @@ router.all('/', async (req, res) => {
     return res.status(401).json({ error: '缺少 API 密钥 x-user-api-key' });
   }
 
-  // 安全校验 1：只允许 HTTPS
-  let parsed;
-  try {
-    parsed = new URL(targetUrl);
-  } catch {
-    return res.status(400).json({ error: '无效的目标 URL' });
-  }
-  if (parsed.protocol !== 'https:') {
-    return res.status(403).json({ error: '仅允许 HTTPS 目标' });
+  const { errorStatus, errorBody } = validateTargetUrl(targetUrl);
+  if (errorStatus) {
+    return res.status(errorStatus).json(errorBody);
   }
 
-  // 安全校验 2：禁止代理到内网地址
-  if (isPrivateHost(parsed.hostname)) {
-    console.warn(`[AI PROXY] Blocked internal target: ${targetUrl}`);
-    return res.status(403).json({ error: '禁止代理到内网地址' });
-  }
+  // 客户端中途断开时立即中止上游请求，避免继续为已放弃的生成计费/占用连接
+  const upstreamAbort = new AbortController();
+  res.on('close', () => {
+    if (!res.writableEnded) upstreamAbort.abort();
+  });
 
   try {
-    // 准备转发请求头（仅复制安全的请求头）
     const forwardHeaders = {};
-    const safeHeaders = ['content-type', 'accept', 'anthropic-version', 'anthropic-beta', 'user-agent'];
-    for (const key of safeHeaders) {
+    for (const key of FORWARDABLE_REQUEST_HEADERS) {
       if (req.headers[key]) forwardHeaders[key] = req.headers[key];
     }
 
-    // 注入用户的 API Key
+    // 注入用户的 API Key（Authorization 走 Bearer 方案，其余按原样注入）
     if (apiKeyHeaderName.toLowerCase() === 'authorization') {
       forwardHeaders['Authorization'] = `Bearer ${apiKey}`;
     } else {
       forwardHeaders[apiKeyHeaderName] = apiKey;
     }
 
-    const fetchOptions = { method: req.method, headers: forwardHeaders };
+    const fetchOptions = { method: req.method, headers: forwardHeaders, signal: upstreamAbort.signal };
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.body && Object.keys(req.body).length > 0) {
       fetchOptions.body = JSON.stringify(req.body);
     }
@@ -89,27 +106,29 @@ router.all('/', async (req, res) => {
     const upstreamResponse = await fetch(targetUrl, fetchOptions);
     res.status(upstreamResponse.status);
 
-    // 复制安全响应头
-    for (const key of ['content-type', 'cache-control']) {
-      const val = upstreamResponse.headers.get(key);
-      if (val) res.setHeader(key, val);
+    for (const key of FORWARDABLE_RESPONSE_HEADERS) {
+      const value = upstreamResponse.headers.get(key);
+      if (value) res.setHeader(key, value);
     }
 
-    // 流式响应（SSE）
     const contentType = upstreamResponse.headers.get('content-type') || '';
-    if (contentType.includes('text/event-stream') || (req.headers['accept'] || '').includes('text/event-stream')) {
+    const wantsStream = contentType.includes('text/event-stream')
+      || (req.headers['accept'] || '').includes('text/event-stream');
+
+    if (wantsStream && upstreamResponse.body) {
+      // 流式响应（SSE）：逐块透传，不在内存中聚合
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
-      const reader = upstreamResponse.body.getReader();
       try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          res.write(value);
+        for await (const chunk of upstreamResponse.body) {
+          res.write(chunk);
         }
-      } catch (e) {
-        console.error('[AI PROXY] Stream error:', e.message);
+      } catch (err) {
+        // 客户端主动断开触发的 abort 属正常路径，其余错误记录后照常结束响应
+        if (err.name !== 'AbortError') {
+          console.error('[AI PROXY] Stream error:', err.message);
+        }
       }
       res.end();
     } else {
@@ -117,6 +136,7 @@ router.all('/', async (req, res) => {
       res.send(Buffer.from(data));
     }
   } catch (error) {
+    if (error.name === 'AbortError') return; // 客户端已断开，无需响应
     console.error('[AI PROXY] Upstream failed:', error.message, error.cause || '');
     res.status(502).json({ error: `AI 代理请求上游失败: ${error.message} ${error.cause ? error.cause.message : ''}`.trim() });
   }
