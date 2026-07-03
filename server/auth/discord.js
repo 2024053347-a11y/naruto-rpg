@@ -136,8 +136,8 @@ router.get('/discord/callback', async (req, res) => {
       return res.redirect('/login.html?error=not_in_guild');
     }
 
-    // 6. 验证成功，保存/更新用户到 SQLite
-    upsertUser({
+    // 6. 验证成功，保存/更新用户到用户库；写入失败会走 catch 分支，避免「登录成功但账户不存在」的死循环
+    await upsertUser({
       id: discordUser.id,
       username: discordUser.username,
       discriminator: discordUser.discriminator,

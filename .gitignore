@@ -21,6 +21,7 @@ terminal-output.png
 
 # 后端部署相关
 .env
+server/db/*.tmp
 server/db/*.db
 server/db/*.db-journal
 server/db/*.db-wal

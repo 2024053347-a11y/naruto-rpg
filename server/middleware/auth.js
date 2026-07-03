@@ -37,7 +37,7 @@ export async function requireAuth(req, res, next) {
     const decoded = jwt.verify(token, config.jwt.secret);
     
     // 验证用户在数据库中是否确实存在
-    const user = getUser(decoded.id);
+    const user = await getUser(decoded.id);
     if (!user) {
       return res.status(401).json({ error: '账户不存在或已被删除' });
     }
@@ -73,7 +73,7 @@ export async function requireHtmlAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
-    const user = getUser(decoded.id);
+    const user = await getUser(decoded.id);
     if (!user) {
       res.clearCookie('naruto_token');
       return res.redirect('/login.html');
@@ -99,7 +99,7 @@ export async function optionalAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
-    const user = getUser(decoded.id);
+    const user = await getUser(decoded.id);
     if (user) {
       req.user = user;
     }
