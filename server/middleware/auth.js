@@ -2,64 +2,96 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 import { getUser } from '../db/index.js';
 
+/** 会话 JWT 所在的 HttpOnly Cookie 名称（签发方 auth/discord.js 复用此常量） */
+export const AUTH_COOKIE_NAME = 'naruto_token';
+
+/** 开发旁路模式下注入的模拟用户 */
+const DEV_BYPASS_USER = Object.freeze({ id: 'dev_user', username: 'dev_tester', avatar: '' });
+
 /**
- * 提取请求中的 JWT 令牌
+ * 每次请求时读取环境变量而非启动时快照，保持旧实现「测试中可动态开关」的语义。
+ * @returns {boolean}
+ */
+function isAuthBypassEnabled() {
+  return process.env.AUTH_BYPASS === 'true';
+}
+
+/**
+ * 从请求中提取 JWT：优先 HttpOnly Cookie，其次 Authorization: Bearer 头。
+ * @param {import('express').Request} req
+ * @returns {string | null}
  */
 function extractToken(req) {
-  // 1. 从 HttpOnly Cookie 中提取
-  if (req.cookies && req.cookies.naruto_token) {
-    return req.cookies.naruto_token;
+  if (req.cookies?.[AUTH_COOKIE_NAME]) {
+    return req.cookies[AUTH_COOKIE_NAME];
   }
-  // 2. 从 Authorization: Bearer 头中提取
   const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    return authHeader.substring(7);
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.slice('Bearer '.length);
   }
   return null;
 }
 
 /**
- * 强制身份验证中间件 (针对 API)
+ * 三个中间件共享的认证内核：提取令牌 → 校验签名 → 确认用户仍存在。
+ * 只做判定不做响应，响应策略（401 JSON / 重定向）由各中间件自行决定。
+ *
+ * @param {import('express').Request} req
+ * @returns {Promise<
+ *   {status: 'ok', user: object} |
+ *   {status: 'missing_token' | 'unknown_user' | 'invalid_token', error?: Error}
+ * >}
  */
-export async function requireAuth(req, res, next) {
-  // DEV MODE: only bypass when explicitly enabled via AUTH_BYPASS env var
-  if (process.env.AUTH_BYPASS === 'true') {
-    req.user = { id: 'dev_user', username: 'dev_tester', avatar: '' };
-    return next();
-  }
+async function authenticateRequest(req) {
   const token = extractToken(req);
-
-  if (!token) {
-    return res.status(401).json({ error: '未登录，请先进行身份验证' });
-  }
+  if (!token) return { status: 'missing_token' };
 
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
-    
-    // 验证用户在数据库中是否确实存在
-    const user = getUser(decoded.id);
-    if (!user) {
-      return res.status(401).json({ error: '账户不存在或已被删除' });
-    }
-
-    req.user = user;
-    next();
+    // JWT 有效还不够：用户可能已被删除，必须回查数据库
+    const user = await getUser(decoded.id);
+    if (!user) return { status: 'unknown_user' };
+    return { status: 'ok', user };
   } catch (err) {
-    console.error('[AUTH] Token verification failed:', err.message);
-    res.clearCookie('naruto_token', { path: '/' });
-    return res.status(401).json({ error: '登录会话已过期，请重新登录' });
+    return { status: 'invalid_token', error: err };
   }
 }
 
 /**
- * 强制身份验证中间件 (针对 HTML 页面访问)
+ * 强制身份验证中间件（针对 API，失败返回 401 JSON）。
+ * @type {import('express').RequestHandler}
  */
-export async function requireHtmlAuth(req, res, next) {
-  if (process.env.AUTH_BYPASS === 'true') {
-    req.user = { id: 'dev_user', username: 'dev_tester', avatar: '' };
+export async function requireAuth(req, res, next) {
+  if (isAuthBypassEnabled()) {
+    req.user = DEV_BYPASS_USER;
     return next();
   }
-  const token = extractToken(req);
+
+  const result = await authenticateRequest(req);
+  switch (result.status) {
+    case 'ok':
+      req.user = result.user;
+      return next();
+    case 'missing_token':
+      return res.status(401).json({ error: '未登录，请先进行身份验证' });
+    case 'unknown_user':
+      return res.status(401).json({ error: '账户不存在或已被删除' });
+    default: // invalid_token
+      console.error('[AUTH] Token verification failed:', result.error?.message);
+      res.clearCookie(AUTH_COOKIE_NAME, { path: '/' });
+      return res.status(401).json({ error: '登录会话已过期，请重新登录' });
+  }
+}
+
+/**
+ * 强制身份验证中间件（针对 HTML 页面访问，失败重定向到登录页）。
+ * @type {import('express').RequestHandler}
+ */
+export async function requireHtmlAuth(req, res, next) {
+  if (isAuthBypassEnabled()) {
+    req.user = DEV_BYPASS_USER;
+    return next();
+  }
 
   // 禁用 HTML 页面和重定向的缓存，防止 CDN 缓存导致无限重定向
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -67,44 +99,31 @@ export async function requireHtmlAuth(req, res, next) {
   res.setHeader('Expires', '0');
   res.setHeader('Surrogate-Control', 'no-store');
 
-  if (!token) {
-    return res.redirect('/login.html');
-  }
-
-  try {
-    const decoded = jwt.verify(token, config.jwt.secret);
-    const user = getUser(decoded.id);
-    if (!user) {
-      res.clearCookie('naruto_token');
+  const result = await authenticateRequest(req);
+  switch (result.status) {
+    case 'ok':
+      req.user = result.user;
+      return next();
+    case 'missing_token':
       return res.redirect('/login.html');
-    }
-
-    req.user = user;
-    next();
-  } catch (err) {
-    res.clearCookie('naruto_token');
-    return res.redirect('/login.html?error=session_expired');
+    case 'unknown_user':
+      res.clearCookie(AUTH_COOKIE_NAME, { path: '/' });
+      return res.redirect('/login.html');
+    default: // invalid_token
+      res.clearCookie(AUTH_COOKIE_NAME, { path: '/' });
+      return res.redirect('/login.html?error=session_expired');
   }
 }
 
 /**
- * 可选身份验证中间件 (不拦截请求，仅解析用户信息)
+ * 可选身份验证中间件：解析成功则挂载 req.user，任何失败都放行。
+ * 注意：与旧实现一致，此中间件不受 AUTH_BYPASS 影响。
+ * @type {import('express').RequestHandler}
  */
 export async function optionalAuth(req, res, next) {
-  const token = extractToken(req);
-
-  if (!token) {
-    return next();
-  }
-
-  try {
-    const decoded = jwt.verify(token, config.jwt.secret);
-    const user = getUser(decoded.id);
-    if (user) {
-      req.user = user;
-    }
-  } catch (err) {
-    // 忽略错误，继续传递请求
+  const result = await authenticateRequest(req);
+  if (result.status === 'ok') {
+    req.user = result.user;
   }
   next();
 }

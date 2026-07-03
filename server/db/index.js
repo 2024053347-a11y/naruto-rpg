@@ -1,232 +1,247 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { readJsonFile, writeFileAtomic, updateJsonFile } from './json-store.js';
+
+/**
+ * 数据访问层（仓储模式）：用户 / 云存档 / 音乐收藏 三个领域各自一组函数。
+ * 元数据存 JSON 索引文件，存档正文以 gzip 二进制单独落盘（`saves/<id>.bin`）。
+ * 所有写操作经由 json-store 的互斥队列 + 原子写入，读操作享受 mtime 缓存。
+ */
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbDir = path.join(__dirname);
+const dbDir = __dirname;
 const savesDir = path.join(dbDir, 'saves');
 const usersFilePath = path.join(dbDir, 'users.json');
 const indexFilePath = path.join(dbDir, 'saves_index.json');
 const favoritesFilePath = path.join(dbDir, 'favorites.json');
 
-// 确保数据库目录和存档目录存在
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-if (!fs.existsSync(savesDir)) {
-  fs.mkdirSync(savesDir, { recursive: true });
-}
+/** 单个用户的音乐收藏上限，防止收藏文件无限膨胀 */
+const MAX_FAVORITES_PER_USER = 100;
 
-// 辅助函数：安全的读取 JSON 文件
-function readJsonFile(filePath, defaultVal = {}) {
-  let lastErr;
-  for (let i = 0; i < 5; i++) {
+/**
+ * @typedef {object} SaveMeta
+ * @property {string} id
+ * @property {string} user_id
+ * @property {string} slot_name
+ * @property {object} preview_data
+ * @property {number} size_bytes
+ * @property {string} created_at ISO 8601
+ * @property {string} updated_at ISO 8601
+ */
+
+/**
+ * 初始化数据库目录与初始文件。必须在服务开始接受请求前 await 完成。
+ * @returns {Promise<void>}
+ */
+export async function initDb() {
+  await fs.mkdir(savesDir, { recursive: true });
+  // 仅在文件缺失时创建空结构，绝不覆盖已有数据
+  for (const filePath of [usersFilePath, indexFilePath, favoritesFilePath]) {
     try {
-      if (fs.existsSync(filePath)) {
-        const content = fs.readFileSync(filePath, 'utf8');
-        // 如果文件因为正在被写入而暂时为空，抛出错误以触发重试
-        if (!content.trim()) {
-          throw new Error('File is empty (possibly being written)');
-        }
-        return JSON.parse(content);
-      }
-      return defaultVal;
-    } catch (err) {
-      lastErr = err;
-      // 遇到文件锁定或为空的情况，同步阻塞等待 50ms 后再试
-      const start = Date.now();
-      while (Date.now() - start < 50) {}
+      await fs.access(filePath);
+    } catch {
+      await updateJsonFile(filePath, {}, () => {});
     }
   }
-  console.error(`[DB] Error reading JSON file ${filePath} after 5 retries:`, lastErr);
-  return defaultVal;
-}
-
-// 辅助函数：安全的写入 JSON 文件
-function writeJsonFile(filePath, data) {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-  } catch (err) {
-    console.error(`[DB] Error writing JSON file ${filePath}:`, err);
-  }
-}
-
-export function initDb() {
   console.log(`[DB] File-based Database initialized at ${dbDir}`);
-  // 确保初始文件存在
-  if (!fs.existsSync(usersFilePath)) writeJsonFile(usersFilePath, {});
-  if (!fs.existsSync(indexFilePath)) writeJsonFile(indexFilePath, {});
-  if (!fs.existsSync(favoritesFilePath)) writeJsonFile(favoritesFilePath, {});
-  return true;
 }
 
-export function getDb() {
-  return true;
-}
+// --- 用户仓储 ---
 
-// --- 用户数据库操作 ---
-
+/**
+ * 新增或更新 Discord 用户档案。
+ * 已存在的用户保留 created_at 及其他历史字段，仅刷新档案与 last_login。
+ * @param {{id: string, username: string, discriminator?: string, avatar?: string, global_name?: string}} profile
+ * @returns {Promise<void>}
+ */
 export function upsertUser({ id, username, discriminator, avatar, global_name }) {
-  const users = readJsonFile(usersFilePath);
-  const now = new Date().toISOString();
-  
-  if (users[id]) {
+  return updateJsonFile(usersFilePath, {}, (users) => {
+    const now = new Date().toISOString();
     users[id] = {
       ...users[id],
-      username,
-      discriminator,
-      avatar,
-      global_name,
-      last_login: now
-    };
-  } else {
-    users[id] = {
       id,
       username,
       discriminator,
       avatar,
       global_name,
-      created_at: now,
+      created_at: users[id]?.created_at ?? now,
       last_login: now
     };
-  }
-  writeJsonFile(usersFilePath, users);
+  });
 }
 
-export function getUser(id) {
-  const users = readJsonFile(usersFilePath);
-  return users[id] || null;
+/**
+ * @param {string} id Discord 用户 ID
+ * @returns {Promise<object | null>}
+ */
+export async function getUser(id) {
+  const users = await readJsonFile(usersFilePath, {});
+  return users[id] ?? null;
 }
 
-// --- 存档数据库操作 ---
+// --- 云存档仓储 ---
 
-export function getUserSaves(userId) {
-  const index = readJsonFile(indexFilePath);
+/**
+ * 获取用户全部存档元数据，按更新时间倒序。
+ * @param {string} userId
+ * @returns {Promise<SaveMeta[]>}
+ */
+export async function getUserSaves(userId) {
+  const index = await readJsonFile(indexFilePath, {});
   return Object.values(index)
-    .filter(save => save.user_id === userId)
+    .filter((save) => save.user_id === userId)
     .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 }
 
-export function getUserSaveCount(userId) {
-  const index = readJsonFile(indexFilePath);
-  return Object.values(index).filter(save => save.user_id === userId).length;
+/**
+ * @param {string} userId
+ * @returns {Promise<number>}
+ */
+export async function getUserSaveCount(userId) {
+  const saves = await getUserSaves(userId);
+  return saves.length;
 }
 
-export function getSaveById(id) {
-  const index = readJsonFile(indexFilePath);
+/**
+ * 读取存档元数据及其二进制正文。
+ * 索引存在但 .bin 文件缺失/损坏时返回 null（与元数据不存在同样处理）。
+ * @param {string} id
+ * @returns {Promise<(SaveMeta & {save_data: Buffer}) | null>}
+ */
+export async function getSaveById(id) {
+  const index = await readJsonFile(indexFilePath, {});
   const saveMeta = index[id];
   if (!saveMeta) return null;
 
-  const saveFilePath = path.join(savesDir, `${id}.bin`);
   try {
-    if (fs.existsSync(saveFilePath)) {
-      const save_data = fs.readFileSync(saveFilePath);
-      return {
-        ...saveMeta,
-        save_data
-      };
-    }
+    const save_data = await fs.readFile(path.join(savesDir, `${id}.bin`));
+    return { ...saveMeta, save_data };
   } catch (err) {
-    console.error(`[DB] Error reading save bin file ${id}:`, err);
+    if (err.code !== 'ENOENT') {
+      console.error(`[DB] Error reading save bin file ${id}:`, err);
+    }
+    return null;
   }
-  return null;
 }
 
-export function insertSave({ id, user_id, slot_name, preview_data, save_data, size_bytes }) {
-  // 1. 写入二进制存档数据
-  const saveFilePath = path.join(savesDir, `${id}.bin`);
-  fs.writeFileSync(saveFilePath, save_data);
+/**
+ * 新建存档：先原子落盘二进制正文，再写入索引元数据。
+ * 顺序保证：索引里出现的存档一定有正文文件；反向的孤儿 .bin 可安全清理。
+ * @param {{id: string, user_id: string, slot_name: string, preview_data: object, save_data: Buffer, size_bytes: number}} save
+ * @returns {Promise<void>}
+ */
+export async function insertSave({ id, user_id, slot_name, preview_data, save_data, size_bytes }) {
+  await writeFileAtomic(path.join(savesDir, `${id}.bin`), save_data);
 
-  // 2. 写入索引元数据
-  const index = readJsonFile(indexFilePath);
-  const now = new Date().toISOString();
-  
-  index[id] = {
-    id,
-    user_id,
-    slot_name,
-    preview_data,
-    size_bytes,
-    created_at: now,
-    updated_at: now
-  };
-  
-  writeJsonFile(indexFilePath, index);
+  await updateJsonFile(indexFilePath, {}, (index) => {
+    const now = new Date().toISOString();
+    index[id] = { id, user_id, slot_name, preview_data, size_bytes, created_at: now, updated_at: now };
+  });
 }
 
-export function updateSave(id, { slot_name, preview_data, save_data, size_bytes }) {
-  const index = readJsonFile(indexFilePath);
-  if (!index[id]) return;
-
-  // 1. 如果有新的存档数据，更新二进制文件
+/**
+ * 更新存档。只更新传入的字段；save_data 与 size_bytes 成对更新。
+ * @param {string} id
+ * @param {{slot_name?: string, preview_data?: object, save_data?: Buffer, size_bytes?: number}} updates
+ * @returns {Promise<void>}
+ */
+export async function updateSave(id, { slot_name, preview_data, save_data, size_bytes }) {
   if (save_data !== undefined) {
-    const saveFilePath = path.join(savesDir, `${id}.bin`);
-    fs.writeFileSync(saveFilePath, save_data);
-    index[id].size_bytes = size_bytes;
+    await writeFileAtomic(path.join(savesDir, `${id}.bin`), save_data);
   }
 
-  // 2. 更新元数据
-  if (slot_name !== undefined) {
-    index[id].slot_name = slot_name;
-  }
-  if (preview_data !== undefined) {
-    index[id].preview_data = preview_data;
-  }
-  
-  index[id].updated_at = new Date().toISOString();
-  writeJsonFile(indexFilePath, index);
+  await updateJsonFile(indexFilePath, {}, (index) => {
+    const meta = index[id];
+    if (!meta) return; // 与旧实现一致：目标不存在时静默跳过（路由层已做 404 校验）
+
+    if (save_data !== undefined) meta.size_bytes = size_bytes;
+    if (slot_name !== undefined) meta.slot_name = slot_name;
+    if (preview_data !== undefined) meta.preview_data = preview_data;
+    meta.updated_at = new Date().toISOString();
+  });
 }
 
-export function deleteSave(id) {
-  // 1. 删除索引
-  const index = readJsonFile(indexFilePath);
-  if (index[id]) {
+/**
+ * 删除存档：先移除索引，再删除物理 .bin 文件。
+ * .bin 删除失败只记录日志——索引已删即视为删除成功，残留文件不影响正确性。
+ * @param {string} id
+ * @returns {Promise<void>}
+ */
+export async function deleteSave(id) {
+  await updateJsonFile(indexFilePath, {}, (index) => {
     delete index[id];
-    writeJsonFile(indexFilePath, index);
-  }
+  });
 
-  // 2. 删除对应的物理二进制存档文件
-  const saveFilePath = path.join(savesDir, `${id}.bin`);
   try {
-    if (fs.existsSync(saveFilePath)) {
-      fs.unlinkSync(saveFilePath);
-    }
+    await fs.unlink(path.join(savesDir, `${id}.bin`));
   } catch (err) {
-    console.error(`[DB] Error deleting save file ${id}:`, err);
+    if (err.code !== 'ENOENT') {
+      console.error(`[DB] Error deleting save file ${id}:`, err);
+    }
   }
 }
 
-// --- 音乐收藏数据库操作 ---
+// --- 音乐收藏仓储 ---
 
-export function getUserFavorites(userId) {
-  const favs = readJsonFile(favoritesFilePath);
-  return favs[userId] || [];
+/**
+ * 歌曲去重键：兼容三种历史来源的 ID 字段。
+ * @param {{url_id?: string, mid?: string, id?: string}} song
+ * @returns {string | undefined}
+ */
+function getSongKey(song) {
+  return song.url_id || song.mid || song.id;
 }
 
-export function saveUserFavorites(userId, songs) {
-  const favs = readJsonFile(favoritesFilePath);
+/**
+ * @param {string} userId
+ * @returns {Promise<object[]>}
+ */
+export async function getUserFavorites(userId) {
+  const favorites = await readJsonFile(favoritesFilePath, {});
+  return favorites[userId] ?? [];
+}
+
+/**
+ * 整体覆盖用户收藏列表（保留前 100 首）。
+ * @param {string} userId
+ * @param {object[]} songs
+ * @returns {Promise<void>}
+ */
+export async function saveUserFavorites(userId, songs) {
   if (!Array.isArray(songs)) return;
-  favs[userId] = songs.slice(0, 100);
-  writeJsonFile(favoritesFilePath, favs);
+  await updateJsonFile(favoritesFilePath, {}, (favorites) => {
+    favorites[userId] = songs.slice(0, MAX_FAVORITES_PER_USER);
+  });
 }
 
+/**
+ * 追加一首收藏（按歌曲键去重，超出上限时淘汰最早的）。
+ * @param {string} userId
+ * @param {object} song
+ * @returns {Promise<object[]>} 更新后的收藏列表
+ */
 export function addUserFavorite(userId, song) {
-  const favs = readJsonFile(favoritesFilePath);
-  const list = favs[userId] || [];
-  const sid = song.url_id || song.mid || song.id;
-  const exists = list.some(f => (f.url_id || f.mid || f.id) === sid);
-  if (!exists) {
-    list.push(song);
-    favs[userId] = list.slice(-100);
-    writeJsonFile(favoritesFilePath, favs);
-  }
-  return favs[userId];
+  return updateJsonFile(favoritesFilePath, {}, (favorites) => {
+    const list = favorites[userId] ?? [];
+    const songKey = getSongKey(song);
+    if (!list.some((item) => getSongKey(item) === songKey)) {
+      list.push(song);
+    }
+    favorites[userId] = list.slice(-MAX_FAVORITES_PER_USER);
+    return favorites[userId];
+  });
 }
 
+/**
+ * 移除一首收藏。
+ * @param {string} userId
+ * @param {string} songId
+ * @returns {Promise<object[]>} 更新后的收藏列表
+ */
 export function removeUserFavorite(userId, songId) {
-  const favs = readJsonFile(favoritesFilePath);
-  const list = favs[userId] || [];
-  favs[userId] = list.filter(f => (f.url_id || f.mid || f.id) !== songId);
-  writeJsonFile(favoritesFilePath, favs);
-  return favs[userId];
+  return updateJsonFile(favoritesFilePath, {}, (favorites) => {
+    favorites[userId] = (favorites[userId] ?? []).filter((item) => getSongKey(item) !== songId);
+    return favorites[userId];
+  });
 }
