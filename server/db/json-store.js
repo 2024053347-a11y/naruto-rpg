@@ -1,145 +1,149 @@
+// @ts-check
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 
-/**
- * 通用 JSON 文件存储引擎（单进程模型）。
- *
- * 解决旧实现的三个核心缺陷：
- * 1. 同步 I/O + 忙等重试（`while (Date.now() - start < 50) {}`）会冻结整个事件循环；
- * 2. 直接 writeFileSync 覆盖目标文件，进程崩溃/并发读取时会产生空文件或半截 JSON；
- * 3. 并发请求的「读-改-写」互相覆盖，产生丢失更新（Lost Update）。
- *
- * 对应策略：全异步 I/O、临时文件 + rename 原子落盘、按文件路径串行化的互斥队列。
- */
-
-/** 读取重试参数：文件可能被外部进程（如部署脚本）非原子地写入，短暂为空 */
-const READ_RETRY_LIMIT = 5;
+/** 读取重试次数：容忍外部进程（如人工编辑、运维脚本）写到一半的瞬时状态 */
+const READ_MAX_ATTEMPTS = 5;
+/** 每次读取重试之间的等待毫秒数 */
 const READ_RETRY_DELAY_MS = 50;
 
 /**
- * 解析结果缓存：filePath -> { mtimeMs, size, data }
- * 命中条件为 stat 的 mtime + size 均未变化，因此外部进程直接修改文件时缓存会自动失效。
- * @type {Map<string, {mtimeMs: number, size: number, data: unknown}>}
- */
-const parseCache = new Map();
-
-/**
- * 按 key 串行化异步任务的轻量互斥锁（promise 链队列）。
- * @type {Map<string, Promise<unknown>>}
- */
-const lockQueues = new Map();
-
-/**
- * 在指定 key 的互斥锁内执行任务；同一 key 上的任务严格按提交顺序执行。
  * @template T
- * @param {string} key
- * @param {() => Promise<T>} task
- * @returns {Promise<T>}
+ * @typedef {Object} MutationOutcome
+ * @property {boolean} persist 是否需要把变更落盘（no-op 场景返回 false，避免无意义 I/O）
+ * @property {T} [result] 透传给调用方的返回值
  */
-function withLock(key, task) {
-  const previous = lockQueues.get(key) ?? Promise.resolve();
-  // 无论前序任务成败，后续任务都必须继续执行，否则一次失败会卡死整个队列
-  const current = previous.then(task, task);
-  lockQueues.set(key, current.catch(() => {}));
-  return current;
-}
 
 /**
- * 读取并解析 JSON 文件（带缓存与空文件重试）。
- * 返回深拷贝，调用方可放心修改而不会污染缓存。
+ * JsonStore —— 单个 JSON 文档的持久化封装。
  *
- * @template T
- * @param {string} filePath
- * @param {T} defaultValue 文件不存在或多次重试仍失败时返回的兜底值
- * @returns {Promise<T>}
+ * 设计约束：
+ * - 所有 I/O 均为异步，绝不阻塞事件循环；
+ * - 写入采用「临时文件 + 原子 rename」，磁盘上永远不存在半截 JSON；
+ * - 所有「读-改-写」通过实例内的 Promise 链串行化，
+ *   保证并发请求之间不会互相覆盖（等价于旧版同步 I/O 隐含的原子性）。
  */
-export async function readJsonFile(filePath, defaultValue) {
-  let lastError;
-  for (let attempt = 0; attempt < READ_RETRY_LIMIT; attempt += 1) {
-    try {
-      let stat;
+export class JsonStore {
+  /** @type {string} */
+  #filePath;
+  /** @type {Record<string, any>} */
+  #defaultValue;
+  /**
+   * 串行化互斥锁：每个「读-改-写」事务都追加到该链尾部。
+   * @type {Promise<unknown>}
+   */
+  #writeChain = Promise.resolve();
+
+  /**
+   * @param {string} filePath JSON 文档的绝对路径
+   * @param {Record<string, any>} [defaultValue] 文件缺失/损坏时的兜底文档
+   */
+  constructor(filePath, defaultValue = {}) {
+    this.#filePath = filePath;
+    this.#defaultValue = defaultValue;
+  }
+
+  /** @returns {string} */
+  get filePath() {
+    return this.#filePath;
+  }
+
+  /**
+   * 确保文件存在；不存在则以兜底文档初始化。
+   * @returns {Promise<void>}
+   */
+  async ensureExists() {
+    await this.#enqueue(async () => {
       try {
-        stat = await fs.stat(filePath);
+        await fs.access(this.#filePath);
+      } catch {
+        await this.#writeAtomic(this.#defaultValue);
+      }
+    });
+  }
+
+  /**
+   * 读取整个文档。文件缺失返回兜底文档的深拷贝；
+   * 文件为空或损坏时按旧版语义重试后降级为兜底文档（记录错误，不抛出）。
+   * @returns {Promise<Record<string, any>>}
+   */
+  async read() {
+    let lastErr;
+    for (let attempt = 1; attempt <= READ_MAX_ATTEMPTS; attempt++) {
+      try {
+        const content = await fs.readFile(this.#filePath, 'utf8');
+        if (!content.trim()) {
+          // 可能有外部写入者只写了一半，等待后重试
+          throw new Error('File is empty (possibly being written)');
+        }
+        return JSON.parse(content);
       } catch (err) {
-        if (err.code === 'ENOENT') return structuredClone(defaultValue);
-        throw err;
+        if (/** @type {NodeJS.ErrnoException} */ (err).code === 'ENOENT') {
+          return structuredClone(this.#defaultValue);
+        }
+        lastErr = err;
+        await sleep(READ_RETRY_DELAY_MS);
       }
+    }
+    console.error(
+      `[DB] Error reading JSON file ${this.#filePath} after ${READ_MAX_ATTEMPTS} retries:`,
+      lastErr
+    );
+    return structuredClone(this.#defaultValue);
+  }
 
-      const cached = parseCache.get(filePath);
-      if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size) {
-        return structuredClone(cached.data);
+  /**
+   * 原子的「读-改-写」事务。mutate 收到最新文档并就地修改，
+   * 返回 { persist, result }；persist 为 true 时文档被原子落盘。
+   * mutate 抛出的异常会原样传给调用方，且不会污染后续事务。
+   *
+   * @template T
+   * @param {(doc: Record<string, any>) => MutationOutcome<T> | Promise<MutationOutcome<T>>} mutate
+   * @returns {Promise<T | undefined>}
+   */
+  async update(mutate) {
+    return this.#enqueue(async () => {
+      const doc = await this.read();
+      const { persist, result } = await mutate(doc);
+      if (persist) {
+        await this.#writeAtomic(doc);
       }
+      return result;
+    });
+  }
 
-      const content = await fs.readFile(filePath, 'utf8');
-      // 空文件视作「外部写入进行中」，抛错进入重试而不是当成合法数据
-      if (!content.trim()) {
-        throw new Error(`File is empty (possibly being written): ${filePath}`);
-      }
-      const data = JSON.parse(content);
-      parseCache.set(filePath, { mtimeMs: stat.mtimeMs, size: stat.size, data });
-      return structuredClone(data);
-    } catch (err) {
-      lastError = err;
-      await sleep(READ_RETRY_DELAY_MS);
+  /**
+   * 把任务追加到互斥链尾部执行。失败会向调用方抛出，
+   * 但链本身吞掉 rejection，保证后续任务不被上一个失败阻断。
+   * @template T
+   * @param {() => Promise<T>} task
+   * @returns {Promise<T>}
+   */
+  #enqueue(task) {
+    const run = this.#writeChain.then(task);
+    this.#writeChain = run.then(
+      () => undefined,
+      () => undefined
+    );
+    return run;
+  }
+
+  /**
+   * 先写临时文件再 rename，使写入对读取方原子可见。
+   * @param {Record<string, any>} doc
+   * @returns {Promise<void>}
+   */
+  async #writeAtomic(doc) {
+    const payload = JSON.stringify(doc, null, 2);
+    const tmpPath = `${this.#filePath}.${process.pid}.tmp`;
+    await fs.writeFile(tmpPath, payload, 'utf8');
+    try {
+      await fs.rename(tmpPath, this.#filePath);
+    } catch (renameErr) {
+      // 个别 Windows 环境下目标文件被占用会导致 rename 失败，
+      // 此时退回直接覆盖写，保证数据不丢（牺牲这一次的原子性）
+      await fs.rm(tmpPath, { force: true });
+      await fs.writeFile(this.#filePath, payload, 'utf8');
     }
   }
-  // 与旧实现保持一致：读取彻底失败时降级为兜底值，保证服务可用性优先
-  console.error(`[DB] Error reading JSON file ${filePath} after ${READ_RETRY_LIMIT} retries:`, lastError);
-  return structuredClone(defaultValue);
-}
-
-/**
- * 原子写入任意文件：先写同目录临时文件，再 rename 覆盖目标。
- * rename 在同一文件系统内是原子操作，读取方永远不会看到半截内容。
- *
- * @param {string} filePath
- * @param {string | Buffer} content
- * @returns {Promise<void>}
- */
-export async function writeFileAtomic(filePath, content) {
-  const tempPath = path.join(
-    path.dirname(filePath),
-    `.${path.basename(filePath)}.${process.pid}.tmp`
-  );
-  try {
-    await fs.writeFile(tempPath, content);
-    await fs.rename(tempPath, filePath);
-  } catch (err) {
-    await fs.unlink(tempPath).catch(() => {});
-    throw err;
-  }
-}
-
-/**
- * 序列化并原子写入 JSON 文件，同时同步更新解析缓存。
- * 与旧实现不同：写入失败会向上抛出，而不是吞掉错误让调用方误以为保存成功。
- *
- * @param {string} filePath
- * @param {unknown} data
- * @returns {Promise<void>}
- */
-export async function writeJsonFile(filePath, data) {
-  await writeFileAtomic(filePath, JSON.stringify(data, null, 2));
-  const stat = await fs.stat(filePath);
-  parseCache.set(filePath, { mtimeMs: stat.mtimeMs, size: stat.size, data: structuredClone(data) });
-}
-
-/**
- * 对单个 JSON 文件执行互斥的「读-改-写」事务，消除并发丢失更新。
- * mutate 直接原地修改 data；其返回值会透传给调用方（例如返回更新后的列表）。
- *
- * @template T, R
- * @param {string} filePath
- * @param {T} defaultValue
- * @param {(data: T) => R | Promise<R>} mutate
- * @returns {Promise<R>}
- */
-export function updateJsonFile(filePath, defaultValue, mutate) {
-  return withLock(filePath, async () => {
-    const data = await readJsonFile(filePath, defaultValue);
-    const result = await mutate(data);
-    await writeJsonFile(filePath, data);
-    return result;
-  });
 }
