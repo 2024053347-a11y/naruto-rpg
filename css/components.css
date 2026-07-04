@@ -526,3 +526,209 @@
   color: #eb613f; padding: 3px 10px; border-radius: 100px;
   font-size: 10px; font-weight: 500;
 }
+
+
+/* ── Divination Box (卦象判定) - Scheme A: Mystical Seal ──── */
+@keyframes spin-slow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.divination-seal-box {
+  margin: var(--sp-6) 0;
+  position: relative;
+  border-radius: var(--r-lg);
+  background: rgba(8, 8, 12, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.5);
+}
+
+/* Background Seal Animation */
+.divination-seal-box .d-bg-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='rgba(255,255,255,0.8)' stroke-width='1' stroke-dasharray='4 6'/%3E%3Ccircle cx='100' cy='100' r='80' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='60' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='12' stroke-dasharray='10 20'/%3E%3Cpath d='M100 20 L100 180 M20 100 L180 100 M43 43 L157 157 M43 157 L157 43' stroke='rgba(255,255,255,0.4)' stroke-width='0.5'/%3E%3Ccircle cx='100' cy='100' r='30' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.04;
+  animation: spin-slow 90s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.divination-seal-box .d-content-layer {
+  position: relative;
+  z-index: 1;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.divination-seal-box .d-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 1;
+}
+
+.divination-seal-box .d-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+}
+
+.divination-seal-box .d-title {
+  font-family: var(--font-title);
+  font-size: 10px;
+  letter-spacing: 8px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.divination-seal-box .d-action {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.8;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.divination-seal-box .d-result-stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.divination-seal-box .d-dice-text {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  letter-spacing: 4px;
+  font-family: var(--font-mono);
+}
+
+.divination-seal-box .d-seal-text {
+  font-family: "STKaiti", "KaiTi", "楷体", serif;
+  font-size: 34px;
+  font-weight: bold;
+  line-height: 1.1;
+  letter-spacing: 12px;
+  text-indent: 12px; /* balance the letter spacing */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  position: relative;
+}
+
+.divination-seal-box .d-narrative {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  text-align: justify;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  padding-top: 20px;
+}
+
+/* --- Dynamic Colors Based on Result Type --- */
+
+/* Epic (天命) - Golden */
+.divination-seal-box.epic {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(250,204,21,0.03);
+}
+.divination-seal-box.epic .d-bg-seal { opacity: 0.15; filter: drop-shadow(0 0 10px rgba(250,204,21,0.5)); }
+.divination-seal-box.epic .d-seal-text {
+  background-image: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
+  filter: drop-shadow(0 0 15px rgba(250,204,21,0.4));
+}
+
+/* Success (逢生/吉) - Green */
+.divination-seal-box.success {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(74,222,128,0.02);
+}
+.divination-seal-box.success .d-bg-seal { opacity: 0.08; filter: drop-shadow(0 0 10px rgba(74,222,128,0.3)); }
+.divination-seal-box.success .d-seal-text {
+  background-image: linear-gradient(135deg, #bbf7d0 0%, #16a34a 100%);
+  filter: drop-shadow(0 0 15px rgba(74,222,128,0.3));
+}
+
+/* Warning (代偿/警示) - Crimson/Orange */
+.divination-seal-box.warning {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(235,97,63,0.03);
+}
+.divination-seal-box.warning .d-bg-seal { opacity: 0.1; filter: drop-shadow(0 0 10px rgba(235,97,63,0.4)); }
+.divination-seal-box.warning .d-seal-text {
+  background-image: linear-gradient(135deg, #fca5a5 0%, #b91c1c 100%);
+  filter: drop-shadow(0 0 15px rgba(239,68,68,0.4));
+}
+
+/* Danger (大凶) - Deep Red */
+.divination-seal-box.danger {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(185,28,28,0.05);
+}
+.divination-seal-box.danger .d-bg-seal { opacity: 0.12; filter: drop-shadow(0 0 10px rgba(185,28,28,0.5)); }
+.divination-seal-box.danger .d-seal-text {
+  background-image: linear-gradient(135deg, #f87171 0%, #7f1d1d 100%);
+  filter: drop-shadow(0 0 15px rgba(185,28,28,0.5));
+}
+
+/* Normal (平) - Gray/Silver */
+.divination-seal-box.normal .d-seal-text {
+  background-image: linear-gradient(135deg, #f1f5f9 0%, #64748b 100%);
+}
+
+/* Info (瞬身/洞察) - Blue */
+.divination-seal-box.info {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(56,189,248,0.03);
+}
+.divination-seal-box.info .d-bg-seal { opacity: 0.1; filter: drop-shadow(0 0 10px rgba(56,189,248,0.4)); }
+.divination-seal-box.info .d-seal-text {
+  background-image: linear-gradient(135deg, #bae6fd 0%, #0284c7 100%);
+  filter: drop-shadow(0 0 15px rgba(56,189,248,0.4));
+}
+
+/* ── 文本颜色区分 (Text Color Distinctions) ──── */
+.text-dialogue {
+  color: var(--color-dialogue, #bae6fd);
+  text-shadow: 0 0 10px var(--color-dialogue-shadow, rgba(186, 230, 253, 0.3));
+  font-weight: 500;
+}
+.text-thought {
+  color: var(--color-thought, #c4b5fd);
+  text-shadow: 0 0 10px var(--color-thought-shadow, rgba(196, 181, 253, 0.2));
+  font-style: italic;
+}
+
+/* ── 全局优化 (Global Polish) ──── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+::selection {
+  background: rgba(235, 97, 63, 0.3);
+  color: #fff;
+}

@@ -764,18 +764,20 @@ class CharacterCreator extends HTMLElement {
     s['系统·当前分支'] = 'branch_main';
     
     s['进度·金钱'] = 500;
-    s['物品·道具·苦无'] = { quantity: 5, quality: '普通' };
+    s['物品·道具·苦无·数量'] = 5;
+    s['物品·道具·苦无·品质'] = '普通';
     if(bg.equipment){
       if(bg.equipment.tools) {
         for(const [name, item] of Object.entries(bg.equipment.tools)) {
-          const existing = s['物品·道具·' + name];
-          if(existing && existing.name === name) existing.quantity = (existing.quantity || 0) + (item.quantity || 1);
-          else s['物品·道具·' + name] = item;
+          const qtyKey = '物品·道具·' + name + '·数量';
+          s[qtyKey] = (s[qtyKey] || 0) + (item.quantity || 1);
+          if (item.quality) s['物品·道具·' + name + '·品质'] = item.quality;
         }
       }
       if(bg.equipment.consumables) {
         for(const [name, item] of Object.entries(bg.equipment.consumables)) {
-          s['物品·消耗品·' + name] = item;
+          s['物品·消耗品·' + name + '·数量'] = item.quantity || 1;
+          if (item.quality) s['物品·消耗品·' + name + '·品质'] = item.quality;
         }
       }
     }

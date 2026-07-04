@@ -564,6 +564,7 @@ class InfoPanel extends HTMLElement {
     const normalized = this._normalizeSkillGroup(skills);
     const entries = Object.entries(normalized);
     let list = entries.map(([n,d]) => ({ ...d, name: n }));
+    list = list.filter(s => s.name && s.name.trim());
     if (this._skillSearch) {
       const q = this._skillSearch.toLowerCase();
       list = list.filter(s => (s.name||'').toLowerCase().includes(q));
@@ -843,6 +844,12 @@ class InfoPanel extends HTMLElement {
     } else {
       list = Object.entries(items || {});
     }
+    list = list.filter(([n, i]) => {
+      if (!n) return false;
+      const qty = typeof i.quantity === 'object' ? (i.quantity?.value || i.quantity?.amount || i.quantity?.count || i.quantity?.quantity || 0) : (i.quantity ?? -1);
+      if (qty === 0) return false;
+      return true;
+    });
     let content = '';
     if (!list.length) {
       content = `

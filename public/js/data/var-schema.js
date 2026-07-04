@@ -56,10 +56,10 @@ export const VAR_SCHEMA = {
 
 export const VAR_PATTERNS = [
   // 技能: 名称可含 · (如 火遁·豪火球)，字段必须是已知后缀
-  { pattern: /^技能·(?:忍术|体术|幻术|支援)·(.+)·(名称|等级|属性|消耗|威力|熟练度|描述|说明)$/, type: 'mixed', desc: '技能数据(数值字段自动转number)', _nameIdx: 1, _fieldIdx: 2 },
-  { pattern: /^技能·血继限界·(.+)·(.+)$/,                                                    type: 'mixed', desc: '血继限界子字段', _nameIdx: 1, _fieldIdx: 2 },
-  { pattern: /^技能·天赋·(.+)·(名称|等级|描述|说明|熟练度)$/,                                      type: 'mixed', desc: '天赋数据', _nameIdx: 1, _fieldIdx: 2 },
-  { pattern: /^物品·(?:道具|消耗品|武器|防具|装备|关键|忍具|素材|食物|卷轴|其他)·(.+)·(数量|品质|描述|说明)$/, type: 'mixed', desc: '物品数据(数量转number)', _nameIdx: 1, _fieldIdx: 2 },
+  { pattern: /^技能·(?:忍术|体术|幻术|支援)·(.+?)(?:·(名称|等级|属性|消耗|威力|熟练度|描述|说明))?$/, type: 'mixed', desc: '技能数据(数值字段自动转number)', _nameIdx: 1, _fieldIdx: 2 },
+  { pattern: /^技能·血继限界·(.+?)(?:·(.+))?$/,                                                    type: 'mixed', desc: '血继限界子字段', _nameIdx: 1, _fieldIdx: 2 },
+  // 物品 (支持层级如 物品·消耗品·兵粮丸·数量)
+  { pattern: /^物品·(消耗品|道具|武器|防具|已装备|素材)·(.+?)(?:·(数量|品质|描述|附加属性))?$/, type: 'mixed', desc: '物品数据', _typeIdx: 1, _nameIdx: 2, _fieldIdx: 3 },
   { pattern: /^(?:装备|物品)·(?:道具|消耗品|武器|防具|装备|关键|忍具|素材|食物|卷轴|其他)·(.+)$/,       type: 'mixed', desc: '物品/装备数据(兼容AI别名)', _nameIdx: 1 },
   { pattern: /^物品·已装备·(?:武器|防具|饰品[12])$/,                                           type: 'string', desc: '已装备栏' },
   { pattern: /^进度·声望·(.+)$/,                                                              type: 'number', desc: '村落声望值', _nameIdx: 1 },
@@ -222,8 +222,12 @@ export function coerceValue(key, rawValue) {
       return n;
     }
     if (p.type === 'string') return String(rawValue);
-    const n = Number(rawValue);
-    return isNaN(n) ? String(rawValue) : n;
+    if (isNumeric(key)) {
+      const n = Number(rawValue);
+      if (isNaN(n)) return undefined;
+      return n;
+    }
+    return String(rawValue);
   }
 
   return rawValue;

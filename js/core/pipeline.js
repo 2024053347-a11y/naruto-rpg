@@ -2,7 +2,7 @@ import { stateManager } from './state-manager.js';
 import { AIClient, aiClient } from './ai-client.js';
 import { instructionParser } from './instruction-parser.js';
 import { eventBus } from './event-bus.js';
-import { PROMPTS, VAR_INSTRUCTIONS, NO_VAR_INSTRUCTION } from '../data/prompts.js';
+import { FEW_SHOT_EXAMPLES, VAR_INSTRUCTIONS, NO_VAR_INSTRUCTION } from '../data/prompts.js';
 import { getBriefPromptRef } from '../data/var-schema.js';
 import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
 import { formatGameTime } from '../utils/format.js';
@@ -22,6 +22,8 @@ class MessagePipeline {
     this.chatHistory = [];
     this.isProcessing = false;
     this._cancelled = false;
+    this._onPresetEdited = () => { this._staticSystemPrompt = null; };
+    eventBus.on('preset:edited', this._onPresetEdited);
   }
 
   cancel() {
@@ -303,8 +305,8 @@ class MessagePipeline {
       const client = new AIClient();
       client.configure(updaterConfig);
       const variableTags = await client.chat(this._buildVariableUpdaterMessages({ userInput, enrichedInput, state, narrativeResponse }), {
-        temperature: 0.1,
-        max_tokens: 2048
+        temperature: 0.9,
+        max_tokens: 8192
       });
 
       // 检测空回/截断
@@ -370,7 +372,9 @@ class MessagePipeline {
   op="set" 在 skills.* 路径下会自动合并(保留已有字段)，但建议提供完整对象。
 - 忍术升阶: {"path":"skills.jutsu.火遁·豪火球","op":"assign","key":"rank","value":"B"}
 - 忍术删除: {"path":"skills.jutsu","op":"remove","key":"火遁·豪火球"}
-- 血继限界: {"path":"skills.kekkei_genkai","op":"set","value":"写轮眼·单勾玉"}
+- 查克拉属性变更: {"path":"player.chakra_nature","op":"set","value":"火,风,雷"}（多个属性用逗号分隔，后期可通过set覆盖更新）
+- 血继限界整值: {"path":"skills.kekkei_genkai","op":"set","value":"写轮眼·单勾玉"}
+- 血继限界子字段: {"path":"skills.kekkei_genkai.写轮眼","op":"set","value":"写轮眼·二勾玉"} 或 {"path":"skills.kekkei_genkai.写轮眼","op":"assign","key":"mastery","value":50}
 - 天赋: skills.talents.{天赋名} 同上
 - 物品获取: {"path":"equipment.consumables.绷带","op":"set","value":{"quantity":2,"quality":"普通"}}
 - 物品消耗: {"path":"equipment.consumables.绷带.quantity","op":"sub","value":1}
@@ -391,7 +395,7 @@ class MessagePipeline {
       },
       {
         role: 'user',
-        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state)).slice(0, 6000)}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}\n\n【强制要求】：请首先输出 <variable_thinking> 标签，严格执行以下7段自检（必须逐段回答，不可省略任何一段）：\n1. 人物与关系：本回合涉及的NPC？主模型是否已输出 <relationship> 标签？主模型输出的NPC战斗属性和忍术是否完整？若遗漏、不完整或空置，你必须补充完整的 <relationship> 标签，补齐能力与忍术档案。\n2. 技能变动：本回合是否学习/创造/练习/升级了忍术/体术/幻术/血继/天赋？【⚠️如果是游戏开局，必须将主角初始掌握的所有技能全部写入变量！】主模型的 <variable> 是否已包含？若遗漏则补充。\n3. 物品与装备：本回合是否获得/消耗/使用/丢弃了物品/武器/防具/忍具/金钱？【⚠️如果是游戏开局，必须将初始装备、忍具和初始金钱写入变量！】遗漏则补充。\n4. 任务与历练：本回合是否推进了任务？是否应有 exp/突破/声望变化？遗漏则补充。\n5. 地图与探索：本回合是否移动到了新场景/新区域/新地标？遗漏则补充。\n6. 状态与位置：时间流逝？查克拉/体力/精神/意志力消耗或恢复？【⚠️如果是游戏开局，必须初始化主角的所有基础属性（查克拉、体力、速度、精神、意志等）与上限！】异常状态变化？遗漏则补充。\n7. 战斗状态：是否触发/进行/结束了战斗？（仅战斗回合）\n完成自检后，输出实际变动的XML变量标签。无论有无数值变化，都必须输出 <memory> 标签。\n\n请现在立刻以 <variable_thinking> 开始你的回复：`
+        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state))}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}\n\n【强制要求】：请首先输出 <variable_thinking> 标签，严格执行以下7段自检（必须逐段回答，不可省略任何一段）：\n1. 人物与关系：本回合涉及的NPC？主模型是否已输出 <relationship> 标签？主模型输出的NPC战斗属性和忍术是否完整？若遗漏、不完整或空置，你必须补充完整的 <relationship> 标签，补齐能力与忍术档案。\n2. 技能变动：本回合是否学习/创造/练习/升级了忍术/体术/幻术/血继/天赋？【⚠️如果是游戏开局，必须将主角初始掌握的所有技能全部写入变量！】主模型的 <variable> 是否已包含？若遗漏则补充。\n3. 物品与装备：本回合是否获得/消耗/使用/丢弃了物品/武器/防具/忍具/金钱？【⚠️如果是游戏开局，必须将初始装备、忍具和初始金钱写入变量！】遗漏则补充。\n4. 任务与历练：本回合是否推进了任务？是否应有 exp/突破/声望变化？遗漏则补充。\n5. 地图与探索：本回合是否移动到了新场景/新区域/新地标？遗漏则补充。\n6. 状态与位置：时间流逝？查克拉/体力/精神/意志力消耗或恢复？【⚠️如果是游戏开局，必须初始化主角的所有基础属性（查克拉、体力、速度、精神、意志等）与上限！】异常状态变化？遗漏则补充。\n7. 战斗状态：是否触发/进行/结束了战斗？（仅战斗回合）\n完成自检后，输出实际变动的XML变量标签。无论有无数值变化，都必须输出 <memory> 标签。\n\n请现在立刻以 <variable_thinking> 开始你的回复：`
       }
     ];
   }
@@ -402,6 +406,19 @@ class MessagePipeline {
     return {
       '玩家·姓名': state['玩家·姓名'] || '',
       '玩家·忍阶': state['玩家·忍阶'] || '',
+      '玩家·查克拉属性': state['玩家·查克拉属性'] || '',
+      '玩家·性别': state['玩家·性别'] || '',
+      '玩家·出身': state['玩家·出身'] || '',
+      '玩家·年龄': state['玩家·年龄'] ?? 0,
+      '玩家·战力等级': state['玩家·战力等级'] || '',
+      '玩家·个性': state['玩家·个性'] || '',
+      '玩家·当前目标': state['玩家·当前目标'] || '',
+      '玩家·公开身份': state['玩家·公开身份'] || '',
+      '玩家·声望标签': state['玩家·声望标签'] || '',
+      '玩家·标志': state['玩家·标志'] || '',
+      '玩家·难度': state['玩家·难度'] || '',
+      '玩家·存活': state['玩家·存活'] || '是',
+      '玩家·死因': state['玩家·死因'] || '',
       '属性·查克拉': state['属性·查克拉'] ?? 0,
       '属性·当前查克拉': state['属性·当前查克拉'] ?? 0,
       '属性·体力': state['属性·体力'] ?? 0,
@@ -415,9 +432,13 @@ class MessagePipeline {
       '进度·突破待处理': state['进度·突破待处理'] ?? 0,
       '世界·地点': state['世界·地点'] || '',
       '世界·时间': state['世界·时间'] || '',
+      '世界·月份': state['世界·月份'] || '',
+      '世界·天气': state['世界·天气'] || '',
+      '世界·年代': state['世界·年代'] || '',
       技能: skills, 物品: items,
       _combat: state._combat, _missions: state._missions,
-      _relationships: state._relationships, _memory: state._memory
+      _relationships: state._relationships, _memory: state._memory,
+      _map: state._map
     };
   }
 
@@ -536,7 +557,7 @@ class MessagePipeline {
     const messages = [];
 
     if (!this._staticSystemPrompt) {
-      this._staticSystemPrompt = PROMPTS.DEFAULT_PROMPT + '\n\n' + this._formatFewShot();
+      this._staticSystemPrompt = this._formatFewShot();
       console.log('[Cache] Static prompt built:', this._staticSystemPrompt.length, 'chars');
     }
 
@@ -939,17 +960,19 @@ ${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: 
   }
 
   _scanFlatSkills(state) {
-    const result = { jutsu: {}, taijutsu: {}, genjutsu: {}, support: {}, talents: {}, kekkei_genkai: null };
+    const result = { jutsu: {}, taijutsu: {}, genjutsu: {}, support: {}, talents: {}, kekkei_genkai: {} };
     for (const key of Object.keys(state)) {
-      const m = key.match(/^技能·(忍术|体术|幻术|支援|天赋)·(.+)·(名称|等级|属性|消耗|威力|熟练度|描述)$/);
+      const m = key.match(/^技能·(忍术|体术|幻术|支援|天赋|血继限界)·(.+)·(名称|等级|属性|消耗|威力|熟练度|描述)$/);
       if (m) {
         const [, cat, name, field] = m;
-        const catKey = cat === '忍术' ? 'jutsu' : cat === '体术' ? 'taijutsu' : cat === '幻术' ? 'genjutsu' : cat === '支援' ? 'support' : 'talents';
+        const catKey = cat === '忍术' ? 'jutsu' : cat === '体术' ? 'taijutsu' : cat === '幻术' ? 'genjutsu' : cat === '支援' ? 'support' : cat === '血继限界' ? 'kekkei_genkai' : 'talents';
         if (!result[catKey][name]) result[catKey][name] = { name };
         result[catKey][name][field] = state[key];
       }
     }
-    if (state['技能·血继限界']) result.kekkei_genkai = state['技能·血继限界'];
+    if (state['技能·血继限界'] && Object.keys(result.kekkei_genkai).length === 0) {
+      result.kekkei_genkai = state['技能·血继限界'];
+    }
     return result;
   }
 
@@ -1002,7 +1025,7 @@ ${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: 
   }
 
   _formatFewShot() {
-    const shots = PROMPTS.FEW_SHOT_EXAMPLES;
+    const shots = FEW_SHOT_EXAMPLES;
     if (!shots || !shots.length) return '';
     return `[示例对话 - 始终包含以规范格式]
 ${shots.map((s, i) => {

@@ -1,5 +1,5 @@
 import { eventBus } from '../core/event-bus.js';
-import { DEFAULT_MAIN_PRESET, getMainPreset, invalidateMainPresetCache } from '../data/default-preset.js';
+import { DEFAULT_MAIN_PRESET, DEFAULT_MAIN_PRESET_VERSION, getMainPreset, invalidateMainPresetCache } from '../data/default-preset.js';
 import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
@@ -156,6 +156,7 @@ class MainPresetEditor extends HTMLElement {
     root.querySelector('#mpe-reset-default')?.addEventListener('click', () => {
       if (confirm('恢复为默认 Narutomech 预设？当前修改将丢失。')) {
         this._preset = JSON.parse(JSON.stringify(DEFAULT_MAIN_PRESET));
+        this._preset._version = DEFAULT_MAIN_PRESET_VERSION;
         this._expandedIdx = -1;
         this._render();
       }

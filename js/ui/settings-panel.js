@@ -1,6 +1,5 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
-import { PROMPTS } from '../data/prompts.js';
 import { getAgentConfig, saveAgentConfig } from '../data/agent-config.js';
 import { settingsStyles } from '../../css/components/settings-panel.css.js';
 import { escHtml, escAttr } from '../utils/format.js';
@@ -221,15 +220,8 @@ class SettingsPanel extends HTMLElement {
                        <p style="margin-top:0; margin-bottom:12px; font-size:13px; color:#e8e4d9; font-weight:700;">主预设 · Narutomech</p>
                        <p style="margin-top:0; margin-bottom:16px; font-size:12px; color:#a39f98; line-height:1.6;">管理文风破限、角色扮演、CoT回映等高级预设条目。支持开关、增删、修改、拖拽排序。</p>
                        <button class="btn primary" type="button" data-action="open-main-preset-editor">打开主预设编辑器</button>
-                     </div>
-                     <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.2); border-radius:8px; padding:16px;">
-                       <p style="margin-top:0; margin-bottom:12px; font-size:13px; color:#e8e4d9;">默认叙事预设（内置规则）</p>
-                       <div class="grid" style="grid-template-columns:auto 1fr 50px;gap:6px 10px;">
-                         <label class="music-chk"><span style="color:#a39f98;">DEFAULT_PROMPT</span></label><span class="preset-label">全局叙事规则</span><button class="btn ghost btn-xs" type="button" data-action="edit-preset" data-preset="default" style="padding:2px 6px;font-size:10px;">编辑</button>
-                       </div>
-                     </div>
-                   </div>
-                </section>
+                    </div>
+                 </section>
               </div>
 
               <!-- Tab 4: 忍道音律 -->
@@ -310,19 +302,6 @@ class SettingsPanel extends HTMLElement {
             <button class="btn" data-action="close">返回</button>
             <button class="btn primary" data-action="save">封印保存</button>
           </div>
-          <div class="preset-editor-overlay" id="preset-editor-overlay">
-            <div class="preset-editor-header">
-              <span class="preset-editor-title" id="preset-editor-title">编辑预设</span>
-              <button class="preset-editor-close" id="preset-editor-close">✕</button>
-            </div>
-            <textarea class="preset-editor-textarea" id="preset-editor-textarea" spellcheck="false"></textarea>
-            <div class="preset-editor-hint" id="preset-editor-hint"></div>
-            <div class="preset-editor-actions">
-              <button class="btn" id="preset-editor-reset">恢复默认</button>
-              <button class="btn" id="preset-editor-cancel">取消</button>
-              <button class="btn primary" id="preset-editor-save">保存预设</button>
-            </div>
-          </div>
         </div>
       </div>`;
     this._bind();
@@ -377,10 +356,6 @@ class SettingsPanel extends HTMLElement {
       });
     });
 
-    this.shadowRoot.querySelector('#preset-editor-close')?.addEventListener('click', () => this._closePresetEditor());
-    this.shadowRoot.querySelector('#preset-editor-cancel')?.addEventListener('click', () => this._closePresetEditor());
-    this.shadowRoot.querySelector('#preset-editor-save')?.addEventListener('click', () => this._savePresetEditor());
-    this.shadowRoot.querySelector('#preset-editor-reset')?.addEventListener('click', () => this._resetPresetEditor());
   }
 
   async _handle(action, event) {
@@ -395,7 +370,6 @@ class SettingsPanel extends HTMLElement {
     if (action === 'import') return this._import();
     if (action === 'search-music') return this._searchMusic();
     if (action === 'toggle-lyrics') return this._toggleLyrics();
-    if (action === 'edit-preset') return this._editPreset(event?.target?.dataset?.preset);
     
     if (action === 'open-main-preset-editor') {
       const editor = document.createElement('main-preset-editor');
@@ -541,12 +515,13 @@ class SettingsPanel extends HTMLElement {
     const root = this.shadowRoot;
     const enabled = root.querySelector('[name="varUpdaterEnabled"]')?.checked ?? false;
     const config = stateManager.getAPIConfig() || {};
+    const model = (root.querySelector('[name="varUpdaterModel"]')?.value || '').trim();
+    const apiKey = (root.querySelector('[name="varUpdaterApiKey"]')?.value || '').trim();
     config.variableUpdater = {
+      ...config.variableUpdater,
       enabled,
-      model: (root.querySelector('[name="varUpdaterModel"]')?.value || '').trim() || config.model,
-      apiKey: (root.querySelector('[name="varUpdaterApiKey"]')?.value || '').trim() || config.apiKey,
-      apiUrl: config.apiUrl,
-      backend: 'inherit'
+      model: model || config.variableUpdater?.model || config.model,
+      apiKey: apiKey || config.variableUpdater?.apiKey || config.apiKey,
     };
     await stateManager.saveAPIConfig(config);
   }
@@ -1098,79 +1073,6 @@ class SettingsPanel extends HTMLElement {
     if (this._lyricsHidden && localAudio.bgm) {
       localAudio.bgm.pause();
     }
-  }
-
-  _presetKeys = { default: 'DEFAULT_PROMPT' };
-
-  _editPreset(key) {
-    const promptName = this._presetKeys[key];
-    if (!promptName) return;
-    this._editingPresetKey = key;
-    this._editingPresetName = promptName;
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem(`naruto_preset_${promptName}`) || 'null'); } catch { saved = null; }
-    const current = saved || PROMPTS[promptName] || '';
-    const overlay = this.shadowRoot.querySelector('#preset-editor-overlay');
-    const title = this.shadowRoot.querySelector('#preset-editor-title');
-    const textarea = this.shadowRoot.querySelector('#preset-editor-textarea');
-    const hint = this.shadowRoot.querySelector('#preset-editor-hint');
-    if (title) title.textContent = `编辑 · ${promptName}`;
-    if (textarea) textarea.value = current;
-    if (hint) hint.textContent = saved ? '已使用自定义预设 · 点击"恢复默认"将还原为系统预设' : '当前为系统默认预设';
-    if (overlay) overlay.classList.add('active');
-    if (textarea) textarea.focus();
-  }
-
-  _closePresetEditor() {
-    const overlay = this.shadowRoot.querySelector('#preset-editor-overlay');
-    if (overlay) overlay.classList.remove('active');
-    this._editingPresetKey = null;
-    this._editingPresetName = null;
-  }
-
-  _savePresetEditor() {
-    const textarea = this.shadowRoot.querySelector('#preset-editor-textarea');
-    if (!this._editingPresetName || !textarea) return;
-    const text = textarea.value.trim();
-    if (text === '') {
-      localStorage.removeItem(`naruto_preset_${this._editingPresetName}`);
-    } else {
-      localStorage.setItem(`naruto_preset_${this._editingPresetName}`, text);
-    }
-    this._closePresetEditor();
-    eventBus.emit('app:toast', `${this._editingPresetName} 已保存。应用将在下一次 AI 调用时生效。`);
-  }
-
-  _resetPresetEditor() {
-    if (!this._editingPresetName) return;
-    localStorage.removeItem(`naruto_preset_${this._editingPresetName}`);
-    const textarea = this.shadowRoot.querySelector('#preset-editor-textarea');
-    const hint = this.shadowRoot.querySelector('#preset-editor-hint');
-    if (textarea) textarea.value = PROMPTS[this._editingPresetName] || '';
-    if (hint) hint.textContent = '已还原为系统默认预设';
-  }
-
-  async _exportPresets() {
-    const out = {};
-    for (const key of Object.values(this._presetKeys)) {
-      let saved = null;
-      try { saved = JSON.parse(localStorage.getItem(`naruto_preset_${key}`) || 'null'); } catch { saved = null; }
-      if (saved) out[key] = saved;
-    }
-    const json = JSON.stringify(out, null, 2);
-    await GameModal.prompt({ title: '复制预设配置 JSON', message: '选中下方文本框内容，按 Ctrl+C 复制', value: json, multiline: true, rows: 10, okLabel: '关闭', cancelLabel: '取消' });
-  }
-
-  async _importPresets() {
-    const text = await GameModal.prompt({ title: '粘贴预设配置 JSON', message: '将预设 JSON 粘贴到下方文本框', placeholder: '{ ... }', multiline: true, rows: 10, okLabel: '导入', cancelLabel: '取消' });
-    if (!text) return;
-    try {
-      const data = JSON.parse(text);
-      for (const [key, value] of Object.entries(data)) {
-        if (Object.values(this._presetKeys).includes(key)) localStorage.setItem(`naruto_preset_${key}`, String(value));
-      }
-      GameModal.alert({ title: '导入成功', message: '预设已导入。' });
-    } catch { GameModal.alert({ title: '导入失败', message: 'JSON 不合法。' }); }
   }
 
   _play(type) { /* empty: old API */ }

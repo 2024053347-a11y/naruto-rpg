@@ -11,6 +11,7 @@ import authRouter from './auth/discord.js';
 import savesRouter from './api/saves.js';
 import aiProxyRouter from './api/ai-proxy.js';
 import musicFavoritesRouter from './api/music-favorites.js';
+import adminRouter from './api/admin.js';
 import { requireHtmlAuth } from './middleware/auth.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -80,6 +81,7 @@ app.use('/auth', authLimiter, authRouter);
 app.use('/api/saves', apiLimiter, savesRouter);
 app.use('/api/ai-proxy', apiLimiter, aiProxyRouter);
 app.use('/api/music', apiLimiter, musicFavoritesRouter);
+app.use('/api/admin', adminRouter);
 
 // 5. 网页认证入口拦截
 // 玩家在请求根路径 / 或 index.html 时，必须通过身份验证，否则重定向到登录页面

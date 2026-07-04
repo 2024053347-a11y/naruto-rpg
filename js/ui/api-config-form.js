@@ -1,5 +1,4 @@
 import { aiClient, isTavernEnv } from '../core/ai-client.js';
-import { PROMPTS } from '../data/prompts.js';
 import { eventBus } from '../core/event-bus.js';
 import { escAttr } from '../utils/format.js';
 import { bindCustomSelects } from './custom-select.js';
@@ -115,13 +114,6 @@ export class ApiConfigForm extends HTMLElement {
         </div>
         
         ${this._showAdvanced ? `
-        <div class="settings-row">
-          <label for="settings-prompt-preset">默认叙事预设</label>
-          <select class="settings-select" id="settings-prompt-preset">
-            ${Object.values(PROMPTS.PROMPT_PRESETS || {}).map(preset => this._option(preset.id, preset.name, config.promptPreset || PROMPTS.DEFAULT_PROMPT_PRESET_ID)).join('')}
-          </select>
-          <div class="settings-hint">当前默认使用 Narutomech Alpha-1003 适配版；它会按动态时间线判断人物、组织与事件合理性。</div>
-        </div>
         <div class="settings-subcard">
           <label class="settings-check"><input type="checkbox" id="settings-var-enabled" ${config.variableUpdater?.enabled ? 'checked' : ''} /> 启用二次变量更新模型</label>
           <div class="settings-hint">主模型负责叙事；二次模型在后台读取本回合内容，补充/修正变量、任务、关系和记忆标签。关闭时只解析主模型输出。</div>
@@ -267,7 +259,6 @@ export class ApiConfigForm extends HTMLElement {
     const config = { apiUrl: finalApiUrl, apiKey, model, backend, disableStreaming };
 
     if (this._showAdvanced) {
-      config.promptPreset = root.querySelector('#settings-prompt-preset')?.value || PROMPTS.DEFAULT_PROMPT_PRESET_ID;
       const varEnabled = root.querySelector('#settings-var-enabled')?.checked;
       if (varEnabled) {
         config.variableUpdater = {
@@ -281,8 +272,6 @@ export class ApiConfigForm extends HTMLElement {
         config.variableUpdater = { enabled: false };
       }
     } else {
-      // Retain existing advanced settings if they exist
-      config.promptPreset = this._config.promptPreset || PROMPTS.DEFAULT_PROMPT_PRESET_ID;
       config.variableUpdater = this._config.variableUpdater;
     }
     

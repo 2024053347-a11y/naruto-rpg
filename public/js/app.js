@@ -29,8 +29,6 @@ function checkVersionAndMigrate() {
   const keysToClear = [
     'naruto_ui_prefs',           // UI 偏好 — 新版本默认值更优
     'naruto_worldbook',          // 世界书缓存 — 从 JS 重建
-    'naruto_main_preset',        // 预设缓存 — 从 JS 重建
-    'naruto_main_preset_version',// 预设版本
     'naruto_agent_config',       // Agent 配置 — 从 JS 重建
     'naruto_timeline_summary',   // 时间线摘要 — 从 DB 重建
     'naruto_bg_image',           // 背景图缓存
@@ -54,7 +52,6 @@ import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
 import { escAttr } from './utils/format.js';
 import { KNOWLEDGE_BASE } from './data/knowledge-base.js';
-import { PROMPTS } from './data/prompts.js';
 import './ui/hud.js';
 import './ui/combat-arena.js';
 import './ui/character-creator.js';
@@ -62,6 +59,7 @@ import './ui/panel.js';
 import './ui/modal.js';
 import './ui/timeline-navigator.js';
 import './ui/api-config-form.js';
+import './ui/display-config-form.js';
 import './ui/worldbook-editor.js';
 import './ui/main-preset-editor.js';
 import './ui/agent-progress.js';
@@ -97,6 +95,7 @@ class NarutoRPGApp {
 
     await stateManager.loadUIPrefs();
     applyLocalSettings();
+    this._applyDisplayConfig(stateManager.getDisplayConfig());
     this._bindEvents();
 
     try {
@@ -757,9 +756,12 @@ class NarutoRPGApp {
 
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
               <span style="font-size:10px;color:#a39f98;margin-right:4px;">本地管理:</span>
-              <button class="btn btn-sm btn-secondary" id="btn-export-save" type="button" style="font-size:10px;padding:4px 8px;">导出本地</button>
-              <button class="btn btn-sm btn-secondary" id="btn-import-cloud" type="button" style="font-size:10px;padding:4px 8px;">导入本地</button>
-              <button class="btn btn-sm btn-secondary" id="btn-api-config" type="button" style="font-size:10px;padding:4px 8px;margin-left:auto;">API设置</button>
+              <button class="btn btn-sm btn-secondary" id="btn-export-save" type="button" style="font-size:10px;padding:4px 8px;">导出</button>
+              <button class="btn btn-sm btn-secondary" id="btn-import-cloud" type="button" style="font-size:10px;padding:4px 8px;">导入</button>
+              <div style="margin-left:auto; display:flex; gap:6px;">
+                <button class="btn btn-sm btn-secondary" id="btn-display-config" type="button" style="font-size:10px;padding:4px 8px;">🎨 视觉</button>
+                <button class="btn btn-sm btn-secondary" id="btn-api-config" type="button" style="font-size:10px;padding:4px 8px;">API设置</button>
+              </div>
             </div>
             
             <div style="margin-top:10px;font-size:10px;color:rgba(163,159,152,0.5);">
@@ -898,7 +900,77 @@ class NarutoRPGApp {
         modal.close();
         setTimeout(() => this._openApiSettings(), 100);
       });
+      modal.shadowRoot?.querySelector('#btn-display-config')?.addEventListener('click', () => {
+        modal.close();
+        setTimeout(() => this._openDisplaySettings(), 100);
+      });
     }, 150);
+  }
+
+  _openDisplaySettings() {
+    const Modal = customElements.get('game-modal');
+    if (!Modal) return;
+
+    const config = stateManager.getDisplayConfig();
+    const modal = new Modal();
+    (document.getElementById('app') || document.body).appendChild(modal);
+    modal.show({
+      title: '视觉与外观设置',
+      content: `
+        <display-config-form config='${this._escAttr(JSON.stringify(config))}'></display-config-form>
+      `,
+      buttons: [
+        { label: '取消', close: true },
+        {
+          label: '保存',
+          primary: true,
+          close: false,
+          onClick: async () => {
+            const form = modal.shadowRoot.querySelector('display-config-form');
+            if (form) {
+              const newConfig = form.getConfig();
+              stateManager.saveDisplayConfig(newConfig);
+              this._applyDisplayConfig(newConfig);
+              this._sendSystemMessage('视觉设置已保存。');
+            }
+            modal.close();
+            this._openProfilePanel();
+          }
+        }
+      ]
+    });
+  }
+
+  _applyDisplayConfig(config) {
+    if (!config) return;
+    let style = document.getElementById('dynamic-display-colors');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'dynamic-display-colors';
+      document.head.appendChild(style);
+    }
+    const dHex = config.dialogueColor || '#bae6fd';
+    const tHex = config.thoughtColor || '#c4b5fd';
+    
+    const hexToRgba = (hex, alpha) => {
+      let c;
+      if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+          c= hex.substring(1).split('');
+          if(c.length== 3){
+              c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+          }
+          c= '0x'+c.join('');
+          return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+      }
+      return `rgba(255,255,255,${alpha})`;
+    };
+
+    style.textContent = `:root {
+      --color-dialogue: ${dHex};
+      --color-dialogue-shadow: ${hexToRgba(dHex, 0.3)};
+      --color-thought: ${tHex};
+      --color-thought-shadow: ${hexToRgba(tHex, 0.2)};
+    }`;
   }
 
   _openApiSettings() {

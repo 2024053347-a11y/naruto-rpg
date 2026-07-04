@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>忍者手记 - 管理面板</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#e8e6e3;min-height:100vh}
+.header{background:rgba(255,107,53,0.08);border-bottom:1px solid rgba(255,107,53,0.15);padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:20px;letter-spacing:4px;color:#eb613f}
+.header input{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#e8e6e3;width:200px}
+.container{padding:24px;max-width:1200px;margin:0 auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.card{background:rgba(16,16,32,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px}
+.card .num{font-size:32px;font-weight:900}
+.card .label{font-size:12px;color:#a39f98;margin-top:4px}
+.card.green .num{color:#16a06d}
+.card.red .num{color:#ef5350}
+.card.blue .num{color:#42A5F5}
+.chart-bar{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:12px}
+.chart-bar .bar{flex:1;background:rgba(235,97,63,0.3);border-radius:4px 4px 0 0;text-align:center;font-size:10px;min-height:2px;position:relative}
+.chart-bar .bar span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:#a39f98}
+table{width:100%;border-collapse:collapse;margin-top:16px}
+th{text-align:left;padding:12px 8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:11px;color:#a39f98;text-transform:uppercase;letter-spacing:1px}
+td{padding:12px 8px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px}
+.btn{padding:6px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
+.btn-ban{background:rgba(239,83,80,0.2);color:#ef5350}
+.btn-ban:hover{background:rgba(239,83,80,0.4)}
+.btn-unban{background:rgba(22,160,109,0.2);color:#16a06d}
+.btn-unban:hover{background:rgba(22,160,109,0.4)}
+.section-title{font-size:16px;margin:32px 0 12px;letter-spacing:2px;color:#eb613f}
+.search-box{display:flex;gap:8px;margin-bottom:12px}
+.search-box input{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#e8e6e3;flex:1;max-width:300px}
+.search-box button{padding:8px 16px;background:rgba(235,97,63,0.2);border:1px solid rgba(235,97,63,0.3);color:#eb613f;border-radius:8px;cursor:pointer}
+.pagination{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.pagination button{padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#e8e6e3;cursor:pointer}
+.pagination button.active{background:rgba(235,97,63,0.2);border-color:#eb613f}
+.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.badge-banned{background:rgba(239,83,80,0.2);color:#ef5350}
+.badge-active{background:rgba(22,160,109,0.2);color:#16a06d}
+.loading{text-align:center;padding:40px;color:#a39f98}
+.error{background:rgba(239,83,80,0.1);border:1px solid rgba(239,83,80,0.3);border-radius:8px;padding:12px;margin-bottom:16px;color:#ef5350;display:none}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>忍者手记 · 管理面板</h1>
+  <input type="password" id="adminKey" placeholder="管理员密钥" onchange="loadAll()">
+</div>
+<div class="container">
+  <div id="error" class="error"></div>
+  <div class="cards" id="cards"></div>
+  <div class="section-title">最近7天活跃</div>
+  <div id="chart"></div>
+  <div class="section-title">最近登录</div>
+  <div id="recentLogins" style="font-size:12px;color:#a39f98"></div>
+  <div class="section-title">用户管理</div>
+  <div class="search-box">
+    <input type="text" id="search" placeholder="搜索用户名或ID" onkeyup="if(event.key==='Enter')loadUsers()">
+    <button onclick="loadUsers()">搜索</button>
+  </div>
+  <table><thead><tr><th>用户名</th><th>Discord ID</th><th>状态</th><th>最近登录</th><th>操作</th></tr></thead><tbody id="userTable"><tr><td colspan="5" class="loading">请输入管理员密钥</td></tr></tbody></table>
+  <div class="pagination" id="pagination"></div>
+</div>
+<script>
+let KEY = '';
+let page = 1;
+
+function headers() { return { 'x-admin-key': KEY }; }
+
+async function api(path) {
+  const r = await fetch('/api/admin' + path, { headers: headers() });
+  if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error||'请求失败'); }
+  return r.json();
+}
+
+async function loadAll() {
+  KEY = document.getElementById('adminKey').value;
+  if (!KEY) return;
+  document.getElementById('error').style.display = 'none';
+  try {
+    const stats = await api('/stats');
+    renderCards(stats);
+    renderChart(stats.last7Days);
+    renderRecent(stats.recentLogins);
+    loadUsers();
+  } catch(e) {
+    document.getElementById('error').style.display = 'block';
+    document.getElementById('error').textContent = e.message;
+  }
+}
+
+function renderCards(s) {
+  document.getElementById('cards').innerHTML = `
+    <div class="card blue"><div class="num">${s.todayLogins}</div><div class="label">今日活跃</div></div>
+    <div class="card"><div class="num">${s.yesterdayLogins}</div><div class="label">昨日活跃</div></div>
+    <div class="card green"><div class="num">${s.totalUsers}</div><div class="label">总用户数</div></div>
+    <div class="card red"><div class="num">${s.bannedUsers}</div><div class="label">已封禁</div></div>
+  `;
+}
+
+function renderChart(data) {
+  const max = Math.max(...data.map(d=>d.count), 1);
+  document.getElementById('chart').innerHTML = '<div class="chart-bar">' +
+    data.map(d => `<div class="bar" style="height:${(d.count/max*100)}%"><span>${d.date.slice(5)}<br>${d.count}</span></div>`).join('') +
+    '</div>';
+}
+
+function renderRecent(logins) {
+  document.getElementById('recentLogins').innerHTML = logins.slice(0,10).map(l =>
+    `${l.time?.slice(11,16)||''} ${l.username} (${l.id?.slice(-6)})`
+  ).join(' · ');
+}
+
+async function loadUsers(p) {
+  if (p) page = p;
+  if (!KEY) return;
+  const search = document.getElementById('search').value;
+  try {
+    const data = await api(`/users?page=${page}&limit=20&search=${encodeURIComponent(search)}`);
+    document.getElementById('userTable').innerHTML = data.items.map(u => `
+      <tr>
+        <td>${u.global_name||u.username||'未知'}</td>
+        <td style="font-size:11px;color:#a39f98">${u.id?.slice(-12)}</td>
+        <td>${u.banned ? '<span class="badge badge-banned">已封禁</span>' : '<span class="badge badge-active">正常</span>'}</td>
+        <td style="font-size:11px;color:#a39f98">${u.last_login?.slice(0,10)||'-'}</td>
+        <td>${u.banned
+          ? `<button class="btn btn-unban" onclick="toggleBan('${u.id}','unban')">解封</button>`
+          : `<button class="btn btn-ban" onclick="toggleBan('${u.id}','ban')">封禁</button>`
+        }</td>
+      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#a39f98">无数据</td></tr>';
+    const totalPages = Math.ceil(data.total / 20);
+    document.getElementById('pagination').innerHTML = Array.from({length:totalPages},(_,i)=>i+1)
+      .map(i => `<button class="${i===page?'active':''}" onclick="loadUsers(${i})">${i}</button>`).join('');
+  } catch(e) {
+    document.getElementById('userTable').innerHTML = '<tr><td colspan="5" class="loading">加载失败: '+e.message+'</td></tr>';
+  }
+}
+
+async function toggleBan(id, action) {
+  if (!confirm(`确定要${action==='ban'?'封禁':'解封'}该用户吗？`)) return;
+  try {
+    await fetch('/api/admin/users/'+id+'/'+action, { method:'POST', headers:{...headers(),'Content-Type':'application/json'}, body:JSON.stringify({reason:'管理员操作'}) });
+    loadUsers();
+  } catch(e) { alert(e.message); }
+}
+</script>
+</body>
+</html>

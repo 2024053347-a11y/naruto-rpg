@@ -222,8 +222,12 @@ export function coerceValue(key, rawValue) {
       return n;
     }
     if (p.type === 'string') return String(rawValue);
-    const n = Number(rawValue);
-    return isNaN(n) ? String(rawValue) : n;
+    if (isNumeric(key)) {
+      const n = Number(rawValue);
+      if (isNaN(n)) return undefined;
+      return n;
+    }
+    return String(rawValue);
   }
 
   return rawValue;

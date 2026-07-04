@@ -42,8 +42,26 @@ class EquipmentSystem {
 
     const catCN = CAT_CN[category] || '道具';
     const qtyKey = `物品·${catCN}·${name}·数量`;
-    const qty = stateManager.get(qtyKey);
-    if (category !== 'consumables' && !qty) return false;
+    let qty = stateManager.get(qtyKey);
+    
+    // Legacy support: if it was stored as an object
+    const legacyObj = stateManager.get(`物品·${catCN}·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || 1;
+    }
+
+    let hasItem = !!qty;
+    // For AI generated armor/weapons, they might only have '名称' or '描述' but no '数量'
+    if (!hasItem) {
+      for (const k of Object.keys(stateManager.state)) {
+        if (k.startsWith(`物品·${catCN}·${name}·`)) {
+          hasItem = true;
+          break;
+        }
+      }
+    }
+
+    if (category !== 'consumables' && !hasItem) return false;
 
     const updates = [
       { key: slotKey, op: '=', value: name }
@@ -83,16 +101,43 @@ class EquipmentSystem {
 
   _getItem(category, name) {
     const catCN = CAT_CN[category] || '道具';
-    const qty = stateManager.get(`物品·${catCN}·${name}·数量`);
-    if (qty == null) return null;
-    const quality = stateManager.get(`物品·${catCN}·${name}·品质`) || '普通';
-    return { quantity: Number(qty) || 0, quality };
+    let qty = stateManager.get(`物品·${catCN}·${name}·数量`);
+    let quality = stateManager.get(`物品·${catCN}·${name}·品质`) || '普通';
+
+    const legacyObj = stateManager.get(`物品·${catCN}·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || qty || 1;
+       quality = legacyObj.quality || quality;
+    }
+
+    if (qty == null) {
+      // Check if it exists as an AI generated item without explicit quantity
+      let hasItem = false;
+      for (const k of Object.keys(stateManager.state)) {
+        if (k.startsWith(`物品·${catCN}·${name}·`)) {
+          hasItem = true;
+          break;
+        }
+      }
+      if (!hasItem) return null;
+      qty = 1; // Assume 1 for equipment
+    }
+    
+    return { quantity: Number(qty) || 1, quality };
   }
 
   useItem(name) {
     if (!name || typeof name !== 'string' || !name.trim()) return false;
-    const qty = stateManager.get(`物品·消耗品·${name}·数量`);
-    const quality = stateManager.get(`物品·消耗品·${name}·品质`) || '普通';
+    let qty = stateManager.get(`物品·消耗品·${name}·数量`);
+    let quality = stateManager.get(`物品·消耗品·${name}·品质`) || '普通';
+
+    // Legacy support: if it was stored as an object
+    const legacyObj = stateManager.get(`物品·消耗品·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || qty || 1;
+       quality = legacyObj.quality || quality;
+    }
+
     if (!qty || Number(qty) <= 0) return false;
     const item = { quantity: Number(qty), quality };
 

@@ -12,6 +12,8 @@ export class AIAdapter {
       if (realUrl) {
         const nh = { 'Content-Type': 'application/json' };
         if (h['x-user-api-key']) nh['Authorization'] = 'Bearer ' + h['x-user-api-key'];
+        if (h['Accept']) nh['Accept'] = h['Accept'];
+        if (h['accept']) nh['accept'] = h['accept'];
         return fetch(realUrl, { ...init, headers: nh });
       }
     }
@@ -590,6 +592,7 @@ export class AIClient {
       'x-user-api-key': config.apiKey || '',
       'x-api-key-header': apiKeyHeader,
     };
+    if (stream) headers['Accept'] = 'text/event-stream';
 
     // Separate system messages for Claude/anthropic format
     // The proxy just forwards, so we send the messages as-is
@@ -616,6 +619,7 @@ export class AIClient {
       }
 
       const contentType = response.headers.get('content-type') || '';
+      console.log('[_proxyChat] stream=', stream, 'contentType=', contentType);
       if (stream && onChunk && contentType.includes('text/event-stream')) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();

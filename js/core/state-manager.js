@@ -290,6 +290,17 @@ class StateManager {
       const current = this.state[key];
 
       switch (v.op) {
+        case 'del':
+        case 'delete':
+        case 'remove': {
+          if (key.includes('.')) {
+            // Not supported for deep path deletion in flat updates right now, but we can do our best
+          } else {
+            delete this.state[key];
+          }
+          applied.push(v);
+          break;
+        }
         case '=': {
           const coerced = coerceValue(key, rawVal);
           // B-03: 类型断言——若 schema 要求 number 但 coerce 后仍非数字，拒绝写入
@@ -312,7 +323,16 @@ class StateManager {
           if (key.includes('.')) {
             setValueByPath(this.state, key, coerced);
           } else {
-            this.state[key] = coerced;
+            // Delete skill prefix if setting base skill key to falsy (or 0)
+            if (key.startsWith('技能·') && !key.split('·')[3] && (coerced === 0 || coerced === '' || coerced === '0' || coerced === '无' || coerced === false)) {
+              for (const k in this.state) {
+                if (k.startsWith(key + '·') || k === key) {
+                  delete this.state[k];
+                }
+              }
+            } else {
+              this.state[key] = coerced;
+            }
           }
           applied.push(v);
           break;
@@ -417,9 +437,9 @@ class StateManager {
       }
 
       // Skills: skills.jutsu.火遁·豪火球 → 技能·忍术·火遁·豪火球·*
-      const skillsMatch = path.match(/^skills\.(jutsu|taijutsu|genjutsu|support|talents)\.(.+?)(?:\.(.+))?$/);
+      const skillsMatch = path.match(/^skills\.(jutsu|taijutsu|genjutsu|support|talents|kekkei_genkai)\.(.+?)(?:\.(.+))?$/);
       if (skillsMatch) {
-        const typeRev = { jutsu: '忍术', taijutsu: '体术', genjutsu: '幻术', support: '支援', talents: '天赋' };
+        const typeRev = { jutsu: '忍术', taijutsu: '体术', genjutsu: '幻术', support: '支援', talents: '天赋', kekkei_genkai: '血继限界' };
         const fieldRev = { name: '名称', rank: '等级', element: '属性', cost: '消耗', power: '威力', mastery: '熟练度', description: '描述', type: '类型' };
         const type = typeRev[skillsMatch[1]] || skillsMatch[1];
         const skillName = skillsMatch[2];
@@ -439,9 +459,14 @@ class StateManager {
           const flatOp = OP_MAP[op] || '=';
           flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: flatOp, value });
         } else if (op === 'remove' && v.key) {
-          // Remove skill - set all fields to empty
-          for (const zhField of ['名称', '等级', '属性', '消耗', '威力', '熟练度', '描述']) {
-            flatUpdates.push({ key: `技能·${type}·${v.key}·${zhField}`, op: '=', value: '' });
+          const skillPrefix = `技能·${type}·${v.key}·`;
+          const deletedKeys = [];
+          for (const stateKey of Object.keys(this.state)) {
+            if (stateKey.startsWith(skillPrefix)) deletedKeys.push(stateKey);
+          }
+          for (const stateKey of deletedKeys) {
+            delete this.state[stateKey];
+            eventBus.emit('state:changed', { key: stateKey, value: undefined, deleted: true });
           }
         }
         continue;
@@ -466,8 +491,14 @@ class StateManager {
           const flatOp = OP_MAP[op] || '=';
           flatUpdates.push({ key: `物品·${type}·${itemName}·${zhField}`, op: flatOp, value });
         } else if (op === 'remove' && v.key) {
-          for (const zhField of ['数量', '品质', '描述']) {
-            flatUpdates.push({ key: `物品·${type}·${v.key}·${zhField}`, op: '=', value: '' });
+          const itemPrefix = `物品·${type}·${v.key}·`;
+          const deletedKeys = [];
+          for (const stateKey of Object.keys(this.state)) {
+            if (stateKey.startsWith(itemPrefix)) deletedKeys.push(stateKey);
+          }
+          for (const stateKey of deletedKeys) {
+            delete this.state[stateKey];
+            eventBus.emit('state:changed', { key: stateKey, value: undefined, deleted: true });
           }
         }
         continue;
@@ -478,11 +509,27 @@ class StateManager {
       if (equippedMatch) {
         const slotRev = { weapon: '武器', armor: '防具', accessory1: '饰品1', accessory2: '饰品2' };
         const slot = slotRev[equippedMatch[1]] || equippedMatch[1];
-        flatUpdates.push({ key: `物品·已装备·${slot}`, op: '=', value });
+        if (op === 'remove') {
+          const flatKey = `物品·已装备·${slot}`;
+          if (flatKey in this.state) {
+            delete this.state[flatKey];
+            eventBus.emit('state:changed', { key: flatKey, value: undefined, deleted: true });
+          }
+        } else {
+          flatUpdates.push({ key: `物品·已装备·${slot}`, op: '=', value });
+        }
         continue;
       }
 
       // Reputation: progression.reputation.木叶隐村 → 进度·声望·木叶隐村
+      if (path === 'progression.reputation' && op === 'remove' && v.key) {
+        const repKey = `进度·声望·${v.key}`;
+        if (repKey in this.state) {
+          delete this.state[repKey];
+          eventBus.emit('state:changed', { key: repKey, value: undefined, deleted: true });
+        }
+        continue;
+      }
       const repMatch = path.match(/^progression\.reputation\.(.+)$/);
       if (repMatch) {
         const flatOp = OP_MAP[op] || '=';
@@ -531,6 +578,15 @@ class StateManager {
         map.known_locations[v.key] = value;
         this.state._map = map;
         eventBus.emit('state:changed', { key: '_map', value: this.state._map });
+        continue;
+      }
+      if (knownLocMatch && op === 'remove' && v.key) {
+        const map = this.state._map || { known_locations: {}, active_pins: '' };
+        if (map.known_locations && map.known_locations[v.key]) {
+          delete map.known_locations[v.key];
+          this.state._map = map;
+          eventBus.emit('state:changed', { key: '_map', value: this.state._map });
+        }
         continue;
       }
 
@@ -984,6 +1040,26 @@ class StateManager {
       }
       console.warn(`[StateManager] localStorage setItem failed for ${key}:`, e.message);
       return false;
+    }
+
+  }
+
+  getDisplayConfig() {
+    try {
+      const saved = localStorage.getItem('naruto_rpg_display_config');
+      if (saved) return JSON.parse(saved);
+    } catch(e) {
+      console.warn('[StateManager] Failed to parse display config:', e);
+    }
+    return { dialogueColor: '#bae6fd', thoughtColor: '#c4b5fd' };
+  }
+
+  saveDisplayConfig(config) {
+    if (!config || typeof config !== 'object') return;
+    try {
+      localStorage.setItem('naruto_rpg_display_config', JSON.stringify(config));
+    } catch(e) {
+      console.warn('[StateManager] Failed to save display config:', e);
     }
   }
 

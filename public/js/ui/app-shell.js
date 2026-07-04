@@ -928,7 +928,13 @@ class AppShell {
 
     const save = () => {
       const raw = input.value.trim();
-      if (raw === '') return;
+      if (raw === '') {
+        // User cleared the input, treat as delete
+        stateManager.update([{ key, op: 'del' }]);
+        row.remove();
+        editHtml.remove();
+        return;
+      }
       const newVal = isNum ? Number(raw) : raw;
       if (isNum && isNaN(newVal)) return;
       stateManager.update([{ key, op: '=', value: newVal }]);
@@ -1118,10 +1124,59 @@ class AppShell {
       return '';
     });
 
+    const guaxiangBlocks = [];
+    processed = processed.replace(/≈卦象判定≈\n?([\s\S]*?)卦象：([^\n]+)\n?([\s\S]*?)(?:≈卦终≈|$)/g, (match, action, resultLine, narrative) => {
+      let dice = '卦象';
+      let result = resultLine.trim();
+      const parts = resultLine.split(/→|->|＞|>/);
+      if (parts.length > 1) {
+        dice = parts[0].trim();
+        result = parts[1].trim();
+      }
+      
+      let resClass = 'default';
+      if (result.includes('天命')) resClass = 'epic';
+      else if (result.includes('瞬身')) resClass = 'success';
+      else if (result.includes('及第')) resClass = 'normal';
+      else if (result.includes('代偿')) resClass = 'warning';
+      else if (result.includes('转机')) resClass = 'info';
+      else if (result.includes('大凶') || result.includes('失败')) resClass = 'danger';
+
+      const esc = this._esc ? this._esc.bind(this) : (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const actionHtml = action.trim() ? `<div class="d-action">${esc(action.trim()).replace(/\n/g, '<br>')}</div>` : '';
+      const narrativeHtml = narrative.trim() ? `<div class="d-narrative">${esc(narrative.trim()).replace(/\n/g, '<br>')}</div>` : '';
+
+      const block = `
+        <div class="divination-seal-box ${resClass}">
+          <div class="d-content-layer">
+            <div class="d-header">
+              <span class="d-line"></span>
+              <span class="d-title">命运判定</span>
+              <span class="d-line"></span>
+            </div>
+            ${actionHtml}
+            <div class="d-result-stamp">
+              <div class="d-bg-seal"></div>
+              <div class="d-dice-text">${esc(dice)}</div>
+              <div class="d-seal-text">${esc(result)}</div>
+            </div>
+            ${narrativeHtml}
+          </div>
+        </div>`;
+      guaxiangBlocks.push(block);
+      return `%%%GUAXIANG_${guaxiangBlocks.length - 1}%%%`;
+    });
+
     let html = this._esc(processed);
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, label, href) => this._renderSafeLink(label, href));
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>' + '$' + '1</strong>');
     html = html.replace(/\*(.+?)\*/g, '<em>' + '$' + '1</em>');
+
+    html = html.replace(/(“[^”]+”|「[^」]+」)/g, '<span class="text-dialogue">$&</span>');
+    html = html.replace(/（([^）]+)）/g, '<span class="text-thought">（$1）</span>');
+    html = html.replace(/『([^』]+)』/g, '<span class="text-thought">『$1』</span>');
+    html = html.replace(/~([^~]+)~/g, '<span class="text-thought">~$1~</span>');
+    
     html = html.replace(/\n\n+/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
     html = '<p>' + html + '</p>';
@@ -1143,6 +1198,10 @@ class AppShell {
       }
     }
 
+    html = html.replace(/<p>\s*%%%GUAXIANG_(\d+)%%%\s*<\/p>/g, '%%%GUAXIANG_$1%%%');
+    html = html.replace(/<br>\s*%%%GUAXIANG_(\d+)%%%\s*(?:<br>)?/g, '%%%GUAXIANG_$1%%%');
+    html = html.replace(/%%%GUAXIANG_(\d+)%%%/g, (match, id) => guaxiangBlocks[id]);
+
     html = html.replace(/\[行动\]\s*(.*?)(?=<br>|<\/p>|$)/g, (match, option) => {
       const plain = option.replace(/<[^>]+>/g, '');
       return `<button class="action-option" data-action="${this._escAttr(plain.trim())}">
@@ -1151,8 +1210,8 @@ class AppShell {
               </button>`;
     });
 
-    // 兼容旧存档的选项格式，允许末尾句号但防止跨越多重引号匹配
-    html = html.replace(/(<br>|<p>)\s*「([^「」]+)」\s*(?=<br>|<\/p>|$)/g, (match, prefix, option) => {
+    // 兼容旧存档的选项格式，允许末尾句号但防止跨越多重引号匹配，忽略被前面正则添加的对话span
+    html = html.replace(/(<br>|<p>)\s*(?:<span class="text-dialogue">)?「([^「」]+)」(?:<\/span>)?\s*(?=<br>|<\/p>|$)/g, (match, prefix, option) => {
       const plain = option.replace(/<[^>]+>/g, '');
       return `${prefix}<button class="action-option" data-action="${this._escAttr(plain.trim())}">
                 <span class="action-option__icon">忍</span>
@@ -1424,7 +1483,7 @@ class AppShell {
             </div>
             <div class="api-hero-panel">
               <div class="api-hero-line"><strong>世界状态</strong><span>默认木叶48年 · 可随存档/选择切换</span></div>
-              <div class="api-hero-line"><strong>默认预设</strong><span>忍者手记 · 内置默认预设</span></div>
+              <div class="api-hero-line"><strong>叙事预设</strong><span>Narutomech Alpha-1003 · 主预设统一管理</span></div>
               <div class="api-hero-line"><strong>存档方式</strong><span>IndexedDB 本地时间线</span></div>
               <div class="api-hero-line"><strong>开局流程</strong><span>连接模型 → 创建角色 → 入学试炼</span></div>
             </div>

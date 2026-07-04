@@ -91,12 +91,26 @@ export class InstructionParser {
             // Format A: The old {"updates": [...]} format
             if (data.updates && Array.isArray(data.updates)) {
               for (const u of data.updates) {
+                // Normalize path to key if AI used path for a flat key
+                if (u.path && !u.key) {
+                  if (!u.path.includes('.') || u.path.includes('·')) {
+                    u.key = u.path;
+                    u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
+                    delete u.path;
+                  } else if (u.path.startsWith('attributes.')) {
+                    u.key = '属性·' + u.path.slice(11);
+                    u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
+                    delete u.path;
+                  }
+                }
+
                 if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                  if (!isKnownKey(u.key)) {
-                    console.warn('[InstructionParser] 未知变量，跳过:', u.key);
+                  const resolvedKey = resolveAlias(u.key);
+                  if (!isKnownKey(resolvedKey)) {
+                    console.warn('[InstructionParser] 未知变量，跳过:', resolvedKey);
                     continue;
                   }
-                  updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
+                  updates.push({ key: resolvedKey, op: u.op, value: coerceValue(resolvedKey, u.value) });
                 } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
                   updates.push(u);
                 }
@@ -105,12 +119,26 @@ export class InstructionParser {
             // Format B: The new single object format: {"path":"...", "op":"...", "value":...}
             else {
               const u = data;
+              // Normalize path to key if AI used path for a flat key
+              if (u.path && !u.key) {
+                if (!u.path.includes('.') || u.path.includes('·')) {
+                  u.key = u.path;
+                  u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
+                  delete u.path;
+                } else if (u.path.startsWith('attributes.')) {
+                  u.key = '属性·' + u.path.slice(11);
+                  u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
+                  delete u.path;
+                }
+              }
+
               if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                if (!isKnownKey(u.key)) {
-                  console.warn('[InstructionParser] 未知变量，跳过:', u.key);
+                const resolvedKey = resolveAlias(u.key);
+                if (!isKnownKey(resolvedKey)) {
+                  console.warn('[InstructionParser] 未知变量，跳过:', resolvedKey);
                   continue;
                 }
-                updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
+                updates.push({ key: resolvedKey, op: u.op, value: coerceValue(resolvedKey, u.value) });
               } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
                 updates.push(u);
               }
