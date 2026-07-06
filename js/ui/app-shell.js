@@ -386,8 +386,13 @@ class AppShell {
 
     eventBus.on('ai:usage', (usage) => {
       if (!usage) return;
-      const hit = Number(usage.prompt_cache_hit_tokens) || 0;
-      const miss = Number(usage.prompt_cache_miss_tokens) || 0;
+      let hit = Number(usage.prompt_cache_hit_tokens) || 0;
+      let miss = Number(usage.prompt_cache_miss_tokens) || 0;
+      // Claude: cache_read = hit, cache_creation = miss (first-time write)
+      if (hit + miss === 0) {
+        hit = Number(usage.cache_read_input_tokens) || 0;
+        miss = Number(usage.cache_creation_input_tokens) || 0;
+      }
       const total = hit + miss;
       const el = this.element?.querySelector('#status-cache');
       if (!el) return;
@@ -397,10 +402,10 @@ class AppShell {
         el.style.color = color;
         el.textContent = `◉ ${rate}%`;
         el.title = `缓存命中: ${hit} tokens / 未命中: ${miss} tokens`;
-      } else if (usage.prompt_tokens) {
+      } else if (usage.prompt_tokens || usage.input_tokens) {
         el.style.color = '#a39f98';
         el.textContent = `◉ ---`;
-        el.title = `本次输入: ${usage.prompt_tokens} tokens（非DeepSeek或缓存字段缺失）`;
+        el.title = `本次输入: ${usage.prompt_tokens || usage.input_tokens} tokens（缓存字段缺失）`;
       } else {
         el.style.color = '#6e6a65';
         el.textContent = `◉ ---`;
@@ -877,8 +882,7 @@ class AppShell {
           const parsed = JSON.parse(editHtml.querySelector('textarea').value);
           const currentRels = stateManager.getSub('_relationships') || {};
           currentRels[npcName] = parsed;
-          stateManager.state._relationships = currentRels;
-          if (window.eventBus) window.eventBus.emit('state:changed', { key: '_relationships', value: currentRels });
+          stateManager.setSub('_relationships', currentRels);
           const deltaEl = row.querySelector('.vu-delta');
           if (deltaEl) { deltaEl.textContent = '已修正'; deltaEl.className = 'vu-delta vu-set'; }
           editHtml.remove();

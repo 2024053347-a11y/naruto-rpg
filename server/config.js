@@ -68,4 +68,8 @@ if (config.nodeEnv === 'production') {
   if (missing.length > 0) {
     console.warn(`[WARNING] Production mode configuration check failed! Missing keys: ${missing.join(', ')}`);
   }
+  if (config.jwt.secret === DEV_FALLBACK_JWT_SECRET) {
+    console.error('[FATAL] JWT_SECRET must be set to a real secret in production. Exiting.');
+    process.exit(1);
+  }
 }

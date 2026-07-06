@@ -47,6 +47,15 @@ export const upsertUser = (profile) => users.upsert(profile);
 /** @type {UserRepository['findById']} */
 export const getUser = (id) => users.findById(id);
 
+/** @type {UserRepository['getAll']} */
+export const getAllUsers = () => users.getAll();
+
+/** @type {UserRepository['banUser']} */
+export const banUser = (id, reason) => users.banUser(id, reason);
+
+/** @type {UserRepository['unbanUser']} */
+export const unbanUser = (id) => users.unbanUser(id);
+
 // --- 存档数据库操作 ---
 
 /** @type {SaveRepository['listByUser']} */

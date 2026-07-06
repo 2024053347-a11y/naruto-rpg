@@ -18,14 +18,21 @@ const FORWARDABLE_RESPONSE_HEADERS = ['content-type', 'cache-control'];
  * @returns {boolean}
  */
 function isPrivateHost(hostname) {
+  // 十进制 IP 绕过（如 https://2130706433/ → 127.0.0.1）
+  if (/^\d+$/.test(hostname)) return true;
+
   if (['localhost', '127.0.0.1', '[::1]', '0.0.0.0'].includes(hostname)) return true;
+  // IPv4-mapped IPv6（如 [::ffff:127.0.0.1]）
+  if (hostname.startsWith('[::ffff:') && hostname.endsWith(']')) return true;
+  // IPv6 唯一本地地址 fc00::/7 和链路本地 fe80::/10
+  if (hostname.startsWith('[fc') || hostname.startsWith('[fd') || hostname.startsWith('[fe8') || hostname.startsWith('[fe9')) return true;
 
   const octets = hostname.split('.').map(Number);
   if (octets.length === 4 && octets.every((n) => !Number.isNaN(n))) {
-    if (octets[0] === 10) return true; // 10.0.0.0/8
-    if (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) return true; // 172.16.0.0/12
-    if (octets[0] === 192 && octets[1] === 168) return true; // 192.168.0.0/16
-    if (octets[0] === 169 && octets[1] === 254) return true; // 169.254.0.0/16 链路本地
+    if (octets[0] === 10) return true;
+    if (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) return true;
+    if (octets[0] === 192 && octets[1] === 168) return true;
+    if (octets[0] === 169 && octets[1] === 254) return true;
   }
   return false;
 }
@@ -79,6 +86,12 @@ router.all('/', async (req, res) => {
     return res.status(errorStatus).json(errorBody);
   }
 
+  // 白名单：仅允许标准的 API key 请求头名称
+  const ALLOWED_KEY_HEADERS = ['authorization', 'x-api-key', 'api-key'];
+  if (!ALLOWED_KEY_HEADERS.includes(apiKeyHeaderName.toLowerCase())) {
+    return res.status(451).json({ error: '不允许的 x-api-key-header 值' });
+  }
+
   // 客户端中途断开时立即中止上游请求，避免继续为已放弃的生成计费/占用连接
   const upstreamAbort = new AbortController();
   res.on('close', () => {
@@ -98,12 +111,17 @@ router.all('/', async (req, res) => {
       forwardHeaders[apiKeyHeaderName] = apiKey;
     }
 
-    const fetchOptions = { method: req.method, headers: forwardHeaders, signal: upstreamAbort.signal };
+    const fetchOptions = { method: req.method, headers: forwardHeaders, signal: upstreamAbort.signal, redirect: 'manual' };
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.body && Object.keys(req.body).length > 0) {
       fetchOptions.body = JSON.stringify(req.body);
     }
 
     const upstreamResponse = await fetch(targetUrl, fetchOptions);
+    // 拒绝重定向 — AI API 不需要
+    if (upstreamResponse.status >= 300 && upstreamResponse.status < 400) {
+      console.warn(`[AI PROXY] Blocked redirect to: ${upstreamResponse.headers.get('location') || 'unknown'}`);
+      return res.status(502).json({ error: `AI 代理拒绝重定向: ${upstreamResponse.status}` });
+    }
     res.status(upstreamResponse.status);
 
     for (const key of FORWARDABLE_RESPONSE_HEADERS) {

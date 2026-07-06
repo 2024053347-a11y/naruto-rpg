@@ -2,18 +2,31 @@ import { Router } from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash, timingSafeEqual } from 'node:crypto';
+import { getAllUsers, banUser, unbanUser } from '../db/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_DIR = path.join(__dirname, '../db');
 
-// 简易管理员密钥（可通过 .env ADMIN_KEY 配置，不配置时默认密码）
-const ADMIN_KEY = process.env.ADMIN_KEY || 'naruto-admin-2024';
+// 管理员密钥：必须通过 .env ADMIN_KEY 配置，未配置时管理面板整体禁用（无默认密码）
+const ADMIN_KEY = process.env.ADMIN_KEY || '';
 
 const router = Router();
 
+/** 常量时间比较：先做 sha256 归一化长度，避免 timingSafeEqual 因长度不同直接抛错/泄露长度信息 */
+function safeKeyEqual(a, b) {
+  const ha = createHash('sha256').update(String(a)).digest();
+  const hb = createHash('sha256').update(String(b)).digest();
+  return timingSafeEqual(ha, hb);
+}
+
 function requireAdmin(req, res, next) {
-  const key = req.headers['x-admin-key'] || req.query.key || req.cookies?.admin_key;
-  if (key !== ADMIN_KEY) {
+  if (!ADMIN_KEY) {
+    return res.status(503).json({ error: '管理面板未启用：请在 .env 中配置 ADMIN_KEY' });
+  }
+  // 仅接受请求头传递密钥；query/cookie 会残留在访问日志与浏览器历史中
+  const key = req.headers['x-admin-key'];
+  if (!key || !safeKeyEqual(key, ADMIN_KEY)) {
     return res.status(403).json({ error: '管理员密钥无效' });
   }
   next();
@@ -39,7 +52,7 @@ router.get('/stats', async (req, res) => {
     const today = now.toISOString().slice(0, 10);
 
     // 读取所有数据
-    const users = readJsonFile('users.json') || {};
+    const users = await getAllUsers();
     const saves = readJsonFile('saves_index.json') || {};
     const userList = Object.values(users);
 
@@ -47,19 +60,19 @@ router.get('/stats', async (req, res) => {
     let loginLog = [];
     try { loginLog = readJsonFile('login_log.json') || []; } catch {}
 
-    const todayLogins = loginLog.filter(l => l.date === today).length;
+    const todayLogins = new Set(loginLog.filter(l => l.date === today).map(l => l.id)).size;
     const yesterday = new Date(now - 86400000).toISOString().slice(0, 10);
-    const yesterdayLogins = loginLog.filter(l => l.date === yesterday).length;
+    const yesterdayLogins = new Set(loginLog.filter(l => l.date === yesterday).map(l => l.id)).size;
 
     const totalUsers = userList.length;
     const bannedUsers = userList.filter(u => u.banned).length;
     const totalSaves = Object.keys(saves).length;
 
-    // 最近7天活跃
+    // 最近7天活跃（独立用户数）
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now - i * 86400000).toISOString().slice(0, 10);
-      last7Days.push({ date: d, count: loginLog.filter(l => l.date === d).length });
+      last7Days.push({ date: d, count: new Set(loginLog.filter(l => l.date === d).map(l => l.id)).size });
     }
 
     // 最近登录的用户
@@ -78,7 +91,7 @@ router.get('/stats', async (req, res) => {
 // GET /api/admin/users - 用户列表
 router.get('/users', async (req, res) => {
   try {
-    const users = readJsonFile('users.json') || {};
+    const users = await getAllUsers();
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 50;
     const search = (req.query.search || '').toLowerCase();
@@ -114,16 +127,9 @@ router.post('/users/:id/ban', async (req, res) => {
   try {
     const { id } = req.params;
     const { reason } = req.body || {};
-    const users = readJsonFile('users.json') || {};
-
-    if (!users[id]) return res.status(404).json({ error: '用户不存在' });
-
-    users[id].banned = true;
-    users[id].ban_reason = reason || '违反社区规则';
-    users[id].banned_at = new Date().toISOString();
-    writeJsonFile('users.json', users);
-
-    res.json({ success: true, user: users[id] });
+    const user = await banUser(id, reason);
+    if (!user) return res.status(404).json({ error: '用户不存在' });
+    res.json({ success: true, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -133,16 +139,9 @@ router.post('/users/:id/ban', async (req, res) => {
 router.post('/users/:id/unban', async (req, res) => {
   try {
     const { id } = req.params;
-    const users = readJsonFile('users.json') || {};
-
-    if (!users[id]) return res.status(404).json({ error: '用户不存在' });
-
-    delete users[id].banned;
-    delete users[id].ban_reason;
-    delete users[id].banned_at;
-    writeJsonFile('users.json', users);
-
-    res.json({ success: true, user: users[id] });
+    const user = await unbanUser(id);
+    if (!user) return res.status(404).json({ error: '用户不存在' });
+    res.json({ success: true, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

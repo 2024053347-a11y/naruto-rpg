@@ -174,7 +174,7 @@ export class InstructionParser {
 
       // Recovery: AI sometimes puts multiple JSON objects in one tag
       // or adds trailing text after the JSON
-      const jsonObjects = raw.match(/\{[\s\S]*?\}/g);
+      const jsonObjects = this._extractJsonObjects(raw);
       if (jsonObjects) {
         for (const jsonStr of jsonObjects) {
           try {
@@ -216,7 +216,7 @@ export class InstructionParser {
       .replace(/<anthropic_think>[\s\S]*?<\/anthropic_think>/gi, '')
       .replace(/<deepseek_thinking>[\s\S]*?<\/deepseek_thinking>/gi, '')
       .replace(/<analysis>[\s\S]*?<\/analysis>/gi, '')
-      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
+      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>([\s\S]*?)<\/\1>/g, '$2')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }
@@ -269,6 +269,24 @@ export class InstructionParser {
 
   hasStatusQuery(text) {
     return text ? /<status_query\s*\/>/.test(text) : false;
+  }
+
+  _extractJsonObjects(str) {
+    const results = [];
+    let depth = 0, start = -1;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '{') {
+        if (depth === 0) start = i;
+        depth++;
+      } else if (str[i] === '}') {
+        depth--;
+        if (depth === 0 && start >= 0) {
+          results.push(str.slice(start, i + 1));
+          start = -1;
+        } else if (depth < 0) depth = 0;
+      }
+    }
+    return results.length ? results : null;
   }
 }
 

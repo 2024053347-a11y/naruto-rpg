@@ -11,7 +11,17 @@ export class AIAdapter {
       const realUrl = h['x-target-url'];
       if (realUrl) {
         const nh = { 'Content-Type': 'application/json' };
-        if (h['x-user-api-key']) nh['Authorization'] = 'Bearer ' + h['x-user-api-key'];
+        const keyHeader = h['x-api-key-header'] || 'Authorization';
+        if (h['x-user-api-key']) {
+          if (keyHeader.toLowerCase() === 'authorization') {
+            nh['Authorization'] = 'Bearer ' + h['x-user-api-key'];
+          } else {
+            nh[keyHeader] = h['x-user-api-key'];
+          }
+        }
+        for (const fwd of ['anthropic-version', 'anthropic-beta']) {
+          if (h[fwd]) nh[fwd] = h[fwd];
+        }
         return fetch(realUrl, { ...init, headers: nh });
       }
     }
@@ -305,12 +315,27 @@ class ClaudeAdapter extends AIAdapter {
     const chatMessages = [];
     for (const msg of messages) {
       if (msg.role === 'system') {
-        systemMessages.push(msg.content);
+        systemMessages.push(typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content));
       } else {
         chatMessages.push(msg);
       }
     }
-    return { system: systemMessages.join('\n\n'), messages: chatMessages };
+
+    const systemStr = systemMessages.join('\n\n');
+    const system = systemStr
+      ? [{ type: 'text', text: systemStr, cache_control: { type: 'ephemeral' } }]
+      : undefined;
+
+    const cacheIdx = chatMessages.length >= 2 ? chatMessages.length - 2 : -1;
+    const wrapped = chatMessages.map((msg, idx) => {
+      if (idx === cacheIdx) {
+        const text = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content);
+        return { role: msg.role, content: [{ type: 'text', text, cache_control: { type: 'ephemeral' } }] };
+      }
+      return msg;
+    });
+
+    return { system, messages: wrapped };
   }
 
   async chat(messages, options = {}) {
@@ -334,7 +359,8 @@ class ClaudeAdapter extends AIAdapter {
           'x-target-url': `${this.apiUrl}/messages`,
           'x-user-api-key': this.apiKey,
           'x-api-key-header': 'x-api-key',
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': '2023-06-01',
+          'anthropic-beta': 'prompt-caching-2024-07-31'
         },
         body: JSON.stringify(body),
         signal: controller.signal
@@ -392,7 +418,8 @@ class ClaudeAdapter extends AIAdapter {
               'x-target-url': `${this.apiUrl}/messages`,
               'x-user-api-key': this.apiKey,
               'x-api-key-header': 'x-api-key',
-              'anthropic-version': '2023-06-01'
+              'anthropic-version': '2023-06-01',
+              'anthropic-beta': 'prompt-caching-2024-07-31'
             },
             body: JSON.stringify(body),
             signal: signal
@@ -428,6 +455,7 @@ class ClaudeAdapter extends AIAdapter {
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
           let buffer = '';
+          let lastUsage = null;
           while (true) {
             const { done, value } = await reader.read();
             buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
@@ -439,6 +467,9 @@ class ClaudeAdapter extends AIAdapter {
               const jsonStr = line.slice(6).trim();
               try {
                 const data = JSON.parse(jsonStr);
+                if (data.type === 'message_start' && data.message?.usage) {
+                  lastUsage = data.message.usage;
+                }
                 if (data.type === 'content_block_delta') {
                   const text = data.delta?.text || '';
                   if (text) {
@@ -448,7 +479,10 @@ class ClaudeAdapter extends AIAdapter {
                 }
               } catch { /* skip malformed SSE chunks */ }
             }
-            if (done) break;
+            if (done) {
+              if (lastUsage) eventBus.emit('ai:usage', lastUsage);
+              break;
+            }
           }
           return fullContent || null;
         } catch (fetchError) {
@@ -493,7 +527,8 @@ class ClaudeAdapter extends AIAdapter {
         'x-target-url': `${apiUrl}/models`,
         'x-user-api-key': config.apiKey || '',
         'x-api-key-header': 'x-api-key',
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31'
       }
     });
     if (!response.ok) {

@@ -35,11 +35,17 @@ export async function requireAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
-    
+
     // 验证用户在数据库中是否确实存在
     const user = await getUser(decoded.id);
     if (!user) {
       return res.status(401).json({ error: '账户不存在或已被删除' });
+    }
+
+    // 封禁即时生效：不等 7 天 JWT 过期
+    if (user.banned) {
+      res.clearCookie('naruto_token', { path: '/' });
+      return res.status(403).json({ error: `账户已被封禁${user.ban_reason ? `：${user.ban_reason}` : ''}` });
     }
 
     req.user = user;
@@ -79,6 +85,12 @@ export async function requireHtmlAuth(req, res, next) {
       return res.redirect('/login.html');
     }
 
+    // 封禁即时生效
+    if (user.banned) {
+      res.clearCookie('naruto_token');
+      return res.redirect('/login.html?error=banned');
+    }
+
     req.user = user;
     next();
   } catch (err) {
@@ -100,7 +112,7 @@ export async function optionalAuth(req, res, next) {
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
     const user = await getUser(decoded.id);
-    if (user) {
+    if (user && !user.banned) {
       req.user = user;
     }
   } catch (err) {

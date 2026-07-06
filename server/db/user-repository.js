@@ -56,4 +56,40 @@ export class UserRepository {
     const users = await this.#store.read();
     return users[id] ?? null;
   }
+
+  /**
+   * @returns {Promise<Record<string, UserRecord>>}
+   */
+  async getAll() {
+    return this.#store.read();
+  }
+
+  /**
+   * @param {string} id
+   * @param {string} [reason]
+   * @returns {Promise<UserRecord | null>}
+   */
+  async banUser(id, reason) {
+    return this.#store.update((users) => {
+      if (!users[id]) return { persist: false, result: null };
+      users[id].banned = true;
+      users[id].ban_reason = reason || '违反社区规则';
+      users[id].banned_at = new Date().toISOString();
+      return { persist: true, result: users[id] };
+    });
+  }
+
+  /**
+   * @param {string} id
+   * @returns {Promise<UserRecord | null>}
+   */
+  async unbanUser(id) {
+    return this.#store.update((users) => {
+      if (!users[id]) return { persist: false, result: null };
+      delete users[id].banned;
+      delete users[id].ban_reason;
+      delete users[id].banned_at;
+      return { persist: true, result: users[id] };
+    });
+  }
 }

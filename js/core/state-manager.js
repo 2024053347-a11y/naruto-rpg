@@ -14,6 +14,8 @@ class StateManager {
     this._listeners = new Map();
     this._db = null;
     this._levelUpNotified = false;
+    this._stateVersion = 0;
+    this._getCache = { version: -1, state: null };
   }
 
   getDefaultState() {
@@ -67,15 +69,22 @@ class StateManager {
 
   get(path) {
     if (!path) {
+      if (this._getCache.version === this._stateVersion) {
+        return deepClone(this._getCache.state);
+      }
       const state = deepClone(this.state);
       this._injectCompatProps(state);
-      return state;
+      this._getCache = { version: this._stateVersion, state };
+      return deepClone(state);
     }
     let val = getValueByPath(this.state, path);
     if (val === undefined) {
-      const compat = deepClone(this.state);
-      this._injectCompatProps(compat);
-      val = getValueByPath(compat, path);
+      if (this._getCache.version !== this._stateVersion) {
+        const compat = deepClone(this.state);
+        this._injectCompatProps(compat);
+        this._getCache = { version: this._stateVersion, state: compat };
+      }
+      val = getValueByPath(this._getCache.state, path);
     }
     return deepClone(val);
   }
@@ -375,6 +384,7 @@ class StateManager {
     }
     this._notifySubscribers(applied);
     eventBus.emit('state:batch-changed', { updates: applied });
+    this._stateVersion++;
   }
 
   batchUpdate(vars) {
@@ -610,6 +620,8 @@ class StateManager {
     }
 
     if (flatUpdates.length) this.update(flatUpdates);
+    // path 项直接改了 this.state（不经 update()），必须失效 get() 缓存
+    this._stateVersion++;
   }
 
   getSub(key) {
@@ -620,6 +632,7 @@ class StateManager {
   // 注意：setSub 是"整段覆盖"语义。如果只想改子字段、保留其余，请用 mergeSub。
   setSub(key, value) {
     this.state[key] = value;
+    this._stateVersion++;
     eventBus.emit('state:changed', { key, value });
   }
 
@@ -635,6 +648,7 @@ class StateManager {
     } else {
       this.state[key] = { ...cur, ...partial };
     }
+    this._stateVersion++;
     eventBus.emit('state:changed', { key, value: this.state[key] });
   }
 
@@ -691,6 +705,7 @@ class StateManager {
       // B-07: 读档/时间线跳转后强制重置升级守卫
       this._levelUpNotified = false;
       this._enforceBounds();
+      this._stateVersion++;
       eventBus.emit('state:restored', this.state);
       return;
     }
@@ -698,6 +713,7 @@ class StateManager {
     this.state = normalized;
     this._levelUpNotified = false;
     this._enforceBounds();
+    this._stateVersion++;
     eventBus.emit('state:restored', this.state);
   }
 
@@ -917,6 +933,7 @@ class StateManager {
   reset() {
     this.state = this._buildDefaultState();
     this._levelUpNotified = false;
+    this._stateVersion++;
     eventBus.emit('state:reset', this.state);
   }
 

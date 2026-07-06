@@ -54,8 +54,7 @@ app.use(helmet({
 
 app.use(compression());
 app.use(cookieParser());
-// JSON body 限制降至 5MB（单存档上限 10MB 走二进制流，不走 JSON body）- 现提升至 200MB 以支持超大存档
-app.use(express.json({ limit: '200mb' }));
+app.use(express.json({ limit: '30mb' }));
 
 // 3. 速率限制中间件 (防暴破/恶意请求)
 const authLimiter = rateLimit({
@@ -81,7 +80,7 @@ app.use('/auth', authLimiter, authRouter);
 app.use('/api/saves', apiLimiter, savesRouter);
 app.use('/api/ai-proxy', apiLimiter, aiProxyRouter);
 app.use('/api/music', apiLimiter, musicFavoritesRouter);
-app.use('/api/admin', adminRouter);
+app.use('/api/admin', authLimiter, adminRouter);
 
 // 5. 网页认证入口拦截
 // 玩家在请求根路径 / 或 index.html 时，必须通过身份验证，否则重定向到登录页面

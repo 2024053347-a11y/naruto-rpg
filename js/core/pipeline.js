@@ -2,8 +2,8 @@ import { stateManager } from './state-manager.js';
 import { AIClient, aiClient } from './ai-client.js';
 import { instructionParser } from './instruction-parser.js';
 import { eventBus } from './event-bus.js';
-import { FEW_SHOT_EXAMPLES, VAR_INSTRUCTIONS, NO_VAR_INSTRUCTION } from '../data/prompts.js';
-import { getBriefPromptRef } from '../data/var-schema.js';
+import { FEW_SHOT_EXAMPLES } from '../data/prompts.js';
+import { getBriefPromptRef, ALLOWED_TAGS, generateMainVarInstructions } from '../data/var-schema.js';
 import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
 import { formatGameTime } from '../utils/format.js';
 import { GAME_DATA } from '../data/game-data.js';
@@ -135,13 +135,15 @@ class MessagePipeline {
         thinkContent = (thinkContent ? thinkContent + '\n\n' : '') + '### 变量自检\n' + varThinkContent;
       }
 
-      this.chatHistory.push({ role: 'user', content: this._lastFullUserContent });
+      this.chatHistory.push({ role: 'user', content: `[玩家操作]\n${userInput}` });
       this.chatHistory.push({ role: 'assistant', content: displayResponse });
       this._trimHistory();
 
       // B-13: 等待 secondary updater 完成后再创建 timeline 节点
       let secondarySuccess = false;
       let shouldRunSecondary = stateManager.getAPIConfig()?.variableUpdater?.enabled === true;
+      let retryCount = 0;
+      const maxRetries = 2;
       
       while (shouldRunSecondary && !secondarySuccess) {
         const configuredTimeout = stateManager.getAPIConfig()?.variableUpdater?.timeoutMs;
@@ -165,6 +167,12 @@ class MessagePipeline {
           const additionalResponse = await secondaryWithTimeout;
           if (additionalResponse === '__SECONDARY_TIMEOUT__') {
             console.warn('[Pipeline] Secondary variable updater timed out after', secondaryTimeoutMs, 'ms');
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              console.warn('[Pipeline] Secondary updater max retries reached, skipping');
+              secondarySuccess = true;
+              continue;
+            }
             const Modal = customElements.get('game-modal');
             if (Modal) {
               const retry = await Modal.confirm({
@@ -187,6 +195,12 @@ class MessagePipeline {
           }
         } catch (err) {
           console.warn('[Pipeline] Background variable updater failed:', err?.message);
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            console.warn('[Pipeline] Secondary updater max retries reached, skipping');
+            secondarySuccess = true;
+            continue;
+          }
           const Modal = customElements.get('game-modal');
           if (Modal) {
             const retry = await Modal.confirm({
@@ -219,6 +233,25 @@ class MessagePipeline {
         } catch (timelineErr) {
           console.error('[Pipeline] Timeline node creation failed:', timelineErr.message);
           this._lastTimelineError = timelineErr.message;
+        }
+      }
+
+      // 记忆压缩: 二次模型 > 主模型 > 截断降级
+      if (this.memorySystem) {
+        const mainCfg = stateManager.getAPIConfig() || {};
+        const updaterCfg = mainCfg.variableUpdater;
+        const compressCfg = (updaterCfg?.enabled && updaterCfg.apiKey && updaterCfg.model)
+          ? {
+              backend: (updaterCfg.backend && updaterCfg.backend !== 'inherit') ? updaterCfg.backend : mainCfg.backend,
+              apiUrl: updaterCfg.apiUrl || mainCfg.apiUrl,
+              apiKey: updaterCfg.apiKey || mainCfg.apiKey,
+              model: updaterCfg.model || mainCfg.model
+            }
+          : mainCfg;
+        if (compressCfg.apiKey && compressCfg.model) {
+          const compressClient = new AIClient();
+          compressClient.configure(compressCfg);
+          this.memorySystem.aiCompress(compressClient).catch(() => {});
         }
       }
 
@@ -395,7 +428,7 @@ class MessagePipeline {
       },
       {
         role: 'user',
-        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state))}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}\n\n【强制要求】：请首先输出 <variable_thinking> 标签，严格执行以下7段自检（必须逐段回答，不可省略任何一段）：\n1. 人物与关系：本回合涉及的NPC？主模型是否已输出 <relationship> 标签？主模型输出的NPC战斗属性和忍术是否完整？若遗漏、不完整或空置，你必须补充完整的 <relationship> 标签，补齐能力与忍术档案。\n2. 技能变动：本回合是否学习/创造/练习/升级了忍术/体术/幻术/血继/天赋？【⚠️如果是游戏开局，必须将主角初始掌握的所有技能全部写入变量！】主模型的 <variable> 是否已包含？若遗漏则补充。\n3. 物品与装备：本回合是否获得/消耗/使用/丢弃了物品/武器/防具/忍具/金钱？【⚠️如果是游戏开局，必须将初始装备、忍具和初始金钱写入变量！】遗漏则补充。\n4. 任务与历练：本回合是否推进了任务？是否应有 exp/突破/声望变化？遗漏则补充。\n5. 地图与探索：本回合是否移动到了新场景/新区域/新地标？遗漏则补充。\n6. 状态与位置：时间流逝？查克拉/体力/精神/意志力消耗或恢复？【⚠️如果是游戏开局，必须初始化主角的所有基础属性（查克拉、体力、速度、精神、意志等）与上限！】异常状态变化？遗漏则补充。\n7. 战斗状态：是否触发/进行/结束了战斗？（仅战斗回合）\n完成自检后，输出实际变动的XML变量标签。无论有无数值变化，都必须输出 <memory> 标签。\n\n请现在立刻以 <variable_thinking> 开始你的回复：`
+        content: `[当前状态JSON]\n${JSON.stringify(this._compactStateForVariableUpdater(state))}\n\n[预处理玩家输入]\n${enrichedInput}\n\n[原始玩家输入]\n${userInput}\n\n[主模型回复]\n${narrativeResponse}${Number(state['进度·突破待处理']) > 0 ? `\n\n【⚠️突破指令——本回合必须执行！】\n当前突破待处理 = ${state['进度·突破待处理']}。本回合必须完成实力突破！严格按以下步骤操作：\n1. 按角色发展方向提升属性上限（chakra/stamina/spirit/willpower/speed 用 add），单回合总量 <= 15（重大突破）\n2. 同步提升相关技能熟练度\n3. 完成突破后，输出 <variable>{"path":"progression.pending_breakthrough","op":"sub","value":${state['进度·突破待处理']}}，将突破标记清零\n4. 在 <memory> 中详细记录本次突破的属性和技能成长内容` : ''}\n\n【强制要求】：请首先输出 <variable_thinking> 标签，严格执行以下7段自检（必须逐段回答，不可省略任何一段）：\n1. 人物与关系：本回合涉及的NPC？主模型是否已输出 <relationship> 标签？主模型输出的NPC战斗属性和忍术是否完整？若遗漏、不完整或空置，你必须补充完整的 <relationship> 标签，补齐能力与忍术档案。\n2. 技能变动：本回合是否学习/创造/练习/升级了忍术/体术/幻术/血继/天赋？【⚠️如果是游戏开局，必须将主角初始掌握的所有技能全部写入变量！】主模型的 <variable> 是否已包含？若遗漏则补充。\n3. 物品与装备：本回合是否获得/消耗/使用/丢弃了物品/武器/防具/忍具/金钱？【⚠️如果是游戏开局，必须将初始装备、忍具和初始金钱写入变量！】遗漏则补充。\n4. 任务与历练：本回合是否推进了任务？是否应有 exp/突破/声望变化？遗漏则补充。\n5. 地图与探索：本回合是否移动到了新场景/新区域/新地标？遗漏则补充。\n6. 状态与位置：时间流逝？查克拉/体力/精神/意志力消耗或恢复？【⚠️如果是游戏开局，必须初始化主角的所有基础属性（查克拉、体力、速度、精神、意志等）与上限！】异常状态变化？遗漏则补充。\n7. 战斗状态：是否触发/进行/结束了战斗？（仅战斗回合）\n完成自检后，输出实际变动的XML变量标签。无论有无数值变化，都必须输出 <memory> 标签。\n\n请现在立刻以 <variable_thinking> 开始你的回复：`
       }
     ];
   }
@@ -490,8 +523,7 @@ class MessagePipeline {
   _sanitizeVariableUpdaterOutput(text) {
     if (!text) return '';
     const tags = [];
-    const allowed = ['var', 'variable', 'var_thinking', 'variable_thinking', 'combat', 'mission', 'relationship', 'event', 'memory'];
-    for (const tag of allowed) {
+    for (const tag of ALLOWED_TAGS) {
       const regex = new RegExp(`<${tag}(?:\\s+[^>]*)?>[\\s\\S]*?(?:<\\/${tag}>|$)`, 'gi');
       const matches = text.match(regex);
       if (matches) tags.push(...matches);
@@ -566,7 +598,7 @@ class MessagePipeline {
     const updaterEnabled = stateManager.getAPIConfig()?.variableUpdater?.enabled === true;
     messages.push({
       role: 'system',
-      content: updaterEnabled ? NO_VAR_INSTRUCTION : VAR_INSTRUCTIONS
+      content: generateMainVarInstructions(updaterEnabled)
     });
 
     const { top, bottom, prefill } = this._buildMainPresetMessages(state, userInput, updaterEnabled);
@@ -754,9 +786,12 @@ class MessagePipeline {
     const rels = state._relationships || {};
     const eventsStr = state['世界·活跃事件'] || '';
     const events = eventsStr ? eventsStr.split('\n').filter(Boolean) : [];
+    const isCombat = !!combat?.is_active;
 
-    return `
-[动态游戏状态]
+    const parts = [];
+
+    // ── Tier 1: 始终注入 ──
+    parts.push(`[动态游戏状态]
 ## 时代约束
 ${timelineContext}
 - 核心规则: 不要默认玩家处于疾风传开始时间。必须按当前时间线判断人物年龄、组织公开程度、事件是否已发生、忍术/科技/称号是否可用。
@@ -770,9 +805,10 @@ ${timelineContext}
 - 出身: ${state['玩家·出身']}
 - 查克拉属性: ${state['玩家·查克拉属性'] || '未选择'}
 - 当前目标: ${state['玩家·当前目标'] || '未设定'}
-- 声望标签: ${state['玩家·声望标签'] || '无'}
+- 声望标签: ${state['玩家·声望标签'] || '无'}`);
 
-## 当前属性
+    // ── Tier 2: 属性 + 精简技能/装备 ──
+    parts.push(`## 当前属性
 - 查克拉: ${state['属性·当前查克拉']}/${state['属性·查克拉']}
 - 精神力: ${state['属性·当前精神力']}/${state['属性·精神力']}
 - 意志: ${state['属性·当前意志力']}/${state['属性·意志力']}
@@ -780,23 +816,23 @@ ${timelineContext}
 - 速度: ${state['属性·速度']}
 - 幸运: ${state['属性·幸运']}
 
-## 派生战力参考
-${this._summarizeDerivedStats(state)}
-
 ## 技能摘要
-${this._summarizeSkills(skills)}
+${isCombat ? this._summarizeSkills(skills) : this._summarizeSkillsCompact(skills, 5)}
 
-## 装备摘要
-- 武器: ${this._summarizeEquipment(items.weapons)}
-- 忍具: ${this._summarizeEquipment(items.tools)}
-- 消耗品: ${this._summarizeEquipment(items.consumables)}
-- 金钱: ${state['进度·金钱'] || 0}两
+## 装备
+${isCombat ? this._summarizeEquipmentFull(items) : this._summarizeEquipmentCompact(items)}`);
 
-## 任务进度
-${this._summarizeMissions(activeMissions)}
+    // ── Tier 3: 仅战斗时注入 ──
+    if (isCombat) {
+      parts.push(`## 派生战力参考
+${this._summarizeDerivedStats(state)}`);
+    }
+
+    parts.push(`## 任务进度
+${this._summarizeMissionsCompact(activeMissions)}
 
 ## 人际关系
-${this._summarizeRelationships(rels)}
+${isCombat ? this._summarizeRelationships(rels) : this._summarizeRelationshipsCompact(rels)}
 
 ## 世界状态
 - 时间: ${formatGameTime(state['世界·时间'])}
@@ -807,8 +843,9 @@ ${this._summarizeRelationships(rels)}
 - 已知地标: ${Object.keys(state._map?.known_locations || {}).join('、') || '无'}
 
 ## 战斗状态
-${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: ${combat.enemy_chakra}/${combat.enemy_chakra_max}` : '无战斗'}
-`;
+${isCombat ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: ${combat.enemy_chakra}/${combat.enemy_chakra_max}` : '无战斗'}`);
+
+    return parts.join('\n');
   }
 
   _buildTimelineContext(state) {
@@ -867,9 +904,31 @@ ${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: 
     }).join(' | ');
   }
 
+  _summarizeEquipmentFull(items) {
+    return [
+      `- 武器: ${this._summarizeEquipment(items.weapons)}`,
+      `- 忍具: ${this._summarizeEquipment(items.tools)}`,
+      `- 消耗品: ${this._summarizeEquipment(items.consumables)}`,
+      `- 金钱: ${items.ryo || 0}两`
+    ].join('\n');
+  }
+
+  _summarizeEquipmentCompact(items) {
+    const equipped = Object.entries(items.equipped || {}).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
+    return [
+      equipped.length ? `已装备: ${equipped.join(' | ')}` : '已装备: 无',
+      `- 金钱: ${items.ryo || 0}两`
+    ].join('\n');
+  }
+
   _summarizeMissions(activeMissions) {
     if (!activeMissions || activeMissions.length === 0) return '无进行中的任务';
     return activeMissions.map(m => `[${m.rank || 'D'}] ${m.title}`).join('\n');
+  }
+
+  _summarizeMissionsCompact(activeMissions) {
+    if (!activeMissions || activeMissions.length === 0) return '无进行中的任务';
+    return activeMissions.slice(0, 4).map(m => `[${m.rank || 'D'}] ${m.title}${m.status ? ' ' + m.status : ''}`).join(' | ');
   }
 
   _summarizePromotion(state) {
@@ -929,6 +988,26 @@ ${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: 
       .slice(0, 8);
   }
 
+  _summarizeSkillsCompact(skills = {}, topN = 5) {
+    const allEntries = [];
+    const categories = [
+      ['忍', skills.jutsu], ['体', skills.taijutsu],
+      ['幻', skills.genjutsu], ['辅', skills.support],
+      ['天赋', skills.talents]
+    ];
+    for (const [label, group] of categories) {
+      if (!group || typeof group !== 'object') continue;
+      for (const [name, data] of Object.entries(group)) {
+        allEntries.push({ label, name, mastery: Number(data?.mastery) || 0 });
+      }
+    }
+    allEntries.sort((a, b) => b.mastery - a.mastery);
+    const top = allEntries.slice(0, topN);
+    let lines = top.map(e => `${e.name}(${e.label}${e.mastery})`).join(' | ');
+    if (skills.kekkei_genkai) lines = `血继: ${skills.kekkei_genkai} | ` + lines;
+    return lines || '无';
+  }
+
   _trackLabel(track) {
     const labels = {
       balanced: '均衡型',
@@ -952,6 +1031,19 @@ ${combat?.is_active ? `【战斗中】对手: ${combat.enemy_name} | 查克拉: 
         return `${name}: ${a > 30 ? '友好' : a < -30 ? '敌意' : '中立'}(${a}) 信${t} 敬${r}${rel.role ? ' ' + rel.role : ''}`;
       })
       .join(' | ');
+  }
+
+  _summarizeRelationshipsCompact(relationships) {
+    if (!relationships || Object.keys(relationships).length === 0) return '暂无特别关系';
+    return Object.entries(relationships)
+      .filter(([, rel]) => Math.abs(rel?.affection || 0) >= 30 || (rel?.role && rel.role !== '路人'))
+      .sort((a, b) => Math.abs(b[1]?.affection || 0) - Math.abs(a[1]?.affection || 0))
+      .slice(0, 6)
+      .map(([name, rel]) => {
+        const a = rel.affection || 0;
+        return `${name}: ${a > 30 ? '友好' : a < -30 ? '敌意' : '中立'}(${a})`;
+      })
+      .join(' | ') || '暂无特别关系';
   }
 
   _summarizeEventsStr(events) {
@@ -1037,8 +1129,14 @@ ${s.content}`;
 
   _trimHistory() {
     if (this.chatHistory.length > 80) {
+      const overflow = this.chatHistory.slice(0, -30);
+      if (this.memorySystem) {
+        this.memorySystem.apply({
+          facts: ['历史归档: 早期对话已清理'],
+          events: [`${formatGameTime(stateManager.get('世界·时间'))} 历史对话归档 (${overflow.length}条)`]
+        }, { source: 'system' });
+      }
       this.chatHistory = this.chatHistory.slice(-30);
-      console.log('[Cache] Epoch trimmed. Archived memory will bridge the gap.');
     }
   }
 

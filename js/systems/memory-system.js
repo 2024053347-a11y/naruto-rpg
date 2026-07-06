@@ -48,9 +48,25 @@ class MemorySystem {
     }
     if (!memory.recent_summary && (userInput || aiResponse)) memory.recent_summary = this.buildFallbackSummary(userInput, aiResponse);
     if (update.npc_notes && typeof update.npc_notes === 'object') {
-      const existing = this._linesToObj(memory.npc_notes);
-      Object.assign(existing, update.npc_notes);
-      memory.npc_notes = Object.entries(existing).map(([k, v]) => `${k}: ${v}`).join('\n');
+      const turn = Number(stateManager.get('系统·回合数')) || 0;
+      const lines = memory.npc_notes ? memory.npc_notes.split('\n').filter(Boolean) : [];
+      for (const [npc, note] of Object.entries(update.npc_notes)) {
+        const entry = `[T${turn}] ${String(note)}`;
+        lines.push(`${npc}: ${entry}`);
+      }
+      const perNpc = {};
+      for (const l of lines) {
+        const idx = l.indexOf(': ');
+        if (idx > 0) {
+          const name = l.slice(0, idx);
+          const note = l.slice(idx + 2);
+          if (!perNpc[name]) perNpc[name] = [];
+          perNpc[name].push(note);
+        }
+      }
+      memory.npc_notes = Object.entries(perNpc)
+        .flatMap(([name, notes]) => notes.slice(-5).map(n => `${name}: ${n}`))
+        .join('\n');
     }
 
     this._trim(memory);
@@ -121,6 +137,40 @@ class MemorySystem {
     memory.compressed_summary = `${previous}[阶段摘要${(memory.compression_count || 0) + 1}]\n${block}`.slice(-COMPRESSED_SUMMARY_LIMIT);
     memory.turn_summaries = keep.join('\n');
     memory.compression_count = (memory.compression_count || 0) + 1;
+    memory._pendingCompressionText = (memory._pendingCompressionText || '') + block + '\n';
+  }
+
+  async aiCompress(client) {
+    const memory = this._loadMemory();
+    const savedAt = memory.meta?.updated_at;
+    const text = (memory._pendingCompressionText || '').trim();
+    if (!text || text.length < 200) return false;
+
+    const prompt = [
+      { role: 'system', content: '将以下回合小结压缩为密集摘要(≤500汉字)，保留: NPC姓名与态度变化、地点变换、关键决策与后果、新线索。只输出摘要，不加前缀。' },
+      { role: 'user', content: text.slice(0, 6000) }
+    ];
+
+    try {
+      const summary = await client.chat(prompt, { temperature: 0.3, max_tokens: 1024 });
+      if (summary && summary.length > 40) {
+        const current = this._loadMemory();
+        if (savedAt && current.meta?.updated_at !== savedAt) {
+          console.warn('[MemorySystem] AI compression aborted: memory modified during call');
+          return false;
+        }
+        const previous = memory.compressed_summary || '';
+        const cleanSummary = summary.trim().replace(/^[阶段摘要AI摘要]*[:：\s]*/, '');
+        memory.compressed_summary = `${previous}\n[AI摘要] ${cleanSummary}`.slice(-COMPRESSED_SUMMARY_LIMIT);
+        memory._pendingCompressionText = '';
+        this._saveMemory(memory);
+        return true;
+      }
+    } catch (e) {
+      console.warn('[MemorySystem] AI compression failed, keeping raw truncation:', e.message);
+    }
+    memory._pendingCompressionText = '';
+    return false;
   }
 
   buildPromptContext(memory) {
@@ -143,11 +193,6 @@ class MemorySystem {
 
     const pinsLines = memory.pins ? memory.pins.split('\n').filter(Boolean) : [];
     if (pinsLines.length) parts.push(`## 置顶提醒\n${pinsLines.slice(-5).map(item => `- ${item}`).join('\n')}`);
-    if (memory.compressed_summary) parts.push(`## 阶段压缩摘要\n${memory.compressed_summary}`);
-    const turnLines = memory.turn_summaries ? memory.turn_summaries.split('\n').filter(Boolean) : [];
-    if (turnLines.length) {
-      parts.push(`## 最近回合小结\n${turnLines.slice(-6).map(item => `- ${item}`).join('\n')}`);
-    }
     if (memory.recent_summary) parts.push(`## 最近剧情摘要\n${memory.recent_summary}`);
 
     const factsLines = memory.facts ? memory.facts.split('\n').filter(Boolean) : [];
@@ -159,16 +204,15 @@ class MemorySystem {
 
     const archivedLines = memory.archived ? memory.archived.split('\n').filter(Boolean) : [];
     if (archivedLines.length) {
-      const relevantArchived = archivedLines.filter(fact => {
-        if (!fact) return false;
-        if (location && fact.includes(location)) return true;
-        for (const npc of sceneNPCs) {
-          if (npc && fact.includes(npc)) return true;
-        }
-        return false;
-      });
-      if (relevantArchived.length) {
-        parts.push(`## 归档记忆(场景相关)\n${relevantArchived.slice(-8).map(item => `- ${item}`).join('\n')}`);
+      const entities = this._buildEntityList({ sceneNPCs, location, memory });
+      const scored = archivedLines.map(fact => ({ fact, score: this._scoreFact(fact, entities) }));
+      const relevant = scored
+        .filter(s => s.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 8)
+        .map(s => s.fact);
+      if (relevant.length) {
+        parts.push(`## 归档记忆(场景相关)\n${relevant.map(item => `- ${item}`).join('\n')}`);
       }
     }
 
@@ -177,10 +221,21 @@ class MemorySystem {
     const impLines = memory.important_events ? memory.important_events.split('\n').filter(Boolean) : [];
     if (impLines.length) parts.push(`## 重要事件\n${impLines.slice(-8).map(item => `- ${item}`).join('\n')}`);
 
-    const npcNotes = this._linesToObj(memory.npc_notes);
-    const npcKeys = Object.keys(npcNotes);
-    if (npcKeys.length) {
-      parts.push(`## NPC记忆\n${npcKeys.slice(-8).map(name => `- ${name}: ${npcNotes[name]}`).join('\n')}`);
+    const npcLines = memory.npc_notes ? memory.npc_notes.split('\n').filter(Boolean) : [];
+    const npcMap = {};
+    for (const line of npcLines) {
+      const idx = line.indexOf(': ');
+      if (idx > 0) {
+        const name = line.slice(0, idx);
+        const note = line.slice(idx + 2);
+        if (!npcMap[name]) npcMap[name] = [];
+        npcMap[name].push(note);
+      }
+    }
+    const npcEntries = Object.entries(npcMap).slice(-6);
+    if (npcEntries.length) {
+      const npcText = npcEntries.map(([name, notes]) => `- ${name}: ${notes.slice(-3).join(' | ')}`).join('\n');
+      parts.push(`## NPC记忆\n${npcText}`);
     }
     return parts.length ? `[动态记忆 - 优先级高于世界书]\n${parts.join('\n\n')}` : '';
   }
@@ -258,6 +313,8 @@ class MemorySystem {
       compression_count: Number(raw.compression_count) || 0,
       important_events: raw.important_events || '',
       npc_notes: raw.npc_notes || '',
+      _facts_meta: raw._facts_meta || '[]',
+      _pendingCompressionText: raw._pendingCompressionText || '',
       meta: { updated_at: raw.meta?.updated_at || null, sources: { ...(raw.meta?.sources || {}) } }
     };
   }
@@ -267,6 +324,7 @@ class MemorySystem {
       pins: '', facts: '', clues: '', long_term: '', archived: '',
       recent_summary: '', turn_summaries: '', compressed_summary: '',
       compression_count: 0, important_events: '', npc_notes: '',
+      _facts_meta: '[]',
       meta: { updated_at: null, sources: {} }
     };
   }
@@ -284,6 +342,8 @@ class MemorySystem {
       compression_count: memory.compression_count || 0,
       important_events: memory.important_events || '',
       npc_notes: memory.npc_notes || '',
+      _facts_meta: memory._facts_meta || '[]',
+      _pendingCompressionText: memory._pendingCompressionText || '',
       meta: memory.meta || { updated_at: null, sources: {} }
     });
   }
@@ -307,6 +367,18 @@ class MemorySystem {
     }
     if (existing.length > limit) existing.splice(0, existing.length - limit);
     memory[field] = existing.join('\n');
+
+    if (field === 'facts' || field === 'long_term') {
+      const turn = Number(stateManager.get('系统·回合数')) || 0;
+      const oldMeta = this._parseMeta(memory._facts_meta);
+      const oldMap = new Map(oldMeta.map(m => [m.k, m]));
+      const meta = existing.map(text => {
+        const key = text.slice(0, 40);
+        const prev = oldMap.get(key);
+        return { k: key, t: prev ? prev.t : turn, i: prev ? prev.i : 1 };
+      });
+      memory._facts_meta = JSON.stringify(meta);
+    }
   }
 
   _appendClues(memory, clues) {
@@ -343,12 +415,34 @@ class MemorySystem {
     const archiveOlder = (field, limit) => {
       const lines = memory[field] ? memory[field].split('\n').filter(Boolean) : [];
       if (lines.length <= limit) return;
-      const overflow = lines.splice(0, lines.length - limit);
+
+      let scored;
+      if (field === 'facts' || field === 'long_term') {
+        const meta = this._parseMeta(memory._facts_meta);
+        const metaMap = new Map(meta.map(m => [m.k, m]));
+        scored = lines.map((text, idx) => ({
+          text, idx,
+          importance: metaMap.get(text.slice(0, 40))?.i || 1
+        }));
+      } else {
+        scored = lines.map((text, idx) => ({ text, idx, importance: 1 }));
+      }
+
+      scored.sort((a, b) => b.importance - a.importance || b.idx - a.idx);
+      const keepSet = new Set(scored.slice(0, limit).map(s => s.idx));
+      const kept = [];
+      const overflow = [];
+      for (let i = 0; i < lines.length; i++) {
+        if (keepSet.has(i)) kept.push(lines[i]);
+        else overflow.push(lines[i]);
+      }
+
+      memory[field] = kept.join('\n');
+
       const archived = memory.archived ? memory.archived.split('\n').filter(Boolean) : [];
       for (const item of overflow) {
         if (!archived.includes(item)) archived.push(item);
       }
-      memory[field] = lines.join('\n');
       memory.archived = archived.slice(-600).join('\n');
     };
     archiveOlder('facts', 90);
@@ -365,6 +459,46 @@ class MemorySystem {
 
   _appendRollingSummary(prefix, text) {
     return [prefix, text].filter(Boolean).join('\n').slice(-ROLLING_SUMMARY_LIMIT);
+  }
+
+  _parseMeta(raw) {
+    try { return JSON.parse(raw || '[]'); } catch { return []; }
+  }
+
+  _tokenize(text) {
+    const cleaned = String(text || '').replace(/[^\u4e00-\u9fff\w]/g, ' ').toLowerCase();
+    const tokens = cleaned.split(/\s+/).filter(Boolean);
+    const result = [...tokens];
+    for (let i = 0; i < tokens.length - 1; i++) {
+      result.push(tokens[i] + tokens[i + 1]);
+    }
+    return result;
+  }
+
+  _buildEntityList({ sceneNPCs, location, memory }) {
+    const entities = new Set();
+    if (location) entities.add(location);
+    for (const npc of sceneNPCs) { if (npc) entities.add(npc); }
+    const summary = memory.recent_summary || '';
+    for (const token of this._tokenize(summary)) {
+      if (/^[\u4e00-\u9fff]{2,3}$/.test(token)) entities.add(token);
+    }
+    return [...entities];
+  }
+
+  _scoreFact(fact, entities) {
+    if (!fact) return 0;
+    let score = 0;
+    const tokens = this._tokenize(fact);
+    for (const entity of entities) {
+      if (!entity) continue;
+      if (fact.includes(entity)) { score += 3; continue; }
+      const eTokens = this._tokenize(entity);
+      for (const t of eTokens) {
+        if (tokens.includes(t)) score += 1;
+      }
+    }
+    return score;
   }
 
   _memoryText(item) {

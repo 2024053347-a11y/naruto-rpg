@@ -3,148 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>忍者手记 - 管理面板</title>
+<title>忍者手记 · 管理</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E印%3C/text%3E%3C/svg%3E">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#e8e6e3;min-height:100vh}
-.header{background:rgba(255,107,53,0.08);border-bottom:1px solid rgba(255,107,53,0.15);padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:20px;letter-spacing:4px;color:#eb613f}
-.header input{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#e8e6e3;width:200px}
-.container{padding:24px;max-width:1200px;margin:0 auto}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-.card{background:rgba(16,16,32,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px}
-.card .num{font-size:32px;font-weight:900}
-.card .label{font-size:12px;color:#a39f98;margin-top:4px}
-.card.green .num{color:#16a06d}
-.card.red .num{color:#ef5350}
-.card.blue .num{color:#42A5F5}
-.chart-bar{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:12px}
-.chart-bar .bar{flex:1;background:rgba(235,97,63,0.3);border-radius:4px 4px 0 0;text-align:center;font-size:10px;min-height:2px;position:relative}
-.chart-bar .bar span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:#a39f98}
-table{width:100%;border-collapse:collapse;margin-top:16px}
-th{text-align:left;padding:12px 8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:11px;color:#a39f98;text-transform:uppercase;letter-spacing:1px}
-td{padding:12px 8px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px}
-.btn{padding:6px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
-.btn-ban{background:rgba(239,83,80,0.2);color:#ef5350}
-.btn-ban:hover{background:rgba(239,83,80,0.4)}
-.btn-unban{background:rgba(22,160,109,0.2);color:#16a06d}
-.btn-unban:hover{background:rgba(22,160,109,0.4)}
-.section-title{font-size:16px;margin:32px 0 12px;letter-spacing:2px;color:#eb613f}
-.search-box{display:flex;gap:8px;margin-bottom:12px}
-.search-box input{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#e8e6e3;flex:1;max-width:300px}
-.search-box button{padding:8px 16px;background:rgba(235,97,63,0.2);border:1px solid rgba(235,97,63,0.3);color:#eb613f;border-radius:8px;cursor:pointer}
-.pagination{display:flex;gap:8px;justify-content:center;margin-top:16px}
-.pagination button{padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#e8e6e3;cursor:pointer}
-.pagination button.active{background:rgba(235,97,63,0.2);border-color:#eb613f}
-.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.badge-banned{background:rgba(239,83,80,0.2);color:#ef5350}
-.badge-active{background:rgba(22,160,109,0.2);color:#16a06d}
-.loading{text-align:center;padding:40px;color:#a39f98}
-.error{background:rgba(239,83,80,0.1);border:1px solid rgba(239,83,80,0.3);border-radius:8px;padding:12px;margin-bottom:16px;color:#ef5350;display:none}
+:root{
+  --bg:#07080d;--surface:#0f1119;--border:rgba(255,255,255,.06);
+  --text:#e4e2e0;--muted:#787580;--accent:#eb613f;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(235,97,63,.04),transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(59,130,246,.04),transparent 50%);pointer-events:none;z-index:0}
+
+/* Auth Screen */
+.auth{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+.auth.hidden{display:none}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;width:90%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.auth-card h1{font-size:22px;letter-spacing:4px;color:var(--accent);margin-bottom:8px}
+.auth-card p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.auth-card input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;text-align:center;outline:none;transition:border-color .2s}
+.auth-card input:focus{border-color:var(--accent)}
+.auth-card button{width:100%;padding:12px;margin-top:12px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-weight:600;font-size:14px;cursor:pointer;transition:opacity .2s}
+.auth-card button:hover{opacity:.9}
+.auth-card .hint{font-size:11px;color:var(--muted);margin-top:16px}
+
+/* Layout */
+nav{position:sticky;top:0;z-index:50;background:rgba(7,8,13,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+nav h1{font-size:16px;font-weight:600;letter-spacing:2px}
+nav h1 span{color:var(--accent)}
+nav .actions{display:flex;gap:8px;align-items:center}
+nav button{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;transition:all .2s}
+nav button:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+nav button.danger:hover{color:var(--red);border-color:rgba(239,68,68,.3)}
+main{padding:24px;max-width:1280px;margin:0 auto;position:relative;z-index:1}
+
+/* Stats Grid */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.stat:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.12)}
+.stat .icon{font-size:24px;margin-bottom:12px}
+.stat .value{font-size:36px;font-weight:700;letter-spacing:-1px}
+.stat .label{font-size:12px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.stat::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:.08}
+.stat.dau .value{color:var(--blue)} .stat.dau::after{background:var(--blue)}
+.stat.mau .value{color:var(--accent)} .stat.mau::after{background:var(--accent)}
+.stat.total .value{color:var(--green)} .stat.total::after{background:var(--green)}
+.stat.banned .value{color:var(--red)} .stat.banned::after{background:var(--red)}
+
+/* Chart */
+.chart-section{margin-bottom:32px}
+.chart-section h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:16px}
+.chart{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.bars{display:flex;align-items:flex-end;gap:12px;height:160px}
+.bar-wrapper{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar{width:100%;background:linear-gradient(to top,var(--accent),rgba(235,97,63,.4));border-radius:6px 6px 0 0;min-height:2px;transition:height .5s ease;position:relative}
+.bar-count{font-size:11px;font-weight:600;color:var(--text)}
+.bar-date{font-size:10px;color:var(--muted)}
+
+/* Table */
+.table-section h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:16px}
+.toolbar{display:flex;gap:12px;margin-bottom:16px;align-items:center}
+.toolbar input{flex:1;max-width:320px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;outline:none}
+.toolbar input:focus{border-color:var(--accent)}
+.toolbar button{padding:10px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+.toolbar button:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+
+table{width:100%;border-collapse:collapse}
+thead th{padding:14px 16px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);border-bottom:1px solid var(--border)}
+tbody td{padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03)}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px}
+.badge-ok{background:rgba(34,197,94,.12);color:var(--green)}
+.badge-banned{background:rgba(239,68,68,.12);color:var(--red)}
+.uid{font-family:'SF Mono',monospace;font-size:11px;color:var(--muted)}
+.btn-sm{padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;transition:all .2s}
+.btn-ban{background:rgba(239,68,68,.15);color:var(--red)}
+.btn-ban:hover{background:rgba(239,68,68,.3)}
+.btn-unban{background:rgba(34,197,94,.12);color:var(--green)}
+.btn-unban:hover{background:rgba(34,197,94,.25)}
+.empty{text-align:center;padding:48px;color:var(--muted);font-size:13px}
+.pages{display:flex;gap:6px;justify-content:center;margin-top:20px}
+.pages button{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;transition:all .2s}
+.pages button:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+.pages button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr)}nav{padding:0 16px}main{padding:16px}}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>忍者手记 · 管理面板</h1>
-  <input type="password" id="adminKey" placeholder="管理员密钥" onchange="loadAll()">
-</div>
-<div class="container">
-  <div id="error" class="error"></div>
-  <div class="cards" id="cards"></div>
-  <div class="section-title">最近7天活跃</div>
-  <div id="chart"></div>
-  <div class="section-title">最近登录</div>
-  <div id="recentLogins" style="font-size:12px;color:#a39f98"></div>
-  <div class="section-title">用户管理</div>
-  <div class="search-box">
-    <input type="text" id="search" placeholder="搜索用户名或ID" onkeyup="if(event.key==='Enter')loadUsers()">
-    <button onclick="loadUsers()">搜索</button>
+
+<!-- Auth -->
+<div class="auth" id="auth">
+  <div class="auth-card">
+    <h1>忍者手记</h1>
+    <p>管理面板</p>
+    <input type="password" id="keyInput" placeholder="管理员密钥" onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">进入面板</button>
+    <p class="hint">密钥将安全保存到本地</p>
   </div>
-  <table><thead><tr><th>用户名</th><th>Discord ID</th><th>状态</th><th>最近登录</th><th>操作</th></tr></thead><tbody id="userTable"><tr><td colspan="5" class="loading">请输入管理员密钥</td></tr></tbody></table>
-  <div class="pagination" id="pagination"></div>
 </div>
+
+<!-- Dashboard (hidden until auth) -->
+<div id="dashboard" style="display:none">
+<nav>
+  <h1><span>忍</span> 管理面板</h1>
+  <div class="actions">
+    <button onclick="refresh()">↻ 刷新</button>
+    <button class="danger" onclick="logout()">退出</button>
+  </div>
+</nav>
+<main>
+  <div class="stats" id="stats"></div>
+  <div class="chart-section">
+    <h2>最近 7 天活跃用户</h2>
+    <div class="chart"><div class="bars" id="bars"></div></div>
+  </div>
+  <div class="table-section">
+    <h2>用户管理</h2>
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="搜索用户名或 ID…" onkeydown="if(event.key==='Enter')loadUsers()">
+      <button onclick="loadUsers()">搜索</button>
+    </div>
+    <table>
+      <thead><tr><th>用户</th><th>Discord ID</th><th>状态</th><th>最近登录</th><th>操作</th></tr></thead>
+      <tbody id="usersTable"><tr><td colspan="5" class="empty">加载中…</td></tr></tbody>
+    </table>
+    <div class="pages" id="pages"></div>
+  </div>
+</main>
+</div>
+
 <script>
-let KEY = '';
+const KEY_STORE = 'naruto_admin_key';
+let key = localStorage.getItem(KEY_STORE) || '';
 let page = 1;
 
-function headers() { return { 'x-admin-key': KEY }; }
+function authHeaders() { return { 'x-admin-key': key }; }
 
-async function api(path) {
-  const r = await fetch('/api/admin' + path, { headers: headers() });
+async function api(path, opts={}) {
+  const r = await fetch('/api/admin'+path, { ...opts, headers: { ...authHeaders(), ...(opts.headers||{}) } });
   if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error||'请求失败'); }
   return r.json();
 }
 
-async function loadAll() {
-  KEY = document.getElementById('adminKey').value;
-  if (!KEY) return;
-  document.getElementById('error').style.display = 'none';
+function login() {
+  const v = document.getElementById('keyInput').value.trim();
+  if (!v) return;
+  key = v;
+  localStorage.setItem(KEY_STORE, key);
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('dashboard').style.display = '';
+  refresh();
+}
+
+function logout() {
+  key = ''; localStorage.removeItem(KEY_STORE);
+  document.getElementById('auth').classList.remove('hidden');
+  document.getElementById('dashboard').style.display = 'none';
+}
+
+async function refresh() {
   try {
-    const stats = await api('/stats');
-    renderCards(stats);
-    renderChart(stats.last7Days);
-    renderRecent(stats.recentLogins);
+    const s = await api('/stats');
+    document.getElementById('stats').innerHTML = `
+      <div class="stat dau"><div class="icon">👤</div><div class="value">${s.todayLogins}</div><div class="label">今日活跃</div></div>
+      <div class="stat mau"><div class="icon">📅</div><div class="value">${s.yesterdayLogins}</div><div class="label">昨日活跃</div></div>
+      <div class="stat total"><div class="icon">👥</div><div class="value">${s.totalUsers}</div><div class="label">总注册用户</div></div>
+      <div class="stat banned"><div class="icon">🚫</div><div class="value">${s.bannedUsers}</div><div class="label">封禁中</div></div>`;
+    const max = Math.max(...s.last7Days.map(d=>d.count), 1);
+    document.getElementById('bars').innerHTML = s.last7Days.map(d =>
+      `<div class="bar-wrapper"><div class="bar-count">${d.count}</div><div class="bar" style="height:${Math.max(d.count/max*100,2)}%"></div><div class="bar-date">${d.date.slice(5)}</div></div>`
+    ).join('');
     loadUsers();
-  } catch(e) {
-    document.getElementById('error').style.display = 'block';
-    document.getElementById('error').textContent = e.message;
-  }
-}
-
-function renderCards(s) {
-  document.getElementById('cards').innerHTML = `
-    <div class="card blue"><div class="num">${s.todayLogins}</div><div class="label">今日活跃</div></div>
-    <div class="card"><div class="num">${s.yesterdayLogins}</div><div class="label">昨日活跃</div></div>
-    <div class="card green"><div class="num">${s.totalUsers}</div><div class="label">总用户数</div></div>
-    <div class="card red"><div class="num">${s.bannedUsers}</div><div class="label">已封禁</div></div>
-  `;
-}
-
-function renderChart(data) {
-  const max = Math.max(...data.map(d=>d.count), 1);
-  document.getElementById('chart').innerHTML = '<div class="chart-bar">' +
-    data.map(d => `<div class="bar" style="height:${(d.count/max*100)}%"><span>${d.date.slice(5)}<br>${d.count}</span></div>`).join('') +
-    '</div>';
-}
-
-function renderRecent(logins) {
-  document.getElementById('recentLogins').innerHTML = logins.slice(0,10).map(l =>
-    `${l.time?.slice(11,16)||''} ${l.username} (${l.id?.slice(-6)})`
-  ).join(' · ');
+  } catch(e) { alert('加载失败: '+e.message); }
 }
 
 async function loadUsers(p) {
   if (p) page = p;
-  if (!KEY) return;
-  const search = document.getElementById('search').value;
+  const q = document.getElementById('search')?.value || '';
   try {
-    const data = await api(`/users?page=${page}&limit=20&search=${encodeURIComponent(search)}`);
-    document.getElementById('userTable').innerHTML = data.items.map(u => `
-      <tr>
-        <td>${u.global_name||u.username||'未知'}</td>
-        <td style="font-size:11px;color:#a39f98">${u.id?.slice(-12)}</td>
-        <td>${u.banned ? '<span class="badge badge-banned">已封禁</span>' : '<span class="badge badge-active">正常</span>'}</td>
-        <td style="font-size:11px;color:#a39f98">${u.last_login?.slice(0,10)||'-'}</td>
-        <td>${u.banned
-          ? `<button class="btn btn-unban" onclick="toggleBan('${u.id}','unban')">解封</button>`
-          : `<button class="btn btn-ban" onclick="toggleBan('${u.id}','ban')">封禁</button>`
-        }</td>
-      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#a39f98">无数据</td></tr>';
-    const totalPages = Math.ceil(data.total / 20);
-    document.getElementById('pagination').innerHTML = Array.from({length:totalPages},(_,i)=>i+1)
-      .map(i => `<button class="${i===page?'active':''}" onclick="loadUsers(${i})">${i}</button>`).join('');
+    const d = await api(`/users?page=${page}&limit=20&search=${encodeURIComponent(q)}`);
+    document.getElementById('usersTable').innerHTML = d.items.length === 0
+      ? '<tr><td colspan="5" class="empty">无数据</td></tr>'
+      : d.items.map(u => `<tr>
+          <td><strong>${u.global_name||u.username||'未知'}</strong></td>
+          <td class="uid">${(u.id||'').slice(-14)||'-'}</td>
+          <td>${u.banned?'<span class="badge badge-banned">已封禁</span>':'<span class="badge badge-ok">正常</span>'}</td>
+          <td style="color:var(--muted);font-size:12px">${u.last_login?.slice(0,10)||'-'}</td>
+          <td>${u.banned
+            ?`<button class="btn-sm btn-unban" onclick="ban('${u.id}','unban')">解封</button>`
+            :`<button class="btn-sm btn-ban" onclick="ban('${u.id}','ban')">封禁</button>`}
+          </td></tr>`).join('');
+    const tp = Math.ceil(d.total/20);
+    document.getElementById('pages').innerHTML = Array.from({length:tp},(_,i)=>i+1)
+      .map(i=>`<button class="${i===page?'active':''}" onclick="loadUsers(${i})">${i}</button>`).join('');
   } catch(e) {
-    document.getElementById('userTable').innerHTML = '<tr><td colspan="5" class="loading">加载失败: '+e.message+'</td></tr>';
+    document.getElementById('usersTable').innerHTML = '<tr><td colspan="5" class="empty">加载失败</td></tr>';
   }
 }
 
-async function toggleBan(id, action) {
-  if (!confirm(`确定要${action==='ban'?'封禁':'解封'}该用户吗？`)) return;
+async function ban(id, action) {
+  if (!confirm(`确定${action==='ban'?'封禁':'解封'}该用户？`)) return;
   try {
-    await fetch('/api/admin/users/'+id+'/'+action, { method:'POST', headers:{...headers(),'Content-Type':'application/json'}, body:JSON.stringify({reason:'管理员操作'}) });
-    loadUsers();
+    await api(`/users/${id}/${action}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({reason:'管理员操作'}) });
+    loadUsers(page);
+    refresh();
   } catch(e) { alert(e.message); }
 }
+
+// Init
+if (key) { login(); }
 </script>
 </body>
 </html>
