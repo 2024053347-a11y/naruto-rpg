@@ -98,7 +98,7 @@
         /* ── 高级表单控件 (Custom Form Controls) ──── */
         
         /* 文本框 & 下拉框 */
-        input[type="text"], input[type="number"], select, textarea {
+        input[type="text"], input[type="password"], input[type="number"], select, textarea {
           width: 100%; box-sizing: border-box; 
           background: rgba(255,255,255,0.02); color: var(--text-primary); 
           border: 1px solid var(--border-subtle); border-radius: var(--r-sm);
@@ -159,6 +159,19 @@
         .file-input::-webkit-file-upload-button:hover { background: rgba(255,255,255,0.1); border-color: var(--border-strong); }
 
         textarea { min-height: 80px; resize: vertical; padding: 12px !important; }
+
+        .setting-note { margin: -8px 0 22px; color: var(--text-tertiary); font-size: 12px; line-height: 1.7; }
+        .variable-grid { grid-template-columns: 110px minmax(0, 1fr); }
+        .inline-field { display: flex; gap: 8px; min-width: 0; }
+        .inline-field input { flex: 1; min-width: 0; }
+        .prompt-preset-card {
+          display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+          padding: 20px; border: 1px solid rgba(235,97,63,0.22); border-radius: var(--r-md);
+          background: rgba(0,0,0,0.22);
+        }
+        .prompt-preset-card strong { color: var(--text-primary); font-family: var(--font-title); letter-spacing: 1px; }
+        .prompt-preset-card span { color: var(--text-tertiary); font-size: 11px; }
+        .prompt-preset-card p { margin: 2px 0 8px; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
 
         /* ── 音乐播放器专区 (Shinobi Music Player) ──── */
         .music-panel {
@@ -291,6 +304,7 @@
           .setting-item { flex-direction: column; align-items: flex-start; gap: 12px; }
           .content { padding: 24px; }
           .pane-grid { grid-template-columns: 1fr; }
+          .variable-grid { grid-template-columns: 1fr; gap: 10px; }
           .music-player-bar { flex-direction: column; align-items: stretch; gap: 16px; }
           .music-controls { flex-wrap: wrap; justify-content: space-between; }
           .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }

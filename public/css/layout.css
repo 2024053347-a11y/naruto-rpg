@@ -91,6 +91,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
 .app-shell--setup .app-sidebar,
 .app-shell--setup .app-panel,
 .app-shell--setup .topbar-btn--panel,
+.app-shell--setup .topbar-btn--developer,
 .app-shell--setup .topbar-btn--timeline,
 .app-shell--setup .topbar-divider { display: none; }
 
@@ -145,6 +146,8 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
   border: 1px solid transparent; background: var(--surface-icon-wrapper);
 }
 .topbar-btn-label { display: none; }
+.topbar-btn--developer { width: auto; padding: 0 10px; gap: 6px; }
+.topbar-btn--developer .topbar-btn-label { display: inline; font-size: 12px; letter-spacing: 1px; }
 .topbar-btn:hover { 
   background: var(--surface-icon-wrapper-hover); 
   color: var(--text-primary); 
