@@ -38,9 +38,9 @@ if (index) {
 
 const sw = readText('sw.js');
 if (sw) {
-  assertIncludes(sw, '/models', 'service worker bypasses model API');
   assertIncludes(sw, '/v1/chat/completions', 'service worker bypasses chat API');
-  assertIncludes(sw, './index.html', 'service worker caches relative app shell path');
+  assertIncludes(sw, '/api/ai-proxy', 'service worker bypasses AI proxy API');
+  assertIncludes(sw, 'cache.put(event.request', 'service worker caches successful app requests');
   if (sw.includes("'/index.html'")) fail('service worker should not cache root-absolute index path');
 }
 
@@ -62,8 +62,8 @@ if (pipeline) {
 
 const prompts = readText('js/data/prompts.js');
 if (prompts) {
-  assertIncludes(prompts, 'export const DEFAULT_PROMPT', 'single default prompt exists');
-  assertIncludes(prompts, '思维链', 'default prompt includes think chain');
+  assertIncludes(prompts, 'export const FEW_SHOT_EXAMPLES', 'few-shot prompt examples exist');
+  assertIncludes(prompts, '<think>', 'few-shot prompts include reasoning examples');
 }
 
 const worldbookIndex = readText('js/data/worldbook/index.js');
@@ -107,25 +107,26 @@ wrappedVariable.variables?.[0]?.path === 'attributes.chakra_current' ? pass('par
 
 const { stateManager } = await import('../js/core/state-manager.js');
 stateManager.reset();
-stateManager.update([
+stateManager.batchUpdate([
   { path: 'attributes.chakra_current', op: 'sub', value: 999 },
   { path: 'attributes.stamina_current', op: 'add', value: 999 },
-  { path: 'progression.exp', op: 'add', value: 25 },
-  { path: 'missions.active', op: 'push', value: { id: 'smoke_mission', title: '烟测任务' } },
-  { path: 'relationships.旗木卡卡西', op: 'set', value: { affection: 200, trust: -200, respect: 200 } }
+  { path: 'progression.exp', op: 'add', value: 25 }
 ]);
-stateManager.get('attributes.chakra_current') === 0 ? pass('state sub clamps current chakra at zero') : fail('state sub should clamp current chakra at zero');
-stateManager.get('attributes.stamina_current') === stateManager.get('attributes.stamina') ? pass('state add clamps current stamina at max') : fail('state add should clamp current stamina at max');
-stateManager.get('progression.exp') === 25 ? pass('state add updates progression exp') : fail('state add should update progression exp');
-stateManager.get('missions.active')?.[0]?.id === 'smoke_mission' ? pass('state push updates active missions') : fail('state push should update active missions');
-stateManager.get('relationships.旗木卡卡西.affection') === 100 ? pass('state relationship affection is bounded') : fail('state relationship affection should be bounded');
-stateManager.get('relationships.旗木卡卡西.trust') === -100 ? pass('state relationship trust is bounded') : fail('state relationship trust should be bounded');
-stateManager.get('relationships.旗木卡卡西.respect') === 100 ? pass('state relationship respect is bounded') : fail('state relationship respect should be bounded');
+stateManager.setSub('_missions', { active: { smoke_mission: { id: 'smoke_mission', title: '烟测任务' } }, completed: {} });
+stateManager.setSub('_relationships', { 旗木卡卡西: { affection: 200, trust: -200, respect: 200 } });
+stateManager.update([{ key: '进度·经验', op: '+', value: 0 }]);
+stateManager.get('属性·当前查克拉') === 0 ? pass('state sub clamps current chakra at zero') : fail('state sub should clamp current chakra at zero');
+stateManager.get('属性·当前体力') === stateManager.get('属性·体力') ? pass('state add clamps current stamina at max') : fail('state add should clamp current stamina at max');
+stateManager.get('进度·经验') === 25 ? pass('state add updates progression exp') : fail('state add should update progression exp');
+stateManager.getSub('_missions')?.active?.smoke_mission?.id === 'smoke_mission' ? pass('state stores active missions') : fail('state should store active missions');
+stateManager.getSub('_relationships')?.旗木卡卡西?.affection === 100 ? pass('state relationship affection is bounded') : fail('state relationship affection should be bounded');
+stateManager.getSub('_relationships')?.旗木卡卡西?.trust === -100 ? pass('state relationship trust is bounded') : fail('state relationship trust should be bounded');
+stateManager.getSub('_relationships')?.旗木卡卡西?.respect === 100 ? pass('state relationship respect is bounded') : fail('state relationship respect should be bounded');
 
 const snapshot = stateManager.snapshot();
-stateManager.update([{ path: 'world_state.current_location', op: 'set', value: '死亡森林' }]);
+stateManager.batchUpdate([{ path: 'world_state.current_location', op: 'set', value: '死亡森林' }]);
 stateManager.restore(snapshot);
-stateManager.get('world_state.current_location') === snapshot.world_state.current_location ? pass('state snapshot restore recovers location') : fail('state snapshot restore should recover location');
+stateManager.get('世界·地点') === snapshot['世界·地点'] ? pass('state snapshot restore recovers location') : fail('state snapshot restore should recover location');
 
 const { KNOWLEDGE_BASE } = await import('../js/data/knowledge-base.js');
 const { WORLD_BOOK_ENTRIES, WORLD_BOOK_META } = await import('../js/data/worldbook/index.js');

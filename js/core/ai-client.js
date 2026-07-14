@@ -109,7 +109,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const response = await _fetch(`/api/ai-proxy`, {
+    const response = await this._fetch(`/api/ai-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
         let fullContent = '';
         try {
-          const response = await _fetch(`/api/ai-proxy`, {
+          const response = await this._fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -352,7 +352,7 @@ class ClaudeAdapter extends AIAdapter {
         messages: chatMsgs
       };
       if (system) body.system = system;
-      const response = await _fetch(`/api/ai-proxy`, {
+      const response = await this._fetch(`/api/ai-proxy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -411,7 +411,7 @@ class ClaudeAdapter extends AIAdapter {
             stream: true
           };
           if (system) body.system = system;
-          const response = await _fetch(`/api/ai-proxy`, {
+          const response = await this._fetch(`/api/ai-proxy`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -619,22 +619,29 @@ export class AIClient {
     const targetUrl = this._buildApiUrl();
     const apiKeyHeader = config.backend === 'claude' ? 'x-api-key' : 'Authorization';
 
+    const isClaude = config.backend === 'claude';
     const headers = {
       'Content-Type': 'application/json',
       'x-target-url': targetUrl,
       'x-user-api-key': config.apiKey || '',
       'x-api-key-header': apiKeyHeader,
     };
+    if (isClaude) {
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-beta'] = 'prompt-caching-2024-07-31';
+    }
 
-    // Separate system messages for Claude/anthropic format
-    // The proxy just forwards, so we send the messages as-is
+    const converted = isClaude && typeof this.adapter?._convertMessages === 'function'
+      ? this.adapter._convertMessages(messages)
+      : { messages };
     const body = {
       model: config.model,
-      messages,
+      messages: converted.messages,
       temperature: options.temperature ?? 0.9,
       max_tokens: options.max_tokens ?? 4096,
       stream: stream || false,
     };
+    if (converted.system) body.system = converted.system;
     if (options.top_p !== undefined) body.top_p = options.top_p;
 
     try {

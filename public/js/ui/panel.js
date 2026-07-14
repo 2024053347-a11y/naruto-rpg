@@ -2,6 +2,7 @@ import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { formatPercentage, escHtml, escAttr } from '../utils/format.js';
 import { equipmentSystem } from '../systems/equipment-system.js';
+import { skillSystem } from '../systems/skill-system.js';
 import { relationshipSystem } from '../systems/relationship-system.js';
 import GameModal from './modal.js';
 import { panelStyles } from '../../css/components/panel.css.js';
@@ -136,7 +137,42 @@ class InfoPanel extends HTMLElement {
           this.render();
         });
       });
+      this.shadowRoot.querySelectorAll('.eq-discard-btn').forEach(b => {
+        b.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const name = b.dataset.name;
+          const cat = b.dataset.cat;
+          const confirmed = await GameModal.confirm({
+            title: '丢弃物品',
+            message: `确定要丢弃所有的「${name}」吗？\n此操作不可撤回。`,
+            okLabel: '丢弃',
+            cancelLabel: '保留'
+          });
+          if (confirmed) {
+            equipmentSystem.removeItem(cat, name, 999999);
+            this.render();
+          }
+        });
+      });
     }
+
+    this.shadowRoot.querySelectorAll('.skill-forget-btn').forEach(b => {
+      b.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const name = b.dataset.name;
+        const type = b.dataset.type;
+        const confirmed = await GameModal.confirm({
+          title: '遗忘技能',
+          message: `确定要遗忘「${name}」吗？\n此操作不可撤回，所有熟练度将被清除。`,
+          okLabel: '遗忘',
+          cancelLabel: '保留'
+        });
+        if (confirmed) {
+          skillSystem.forgetSkill(type, name);
+          this.render();
+        }
+      });
+    });
 
     this.shadowRoot.querySelectorAll('[data-rel-name]').forEach(card => {
       card.addEventListener('click', () => {
@@ -211,7 +247,7 @@ class InfoPanel extends HTMLElement {
     const tl = threat.label.split(' ');
     const tNum = tl.length > 1 ? tl[1] : '';
     const tTxt = tl[0];
-    
+
     const chakra = s['属性·查克拉'];
     const chakraCur = s['属性·当前查克拉'];
     const stamina = s['属性·体力'];
@@ -224,7 +260,7 @@ class InfoPanel extends HTMLElement {
     const expNext = s['进度·下一级经验'];
     const promotion = s['进度·突破待处理'] ? { track: s['进度·突破待处理'] } : {};
     const ryo = s['进度·金钱'] || 0;
-    
+
     return `
       <div class="sec">
         <div class="sec-title">绝密卷宗 (Dossier)</div>
@@ -239,13 +275,13 @@ class InfoPanel extends HTMLElement {
               <div class="attr-id-rank">${this._esc(p['玩家·忍阶'])}</div>
             </div>
           </div>
-          
+
           <div class="attr-card" style="--threat-color: ${threat.color};">
             <div class="attr-threat"></div>
             <div class="attr-label">综合危险度</div>
             <div class="attr-threat-val">${tTxt} <span style="font-size:12px;opacity:0.6;font-family:var(--font-body); font-weight:normal;">${tNum}</span></div>
           </div>
-          
+
           <div class="attr-card">
             <div class="attr-label">查克拉属性 / 出身</div>
             ${this._renderChakra(p['玩家·查克拉属性'])}
@@ -253,7 +289,7 @@ class InfoPanel extends HTMLElement {
           </div>
         </div>
       </div>
-      
+
       <div class="sec">
         <div class="sec-title">能量与潜能 (Vitals)</div>
         <div class="attr-bento">
@@ -267,7 +303,7 @@ class InfoPanel extends HTMLElement {
           </div>
         </div>
       </div>
-      
+
       <div class="sec" style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div>
           <div class="sec-title">实战造诣</div>
@@ -302,12 +338,12 @@ class InfoPanel extends HTMLElement {
     if (!natures) return '<span style="color:var(--text-tertiary); font-size:12px; margin: 4px 0 8px;">未觉醒</span>';
     const list = Array.isArray(natures) ? natures : [natures];
     if (list.length === 0) return '<span style="color:var(--text-tertiary); font-size:12px; margin: 4px 0 8px;">未觉醒</span>';
-    
+
     const colors = {
       '火': '#ef5350', '水': '#42A5F5', '风': '#81c784', '雷': '#ffd54f', '土': '#c69c6d',
       '阴': '#CE93D8', '阳': '#f4f1ea', '木': '#66BB6A', '冰': '#81d4fa', '熔': '#ff7043', '沸': '#ff8a65', '磁': '#90a4ae', '岚': '#b39ddb'
     };
-    
+
     return `<div class="chakra-badges">` + list.map(n => {
       const c = colors[n] || 'var(--text-secondary)';
       // 如果颜色有透明度需求，可以稍加处理，这里简单处理 box-shadow 采用 currentColor 会自动继承
@@ -328,25 +364,25 @@ class InfoPanel extends HTMLElement {
       return g;
     };
     const best = g => Math.max(0, ...Object.values(normalizeSkillGroup(g)).map(x => Number(x?.mastery) || 0));
-    
+
     const chakra = s['属性·查克拉'] || 0;
     const spirit = s['属性·精神力'] || 0;
     const stamina = s['属性·体力'] || 0;
     const speed = s['属性·速度'] || 0;
     const willpower = s['属性·意志力'] || 0;
     const luck = s['属性·幸运'] || 0;
-    
+
     const skJutsu = this._scanSkills(s, '忍术');
     const skTaijutsu = this._scanSkills(s, '体术');
     const skGenjutsu = this._scanSkills(s, '幻术');
-    
+
     const nin = Math.round((chakra) * 0.45 + (spirit) * 0.25 + best(skJutsu) * 0.7);
     const tai = Math.round((stamina) * 0.25 + (speed) * 0.9 + (willpower) * 0.2 + best(skTaijutsu) * 0.9);
     const gen = Math.round((spirit) * 0.75 + (chakra) * 0.2 + best(skGenjutsu) * 0.9);
     const def = Math.round((stamina) * 0.18 + (willpower) * 0.25);
-    
+
     const total = Math.round((nin + tai + gen + def) * 0.35 + (speed) * 0.4 + (luck) * 0.3);
-    
+
     const peak = Math.max(chakra, stamina, spirit, willpower, speed);
 
     const tiers = [
@@ -358,7 +394,7 @@ class InfoPanel extends HTMLElement {
       { maxTotal: 400, maxPeak: 300, label: 'S级威胁',   color: '#ef5350' },
       { maxTotal: Infinity, maxPeak: Infinity, label: '影级/神话', color: '#d50000' }
     ];
-    
+
     let currentTier = tiers[0];
     for (let i = 1; i < tiers.length; i++) {
       const prev = tiers[i-1];
@@ -368,7 +404,7 @@ class InfoPanel extends HTMLElement {
         break;
       }
     }
-    
+
     return { label: `${currentTier.label} (${total})`, color: currentTier.color };
   }
 
@@ -386,7 +422,7 @@ class InfoPanel extends HTMLElement {
     const tai=Math.round((stamina)*0.25+(speed)*0.9+(willpower)*0.2+best(skTaijutsu)*0.9);
     const gen=Math.round((spirit)*0.75+(chakra)*0.2+best(skGenjutsu)*0.9);
     const def=Math.round((stamina)*0.18+(willpower)*0.25);
-    
+
     const items = [['忍术',nin,'#42A5F5'], ['体术',tai,'#66BB6A'], ['幻术',gen,'#CE93D8'], ['防御',def,'var(--text-secondary)']];
     return items.map(([l,v,c])=>`
       <div>
@@ -431,7 +467,7 @@ class InfoPanel extends HTMLElement {
       const rest = k.slice(prefix.length);
       // Check if it's a flat sub-field key like "变身术·消耗"
       const dotIdx = rest.lastIndexOf('·');
-      
+
       let isCorrupted = false;
       if (dotIdx > 0) {
         const parts = rest.split('·');
@@ -450,7 +486,7 @@ class InfoPanel extends HTMLElement {
         if (subFieldKeys.has(fieldCN)) {
           if (!result[skillName]) result[skillName] = {};
           const fieldEN = subFields[fieldCN];
-          
+
           let finalV = v;
           if (typeof v === 'object' && v !== null) {
             const vals = Object.values(v);
@@ -458,7 +494,7 @@ class InfoPanel extends HTMLElement {
             else if (v[fieldCN] !== undefined) finalV = v[fieldCN];
             else if (v[fieldEN] !== undefined) finalV = v[fieldEN];
           }
-          
+
           result[skillName][fieldEN] = finalV;
           continue;
         }
@@ -602,7 +638,10 @@ class InfoPanel extends HTMLElement {
                   ${d[metaKey] ? `<span style="color:${color}; font-weight:bold;">${this._esc(d[metaKey])}</span>` : ''}
                   <span>${this._esc(d.rank||'E')} 级</span>
                 </div>
-                <div style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono);">造诣 ${d.mastery||0}</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <div style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono);">造诣 ${d.mastery||0}</div>
+                  <button class="btn-sleek skill-forget-btn" data-name="${this._escAttr(d.name)}" data-type="${this._escAttr(type)}" style="padding:2px 6px; font-size:9px; border-color:rgba(239,83,80,0.3); color:#ef5350;" onclick="event.stopPropagation();">遗忘</button>
+                </div>
               </div>
             </div>`;
           }).join('')}</div>`);
@@ -625,7 +664,10 @@ class InfoPanel extends HTMLElement {
     return `<div class="skill-compact-row" data-action="expand-skill" data-skill="${this._escAttr(d.name)}" data-type="${this._escAttr(d._type||'')}">
       <span class="skill-name" title="${this._escAttr(d.name)}">${this._esc(d.name)}</span>
       <span class="skill-meta">${el}${rank}<span style="font-size:10px;color:var(--text-secondary);">${this._mt(d.mastery||0)}</span></span>
-      <span class="skill-mastery-num">造诣 ${d.mastery||0}</span>
+      <span class="skill-mastery-num" style="display:flex; align-items:center;">
+        造诣 ${d.mastery||0}
+        <button class="btn-sleek skill-forget-btn" data-name="${this._escAttr(d.name)}" data-type="${this._escAttr(d._type||'')}" style="padding:2px 6px; font-size:9px; margin-left:6px; border-color:rgba(239,83,80,0.3); color:#ef5350;" onclick="event.stopPropagation();">遗忘</button>
+      </span>
     </div>`;
   }
 
@@ -660,7 +702,7 @@ class InfoPanel extends HTMLElement {
         if (!bucket) continue;
         const itemName = parts.slice(2, -1).join('·');
         const fieldCN = parts[parts.length - 1];
-        
+
         // Sanitize: If the itemName contains any known subfield keywords, it's a corrupted key from past bugs
         let isCorrupted = false;
         const itemNameParts = parts.slice(2, -1);
@@ -674,7 +716,7 @@ class InfoPanel extends HTMLElement {
 
         if (fieldMapKeys.has(fieldCN)) {
           if (!bucket[itemName]) bucket[itemName] = {};
-          
+
           let finalV = v;
           if (typeof v === 'object' && v !== null) {
             const vals = Object.values(v);
@@ -682,7 +724,7 @@ class InfoPanel extends HTMLElement {
             else if (v[fieldCN] !== undefined) finalV = v[fieldCN];
             else if (v[fieldMap[fieldCN]] !== undefined) finalV = v[fieldMap[fieldCN]];
           }
-          
+
           bucket[itemName][fieldMap[fieldCN]] = finalV;
           continue;
         }
@@ -693,8 +735,14 @@ class InfoPanel extends HTMLElement {
         const bucket = catMap[catCN];
         if (!bucket) continue;
         const itemName = parts[2];
+        if (!bucket[itemName]) bucket[itemName] = {};
         if (typeof v === 'object' && v !== null) {
-          bucket[itemName] = { ...(bucket[itemName] || {}), ...v };
+          // Merge only fields that don't already exist (flat keys take precedence)
+          for (const [vk, vv] of Object.entries(v)) {
+            if (bucket[itemName][vk] === undefined) {
+              bucket[itemName][vk] = vv;
+            }
+          }
         }
       }
     }
@@ -740,7 +788,7 @@ class InfoPanel extends HTMLElement {
       let item = equipment.weapons?.[entry.name] || equipment.armor?.[entry.name] || equipment.tools?.[entry.name];
       if (!item) item = stateManager.get(`物品·武器·${entry.name}`) || stateManager.get(`物品·防具·${entry.name}`) || stateManager.get(`物品·道具·${entry.name}`) || { name: entry.name, quality: '普通' };
       if (!item) continue;
-      
+
       if (item.stats && typeof item.stats === 'object') {
         for (const [k, v] of Object.entries(item.stats)) {
           if (typeof v === 'number') {
@@ -783,7 +831,7 @@ class InfoPanel extends HTMLElement {
     ];
     let html = `<div class="sec" style="background: rgba(255,255,255,0.015); padding: 16px; border-radius: var(--r-md); box-shadow: var(--shadow-inner);">
       <div class="sec-title" style="margin-top:0; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">战斗武装</div>`;
-    
+
     const bonusEntries = Object.entries(bonus);
     if (bonusEntries.length > 0) {
       html += `<div class="rel-stats" style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">`;
@@ -795,7 +843,7 @@ class InfoPanel extends HTMLElement {
       }
       html += `</div>`;
     }
-    
+
     html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">`;
     for (const slot of slots) {
       const entry = equipped[slot.key];
@@ -874,7 +922,7 @@ class InfoPanel extends HTMLElement {
               <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:2;">
                 <div style="display:flex; flex-direction:column; gap:4px;">
                   <div style="font-size:14px; font-weight:800; font-family:var(--font-title); color:var(--text-primary); display:flex; align-items:center; gap:8px;">
-                    ${this._esc(n)} 
+                    ${this._esc(n)}
                     ${isEquipped ? `<span style="font-size:9px; background:var(--text-primary); color:var(--c-void); padding:2px 6px; border-radius:2px; font-weight:bold;">装备中</span>` : ''}
                   </div>
                   <div style="font-size:11px; color:var(--text-tertiary); display:flex; gap:12px;">
@@ -883,10 +931,11 @@ class InfoPanel extends HTMLElement {
                   </div>
                 </div>
                 <div style="display:flex; gap:8px;">
-                  ${category === 'weapons' || category === 'armor' || category === 'tools' ? 
+                  ${category === 'weapons' || category === 'armor' || category === 'tools' ?
                     (isEquipped ? `<button class="btn-sleek active eq-unequip-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px;">卸下</button>`
                     : `<button class="btn-sleek eq-equip-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px;">装备</button>`) : ''}
                   ${category === 'consumables' ? `<button class="btn-sleek eq-use-btn" data-name="${this._escAttr(n)}" style="padding:6px 12px;">使用</button>` : ''}
+                  <button class="btn-sleek eq-discard-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px; border-color: rgba(239,83,80,0.3); color: #ef5350;" onclick="event.stopPropagation();">丢弃</button>
                 </div>
               </div>
               ${i.description ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:4px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.05); position:relative; z-index:2; line-height:1.5;">${this._esc(i.description)}</div>` : ''}
@@ -1062,11 +1111,11 @@ class InfoPanel extends HTMLElement {
       .npc-avatar-ring::before { content: ''; position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent, rgba(198,156,109,0.9), transparent); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: spin 8s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
       .npc-avatar { width: 66px; height: 66px; background: #0A0A0A; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: var(--font-brush, serif); color: #c69c6d; font-size: 32px; font-weight: bold; }
-      
+
       .npc-id { flex: 1; display: flex; flex-direction: column; gap: 4px; }
       .npc-name { font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 2px; }
       .npc-sub { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; display: flex; gap: 8px; }
-      
+
       .npc-social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
       .npc-social-item { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); display: flex; flex-direction: column; gap: 4px; }
       .npc-social-item .social-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 2px; }
@@ -1075,14 +1124,14 @@ class InfoPanel extends HTMLElement {
       .npc-social-item.affection.neg .social-val { color: #ef5350; }
       .npc-social-item.trust .social-val { color: #42A5F5; }
       .npc-social-item.respect .social-val { color: #c69c6d; }
-      
+
       .npc-section-title { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.4); letter-spacing: 4px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; text-transform: uppercase; }
       .npc-section-title .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.05), transparent); }
-      
+
       .npc-meta-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
       .npc-rank-badge { background: rgba(198,156,109,0.1); color: #c69c6d; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 1px; border: 1px solid rgba(198,156,109,0.2); }
       .npc-nature-tag { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 4px; font-size: 10px; border: 1px solid rgba(255,255,255,0.05); }
-      
+
       .npc-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-bottom: 12px; }
       .npc-stat-card { background: rgba(255,255,255,0.015); border-radius: 8px; padding: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); display: flex; flex-direction: column; gap: 8px; }
       .npc-stat-head { display: flex; align-items: center; gap: 8px; }
@@ -1090,10 +1139,10 @@ class InfoPanel extends HTMLElement {
       .npc-stat-val { font-size: 14px; font-weight: 600; color: #fff; font-family: monospace; }
       .npc-stat-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.6); overflow: hidden; border-radius: 1px; }
       .npc-stat-fill { height: 100%; box-shadow: 0 0 8px currentColor; }
-      
+
       .npc-mastery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
       .npc-stat-card.npc-mastery { padding: 12px; }
-      
+
       .npc-jutsu-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
       .npc-jutsu-card { background: rgba(255,255,255,0.015); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); transition: background 0.2s; }
       .npc-jutsu-card:hover { background: rgba(255,255,255,0.03); }
@@ -1106,16 +1155,27 @@ class InfoPanel extends HTMLElement {
       .jutsu-desc { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 16px; }
       .jutsu-stats { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.3); font-family: monospace; }
       .jutsu-stats span { display: flex; align-items: center; gap: 6px; }
-      
+
       .npc-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
       .npc-tag { font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
-      
+
       .timeline-wrap { display: flex; flex-direction: column; gap: 16px; }
       .timeline-node { position: relative; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.05); }
       .timeline-node::before { content: ''; position: absolute; left: -3px; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.2); }
       .tl-time { font-size: 9px; color: rgba(255,255,255,0.3); margin-bottom: 4px; letter-spacing: 1px; }
       .tl-action { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 8px; }
       .tl-thought { font-size: 12px; color: rgba(198,156,109,0.8); line-height: 1.6; font-family: 'Georgia', 'Songti SC', serif; font-style: italic; background: linear-gradient(90deg, rgba(198,156,109,0.05), transparent); padding: 10px 12px; border-left: 2px solid rgba(198,156,109,0.3); border-radius: 0 4px 4px 0; }
+
+      .npc-grand-summary { background: linear-gradient(135deg, rgba(198,156,109,0.06), rgba(66,165,245,0.04)); border: 1px solid rgba(198,156,109,0.12); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; }
+      .npc-grand-summary::before { content: '编年'; position: absolute; top: 8px; right: 12px; font-size: 48px; font-weight: 900; opacity: 0.03; font-family: var(--font-brush, serif); letter-spacing: 8px; pointer-events: none; }
+      .npc-grand-summary .gs-label { font-size: 9px; font-weight: 800; color: rgba(198,156,109,0.6); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
+      .npc-grand-summary .gs-text { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.8; }
+
+      .npc-summary-list { display: flex; flex-direction: column; gap: 10px; }
+      .npc-summary-card { background: rgba(66,165,245,0.03); border-left: 2px solid rgba(66,165,245,0.2); border-radius: 0 6px 6px 0; padding: 10px 14px; transition: background 0.2s; }
+      .npc-summary-card:hover { background: rgba(66,165,245,0.06); }
+      .npc-summary-card .sc-time { font-size: 9px; color: rgba(66,165,245,0.5); letter-spacing: 1px; margin-bottom: 4px; }
+      .npc-summary-card .sc-text { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; }
       </style>
     `;
 
@@ -1152,11 +1212,42 @@ class InfoPanel extends HTMLElement {
 
         ${combatStatsHtml}
         ${jutsuHtml}
+        ${this._renderGrandSummary(d.grand_summary)}
+        ${this._renderSummaries(d.summaries)}
         ${this._renderInteractionLog(d.history)}
         ${(d.tags||[]).length ? `<div class="npc-tags">${d.tags.map(t=>`<span class="npc-tag">${this._esc(t)}</span>`).join('')}</div>` : ''}
       </div>
     `;
     modal.show({ title: '绝密情报档案', content: html, buttons: [{ label: '关闭', primary: true, onClick: () => modal.close() }] });
+  }
+
+  _renderGrandSummary(grandSummary) {
+    if (!grandSummary || typeof grandSummary !== 'string' || !grandSummary.trim()) return '';
+    return `
+      <div class="npc-section">
+        <div class="npc-section-title"><span>\u5173\u7cfb\u7f16\u5e74\u53f2</span><div class="line"></div></div>
+        <div class="npc-grand-summary">
+          <div class="gs-label">\u5386\u53f2\u603b\u7ed3 \u00b7 GRAND SUMMARY</div>
+          <div class="gs-text">${this._esc(grandSummary)}</div>
+        </div>
+      </div>`;
+  }
+
+  _renderSummaries(summaries) {
+    if (!Array.isArray(summaries) || summaries.length === 0) return '';
+    const cards = summaries.map((s, i) => {
+      const timeStr = s.time || `\u7b2c${s.turn || '?'}\u56de\u5408`;
+      return `
+        <div class="npc-summary-card">
+          <div class="sc-time">\u9636\u6bb5 ${i + 1} \u00b7 ${this._esc(typeof timeStr === 'string' ? timeStr : '')}</div>
+          <div class="sc-text">${this._esc(s.content || '')}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="npc-section">
+        <div class="npc-section-title"><span>\u8fd1\u671f\u5fc3\u7406\u6863\u6848 \u00b7 ${summaries.length}</span><div class="line"></div></div>
+        <div class="npc-summary-list">${cards}</div>
+      </div>`;
   }
 
   _renderInteractionLog(historyArray) {
@@ -1165,18 +1256,18 @@ class InfoPanel extends HTMLElement {
       let summary = e.summary || '';
       let actionHtml = '';
       let thoughtHtml = '';
-      
+
       const tMatch = summary.match(/\[心声\]\s*([^\[]+)/);
       const hMatch = summary.match(/\[历史\]\s*([^\[]+)/);
-      
+
       if (hMatch) actionHtml = `<div class="tl-action">${this._esc(hMatch[1].trim())}</div>`;
       if (tMatch) thoughtHtml = `<div class="tl-thought">" ${this._esc(tMatch[1].trim())} "</div>`;
-      
+
       // Fallback if neither tag is found
       if (!hMatch && !tMatch && summary.trim()) {
         actionHtml = `<div class="tl-action">${this._esc(summary.trim())}</div>`;
       }
-      
+
       return `
         <div class="timeline-node">
           ${e.time ? `<div class="tl-time">${this._esc(e.time)}</div>` : ''}
@@ -1185,7 +1276,7 @@ class InfoPanel extends HTMLElement {
         </div>
       `;
     }).join('');
-    
+
     return `
       <div class="npc-section">
         <div class="npc-section-title"><span>羁绊追溯</span><div class="line"></div></div>
@@ -1224,7 +1315,7 @@ class InfoPanel extends HTMLElement {
                   </div>
                 </div>
               </div>
-              
+
               <div class="rel-dashboard">
                 <div class="dash-stat">
                   <div class="dash-label">好感度</div>

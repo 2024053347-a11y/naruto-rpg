@@ -91,26 +91,12 @@ export class InstructionParser {
             // Format A: The old {"updates": [...]} format
             if (data.updates && Array.isArray(data.updates)) {
               for (const u of data.updates) {
-                // Normalize path to key if AI used path for a flat key
-                if (u.path && !u.key) {
-                  if (!u.path.includes('.') || u.path.includes('·')) {
-                    u.key = u.path;
-                    u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
-                    delete u.path;
-                  } else if (u.path.startsWith('attributes.')) {
-                    u.key = '属性·' + u.path.slice(11);
-                    u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
-                    delete u.path;
-                  }
-                }
-
                 if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                  const resolvedKey = resolveAlias(u.key);
-                  if (!isKnownKey(resolvedKey)) {
-                    console.warn('[InstructionParser] 未知变量，跳过:', resolvedKey);
+                  if (!isKnownKey(u.key)) {
+                    console.warn('[InstructionParser] 未知变量，跳过:', u.key);
                     continue;
                   }
-                  updates.push({ key: resolvedKey, op: u.op, value: coerceValue(resolvedKey, u.value) });
+                  updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
                 } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
                   updates.push(u);
                 }
@@ -119,26 +105,12 @@ export class InstructionParser {
             // Format B: The new single object format: {"path":"...", "op":"...", "value":...}
             else {
               const u = data;
-              // Normalize path to key if AI used path for a flat key
-              if (u.path && !u.key) {
-                if (!u.path.includes('.') || u.path.includes('·')) {
-                  u.key = u.path;
-                  u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
-                  delete u.path;
-                } else if (u.path.startsWith('attributes.')) {
-                  u.key = '属性·' + u.path.slice(11);
-                  u.op = u.op === 'set' ? '=' : (u.op === 'add' ? '+' : (u.op === 'sub' ? '-' : u.op));
-                  delete u.path;
-                }
-              }
-
               if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                const resolvedKey = resolveAlias(u.key);
-                if (!isKnownKey(resolvedKey)) {
-                  console.warn('[InstructionParser] 未知变量，跳过:', resolvedKey);
+                if (!isKnownKey(u.key)) {
+                  console.warn('[InstructionParser] 未知变量，跳过:', u.key);
                   continue;
                 }
-                updates.push({ key: resolvedKey, op: u.op, value: coerceValue(resolvedKey, u.value) });
+                updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
               } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
                 updates.push(u);
               }
@@ -202,7 +174,7 @@ export class InstructionParser {
 
       // Recovery: AI sometimes puts multiple JSON objects in one tag
       // or adds trailing text after the JSON
-      const jsonObjects = raw.match(/\{[\s\S]*?\}/g);
+      const jsonObjects = this._extractJsonObjects(raw);
       if (jsonObjects) {
         for (const jsonStr of jsonObjects) {
           try {
@@ -234,6 +206,7 @@ export class InstructionParser {
       .replace(/<event>[\s\S]*?<\/event>/g, '')
       .replace(/<memory>[\s\S]*?<\/memory>/g, '')
       .replace(/<status_query\s*\/>/g, '')
+      .replace(/<recall\s+[^>]*\/>/g, '')
       .replace(/<system_info>[\s\S]*?<\/system_info>/g, '')
       .replace(/<think>[\s\S]*?<\/think>/gi, '')
       .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
@@ -244,7 +217,7 @@ export class InstructionParser {
       .replace(/<anthropic_think>[\s\S]*?<\/anthropic_think>/gi, '')
       .replace(/<deepseek_thinking>[\s\S]*?<\/deepseek_thinking>/gi, '')
       .replace(/<analysis>[\s\S]*?<\/analysis>/gi, '')
-      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
+      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>([\s\S]*?)<\/\1>/g, '$2')
       .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }
@@ -265,7 +238,7 @@ export class InstructionParser {
 
   extractVarThinkContent(text) {
     if (!text) return '';
-    const m = text.match(/<var_thinking>([\s\S]*?)<\/var_thinking>/i);
+    const m = text.match(/<var(?:iable)?_thinking>([\s\S]*?)<\/var(?:iable)?_thinking>/i);
     return m ? m[1].trim() : '';
   }
 
@@ -281,6 +254,7 @@ export class InstructionParser {
       .replace(/<event>[\s\S]*?(?:<\/event>|$)/g, '')
       .replace(/<memory>[\s\S]*?(?:<\/memory>|$)/g, '')
       .replace(/<status_query\s*\/?\s*>?/g, '')
+      .replace(/<recall\s+[^>]*\/?\s*>?/g, '')
       .replace(/<system_info>[\s\S]*?(?:<\/system_info>|$)/g, '')
       .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
       .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')
@@ -297,6 +271,24 @@ export class InstructionParser {
 
   hasStatusQuery(text) {
     return text ? /<status_query\s*\/>/.test(text) : false;
+  }
+
+  _extractJsonObjects(str) {
+    const results = [];
+    let depth = 0, start = -1;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '{') {
+        if (depth === 0) start = i;
+        depth++;
+      } else if (str[i] === '}') {
+        depth--;
+        if (depth === 0 && start >= 0) {
+          results.push(str.slice(start, i + 1));
+          start = -1;
+        } else if (depth < 0) depth = 0;
+      }
+    }
+    return results.length ? results : null;
   }
 }
 

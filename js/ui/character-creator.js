@@ -4,6 +4,7 @@ import { GAME_DATA } from '../data/game-data.js';
 import { icon } from '../utils/icons.js';
 import { escHtml } from '../utils/format.js';
 import { bindCustomSelects } from './custom-select.js';
+import { createOpeningContract, deriveOpeningState } from '../systems/opening-contract.js';
 
 const START_PRESET_KEY = 'naruto_start_preset_v1';
 
@@ -795,6 +796,9 @@ class CharacterCreator extends HTMLElement {
     s['世界·年代'] = `木叶${year}年`;
     s['世界·时间'] = `木叶${year}年${timelinePreset.month || 1}月1日·清晨`;
     s['世界·天气'] = '晴';
+
+    // 明确写在自定义设定里的初始身份优先于通用“忍校学生”模板。
+    Object.assign(s, deriveOpeningState(this._choices, s));
     
     if (timelinePreset.era_summary) {
       const memSub = s['_memory'] || {};
@@ -838,6 +842,7 @@ class CharacterCreator extends HTMLElement {
       
       s['_memory'] = memSub;
     }
+    s['_opening_contract'] = createOpeningContract({ choices: this._choices, state: s });
     if(bg.relationships) {
       const relSub = s['_relationships'] || {};
       for (const [name, value] of Object.entries(bg.relationships)) {
@@ -851,7 +856,10 @@ class CharacterCreator extends HTMLElement {
     this._choices.attributes = { ...this._attrs };
     this._saveStartPreset();
     stateManager.restore(s);
-    eventBus.emit('character:created', s['玩家·姓名']);
+    eventBus.emit('character:created', {
+      name: s['玩家·姓名'],
+      contract: s['_opening_contract']
+    });
   }
 
   _normalizeCustomSkill() {

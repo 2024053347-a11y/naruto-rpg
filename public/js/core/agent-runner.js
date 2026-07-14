@@ -5,7 +5,8 @@ import { AGENT_MANIFESTS, AGENT_TIMEOUTS } from './agent-manifests.js';
 import { AGENT_PROMPTS } from './agent-prompts.js';
 import { getAgentConfig } from '../data/agent-config.js';
 import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
-import { NO_VAR_INSTRUCTION } from '../data/prompts.js';
+import { generateMainVarInstructions } from '../data/var-schema.js';
+import { formatOpeningContractPrompt, resolveOpeningContract } from '../systems/opening-contract.js';
 
 class AgentRunner {
   constructor() {
@@ -118,6 +119,12 @@ class AgentRunner {
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });
     }
+
+    const openingContract = formatOpeningContractPrompt(resolveOpeningContract(state), {
+      compact: true,
+      audience: agentType === 'character' ? 'npc' : 'narrator'
+    });
+    if (openingContract) messages.push({ role: 'system', content: openingContract });
 
     // 2. Preset Context (Mostly static, highly cacheable)
     if (manifest.includePreset) {
@@ -264,7 +271,7 @@ class AgentRunner {
     // 6. 变量标签策略（根据二次模型配置）
     const updaterEnabled = stateManager.getAPIConfig?.()?.variableUpdater?.enabled === true;
     if (updaterEnabled) {
-      constraint += NO_VAR_INSTRUCTION + '\n\n';
+      constraint += generateMainVarInstructions(true) + '\n\n';
     } else {
       constraint += '【变量标签输出】正文末尾必须附上 <var>、<relationship>、<memory> 等标签。\n\n';
     }

@@ -54,7 +54,6 @@ app.use(helmet({
 
 app.use(compression());
 app.use(cookieParser());
-app.use(express.json({ limit: '30mb' }));
 
 // 3. 速率限制中间件 (防暴破/恶意请求)
 const authLimiter = rateLimit({
@@ -76,11 +75,13 @@ const staticLimiter = rateLimit({
 });
 
 // 4. 路由挂载
-app.use('/auth', authLimiter, authRouter);
+const defaultJsonParser = express.json({ limit: '2mb' });
+
+app.use('/auth', authLimiter, defaultJsonParser, authRouter);
 app.use('/api/saves', apiLimiter, savesRouter);
-app.use('/api/ai-proxy', apiLimiter, aiProxyRouter);
-app.use('/api/music', apiLimiter, musicFavoritesRouter);
-app.use('/api/admin', authLimiter, adminRouter);
+app.use('/api/ai-proxy', apiLimiter, defaultJsonParser, aiProxyRouter);
+app.use('/api/music', apiLimiter, defaultJsonParser, musicFavoritesRouter);
+app.use('/api/admin', authLimiter, defaultJsonParser, adminRouter);
 
 // 5. 网页认证入口拦截
 // 玩家在请求根路径 / 或 index.html 时，必须通过身份验证，否则重定向到登录页面
@@ -103,6 +104,9 @@ app.use((req, res) => {
 
 // 8. 全局错误捕获中间件 — 不泄露内部细节给客户端
 app.use((err, req, res, next) => {
+  if (err?.type === 'entity.too.large') {
+    return res.status(413).json({ error: '请求体超过允许的大小' });
+  }
   console.error('[SERVER ERROR]', err.stack || err.message || err);
   res.status(500).json({ error: '服务器内部错误，请稍后重试' });
 });

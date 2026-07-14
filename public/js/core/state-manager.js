@@ -14,6 +14,8 @@ class StateManager {
     this._listeners = new Map();
     this._db = null;
     this._levelUpNotified = false;
+    this._stateVersion = 0;
+    this._getCache = { version: -1, state: null };
   }
 
   getDefaultState() {
@@ -30,6 +32,7 @@ class StateManager {
         active_branch: 'branch_main'
       },
       _agent_memories: {},
+      _opening_contract: null,
       _combat: null,
       _missions: {
         active: {}, available: {}, completed: {}, failed: {},
@@ -67,15 +70,22 @@ class StateManager {
 
   get(path) {
     if (!path) {
+      if (this._getCache.version === this._stateVersion) {
+        return deepClone(this._getCache.state);
+      }
       const state = deepClone(this.state);
       this._injectCompatProps(state);
-      return state;
+      this._getCache = { version: this._stateVersion, state };
+      return deepClone(state);
     }
     let val = getValueByPath(this.state, path);
     if (val === undefined) {
-      const compat = deepClone(this.state);
-      this._injectCompatProps(compat);
-      val = getValueByPath(compat, path);
+      if (this._getCache.version !== this._stateVersion) {
+        const compat = deepClone(this.state);
+        this._injectCompatProps(compat);
+        this._getCache = { version: this._stateVersion, state: compat };
+      }
+      val = getValueByPath(this._getCache.state, path);
     }
     return deepClone(val);
   }
@@ -346,7 +356,11 @@ class StateManager {
             continue;
           }
           const currentVal = key.includes('.') ? getValueByPath(this.state, key) : current;
-          const curNum = Number(currentVal);
+          let curNum = Number(currentVal);
+          // 兜底: 状态中缺失但从 schema 声明为数字,取默认值或 0
+          if (isNaN(curNum) && isKnownKey(key) && key in VAR_SCHEMA && VAR_SCHEMA[key]?.type === 'number') {
+            curNum = VAR_SCHEMA[key].default ?? 0;
+          }
           if (isNaN(curNum)) {
             console.warn('[StateManager] 非数字变量不支持增减:', key);
             continue;
@@ -375,6 +389,7 @@ class StateManager {
     }
     this._notifySubscribers(applied);
     eventBus.emit('state:batch-changed', { updates: applied });
+    this._stateVersion++;
   }
 
   batchUpdate(vars) {
@@ -451,6 +466,9 @@ class StateManager {
             const zhField = fieldRev[k] || k;
             flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: '=', value: val });
           }
+        } else if (op === 'set' && !field && (typeof value === 'string' || typeof value === 'number')) {
+          // 字符串/数字值（如血继限界"写轮眼·二勾玉"）→ 存入 描述
+          flatUpdates.push({ key: `技能·${type}·${skillName}·描述`, op: '=', value: String(value) });
         } else if (op === 'assign' && v.key && value !== undefined) {
           const zhField = fieldRev[v.key] || v.key;
           flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: '=', value });
@@ -564,8 +582,9 @@ class StateManager {
       if (path === 'world_state.map.explored_regions') {
         if (op === 'push') {
           const current = this.state['世界·已探索区域'] || '';
-          const newVal = current ? `${current}，${value}` : value;
-          flatUpdates.push({ key: '世界·已探索区域', op: '=', value: newVal });
+          const parts = current ? current.split('，').filter(Boolean) : [];
+          if (!parts.includes(value)) parts.push(value);
+          flatUpdates.push({ key: '世界·已探索区域', op: '=', value: parts.join('，') });
         } else {
           flatUpdates.push({ key: '世界·已探索区域', op: '=', value });
         }
@@ -604,12 +623,16 @@ class StateManager {
       }
 
       // Fallback: try direct state property
-      console.warn('[StateManager] batchUpdate: unrecognized path, attempting direct set:', path);
+      if (!path.startsWith('skills.') && !path.startsWith('items.')) {
+        console.warn('[StateManager] batchUpdate: unrecognized path, attempting direct set:', path);
+      }
       setValueByPath(this.state, path, value);
       eventBus.emit('state:changed', { key: path, value });
     }
 
     if (flatUpdates.length) this.update(flatUpdates);
+    // path 项直接改了 this.state（不经 update()），必须失效 get() 缓存
+    this._stateVersion++;
   }
 
   getSub(key) {
@@ -620,6 +643,7 @@ class StateManager {
   // 注意：setSub 是"整段覆盖"语义。如果只想改子字段、保留其余，请用 mergeSub。
   setSub(key, value) {
     this.state[key] = value;
+    this._stateVersion++;
     eventBus.emit('state:changed', { key, value });
   }
 
@@ -635,6 +659,7 @@ class StateManager {
     } else {
       this.state[key] = { ...cur, ...partial };
     }
+    this._stateVersion++;
     eventBus.emit('state:changed', { key, value: this.state[key] });
   }
 
@@ -691,6 +716,7 @@ class StateManager {
       // B-07: 读档/时间线跳转后强制重置升级守卫
       this._levelUpNotified = false;
       this._enforceBounds();
+      this._stateVersion++;
       eventBus.emit('state:restored', this.state);
       return;
     }
@@ -698,6 +724,7 @@ class StateManager {
     this.state = normalized;
     this._levelUpNotified = false;
     this._enforceBounds();
+    this._stateVersion++;
     eventBus.emit('state:restored', this.state);
   }
 
@@ -782,6 +809,7 @@ class StateManager {
         active_branch: old._meta?.active_branch ?? 'branch_main'
       },
       _combat: old.combat ?? null,
+      _opening_contract: old.opening_contract ?? null,
       _missions: this._migrateMissions(mis),
       _relationships: rel,
       _memory: {
@@ -917,6 +945,7 @@ class StateManager {
   reset() {
     this.state = this._buildDefaultState();
     this._levelUpNotified = false;
+    this._stateVersion++;
     eventBus.emit('state:reset', this.state);
   }
 

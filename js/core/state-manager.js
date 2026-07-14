@@ -32,6 +32,7 @@ class StateManager {
         active_branch: 'branch_main'
       },
       _agent_memories: {},
+      _opening_contract: null,
       _combat: null,
       _missions: {
         active: {}, available: {}, completed: {}, failed: {},
@@ -355,7 +356,11 @@ class StateManager {
             continue;
           }
           const currentVal = key.includes('.') ? getValueByPath(this.state, key) : current;
-          const curNum = Number(currentVal);
+          let curNum = Number(currentVal);
+          // 兜底: 状态中缺失但从 schema 声明为数字,取默认值或 0
+          if (isNaN(curNum) && isKnownKey(key) && key in VAR_SCHEMA && VAR_SCHEMA[key]?.type === 'number') {
+            curNum = VAR_SCHEMA[key].default ?? 0;
+          }
           if (isNaN(curNum)) {
             console.warn('[StateManager] 非数字变量不支持增减:', key);
             continue;
@@ -461,6 +466,9 @@ class StateManager {
             const zhField = fieldRev[k] || k;
             flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: '=', value: val });
           }
+        } else if (op === 'set' && !field && (typeof value === 'string' || typeof value === 'number')) {
+          // 字符串/数字值（如血继限界"写轮眼·二勾玉"）→ 存入 描述
+          flatUpdates.push({ key: `技能·${type}·${skillName}·描述`, op: '=', value: String(value) });
         } else if (op === 'assign' && v.key && value !== undefined) {
           const zhField = fieldRev[v.key] || v.key;
           flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: '=', value });
@@ -574,8 +582,9 @@ class StateManager {
       if (path === 'world_state.map.explored_regions') {
         if (op === 'push') {
           const current = this.state['世界·已探索区域'] || '';
-          const newVal = current ? `${current}，${value}` : value;
-          flatUpdates.push({ key: '世界·已探索区域', op: '=', value: newVal });
+          const parts = current ? current.split('，').filter(Boolean) : [];
+          if (!parts.includes(value)) parts.push(value);
+          flatUpdates.push({ key: '世界·已探索区域', op: '=', value: parts.join('，') });
         } else {
           flatUpdates.push({ key: '世界·已探索区域', op: '=', value });
         }
@@ -614,7 +623,9 @@ class StateManager {
       }
 
       // Fallback: try direct state property
-      console.warn('[StateManager] batchUpdate: unrecognized path, attempting direct set:', path);
+      if (!path.startsWith('skills.') && !path.startsWith('items.')) {
+        console.warn('[StateManager] batchUpdate: unrecognized path, attempting direct set:', path);
+      }
       setValueByPath(this.state, path, value);
       eventBus.emit('state:changed', { key: path, value });
     }
@@ -798,6 +809,7 @@ class StateManager {
         active_branch: old._meta?.active_branch ?? 'branch_main'
       },
       _combat: old.combat ?? null,
+      _opening_contract: old.opening_contract ?? null,
       _missions: this._migrateMissions(mis),
       _relationships: rel,
       _memory: {

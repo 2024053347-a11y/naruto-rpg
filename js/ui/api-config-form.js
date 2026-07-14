@@ -82,8 +82,8 @@ export class ApiConfigForm extends HTMLElement {
           ${!this._showAdvanced ? '<div class="settings-hint">支持 OpenAI / Anthropic / DeepSeek / 自定义兼容 API</div>' : ''}
         </div>
         <div class="settings-row">
-          <label for="settings-api-key">API Key (本地免密模型可留空)</label>
-          <input class="settings-input" id="settings-api-key" type="password" value="${this._escAttr(config.apiKey || '')}" placeholder="输入密钥 (本地免密可留空)" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
+          <label for="settings-api-key">API Key (免密模型可留空)</label>
+          <input class="settings-input" id="settings-api-key" type="password" value="${this._escAttr(config.apiKey || '')}" placeholder="输入密钥 (免密模型可留空)" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
         </div>
         <div class="settings-row">
           <label for="settings-api-model">模型名称</label>

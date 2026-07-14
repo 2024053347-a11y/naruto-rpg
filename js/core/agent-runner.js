@@ -6,6 +6,7 @@ import { AGENT_PROMPTS } from './agent-prompts.js';
 import { getAgentConfig } from '../data/agent-config.js';
 import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
 import { generateMainVarInstructions } from '../data/var-schema.js';
+import { formatOpeningContractPrompt, resolveOpeningContract } from '../systems/opening-contract.js';
 
 class AgentRunner {
   constructor() {
@@ -118,6 +119,12 @@ class AgentRunner {
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });
     }
+
+    const openingContract = formatOpeningContractPrompt(resolveOpeningContract(state), {
+      compact: true,
+      audience: agentType === 'character' ? 'npc' : 'narrator'
+    });
+    if (openingContract) messages.push({ role: 'system', content: openingContract });
 
     // 2. Preset Context (Mostly static, highly cacheable)
     if (manifest.includePreset) {

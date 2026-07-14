@@ -6,6 +6,7 @@ import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
 import { getVariableUpdaterPreset } from '../data/variable-updater-preset.js';
+import './memory-panel.js';
 
 const THEME_PRESETS = {
   konoha: { label: '木叶卷轴', textColor: '#e8e4d9', accentColor: '#eb613f', goldColor: '#c69c6d', backgroundColor: '#070a0e' },
@@ -98,6 +99,7 @@ class SettingsPanel extends HTMLElement {
               <button class="tab-btn" data-target="tab-variable">变量更新</button>
               <button class="tab-btn" data-target="tab-lore">世界书与预设</button>
               <button class="tab-btn" data-target="tab-audio">忍道音律</button>
+              <button class="tab-btn" data-target="tab-memory">记忆编年</button>
               <button class="tab-btn" data-target="tab-system">系统与归档</button>
             </aside>
             <main class="content">
@@ -220,6 +222,8 @@ class SettingsPanel extends HTMLElement {
                       <input type="number" name="varUpdaterMaxTokens" min="256" max="32768" step="256" value="${apiConfig.variableUpdater?.maxTokens ?? 8192}">
                       <label>超时（毫秒）</label>
                       <input type="number" name="varUpdaterTimeout" min="0" step="1000" value="${apiConfig.variableUpdater?.timeoutMs ?? 120000}" title="0 表示不限制">
+                      <label>流式传输</label>
+                      <input type="checkbox" name="varUpdaterStreaming" ${apiConfig.variableUpdater?.streaming !== false ? 'checked' : ''}>
                     </div>
                   </section>
                   <section>
@@ -285,6 +289,11 @@ class SettingsPanel extends HTMLElement {
                      </div>
                    </div>
                 </section>
+              </div>
+
+              <!-- Tab: 记忆编年 -->
+              <div class="tab-pane" id="tab-memory">
+                <memory-panel></memory-panel>
               </div>
 
               <!-- Tab 5: 系统与归档 -->
@@ -384,6 +393,8 @@ class SettingsPanel extends HTMLElement {
         this.shadowRoot.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         this.shadowRoot.getElementById(btn.dataset.target)?.classList.add('active');
+        const mp = this.shadowRoot.querySelector('memory-panel');
+        if (btn.dataset.target === 'tab-memory' && mp) mp.refreshStats();
       });
     });
 
@@ -491,7 +502,7 @@ class SettingsPanel extends HTMLElement {
         input.parentElement.appendChild(listEl);
       }
       listEl.innerHTML = models.map(id =>
-        `<div style="padding:7px 10px;cursor:pointer;font-size:12px;color:#a39f98;border-bottom:1px solid rgba(255,255,255,0.04);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" data-model="${id}">${id}</div>`
+        `<div style="padding:7px 10px;cursor:pointer;font-size:12px;color:#a39f98;border-bottom:1px solid rgba(255,255,255,0.04);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" data-model="${escAttr(id)}">${escHtml(id)}</div>`
       ).join('');
       listEl.querySelectorAll('div').forEach(item => {
         item.addEventListener('click', () => {
@@ -573,7 +584,8 @@ class SettingsPanel extends HTMLElement {
       model,
       temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : 0.9,
       maxTokens: Math.max(256, Number(root.querySelector('[name="varUpdaterMaxTokens"]')?.value) || 8192),
-      timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0)
+      timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0),
+      streaming: root.querySelector('[name="varUpdaterStreaming"]')?.checked ?? true
     };
     await stateManager.saveAPIConfig(config);
   }

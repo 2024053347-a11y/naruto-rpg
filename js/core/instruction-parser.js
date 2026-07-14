@@ -206,6 +206,7 @@ export class InstructionParser {
       .replace(/<event>[\s\S]*?<\/event>/g, '')
       .replace(/<memory>[\s\S]*?<\/memory>/g, '')
       .replace(/<status_query\s*\/>/g, '')
+      .replace(/<recall\s+[^>]*\/>/g, '')
       .replace(/<system_info>[\s\S]*?<\/system_info>/g, '')
       .replace(/<think>[\s\S]*?<\/think>/gi, '')
       .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
@@ -237,7 +238,7 @@ export class InstructionParser {
 
   extractVarThinkContent(text) {
     if (!text) return '';
-    const m = text.match(/<var_thinking>([\s\S]*?)<\/var_thinking>/i);
+    const m = text.match(/<var(?:iable)?_thinking>([\s\S]*?)<\/var(?:iable)?_thinking>/i);
     return m ? m[1].trim() : '';
   }
 
@@ -253,6 +254,7 @@ export class InstructionParser {
       .replace(/<event>[\s\S]*?(?:<\/event>|$)/g, '')
       .replace(/<memory>[\s\S]*?(?:<\/memory>|$)/g, '')
       .replace(/<status_query\s*\/?\s*>?/g, '')
+      .replace(/<recall\s+[^>]*\/?\s*>?/g, '')
       .replace(/<system_info>[\s\S]*?(?:<\/system_info>|$)/g, '')
       .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
       .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')

@@ -42,8 +42,26 @@ class EquipmentSystem {
 
     const catCN = CAT_CN[category] || '道具';
     const qtyKey = `物品·${catCN}·${name}·数量`;
-    const qty = stateManager.get(qtyKey);
-    if (category !== 'consumables' && !qty) return false;
+    let qty = stateManager.get(qtyKey);
+
+    // Legacy support: if it was stored as an object
+    const legacyObj = stateManager.get(`物品·${catCN}·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || 1;
+    }
+
+    let hasItem = !!qty;
+    // For AI generated armor/weapons, they might only have '名称' or '描述' but no '数量'
+    if (!hasItem) {
+      for (const k of Object.keys(stateManager.state)) {
+        if (k.startsWith(`物品·${catCN}·${name}·`)) {
+          hasItem = true;
+          break;
+        }
+      }
+    }
+
+    if (category !== 'consumables' && !hasItem) return false;
 
     const updates = [
       { key: slotKey, op: '=', value: name }
@@ -75,24 +93,54 @@ class EquipmentSystem {
 
   _findItemCategory(name) {
     for (const [cn, en] of Object.entries(CAT_EN)) {
-      const qty = stateManager.get(`物品·${cn}·${name}·数量`);
-      if (qty != null) return en;
+      const baseKey = `物品·${cn}·${name}`;
+      const qty = stateManager.get(`${baseKey}·数量`);
+      const legacy = stateManager.get(baseKey);
+      const hasFields = Object.keys(stateManager.state).some(key => key.startsWith(`${baseKey}·`));
+      if (qty != null || (legacy && typeof legacy === 'object') || hasFields) return en;
     }
     return null;
   }
 
   _getItem(category, name) {
     const catCN = CAT_CN[category] || '道具';
-    const qty = stateManager.get(`物品·${catCN}·${name}·数量`);
-    if (qty == null) return null;
-    const quality = stateManager.get(`物品·${catCN}·${name}·品质`) || '普通';
-    return { quantity: Number(qty) || 0, quality };
+    let qty = stateManager.get(`物品·${catCN}·${name}·数量`);
+    let quality = stateManager.get(`物品·${catCN}·${name}·品质`) || '普通';
+
+    const legacyObj = stateManager.get(`物品·${catCN}·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || qty || 1;
+       quality = legacyObj.quality || quality;
+    }
+
+    if (qty == null) {
+      // Check if it exists as an AI generated item without explicit quantity
+      let hasItem = false;
+      for (const k of Object.keys(stateManager.state)) {
+        if (k.startsWith(`物品·${catCN}·${name}·`)) {
+          hasItem = true;
+          break;
+        }
+      }
+      if (!hasItem) return null;
+      qty = 1; // Assume 1 for equipment
+    }
+
+    return { quantity: Number(qty) || 1, quality };
   }
 
   useItem(name) {
     if (!name || typeof name !== 'string' || !name.trim()) return false;
-    const qty = stateManager.get(`物品·消耗品·${name}·数量`);
-    const quality = stateManager.get(`物品·消耗品·${name}·品质`) || '普通';
+    let qty = stateManager.get(`物品·消耗品·${name}·数量`);
+    let quality = stateManager.get(`物品·消耗品·${name}·品质`) || '普通';
+
+    // Legacy support: if it was stored as an object
+    const legacyObj = stateManager.get(`物品·消耗品·${name}`);
+    if (legacyObj && typeof legacyObj === 'object') {
+       qty = legacyObj.quantity || qty || 1;
+       quality = legacyObj.quality || quality;
+    }
+
     if (!qty || Number(qty) <= 0) return false;
     const item = { quantity: Number(qty), quality };
 
@@ -238,34 +286,80 @@ class EquipmentSystem {
     const catCN = CAT_CN[category] || '道具';
     const qtyKey = `物品·${catCN}·${name}·数量`;
     const qualityKey = `物品·${catCN}·${name}·品质`;
-    const existing = stateManager.get(qtyKey);
+    const legacyKey = `物品·${catCN}·${name}`;
+
+    let existing = stateManager.get(qtyKey);
+    let legacyObj = stateManager.get(legacyKey);
+
+    const updates = [];
+
     if (existing != null) {
-      stateManager.update([
-        { key: qtyKey, op: '+', value: quantity }
-      ]);
+      updates.push({ key: qtyKey, op: '+', value: quantity });
     } else {
-      stateManager.update([
-        { key: qtyKey, op: '=', value: quantity },
-        { key: qualityKey, op: '=', value: quality }
-      ]);
+      let startQty = quantity;
+      if (legacyObj && typeof legacyObj === 'object') {
+        startQty += (legacyObj.quantity || 0);
+        quality = legacyObj.quality || quality;
+      }
+      updates.push({ key: qtyKey, op: '=', value: startQty });
+      updates.push({ key: qualityKey, op: '=', value: quality });
     }
+
+    if (legacyObj && typeof legacyObj === 'object') {
+      updates.push({ key: legacyKey, op: 'delete' });
+    }
+
+    stateManager.update(updates);
   }
 
   removeItem(category, name, quantity = 1) {
     const catCN = CAT_CN[category] || '道具';
     const qtyKey = `物品·${catCN}·${name}·数量`;
+    const legacyKey = `物品·${catCN}·${name}`;
+
     const existing = stateManager.get(qtyKey);
-    if (existing == null) return false;
-    const currentQty = Number(existing) || 0;
+    const legacyObj = stateManager.get(legacyKey);
+    const storedKeys = Object.keys(stateManager.state)
+      .filter(key => key === legacyKey || key.startsWith(`${legacyKey}·`));
+    const hasLegacyObject = legacyObj && typeof legacyObj === 'object';
+
+    if (existing == null && !hasLegacyObject && !storedKeys.length) return false;
+
+    // 早期存档可能只有品质/描述，没有数量；UI 会将这类装备视为单件物品。
+    const currentQty = existing != null
+      ? Number(existing)
+      : (hasLegacyObject ? Number(legacyObj.quantity ?? 1) : 1);
     const newQty = Math.max(0, currentQty - quantity);
-    stateManager.update([
-      { key: qtyKey, op: '=', value: newQty }
-    ]);
+
     if (newQty <= 0) {
-      stateManager.update([
-        { key: `物品·${catCN}·${name}·品质`, op: '=', value: '' }
-      ]);
+      for (const [slot, slotCategory] of Object.entries(SLOT_TO_CAT)) {
+        if (slotCategory === category && stateManager.get(SLOT_KEYS[slot]) === name) {
+          this.unequip(slot);
+        }
+      }
     }
+
+    const updates = [];
+
+    if (newQty <= 0) {
+      // 数量、品质、描述和旧对象必须作为一个实体一起删除，避免残骸被 UI 当作 1 件物品。
+      for (const key of storedKeys) updates.push({ key, op: 'delete' });
+    } else {
+      updates.push({ key: qtyKey, op: '=', value: newQty });
+    }
+
+    if (newQty > 0 && hasLegacyObject) {
+      // If we still have quantity but a legacy object exists, migrate its properties out then delete it
+      if (legacyObj.quality && stateManager.get(`物品·${catCN}·${name}·品质`) == null) {
+        updates.push({ key: `物品·${catCN}·${name}·品质`, op: '=', value: legacyObj.quality });
+      }
+      if (legacyObj.description && stateManager.get(`物品·${catCN}·${name}·描述`) == null) {
+        updates.push({ key: `物品·${catCN}·${name}·描述`, op: '=', value: legacyObj.description });
+      }
+      updates.push({ key: legacyKey, op: 'delete' });
+    }
+
+    stateManager.update(updates);
     return true;
   }
 

@@ -13,11 +13,12 @@ import { errorHandler } from './utils/error-handler.js';
 import { loadingIndicator } from './utils/loading-indicator.js';
 import { swNotifier } from './utils/sw-notifier.js';
 import { helpGuide } from './utils/help-guide.js';
+import { formatOpeningContractPrompt, resolveOpeningContract } from './systems/opening-contract.js';
 
 // ═══════════════════════════════════════
 // 版本号 — 更新时递增，自动清理旧缓存
 // ═══════════════════════════════════════
-const APP_VERSION = 20250625;
+const APP_VERSION = 2026071403;
 
 function checkVersionAndMigrate() {
   const storedVersion = parseInt(localStorage.getItem('naruto_app_version') || '0', 10);
@@ -185,54 +186,18 @@ class NarutoRPGApp {
       }
     });
 
-    eventBus.on('character:created', async (player) => {
+    eventBus.on('character:created', async (payload = {}) => {
       appShell.showGame();
       this._sendSystemMessage('角色创建完成！正在生成开场剧情...');
 
-      if (player.persona) {
-        try {
-          let customEntries = KNOWLEDGE_BASE.getCustomEntries() || [];
-          const personaIndex = customEntries.findIndex(e => e.title === '玩家人设');
-          const newContent = `[玩家人设]\n名字：${player.name || '玩家'}\n${player.persona}`;
-          
-          if (personaIndex >= 0) {
-            if (customEntries[personaIndex].content !== newContent || !customEntries[personaIndex].isAlwaysOn) {
-               if (confirm('世界书中已存在玩家人设，是否用当前的新人设覆盖？')) {
-                 customEntries[personaIndex].content = newContent;
-                 customEntries[personaIndex].isAlwaysOn = true;
-                 KNOWLEDGE_BASE.saveCustomEntries(customEntries);
-                 this._sendSystemMessage('玩家人设已更新至世界书。');
-               }
-            }
-          } else {
-             customEntries.push({
-               keys: ['玩家人设', player.name || '玩家', '人设', '外貌', '性格'],
-               title: '玩家人设',
-               content: newContent,
-               category: 'character_detail',
-               isAlwaysOn: true
-             });
-             KNOWLEDGE_BASE.saveCustomEntries(customEntries);
-             this._sendSystemMessage('玩家人设已写入世界书，防止AI遗忘。');
-          }
-        } catch(e) {
-          console.warn('保存世界书人设失败:', e);
-        }
-      }
-
       try {
         const state = stateManager.get();
+        const contract = state._opening_contract || payload.contract || resolveOpeningContract(state);
         stateManager.update([{ key: '系统·回合数', op: '=', value: 1 }]);
-        const playerNature = Array.isArray(player.chakra_nature)
-          ? player.chakra_nature.join(', ')
-          : player.chakra_nature || '未知';
-        const customProfile = player.custom_profile || {};
-        const customLines = [
-          customProfile.talent ? `自定义天赋: ${customProfile.talent.name} - ${customProfile.talent.description}` : '',
-          customProfile.background ? `自定义出身: ${customProfile.background.name} - ${customProfile.background.description}; 起始地点: ${customProfile.background.location}` : '',
-          customProfile.skill ? `自定义初始技能: ${customProfile.skill.name} (${customProfile.skill.rank}级/${customProfile.skill.type}) - ${customProfile.skill.description}` : '',
-          player.persona ? `【玩家核心人设设定】: ${player.persona}` : ''
-        ].filter(Boolean).join('\n');
+        const playerNature = Array.isArray(state['玩家·查克拉属性'])
+          ? state['玩家·查克拉属性'].join(', ')
+          : state['玩家·查克拉属性'] || '未知';
+        const customLines = formatOpeningContractPrompt(contract, { compact: true });
         const timelineLabel = state['世界·时间']?.year || state['世界·年代'] || '木叶48年';
         const memoryEra = state._memory?.recent_summary || '';
 
@@ -243,7 +208,7 @@ class NarutoRPGApp {
         let startPrompt;
         if (updaterEnabled) {
           // Secondary updater handles variables — main model focuses on narrative only
-          startPrompt = `[系统指令] 新角色已创建。角色名: ${player.name || '忍者'}, 性别: ${player.gender}, 荣誉忍阶: ${player.official_rank}, 出身: ${player.background}, 天赋: ${(player.talents || []).join(', ') || '未设定'}, 查克拉属性: ${playerNature}。${customLines ? `\n玩家自定义设定如下，请在后续剧情中尊重这些设定，不要随意否定，但可以根据世界观给出代价和限制:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
+          startPrompt = `[开局请求] 新角色已创建。角色名: ${state['玩家·姓名'] || '忍者'}, 性别: ${state['玩家·性别']}, 忍阶: ${state['玩家·忍阶']}, 出身: ${state['玩家·出身']}, 查克拉属性: ${playerNature}。${customLines ? `\n必须执行的玩家开局契约:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
 
 【对主模型的强制指令】：
 请严格遵循【沉浸叙事铁律】，正文中绝对禁止出现任何数字、数值、符号。
@@ -260,7 +225,7 @@ class NarutoRPGApp {
 完成初始化后，正常输出变动的标签。`;
         } else {
           // No secondary updater — main model must output variables
-          startPrompt = `[系统指令] 新角色已创建。角色名: ${player.name || '忍者'}, 性别: ${player.gender}, 荣誉忍阶: ${player.official_rank}, 出身: ${player.background}, 天赋: ${(player.talents || []).join(', ') || '未设定'}, 查克拉属性: ${playerNature}。${customLines ? `\n玩家自定义设定如下，请在后续剧情中尊重这些设定，不要随意否定，但可以根据世界观给出代价和限制:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
+          startPrompt = `[开局请求] 新角色已创建。角色名: ${state['玩家·姓名'] || '忍者'}, 性别: ${state['玩家·性别']}, 忍阶: ${state['玩家·忍阶']}, 出身: ${state['玩家·出身']}, 查克拉属性: ${playerNature}。${customLines ? `\n必须执行的玩家开局契约:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
 【最高优先级系统任务：角色深度初始化】
 上述属性和选择均为用户选择，请你严格按照上述属性生成变量，另外【绝对不可以】在正文中直接提到这些具体的属性值、选择项或天赋名，应将其化用为具体的行动和剧情细节。
 这是开局的唯一一次全量状态与属性初始化。请你作为专业的 DM，使用对应的 XML 标签为该角色进行**深度的初始构建**。

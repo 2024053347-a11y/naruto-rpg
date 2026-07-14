@@ -175,6 +175,12 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
   },
 
   buildContext({ query = '', state = {}, memory = {}, maxEntries = 8, budget = 5600 } = {}) {
+    // 增量检测: 场景未变时复用上次结果,跳过搜索+格式化开销
+    const fp = this._sceneFingerprint(state, memory);
+    if (this._sceneCacheKey === fp && this._sceneCacheOutput !== null) {
+      return this._sceneCacheOutput;
+    }
+    this._sceneCacheKey = fp;
     const searchText = this._buildSearchText(query, state, memory);
     const baseline = this._getBaselineEntries(state, searchText);
     const eraFacts = this._getEraSensitiveFacts(state, searchText);
@@ -209,9 +215,9 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       if (selected.length >= maxEntries) break;
     }
 
-    if (!selected.length) return '';
+    if (!selected.length) { this._sceneCacheOutput = ''; return ''; }
     const timelineLabel = this._currentTimelineLabel(state);
-    return [
+    this._sceneCacheOutput = [
       `[世界书检索结果 - 分层注入，必须优先采用]`,
       selected.join('\n\n'),
       `[世界书使用规则]`,
@@ -221,6 +227,7 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       `- 与玩家记忆、任务、当前位置冲突时，优先遵守动态状态。`,
       `- 回复中的地点、NPC年龄/状态、组织公开程度必须与上述条目保持一致。`
     ].join('\n');
+    return this._sceneCacheOutput;
   },
 
   matchAndGetContent(text, maxResults = 3) {
@@ -278,6 +285,18 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
   invalidateCache() {
     this._searchCache = null;
     this._searchCacheKey = null;
+    this._sceneCacheKey = null;
+    this._sceneCacheOutput = null;
+  },
+
+  _sceneFingerprint(state, memory) {
+    const loc = state['世界·地点'] || '';
+    const rels = state._relationships || {};
+    const names = Object.keys(rels).sort().join(',');
+    const missions = state._missions || {};
+    const activeTitles = Object.values(missions.active || {}).map(m => m.title || '').sort().join(',');
+    const memBrief = (memory?.recent_summary || '').slice(-100);
+    return `${loc}|${names}|${activeTitles}|${memBrief}`;
   },
 
   _cacheKey(query, state, memory) {
@@ -358,6 +377,8 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     // 自动添加所有“蓝灯（常驻）”条目
     const all = this.allEntries;
     for (const entry of all) {
+      // 玩家开局契约属于当前存档；旧版全局“玩家人设”不能污染其他角色。
+      if (entry.title === '玩家人设' && state._opening_contract) continue;
       if (entry.isAlwaysOn) {
         add(entry);
       }

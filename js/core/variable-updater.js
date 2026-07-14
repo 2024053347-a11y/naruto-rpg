@@ -74,7 +74,18 @@ function publishTrace(messages, { userInput, presetName, generationOptions }) {
   eventBus.emit('debug:variable-updater-prompt-trace', trace);
 }
 
-export async function runVariableUpdater({ mainConfig, userInput, enrichedInput, state, narrativeResponse, compactState }) {
+export async function runVariableUpdater({
+  mainConfig,
+  userInput,
+  enrichedInput,
+  state,
+  narrativeResponse,
+  compactState,
+  openingContract = '',
+  memoryContext = '',
+  knowledgeContext = '',
+  onClient
+}) {
   const variableConfig = mainConfig?.variableUpdater;
   if (!variableConfig?.enabled) return null;
 
@@ -90,9 +101,17 @@ export async function runVariableUpdater({ mainConfig, userInput, enrichedInput,
     userInput,
     enrichedInput,
     narrativeResponse,
-    breakthroughInstruction: buildBreakthroughInstruction(state)
+    breakthroughInstruction: buildBreakthroughInstruction(state),
+    memoryContext,
+    knowledgeContext
   });
   if (!messages.length) throw new Error('变量更新预设没有启用的有效条目');
+  const runtimeContext = [
+    openingContract,
+    memoryContext ? `[记忆摘要]\n${memoryContext}` : '',
+    knowledgeContext
+  ].filter(Boolean).join('\n\n');
+  if (runtimeContext) messages.unshift({ role: 'system', content: runtimeContext });
 
   const generationOptions = {
     temperature: Number.isFinite(Number(variableConfig.temperature)) ? Number(variableConfig.temperature) : 0.9,
@@ -102,8 +121,11 @@ export async function runVariableUpdater({ mainConfig, userInput, enrichedInput,
 
   try {
     const client = new AIClient();
+    onClient?.(client);
     client.configure(updaterConfig);
-    const variableTags = await client.chat(messages, generationOptions);
+    const variableTags = variableConfig.streaming !== false
+      ? await client.chatStream(messages, generationOptions, () => {})
+      : await client.chat(messages, generationOptions);
     if (!variableTags || variableTags.trim().length < 20) {
       throw new Error(`变量更新模型返回内容过短（${variableTags?.length || 0}字符），疑似空回或截断`);
     }
@@ -116,5 +138,7 @@ export async function runVariableUpdater({ mainConfig, userInput, enrichedInput,
     console.warn('[VariableUpdater] 更新失败:', error.message);
     eventBus.emit('pipeline:warning', { warning: `变量更新失败: ${error.message}` });
     throw error;
+  } finally {
+    onClient?.(null);
   }
 }

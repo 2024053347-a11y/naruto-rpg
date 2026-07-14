@@ -1,7 +1,7 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 
-const HISTORY_MAX = 10;
+const HISTORY_MAX = 30;
 const THOUGHTS_MAX = 5;
 
 class RelationshipSystem {
@@ -54,6 +54,10 @@ class RelationshipSystem {
       if (!current.history.length || current.history[0].summary !== summaryStr) {
         const entry = { turn, time: now, summary: summaryStr };
         current.history = [entry, ...current.history].slice(0, HISTORY_MAX);
+      }
+      // 置顶角色互动计数
+      if (current.pinned) {
+        current.summary_turn_counter = (current.summary_turn_counter || 0) + 1;
       }
     }
 
@@ -227,7 +231,10 @@ class RelationshipSystem {
       tags: Array.isArray(value.tags) ? value.tags : [],
       known_secrets: Array.isArray(value.known_secrets) ? value.known_secrets : [],
       promises: Array.isArray(value.promises) ? value.promises : [],
-      debts: Array.isArray(value.debts) ? value.debts : []
+      debts: Array.isArray(value.debts) ? value.debts : [],
+      summary_turn_counter: Number(value.summary_turn_counter) || 0,
+      summaries: Array.isArray(value.summaries) ? value.summaries : [],
+      grand_summary: value.grand_summary || ''
     };
   }
 }

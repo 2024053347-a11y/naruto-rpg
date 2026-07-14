@@ -83,7 +83,8 @@ class AppShell {
         <span id="status-time">木叶四十八年</span><span class="sep"></span>
         <span id="status-weather">晴</span><span class="sep"></span>
         <span id="status-turn">第 1 回合</span><span class="sep"></span>
-        <span id="status-cache" title="缓存命中率" style="cursor:default;">--</span>
+        <span id="status-cache" title="缓存命中率" style="cursor:default;">--</span><span class="sep"></span>
+        <span id="status-version" title="当前版本">v</span>
       </footer>
     `;
 
@@ -233,6 +234,8 @@ class AppShell {
     eventBus.on('pipeline:processing', () => {
       this._turnUpdates = [];
       this._captureUpdates = true;
+      this._agentStreamAgent = null;
+      this._agentStreamText = '';
       this._setProcessing(true);
       if (getAgentConfig().enabled) {
         this._showAgentProgress();
@@ -241,6 +244,20 @@ class AppShell {
 
     eventBus.on('pipeline:chunk', ({ response }) => {
       this._updateStreaming(instructionParser.cleanupPartialResponse(response));
+    });
+
+    // Agent 模式：仅 writer/writer-polish 阶段的流式片段作为正文实时显示
+    // （outline/critic 等中间阶段是 JSON，不进正文）
+    eventBus.on('agent:stream', ({ agent, chunk }) => {
+      if (agent !== 'writer' && agent !== 'writer-polish') return;
+      if (!chunk) return;
+      // writer-polish 会重写正文，切换阶段时重置累积
+      if (this._agentStreamAgent !== agent) {
+        this._agentStreamAgent = agent;
+        this._agentStreamText = '';
+      }
+      this._agentStreamText += chunk;
+      this._updateStreaming(instructionParser.cleanupPartialResponse(this._agentStreamText));
     });
 
     eventBus.on('pipeline:cancelled', ({ partialResponse }) => {
@@ -436,9 +453,18 @@ class AppShell {
 
     eventBus.on('equipment:equipped', ({ slot, name }) => {
       this._showToast(`装备: ${name}`);
+      this._addPendingAction(`装备了 ${name}`);
     });
     eventBus.on('equipment:unequipped', ({ name }) => {
       this._showToast(`卸下: ${name}`);
+      this._addPendingAction(`卸下了 ${name}`);
+    });
+    eventBus.on('equipment:used', ({ name, effect }) => {
+      this._showToast(`使用: ${name}`);
+      let effectText = '';
+      if (effect.heal) effectText += `恢复${effect.heal}点体力 `;
+      if (effect.chakra) effectText += `恢复${effect.chakra}点查克拉 `;
+      this._addPendingAction(`使用了 ${name}${effectText ? `，${effectText}` : ''}`);
     });
 
     eventBus.on('mission:added', (mission) => {
@@ -456,16 +482,38 @@ class AppShell {
     });
   }
 
+  _addPendingAction(actionText) {
+    if (!this._pendingActions) this._pendingActions = [];
+    this._pendingActions.push(actionText);
+    const textarea = this.element.querySelector('#chat-input');
+    if (textarea && textarea.value.trim() === '') {
+      textarea.placeholder = `(已准备 ${this._pendingActions.length} 个动作，输入指令或直接按回车执行)`;
+    }
+  }
+
   _sendMessage() {
     if (this._isProcessing) return;
     const textarea = this.element.querySelector('#chat-input');
     const text = textarea.value.trim();
-    if (!text) return;
+    if (!text && !(this._pendingActions && this._pendingActions.length > 0)) return;
     textarea.value = '';
+    textarea.placeholder = '提笔写下你的决断...';
     this._resizeInput();
-    this._addToRecentInputs(text);
-    this._addUserMessage(text);
-    eventBus.emit('user:input', text);
+
+    let finalText = text;
+    let displayMsg = text;
+    if (this._pendingActions && this._pendingActions.length > 0) {
+      const actions = this._pendingActions.join('；');
+      finalText = text ? `[系统：玩家${actions}]\n${text}` : `[系统：玩家${actions}]`;
+      displayMsg = text ? `(系统动作)\n${text}` : `(系统动作已发送)`;
+      this._pendingActions = [];
+    }
+
+    if (text) {
+      this._addToRecentInputs(text);
+    }
+    this._addUserMessage(displayMsg);
+    eventBus.emit('user:input', finalText);
     this._recentInputIdx = -1;
   }
 
@@ -610,7 +658,7 @@ class AppShell {
     div.className = 'chat-message chat-message--ai';
     div.innerHTML = `<div class="chat-content">${this._renderMarkdown(text)}</div>`;
     msgs.appendChild(div);
-    
+
     // Add combat arena if active and setting is enabled
     const combat = stateManager.getSub('_combat');
     const tacticalCombat = stateManager.getSub('_ui').settings.tacticalCombat;
@@ -642,7 +690,7 @@ class AppShell {
     if (!this._streamingEl) {
       const msgs = this.element.querySelector('#chat-messages');
       // Single page paradigm: Clear the "正在结印..." system message before streaming
-      msgs.innerHTML = ''; 
+      msgs.innerHTML = '';
       this._streamingEl = document.createElement('div');
       this._streamingEl.className = 'chat-message chat-message--ai is-streaming';
       this._streamingEl.innerHTML = '<div class="chat-content"></div><span class="typing-cursor"></span>';
@@ -810,7 +858,7 @@ class AppShell {
       const label = this._beautifyVarKey(k);
       let curVal = stateManager.get(k);
       if (curVal === undefined) curVal = u.value; // Fallback for synthetic keys
-      
+
       const isNumeric = typeof curVal === 'number';
 
       let deltaHtml = '';
@@ -867,7 +915,7 @@ class AppShell {
       const rels = stateManager.getSub('_relationships') || {};
       const npcData = rels[npcName];
       if (!npcData) return;
-      
+
       const displayVal = JSON.stringify(npcData, null, 2);
       const editHtml = document.createElement('div');
       editHtml.className = 'vu-edit-inline';
@@ -880,7 +928,7 @@ class AppShell {
         </div>
       `;
       row.appendChild(editHtml);
-      
+
       const save = () => {
         try {
           const parsed = JSON.parse(editHtml.querySelector('textarea').value);
@@ -1104,6 +1152,14 @@ class AppShell {
     }
     if (weather) weather.textContent = stateManager.get('世界·天气') || '晴';
     if (turn) turn.textContent = '第 ' + (Number(stateManager.get('系统·回合数')) || 1) + ' 回合';
+    const ver = this.element.querySelector('#status-version');
+    if (ver && !ver.textContent.includes('.')) {
+      // 从缓存的版本号读取，或使用 script src 上的 ?v= 参数
+      const scriptEl = document.querySelector('script[src*="app.js?v="]');
+      const m = scriptEl?.src.match(/v=(\d+)/);
+      ver.textContent = 'v' + (m ? m[1] : 'dev');
+      ver.title = '当前版本';
+    }
   }
 
   _updateDicePool(_values) { /* removed from status bar */ }
@@ -1141,7 +1197,7 @@ class AppShell {
         dice = parts[0].trim();
         result = parts[1].trim();
       }
-      
+
       let resClass = 'default';
       if (result.includes('天命')) resClass = 'epic';
       else if (result.includes('瞬身')) resClass = 'success';
@@ -1184,7 +1240,7 @@ class AppShell {
     html = html.replace(/（([^）]+)）/g, '<span class="text-thought">（$1）</span>');
     html = html.replace(/『([^』]+)』/g, '<span class="text-thought">『$1』</span>');
     html = html.replace(/~([^~]+)~/g, '<span class="text-thought">~$1~</span>');
-    
+
     html = html.replace(/\n\n+/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
     html = '<p>' + html + '</p>';
@@ -1331,7 +1387,7 @@ class AppShell {
         rfs.call(el).then(() => {
           document.body.classList.add('immersive-fullscreen');
           this._closeMobileDrawers();
-          
+
           const sidebar = this.element.querySelector('#app-sidebar');
           if (sidebar && !sidebar.classList.contains('app-sidebar--collapsed')) {
             this._toggleSidebar();
@@ -1460,7 +1516,7 @@ class AppShell {
     const sidebar = this.element.querySelector('#app-sidebar');
     const timelineBtn = this.element.querySelector('#btn-timeline');
     const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
-    
+
     (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.toggle('is-mobile-view', isMobile);
 
     if (isMobile) {
@@ -1650,4 +1706,5 @@ class AppShell {
     msgs.appendChild(div);
     this._scroll();
   }
-}export const appShell = new AppShell();
+}
+export const appShell = new AppShell();

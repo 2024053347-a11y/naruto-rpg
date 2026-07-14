@@ -88,7 +88,7 @@ class TimelineSystem {
     return node;
   }
 
-  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [] }) {
+  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null }) {
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     const activeBranch = meta.active_branch;
@@ -99,7 +99,7 @@ class TimelineSystem {
       const snapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, 'branch_main');
       const cleanAiResponse = (aiResponse || '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]*>/g, '').trim();
       const cleanPlayerInput = (playerInput || '').replace(/<[^>]*>/g, '').trim();
-      const summary = truncate(cleanAiResponse || cleanPlayerInput, 200);
+      const summary = truncate(memorySummary || cleanAiResponse || cleanPlayerInput, 200);
       const delta = this._extractChatDelta(chatHistory);
       const node = {
         id: nodeId, parent_id: null, children_ids: [], branch_id: 'branch_main',
@@ -142,7 +142,7 @@ class TimelineSystem {
     const snapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, branchId);
     const cleanAiResponse = (aiResponse || '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]*>/g, '').trim();
     const cleanPlayerInput = (playerInput || '').replace(/<[^>]*>/g, '').trim();
-    const summary = truncate(cleanPlayerInput || cleanAiResponse, 60);
+    const summary = truncate(memorySummary || cleanPlayerInput || cleanAiResponse, 200);
     const delta = this._extractChatDelta(chatHistory);
 
     const node = {

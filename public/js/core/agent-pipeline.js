@@ -290,6 +290,17 @@ class AgentPipeline {
   async _reviewDraft(state, draft, isFullMode) {
     const agents = [
       {
+        type: 'critic-character',
+        key: 'critic-contract',
+        params: {
+          state,
+          taskPrompt: '请审查正文是否违反玩家开局契约、擅自改写玩家人设，或让NPC无故知道玩家秘密。所有冲突都按 error 报告，并给出可直接执行的改写建议。',
+          extraContext: { draft },
+          options: { temperature: 0.2, max_tokens: 1024 },
+          onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'critic-contract', chunk })
+        }
+      },
+      {
         type: 'critic-style',
         key: 'critic-style',
         params: {
@@ -333,6 +344,15 @@ class AgentPipeline {
     for (const [type, result] of draftReviews) {
       if (result.success && result.data?.suggestions) {
         suggestions.push(...result.data.suggestions.map(s => ({ ...s, from: type })));
+      }
+      if (result.success && result.data?.issues) {
+        suggestions.push(...result.data.issues.map(issue => ({
+          location: issue.location || (issue.beatId ? `Beat ${issue.beatId}` : '正文相关段落'),
+          type: 'opening_contract',
+          description: issue.description || issue.rule || '违反玩家开局契约',
+          suggestion: issue.suggestion || '按玩家开局契约重写冲突内容',
+          from: type
+        })));
       }
     }
     if (!suggestions.length) return draft;
@@ -402,7 +422,14 @@ class AgentPipeline {
 
   _buildCharacterTaskPrompt(npcName, state, outline) {
     const rel = state._relationships?.[npcName];
-    const npcNotes = state._memory?.npc_notes?.[npcName] || '';
+    const rawNpcNotes = state._memory?.npc_notes;
+    const npcNotes = typeof rawNpcNotes === 'string'
+      ? rawNpcNotes.split('\n')
+          .filter(line => line.startsWith(`${npcName}: `))
+          .slice(-3)
+          .map(line => line.slice(npcName.length + 2))
+          .join(' | ')
+      : (rawNpcNotes?.[npcName] || '');
     const charMemory = state._agent_memories?.[npcName];
 
     let prompt = `你现在是「${npcName}」。\n`;

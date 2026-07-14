@@ -38,7 +38,7 @@ export const VAR_SCHEMA = {
   '进度·防御熟练度':     { type: 'number',  default: 0,    min: 0, max: 100, desc: '防御总熟练度' },
   '进度·已完成任务':     { type: 'number',  default: 0,    min: 0,           desc: '已完成任务数' },
    '进度·突破待处理':     { type: 'number',  default: 0,    min: 0,           desc: '待突破次数(等级突破)' },
-  '进度·金钱':          { type: 'number',  default: 500,  min: 0, max: 999999, desc: '金钱(両)' },
+  '进度·金钱':          { type: 'number',  default: 500,  min: 0, desc: '金钱(両)' },
   '进度·称号':          { type: 'string',  default: '',        desc: '称号(，分隔)' },
   '进度·成就':          { type: 'string',  default: '',        desc: '成就(，分隔)' },
 
@@ -56,7 +56,7 @@ export const VAR_SCHEMA = {
 
 export const VAR_PATTERNS = [
   // 技能: 名称可含 · (如 火遁·豪火球)，字段必须是已知后缀
-  { pattern: /^技能·(?:忍术|体术|幻术|支援)·(.+)·(名称|等级|属性|消耗|威力|熟练度|描述|说明)$/, type: 'mixed', desc: '技能数据(数值字段自动转number)', _nameIdx: 1, _fieldIdx: 2 },
+  { pattern: /^技能·(?:忍术|体术|幻术|支援)·(.+)·(名称|等级|属性|消耗|威力|熟练度|描述|说明|类型)$/, type: 'mixed', desc: '技能数据(数值字段自动转number)', _nameIdx: 1, _fieldIdx: 2 },
   { pattern: /^技能·血继限界·(.+)·(.+)$/,                                                    type: 'mixed', desc: '血继限界子字段', _nameIdx: 1, _fieldIdx: 2 },
   { pattern: /^技能·天赋·(.+)·(名称|等级|描述|说明|熟练度)$/,                                      type: 'mixed', desc: '天赋数据', _nameIdx: 1, _fieldIdx: 2 },
   { pattern: /^物品·(?:道具|消耗品|武器|防具|装备|关键|忍具|素材|食物|卷轴|其他)·(.+)·(数量|品质|描述|说明)$/, type: 'mixed', desc: '物品数据(数量转number)', _nameIdx: 1, _fieldIdx: 2 },
@@ -306,7 +306,7 @@ export function getBriefPromptRef() {
   for (let i = 0; i < groups.length; i++) {
     lines.push(`${labels[i]}: ${groups[i].join(', ')}`);
   }
-  lines.push('技能: 技能·(忍术|体术|幻术|支援)·技能名·(名称|等级|属性|消耗|威力|熟练度|描述) | 技能·血继限界·血继名·子字段 | 技能·天赋·天赋名·(名称|描述|熟练度)');
+  lines.push('技能: 技能·(忍术|体术|幻术|支援)·技能名·(名称|等级|属性|消耗|威力|熟练度|描述|类型) | 技能·血继限界·血继名·子字段 | 技能·天赋·天赋名·(名称|描述|熟练度)');
   lines.push('物品: 物品·(道具|消耗品|武器|防具)·物品名·(数量|品质|描述) | 物品·已装备·(武器|防具|饰品1|饰品2)');
   lines.push('声望: 进度·声望·村名');
   lines.push('系统元数据: 系统·(当前节点|当前分支)');

@@ -1,10 +1,20 @@
+const escapeHtml = (value) => String(value ?? '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+const messageHtml = (value) => escapeHtml(value).replace(/\r?\n/g, '<br>');
+
 class GameModal extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }
 
-  show({ title, content, buttons = [] }) {
+  show({ title, content, buttons = [], onDismiss = null }) {
+    this._onDismiss = onDismiss;
     this.shadowRoot.innerHTML = `
       <style>
         :host { display: block; color: var(--text-primary, #e8e4d9); font-family: 'Noto Sans SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, sans-serif; }
@@ -86,9 +96,9 @@ class GameModal extends HTMLElement {
       </style>
       <div class="overlay" id="mo">
         <div class="modal">
-          <div class="title">${title||''}</div>
+          <div class="title">${escapeHtml(title)}</div>
           <div class="body">${content||''}</div>
-          <div class="btns">${buttons.map((b,i)=>`<button class="btn${b.primary?' btn-p':''}" data-idx="${i}">${b.label}</button>`).join('')}</div>
+          <div class="btns">${buttons.map((b,i)=>`<button class="btn${b.primary?' btn-p':''}" data-idx="${i}">${escapeHtml(b.label)}</button>`).join('')}</div>
         </div>
       </div>
     `;
@@ -106,19 +116,28 @@ class GameModal extends HTMLElement {
 
   close() {
     document.removeEventListener('keydown', this._onKeyDown);
+    const onDismiss = this._onDismiss;
+    this._onDismiss = null;
     this.shadowRoot.innerHTML = '';
     this.remove();
+    onDismiss?.();
   }
 
   static confirm({ title, message, okLabel = '确定', cancelLabel = '取消' }) {
     return new Promise(resolve => {
       const m = new GameModal();
+      let settled = false;
+      const settle = (value) => {
+        if (settled) return;
+        settled = true;
+        resolve(value);
+      };
       (document.getElementById('app') || document.body).appendChild(m);
       m.show({
-        title, content: `<p>${message}</p>`,
+        title, content: `<p>${messageHtml(message)}</p>`, onDismiss: () => settle(false),
         buttons: [
-          { label: cancelLabel, onClick: () => resolve(false) },
-          { label: okLabel, primary: true, onClick: () => resolve(true) }
+          { label: cancelLabel, onClick: () => settle(false) },
+          { label: okLabel, primary: true, onClick: () => settle(true) }
         ]
       });
     });
@@ -127,11 +146,17 @@ class GameModal extends HTMLElement {
   static alert({ title, message, okLabel = '确定' }) {
     return new Promise(resolve => {
       const m = new GameModal();
+      let settled = false;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
+        resolve(true);
+      };
       (document.getElementById('app') || document.body).appendChild(m);
       m.show({
-        title, content: `<p>${message}</p>`,
+        title, content: `<p>${messageHtml(message)}</p>`, onDismiss: settle,
         buttons: [
-          { label: okLabel, primary: true, onClick: () => resolve(true) }
+          { label: okLabel, primary: true, onClick: settle }
         ]
       });
     });
@@ -140,17 +165,27 @@ class GameModal extends HTMLElement {
   static prompt({ title, message = '', value = '', placeholder = '', okLabel = '确定', cancelLabel = '取消', multiline = false, rows = 6 }) {
     return new Promise(resolve => {
       const m = new GameModal();
+      let settled = false;
+      const settle = (result) => {
+        if (settled) return;
+        settled = true;
+        resolve(result);
+      };
       (document.getElementById('app') || document.body).appendChild(m);
       const inputId = 'gm-input';
+      const safeValue = escapeHtml(value);
+      const safePlaceholder = escapeHtml(placeholder);
+      const safeRows = Math.min(30, Math.max(1, Number(rows) || 6));
       const inputHtml = multiline
-        ? `<textarea id="${inputId}" rows="${rows}" placeholder="${placeholder}" style="width:100%;min-height:120px;resize:vertical;padding:10px 12px;background:rgba(7,10,14,0.6);border:1px solid rgba(232,228,217,0.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font-family:'JetBrains Mono','Fira Code',monospace;font-size:12px;line-height:1.6;outline:none;">${value}</textarea>`
-        : `<input id="${inputId}" type="text" value="${value}" placeholder="${placeholder}" style="width:100%;padding:10px 12px;background:rgba(7,10,14,0.6);border:1px solid rgba(232,228,217,0.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font-family:inherit;font-size:13px;outline:none;" />`;
+        ? `<textarea id="${inputId}" rows="${safeRows}" placeholder="${safePlaceholder}" style="width:100%;min-height:120px;resize:vertical;padding:10px 12px;background:rgba(7,10,14,0.6);border:1px solid rgba(232,228,217,0.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font-family:'JetBrains Mono','Fira Code',monospace;font-size:12px;line-height:1.6;outline:none;">${safeValue}</textarea>`
+        : `<input id="${inputId}" type="text" value="${safeValue}" placeholder="${safePlaceholder}" style="width:100%;padding:10px 12px;background:rgba(7,10,14,0.6);border:1px solid rgba(232,228,217,0.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font-family:inherit;font-size:13px;outline:none;" />`;
       m.show({
         title,
-        content: `<p style="margin:0 0 10px;">${message}</p>${inputHtml}`,
+        content: `<p style="margin:0 0 10px;">${messageHtml(message)}</p>${inputHtml}`,
+        onDismiss: () => settle(null),
         buttons: [
-          { label: cancelLabel, onClick: () => resolve(null) },
-          { label: okLabel, primary: true, onClick: () => resolve(m.shadowRoot.getElementById(inputId)?.value ?? null) }
+          { label: cancelLabel, onClick: () => settle(null) },
+          { label: okLabel, primary: true, onClick: () => settle(m.shadowRoot.getElementById(inputId)?.value ?? null) }
         ]
       });
       requestAnimationFrame(() => {

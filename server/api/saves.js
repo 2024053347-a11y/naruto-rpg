@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, json } from 'express';
 import zlib from 'node:zlib';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
@@ -14,6 +14,8 @@ const router = Router();
 
 // 所有存档路由均需要经过身份验证
 router.use(requireAuth);
+// 大请求体只在认证通过后解析，且与业务层存档上限保持一致
+router.use(json({ limit: `${config.saves.maxSizeMb + 1}mb` }));
 
 // 路径参数安全校验：只允许 UUID 和字母数字+连字符格式
 function validateSaveId(id) {
