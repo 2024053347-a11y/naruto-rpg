@@ -26,6 +26,12 @@ server/db/*.db
 server/db/*.db-journal
 server/db/*.db-wal
 
+# 本地发布脚本（包含服务器地址和部署路径，仅保留在本机）
+/deploy.sh
+/一键打包.bat
+/部署正式站.bat
+/部署测试站.bat
+
 # 隐私/临时文件
 *.png
 !img/*.png
