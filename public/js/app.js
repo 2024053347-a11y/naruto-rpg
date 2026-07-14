@@ -62,6 +62,7 @@ import './ui/api-config-form.js';
 import './ui/display-config-form.js';
 import './ui/worldbook-editor.js';
 import './ui/main-preset-editor.js';
+import './ui/variable-updater-preset-editor.js';
 import './ui/agent-progress.js';
 import './ui/map-modal.js';
 import SettingsPanel, { applyLocalSettings } from './ui/settings-panel.js';

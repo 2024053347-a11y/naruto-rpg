@@ -36,6 +36,8 @@ class AppShell {
         <div class="topbar-right" aria-label="界面切换">
           <button class="topbar-btn topbar-btn--panel" id="btn-panel" title="角色面板" aria-pressed="true">${icon('panel')}<span class="topbar-btn-label">面板</span></button>
           <span class="topbar-divider"></span>
+          <button class="topbar-btn topbar-btn--developer" id="btn-developer" title="提示词查看" aria-pressed="false">${icon('developer')}<span class="topbar-btn-label">提示词查看</span></button>
+          <span class="topbar-divider"></span>
           <button class="topbar-btn topbar-btn--timeline" id="btn-timeline" title="时间线" aria-pressed="false">${icon('timeline')}<span class="topbar-btn-label">时间线</span></button>
           <span class="topbar-divider"></span>
           <button class="topbar-btn topbar-btn--mobile" id="btn-mobile" title="手机端预览" aria-pressed="false">${icon('mobile')}<span class="topbar-btn-label">手机</span></button>
@@ -72,6 +74,7 @@ class AppShell {
         </main>
         <aside class="app-panel" id="app-panel">
           <info-panel id="info-panel"></info-panel>
+          <developer-panel id="developer-panel" style="display:none;"></developer-panel>
         </aside>
       </div>
 
@@ -107,6 +110,7 @@ class AppShell {
     textarea.addEventListener('input', () => this._resizeInput());
 
     this.element.querySelector('#btn-panel').addEventListener('click', () => this._togglePanel());
+    this.element.querySelector('#btn-developer').addEventListener('click', () => this._toggleDeveloperPanel());
     this.element.querySelector('#btn-timeline').addEventListener('click', () => this._toggleSidebar());
     this.element.querySelector('#btn-mobile').addEventListener('click', () => this._toggleMobileView());
     this.element.querySelector('#btn-zen').addEventListener('click', () => this._toggleZenMode());
@@ -1354,30 +1358,77 @@ class AppShell {
   }
 
   _togglePanel() {
+    this._toggleRightPanel('info');
+  }
+
+  async _toggleDeveloperPanel() {
+    if (!customElements.get('developer-panel')) {
+      try { await import('./developer-panel.js'); }
+      catch (e) { console.error('[DeveloperPanel] load failed:', e); this._showToast('提示词查看加载失败'); return; }
+    }
+    this._toggleRightPanel('developer');
+  }
+
+  _toggleRightPanel(mode) {
     const panel = this.element.querySelector('#app-panel');
-    const btn = this.element.querySelector('#btn-panel');
+    if (!panel) return;
     const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
-    let isOpen;
+    const currentMode = panel.dataset.mode || 'info';
+    const isOpen = isMobile ? panel.classList.contains('panel-open') : !panel.classList.contains('app-panel--collapsed');
+
+    if (isOpen && currentMode === mode) {
+      this._closeRightPanel();
+      return;
+    }
+
+    this._setRightPanelMode(mode);
+    this._openRightPanel(isMobile);
+  }
+
+  _setRightPanelMode(mode) {
+    const panel = this.element?.querySelector('#app-panel');
+    if (!panel) return;
+    panel.dataset.mode = mode;
+    const info = panel.querySelector('#info-panel');
+    const dev = panel.querySelector('#developer-panel');
+    if (info) info.style.display = mode === 'developer' ? 'none' : '';
+    if (dev) dev.style.display = mode === 'developer' ? '' : 'none';
+    this._syncRightPanelButtons();
+  }
+
+  _openRightPanel(isMobile = window.matchMedia('(max-width: 768px)').matches) {
+    const panel = this.element?.querySelector('#app-panel');
+    if (!panel) return;
+    panel.classList.remove('app-panel--collapsed');
     if (isMobile) {
-      if (panel.classList.contains('panel-open')) {
-        panel.classList.remove('panel-open');
-        panel.classList.add('app-panel--collapsed');
-        isOpen = false;
-      } else {
-        panel.classList.remove('app-panel--collapsed');
-        panel.classList.add('panel-open');
-        isOpen = true;
-        const sidebar = this.element.querySelector('#app-sidebar');
-        const timelineBtn = this.element.querySelector('#btn-timeline');
-        sidebar?.classList.add('app-sidebar--collapsed');
-        sidebar?.setAttribute('aria-hidden', 'true');
-        timelineBtn?.setAttribute('aria-pressed', 'false');
-      }
+      panel.classList.add('panel-open');
+      const sidebar = this.element.querySelector('#app-sidebar');
+      const timelineBtn = this.element.querySelector('#btn-timeline');
+      sidebar?.classList.add('app-sidebar--collapsed');
+      sidebar?.setAttribute('aria-hidden', 'true');
+      timelineBtn?.setAttribute('aria-pressed', 'false');
       this._syncMobileScrim();
     } else {
-      isOpen = !panel.classList.toggle('app-panel--collapsed');
+      panel.classList.remove('panel-open');
     }
-    btn?.setAttribute('aria-pressed', String(isOpen));
+    this._syncRightPanelButtons();
+  }
+
+  _closeRightPanel() {
+    const panel = this.element?.querySelector('#app-panel');
+    if (!panel) return;
+    panel.classList.remove('panel-open');
+    panel.classList.add('app-panel--collapsed');
+    this._syncRightPanelButtons();
+    this._syncMobileScrim();
+  }
+
+  _syncRightPanelButtons() {
+    const panel = this.element?.querySelector('#app-panel');
+    const mode = panel?.dataset.mode || 'info';
+    const isOpen = Boolean(panel && (panel.classList.contains('panel-open') || !panel.classList.contains('app-panel--collapsed')));
+    this.element?.querySelector('#btn-panel')?.setAttribute('aria-pressed', String(isOpen && mode !== 'developer'));
+    this.element?.querySelector('#btn-developer')?.setAttribute('aria-pressed', String(isOpen && mode === 'developer'));
   }
 
   _toggleSidebar() {
@@ -1390,9 +1441,11 @@ class AppShell {
     if (isMobile && !isCollapsed) {
       const panel = this.element.querySelector('#app-panel');
       const panelBtn = this.element.querySelector('#btn-panel');
+      const developerBtn = this.element.querySelector('#btn-developer');
       panel?.classList.remove('panel-open');
       panel?.classList.add('app-panel--collapsed');
       panelBtn?.setAttribute('aria-pressed', 'false');
+      developerBtn?.setAttribute('aria-pressed', 'false');
     }
     this._syncMobileScrim();
   }
@@ -1400,7 +1453,6 @@ class AppShell {
   _syncResponsiveState() {
     if (!this.element) return;
     const panel = this.element.querySelector('#app-panel');
-    const panelBtn = this.element.querySelector('#btn-panel');
     const sidebar = this.element.querySelector('#app-sidebar');
     const timelineBtn = this.element.querySelector('#btn-timeline');
     const isMobile = window.matchMedia('(max-width: 768px)').matches || (this.element ? (this.element.closest('#app') || document.body) : document.body).classList.contains('is-mobile-forced');
@@ -1411,13 +1463,13 @@ class AppShell {
       if (panel && !panel.classList.contains('app-panel--collapsed')) {
         panel.classList.add('panel-open');
       }
-      panelBtn?.setAttribute('aria-pressed', String(panel?.classList.contains('panel-open')));
+      this._syncRightPanelButtons();
     } else if (panel) {
       if (panel.classList.contains('panel-open')) {
         panel.classList.remove('app-panel--collapsed');
       }
       panel.classList.remove('panel-open');
-      panelBtn?.setAttribute('aria-pressed', String(!panel.classList.contains('app-panel--collapsed')));
+      this._syncRightPanelButtons();
     }
 
     timelineBtn?.setAttribute('aria-pressed', String(!sidebar?.classList.contains('app-sidebar--collapsed')));
@@ -1441,12 +1493,14 @@ class AppShell {
     const panel = this.element?.querySelector('#app-panel');
     const sidebar = this.element?.querySelector('#app-sidebar');
     const panelBtn = this.element?.querySelector('#btn-panel');
+    const developerBtn = this.element?.querySelector('#btn-developer');
     const timelineBtn = this.element?.querySelector('#btn-timeline');
     panel?.classList.remove('panel-open');
     panel?.classList.add('app-panel--collapsed');
     sidebar?.classList.add('app-sidebar--collapsed');
     sidebar?.setAttribute('aria-hidden', 'true');
     panelBtn?.setAttribute('aria-pressed', 'false');
+    developerBtn?.setAttribute('aria-pressed', 'false');
     timelineBtn?.setAttribute('aria-pressed', 'false');
     this._syncMobileScrim();
   }

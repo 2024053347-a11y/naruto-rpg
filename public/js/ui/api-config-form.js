@@ -113,38 +113,6 @@ export class ApiConfigForm extends HTMLElement {
           <div class="settings-hint" style="margin-top: -4px;">对于某些不支持流式传输的中转代理 API，开启此项可避免报错。</div>
         </div>
         
-        ${this._showAdvanced ? `
-        <div class="settings-subcard">
-          <label class="settings-check"><input type="checkbox" id="settings-var-enabled" ${config.variableUpdater?.enabled ? 'checked' : ''} /> 启用二次变量更新模型</label>
-          <div class="settings-hint">主模型负责叙事；二次模型在后台读取本回合内容，补充/修正变量、任务、关系和记忆标签。关闭时只解析主模型输出。</div>
-          <div class="settings-row">
-            <label for="settings-var-model">变量更新模型</label>
-            <div class="settings-model-row">
-              <input class="settings-input" id="settings-var-model" value="${this._escAttr(config.variableUpdater?.model || config.model || '')}" placeholder="点击读取模型，或留空使用主模型" autocomplete="off" autocapitalize="off" spellcheck="false" />
-              <button class="settings-fetch" type="button" id="settings-fetch-var-models">读取模型</button>
-            </div>
-            <div class="model-list-wrap" id="settings-var-model-list"></div>
-          </div>
-          <div class="settings-row">
-            <label for="settings-var-api-url">变量模型 API 地址</label>
-            <input class="settings-input" id="settings-var-api-url" value="${this._escAttr(config.variableUpdater?.apiUrl || config.apiUrl || '')}" placeholder="留空则使用主 API 地址" autocomplete="off" autocapitalize="off" spellcheck="false" />
-          </div>
-          <div class="settings-row">
-            <label for="settings-var-api-key">变量模型 API Key</label>
-            <input class="settings-input" id="settings-var-api-key" type="password" value="${this._escAttr(config.variableUpdater?.apiKey || '')}" placeholder="留空则使用主 API Key" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
-          </div>
-          <div class="settings-row">
-            <label for="settings-var-backend">变量模型类型</label>
-            <select class="settings-select" id="settings-var-backend">
-              ${this._option('inherit', '跟随主模型', config.variableUpdater?.backend || 'inherit')}
-              ${this._option('openai', 'OpenAI 兼容', config.variableUpdater?.backend || 'inherit')}
-              ${this._option('claude', 'Claude / Anthropic', config.variableUpdater?.backend || 'inherit')}
-              ${this._option('deepseek', 'DeepSeek', config.variableUpdater?.backend || 'inherit')}
-              ${this._option('custom', '自定义兼容', config.variableUpdater?.backend || 'inherit')}
-            </select>
-          </div>
-        </div>
-        ` : ''}
       </div>
     `;
   }
@@ -222,17 +190,6 @@ export class ApiConfigForm extends HTMLElement {
     mainInput?.addEventListener('focus', () => { if (mainList?.children.length) mainList.classList.add('open'); });
     mainInput?.addEventListener('blur', () => setTimeout(() => mainList?.classList.remove('open'), 200));
 
-    // ── Variable updater model ──
-    const varFetch = this.shadowRoot.querySelector('#settings-fetch-var-models');
-    const varInput = this.shadowRoot.querySelector('#settings-var-model');
-    const varList = this.shadowRoot.querySelector('#settings-var-model-list');
-    varFetch?.addEventListener('click', () => {
-      const apiUrl = this.shadowRoot.querySelector('#settings-var-api-url')?.value.trim() || undefined;
-      const apiKey = this.shadowRoot.querySelector('#settings-var-api-key')?.value.trim() || undefined;
-      doFetch(varFetch, varList, varInput, null, apiUrl, apiKey);
-    });
-    varInput?.addEventListener('focus', () => { if (varList?.children.length) varList.classList.add('open'); });
-    varInput?.addEventListener('blur', () => setTimeout(() => varList?.classList.remove('open'), 200));
   }
 
   getConfig(allowEmptyModel = false) {
@@ -258,22 +215,7 @@ export class ApiConfigForm extends HTMLElement {
     const disableStreaming = root.querySelector('#settings-disable-streaming')?.checked || false;
     const config = { apiUrl: finalApiUrl, apiKey, model, backend, disableStreaming };
 
-    if (this._showAdvanced) {
-      const varEnabled = root.querySelector('#settings-var-enabled')?.checked;
-      if (varEnabled) {
-        config.variableUpdater = {
-          enabled: true,
-          model: root.querySelector('#settings-var-model')?.value.trim() || model,
-          apiUrl: root.querySelector('#settings-var-api-url')?.value.trim() || finalApiUrl,
-          apiKey: root.querySelector('#settings-var-api-key')?.value.trim() || apiKey,
-          backend: root.querySelector('#settings-var-backend')?.value || 'inherit'
-        };
-      } else {
-        config.variableUpdater = { enabled: false };
-      }
-    } else {
-      config.variableUpdater = this._config.variableUpdater;
-    }
+    config.variableUpdater = this._config.variableUpdater;
     
     return config;
   }

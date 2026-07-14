@@ -5,6 +5,7 @@ import { settingsStyles } from '../../css/components/settings-panel.css.js';
 import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
+import { getVariableUpdaterPreset } from '../data/variable-updater-preset.js';
 
 const THEME_PRESETS = {
   konoha: { label: '木叶卷轴', textColor: '#e8e4d9', accentColor: '#eb613f', goldColor: '#c69c6d', backgroundColor: '#070a0e' },
@@ -80,6 +81,7 @@ class SettingsPanel extends HTMLElement {
   render() {
     const s = this._settings;
     const apiConfig = stateManager.getAPIConfig() || {};
+    const variablePreset = getVariableUpdaterPreset();
     this.shadowRoot.innerHTML = `
       <style>${settingsStyles}</style>
       <div class="backdrop" data-close="true">
@@ -93,6 +95,7 @@ class SettingsPanel extends HTMLElement {
             <aside class="sidebar">
               <button class="tab-btn active" data-target="tab-visual">视觉与环境</button>
               <button class="tab-btn" data-target="tab-agent">引擎与代理</button>
+              <button class="tab-btn" data-target="tab-variable">变量更新</button>
               <button class="tab-btn" data-target="tab-lore">世界书与预设</button>
               <button class="tab-btn" data-target="tab-audio">忍道音律</button>
               <button class="tab-btn" data-target="tab-system">系统与归档</button>
@@ -183,28 +186,55 @@ class SettingsPanel extends HTMLElement {
                      </div>
                    </div>
                 </section>
-                <section style="margin-top:24px;">
-                   <h3>二次变量更新模型</h3>
-                   <div style="background:#070a0e; border:1px solid rgba(235,97,63,0.2); border-radius:8px; padding:20px;">
-                     <p style="margin-top:0; margin-bottom:14px; font-size:12px; color:#a39f98; line-height:1.6;">
-                       主模型负责叙事，二次模型在后台读取本回合内容，自动补充/修正变量标签。<br>关闭时只解析主模型直接输出的 &lt;var&gt; 标签。</p>
-                     <div class="grid" style="grid-template-columns:auto 1fr; gap:10px 16px; align-items:center;">
-                       <label style="color:#e8e4d9;">启用二次变量更新</label>
-                       <input type="checkbox" name="varUpdaterEnabled" ${(apiConfig.variableUpdater?.enabled) ? 'checked' : ''}>
-                       <label style="color:#a39f98; font-size:11px;">变量模型 (留空=主模型)</label>
-                       <div style="display:flex;gap:8px;">
-                         <input type="text" name="varUpdaterModel" value="${apiConfig.variableUpdater?.model || ''}" placeholder="留空使用主模型" style="flex:1;background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.15); border-radius:4px; padding:4px 8px; font-size:12px;" list="settings-varup-datalist">
-                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="varUpdaterModel" style="white-space:nowrap;font-size:10px;">读取</button>
-                       </div>
-                       <datalist id="settings-varup-datalist"></datalist>
-                       <label style="color:#a39f98; font-size:11px;">API Key (留空=主Key)</label>
-                       <input type="password" name="varUpdaterApiKey" value="${apiConfig.variableUpdater?.apiKey || ''}" placeholder="留空使用主API Key" style="background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.15); border-radius:4px; padding:4px 8px; font-size:12px;">
-                     </div>
-                   </div>
-                </section>
               </div>
 
-              <!-- Tab 3: 世界书与预设 -->
+              <!-- Tab 3: 变量更新 -->
+              <div class="tab-pane" id="tab-variable">
+                <div class="pane-grid">
+                  <section>
+                    <h3>变量更新模型</h3>
+                    <p class="setting-note">与主叙事模型完全分离。留空的 API、Key、模型与后端会实时继承主模型配置。</p>
+                    <div class="grid variable-grid">
+                      <label>启用变量更新</label>
+                      <input type="checkbox" name="varUpdaterEnabled" ${apiConfig.variableUpdater?.enabled ? 'checked' : ''}>
+                      <label>后端类型</label>
+                      <select name="varUpdaterBackend">
+                        <option value="inherit">跟随主模型</option>
+                        <option value="openai">OpenAI 兼容</option>
+                        <option value="claude">Claude / Anthropic</option>
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="custom">自定义兼容</option>
+                      </select>
+                      <label>API 地址</label>
+                      <input type="text" name="varUpdaterApiUrl" value="${escAttr(apiConfig.variableUpdater?.apiUrl || '')}" placeholder="留空继承主 API 地址">
+                      <label>API Key</label>
+                      <input type="password" name="varUpdaterApiKey" value="${escAttr(apiConfig.variableUpdater?.apiKey || '')}" placeholder="留空继承主 API Key">
+                      <label>变量模型</label>
+                      <div class="inline-field">
+                        <input type="text" name="varUpdaterModel" value="${escAttr(apiConfig.variableUpdater?.model || '')}" placeholder="留空继承主模型">
+                        <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="varUpdaterModel">读取</button>
+                      </div>
+                      <label>Temperature</label>
+                      <input type="number" name="varUpdaterTemperature" min="0" max="2" step="0.05" value="${apiConfig.variableUpdater?.temperature ?? 0.9}">
+                      <label>Max Tokens</label>
+                      <input type="number" name="varUpdaterMaxTokens" min="256" max="32768" step="256" value="${apiConfig.variableUpdater?.maxTokens ?? 8192}">
+                      <label>超时（毫秒）</label>
+                      <input type="number" name="varUpdaterTimeout" min="0" step="1000" value="${apiConfig.variableUpdater?.timeoutMs ?? 120000}" title="0 表示不限制">
+                    </div>
+                  </section>
+                  <section>
+                    <h3>变量更新预设</h3>
+                    <div class="prompt-preset-card">
+                      <strong id="variable-preset-name">${escHtml(variablePreset.name || '未命名变量更新预设')}</strong>
+                      <span id="variable-preset-count">${variablePreset.entries?.length || 0} 个预设条目 · ${variablePreset.entries?.filter(entry => entry.enabled !== false).length || 0} 个已启用</span>
+                      <p>可查看并编辑真实 system/user role 链，支持保存、JSON 导入、JSON 导出、增删排序和恢复默认。运行时直接读取此预设，不再使用隐藏硬编码内容。</p>
+                      <button class="btn primary" type="button" data-action="open-variable-updater-preset-editor">编辑 / 导入 / 导出</button>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <!-- Tab 4: 世界书与预设 -->
               <div class="tab-pane" id="tab-lore">
                 <section style="margin-bottom: 32px;">
                    <h3>世界书管理 · 知识库</h3>
@@ -316,6 +346,7 @@ class SettingsPanel extends HTMLElement {
     this._set('fontPreset', s.fontPreset || this._inferFontPreset(s.fontFamily));
     if (localStorage.getItem('naruto_music_loop') !== null) this._set('musicLoop', this._getLoop());
     if (localStorage.getItem('naruto_music_shuffle') !== null) this._set('musicShuffle', this._getShuffle());
+    this._set('varUpdaterBackend', stateManager.getAPIConfig()?.variableUpdater?.backend || 'inherit');
   }
 
   _set(name, value) {
@@ -377,6 +408,13 @@ class SettingsPanel extends HTMLElement {
       return;
     }
 
+    if (action === 'open-variable-updater-preset-editor') {
+      const editor = document.createElement('variable-updater-preset-editor');
+      editor.addEventListener('preset-saved', () => this._refreshVariablePresetSummary(), { once: true });
+      (document.getElementById('app') || document.body).appendChild(editor);
+      return;
+    }
+
     if (action === 'open-worldbook-editor') {
       const editor = document.createElement('worldbook-editor');
       (document.getElementById('app') || document.body).appendChild(editor);
@@ -424,7 +462,14 @@ class SettingsPanel extends HTMLElement {
   async _fetchModelsFor(btn) {
     const targetName = btn?.dataset?.target;
     if (!targetName) return;
-    const apiConfig = stateManager.getAPIConfig() || {};
+    const mainConfig = stateManager.getAPIConfig() || {};
+    const apiConfig = targetName === 'varUpdaterModel' ? {
+      ...mainConfig,
+      ...(mainConfig.variableUpdater || {}),
+      backend: this._get('varUpdaterBackend') === 'inherit' ? mainConfig.backend : this._get('varUpdaterBackend'),
+      apiUrl: this._get('varUpdaterApiUrl') || mainConfig.apiUrl,
+      apiKey: this._get('varUpdaterApiKey') || mainConfig.apiKey
+    } : mainConfig;
     if (!apiConfig.apiUrl) {
       this._showToast('请先在契约卷轴中配置 API 地址');
       return;
@@ -486,7 +531,7 @@ class SettingsPanel extends HTMLElement {
     stateManager.update([{ key: '_ui.settings', op: '=', value: settings }]);
 
     this._saveAgentConfig();
-    this._saveVariableUpdaterConfig();
+    await this._saveVariableUpdaterConfig();
 
     try {
       await stateManager.saveUIPrefs();
@@ -516,14 +561,29 @@ class SettingsPanel extends HTMLElement {
     const enabled = root.querySelector('[name="varUpdaterEnabled"]')?.checked ?? false;
     const config = stateManager.getAPIConfig() || {};
     const model = (root.querySelector('[name="varUpdaterModel"]')?.value || '').trim();
+    const apiUrl = (root.querySelector('[name="varUpdaterApiUrl"]')?.value || '').trim();
     const apiKey = (root.querySelector('[name="varUpdaterApiKey"]')?.value || '').trim();
+    const temperature = Number(root.querySelector('[name="varUpdaterTemperature"]')?.value);
     config.variableUpdater = {
       ...config.variableUpdater,
       enabled,
-      model: model || config.variableUpdater?.model || config.model,
-      apiKey: apiKey || config.variableUpdater?.apiKey || config.apiKey,
+      backend: root.querySelector('[name="varUpdaterBackend"]')?.value || 'inherit',
+      apiUrl,
+      apiKey,
+      model,
+      temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : 0.9,
+      maxTokens: Math.max(256, Number(root.querySelector('[name="varUpdaterMaxTokens"]')?.value) || 8192),
+      timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0)
     };
     await stateManager.saveAPIConfig(config);
+  }
+
+  _refreshVariablePresetSummary() {
+    const preset = getVariableUpdaterPreset();
+    const name = this.shadowRoot.querySelector('#variable-preset-name');
+    const count = this.shadowRoot.querySelector('#variable-preset-count');
+    if (name) name.textContent = preset.name || '未命名变量更新预设';
+    if (count) count.textContent = `${preset.entries?.length || 0} 个预设条目 · ${preset.entries?.filter(entry => entry.enabled !== false).length || 0} 个已启用`;
   }
 
   async _reset() {
