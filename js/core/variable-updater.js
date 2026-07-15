@@ -5,6 +5,12 @@ import { getVariableUpdaterPreset, resolveVariableUpdaterPreset } from '../data/
 export const VARIABLE_UPDATER_TRACE_STORAGE_KEY = 'naruto_variable_updater_prompt_trace';
 const ALLOWED_TAGS = ['var', 'variable', 'var_thinking', 'variable_thinking', 'combat', 'mission', 'relationship', 'memory', 'event'];
 
+export function resolveVariableUpdaterTimeout(variableConfig = {}) {
+  if (variableConfig.timeoutMs === 0) return 999999999;
+  const parsed = Number(variableConfig.timeoutMs);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 120000;
+}
+
 function buildBreakthroughInstruction(state) {
   const pending = Number(state?.['进度·突破待处理']) || 0;
   if (pending <= 0) return '';
@@ -115,7 +121,8 @@ export async function runVariableUpdater({
 
   const generationOptions = {
     temperature: Number.isFinite(Number(variableConfig.temperature)) ? Number(variableConfig.temperature) : 0.9,
-    max_tokens: Math.max(256, Number(variableConfig.maxTokens) || 8192)
+    max_tokens: Math.max(256, Number(variableConfig.maxTokens) || 8192),
+    timeout: resolveVariableUpdaterTimeout(variableConfig)
   };
   publishTrace(messages, { userInput, presetName: preset.name || '未命名预设', generationOptions });
 

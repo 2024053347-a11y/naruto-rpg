@@ -1,6 +1,7 @@
 // 帮助文档和新手引导
 class HelpGuide {
   constructor() {
+    this._modalEscHandler = null;
     this._injectStyles();
     this._setupHelpButton();
   }
@@ -66,7 +67,7 @@ class HelpGuide {
         <div class="help-section">
           <h3>⚠️ 隐私提示</h3>
           <p style="color:#c7c2b8;line-height:1.6;">
-            API 密钥仅保存在你的浏览器本地，不会上传到任何服务器。
+            API 密钥仅持久化在你的浏览器本地；发起 AI 请求时会经本站无状态代理在内存中透传，但不会写入服务器数据库或日志。
             建议定期通过 <strong>导出存档</strong> 备份你的游戏数据。
           </p>
         </div>
@@ -208,16 +209,19 @@ class HelpGuide {
     modal.querySelector('.help-modal-overlay').addEventListener('click', () => this._closeModal());
 
     // ESC 关闭
-    const escHandler = (e) => {
+    this._modalEscHandler = (e) => {
       if (e.key === 'Escape') {
         this._closeModal();
-        document.removeEventListener('keydown', escHandler);
       }
     };
-    document.addEventListener('keydown', escHandler);
+    document.addEventListener('keydown', this._modalEscHandler);
   }
 
   _closeModal() {
+    if (this._modalEscHandler) {
+      document.removeEventListener('keydown', this._modalEscHandler);
+      this._modalEscHandler = null;
+    }
     const modal = document.getElementById('help-modal');
     if (modal) modal.remove();
   }

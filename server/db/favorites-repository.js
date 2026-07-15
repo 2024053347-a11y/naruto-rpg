@@ -49,8 +49,7 @@ export class FavoritesRepository {
 
   /**
    * 整体替换收藏列表。非数组入参静默忽略（沿用旧版语义）。
-   * 注意：这里截断保留「前 100 条」，而 add() 溢出时保留「后 100 条」——
-   * 两者不一致是历史行为，为保证兼容性而保留。
+   * 与 add() 一致：超过上限时保留最新的 100 条。
    * @param {string} userId
    * @param {Song[]} songs
    * @returns {Promise<void>}
@@ -58,7 +57,7 @@ export class FavoritesRepository {
   async replaceAll(userId, songs) {
     if (!Array.isArray(songs)) return;
     await this.#store.update((favs) => {
-      favs[userId] = songs.slice(0, MAX_FAVORITES_PER_USER);
+      favs[userId] = songs.slice(-MAX_FAVORITES_PER_USER);
       return { persist: true };
     });
   }

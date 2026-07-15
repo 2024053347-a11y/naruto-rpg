@@ -25,6 +25,7 @@ server/db/*.tmp
 server/db/*.db
 server/db/*.db-journal
 server/db/*.db-wal
+/server/data/
 
 # 本地发布脚本（包含服务器地址和部署路径，仅保留在本机）
 /deploy.sh

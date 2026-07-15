@@ -107,6 +107,9 @@ app.use((err, req, res, next) => {
   if (err?.type === 'entity.too.large') {
     return res.status(413).json({ error: '请求体超过允许的大小' });
   }
+  if (err?.type === 'entity.parse.failed' || (err instanceof SyntaxError && err?.status === 400)) {
+    return res.status(400).json({ error: '请求体不是有效的 JSON' });
+  }
   console.error('[SERVER ERROR]', err.stack || err.message || err);
   res.status(500).json({ error: '服务器内部错误，请稍后重试' });
 });

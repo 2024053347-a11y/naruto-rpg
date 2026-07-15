@@ -76,8 +76,11 @@ router.post('/', async (req, res) => {
   const { slot_name, save_data, preview_data } = req.body;
   const userId = req.user.id;
 
-  if (!slot_name || !save_data) {
-    return res.status(400).json({ error: '缺少存档名称或存档数据' });
+  if (typeof slot_name !== 'string' || !slot_name.trim()) {
+    return res.status(400).json({ error: '存档名称必须为非空字符串' });
+  }
+  if (save_data == null || typeof save_data !== 'object') {
+    return res.status(400).json({ error: '存档数据必须为 JSON 对象或数组' });
   }
 
   try {
@@ -101,10 +104,11 @@ router.post('/', async (req, res) => {
 
     // 4. 生成唯一 ID 并存入数据库
     const saveId = randomUUID();
+    const normalizedSlotName = slot_name.trim().substring(0, 50);
     await db.insertSave({
       id: saveId,
       user_id: userId,
-      slot_name: slot_name.substring(0, 50), // 截断名称防溢出
+      slot_name: normalizedSlotName,
       preview_data: preview_data || {},
       save_data: compressedData,
       size_bytes: sizeBytes
@@ -113,7 +117,7 @@ router.post('/', async (req, res) => {
     console.log(`[API SAVES] User ${req.user.username} created new save: ${slot_name} (${saveId})`);
     res.status(201).json({
       id: saveId,
-      slot_name: slot_name,
+      slot_name: normalizedSlotName,
       message: '存档成功保存至云端'
     });
   } catch (err) {
@@ -131,6 +135,13 @@ router.put('/:id', async (req, res) => {
   const { slot_name, save_data, preview_data } = req.body;
   const userId = req.user.id;
 
+  if (slot_name !== undefined && (typeof slot_name !== 'string' || !slot_name.trim())) {
+    return res.status(400).json({ error: '存档名称必须为非空字符串' });
+  }
+  if (save_data !== undefined && (save_data == null || typeof save_data !== 'object')) {
+    return res.status(400).json({ error: '存档数据必须为 JSON 对象或数组' });
+  }
+
   try {
     // 权限校验只需元数据，避免为此读入整个存档正文
     const save = await db.getSaveMetaById(id);
@@ -145,7 +156,7 @@ router.put('/:id', async (req, res) => {
     const updates = {};
 
     if (slot_name !== undefined) {
-      updates.slot_name = slot_name.substring(0, 50);
+      updates.slot_name = slot_name.trim().substring(0, 50);
     }
     if (preview_data !== undefined) {
       updates.preview_data = preview_data;

@@ -84,6 +84,11 @@ export class SaveRepository {
     return Object.values(index).filter((save) => save.user_id === userId).length;
   }
 
+  async countAll() {
+    const index = await this.#index.read();
+    return Object.keys(index).length;
+  }
+
   /**
    * 仅读取元数据（不加载二进制正文），用于权限校验等轻量场景。
    * 与旧版 getSaveById 语义对齐：索引存在但 .bin 文件缺失时视为存档不存在。

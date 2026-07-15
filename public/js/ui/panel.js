@@ -652,7 +652,7 @@ class InfoPanel extends HTMLElement {
           <span class="arrow${isCollapsed?'':' open'}">▶</span>
           ${title}<span class="skill-collapse-badge">(${list.length})</span>
         </div>
-        <div class="skill-section-body${isCollapsed?' collapsed':''}" style="max-height:${isCollapsed?'0':'2000px'}">
+        <div class="skill-section-body${isCollapsed?' collapsed':''}">
           ${bodyHtml}
         </div>
       </div>`;

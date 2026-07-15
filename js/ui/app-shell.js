@@ -491,14 +491,11 @@ class AppShell {
     }
   }
 
-  _sendMessage() {
-    if (this._isProcessing) return;
+  async _sendMessage() {
+    if (this._isProcessing || this._isSubmitting) return;
     const textarea = this.element.querySelector('#chat-input');
     const text = textarea.value.trim();
     if (!text && !(this._pendingActions && this._pendingActions.length > 0)) return;
-    textarea.value = '';
-    textarea.placeholder = '提笔写下你的决断...';
-    this._resizeInput();
 
     let finalText = text;
     let displayMsg = text;
@@ -506,15 +503,40 @@ class AppShell {
       const actions = this._pendingActions.join('；');
       finalText = text ? `[系统：玩家${actions}]\n${text}` : `[系统：玩家${actions}]`;
       displayMsg = text ? `(系统动作)\n${text}` : `(系统动作已发送)`;
-      this._pendingActions = [];
     }
 
-    if (text) {
-      this._addToRecentInputs(text);
+    this._isSubmitting = true;
+    textarea.disabled = true;
+    const sendButton = this.element.querySelector('#btn-send');
+    if (sendButton) sendButton.disabled = true;
+    let accepted = false;
+    const accept = () => {
+      if (accepted) return;
+      accepted = true;
+      textarea.value = '';
+      textarea.placeholder = '提笔写下你的决断...';
+      this._resizeInput();
+      this._pendingActions = [];
+      this._turnUpdates = [];
+      if (text) this._addToRecentInputs(text);
+      this._addUserMessage(displayMsg);
+      this._recentInputIdx = -1;
+      this._closeMobileDrawers();
+    };
+
+    try {
+      await eventBus.request('user:submit', { text: finalText, accept });
+    } catch (error) {
+      console.error('[AppShell] User submission failed:', error);
+      eventBus.emit('app:toast', error.message || '提交行动失败');
+    } finally {
+      this._isSubmitting = false;
+      if (!this._isProcessing) {
+        textarea.disabled = false;
+        if (sendButton) sendButton.disabled = false;
+        textarea.focus();
+      }
     }
-    this._addUserMessage(displayMsg);
-    eventBus.emit('user:input', finalText);
-    this._recentInputIdx = -1;
   }
 
   _setProcessing(isProcessing) {

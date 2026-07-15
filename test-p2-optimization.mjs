@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import assert from 'node:assert/strict';
+import { AgentRunner } from './js/core/agent-runner.js';
+
 /**
  * P2 优化效果测试
  * 测试：性能埋点、状态注入紧凑格式、历史消息智能裁剪
@@ -56,7 +59,7 @@ console.log('  ...\n');
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 console.log('【测试 2】历史消息智能裁剪\n');
 
-const longAssistantMessage = '这是一段很长的AI回复。'.repeat(50) + ' 中间省略了很多内容。' + '这是结尾部分。'.repeat(20);
+const longAssistantMessage = '这是一段很长的AI回复。'.repeat(100) + ' 中间省略了很多内容。' + '这是结尾部分。'.repeat(40);
 const shortUserMessage = '玩家的简短输入';
 
 const mockHistory = [
@@ -66,16 +69,22 @@ const mockHistory = [
   { role: 'assistant', content: '简短的AI回复' }
 ];
 
-// 智能裁剪
-const compressed = mockHistory.map(msg => {
-  if (msg.role === 'assistant' && msg.content.length > 800) {
-    return {
-      role: msg.role,
-      content: msg.content.slice(0, 400) + '\n[...已省略中间部分...]\n' + msg.content.slice(-400)
-    };
-  }
-  return msg;
+// 调用真实 AgentRunner，而不是在测试里复制一份实现。
+const runner = new AgentRunner();
+const messages = runner._buildMessages('outliner', {
+  systemPromptKey: 'NONE',
+  includeHistory: true,
+  historyTurns: 2,
+  includePreset: false,
+  stateFields: [],
+  maxContextChars: 1
+}, {
+  state: {},
+  userInput: '测试输入',
+  taskPrompt: '测试任务',
+  extraContext: { _pipeline: { getHistory: () => mockHistory } }
 });
+const compressed = messages.filter(msg => msg.role === 'user' || msg.role === 'assistant').slice(0, mockHistory.length);
 
 const originalSize = mockHistory.reduce((sum, msg) => sum + msg.content.length, 0);
 const compressedSize = compressed.reduce((sum, msg) => sum + msg.content.length, 0);
@@ -87,6 +96,11 @@ console.log('  节省比例:', Math.round((1 - compressedSize / originalSize) * 
 console.log('\n  裁剪前 assistant 消息:', longAssistantMessage.length, '字符');
 console.log('  裁剪后 assistant 消息:', compressed[1].content.length, '字符');
 console.log('  user 消息保持完整: ✓\n');
+
+assert.ok(longAssistantMessage.length > 800, '测试样本必须超过裁剪阈值');
+assert.ok(compressed[1].content.length < longAssistantMessage.length, '长 AI 回复应被裁剪');
+assert.ok(compressed[1].content.includes('已省略中间部分'), '裁剪结果应包含省略标记');
+assert.equal(compressed[0].content, shortUserMessage, '用户输入必须保持完整');
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 测试 3: 性能埋点模拟

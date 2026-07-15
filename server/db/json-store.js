@@ -7,6 +7,16 @@ const READ_MAX_ATTEMPTS = 5;
 /** 每次读取重试之间的等待毫秒数 */
 const READ_RETRY_DELAY_MS = 50;
 
+export class JsonStoreReadError extends Error {
+  constructor(filePath, cause) {
+    super(`[DB] Unable to read JSON document safely: ${filePath}`);
+    this.name = 'JsonStoreReadError';
+    this.code = 'JSON_STORE_READ_FAILED';
+    this.filePath = filePath;
+    this.cause = cause;
+  }
+}
+
 /**
  * @template T
  * @typedef {Object} MutationOutcome
@@ -64,7 +74,7 @@ export class JsonStore {
 
   /**
    * 读取整个文档。文件缺失返回兜底文档的深拷贝；
-   * 文件为空或损坏时按旧版语义重试后降级为兜底文档（记录错误，不抛出）。
+   * 文件为空或损坏时重试后抛错，禁止后续 update() 用兜底文档覆盖旧数据。
    * @returns {Promise<Record<string, any>>}
    */
   async read() {
@@ -85,11 +95,7 @@ export class JsonStore {
         await sleep(READ_RETRY_DELAY_MS);
       }
     }
-    console.error(
-      `[DB] Error reading JSON file ${this.#filePath} after ${READ_MAX_ATTEMPTS} retries:`,
-      lastErr
-    );
-    return structuredClone(this.#defaultValue);
+    throw new JsonStoreReadError(this.#filePath, lastErr);
   }
 
   /**

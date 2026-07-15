@@ -57,16 +57,24 @@ js/
 
 ## 快速开始
 
-1. 克隆仓库，用任意静态服务器打开 `index.html`
-2. 首次进入需配置 AI API（支持 OpenAI 兼容接口）
-3. 创建角色 → 开始冒险
+1. 安装 Node.js 18+，克隆仓库并安装依赖。
+2. 将 `.env.example` 复制为 `.env`。本地开发可保留 `AUTH_BYPASS=true`；生产环境应关闭旁路并配置 Discord OAuth 与随机 `JWT_SECRET`。
+3. 启动 Node 服务，打开 `http://localhost:3000`。
+4. 首次进入配置 AI API（支持 OpenAI 兼容接口），创建角色后开始冒险。
 
 ```bash
-# 使用 Python 快速启动
-python -m http.server 8080
-# 或 Node.js
-npx serve .
+npm install
+npm start
 ```
+
+项目包含统一的回归测试与构建命令：
+
+```bash
+npm test
+npm run build
+```
+
+根目录的 `js/`、`css/`、`img/` 和 `assets/` 是应用源码；`public/` 中的同名内容是服务端部署镜像，会在 `npm start`、`npm run dev` 和 `npm run build` 前由 `npm run sync-public` 自动生成。登录页、管理页和法律文档仍由 `public/` 单独维护。
 
 ## Agent 模式
 

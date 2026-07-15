@@ -115,7 +115,7 @@ class SettingsPanel extends HTMLElement {
                       <label>字体预设</label>
                       <select name="fontPreset">${Object.entries(FONT_PRESETS).map(([k,v]) => `<option value="${k}">${v.label}</option>`).join('')}</select>
                       <label>自定义字体</label>
-                      <input type="text" name="fontFamily" value="${esc(s.fontFamily)}" placeholder="'Noto Sans SC', sans-serif">
+                      <input type="text" name="fontFamily" value="${escAttr(s.fontFamily)}" placeholder="'Noto Sans SC', sans-serif">
                       <label>阅读字号</label>
                       <input type="number" name="fontSize" min="12" max="24" value="${s.fontSize}">
                       <label>行间距</label>
@@ -144,7 +144,7 @@ class SettingsPanel extends HTMLElement {
                       <label>背景底色 (墨)</label>
                       <div class="color-picker-wrap"><input type="color" name="backgroundColor" value="${s.backgroundColor}"></div>
                       <label>背景图链接</label>
-                      <input type="text" name="backgroundImage" value="${esc(s.backgroundImage)}" placeholder="https://...">
+                      <input type="text" name="backgroundImage" value="${escAttr(s.backgroundImage)}" placeholder="https://...">
                       <label>本地背景图</label>
                       <input class="file-input" name="backgroundFile" type="file" accept="image/*">
                       <label>背景昏暗度</label>
@@ -838,7 +838,7 @@ class SettingsPanel extends HTMLElement {
       const artist = Array.isArray(song.artist) ? song.artist.join(' / ') : (song.artist || song.singer || '');
       const item = document.createElement('div');
       item.className = 'music-item';
-      item.innerHTML = `<div class="music-item-info"><span class="music-item-name">${esc(name)}</span><span class="music-item-artist">${esc(artist)}</span></div><span class="music-item-fav${isFav?' favorited':''}" data-action="fav" data-song='${esc(JSON.stringify(song))}' style="font-size:15px;cursor:pointer;">★</span><span class="music-play-icon">▶</span>`;
+      item.innerHTML = `<div class="music-item-info"><span class="music-item-name">${esc(name)}</span><span class="music-item-artist">${esc(artist)}</span></div><span class="music-item-fav${isFav?' favorited':''}" data-action="fav" style="font-size:15px;cursor:pointer;">★</span><span class="music-play-icon">▶</span>`;
       item.querySelector('.music-play-icon').addEventListener('click', e => { e.stopPropagation(); this._playSong(song); });
       item.querySelector('.music-item-fav').addEventListener('click', e => { e.stopPropagation(); this._toggleFavorite(song); });
       item.addEventListener('click', () => this._playSong(song));

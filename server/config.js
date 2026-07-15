@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 // 确保读取项目根目录的 .env 文件
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '../.env') });
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const AUTH_BYPASS_REQUESTED = process.env.AUTH_BYPASS === 'true';
 
 /** 开发兜底密钥：生产环境使用它意味着 JWT 可被任何人伪造，配置校验会点名告警 */
 const DEV_FALLBACK_JWT_SECRET = 'naruto-rpg-dev-only-not-for-production';
@@ -23,7 +25,10 @@ function toPositiveInt(value, fallback) {
 /** 应用全局配置（deepFreeze 防止运行期被意外篡改） */
 export const config = deepFreeze({
   port: toPositiveInt(process.env.PORT, 3000),
-  nodeEnv: process.env.NODE_ENV || 'development',
+  nodeEnv: NODE_ENV,
+  auth: {
+    bypass: AUTH_BYPASS_REQUESTED && NODE_ENV !== 'production'
+  },
   discord: {
     clientId: process.env.DISCORD_CLIENT_ID,
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
@@ -38,9 +43,14 @@ export const config = deepFreeze({
     maxSlots: toPositiveInt(process.env.MAX_SAVE_SLOTS, 1),
     maxSizeMb: toPositiveInt(process.env.MAX_SAVE_SIZE_MB, 200)
   },
+  storage: {
+    dataDir: path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'))
+  },
   proxy: {
     enabled: process.env.PROXY_ENABLED === 'true',
-    url: process.env.PROXY_URL || ''
+    url: process.env.PROXY_URL || '',
+    timeoutMs: toPositiveInt(process.env.AI_PROXY_TIMEOUT_MS, 120000),
+    maxResponseMb: toPositiveInt(process.env.AI_PROXY_MAX_RESPONSE_MB, 20)
   }
 });
 
@@ -64,12 +74,13 @@ if (config.nodeEnv === 'production') {
   if (!config.discord.redirectUri) missing.push('DISCORD_REDIRECT_URI');
   if (!config.discord.requiredGuildId) missing.push('DISCORD_REQUIRED_GUILD_ID');
   if (config.jwt.secret === DEV_FALLBACK_JWT_SECRET) missing.push('JWT_SECRET (using default)');
+  if (AUTH_BYPASS_REQUESTED) missing.push('AUTH_BYPASS (must be false in production)');
 
   if (missing.length > 0) {
     console.warn(`[WARNING] Production mode configuration check failed! Missing keys: ${missing.join(', ')}`);
   }
-  if (config.jwt.secret === DEV_FALLBACK_JWT_SECRET) {
-    console.error('[FATAL] JWT_SECRET must be set to a real secret in production. Exiting.');
+  if (config.jwt.secret === DEV_FALLBACK_JWT_SECRET || AUTH_BYPASS_REQUESTED) {
+    console.error('[FATAL] Production security configuration is unsafe. Exiting.');
     process.exit(1);
   }
 }

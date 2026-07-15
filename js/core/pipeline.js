@@ -178,46 +178,16 @@ class MessagePipeline {
       const maxRetries = 2;
       
       while (shouldRunSecondary && !secondarySuccess && !this._cancelled) {
-        const configuredTimeout = stateManager.getAPIConfig()?.variableUpdater?.timeoutMs;
-        const secondaryTimeoutMs = configuredTimeout === 0 ? 999999999 : (configuredTimeout || 120000);
-        
         const secondaryPromise = this._runSecondaryVariableUpdate({
           userInput,
           enrichedInput,
           state,
           narrativeResponse: fullResponse
         });
-        
-        const secondaryWithTimeout = configuredTimeout === 0
-          ? secondaryPromise
-          : Promise.race([
-              secondaryPromise,
-              new Promise((resolve) => setTimeout(() => resolve('__SECONDARY_TIMEOUT__'), secondaryTimeoutMs))
-            ]);
-            
+
         try {
-          const additionalResponse = await secondaryWithTimeout;
-          if (additionalResponse === '__SECONDARY_TIMEOUT__') {
-            console.warn('[Pipeline] Secondary variable updater timed out after', secondaryTimeoutMs, 'ms');
-            retryCount++;
-            if (retryCount >= maxRetries) {
-              console.warn('[Pipeline] Secondary updater max retries reached, skipping');
-              secondarySuccess = true;
-              continue;
-            }
-            const Modal = customElements.get('game-modal');
-            if (Modal) {
-              const retry = await Modal.confirm({
-                title: '⚠️ 变量演算超时',
-                message: '后台数据演算超时。强行跳过可能会导致部分状态（好感、属性、物品等）遗漏。\\n是否重新尝试演算？',
-                okLabel: '重试演算',
-                cancelLabel: '跳过并继续'
-              });
-              if (!retry) secondarySuccess = true;
-            } else {
-              secondarySuccess = true;
-            }
-          } else if (additionalResponse) {
+          const additionalResponse = await secondaryPromise;
+          if (additionalResponse) {
             const extra = instructionParser.parse(additionalResponse);
             this._applyInstructions(extra, true);
             // 记录二次模型生成的 <memory>

@@ -22,8 +22,7 @@ function extractToken(req) {
  * 强制身份验证中间件 (针对 API)
  */
 export async function requireAuth(req, res, next) {
-  // DEV MODE: only bypass when explicitly enabled via AUTH_BYPASS env var
-  if (process.env.AUTH_BYPASS === 'true') {
+  if (config.auth.bypass) {
     req.user = { id: 'dev_user', username: 'dev_tester', avatar: '' };
     return next();
   }
@@ -61,7 +60,7 @@ export async function requireAuth(req, res, next) {
  * 强制身份验证中间件 (针对 HTML 页面访问)
  */
 export async function requireHtmlAuth(req, res, next) {
-  if (process.env.AUTH_BYPASS === 'true') {
+  if (config.auth.bypass) {
     req.user = { id: 'dev_user', username: 'dev_tester', avatar: '' };
     return next();
   }

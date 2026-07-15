@@ -14,41 +14,8 @@ import { loadingIndicator } from './utils/loading-indicator.js';
 import { swNotifier } from './utils/sw-notifier.js';
 import { helpGuide } from './utils/help-guide.js';
 import { formatOpeningContractPrompt, resolveOpeningContract } from './systems/opening-contract.js';
+import { migrateStorage } from './core/storage-migrations.js';
 
-// ═══════════════════════════════════════
-// 版本号 — 更新时递增，自动清理旧缓存
-// ═══════════════════════════════════════
-const APP_VERSION = 2026071403;
-
-function checkVersionAndMigrate() {
-  const storedVersion = parseInt(localStorage.getItem('naruto_app_version') || '0', 10);
-  if (storedVersion >= APP_VERSION) return;
-
-  console.log(`[NarutoRPG] 版本更新 ${storedVersion} → ${APP_VERSION}，清理旧缓存...`);
-
-  // 清除可安全重建的缓存（保留用户数据）
-  const keysToClear = [
-    'naruto_ui_prefs',           // UI 偏好 — 新版本默认值更优
-    'naruto_worldbook',          // 世界书缓存 — 从 JS 重建
-    'naruto_agent_config',       // Agent 配置 — 从 JS 重建
-    'naruto_timeline_summary',   // 时间线摘要 — 从 DB 重建
-    'naruto_bg_image',           // 背景图缓存
-    'naruto_music_playlist',     // 播放列表缓存
-    'naruto_music_favorites',    // 收藏列表缓存
-  ];
-
-  for (const key of keysToClear) {
-    try { localStorage.removeItem(key); } catch (e) {}
-  }
-  localStorage.setItem('naruto_app_version', String(APP_VERSION));
-
-  // 显示更新提示
-  if (storedVersion > 0 && typeof eventBus !== 'undefined') {
-    setTimeout(() => {
-      eventBus.emit('app:toast', `已更新至最新版本，缓存已自动清理`);
-    }, 2000);
-  }
-}
 import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
 import { escAttr } from './utils/format.js';
@@ -75,8 +42,7 @@ class NarutoRPGApp {
   }
 
   async init() {
-    // 启动时检查版本并清理旧缓存
-    checkVersionAndMigrate();
+    migrateStorage();
 
     const container = document.getElementById('app');
     if (!container) {
@@ -249,66 +215,8 @@ class NarutoRPGApp {
       }
     });
 
-    eventBus.on('user:input', async (text) => {
-      if (!this.pipeline || !aiClient.isConfigured()) {
-        this._sendSystemMessage('请先配置 API 连接。');
-        return;
-      }
-      if (this.pipeline.isProcessing) {
-        this._sendSystemMessage('上一道结印尚未完成，请稍候。');
-        return;
-      }
-
-      const currentId = stateManager.get()['_meta']?.current_node_id;
-      if (currentId) {
-        const currentNode = await stateManager.dbGet('timeline_nodes', currentId);
-        if (currentNode && Array.isArray(currentNode.children_ids) && currentNode.children_ids.length > 0) {
-          const choice = await this._showBranchChoice();
-          if (choice === 'branch') {
-            timelineSystem._pendingBranchFrom = currentId;
-          } else if (choice === 'prune') {
-            await timelineSystem.pruneForward(currentId);
-            const node = await timelineSystem.getCurrentNode();
-            const history = await timelineSystem._reconstructChatHistory(node);
-            this.pipeline?.setHistory(history);
-            appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转。');
-          } else {
-            return;
-          }
-        }
-      }
-
-      try {
-        if (this._pendingStartPrompt) {
-          this._sendSystemMessage('正在重试生成开场剧情...');
-          await this.pipeline.process(this._pendingStartPrompt);
-          this._pendingStartPrompt = null;
-        } else {
-          await this.pipeline.process(text);
-        }
-
-        if (localStorage.getItem('naruto_auto_cloud_sync') === 'true') {
-          try {
-            const data = await timelineSystem.getExportData({ includeArchive: false });
-            const preview = { 
-              name: stateManager.get().player?.name || '未知',
-              location: stateManager.get().world_state?.current_location || '未知',
-              time: Date.now()
-            };
-            await cloudSave.quickSave('默认云存档', data, preview);
-            console.log('[CloudSave] 自动同步成功');
-          } catch (err) {
-            console.error('[CloudSave] 自动同步失败', err);
-          }
-        }
-      } catch (error) {
-        if (this._pendingStartPrompt) {
-          this._showStartupErrorModal(error);
-        } else {
-          console.error('[App] Pipeline process failed:', error);
-        }
-      }
-    });
+    eventBus.on('user:submit', ({ text, accept }) => this._handleUserInput(text, accept));
+    eventBus.on('user:input', (text) => this._handleUserInput(text));
 
     eventBus.on('combat:player-action', ({ action }) => {
       if (this.pipeline?.isProcessing) return;
@@ -513,6 +421,66 @@ class NarutoRPGApp {
     eventBus.on('app:open-api-settings', () => {
       this._openApiSettings();
     });
+  }
+
+  async _handleUserInput(text, accept = null) {
+    if (!this.pipeline || !aiClient.isConfigured()) {
+      this._sendSystemMessage('请先配置 API 连接。');
+      return false;
+    }
+    if (this.pipeline.isProcessing) {
+      this._sendSystemMessage('上一道结印尚未完成，请稍候。');
+      return false;
+    }
+
+    const currentId = stateManager.get()['_meta']?.current_node_id;
+    if (currentId) {
+      const currentNode = await stateManager.dbGet('timeline_nodes', currentId);
+      if (currentNode && Array.isArray(currentNode.children_ids) && currentNode.children_ids.length > 0) {
+        const choice = await this._showBranchChoice();
+        if (choice === 'branch') {
+          timelineSystem._pendingBranchFrom = currentId;
+        } else if (choice === 'prune') {
+          await timelineSystem.pruneForward(currentId);
+          const node = await timelineSystem.getCurrentNode();
+          const history = await timelineSystem._reconstructChatHistory(node);
+          this.pipeline?.setHistory(history);
+          appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转。');
+        } else {
+          return false;
+        }
+      }
+    }
+
+    accept?.();
+    try {
+      if (this._pendingStartPrompt) {
+        this._sendSystemMessage('正在重试生成开场剧情...');
+        await this.pipeline.process(this._pendingStartPrompt);
+        this._pendingStartPrompt = null;
+      } else {
+        await this.pipeline.process(text);
+      }
+
+      if (localStorage.getItem('naruto_auto_cloud_sync') === 'true') {
+        try {
+          const data = await timelineSystem.getExportData({ includeArchive: false });
+          const preview = {
+            name: stateManager.get().player?.name || '未知',
+            location: stateManager.get().world_state?.current_location || '未知',
+            time: Date.now()
+          };
+          await cloudSave.quickSave('默认云存档', data, preview);
+          console.log('[CloudSave] 自动同步成功');
+        } catch (err) {
+          console.error('[CloudSave] 自动同步失败', err);
+        }
+      }
+    } catch (error) {
+      if (this._pendingStartPrompt) this._showStartupErrorModal(error);
+      else console.error('[App] Pipeline process failed:', error);
+    }
+    return true;
   }
 
   async _checkSavedGame() {

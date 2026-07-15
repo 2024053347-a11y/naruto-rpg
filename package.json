@@ -5,10 +5,16 @@
   "main": "server/index.js",
   "type": "module",
   "scripts": {
+    "test": "node scripts/smoke-test.mjs && node scripts/memory-regression.mjs && node scripts/inventory-skill-regression.mjs && node scripts/opening-contract-regression.mjs && node scripts/security-regression.mjs && node scripts/architecture-regression.mjs && node scripts/server-regression.mjs && node scripts/public-sync-regression.mjs && node smoke-phase2.mjs && node test-agent-optimization.mjs && node test-p2-optimization.mjs",
+    "sync-public": "node scripts/sync-public.mjs",
+    "prestart": "npm run sync-public",
     "start": "node server/index.js",
+    "predev": "npm run sync-public",
     "dev": "node --watch server/index.js",
     "bundle": "node scripts/bundle.mjs",
-    "build-regex": "node scripts/build-regex.mjs"
+    "build-regex": "node scripts/build-regex.mjs",
+    "prebuild": "npm run sync-public",
+    "build": "npm run bundle && npm run build-regex"
   },
   "dependencies": {
     "express": "^4.21.0",

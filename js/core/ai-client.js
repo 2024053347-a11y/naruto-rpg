@@ -618,6 +618,20 @@ export class AIClient {
     const config = this._config || {};
     const targetUrl = this._buildApiUrl();
     const apiKeyHeader = config.backend === 'claude' ? 'x-api-key' : 'Authorization';
+    const timeoutMs = Number.isFinite(options.timeout) && options.timeout > 0
+      ? options.timeout
+      : 90000;
+    const requestController = new AbortController();
+    const parentSignal = options.signal;
+    let timedOut = false;
+    const abortFromParent = () => requestController.abort(parentSignal?.reason);
+    if (parentSignal?.aborted) abortFromParent();
+    else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      requestController.abort();
+    }, timeoutMs);
+    if (!parentSignal) this._abortController = requestController;
 
     const isClaude = config.backend === 'claude';
     const headers = {
@@ -649,7 +663,7 @@ export class AIClient {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-        signal: options.signal,
+        signal: requestController.signal,
       });
 
       if (!response.ok) {
@@ -696,8 +710,15 @@ export class AIClient {
         || data.choices?.[0]?.text
         || '';
     } catch (e) {
+      if (timedOut) {
+        throw new Error(`代理请求超时（${timeoutMs}ms）`);
+      }
       if (e.name === 'AbortError') throw e;
       throw new Error(`代理请求失败: ${e.message}`);
+    } finally {
+      clearTimeout(timeoutId);
+      parentSignal?.removeEventListener('abort', abortFromParent);
+      if (this._abortController === requestController) this._abortController = null;
     }
   }
 

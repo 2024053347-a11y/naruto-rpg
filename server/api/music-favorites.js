@@ -5,7 +5,7 @@ import * as db from '../db/index.js';
 const router = Router();
 router.use(requireAuth);
 
-router.get('/', async (req, res) => {
+async function listFavorites(req, res) {
   try {
     const favs = await db.getUserFavorites(req.user.id);
     res.json({ count: favs.length, favorites: favs });
@@ -13,9 +13,9 @@ router.get('/', async (req, res) => {
     console.error('[API Music] GET favorites error:', err);
     res.status(500).json({ error: '获取收藏失败' });
   }
-});
+}
 
-router.put('/', async (req, res) => {
+async function replaceFavorites(req, res) {
   try {
     const { favorites } = req.body;
     if (!Array.isArray(favorites)) {
@@ -28,9 +28,9 @@ router.put('/', async (req, res) => {
     console.error('[API Music] PUT favorites error:', err);
     res.status(500).json({ error: '同步收藏失败' });
   }
-});
+}
 
-router.post('/', async (req, res) => {
+async function addFavorite(req, res) {
   try {
     const { song } = req.body;
     if (!song || !(song.url_id || song.mid || song.id)) {
@@ -42,9 +42,9 @@ router.post('/', async (req, res) => {
     console.error('[API Music] POST favorite error:', err);
     res.status(500).json({ error: '添加收藏失败' });
   }
-});
+}
 
-router.delete('/:songId', async (req, res) => {
+async function removeFavorite(req, res) {
   try {
     const favs = await db.removeUserFavorite(req.user.id, req.params.songId);
     res.json({ message: '已从收藏移除', count: favs.length });
@@ -52,6 +52,12 @@ router.delete('/:songId', async (req, res) => {
     console.error('[API Music] DELETE favorite error:', err);
     res.status(500).json({ error: '移除收藏失败' });
   }
-});
+}
+
+// `/favorites` 是已发布前端使用的路径；根路径保留给旧版客户端。
+router.get(['/', '/favorites'], listFavorites);
+router.put(['/', '/favorites'], replaceFavorites);
+router.post(['/', '/favorites'], addFavorite);
+router.delete(['/:songId', '/favorites/:songId'], removeFavorite);
 
 export default router;

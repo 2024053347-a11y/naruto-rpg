@@ -1,5 +1,5 @@
-const CACHE_NAME = 'naruto-rpg-v14';
-const IMMUTABLE_PREFIX = '/api/';
+const CACHE_PREFIX = 'naruto-rpg-';
+const CACHE_NAME = `${CACHE_PREFIX}v15`;
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -9,7 +9,9 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.map(key => caches.delete(key))  // 清除所有旧缓存
+        keys
+          .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       );
     })
   );
@@ -23,12 +25,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 不拦截 AI API 请求
-  if (url.pathname.includes('/v1/chat/completions') ||
+  // 仅缓存静态 GET；认证/API 响应含用户数据，POST 等方法也不受 Cache API 支持。
+  if (event.request.method !== 'GET' ||
+      url.pathname.includes('/api/') ||
+      url.pathname.includes('/auth/') ||
+      url.pathname.includes('/v1/chat/completions') ||
       url.pathname.includes('/v1/messages') ||
-      url.pathname.includes('/api/ai-proxy') ||
-      url.pathname.includes('/api/saves') ||
-      url.pathname.includes('/api/admin')) {
+      url.pathname.includes('/api/ai-proxy')) {
     return;
   }
 

@@ -44,6 +44,18 @@ class EventBus {
     }
   }
 
+  async request(event, data) {
+    const listeners = this._listeners.get(event);
+    if (!listeners || listeners.size === 0) {
+      throw new Error(`[EventBus] No request handler registered for ${event}`);
+    }
+    if (listeners.size !== 1) {
+      throw new Error(`[EventBus] Request ${event} requires exactly one handler`);
+    }
+    const [handler] = listeners;
+    return handler(data);
+  }
+
   once(event, callback) {
     const wrapper = (data) => {
       this.off(event, wrapper);

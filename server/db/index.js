@@ -9,25 +9,58 @@
  *
  * ⚠️ 自 v2.2 起所有数据操作均为异步（返回 Promise），调用方必须 await。
  */
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { config } from '../config.js';
 import { UserRepository } from './user-repository.js';
 import { SaveRepository } from './save-repository.js';
 import { FavoritesRepository } from './favorites-repository.js';
+import { LoginLogRepository } from './login-log-repository.js';
 
-const dbDir = path.dirname(fileURLToPath(import.meta.url));
+const legacyDbDir = path.dirname(fileURLToPath(import.meta.url));
+const dataDir = config.storage.dataDir;
 
-const users = new UserRepository(path.join(dbDir, 'users.json'));
-const saves = new SaveRepository(path.join(dbDir, 'saves_index.json'), path.join(dbDir, 'saves'));
-const favorites = new FavoritesRepository(path.join(dbDir, 'favorites.json'));
+const users = new UserRepository(path.join(dataDir, 'users.json'));
+const saves = new SaveRepository(path.join(dataDir, 'saves_index.json'), path.join(dataDir, 'saves'));
+const favorites = new FavoritesRepository(path.join(dataDir, 'favorites.json'));
+const loginLog = new LoginLogRepository(path.join(dataDir, 'login_log.json'));
+
+async function migrateLegacyData() {
+  if (path.resolve(dataDir) === path.resolve(legacyDbDir)) return;
+  await fs.mkdir(dataDir, { recursive: true });
+  for (const name of ['users.json', 'saves_index.json', 'favorites.json', 'login_log.json']) {
+    const source = path.join(legacyDbDir, name);
+    const target = path.join(dataDir, name);
+    try {
+      await fs.access(target);
+      continue;
+    } catch {}
+    try {
+      await fs.copyFile(source, target);
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+    }
+  }
+  try {
+    await fs.access(path.join(dataDir, 'saves'));
+  } catch {
+    try {
+      await fs.cp(path.join(legacyDbDir, 'saves'), path.join(dataDir, 'saves'), { recursive: true });
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+    }
+  }
+}
 
 /**
  * 初始化持久层：确保数据目录与三个 JSON 文档存在。
  * @returns {Promise<boolean>}
  */
 export async function initDb() {
-  console.log(`[DB] File-based Database initialized at ${dbDir}`);
-  await Promise.all([users.init(), saves.init(), favorites.init()]);
+  await migrateLegacyData();
+  console.log(`[DB] File-based Database initialized at ${dataDir}`);
+  await Promise.all([users.init(), saves.init(), favorites.init(), loginLog.init()]);
   return true;
 }
 
@@ -64,6 +97,8 @@ export const getUserSaves = (userId) => saves.listByUser(userId);
 /** @type {SaveRepository['countByUser']} */
 export const getUserSaveCount = (userId) => saves.countByUser(userId);
 
+export const getTotalSaveCount = () => saves.countAll();
+
 /** @type {SaveRepository['findById']} */
 export const getSaveById = (id) => saves.findById(id);
 
@@ -96,3 +131,9 @@ export const addUserFavorite = (userId, song) => favorites.add(userId, song);
 
 /** @type {FavoritesRepository['remove']} */
 export const removeUserFavorite = (userId, songId) => favorites.remove(userId, songId);
+
+export const recordLogin = (user) => loginLog.record(user);
+
+export const getLoginLog = () => loginLog.list();
+
+export const getDataDir = () => dataDir;

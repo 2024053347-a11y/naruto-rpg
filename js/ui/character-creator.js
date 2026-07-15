@@ -2,7 +2,7 @@ import { eventBus } from '../core/event-bus.js';
 import { stateManager } from '../core/state-manager.js';
 import { GAME_DATA } from '../data/game-data.js';
 import { icon } from '../utils/icons.js';
-import { escHtml } from '../utils/format.js';
+import { escAttr, escHtml } from '../utils/format.js';
 import { bindCustomSelects } from './custom-select.js';
 import { createOpeningContract, deriveOpeningState } from '../systems/opening-contract.js';
 
@@ -254,7 +254,7 @@ class CharacterCreator extends HTMLElement {
   _renderName() {
     return `
       <div class="hint">这个名字会用于剧情、存档摘要和角色面板</div>
-      <input class="name-input" id="player-name" maxlength="16" placeholder="例如：漩涡岚" value="${this._esc(this._choices.name || '')}" autofocus />
+      <input class="name-input" id="player-name" maxlength="16" placeholder="例如：漩涡岚" value="${this._escAttr(this._choices.name || '')}" autofocus />
       <div class="hint" style="margin-top:20px;">自定义角色人设（外貌、性格、过往等，将写入世界书防止AI遗忘）</div>
       <textarea class="text-area" id="player-persona" maxlength="500" placeholder="例如：一头红发，性格开朗，左眼有一道伤疤。喜欢吃拉面，梦想是成为像四代火影一样的人...">${this._esc(this._choices.persona || '')}</textarea>
     `;
@@ -345,7 +345,7 @@ class CharacterCreator extends HTMLElement {
         <div class="custom-title">自定义性别输入</div>
         <div class="field">
           <label>输入性别</label>
-          <input class="text-input custom-field" data-key="customGender" maxlength="12" placeholder="例如：无性别 / 雌雄同体" value="${this._esc(custom)}" />
+          <input class="text-input custom-field" data-key="customGender" maxlength="12" placeholder="例如：无性别 / 雌雄同体" value="${this._escAttr(custom)}" />
         </div>
       </div>` : ''}`;
   }
@@ -370,11 +370,11 @@ class CharacterCreator extends HTMLElement {
         <div class="grid-2">
           <div class="field">
             <label>出身名称</label>
-            <input class="text-input custom-field" data-key="customBackground.name" maxlength="24" placeholder="例如：雨隐遗民 / 漩涡旁支 / 根部观察对象" value="${this._esc(custom.name || '')}" />
+            <input class="text-input custom-field" data-key="customBackground.name" maxlength="24" placeholder="例如：雨隐遗民 / 漩涡旁支 / 根部观察对象" value="${this._escAttr(custom.name || '')}" />
           </div>
           <div class="field">
             <label>起始地点</label>
-            <input class="text-input custom-field" data-key="customBackground.location" maxlength="24" placeholder="例如：木叶旧街 / 忍校后山" value="${this._esc(custom.location || '')}" />
+            <input class="text-input custom-field" data-key="customBackground.location" maxlength="24" placeholder="例如：木叶旧街 / 忍校后山" value="${this._escAttr(custom.location || '')}" />
           </div>
         </div>
         <div class="field">
@@ -439,7 +439,7 @@ class CharacterCreator extends HTMLElement {
         <div class="custom-title">自定义年代卷轴</div>
         <div class="field">
           <label>木叶纪年 (1~100)</label>
-          <input class="text-input custom-field" data-key="customTimeline.year" maxlength="3" placeholder="输入数字，例如：52" value="${this._esc(customYear)}" type="number" min="1" max="100" />
+          <input class="text-input custom-field" data-key="customTimeline.year" maxlength="3" placeholder="输入数字，例如：52" value="${this._escAttr(customYear)}" type="number" min="1" max="100" />
         </div>
       </div>`;
   }
@@ -880,6 +880,10 @@ class CharacterCreator extends HTMLElement {
 
   _esc(str) {
     return escHtml(str);
+  }
+
+  _escAttr(str) {
+    return escAttr(str);
   }
 
   _initialTrack(talentId) {

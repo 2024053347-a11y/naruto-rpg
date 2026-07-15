@@ -2,33 +2,8 @@ import { Router } from 'express';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
-import { upsertUser } from '../db/index.js';
+import { getUser, recordLogin, upsertUser } from '../db/index.js';
 import { requireAuth } from '../middleware/auth.js';
-
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-const __dir = path.dirname(fileURLToPath(import.meta.url));
-
-function logLogin(user) {
-  try {
-    const p = path.join(__dir, '../db/login_log.json');
-    let log = [];
-    try { log = JSON.parse(fs.readFileSync(p, 'utf8')); } catch {}
-    log.push({ id: user.id, username: user.username, date: new Date().toISOString().slice(0,10), time: new Date().toISOString() });
-    const cutoff = new Date(Date.now()-30*86400000).toISOString().slice(0,10);
-    log = log.filter(e => e.date >= cutoff);
-    if (log.length > 10000) log = log.slice(-5000);
-    fs.writeFileSync(p, JSON.stringify(log));
-  } catch {}
-}
-
-function isBanned(user) {
-  try {
-    const p = path.join(__dir, '../db/users.json');
-    return JSON.parse(fs.readFileSync(p, 'utf8'))[user.id]?.banned === true;
-  } catch { return false; }
-}
 
 // Discord API 代理：将 discord.com 请求转发到 Cloudflare Worker
 const discordFetch = async (url, options = {}) => {
@@ -82,10 +57,8 @@ router.get('/discord/callback', async (req, res) => {
   res.clearCookie('discord_oauth_state');
 
   if (!state || state !== savedState) {
-    console.error('[DISCORD CALLBACK] State mismatch error.');
-    console.error(`  -> Query state: ${state}`);
-    console.error(`  -> Cookie state: ${savedState}`);
-    console.error(`  -> All cookies:`, req.cookies);
+    // 不记录 state 或 Cookie 内容：同一请求可能携带登录 JWT，写入日志会泄露凭证。
+    console.warn('[DISCORD CALLBACK] OAuth state mismatch.');
     return res.redirect('/login.html?error=csrf_error');
   }
 
@@ -172,12 +145,16 @@ router.get('/discord/callback', async (req, res) => {
     });
 
     // 检查封禁状态
-    if (isBanned(discordUser)) {
+    const storedUser = await getUser(discordUser.id);
+    if (!storedUser) {
+      throw new Error('Persisted Discord user could not be reloaded');
+    }
+    if (storedUser.banned) {
       return res.redirect('/login.html?error=banned');
     }
 
     // 记录登录日志
-    logLogin(discordUser);
+    await recordLogin(discordUser);
 
     // 7. 签发 JWT
     const token = jwt.sign(

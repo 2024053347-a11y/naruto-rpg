@@ -1,12 +1,6 @@
 import { Router } from 'express';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createHash, timingSafeEqual } from 'node:crypto';
-import { getAllUsers, banUser, unbanUser } from '../db/index.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_DIR = path.join(__dirname, '../db');
+import { getAllUsers, banUser, unbanUser, getLoginLog, getTotalSaveCount } from '../db/index.js';
 
 // 管理员密钥：必须通过 .env ADMIN_KEY 配置，未配置时管理面板整体禁用（无默认密码）
 const ADMIN_KEY = process.env.ADMIN_KEY || '';
@@ -34,17 +28,6 @@ function requireAdmin(req, res, next) {
 
 router.use(requireAdmin);
 
-// 读取/写入 JSON 数据库
-function readJsonFile(filename) {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(DB_DIR, filename), 'utf8'));
-  } catch { return {}; }
-}
-
-function writeJsonFile(filename, data) {
-  fs.writeFileSync(path.join(DB_DIR, filename), JSON.stringify(data, null, 2));
-}
-
 // GET /api/admin/stats - 概览统计
 router.get('/stats', async (req, res) => {
   try {
@@ -53,12 +36,9 @@ router.get('/stats', async (req, res) => {
 
     // 读取所有数据
     const users = await getAllUsers();
-    const saves = readJsonFile('saves_index.json') || {};
     const userList = Object.values(users);
 
-    // 今日登录统计（读取 login_log.json）
-    let loginLog = [];
-    try { loginLog = readJsonFile('login_log.json') || []; } catch {}
+    const loginLog = await getLoginLog();
 
     const todayLogins = new Set(loginLog.filter(l => l.date === today).map(l => l.id)).size;
     const yesterday = new Date(now - 86400000).toISOString().slice(0, 10);
@@ -66,7 +46,7 @@ router.get('/stats', async (req, res) => {
 
     const totalUsers = userList.length;
     const bannedUsers = userList.filter(u => u.banned).length;
-    const totalSaves = Object.keys(saves).length;
+    const totalSaves = await getTotalSaveCount();
 
     // 最近7天活跃（独立用户数）
     const last7Days = [];

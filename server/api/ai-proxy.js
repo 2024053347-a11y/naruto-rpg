@@ -3,6 +3,7 @@ import { lookup } from 'node:dns/promises';
 import { BlockList, isIP } from 'node:net';
 import { request as httpsRequest } from 'node:https';
 import { requireAuth } from '../middleware/auth.js';
+import { config } from '../config.js';
 
 const router = Router();
 
@@ -122,6 +123,11 @@ router.all('/', async (req, res) => {
 
   // 客户端中途断开时立即中止上游请求，避免继续为已放弃的生成计费/占用连接
   const upstreamAbort = new AbortController();
+  let upstreamTimedOut = false;
+  const upstreamTimeout = setTimeout(() => {
+    upstreamTimedOut = true;
+    upstreamAbort.abort();
+  }, config.proxy.timeoutMs);
   res.on('close', () => {
     if (!res.writableEnded) upstreamAbort.abort();
   });
@@ -188,13 +194,30 @@ router.all('/', async (req, res) => {
       res.end();
     } else {
       const chunks = [];
-      for await (const chunk of upstreamResponse) chunks.push(Buffer.from(chunk));
+      const maxResponseBytes = config.proxy.maxResponseMb * 1024 * 1024;
+      let responseBytes = 0;
+      for await (const chunk of upstreamResponse) {
+        responseBytes += chunk.length;
+        if (responseBytes > maxResponseBytes) {
+          upstreamResponse.destroy();
+          return res.status(502).json({ error: `AI 上游响应超过 ${config.proxy.maxResponseMb}MB 限制` });
+        }
+        chunks.push(Buffer.from(chunk));
+      }
       res.send(Buffer.concat(chunks));
     }
   } catch (error) {
-    if (error.name === 'AbortError') return; // 客户端已断开，无需响应
+    if (error.name === 'AbortError') {
+      if (upstreamTimedOut && !res.headersSent) {
+        return res.status(504).json({ error: 'AI 上游请求超时' });
+      }
+      if (upstreamTimedOut && !res.writableEnded) res.end();
+      return; // 客户端已断开或流式响应已结束，无需再次响应
+    }
     console.error('[AI PROXY] Upstream failed:', error.message, error.cause || '');
     res.status(502).json({ error: `AI 代理请求上游失败: ${error.message} ${error.cause ? error.cause.message : ''}`.trim() });
+  } finally {
+    clearTimeout(upstreamTimeout);
   }
 });
 
