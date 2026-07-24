@@ -219,6 +219,20 @@ function Copy-ProductionBackendSources {
   foreach ($PackageFile in @('package.json', 'package-lock.json')) {
     Copy-Item -LiteralPath (Join-Path $ProjectDir $PackageFile) -Destination (Join-Path $Destination $PackageFile) -Force
   }
+
+  # The save API reuses the browser-safe timeline validator. Package its complete
+  # relative import chain at the same paths expected from server/api/saves.js.
+  foreach ($SharedModule in @(
+    'js/core/timeline-save-schema.js',
+    'js/core/continuity-ledger.js',
+    'js/utils/format.js'
+  )) {
+    $SourceFile = Join-Path $ProjectDir $SharedModule
+    $DestinationFile = Join-Path $Destination $SharedModule
+    $DestinationFolder = Split-Path -Parent $DestinationFile
+    New-Item -ItemType Directory -Force -Path $DestinationFolder | Out-Null
+    Copy-Item -LiteralPath $SourceFile -Destination $DestinationFile -Force
+  }
 }
 
 function Assert-PackageContents {
@@ -261,7 +275,14 @@ function Assert-PackageContents {
       throw '测试站部署包禁止包含后端文件'
     }
   } else {
-    foreach ($Required in @('backend/server/index.js', 'backend/package.json', 'backend/package-lock.json')) {
+    foreach ($Required in @(
+      'backend/server/index.js',
+      'backend/package.json',
+      'backend/package-lock.json',
+      'backend/js/core/timeline-save-schema.js',
+      'backend/js/core/continuity-ledger.js',
+      'backend/js/utils/format.js'
+    )) {
       if ($Entries -notcontains $Required) { throw "正式站部署包缺少后端文件：$Required" }
     }
     $RuntimeEntries = @($Entries | Where-Object {
@@ -402,8 +423,10 @@ try {
   if ($Target.RestartBackend) {
     $RemoteSteps += @(
       "test -s '$RemoteRelease/backend/server/index.js'",
-      "mkdir -p '/opt/naruto-rpg/server'",
+      "test -s '$RemoteRelease/backend/js/core/timeline-save-schema.js'",
+      "mkdir -p '/opt/naruto-rpg/server' '/opt/naruto-rpg/js'",
       "cp -a '$RemoteRelease/backend/server/.' '/opt/naruto-rpg/server/'",
+      "cp -a '$RemoteRelease/backend/js/.' '/opt/naruto-rpg/js/'",
       "cp '$RemoteRelease/backend/package.json' '$RemoteRelease/backend/package-lock.json' '/opt/naruto-rpg/'",
       "cd '/opt/naruto-rpg' && npm install --omit=dev --silent",
       "chmod 600 '/opt/naruto-rpg/.env' 2>/dev/null || true",
@@ -416,7 +439,7 @@ try {
   $RemoteSteps += @(
     "grep -Fq '?v=$Version' '$($Target.TargetDir)/index.html'",
     "grep -Fq '?v=$Version' '$($Target.TargetDir)/login.html'",
-    ('grep -Fq ''"version":"{0}"'' ''{1}/version.json''' -f $ReleaseVersion, $Target.TargetDir),
+    "grep -Fq '$ReleaseVersion' '$($Target.TargetDir)/version.json'",
     "curl --fail --silent --show-error --max-time 30 --resolve '$($Target.VerifyResolve)' '$($Target.VerifyUrl)' | grep -Fq '?v=$Version'"
   )
   if ($Mode -eq 'staging') {

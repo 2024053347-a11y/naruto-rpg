@@ -72,8 +72,30 @@ assert.match(deployScript, /\[switch\]\$DryRun/, 'deployer must expose an offlin
 assert.match(deployScript, /\$PackageMetadata[\s\S]{0,240}\$PackageVersion/i, 'deployer must derive the release from package.json');
 assert.match(deployScript, /Write-ReleaseManifest[\s\S]{0,160}version\.json/i, 'deployer must publish machine-readable release metadata');
 assert.match(deployScript, /RELEASE_VERSION=\$ReleaseVersion/i, 'successful deployment must report the release version');
+assert.match(
+  deployScript,
+  /grep\s+-Fq\s+'\$ReleaseVersion'\s+'\$\(\$Target\.TargetDir\)\/version\.json'/i,
+  'remote release verification must avoid nested JSON quotes that Windows OpenSSH can reinterpret'
+);
+assert.doesNotMatch(
+  deployScript,
+  /grep\s+-Fq\s+''?"version"/i,
+  'remote release verification must not depend on preserving embedded JSON quotes'
+);
 assert.match(deployScript, /server\\data/, 'production package must explicitly protect server/data');
 assert.match(deployScript, /server\\db/, 'production package must explicitly protect legacy server/db runtime data');
+for (const sharedModule of [
+  'js/core/timeline-save-schema.js',
+  'js/core/continuity-ledger.js',
+  'js/utils/format.js'
+]) {
+  const escaped = sharedModule.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replaceAll('/', '[\\\\/]');
+  assert.match(
+    deployScript,
+    new RegExp(escaped, 'i'),
+    `production package must include backend shared module ${sharedModule}`
+  );
+}
 assert.match(deployScript, /https:\/\/www\.qiwu\.asia:8080\/login\.html/i, 'staging verification must use the real TLS port');
 assert.doesNotMatch(deployScript, /curl\s+-[^\r\n;]*k/, 'TLS verification must not disable certificate checks');
 assert.match(deployScript, /exit\s+\$ExitCode/i, 'deployer must explicitly return its final process status');
