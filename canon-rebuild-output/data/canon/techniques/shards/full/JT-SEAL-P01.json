@@ -1,0 +1,7068 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-SEAL-P01",
+    "group": "seal",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 60,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-SEAL-0001",
+      "canonical_name": "金剛封锁",
+      "aliases": [
+        "金剛封锁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~漩涡一族,忍术,封印术,结界忍术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是漩涡一族特有的封印术。锁链极为坚固，即使是九尾也难以破坏。根据使用者意图制造的锁链数量和长度，他们可能选择先制造少量锁链，让其在地下分裂并散布到周围区域，以保持周围环境整洁。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KUSHINA-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "金剛封锁",
+          "Adamantine Sealing Chains",
+          "Kongō Fūsa",
+          "Vajra Sealing Chains"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 498,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Adamantine_Sealing_Chains"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Adamantine Sealing Chains",
+        "Kongō Fūsa",
+        "Vajra Sealing Chains"
+      ],
+      "lookup_classes": [
+        "hiden~uzumaki-clan,-ninjutsu,-fūinjutsu,-barrier-ninjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0002",
+      "canonical_name": "结界法阵",
+      "aliases": [
+        "结界法阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种使用特殊符咒界定区域的结界术。当对手进入该区域时，结界被触发。结界的特性因使用的符咒而异。为了防止陷阱被发现，符咒被放置在隐蔽处，即使被发现，解除也极为困难，因此通常最好避开该区域。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KIDO-MARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TAYUYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "结界法阵",
+          "Barrier Method Formation",
+          "Kekkai Hōjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 185,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Barrier_Method_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Barrier Method Formation",
+        "Kekkai Hōjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0003",
+      "canonical_name": "结界符·眼装甲",
+      "aliases": [
+        "结界符·眼装甲"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,结界忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术由雾隐村的追击忍者创造，据青所说他们是唯一知道如何解除此术的人。当使用者身体的特定部位被锁定为目标时，此术会自动触发，符咒移动到相应的身体部位形成屏障进行保护。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-AO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "结界符·眼装甲",
+          "Barrier Talisman: Armoured Eye",
+          "Kekkaifu: Gansōkō"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 471,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Barrier_Talisman%3A_Armoured_Eye"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Barrier Talisman: Armoured Eye",
+        "Kekkaifu: Gansōkō"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-barrier-ninjutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0004",
+      "canonical_name": "结界·天蓋法阵",
+      "aliases": [
+        "结界·天蓋法阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术允许使用者以自身为中心制造球形的探测结界。根据使用者的指令，探测结界可以扩展，捕捉周围的一切。使用者还可以用自己的感知来探测结界空间内的任何动静。结界会跟随使用者移动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "结界·天蓋法阵",
+          "Barrier: Canopy Method Formation",
+          "Kekkai: Tengai Hōjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 375,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Barrier%3A_Canopy_Method_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Barrier: Canopy Method Formation",
+        "Kekkai: Tengai Hōjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0005",
+      "canonical_name": "结界·蝦蟇瓢牢",
+      "aliases": [
+        "结界·蝦蟇瓢牢"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术召唤出一个小葫芦形的蟾蜍，称为瓢牢，是妙木山特有的一种蟾蜍。利用蟾蜍的舌头卷住目标将其拖入蟾蜍的胃中，用于捕捉和隔离目标。被结界隔离在葫芦蟾蜍胃中的空间远比葫芦本身大得多。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "结界·蝦蟇瓢牢",
+          "Barrier: Toad Gourd Prison",
+          "Kekkai: Gama Hyōrō"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 381,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Barrier%3A_Toad_Gourd_Prison"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Barrier: Toad Gourd Prison",
+        "Kekkai: Gama Hyōrō"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu,-space–time-ninjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0006",
+      "canonical_name": "封术吸印",
+      "aliases": [
+        "封术吸印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,瞳术,封印术,查克拉吸收术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种由饿鬼道赋予的高级封印术，在使用者周围召唤出透明屏障，能够吸收任何形状或性质变化的查克拉，并通过在体内反方向旋转查克拉将其驱散。因此可以吸收任何基于查克拉的忍术，使其对使用者无效。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封术吸印",
+          "Blocking Technique Absorption Seal",
+          "Fūjutsu Kyūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 377,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Blocking_Technique_Absorption_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Blocking Technique Absorption Seal",
+        "Fūjutsu Kyūin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-dōjutsu,-fūinjutsu,-chakra-absorption-techniques",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0007",
+      "canonical_name": "查克拉控制·缚",
+      "aliases": [
+        "查克拉控制·缚"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者在人身上放置一个印记。当目标接近封印符时，目标会被红色查克拉线束缚在原地。此术可自行持续数小时，也可通过亥印解除。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "チャクラコントロール·缚",
+          "Chakra Control: Bind",
+          "Chakura Kontorōru: Baku"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 9,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chakra_Control%3A_Bind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chakra Control: Bind",
+        "Chakura Kontorōru: Baku"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0008",
+      "canonical_name": "地爆天星",
+      "aliases": [
+        "地爆天星"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,瞳术,忍术,封印术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "地爆天星是通过轮回眼的天道使用的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "地爆天星",
+          "Chibaku Tensei",
+          "Heavenly Body Bursting from the Earth"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 439,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chibaku_Tensei"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chibaku Tensei",
+        "Heavenly Body Bursting from the Earth"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-dōjutsu,-ninjutsu,-fūinjutsu,",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0009",
+      "canonical_name": "布缚り之术",
+      "aliases": [
+        "布缚り之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用巨大的布卷将目标紧紧包裹，完全束缚其行动，使其无法移动或使用任何术。该能力用途广泛，完成后还可以在束缚的受害者身上施加更多封印，防止其在效果期间被通灵。此术由砂隐村忍者使用，似乎需要与布料有身体接触才能施展。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NONOTA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "布缚り之术",
+          "Cloth Binding Technique",
+          "Nunoshibari no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 524,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cloth_Binding_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cloth Binding Technique",
+        "Nunoshibari no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0010",
+      "canonical_name": "契約封印",
+      "aliases": [
+        "契約封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "当施术者对通灵者使用此封印术时，会解除通灵者对其通灵兽的直接控制。似乎需要近距离接触才能施加该封印。波风水门用此术解除了带土用写轮眼控制的九尾的控制权。虽然契约封印解除了通灵者的控制能力，但并不会让封印术使用者获得通灵兽的控制权。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "契約封印",
+          "Contract Seal",
+          "Keiyaku Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 503,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Contract_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Contract Seal",
+        "Keiyaku Fūin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0011",
+      "canonical_name": "舌禍根絶の印",
+      "aliases": [
+        "舌禍根絶の印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,咒印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这种咒印被志村团藏授予暗部根的所有成员，以确保关于他或组织的信息不会落入敌人手中。团藏死后，所有根成员身上的封印都消失了。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "舌禍根絶の印",
+          "Cursed Tongue Eradication Seal",
+          "Zekka Konzetsu no In"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 452,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cursed_Tongue_Eradication_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cursed Tongue Eradication Seal",
+        "Zekka Konzetsu no In"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-juinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0012",
+      "canonical_name": "封黒法印",
+      "aliases": [
+        "封黒法印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "为了帮助个人将咒印提升到第二状态，音忍四人众使用四黑雾阵。在将个人和黑雾放入密闭空间（如棺材）后，左近使用封黑法印：他将五张用血书写封印式的符咒放在棺材边缘，形成结界将黑雾封住，直到咒印进化完成。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封黒法印",
+          "Dark Sealing Method",
+          "Fūkoku Hōin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 184,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Dark_Sealing_Method"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Dark Sealing Method",
+        "Fūkoku Hōin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0013",
+      "canonical_name": "尸鬼封尽",
+      "aliases": [
+        "尸鬼封尽"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,禁术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "尸鬼封尽是漩涡一族开发的召唤死神的封印术。被视为终极封印术，其存在之隐秘甚至连大蛇丸都一无所知。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尸鬼封尽",
+          "Dead Demon Consuming Seal",
+          "Shiki Fūjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 122,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Dead_Demon_Consuming_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Dead Demon Consuming Seal",
+        "Shiki Fūjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-kinjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0014",
+      "canonical_name": "魔像の锁",
+      "aliases": [
+        "魔像の锁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,封印术,咒印术,瞳术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过外道，使用者能够显现查克拉锁链，束缚任何触碰到的目标。据带土所说，其束缚力远超长门的外道。锁链带有压制尾兽力量的咒印，并给目标带来巨大痛苦。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEMONIC-STATUE-OF-THE-OUTER-PATH",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔像の锁",
+          "Demonic Statue Chains",
+          "Mazō no Kusari"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 567,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Statue_Chains"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Statue Chains",
+        "Mazō no Kusari"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-fūinjutsu,-juinjutsu,-dōjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0015",
+      "canonical_name": "砂漠層大葬封印",
+      "aliases": [
+        "砂漠層大葬封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,咒印术,合作忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用大量沙子将敌人覆盖数层，然后压缩成巨大的金字塔形，完成后将目标囚禁其中。封印符可以贴在金字塔上增强封印力，或由守鹤用其身体上的咒印强化封印。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHUKAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "砂漠層大葬封印",
+          "Desert Layered Imperial Funeral Seal",
+          "Sabaku Sōtaisō Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 556,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Desert_Layered_Imperial_Funeral_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Desert Layered Imperial Funeral Seal",
+        "Sabaku Sōtaisō Fūin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-juinjutsu,-cooperation-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0016",
+      "canonical_name": "八卦の封印式",
+      "aliases": [
+        "八卦の封印式"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "八卦封印式是漩涡一族的封印术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KUSHINA-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "八卦の封印式",
+          "Eight Trigrams Sealing Style",
+          "Hakke no Fūin Shiki"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 1,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Eight_Trigrams_Sealing_Style"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Eight Trigrams Sealing Style",
+        "Hakke no Fūin Shiki"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0017",
+      "canonical_name": "封入之术",
+      "aliases": [
+        "封入之术",
+        "Fūnyū no 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,一般技能,战斗流派",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用此术可将各种物品乃至生物封存于卷轴中，当卷轴被打开或满足特定条件时释放。也可以将忍术封印入卷轴，如干柿鬼鲛将鲨鱼封入水牢术卷轴中，当有人试图阅读卷轴时会触发释放并囚禁对方。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TENTEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封入之术",
+          "Enclosing Technique",
+          "Fūnyū no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 148,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Enclosing_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Enclosing Technique",
+        "Fūnyū no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-general-skill,-fighting-style",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0018",
+      "canonical_name": "解邪法印",
+      "aliases": [
+        "解邪法印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "解邪法印是封邪法印的直接对应术，用于解除施加在人体上的术式封印而非封印它。与封邪法印相比，解邪法印所需的准备要少得多。宇智波佐助用此术复活大蛇丸，混合了药师兜的改良肉体为大蛇丸留在御手洗红豆天之咒印中的意识创造了肉体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "解邪法印",
+          "Evil Releasing Method",
+          "Kaija Hōin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 593,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Evil_Releasing_Method"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Evil Releasing Method",
+        "Kaija Hōin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0019",
+      "canonical_name": "封邪法印",
+      "aliases": [
+        "封邪法印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术压制咒印的力量。由于施加咒印本身就需要大量技巧，用此术压制也同样需要大量技巧。此术的准备十分艰巨：血液充当防止咒印扩散的锁链。施加封邪法印相当痛苦。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封邪法印",
+          "Evil Sealing Method",
+          "Fūja Hōin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 69,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Evil_Sealing_Method"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Evil Sealing Method",
+        "Fūja Hōin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0020",
+      "canonical_name": "指刻封印",
+      "aliases": [
+        "指刻封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 28,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将查克拉集中到指尖，利用其热量可以在表面书写任何文字。此术需要极其精细的查克拉控制。对活体目标会造成轻微不适，如果在肉体上书写会留下疤痕，将伴随目标终生。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "指刻封印",
+          "Finger Carving Seal",
+          "Shikoku Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 382,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Finger_Carving_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Finger Carving Seal",
+        "Shikoku Fūin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0021",
+      "canonical_name": "封火法印",
+      "aliases": [
+        "封火法印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术,忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者准备好预先刻有特殊封印式的卷轴，中央留有空白区域。然后发动此术，将附近的任何火遁吸入空白区域并封印其中，以「封」字显现。无论火焰有何特殊性质，如天照之火，都将保持封印状态直到使用者选择解除。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封火法印",
+          "Fire Sealing Method",
+          "Fūka Hōin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 148,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Sealing_Method"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Sealing Method",
+        "Fūka Hōin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu,-ninjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0022",
+      "canonical_name": "五行封印",
+      "aliases": [
+        "五行封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大蛇丸将邪念查克拉集中到五指尖端，强行按压在另一个封印之上。当奇数的五行封印施加在偶数的四象封印上时，会因奇偶失衡而扰乱四象封印。对漩涡鸣人而言，他失去了对九尾查克拉的访问权限，并且连自身的查克拉也难以使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "五行封印",
+          "Five Elements Seal",
+          "Gogyō Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 49,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Five_Elements_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Five Elements Seal",
+        "Gogyō Fūin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0023",
+      "canonical_name": "五行解印",
+      "aliases": [
+        "五行解印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术移除与其自身力量相当的封印。使用者将查克拉集中到指尖，击打要移除的封印，使其瓦解消失。如果封印施加在人身上，伴随此术的手掌冲击可能会很痛。自来也使用此术移除五行封印时看似轻松，但实际上这是连上忍都觉得困难的非常高级的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "五行解印",
+          "Five Elements Unseal",
+          "Gogyō Kaiin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 91,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Five_Elements_Unseal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Five Elements Unseal",
+        "Gogyō Kaiin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0024",
+      "canonical_name": "五封结界",
+      "aliases": [
+        "五封结界",
+        "五-封印 结界"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将五张符咒用自己的查克拉相互连接。一张符咒贴在希望阻止访问的中心位置，其他四张贴在周围区域。只要至少有一张符咒保持完好，就会在中心位置产生结界，防止其被打开或受到物理破坏。想要移除结界的人最好分成两个小队以提高效率。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "五封结界",
+          "Five-Seal Barrier",
+          "Gofū Kekkai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 254,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Five-Seal_Barrier"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Five-Seal Barrier",
+        "Gofū Kekkai"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0025",
+      "canonical_name": "飞雷神·導雷",
+      "aliases": [
+        "飞雷神·導雷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,结界忍术,武器术",
+        "防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "飞雷神·导雷是一种时空间忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷神·導雷",
+          "Flying Thunder God: Guiding Thunder",
+          "Hiraishin: Dōrai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 502,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_God%3A_Guiding_Thunder"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder God: Guiding Thunder",
+        "Hiraishin: Dōrai"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-barrier-ninjutsu,-bukijutsu",
+        "defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0026",
+      "canonical_name": "禁個呪の札",
+      "aliases": [
+        "禁個呪の札"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,咒印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "禁个咒之札是宇智波斑使用的咒印术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "禁個呪の札",
+          "Forbidden Individual Curse Tag",
+          "Kinkoju no Fuda"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 675,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Forbidden_Individual_Curse_Tag"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Forbidden Individual Curse Tag",
+        "Kinkoju no Fuda"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-juinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0027",
+      "canonical_name": "四黒霧阵",
+      "aliases": [
+        "四黒霧阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术,合作忍术,忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 95,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "音忍四人众站在目标周围的四个方向，同时发动此术。他们在高空中制造出黑暗浓密的雾气，向目标下降，将其笼罩并制造出强大的结界，将其与外界隔绝，甚至能抵御死亡。音忍四人众用此术对抗醒心丸的效果。封黑法印可用于将雾封存在密闭空间中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KIDO-MARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TAYUYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "四黒霧阵",
+          "Four Black Fogs Formation",
+          "Shikokumujin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 184,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Four_Black_Fogs_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "extreme",
+        "reference_pool": 270,
+        "expected_uses": [
+          2,
+          3
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Four Black Fogs Formation",
+        "Shikokumujin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu,-cooperation-ninjutsu,-ninjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0028",
+      "canonical_name": "四赤阳阵",
+      "aliases": [
+        "四赤阳阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术,结界忍术,封印术",
+        "防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 125,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种强大的结界阵，只有影级实力的忍者才能使用。四名忍者站成方形，竖起一个巨大的红色结界。据说比四紫炎阵强数倍，且极具柔韧性和弹性。受到十尾的尾兽玉攻击时，结界仅仅变形并将大部分攻击引向上方，自身完好无损并恢复原状。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "四赤阳阵",
+          "Four Red Yang Formation",
+          "Shisekiyōjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 631,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Four_Red_Yang_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Four Red Yang Formation",
+        "Shisekiyōjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu,-barrier-ninjutsu,-fūinjutsu,",
+        "defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0029",
+      "canonical_name": "四象封印",
+      "aliases": [
+        "四象封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术需要极高的天赋才能施展。施术者将封印式施加在物体或人体上，将强大的敌人或邪恶的灵体封印在其中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KUSHINA-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "四象封印",
+          "Four Symbols Seal",
+          "Shishō Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 1,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Four_Symbols_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Four Symbols Seal",
+        "Shishō Fūin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0030",
+      "canonical_name": "四紫炎阵",
+      "aliases": [
+        "四紫炎阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "四人站成方形阵，同时发动此术，在他们之间竖起一道坚固的结界。结界由紫色火焰构成，接触者会瞬间被吞噬，从而阻止任何人进出。由于结界依赖于四人的维持，攻击其中任何一人即可瓦解结界。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KIDO-MARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TASUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TAYUYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "四紫炎阵",
+          "Four Violet Flames Formation",
+          "Shishienjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 115,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Four_Violet_Flames_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Four Violet Flames Formation",
+        "Shishienjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0031",
+      "canonical_name": "蝦蟇隠れ之术",
+      "aliases": [
+        "蝦蟇隠れ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者召唤出妙木山的特殊蟾蜍，躲进其胃中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "蝦蟇隠れ之术",
+          "Hiding in a Toad Technique",
+          "Gamagakure no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 367,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Hiding_in_a_Toad_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Hiding in a Toad Technique",
+        "Gamagakure no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu,-space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0032",
+      "canonical_name": "鉄甲封印",
+      "aliases": [
+        "鉄甲封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "铁甲封印是云隐村用来将牛鬼封印到其人柱力体内的封印术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "鉄甲封印",
+          "Iron Armour Seal",
+          "Tekkō Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 408,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Iron_Armour_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Iron Armour Seal",
+        "Tekkō Fūin"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0033",
+      "canonical_name": "神威",
+      "aliases": [
+        "神威"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,瞳术,时空间忍术,结界忍术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "神威是一种可以通过宇智波带土的万花筒写轮眼使用的时空间忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-BLACK-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "神威カムイ",
+          "Kamui",
+          "Authority of the Gods"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 276,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kamui"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kamui",
+        "Authority of the Gods"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-dōjutsu,-space–time-ninjutsu,-barrier-ninjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0034",
+      "canonical_name": "磁鉄粒封掌",
+      "aliases": [
+        "磁鉄粒封掌"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~磁遁,忍术,封印术,结界忍术",
+        "磁遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "新希使用他的磁砂将目标封印在球体中。只要使用者活着，封印就会保持活性，目标将处于停滞状态。只有使用者才能解除封印。封印也能维持受害者的生命，即使他们受到致命伤也能争取时间让医疗忍者治疗。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHINKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-RYU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "磁鉄粒封掌",
+          "Magnet Iron Grain Seal Palm",
+          "Jitetsu Ryūfūshō"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 15,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Magnet_Iron_Grain_Seal_Palm"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Magnet Iron Grain Seal Palm",
+        "Jitetsu Ryūfūshō"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~magnet-release,-ninjutsu,-fūinjutsu,-barrier-ninjutsu",
+        "magnet-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0035",
+      "canonical_name": "裏四象封印",
+      "aliases": [
+        "裏四象封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 167,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "里四象封印是一种在施术者死亡时触发的强大封印术。施术者必须事先将封印置于胸前。触发时，它会从施术者自身的血液中释放四个符号，形成巨大的黑色球体。球体范围内的一切都会被吸入并封印在施术者的尸体内。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "裏四象封印",
+          "Reverse Four Symbols Sealing",
+          "Ura Shishō Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 481,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Reverse_Four_Symbols_Sealing"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "heavy",
+        "reference_pool": 660,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Reverse Four Symbols Sealing",
+        "Ura Shishō Fūin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0036",
+      "canonical_name": "仙法·明神门",
+      "aliases": [
+        "仙法·明神门"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "仙法·明神门是千手柱间在仙人模式下使用的一种封印术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·明神门",
+          "Sage Art: Gate of the Great God",
+          "Senpō: Myōjinmon"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 631,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Gate_of_the_Great_God"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Gate of the Great God",
+        "Senpō: Myōjinmon"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0037",
+      "canonical_name": "仙法·磁遁螺旋丸",
+      "aliases": [
+        "仙法·磁遁螺旋丸"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~磁遁,忍术,封印术,咒印术,仙术",
+        "磁遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是鸣人在继承六道仙人的力量后使用的术。将螺旋丸与守鹤的磁遁结合增强其吸力，创造出带有尾兽咒印标记的螺旋丸。此术击中的目标身上会迅速扩散咒印标记并使其无法动弹。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·磁遁螺旋丸",
+          "Sage Art: Magnet Release Rasengan",
+          "Senpō: Jiton Rasengan",
+          "Sage Art: Magnet Release Spiralling Sphere"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 674,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Magnet_Release_Rasengan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Magnet Release Rasengan",
+        "Senpō: Jiton Rasengan",
+        "Sage Art: Magnet Release Spiralling Sphere"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~magnet-release,-ninjutsu,-fūinjutsu,-juinjutsu,-senjutsu",
+        "magnet-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0038",
+      "canonical_name": "封印鉄壁",
+      "aliases": [
+        "封印鉄壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,结界忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种防御性封印术，制造出坚固的屏障来保护施术者免受攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHIRIKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封印鉄壁",
+          "Sealed Iron Wall",
+          "Fūin Teppeki"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 314,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sealed_Iron_Wall"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sealed Iron Wall",
+        "Fūin Teppeki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-barrier-ninjutsu,",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0039",
+      "canonical_name": "封印术·獅子閉哮",
+      "aliases": [
+        "封印术·獅子閉哮"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术,忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这种封印术通过画在地面或墙壁上的封印式完全封锁目标的查克拉。通过封锁被困在中央的人的所有穴道来实现。目标被封印时，封印式中央会出现一个「封」字的图案。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHIYO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MONZAEMON-CHIKAMATSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封印术·獅子閉哮",
+          "Sealing Technique: Lion Closing Roar",
+          "Fūinjutsu: Shishi Heikō"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 273,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sealing_Technique%3A_Lion_Closing_Roar"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sealing Technique: Lion Closing Roar",
+        "Fūinjutsu: Shishi Heikō"
+      ],
+      "lookup_classes": [
+        "fūinjutsu,-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0040",
+      "canonical_name": "封印术·亿怒端数烦流奴",
+      "aliases": [
+        "封印术·亿怒端数烦流奴"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,分身术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 52,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "封印术·亿怒端数烦流奴是奇拉比独有的封印术，利用他生成墨水分身的能力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封印术·億怒端数煩流奴オクトパスホールド",
+          "Sealing Technique: Octopus Hold",
+          "Fūinjutsu: Okutopasu Hōrudo",
+          "Sealing Technique: Hundred-Million, Angry, Fraction, Trouble-Style Guys"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 566,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sealing_Technique%3A_Octopus_Hold"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sealing Technique: Octopus Hold",
+        "Fūinjutsu: Okutopasu Hōrudo",
+        "Sealing Technique: Hundred-Million, Angry, Fraction, Trouble-Style Guys"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-clone-techniques",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0041",
+      "canonical_name": "封印术·幻龙九封尽",
+      "aliases": [
+        "封印术·幻龙九封尽"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 167,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "封印术·幻龙九封尽是由佩恩和其他晓成员使用的术，用于强行封印尾兽或将仍存活的人柱力的尾兽查克拉提取到外道魔像中。如果九名晓成员全部在场，术需要整整三天才能完成。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEMONIC-STATUE-OF-THE-OUTER-PATH",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封印术·幻龙九封尽",
+          "Sealing Technique: Phantom Dragons Nine Consuming Seals",
+          "Fūinjutsu: Genryū Kyūfūjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 255,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sealing_Technique%3A_Phantom_Dragons_Nine_Consuming_Seals"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "heavy",
+        "reference_pool": 660,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sealing Technique: Phantom Dragons Nine Consuming Seals",
+        "Fūinjutsu: Genryū Kyūfūjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0042",
+      "canonical_name": "封印术·虎視眈弾",
+      "aliases": [
+        "封印术·虎視眈弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者在卷轴上画出一只巨大的老虎，画中的老虎从卷轴中延伸出来，用牙齿和爪子捕获猎物，将受害者拖回卷轴中并压制在画中。由于插图巨大，使用者需要较长时间完成图画，期间需要他人保护。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "封印术·虎視眈弾",
+          "Sealing Technique: Tiger Vision Staring Bullet",
+          "Fūinjutsu: Koshi Tandan"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 559,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sealing_Technique%3A_Tiger_Vision_Staring_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sealing Technique: Tiger Vision Staring Bullet",
+        "Fūinjutsu: Koshi Tandan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0043",
+      "canonical_name": "自業呪缚の印",
+      "aliases": [
+        "自業呪缚の印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,咒印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "与舌祸根绝之印类似，此印也可在战斗中施加，并可秘密地放在对手身上。使用者激活时，咒印的标记会扩散到对手全身，使其麻痹。然而，足够强大的查克拉释放可以挣脱封印。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "自業呪缚の印",
+          "Self-Cursing Seal",
+          "Jigō Jubaku no In"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 478,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Self-Cursing_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Self-Cursing Seal",
+        "Jigō Jubaku no In"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-juinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0044",
+      "canonical_name": "再生结界",
+      "aliases": [
+        "再生结界"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "再生结界是一种合作忍术，通过连接一组忍者的查克拉制造结界，如果受损，结界会利用从他们身体散发出的查克拉不断自我修复。结界还能阻止外部的人通过传统方法感知内部的一切。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "再生结界",
+          "Self-Repairing Barrier",
+          "Saisei Kekkai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 536,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Self-Repairing_Barrier"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Self-Repairing Barrier",
+        "Saisei Kekkai"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu,-barrier-ninjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0045",
+      "canonical_name": "感知结界",
+      "aliases": [
+        "感知结界"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种用于探测和感知大范围内入侵者的结界术。当有目标进入结界范围时，施术者能够立即感知到。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "感知结界",
+          "Sensing Barrier",
+          "Kanchi Kekkai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 419,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sensing_Barrier"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sensing Barrier",
+        "Kanchi Kekkai"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0046",
+      "canonical_name": "六道地爆天星",
+      "aliases": [
+        "六道地爆天星"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,合作忍术",
+        "阴阳遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴阳"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "六道地爆天星是一种强大的封印术，只有觉醒六道仙术的人才能使用。它结合了六道阴之力和阳之力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAMURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道 地爆天星",
+          "Six Paths — Chibaku Tensei",
+          "Rikudō — Chibaku Tensei",
+          "Six Paths — Heavenly Body Bursting from the Earth"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 690,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths_%E2%80%94_Chibaku_Tensei"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths — Chibaku Tensei",
+        "Rikudō — Chibaku Tensei",
+        "Six Paths — Heavenly Body Bursting from the Earth"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-cooperation-ninjutsu,",
+        "yin–yang-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "yin-yang"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0047",
+      "canonical_name": "六道十尾柩印",
+      "aliases": [
+        "六道十尾柩印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,封印术,瞳术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "六道十尾柩印是带土和宇智波斑使用的封印术，将十尾封印到自己体内，从而成为十尾的人柱力。轮回眼使用者在靠近十尾的位置结印后，尾兽会被迅速吸收到使用者体内。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道十尾柩印",
+          "Six Paths Ten-Tails Coffin Seal",
+          "Rikudō Jūbi Kyūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 637,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths_Ten-Tails_Coffin_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths Ten-Tails Coffin Seal",
+        "Rikudō Jūbi Kyūin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-fūinjutsu,-dōjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0048",
+      "canonical_name": "六赤阳阵",
+      "aliases": [
+        "六赤阳阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,结界忍术,瞳术,封印术",
+        "防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种最高级别的结界术，在规模和耐久性上都超越四赤阳阵。是由单人创造的结界，任何人都无法跨越，但只有被赐予六道之力的人才能使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六赤阳阵",
+          "Six Red Yang Formation",
+          "Musekiyōjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 643,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Red_Yang_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Red Yang Formation",
+        "Musekiyōjin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-barrier-ninjutsu,-dōjutsu,-fūinjutsu,",
+        "defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0049",
+      "canonical_name": "百豪の印",
+      "aliases": [
+        "百豪の印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 167,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "百豪之印是自六道仙人时代流传下来的术，需要极其精细的查克拉控制。释放时，印记会扩散到使用者的面部或全身，储存的查克拉释放到体内，大大增强术的威力。印记会永久保留在使用者额头中央。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TSUNADE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "百豪の印",
+          "Strength of a Hundred Seal",
+          "Byakugō no In"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 153,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Strength_of_a_Hundred_Seal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "heavy",
+        "reference_pool": 660,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Strength of a Hundred Seal",
+        "Byakugō no In"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0050",
+      "canonical_name": "一糸灯阵",
+      "aliases": [
+        "一糸灯阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这种结界旨在阻止任何人离开其范围。使用者在一定范围内对目标施术，在脚下竖起结界，使封印式范围内的任何人都无法逃脱。尽管力量强大，但可以被更强的力量突破。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-IRUKA-UMINO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "一糸灯阵",
+          "String Light Formation",
+          "Isshi Tōjin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 535,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/String_Light_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "String Light Formation",
+        "Isshi Tōjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0051",
+      "canonical_name": "口寄せ·雷光剣化",
+      "aliases": [
+        "口寄せ·雷光剣化"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,武器术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种特殊的忍具通灵术，允许使用者事先将刀剑或苦无等忍具封印在卷轴或衣物中，以便在需要时召唤。只需触摸封印标记即可瞬间召唤忍具。此术最大的优势是大大减少了取出忍具、摆好姿势和投掷之间的时间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·雷光剣化",
+          "Summoning: Lightning Flash Blade Creation",
+          "Kuchiyose: Raikō Kenka"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 387,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Lightning_Flash_Blade_Creation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Lightning Flash Blade Creation",
+        "Kuchiyose: Raikō Kenka"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-bukijutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0052",
+      "canonical_name": "解尾法印",
+      "aliases": [
+        "解尾法印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此封印术使用封印式束缚人柱力，然后从其体内抽取尾兽。抽取时，尾兽最初以纯粹查克拉的形式出现，也导致宿主进入接近尾兽化状态。抽取后，尾兽获得实体形态。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "解尾法印",
+          "Tail Releasing Method",
+          "Kaibi Hōin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 501,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tail_Releasing_Method"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tail Releasing Method",
+        "Kaibi Hōin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0053",
+      "canonical_name": "尾獣封印",
+      "aliases": [
+        "尾獣封印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "每当漩涡鸣人进入尾兽化形态时，初代火影的项链会激活此术来约束他。不确定此术是自行约束鸣人直到大和能压制九尾的影响，还是自行压制影响力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾獣封印",
+          "Tailed Beast Sealing",
+          "Bijū Fūin"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 438,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tailed_Beast_Sealing"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tailed Beast Sealing",
+        "Bijū Fūin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0054",
+      "canonical_name": "三宝吸潰",
+      "aliases": [
+        "三宝吸潰"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术,忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术由近松之集的第6、7、8号傀儡表演。三个傀儡摆成三角形阵势，分别打开标有佛、法、僧的机关发动此术。可怕的龙卷风爆发，将目标吸入阵型中心。吸入中心的一切都会被巨大力量彻底粉碎并从后方射出。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHIYO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MONZAEMON-CHIKAMATSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "三宝吸潰",
+          "Three Jewels Suction Crushing",
+          "Sanbō Kyūkai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 273,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Three_Jewels_Suction_Crushing"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Three Jewels Suction Crushing",
+        "Sanbō Kyūkai"
+      ],
+      "lookup_classes": [
+        "fūinjutsu,-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0055",
+      "canonical_name": "緊缚金锁之术",
+      "aliases": [
+        "緊缚金锁之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~漩涡一族,忍术,封印术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "由漩涡一族成员形成的这些锁链用于攻击目的，而非用于封印。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KARIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "緊缚金锁之术",
+          "Tight Binding Golden Chain Technique",
+          "Kinbaku Kingusari no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 663,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tight_Binding_Golden_Chain_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tight Binding Golden Chain Technique",
+        "Kinbaku Kingusari no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden~uzumaki-clan,-ninjutsu,-fūinjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0056",
+      "canonical_name": "転写封印·天照",
+      "aliases": [
+        "転写封印·天照"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,封印术,瞳术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种将天照封印在他人写轮眼中的术。封印到目标体内后，当眼睛看到使用者预设的目标时会自动触发。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "転写封印·天照",
+          "Transcription Seal: Amaterasu",
+          "Tensha Fūin: Amaterasu",
+          "Transcription Seal: Illuminating Heaven"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 393,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Transcription_Seal%3A_Amaterasu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Transcription Seal: Amaterasu",
+        "Tensha Fūin: Amaterasu",
+        "Transcription Seal: Illuminating Heaven"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-fūinjutsu,-dōjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0057",
+      "canonical_name": "开封之术",
+      "aliases": [
+        "开封之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,封印术,一般技能,战斗流派",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "忍者用于解封卷轴或纸张中所封印物品的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TENTEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOROI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "开封之术",
+          "Unsealing Technique",
+          "Kaifū no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 184,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Unsealing_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Unsealing Technique",
+        "Kaifū no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fūinjutsu,-general-skill,-fighting-style",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0058",
+      "canonical_name": "木遁·榜排之术",
+      "aliases": [
+        "木遁·榜排之术",
+        "木 遁: Hōbi 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术,封印术",
+        "木遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者迅速制造出龙面形的穹顶结构，将自己完全包围。利用木遁的性质，此封印术大幅削弱来袭的攻击，同时保护内部的使用者。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·榜排之术",
+          "Wood Release: Hōbi Technique",
+          "Mokuton: Hōbi no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 621,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_H%C5%8Dbi_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Hōbi Technique",
+        "Mokuton: Hōbi no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,-fūinjutsu",
+        "wood-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0059",
+      "canonical_name": "木遁·黙杀缚り之术",
+      "aliases": [
+        "木遁·黙杀缚り之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术,封印术",
+        "木遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将手臂变成树木，然后制造出多个枝条迅速缠绕目标，使其无法动弹。此术的强度足以束缚巨大的乌贼。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·黙杀缚り之术",
+          "Wood Release: Smothering Binding Technique",
+          "Mokuton: Mokusatsu Shibari no Jutsu"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 494,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Smothering_Binding_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Smothering Binding Technique",
+        "Mokuton: Mokusatsu Shibari no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,-fūinjutsu",
+        "wood-release,",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEAL-0060",
+      "canonical_name": "阴封印·解",
+      "aliases": [
+        "阴封印·解"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "封印术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "百豪之印以菱形印记形式存在于使用者额头上，用于逐渐积累和储存查克拉。阴封印·解打开该封印，让使用者获得储存的查克拉。释放时，图案从菱形扩散开来，将封印图案转移到他人身上，可以将封印的查克拉转移给对方。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TSUNADE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "阴封印·解",
+          "Yin Seal: Release",
+          "Infūin: Kai"
+        ],
+        "tags": [
+          "seal",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 169,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Yin_Seal%3A_Release"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEAL-AUTO",
+        "reviewed_by": "manual-translation-JT-SEAL-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Yin Seal: Release",
+        "Infūin: Kai"
+      ],
+      "lookup_classes": [
+        "fūinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

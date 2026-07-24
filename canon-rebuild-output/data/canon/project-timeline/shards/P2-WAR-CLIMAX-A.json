@@ -1,0 +1,2194 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P2-WAR-CLIMAX-A",
+    "namespace": "P2",
+    "arc_ids": [
+      "ARC-P2-WAR-MADARA",
+      "ARC-P2-JINCHURIKI-FRONT",
+      "ARC-P2-FIVE-KAGE-BATTLE",
+      "ARC-P2-ITACHI-PURSUIT"
+    ],
+    "date_start": "K068-01-11",
+    "date_end": "K068-01-20"
+  },
+  "days": [
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-111",
+      "date": "K068-01-11",
+      "title": "真正的斑",
+      "arc_id": "ARC-P2-WAR-MADARA",
+      "day_goal": "确认秽土斑的出现条件，让第四部队在第一轮压制中取得可验证情报并保住撤离通道。",
+      "start_state": [
+        "承接P2-WAR-CONFRONT末端逐项记录：斑的材料、祭品、棺与控制链决定其是否完成召回；无的每个分裂体、第四部队阵容资源与鸣人分身位置均沿用真实状态。",
+        "联军各部队沿用K068-01-10末端的伤亡、封印、补给与指挥状态，已被封印或不存在的秽土对象不会在本日复现。",
+        "鸣人本体与奇拉比是否已经离开保护区、卡卡西与凯是否可机动，只能来自此前真实决策。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-MADARA-AWAKES-01",
+          "title": "棺中的误判",
+          "thread_id": "THR-P2-WAR-MADARA",
+          "location": "兜的隐蔽施术据点与无所在战区之间的控制链",
+          "participants": [
+            "药师兜",
+            "宇智波斑（仅在秽土转生成立时）",
+            "无（若仍受控制）"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "药师兜仍能维持秽土转生。",
+            "斑的召回材料与祭品未被破坏。",
+            "无仍可作为远程沟通媒介或兜有其他安全通信方式。"
+          ],
+          "blockers": [
+            "兜死亡、失能或秽土转生已经被解除。",
+            "斑的祭品、遗传材料或棺被玩家提前毁去。"
+          ],
+          "setup": "兜只有在秽土转生术式、斑的遗传材料、祭品和对无的控制链均仍有效时，才能召回斑；斑醒来先核对复活方式而不是自动服从。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MADARA-AWAKES-01-01",
+              "order": 10,
+              "summary": "斑从棺中苏醒，因身体状态与预期不符而追问轮回天生是否已经发动。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MADARA-AWAKES-01-02",
+              "order": 20,
+              "summary": "兜借仍可控制的无说明秽土召回及身体改造，只暴露足以维持合作的信息。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MADARA-AWAKES-01-03",
+              "order": 30,
+              "summary": "斑确认自己保有意志和战斗能力，但没有因此获得兜据点的精确位置。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中斑作为高自主性的秽土战力进入第四部队战区。",
+            "兜确认其改造可让斑使用轮回眼与柱间细胞相关能力。"
+          ],
+          "state_changes": [
+            "斑的公开状态仍是秽土转生体，轮回天生计划并未发生。",
+            "兜与斑形成脆弱的术者控制关系，双方互不信任。"
+          ],
+          "stop_condition": "斑离开棺位并朝仍有联军战力的方向行动，或替代威胁完成部署。",
+          "fallbacks": [
+            {
+              "condition": "斑无法被召回或召回后已被立即封印。",
+              "status": "skipped",
+              "direction": "不生成斑的基准攻势；第四部队改为清剿无或现存最高级秽土战力，并把兜仍是术式源头列为调查目标。",
+              "preserves": "保留秽土控制者威胁、联军必须确认敌方王牌状态以及寻找施术者的战略需求。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第560话",
+              "contribution": "提供斑现身、误判复活方式与兜借无沟通的基准素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把召回条件、控制链和分支缺席写为可裁定状态。"
+            }
+          ],
+          "design_rationale": "把召回、改造和控制链拆为受存档约束的幕后因果，防止已被玩家破坏的秽土体系自动恢复。",
+          "reference_facts": [
+            "斑生前如何获得柱间力量属于幕后历史，现场联军此时并不知道。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01",
+          "title": "第四部队的第一轮接触",
+          "thread_id": "THR-P2-WAR-MADARA",
+          "location": "第四部队前沿阵地",
+          "participants": [
+            "宇智波斑（若已现身）",
+            "我爱罗或实际第四部队指挥者",
+            "大野木或实际在场顾问",
+            "第四部队幸存者",
+            "鸣人影分身（若仍存在）",
+            "玩家角色（若隶属第四部队、侦察或支援班）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "斑已成功现身并抵达第四部队战区。",
+            "第四部队尚有可组织的指挥、通信和至少一条后撤路线。"
+          ],
+          "blockers": [
+            "斑未被召回或已被封印。",
+            "第四部队已撤离该坐标，或玩家此前摧毁了斑抵达此处所需的引导链。"
+          ],
+          "setup": "斑以大范围火遁和近战压迫试探部队；现场的首要任务是识别能力并保持阵形，而不是让所有人围攻不死目标。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01-01",
+              "order": 10,
+              "summary": "前沿哨确认新敌人与此前自称斑的面具人不是同一具身体，并把目视特征送往指挥节点。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01-02",
+              "order": 20,
+              "summary": "斑用火遁、体术和须佐能乎撕开阵线，迫使水遁班、砂防与土遁班协同。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01-03",
+              "order": 30,
+              "summary": "玩家决定优先掩护伤员撤出、维护情报链或参与限制斑的行动；选择会改变前线伤亡与后续可用支援。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01-04",
+              "order": 40,
+              "summary": "我爱罗与大野木只在实际到场且有余力时，为鸣人分身或替代攻击手制造一次试探轮回眼的窗口。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-FOURTH-CONTACT-01-05",
+              "order": 50,
+              "summary": "联军确认斑能以轮回眼吸收查克拉忍术后停止无效齐射，转入疏散与限制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军取得斑拥有永恒万花筒、须佐能乎及轮回眼吸收能力的第一手情报。",
+            "第四部队的伤亡、撤离人数和鸣人分身消耗按玩家选择记录。"
+          ],
+          "state_changes": [
+            "第四部队阵形由进攻转为分层撤离与迟滞。",
+            "斑能力情报进入现场指挥层，但尚未成为全军公共知识。"
+          ],
+          "stop_condition": "前沿部队完成第一轮脱离，或斑的下一次范围攻击迫使现场进入紧急避难。",
+          "fallbacks": [
+            {
+              "condition": "基准第四部队阵容、鸣人分身或两位影任一缺席。",
+              "status": "altered",
+              "direction": "由实际在场指挥者组织能力侦测与撤离；缺席者的术式不被替补演出，必要时只取得较少情报。",
+              "preserves": "保留新敌人身份核验、避免无效攻击与记录真实伤亡的核心战役功能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第560至561话",
+              "contribution": "提供斑对第四部队的火遁、体术、须佐能乎和轮回眼展示。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足阵地、通信、伤员撤离和玩家战术选择。"
+            }
+          ],
+          "design_rationale": "把连续招式压缩为一次能力侦测与生存选择，让玩家的战术入口不等于能正面击败斑。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-HQ-IDENTITY-01",
+          "title": "两个斑的情报矛盾",
+          "thread_id": "THR-P2-WAR-DEPLOYMENT",
+          "location": "忍界联军总部情报席",
+          "participants": [
+            "鹿久或实际联军参谋长",
+            "亥一或实际通信负责人",
+            "青或实际感知负责人",
+            "纲手与艾或实际在总部的影级指挥者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "第四部队成功送出斑的可验证目视报告。",
+            "总部通信与感知岗位至少一条链路仍工作。"
+          ],
+          "blockers": [
+            "总部被毁或通信链完全中断。",
+            "报告只有传闻且无法与面具人同时在场证据交叉验证。"
+          ],
+          "setup": "总部收到带时间戳的第四部队目视报告后，必须区分秽土斑与面具人，而不能把两个敌人的位置和能力合并。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-IDENTITY-01-01",
+              "order": 10,
+              "summary": "通信席交叉核对第四部队影像描述、秽土特征和面具人仍在另一战区的感知记录。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-IDENTITY-01-02",
+              "order": 20,
+              "summary": "参谋层判断面具人利用斑之名发动战争，但暂不推断其真实身份。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-IDENTITY-01-03",
+              "order": 30,
+              "summary": "总部向各战区发布双目标代号、最后确认位置和禁止混报的通信规则。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军正式把秽土斑与面具人列为两个独立目标。",
+            "只有接到本次通报的指挥节点获得该结论。"
+          ],
+          "state_changes": [
+            "斑的身份确认进入受限军情。",
+            "面具人真实身份继续保持未知。"
+          ],
+          "stop_condition": "双目标通报送达仍在线的战区指挥节点，并收到至少一处回执。",
+          "fallbacks": [
+            {
+              "condition": "总部无法完成全军广播。",
+              "status": "altered",
+              "direction": "将双目标结论限制在取得回执的节点，其他部队继续使用“疑似斑”并承担误判风险。",
+              "preserves": "保留情报必须经来源、时间戳和通信传播才能成为角色知识。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第561话",
+              "contribution": "提供总部讨论面具人为何使用斑之名的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立双目标代号、回执和知识边界。"
+            }
+          ],
+          "design_rationale": "明确知识传播范围，避免角色因标题或模型知识提前把面具人认作带土。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中秽土斑抵达第四部队战区；若召回条件失败，则由实际最高威胁替代且明确记为altered或skipped。",
+        "第四部队已开始撤离，斑的写轮眼、须佐能乎与轮回眼吸收能力只在取得报告的节点可知。",
+        "总部确认秽土斑和面具人是两个目标，但没有获得面具人的真实身份。"
+      ],
+      "transition": "斑的大范围术式迫使K068-01-12进入灾害级疏散；总部保留双目标通信，不让其他战线自动共享尚未送达的细节。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-112",
+      "date": "K068-01-12",
+      "title": "陨石后的战场",
+      "arc_id": "ARC-P2-WAR-MADARA",
+      "day_goal": "结算陨石攻击的真实损失、建立医疗与撤离链，并让五影出动服从权限和运输条件。",
+      "start_state": [
+        "斑是否能够召唤陨石取决于前日召回与能力状态；第四部队沿用前日具体阵形、撤离路线和伤员数量。",
+        "我爱罗、大野木、鸣人分身及其他拦截者只能使用前日剩余查克拉和已知能力。",
+        "总部已经区分两个高危目标，但只有收到通报者知道这一点。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-METEOR-EVAC-01",
+          "title": "两颗陨石",
+          "thread_id": "THR-P2-WAR-MADARA",
+          "location": "第四部队战区上空与疏散走廊",
+          "participants": [
+            "宇智波斑",
+            "我爱罗或实际防御负责人",
+            "大野木或实际土遁负责人",
+            "第四部队幸存者",
+            "玩家角色（若位于疏散、结界、医疗或通信岗位）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "斑仍在战区且具备发动天碍震星的能力。",
+            "第四部队至少保有感知预警或肉眼发现窗口。"
+          ],
+          "blockers": [
+            "斑的轮回眼能力被封印、打断或未形成。",
+            "部队已提前撤出陨石影响范围。"
+          ],
+          "setup": "斑在第一轮试探后发动灾害级陨石攻击；任何拦截只能降低损失，无法假定整支部队安全。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-EVAC-01-01",
+              "order": 10,
+              "summary": "感知班发现第一颗陨石并给出极短预警，现场指挥立即划分拦截区和撤离区。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-EVAC-01-02",
+              "order": 20,
+              "summary": "我爱罗与大野木仅在仍有余力时减重、承托第一颗陨石，其他人争取撤离距离。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-EVAC-01-03",
+              "order": 30,
+              "summary": "玩家选择维持撤离标记、协助防御术阵或抢救无法移动者；无法同时覆盖全部责任区。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-EVAC-01-04",
+              "order": 40,
+              "summary": "第二颗陨石撞击第一颗，使拦截转为减灾，冲击波切断部分通信与道路。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-EVAC-01-05",
+              "order": 50,
+              "summary": "幸存指挥者下令停止追击，按责任区点名并标出未确认人员。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "陨石攻击造成的死亡、重伤、失联与装备损失逐项登记，不使用“几乎全灭”代替名单。",
+            "我爱罗与大野木的查克拉和伤势按实际拦截程度结算。"
+          ],
+          "state_changes": [
+            "第四部队失去原阵地并转入分散集结。",
+            "战区通信降级，医疗和封印物资出现缺口。"
+          ],
+          "stop_condition": "第二次冲击结束，幸存者进入标记过的集结区或被列为失联。",
+          "fallbacks": [
+            {
+              "condition": "陨石未落下或只有一颗形成。",
+              "status": "altered",
+              "direction": "按实际范围攻击重算撤离与伤亡，不补造第二颗陨石；仍保留高阶秽土战力迫使阵地重组的后果。",
+              "preserves": "保留资源结算、幸存者点名和防止连续满状态作战。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第561话",
+              "contribution": "提供天碍震星、两次撞击与我爱罗大野木减灾的基准。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足预警、责任区、失联名单与后送链。"
+            }
+          ],
+          "design_rationale": "把灾害攻击写成减灾和取舍场景，避免用一条旧记录抹掉后续可玩的搜救与资源后果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01",
+          "title": "冲击区分诊",
+          "thread_id": "THR-P2-WAR-DEPLOYMENT",
+          "location": "第四部队临时集结区",
+          "participants": [
+            "第四部队医疗忍者",
+            "土台或实际幸存副指挥",
+            "鸣人影分身（若尚未消散）",
+            "玩家角色（若参与搜救、医疗或通信恢复）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "陨石或替代范围攻击造成需要分诊的伤亡。",
+            "至少一支医疗或搜救小组抵达集结区。"
+          ],
+          "blockers": [
+            "集结区再次被敌方完全占领。",
+            "所有人员已由其他路线完成后送。"
+          ],
+          "setup": "冲击后先恢复人员清点、止血和通信，鸣人分身不因主角身份跳过查克拉耗尽。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01-01",
+              "order": 10,
+              "summary": "医疗班按呼吸、失血、挤压伤和查克拉枯竭分区，记录每名被转运者。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01-02",
+              "order": 20,
+              "summary": "斑的木遁追击逼近，留守者必须在继续搜救与立即移动之间取舍。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01-03",
+              "order": 30,
+              "summary": "玩家决定把有限封印布、担架或通信电池优先交给哪个责任区，并留下未覆盖风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01-04",
+              "order": 40,
+              "summary": "若九喇嘛愿为鸣人提供有限查克拉，分身只能用于挡住一轮木遁并随后消散；该帮助不等于双方完全和解。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-METEOR-TRIAGE-01-05",
+              "order": 50,
+              "summary": "集结区完成首次名单与后撤排序，重伤者开始向后方医疗点转运。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "第四部队获得可追踪的幸存、伤亡、失联和后送清单。",
+            "鸣人分身是否消散、九喇嘛是否提供有限援助被单独记录。"
+          ],
+          "state_changes": [
+            "医疗物资和运输能力按选择扣减。",
+            "斑的木遁能力进入现场已知情报。"
+          ],
+          "stop_condition": "最后一批可移动伤员离开集结区，留守搜救组收到撤离时限。",
+          "fallbacks": [
+            {
+              "condition": "鸣人分身不存在或九喇嘛拒绝提供查克拉。",
+              "status": "altered",
+              "direction": "由现有防御班争取撤离时间；若无法挡住木遁则缩短搜救窗口并增加失联，不能凭空补入鸣人。",
+              "preserves": "保留伤亡清单、资源扣减和撤离时限。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第561话",
+              "contribution": "提供陨石后果、鸣人分身枯竭及九尾有限借力的基准。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立分诊、后送和资源清点。"
+            }
+          ],
+          "design_rationale": "在大战高潮中保留医疗、运输和体力逻辑，并区分九喇嘛的短暂利益合作与之后的真正协作。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KAGE-DEPLOY-01",
+          "title": "五影出动",
+          "thread_id": "THR-P2-FIVE-KAGE-BATTLE",
+          "location": "联军总部运输区与第四部队残阵",
+          "participants": [
+            "纲手或实际木叶最高指挥者",
+            "艾或实际雷影",
+            "照美冥或实际水影",
+            "我爱罗或实际风影",
+            "大野木或实际土影",
+            "麻布衣",
+            "玄间与雷同等实际运输术成员"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少两名现任影或获授权代理决定组成联合牵制队。",
+            "总部有可接权的参谋链。",
+            "天送、飞雷神或常规高速路线至少一条可用且落点已确认。"
+          ],
+          "blockers": [
+            "相关影死亡、失能或不再任职且没有代理。",
+            "运输术人员、信标或总部接权链失效。"
+          ],
+          "setup": "只有现任领导权限、总部替代指挥、运输术和落点信标全部落实，影级战力才能离开总部或各自战区。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-DEPLOY-01-01",
+              "order": 10,
+              "summary": "总部根据陨石战报确认常规部队无法持续牵制斑，并核对每位影的真实位置、伤势和职权。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-DEPLOY-01-02",
+              "order": 20,
+              "summary": "纲手与艾评估天送之术对活体的撕裂风险，照美冥的飞雷神运输则等待稳定信标。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-DEPLOY-01-03",
+              "order": 30,
+              "summary": "出动者移交总部指挥权限、携带最低医疗和通信物资，再分路线抵达第四部队残阵。",
+              "causal_role": "transition"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-DEPLOY-01-04",
+              "order": 40,
+              "summary": "实际到场的五村领袖或获授权代理建立共同指挥，不把缺席者的头衔当作战力。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线五影在第四部队残阵会合；变更线按实际存活和权限组成影级联合队。",
+            "鹿久或实际参谋长接管总部日常调度。"
+          ],
+          "state_changes": [
+            "影级战力位置转移到斑所在战区。",
+            "运输术施术者、纲手和艾记录相应身体与查克拉代价。"
+          ],
+          "stop_condition": "到场者完成伤员接手、敌情交换和第一轮战斗分工。",
+          "fallbacks": [
+            {
+              "condition": "无法组成原作五影阵容。",
+              "status": "altered",
+              "direction": "由实际领袖、代理与现存精锐组成联合牵制队；走常规路线者按旅行时间晚到，绝不瞬移补齐五人。",
+              "preserves": "保留各村共同承担斑威胁、总部必须有人接权和运输产生代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第562话",
+              "contribution": "提供纲手、艾与照美冥的运输及五影会合。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足领导权限、落点信标、接权和运输代价。"
+            }
+          ],
+          "design_rationale": "为五影会合补上权限、危险运输、落点和总部交接，防止角色无移动跨战场。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第四部队已经完成第一轮伤亡和失联清点，重伤者沿实际后送路线移动。",
+        "基准线影级联合队在斑战区成立，缺席或失能者由存档认可的代理替代而不会自动复职。",
+        "斑已展示陨石与木遁；具体情报仅通过回执进入总部及接报战区。"
+      ],
+      "transition": "K068-01-13影级联合队接管斑战区，鸣人与奇拉比所在战线则继续独立结算，两个战场不共享即时视野。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-113",
+      "date": "K068-01-13",
+      "title": "两条主战线",
+      "arc_id": "ARC-P2-JINCHURIKI-FRONT",
+      "day_goal": "把五影对斑与鸣人、奇拉比对面具人的战斗拆为独立指挥线程，并建立援军实际行军路线。",
+      "start_state": [
+        "影级联合队沿用前日到场人员、运输伤害与查克拉，不因进入新剧情日恢复满状态。",
+        "鸣人本体、奇拉比及面具人的位置只来自此前战区记录；未离开保护区者不会凭空出现在本日战线。",
+        "面具人可支配的人柱力与尾兽数量取决于此前秽土、封印和外道魔像状态。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KAGE-LINE-01",
+          "title": "影级牵制线",
+          "thread_id": "THR-P2-FIVE-KAGE-BATTLE",
+          "location": "第四部队废墟外围",
+          "participants": [
+            "宇智波斑",
+            "实际到场的五村影或代理",
+            "第四部队封印与医疗支援"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "斑仍可行动。",
+            "至少两名影级战力或代理完成会合。",
+            "后送走廊尚未被切断。"
+          ],
+          "blockers": [
+            "斑已被可靠封印或联合队已全员失去行动能力。",
+            "战区被迫整体撤离。"
+          ],
+          "setup": "联合队以轮换和试探限制斑的推进方向，医疗者不能同时承担持续主攻和全队恢复。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-LINE-01-01",
+              "order": 10,
+              "summary": "到场领袖交换已确认的轮回眼吸收、须佐能乎、陨石和木遁情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-LINE-01-02",
+              "order": 20,
+              "summary": "联合队用砂、熔遁、水遁、雷遁与土遁的实际可用组合试探斑的反应，而非重复无效齐射。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-LINE-01-03",
+              "order": 30,
+              "summary": "医疗与封印班利用短暂窗口转运伤员并标记斑的再生速度。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-LINE-01-04",
+              "order": 40,
+              "summary": "双方形成可持续数个阶段的牵制线，斑仍保有明显优势。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "影级联合队掌握斑的初步能力表与轮换方案。",
+            "斑没有被宣布击败或成功封印。"
+          ],
+          "state_changes": [
+            "每名到场领袖的伤势和查克拉分别记录。",
+            "第四部队残员从主攻转为封印、医疗和警戒支援。"
+          ],
+          "stop_condition": "联合队完成第一轮轮换并保持一条安全后送走廊。",
+          "fallbacks": [
+            {
+              "condition": "原作五影阵容不成立。",
+              "status": "altered",
+              "direction": "按实际能力重新设计轮换与撤离，缺失的血继或医疗功能必须形成明确战术缺口。",
+              "preserves": "保留联合指挥、能力侦测和资源消耗。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第562至563话",
+              "contribution": "提供五影共同对峙斑的战斗基础。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足轮换、封印班、医疗走廊和个体资源账。"
+            }
+          ],
+          "design_rationale": "把五影战写成资源受限的联合牵制，给后续木遁与分身升级留下因果空间。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01",
+          "title": "六名人柱力",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "面具人控制的林地战区",
+          "participants": [
+            "面具人",
+            "漩涡鸣人（若已到场）",
+            "奇拉比（若已到场）",
+            "八尾牛鬼",
+            "仍受控制的秽土人柱力",
+            "玩家角色（若经护卫、感知或援军路线合理到场）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人或奇拉比至少一人实际进入该战区。",
+            "面具人仍能控制至少一名秽土人柱力或等价尾兽载体。"
+          ],
+          "blockers": [
+            "鸣人与奇拉比均未离开保护区或已失去行动能力。",
+            "秽土人柱力已全部被封印或控制链被切断。"
+          ],
+          "setup": "面具人以共享视野和尾兽化人柱力围攻在场目标；鸣人和奇拉比必须先识别控制方式，不能直接知道每根黑棒的位置。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01-01",
+              "order": 10,
+              "summary": "面具人用仍可控制的人柱力构成包围，并拒绝透露真实姓名，只宣称月之眼计划。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01-02",
+              "order": 20,
+              "summary": "熔遁、泡沫、珊瑚与高速突击从不同方向压缩鸣人与奇拉比的活动空间。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01-03",
+              "order": 30,
+              "summary": "玩家选择帮助建立视野盲区、护住撤退路线或标记某一名人柱力的接收器；错误判断会暴露自身位置。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01-04",
+              "order": 40,
+              "summary": "鸣人依据亲历佩恩战的知识提出共享视野与黑棒假说，奇拉比和牛鬼用实际命中加以验证。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-CONTACT-01-05",
+              "order": 50,
+              "summary": "在场方取得一处接收器线索，但仍未解除任何尾兽控制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人一方确认写轮眼与轮回眼共享视野、黑棒接收器及尾兽重新封入秽土宿主的基准机制。",
+            "面具人身份仍未知，面具只被确认具有高硬度和时空间虚化能力。"
+          ],
+          "state_changes": [
+            "人柱力战线进入受控包围战。",
+            "鸣人、奇拉比及玩家按实际受击记录灼伤、束缚、体力和查克拉消耗。"
+          ],
+          "stop_condition": "在场方撤到临时掩体并完成第一次机制复盘，或因阵容不足选择有序撤离。",
+          "fallbacks": [
+            {
+              "condition": "基准双方阵容不完整。",
+              "status": "altered",
+              "direction": "按现存载体和实际到场者缩小交战；没有鸣人时由亲历佩恩机制者或现场试验逐步发现共享视野。",
+              "preserves": "保留控制机制调查、面具人捕获尾兽的目标和知识必须来自亲历。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第564至565话",
+              "contribution": "提供鸣人与奇拉比对六名秽土人柱力、共享视野和黑棒机制。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足到场路线、玩家侦测入口和撤退选择。"
+            }
+          ],
+          "design_rationale": "把旧资料中的连续招式改为可观察、可验证的战术谜题，并隔离面具人身份知识。",
+          "reference_facts": [
+            "这些人柱力生前经历不会因秽土现身自动成为联军公共知识。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-HQ-REINFORCE-01",
+          "title": "援军路线重排",
+          "thread_id": "THR-P2-WAR-DEPLOYMENT",
+          "location": "忍界联军总部作战席",
+          "participants": [
+            "鹿久或实际参谋长",
+            "亥一或实际通信负责人",
+            "青或实际感知负责人",
+            "各部队现任指挥者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "总部仍有作战席和至少两条战区通信。",
+            "至少一支部队已经完成本区主要封印并可抽调。"
+          ],
+          "blockers": [
+            "总部通信瘫痪。",
+            "所有部队仍被本区敌人牵制或缺乏补给。"
+          ],
+          "setup": "总部只能依据各部队真实清剿和封印进度调派援军，尚未结束本区战斗的部队不能被写成已经抵达。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-REINFORCE-01-01",
+              "order": 10,
+              "summary": "作战席逐部队核对未封印目标、伤亡、补给、夜间轮换和最后确认坐标。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-REINFORCE-01-02",
+              "order": 20,
+              "summary": "总部把可抽调人员分为人柱力战线增援、第四部队后送支援和沿途封锁三组。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-HQ-REINFORCE-01-03",
+              "order": 30,
+              "summary": "每组收到路线、预计抵达日、通信窗口和中止条件，未收到回执者不计为已出发。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "已完成原战区任务的部队获得新的行军任务；仍在作战者保留原指挥关系。",
+            "卡卡西、凯及同期伙伴是否能支援由其实际位置和体力决定。"
+          ],
+          "state_changes": [
+            "联军补给与通信负荷上升。",
+            "人柱力战线援军形成可追踪的行军队列。"
+          ],
+          "stop_condition": "所有新命令取得回执或被标记为通信失败，作战席完成预计抵达表。",
+          "fallbacks": [
+            {
+              "condition": "无法统一调派援军。",
+              "status": "altered",
+              "direction": "由取得局部战报的战区指挥者自行派出小队并记录较慢路线；其他部队保持原位。",
+              "preserves": "保留真实行军时间、原战区责任和回执边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第565话",
+              "contribution": "提供总部查询各部队并命令支援鸣人与奇拉比的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足逐部队状态、路线、到达日和通信回执。"
+            }
+          ],
+          "design_rationale": "防止旧资料一句“伙伴们都赶来”造成跨战区瞬移，并把援军到场变成后续可检查条件。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "五影或实际影级联合队与斑维持牵制，个体伤势和查克拉未被重置。",
+        "鸣人与奇拉比若已到场，只掌握共享视野、黑棒和时空间虚化的可验证机制，不知道面具人身份。",
+        "援军已经按真实战区进度出发，但尚未一律抵达。"
+      ],
+      "transition": "K068-01-14人柱力战线继续尝试拆除控制链，卡卡西和凯只有完成原任务并走完支援路线后才能进入。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-114",
+      "date": "K068-01-14",
+      "title": "接收器与增援",
+      "arc_id": "ARC-P2-JINCHURIKI-FRONT",
+      "day_goal": "让援军抵达和控制机制突破建立在路线、查克拉与现场验证上，同时保持佐助线程独立。",
+      "start_state": [
+        "人柱力战线沿用前日包围、伤势与接收器线索。",
+        "总部援军按K068-01-13回执和预计路线移动，不能跳过原战区清剿。",
+        "佐助是否仍在山岳之墓场、是否完成眼睛移植及其阵营选择继承此前实际状态。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01",
+          "title": "墨封印的窗口",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "被尾兽攻击清出的林地",
+          "participants": [
+            "漩涡鸣人",
+            "奇拉比",
+            "八尾牛鬼",
+            "仍受控制的秽土人柱力",
+            "面具人",
+            "玩家角色（若已抵达该战线）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "奇拉比与牛鬼仍可协作。",
+            "至少一名受控人柱力可被短暂击倒。",
+            "封印或支援人员能够抵达窗口。"
+          ],
+          "blockers": [
+            "奇拉比失能或牛鬼无法显现。",
+            "人柱力控制已提前解除或面具人撤离。"
+          ],
+          "setup": "奇拉比清除遮挡后尝试用墨分身固定宿主，封印需要持续时间且面具人可从地下干预。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01-01",
+              "order": 10,
+              "summary": "八尾以可控范围清开林木，鸣人和支援者标记已确认的黑棒位置。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01-02",
+              "order": 20,
+              "summary": "墨分身暂时束缚倒下的人柱力，但尾兽化与面具人的时空间介入开始破坏封印窗口。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01-03",
+              "order": 30,
+              "summary": "玩家选择保护封印班、截断面具人接近路线或优先救出被珊瑚与泡沫限制者。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01-04",
+              "order": 40,
+              "summary": "面具人恢复仍可控制的宿主并升级尾兽化，迫使联军记录失败原因而非宣称已经封印。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-JINCHURIKI-PROBE-01-05",
+              "order": 50,
+              "summary": "队伍确认完全尾兽化会改变黑棒位置，下一轮必须从宿主体内外同时处理。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "第一次批量封印在基准线失败，但留下黑棒位置变化和控制强度情报。",
+            "玩家选择决定封印班、伤员和标记数据保留程度。"
+          ],
+          "state_changes": [
+            "奇拉比与牛鬼承担完全尾兽化和范围清场消耗。",
+            "面具人暴露其能远程收回和重新驱动宿主。"
+          ],
+          "stop_condition": "联军退出失效封印阵，保存至少一份接收器标记或明确标记已丢失。",
+          "fallbacks": [
+            {
+              "condition": "无法发动墨封印或封印目标数量改变。",
+              "status": "altered",
+              "direction": "用现有封印手段对单一目标试验；没有条件时转为撤离与保留情报，不补写批量失败。",
+              "preserves": "保留控制链需要持续拆解和每次尝试都有资源代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第565至566话",
+              "contribution": "提供八尾清场、墨分身封印与面具人恢复人柱力。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足封印持续时间、玩家职责与失败数据。"
+            }
+          ],
+          "design_rationale": "让失败的封印尝试产生可用信息与资源代价，而不是重复一串攻击。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KAKASHI-GUY-ARRIVE-01",
+          "title": "从原战区赶来的两人",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "人柱力战线西侧接近路",
+          "participants": [
+            "旗木卡卡西（若可机动）",
+            "迈特凯（若可机动）",
+            "漩涡鸣人",
+            "奇拉比",
+            "面具人",
+            "玩家角色（若负责引导援军或掩护会合）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "卡卡西与凯已经完成原战区任务并收到援军坐标。",
+            "二人有足够体力走完路线且未被其他指挥任务扣留。"
+          ],
+          "blockers": [
+            "二人死亡、重伤、通信未送达或仍被原战区敌人牵制。",
+            "鸣人不在该处或已安全脱离。"
+          ],
+          "setup": "卡卡西和凯只能带着原战区的伤势、忍具与查克拉抵达；他们先救援被时空间术捕获的目标，再交换有限情报。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAKASHI-GUY-ARRIVE-01-01",
+              "order": 10,
+              "summary": "引导组用前日约定的识别信号把卡卡西和凯带入战线，二人报告沿途耗时和当前余力。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAKASHI-GUY-ARRIVE-01-02",
+              "order": 20,
+              "summary": "面具人趁鸣人受制时尝试接触并转移他，虚化窗口极短。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAKASHI-GUY-ARRIVE-01-03",
+              "order": 30,
+              "summary": "玩家决定用攻击迫使虚化、拉走鸣人或保护比的侧翼，为卡卡西与凯创造唯一救援窗口。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAKASHI-GUY-ARRIVE-01-04",
+              "order": 40,
+              "summary": "卡卡西和凯以实际剩余能力阻断转移，随后从鸣人处获知共享视野与黑棒机制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线卡卡西与凯进入人柱力战线并救下鸣人；未到场分支由实际援军承担或失败。",
+            "二人只知道鸣人亲口说明及现场看到的面具人能力。"
+          ],
+          "state_changes": [
+            "卡卡西记录神威可用次数与眼部负担。",
+            "凯记录已开启门数、肌肉损伤和不得直接开启死门的医疗警告。"
+          ],
+          "stop_condition": "援军与原小队完成一次短促情报交换，并决定继续作战或护送撤离。",
+          "fallbacks": [
+            {
+              "condition": "卡卡西或凯只有一人到场，或由其他援军先到。",
+              "status": "altered",
+              "direction": "由实际到场者执行有限救援并据其能力重算结果；缺席者的神威、体术或台词不得代演。",
+              "preserves": "保留援军必须有路线、救援依赖时机和知识只来自现场交接。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第566话",
+              "contribution": "提供卡卡西与凯阻止面具人转移鸣人的基准。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足行军、识别信号、余力和玩家救援入口。"
+            }
+          ],
+          "design_rationale": "给经典救援补上行军、身份确认和资源账，避免卡卡西与凯从另一战场瞬移且无限使用高阶术。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-SASUKE-DEPARTS-01",
+          "title": "佐助离开山岳墓场",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "山岳之墓场与外部山道",
+          "participants": [
+            "宇智波佐助（若仍在据点）",
+            "残存白绝监视者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍存活并位于山岳之墓场。",
+            "眼睛移植或替代治疗已经达到可行动标准。",
+            "佐助选择离开监视。"
+          ],
+          "blockers": [
+            "佐助未接受眼睛移植、治疗未完成或已在其他地点。",
+            "佐助被拘押、失能或已改变阵营并主动留下。"
+          ],
+          "setup": "佐助仅在完成实际眼部治疗、能够行动且选择离开时突破监视；他不会自动知道战争全貌。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-DEPARTS-01-01",
+              "order": 10,
+              "summary": "佐助确认移植眼睛的视力、疼痛和须佐能乎负担是否达到可行动标准。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-DEPARTS-01-02",
+              "order": 20,
+              "summary": "残存白绝试图以命令和监视阻止他离开，暴露据点外仍有组织活动。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-DEPARTS-01-03",
+              "order": 30,
+              "summary": "佐助突破或绕开监视进入山道，只获得自己亲眼所见的白绝线索。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线佐助离开山岳之墓场，但尚未获得完整战争目标。",
+            "眼睛状态、装备和首次使用造成的消耗被记录。"
+          ],
+          "state_changes": [
+            "佐助位置变为山岳墓场外山道。",
+            "白绝阵营知道佐助脱离监视的范围取决于是否有人成功传讯。"
+          ],
+          "stop_condition": "佐助抵达可观察外部战况的山路节点，决定先找情报而非瞬移到主战场。",
+          "fallbacks": [
+            {
+              "condition": "佐助不从山岳墓场出发。",
+              "status": "altered",
+              "direction": "从其真实位置和身体状态安排调查、休养或受监控移动；不补发永恒万花筒，也不强制其前往鸣人处。",
+              "preserves": "保留佐助必须通过实际渠道获知战争、并对下一行动拥有选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第566话",
+              "contribution": "提供佐助离开山岳之墓场的基准。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足眼部恢复、监视突破与知识限制。"
+            }
+          ],
+          "design_rationale": "把佐助出场建立在治疗、位置和自主选择上，并限制他对战争的初始知识。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "人柱力战线已验证完全尾兽化会改变接收器位置，第一次批量封印的成败和损失已记录。",
+        "基准线卡卡西与凯实际抵达并记录神威、开门体术的剩余负担；缺席分支不会借用其能力。",
+        "基准线佐助位于山岳墓场外山道，只知道白绝监视异常，尚未知道鼬或兜位置。"
+      ],
+      "transition": "K068-01-15鸣人一方尝试从四尾内部解除接收器；斑战区同时进入木遁升级阶段，两个线程继续独立结算。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-115",
+      "date": "K068-01-15",
+      "title": "尾兽的名字",
+      "arc_id": "ARC-P2-JINCHURIKI-FRONT",
+      "day_goal": "把鸣人与孙悟空的接触写成有限知识与信任交换，并让黑棒拆除、外道魔像回收和斑的木遁升级各有条件。",
+      "start_state": [
+        "鸣人、奇拉比、卡卡西、凯及玩家沿用前日伤势与余力；未到场者不参与。",
+        "四尾孙悟空与老紫只有仍被秽土和面具人控制时才会形成基准内部会面。",
+        "影级联合队在另一战区持续轮换，不能读取鸣人意识空间的对话。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-SON-GOKU-PARLEY-01",
+          "title": "被锁链束缚的孙悟空",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "四尾孙悟空的意识空间",
+          "participants": [
+            "漩涡鸣人",
+            "四尾孙悟空",
+            "九喇嘛（仅能感知其与鸣人的内在交流）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "四尾及老紫仍受面具人控制。",
+            "鸣人被四尾吞入且没有失去意识。"
+          ],
+          "blockers": [
+            "四尾已被封印、解放或未出现在战场。",
+            "鸣人未到场、失能或以其他方式避开吞入。"
+          ],
+          "setup": "鸣人被四尾吞入且仍能维持意识时，才可能见到被锁链束缚的孙悟空；这段对话不会自动传给外部同伴。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-PARLEY-01-01",
+              "order": 10,
+              "summary": "孙悟空要求鸣人使用其本名，并质问鸣人是否也只把尾兽当作力量。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-PARLEY-01-02",
+              "order": 20,
+              "summary": "鸣人依据自己与奇拉比、九喇嘛的真实关系承认不足，而不是承诺立即获得全部尾兽信任。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-PARLEY-01-03",
+              "order": 30,
+              "summary": "孙悟空只提供颈部接收器位置和解除方法，并声明获救也不等于立刻结盟。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-PARLEY-01-04",
+              "order": 40,
+              "summary": "鸣人接受有限交易，准备从体内外同时拔除黑棒。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人得知四尾本名、接收器位置与孙悟空不愿被控制的立场。",
+            "孙悟空只对鸣人形成初步认可，没有把记忆或力量公开给全军。"
+          ],
+          "state_changes": [
+            "鸣人与孙悟空建立一条私密的有限信任。",
+            "接收器位置知识仅属于鸣人及其之后主动告知者。"
+          ],
+          "stop_condition": "鸣人离开意识对话并开始执行拔除方案，外部时间继续流逝。",
+          "fallbacks": [
+            {
+              "condition": "内部会面条件不成立。",
+              "status": "skipped",
+              "direction": "通过外部侦测继续寻找接收器；不让鸣人凭空得知孙悟空本名、位置或态度。",
+              "preserves": "保留尾兽控制必须被解除以及信任只能由真实接触建立。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第567至568话",
+              "contribution": "提供鸣人与孙悟空意识交流及黑棒位置。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "限制意识空间知识传播并保留尾兽信任门槛。"
+            }
+          ],
+          "design_rationale": "保护尾兽主体性与知识边界，不把一次真诚谈话写成无条件收服。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01",
+          "title": "内外同时拔除",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "四尾本体周围战场",
+          "participants": [
+            "漩涡鸣人",
+            "四尾孙悟空",
+            "奇拉比与八尾牛鬼",
+            "面具人",
+            "卡卡西与凯（若到场）",
+            "玩家角色（若在外部支援组）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人已从孙悟空处取得接收器位置。",
+            "奇拉比或其他支援能够暂时限制四尾。",
+            "面具人与外道魔像控制链仍在。"
+          ],
+          "blockers": [
+            "鸣人未取得位置或已失能。",
+            "四尾已经离场，或外道魔像无法被召唤。"
+          ],
+          "setup": "鸣人必须从外部接近颈部黑棒，并以留在体内的分身同时发力；面具人的锁链会缩短窗口。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01-01",
+              "order": 10,
+              "summary": "奇拉比和牛鬼暂时固定四尾，外部人员确认鸣人已从口中脱离。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01-02",
+              "order": 20,
+              "summary": "面具人用锁链回收四尾并试图连同鸣人一起吸入，接收器周围查克拉干扰加剧。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01-03",
+              "order": 30,
+              "summary": "玩家选择牵制锁链、保护鸣人本体或为体内分身传递时机；所选之外的风险由其他人承担。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01-04",
+              "order": 40,
+              "summary": "鸣人以外部九尾查克拉模式和内部仙人分身同时发力，按当前资源裁定是否拔出黑棒。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SON-GOKU-ROD-01-05",
+              "order": 50,
+              "summary": "基准线黑棒被拔除，但面具人立刻用外道魔像收回四尾；鸣人只保留孙悟空自愿留下的少量查克拉联系。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线四尾控制接收器被拔除后又被外道魔像回收，没有留在战场成为自由盟友。",
+            "鸣人获得的尾兽查克拉联系来自孙悟空自愿赠予，不等于抽取整只尾兽。"
+          ],
+          "state_changes": [
+            "面具人失去一根接收器并升级威胁等级。",
+            "鸣人、分身与外部支援者结算高强度查克拉和体力消耗。"
+          ],
+          "stop_condition": "四尾被解放、回收或重新控制的状态明确，鸣人与外部队伍退出锁链范围。",
+          "fallbacks": [
+            {
+              "condition": "拔除、回收或支援任一环节改变。",
+              "status": "altered",
+              "direction": "按实际结果保留四尾在战场、被封印或被回收的状态；未获孙悟空同意时不给鸣人尾兽查克拉。",
+              "preserves": "保留解除控制的协作成本、尾兽主体意愿和外道魔像的现实位置。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第568至569话",
+              "contribution": "提供内外拔黑棒及外道魔像收回四尾。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足玩家支援、资源结算和尾兽查克拉来源。"
+            }
+          ],
+          "design_rationale": "把黑棒拆除写成多方协作与时间窗，记录外道魔像回收和查克拉来源。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-DEEP-FOREST-01",
+          "title": "花树界的前兆",
+          "thread_id": "THR-P2-FIVE-KAGE-BATTLE",
+          "location": "斑战区的影级牵制线",
+          "participants": [
+            "宇智波斑",
+            "实际到场的影级联合队",
+            "医疗与封印支援"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "斑仍有木遁能力且联合队尚在战区。",
+            "联合队的牵制迫使斑升级范围控制。"
+          ],
+          "blockers": [
+            "斑已被封印或木遁能力被剥离。",
+            "联合队已撤出该区域。"
+          ],
+          "setup": "斑在常规试探无法摧毁联合队后使用更大规模木遁，把战场从点状交锋变成持续环境威胁。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-DEEP-FOREST-01-01",
+              "order": 10,
+              "summary": "联合队利用轮换短暂压缩斑的活动区域，却无法克服秽土再生。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-DEEP-FOREST-01-02",
+              "order": 20,
+              "summary": "斑施展树界与花树界，根系切断后送走廊，花苞开始积聚不明粉尘。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-DEEP-FOREST-01-03",
+              "order": 30,
+              "summary": "联合队优先开辟高处呼吸区、保护医疗班并采集花粉样本，而非继续围攻。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-DEEP-FOREST-01-04",
+              "order": 40,
+              "summary": "斑战区进入环境控制阶段，所有人员被要求记录暴露时间。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联合队确认斑能使用大规模木遁，且其力量与初代火影相关但来源尚未完全查明。",
+            "花粉暴露与撤离路线成为次日战斗前置。"
+          ],
+          "state_changes": [
+            "后送走廊部分中断。",
+            "联合队查克拉继续下降，医疗班增加中毒准备。"
+          ],
+          "stop_condition": "战区建立至少一个临时无花粉高点，或联合队决定整体换位。",
+          "fallbacks": [
+            {
+              "condition": "花树界未形成。",
+              "status": "altered",
+              "direction": "保留联合队轮换与伤势结算，并按斑实际使用的范围术调整撤离和情报。",
+              "preserves": "保留斑升级压力、后送走廊和能力来源仍需调查。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第575话",
+              "contribution": "提供斑以花树界降临压制五影的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足环境暴露、样本、后送走廊与轮换。"
+            }
+          ],
+          "design_rationale": "把木遁升级作为环境与后勤危机处理，不让五影在背景里无限连续对招。",
+          "reference_facts": [
+            "斑胸口的柱间面孔及改造细节此时尚未被联合队可靠看见。"
+          ]
+        }
+      ],
+      "end_state": [
+        "基准线四尾已被外道魔像回收，鸣人与孙悟空建立私密查克拉联系；不同分支按实际解放、封印或回收结果记录。",
+        "鸣人一方因拔除黑棒进一步耗竭，面具人仍控制其余可用人柱力。",
+        "斑战区进入花树界环境威胁，后送路线和花粉暴露已经登记。"
+      ],
+      "transition": "K068-01-16九喇嘛是否进一步合作取决于此前真实关系和鸣人的行动；合作也只有短时查克拉窗口，不抹除当日累积消耗。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-116",
+      "date": "K068-01-16",
+      "title": "九喇嘛的合作",
+      "arc_id": "ARC-P2-JINCHURIKI-FRONT",
+      "day_goal": "在关系前置成立时推进鸣人与九喇嘛的首次主动协作，结算其时间限制、尾兽接触和全军支援调度。",
+      "start_state": [
+        "鸣人沿用两日高强度战斗后的伤势、查克拉和精神负担。",
+        "九喇嘛只知道自己亲历的封印空间互动和鸣人的行动，不因项目基准线自动信任鸣人。",
+        "面具人剩余受控尾兽数量沿用前日结果，已经被释放或封印者不会重新出现。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KURAMA-PARTNERSHIP-01",
+          "title": "碰拳与开门",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "鸣人的封印空间与外部战场",
+          "participants": [
+            "漩涡鸣人",
+            "九喇嘛",
+            "奇拉比与八尾牛鬼",
+            "卡卡西与凯（若到场）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人此前确实尊重尾兽主体并帮助孙悟空或完成等价行动。",
+            "九喇嘛仍在鸣人体内且封印允许双方沟通。",
+            "鸣人仍有承受融合的身体与精神能力。"
+          ],
+          "blockers": [
+            "九喇嘛已被抽离、封印损坏到无法安全开启或双方关系未达到合作门槛。",
+            "鸣人失去意识或医疗状态禁止继续战斗。"
+          ],
+          "setup": "九喇嘛根据鸣人真实对待尾兽的行动决定是否主动融合查克拉；鸣人打开封印必须出于双方同意。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KURAMA-PARTNERSHIP-01-01",
+              "order": 10,
+              "summary": "其余受控尾兽准备齐射，卡卡西和凯只把神威或开门当作代价极高的最后方案。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KURAMA-PARTNERSHIP-01-02",
+              "order": 20,
+              "summary": "九喇嘛承认鸣人对孙悟空的帮助并伸拳，鸣人明确以伙伴称呼回应。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KURAMA-PARTNERSHIP-01-03",
+              "order": 30,
+              "summary": "双方碰拳并由鸣人打开封印门，形成首次主动的尾兽模式。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KURAMA-PARTNERSHIP-01-04",
+              "order": 40,
+              "summary": "九喇嘛告知当前同步并不完整，稳定窗口只有约五分钟且结束后会出现严重疲劳。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "基准线鸣人与九喇嘛达到首次主动合作，可短时使用尾兽模式。",
+            "合作不会清除鸣人此前的伤势、查克拉债或封印风险。"
+          ],
+          "state_changes": [
+            "鸣人获得短时完整九喇嘛查克拉接口。",
+            "九喇嘛从被动借力转为自愿合作，关系状态提升但仍需磨合。"
+          ],
+          "stop_condition": "尾兽模式窗口开始计时，外部队伍确认无需立即使用神威或死门。",
+          "fallbacks": [
+            {
+              "condition": "九喇嘛拒绝完全合作或鸣人无法承受尾兽模式。",
+              "status": "altered",
+              "direction": "维持有限借力、撤离或由奇拉比承担防御；不得为了弹开尾兽玉强制开门，也不得让凯自动开启死门。",
+              "preserves": "保留关系决定力量、危机需要替代防御及高阶术必须有代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第569至571话",
+              "contribution": "提供鸣人与九喇嘛碰拳、开封印和首次尾兽模式。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "明确关系门槛、五分钟窗口和后续疲劳。"
+            }
+          ],
+          "design_rationale": "把力量提升绑定长期关系、双方同意、持续时间和结束代价，不作为无来源升级。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01",
+          "title": "五分钟内的接收器战",
+          "thread_id": "THR-P2-JINCHURIKI-FRONT",
+          "location": "人柱力战线中心",
+          "participants": [
+            "漩涡鸣人与九喇嘛",
+            "奇拉比与八尾牛鬼",
+            "仍受控制的尾兽与人柱力",
+            "面具人",
+            "卡卡西与凯（若到场）",
+            "玩家角色（若在封印、感知或掩护岗位）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人与九喇嘛已经形成短时尾兽模式。",
+            "至少一名受控人柱力仍在战场。",
+            "外部支援能保护定位分身。"
+          ],
+          "blockers": [
+            "尾兽模式未成立或鸣人提前失能。",
+            "所有受控载体已被其他方式解除。"
+          ],
+          "setup": "鸣人只能在短时尾兽模式内抵消齐射、定位并拔除剩余接收器；外部支援负责守住本体和撤退路线。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01-01",
+              "order": 10,
+              "summary": "鸣人用九喇嘛查克拉护住实际在场同伴，并把受控尾兽的齐射偏转到无人高空。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01-02",
+              "order": 20,
+              "summary": "尾兽模式与敌方尾兽玉碰撞耗去大量窗口，面具人准备在模式结束时捕获鸣人。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01-03",
+              "order": 30,
+              "summary": "玩家选择保护感知分身、阻断面具人的实体化点或加固撤退路线，决定能保留多少接收器定位。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01-04",
+              "order": 40,
+              "summary": "鸣人分身抓住已定位黑棒，本体在短暂意识交汇中听到实际到场尾兽和宿主自报姓名。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAILED-BEAST-RODS-01-05",
+              "order": 50,
+              "summary": "基准线剩余接收器被拔除，面具人把尾兽重新收回外道魔像；模式随即结束。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线受控的六名人柱力离开现世战线，尾兽回到外道魔像；已在此前改变的对象按实际状态处理。",
+            "鸣人只与实际接触的尾兽建立名字和少量查克拉联系。"
+          ],
+          "state_changes": [
+            "鸣人退出尾兽模式并进入严重疲劳期。",
+            "奇拉比、卡卡西、凯及玩家按支援强度结算余力。",
+            "面具人失去人柱力共享视野阵列但保有外道魔像与面具。"
+          ],
+          "stop_condition": "所有接收器、宿主与尾兽去向完成逐项核对，鸣人一方撤出模式结束后的捕获范围。",
+          "fallbacks": [
+            {
+              "condition": "未能在窗口内拔除全部接收器。",
+              "status": "altered",
+              "direction": "逐名记录已解除、仍受控、被封印或被回收的对象，队伍在模式结束后撤离；不以一句“全部回收”覆盖差异。",
+              "preserves": "保留时间限制、尾兽去向、鸣人获得知识的实际名单和外道魔像威胁。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第571至572话",
+              "contribution": "提供尾兽模式、尾兽玉碰撞、意识会面和接收器拔除。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足五分钟计时、玩家岗位、逐对象状态和撤退。"
+            }
+          ],
+          "design_rationale": "压缩连续尾兽攻防，同时保留计时、意识知识、尾兽主体意愿和每个载体的最终去向。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-MORALE-RELAY-01",
+          "title": "不是全知的士气通报",
+          "thread_id": "THR-P2-WAR-DEPLOYMENT",
+          "location": "忍界联军总部通信席",
+          "participants": [
+            "鹿久或实际参谋长",
+            "亥一或实际通信负责人",
+            "青或实际感知负责人",
+            "各战区接报指挥者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "总部感知或收到人柱力战线的可信简报。",
+            "通信岗位仍可向至少一个战区发送信息。"
+          ],
+          "blockers": [
+            "总部失联或简报来源无法核验。",
+            "通信人员已超出安全负荷。"
+          ],
+          "setup": "总部感知到大型九尾查克拉后，只能广播已由战场回报确认的结果，不能把意识空间对话或面具人身份传给全军。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MORALE-RELAY-01-01",
+              "order": 10,
+              "summary": "感知席记录九尾查克拉峰值、持续时间和衰减，通信席等待人柱力战线简报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MORALE-RELAY-01-02",
+              "order": 20,
+              "summary": "总部把“人柱力阵列已被削弱、鸣人仍在作战”编成短报，不宣称战争已经胜利。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-MORALE-RELAY-01-03",
+              "order": 30,
+              "summary": "亥一或替代通信者按身体负担分批发送，只有取得回执的部队更新士气和任务。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "接报部队知道鸣人战线取得阶段成果，但不知道尾兽私密谈话和面具人真实身份。",
+            "总部记录通信者的精神与查克拉负荷。"
+          ],
+          "state_changes": [
+            "援军继续按路线前进。",
+            "联军士气改善仅作用于收到通报的单位。"
+          ],
+          "stop_condition": "本轮广播完成并停止，通信人员进入轮换或医疗观察。",
+          "fallbacks": [
+            {
+              "condition": "无法全军广播。",
+              "status": "altered",
+              "direction": "只向关键指挥节点发送短报，其他部队保持原任务与知识状态。",
+              "preserves": "保留信息经核验和回执传播、通信者承担负荷。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第573话",
+              "contribution": "提供总部感知鸣人力量并提振联军士气的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "限制广播内容、范围、回执和施术负担。"
+            }
+          ],
+          "design_rationale": "保留士气节点，同时防止一次心传身之术制造全军全知和无限通信。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线鸣人与九喇嘛达到首次主动合作，但尾兽模式窗口结束后鸣人严重疲劳，不能立刻满状态再战。",
+        "基准线受控人柱力的接收器已被拔除并由外道魔像回收；变更线保留逐名状态。",
+        "面具人仍戴面具并保有时空间能力、外道魔像和月之眼目标；只有现场人员知道其具体战斗机制。",
+        "接报部队只知道阶段战果，不知道意识空间内容。"
+      ],
+      "transition": "K068-01-17用于人柱力战线短距离换位、医疗检查和援军抵达；K068-01-18转向佐助取得战争情报、鹰小队线索与五影战场花粉危机。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-118",
+      "date": "K068-01-18",
+      "title": "追踪者与花粉",
+      "arc_id": "ARC-P2-ITACHI-PURSUIT",
+      "day_goal": "让佐助、鼬、香燐、水月与重吾各自通过真实渠道行动，同时推进五影对斑的能力取证。",
+      "start_state": [
+        "K068-01-17的换位只恢复得到医疗、睡眠或尾兽协助者的相应体力，不能清除连续大战伤势。",
+        "佐助沿用K068-01-14离开据点后的路线、眼部负担和有限知识。",
+        "鼬是否摆脱兜控制、是否仍存在及能否感应术者方向完全继承此前秽土状态。",
+        "香燐、水月与重吾的位置、羁押和装备按上一分片实际结果判断。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-SASUKE-WHITE-ZETSU-01",
+          "title": "从白绝口中得到的战争",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "山岳墓场外雷雨山道",
+          "participants": [
+            "宇智波佐助",
+            "残存白绝小队"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助已离开山岳墓场并能行动。",
+            "山道仍有掌握部分战况的白绝小队。"
+          ],
+          "blockers": [
+            "佐助未离开、失能或已从更可靠渠道获得信息。",
+            "白绝网络已被彻底清除。"
+          ],
+          "setup": "佐助遇到真实部署在山道的白绝后，必须通过战斗、俘虏或其他可靠渠道获取战争情报。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-WHITE-ZETSU-01-01",
+              "order": 10,
+              "summary": "白绝小队发现佐助脱离监视并尝试拦截或回报其位置。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-WHITE-ZETSU-01-02",
+              "order": 20,
+              "summary": "佐助使用实际掌握的写轮眼、火遁或须佐能乎击败部分敌人，并承担眼部与查克拉消耗。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-WHITE-ZETSU-01-03",
+              "order": 30,
+              "summary": "佐助以幻术审问存活白绝，获得战争目标、鸣人参战和面具人阵营的片面版本。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-WHITE-ZETSU-01-04",
+              "order": 40,
+              "summary": "佐助根据当前立场决定寻找鸣人、鼬或战争真相；基准线的杀意不是不可更改命令。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助只知道白绝实际知晓且在审问中透露的战争信息。",
+            "佐助下一目标由玩家此前影响与当前选择决定。"
+          ],
+          "state_changes": [
+            "佐助位置继续向主要查克拉源方向移动。",
+            "眼部和查克拉消耗被记录，白绝是否成功传讯成为敌方知识条件。"
+          ],
+          "stop_condition": "佐助结束审问并选择一条具体路线，或因伤停止移动。",
+          "fallbacks": [
+            {
+              "condition": "审问或白绝遭遇未发生。",
+              "status": "altered",
+              "direction": "从佐助实际遇到的通信、俘虏或盟友取得有限情报；没有来源时保持不知情并继续侦察。",
+              "preserves": "保留知识来源、佐助自主选择及能力使用代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第574话",
+              "contribution": "提供佐助遭遇并审问白绝、得知战争的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "限制白绝知识并把佐助目标交给当前分支。"
+            }
+          ],
+          "design_rationale": "让佐助通过来源有限的审问获知战争，并保持其阵营与目标可分支。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-TAKA-SCROLL-01",
+          "title": "据点密室的卷轴",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "大蛇丸废弃据点",
+          "participants": [
+            "水月（若自由）",
+            "重吾（若自由）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "水月与重吾均存活、自由且抵达该据点。",
+            "密室及卷轴未被玩家先行发现或毁去。"
+          ],
+          "blockers": [
+            "二人被拘押、分离、死亡或已经放弃寻找佐助。",
+            "据点被毁或卷轴已转移。"
+          ],
+          "setup": "水月与重吾只有在脱离追捕、抵达同一据点且仍选择寻找佐助时，才可能发现密室卷轴。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAKA-SCROLL-01-01",
+              "order": 10,
+              "summary": "二人核对佐助、香燐与自身的最后确认位置，并因继续同行的理由发生冲突。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAKA-SCROLL-01-02",
+              "order": 20,
+              "summary": "重吾失控或等价事故破坏墙体，暴露一间此前未被搜索的密室。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-TAKA-SCROLL-01-03",
+              "order": 30,
+              "summary": "水月确认卷轴与大蛇丸遗留研究相关，但无法只凭封面知道完整用途。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线水月与重吾取得一份可能影响战争的卷轴，并决定先交给佐助判断。",
+            "卷轴内容只进入阅读者知识，未送达佐助前不能改变他的计划。"
+          ],
+          "state_changes": [
+            "卷轴进入实际持有人装备清单。",
+            "重吾的精神稳定和水月的身体状态按冲突结果记录。"
+          ],
+          "stop_condition": "二人封存卷轴并开始沿可验证痕迹寻找佐助，或因分支冲突分开行动。",
+          "fallbacks": [
+            {
+              "condition": "发现密室的人员或事故条件不成立。",
+              "status": "skipped",
+              "direction": "卷轴保持未发现或由实际发现者持有；后续不得让水月凭空把它交给佐助。",
+              "preserves": "保留大蛇丸遗产只有被发现、携带和送达后才能影响战争。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第574话",
+              "contribution": "提供水月与重吾发现卷轴的素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足持有、解读限制和送达条件。"
+            }
+          ],
+          "design_rationale": "保留旧资料中的卷轴线索，但不给“战争取胜秘密”这种全知标签赋予即时效果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KARIN-ESCAPE-01",
+          "title": "香燐的越狱准备",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "木叶情报部拘押区",
+          "participants": [
+            "香燐（若仍被拘押）",
+            "木叶看守与审讯人员"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "香燐仍在木叶拘押区且拥有可接触的工具。",
+            "看守流程存在她能观察的换岗窗口。"
+          ],
+          "blockers": [
+            "香燐已获释、转移、逃脱或工具已被搜出。",
+            "拘押封印使物理开锁无效。"
+          ],
+          "setup": "香燐利用看守对其精神状态的误判准备开锁，但是否成功取决于搜身、监控和玩家此前建立的羁押措施。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KARIN-ESCAPE-01-01",
+              "order": 10,
+              "summary": "香燐继续提供有限合作以观察换岗、封印和钥匙流程。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KARIN-ESCAPE-01-02",
+              "order": 20,
+              "summary": "她尝试取用事先藏匿或后来获得的开锁工具，并评估逃离后寻找佐助的路线。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KARIN-ESCAPE-01-03",
+              "order": 30,
+              "summary": "基准线她只完成准备而不在本日无代价离开，羁押方是否发现异常按现有安保裁定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "香燐的逃脱准备、工具位置和看守警觉度被记录。",
+            "她不知道佐助或鼬当前精确位置。"
+          ],
+          "state_changes": [
+            "拘押安保可能进入警戒或维持原状。",
+            "香燐仍在木叶拘押区，除非当前存档已使其成功脱离。"
+          ],
+          "stop_condition": "香燐收回工具并等待真实窗口，或看守发现异常并升级约束。",
+          "fallbacks": [
+            {
+              "condition": "基准开锁方式不可用。",
+              "status": "altered",
+              "direction": "香燐改为收集情报、争取合法转移或寻找现有安保中的其他具体漏洞；没有漏洞时保持羁押。",
+              "preserves": "保留逃离需要现实手段、她对外部战况知识有限。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第574话",
+              "contribution": "提供香燐藏匿开锁工具并策划逃脱。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "让羁押、监控和玩家安保改动真正生效。"
+            }
+          ],
+          "design_rationale": "保留香燐主动性但不让旧资料中的喜剧伪装绕过玩家建立的安保状态。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-POLLEN-COUNTER-01",
+          "title": "花粉中的证据",
+          "thread_id": "THR-P2-FIVE-KAGE-BATTLE",
+          "location": "花树界覆盖的斑战区",
+          "participants": [
+            "宇智波斑",
+            "实际到场的影级联合队",
+            "医疗与感知支援"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "花树界已经形成。",
+            "影级联合队至少一人仍能清障且医疗支援保有短时防护。"
+          ],
+          "blockers": [
+            "花树界未形成或已被提前清除。",
+            "联合队全部失能或斑未暴露改造部位。"
+          ],
+          "setup": "花粉浓度达到危险值后，联合队必须先处理呼吸与视野；大野木或替代土遁者只有在仍可行动时才能摧毁花体。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-POLLEN-COUNTER-01-01",
+              "order": 10,
+              "summary": "花粉与火遁叠加使暴露者相继失去行动能力，医疗班报告过滤和解毒无法覆盖全场。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-POLLEN-COUNTER-01-02",
+              "order": 20,
+              "summary": "大野木或实际范围清障者在同伴掩护下摧毁主要花体，为队伍争取清醒窗口。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-POLLEN-COUNTER-01-03",
+              "order": 30,
+              "summary": "斑受损再生时，清醒者亲眼看到其胸口的柱间面孔，确认木遁来自身体改造而非普通复制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "仍清醒且目视到再生部位者获得斑身体含柱间组织的证据。",
+            "联合队没有因此知道兜全部实验过程。"
+          ],
+          "state_changes": [
+            "花粉主要来源被破坏但暴露伤害仍需治疗。",
+            "斑的木遁来源从猜测升级为受限战场证据。"
+          ],
+          "stop_condition": "联合队退出高浓度区域并把样本、目视者与暴露时长交给医疗记录。",
+          "fallbacks": [
+            {
+              "condition": "无法取得柱间组织的目视证据。",
+              "status": "altered",
+              "direction": "只记录斑使用木遁这一事实并保留来源未知；不得让总部自动知道其胸口结构。",
+              "preserves": "保留环境伤害结算、证据等级和斑身体能力仍需调查。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第575话",
+              "contribution": "提供花粉压制、大野木清场与斑胸口柱间面孔。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足暴露记录、样本、目视者和情报等级。"
+            }
+          ],
+          "design_rationale": "让关键情报来自目视和样本，并保留花粉伤害与知识范围。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助在基准线从白绝获得片面战争情报并选择继续移动；其目标按当前立场记录。",
+        "水月与重吾若取得卷轴，卷轴仍在持有人手中且尚未送达佐助；香燐仍只有实际获得的逃脱条件。",
+        "影级联合队基准线取得斑含柱间组织的目视证据，花粉暴露和查克拉损耗继续存在。"
+      ],
+      "transition": "K068-01-19用于佐助与鼬沿各自路线接近、联合队处理花粉暴露并重新编组；K068-01-20只推进到鼬确认兜所在洞窟和阻止佐助继续跟随的门槛。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-CLIMAX-A-120",
+      "date": "K068-01-20",
+      "title": "兜的洞窟门前",
+      "arc_id": "ARC-P2-ITACHI-PURSUIT",
+      "day_goal": "以五影战况、佐助追上鼬和鼬确认兜位置三项明确交接结束本分片，不提前进入兜决战。",
+      "start_state": [
+        "影级联合队沿用花粉暴露、伤势、查克拉与医疗资源，斑仍是可再生的秽土体。",
+        "鼬只有在仍为自主秽土体且能循控制联系追踪时，才会接近兜的据点。",
+        "佐助是否追随鼬取决于K068-01-18后的真实路线、眼部状态和选择；未选择追随者不会被强制拉到洞窟。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KAGE-COUNTER-01",
+          "title": "五影的反击与木分身",
+          "thread_id": "THR-P2-FIVE-KAGE-BATTLE",
+          "location": "斑战区清障后的主交锋区",
+          "participants": [
+            "宇智波斑",
+            "纲手或实际医疗与突击负责人",
+            "实际到场的影级联合队",
+            "玩家角色（若担任医疗、封印、感知或战术支援）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "斑仍能使用木分身与须佐能乎。",
+            "联合队至少有突击、限制和封印三项实际能力可组合。",
+            "纲手或替代医疗核心选择参与前线。"
+          ],
+          "blockers": [
+            "斑已被封印或联合队已经撤退。",
+            "医疗核心没有进入攻击距离或玩家提前识破木分身。"
+          ],
+          "setup": "联合队在花粉清除后的短窗口发动组合攻击，但斑的木分身与须佐能乎会惩罚把医疗核心暴露在前线的选择。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-COUNTER-01-01",
+              "order": 10,
+              "summary": "联合队核对每人的剩余能力，决定由谁维持治疗、限制、突击和封印。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-COUNTER-01-02",
+              "order": 20,
+              "summary": "纲手在百豪或其当前可用医疗术支持下突破须佐防御，其他影配合制造封印窗口。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-COUNTER-01-03",
+              "order": 30,
+              "summary": "玩家选择保护医疗核心、检验目标是否为分身或加固封印阵；选择决定斑的反击命中谁。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-COUNTER-01-04",
+              "order": 40,
+              "summary": "基准线被封印的目标只是木分身，真身从根系出现并以须佐之剑贯穿纲手。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KAGE-COUNTER-01-05",
+              "order": 50,
+              "summary": "纲手依靠已开启的再生术维持生命但进入危重消耗，联合队被迫转入防御。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线五影仍存活但均有不同程度伤势与查克拉枯竭，纲手被贯穿且靠百豪维持。",
+            "斑仍未被封印，并展示木分身能骗过除高阶瞳术外的常规判断。"
+          ],
+          "state_changes": [
+            "影级联合队从主动封印转为保护伤者与拖延。",
+            "玩家的检验选择可能使贯穿事件改变、减轻或被阻止。"
+          ],
+          "stop_condition": "联合队建立新的防御距离并完成每名成员的伤势、余力和继续指挥能力清点。",
+          "fallbacks": [
+            {
+              "condition": "原作五影阵容、百豪或木分身骗局任一不成立。",
+              "status": "altered",
+              "direction": "按实际阵容重算反击、识破与伤势；成功识破可避免贯穿但仍消耗封印资源，失败则由真实暴露者承担后果。",
+              "preserves": "保留联合队尝试封印、斑的欺骗能力与所有伤势必须进入下一分片。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第576至577话",
+              "contribution": "提供纲手百豪、五影组合攻击、木分身与须佐之剑反击。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足玩家识别选择、个体资源和可改变伤势。"
+            }
+          ],
+          "design_rationale": "把纲手受创作为可被玩家影响的战术后果，而非不可更改过场，并给后续五影战留下准确资源状态。",
+          "reference_facts": [
+            "加藤断关于寻找施术者的建议若通过真实通信送达，只进入收到该信息的指挥者知识。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-SASUKE-MEETS-ITACHI-01",
+          "title": "雷雨中的兄弟",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "通往兜据点的雷雨林道",
+          "participants": [
+            "宇智波鼬（若自主行动）",
+            "宇智波佐助（若选择追随）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鼬仍是可行动且摆脱兜直接控制的秽土体。",
+            "佐助走到同一路线并实际感知或看到鼬。"
+          ],
+          "blockers": [
+            "鼬未被转生、仍受控制、已被封印或正由他人替代追踪。",
+            "佐助不在附近、失能或选择不追随。"
+          ],
+          "setup": "佐助只能因实际感知到鼬的查克拉或目视其身影而追上；鼬优先追踪施术者，不停下完成全部真相对话。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-MEETS-ITACHI-01-01",
+              "order": 10,
+              "summary": "佐助在林道感知到熟悉查克拉并目视确认鼬的秽土身体。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-MEETS-ITACHI-01-02",
+              "order": 20,
+              "summary": "佐助要求解释复活、灭族真相与自己的选择，鼬只确认必须先阻止秽土转生。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-MEETS-ITACHI-01-03",
+              "order": 30,
+              "summary": "佐助决定继续跟随并用须佐能乎或路线拦截迫使鼬回应，进一步消耗眼力。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-SASUKE-MEETS-ITACHI-01-04",
+              "order": 40,
+              "summary": "鼬不与佐助决战，只留下“到施术者处再谈”的有限承诺并继续前进。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "基准线佐助确认鼬以秽土状态自主行动，并知道鼬正在寻找施术者。",
+            "鼬知道佐助已移植其眼睛且仍被真相问题驱动，但尚未完成最后交接。"
+          ],
+          "state_changes": [
+            "兄弟位置共同转向兜据点外围。",
+            "佐助的眼力、查克拉与情绪负担继续累积。"
+          ],
+          "stop_condition": "鼬保持追踪节奏进入据点外围，佐助追随或按当前选择离开。",
+          "fallbacks": [
+            {
+              "condition": "兄弟无法在此相遇。",
+              "status": "altered",
+              "direction": "由实际追踪者继续寻找兜；佐助维持自己已获得的有限战争知识，不凭空得知鼬目标或据点位置。",
+              "preserves": "保留寻找秽土施术者的战略线和兄弟知识只来自真实会面。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第574至576话",
+              "contribution": "提供佐助发现并追赶鼬、兄弟途中交谈。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足路线、眼力消耗与可拒绝追随的分支。"
+            }
+          ],
+          "design_rationale": "保留兄弟相遇的情感压力，但不把下一任务的兜战与鼬最后告别提前写完。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-CLIMAX-A-KABUTO-THRESHOLD-01",
+          "title": "洞窟入口的乌鸦",
+          "thread_id": "THR-P2-ITACHI-PURSUIT",
+          "location": "兜隐蔽据点外层洞窟",
+          "participants": [
+            "宇智波鼬或实际追踪者",
+            "宇智波佐助（若仍跟随）",
+            "药师兜（仅作为洞窟内被确认目标）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一名实际追踪者能感应或验证兜的控制链。",
+            "兜仍在该据点并维持秽土转生。"
+          ],
+          "blockers": [
+            "兜已离开、死亡、失能或秽土术已解除。",
+            "追踪者失去联系或被阻断在其他地点。"
+          ],
+          "setup": "追踪者通过秽土控制联系、感知痕迹和沿途验证确认兜位于洞窟内；本场只推进到入口，不发生兜战。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KABUTO-THRESHOLD-01-01",
+              "order": 10,
+              "summary": "鼬或实际追踪者比对控制联系、结界痕迹与洞内查克拉，确认兜而非诱饵位于深处。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KABUTO-THRESHOLD-01-02",
+              "order": 20,
+              "summary": "佐助试图继续贴近时，鼬通灵乌鸦形成短暂阻隔，避免佐助在不了解解除术条件前打乱入口方案。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KABUTO-THRESHOLD-01-03",
+              "order": 30,
+              "summary": "鼬说明必须让兜主动解除秽土转生、不能简单杀死术者，并要求佐助在入口作出是否协作的选择。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-CLIMAX-A-KABUTO-THRESHOLD-01-04",
+              "order": 40,
+              "summary": "双方停在洞窟战斗范围之外，兜知道入侵者接近与否取决于其结界是否被触发。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线鼬确认兜所在洞窟，佐助被乌鸦短暂阻止但仍可在下一分片选择介入。",
+            "追踪者知道“迫使兜解除术”是目标，但尚未知道兜全部能力与伊邪那美方案。"
+          ],
+          "state_changes": [
+            "鼬与佐助的末端位置为兜据点外层洞窟。",
+            "兜的警戒状态按结界是否触发记录。",
+            "本分片不改变秽土转生全局状态。"
+          ],
+          "stop_condition": "入口队形、目标确认、警戒是否触发和佐助是否继续协作全部记录后停止；不进入洞内交战。",
+          "fallbacks": [
+            {
+              "condition": "鼬或佐助缺席，或兜位置改变。",
+              "status": "altered",
+              "direction": "由实际追踪者在真实据点外建立监视与进入方案；没有确认目标时继续追踪，不生成乌鸦阻隔或洞窟会面。",
+              "preserves": "保留H必须从真实找到兜、明确参与者与解除术目标后才能开始。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO漫画第576话及高潮篇旧记录0001至0220",
+              "contribution": "提供鼬找到兜、以乌鸦阻止佐助继续贴近的末端素材。"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把目标验证、入口警戒和跨分片停止点写清。"
+            }
+          ],
+          "design_rationale": "严格使用旧0220作为末端参考，把H需要的兜战选择留在下一分片。",
+          "reference_facts": [
+            "伊邪那美及兜的完整战斗能力留给下一分片，当前追踪者不得预知。"
+          ]
+        }
+      ],
+      "end_state": [
+        "五影战线基准状态：斑仍是可行动的秽土体，已展示永恒万花筒、轮回眼吸收、须佐能乎、陨石、木遁、柱间组织与木分身；五影均有累积伤势和查克拉损耗，纲手遭贯穿但以百豪维持。玩家改变时逐人替换该基准。",
+        "人柱力战线基准状态：六名秽土宿主已离场、对应尾兽被外道魔像回收；鸣人与九喇嘛完成首次短时主动合作后严重疲劳，奇拉比与八尾仍可行动但有高额消耗，卡卡西与凯保留各自神威和开门负担。",
+        "面具人状态：面具仍完整，真实身份无人确认；现场人员只知道其时空间虚化、写轮眼/轮回眼共享控制、外道魔像和月之眼目标。",
+        "鼬与佐助基准位置为兜据点外层洞窟；鼬已确认兜在内并以乌鸦短暂阻止佐助贴近，兜战、秽土解除与兄弟最后交接均未发生。",
+        "佐助只知道白绝审问与鼬亲口说明的有限战争信息；水月重吾的卷轴、香燐的逃脱准备若尚未送达，均不进入佐助知识。",
+        "各战区的伤亡、封印、补给、通信回执、俘虏与遗体继续沿用实际记录，未列名者不得以“战况恢复”重置。"
+      ],
+      "transition": "H必须从鼬或实际追踪者确认兜所在、入口队形与警戒状态开始；同时承接斑战区逐人伤势、人柱力与尾兽逐名去向、鸣人尾兽模式后的疲劳，以及面具人身份仍未公开这一知识边界。",
+      "reference_facts": []
+    }
+  ]
+}

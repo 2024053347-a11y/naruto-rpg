@@ -1,6 +1,7 @@
 import { deepClone, generateId, getValueByPath, setValueByPath, isSafePath, isSafePathKey } from '../utils/format.js';
 import { eventBus } from './event-bus.js';
 import { getDefaults, isKnownKey, coerceValue, isNumeric, VAR_SCHEMA, validate } from '../data/var-schema.js';
+import { createContinuityLedger, migrateLegacyMemory } from './continuity-ledger.js';
 
 const DB_NAME = 'naruto_rpg';
 const DB_VERSION = 1;
@@ -26,7 +27,8 @@ class StateManager {
     const flat = getDefaults();
     return {
       ...flat,
-      _version: '4.0',
+      _version: '5.0',
+      _resource_model_version: 1,
       _meta: {
         current_node_id: null,
         active_branch: 'branch_main'
@@ -39,6 +41,8 @@ class StateManager {
         log: {}, stats: { total_done: 0, d_rank: 0, c_rank: 0, b_rank: 0, a_rank: 0, s_rank: 0 }
       },
       _relationships: {},
+      _image_worldbook_overlay: { schema: 'naruto.image-worldbook/v1', version: 1, entries: [] },
+      _continuity: createContinuityLedger(),
       _memory: {
         pins: '', facts: '', clues: '', long_term: '', archived: '',
         recent_summary: '', turn_summaries: '', compressed_summary: '', compression_count: 0,
@@ -122,10 +126,10 @@ class StateManager {
       chakra_current: state['属性·当前查克拉'] || 10,
       spirit: state['属性·精神力'] || 10,
       spirit_current: state['属性·当前精神力'] || 10,
-      willpower: state['属性·意志力'] || 80,
-      willpower_current: state['属性·当前意志力'] || 80,
-      stamina: state['属性·体力'] || 100,
-      stamina_current: state['属性·当前体力'] || 100,
+      vitality: state['属性·生命力'] || 100,
+      vitality_current: state['属性·当前生命力'] || 100,
+      stamina: state['属性·体力'] || 80,
+      stamina_current: state['属性·当前体力'] || 80,
       speed: state['属性·速度'] || 5,
       luck: state['属性·幸运'] || 10
     };
@@ -156,7 +160,47 @@ class StateManager {
       if (key.startsWith('技能·')) {
         const parts = key.split('·');
         if (parts[1] === '血继限界') {
-          skills.kekkei_genkai = state[key];
+          if (key === '技能·血继限界') {
+            if (typeof state[key] === 'object' && state[key] !== null && !Array.isArray(state[key])) {
+              Object.assign(skills.kekkei_genkai, state[key]);
+            } else if (state[key] !== undefined && state[key] !== '') {
+              skills.kekkei_genkai = state[key];
+            }
+            continue;
+          }
+
+          const prefix = '技能·血继限界·';
+          const body = key.slice(prefix.length);
+          const fields = new Map([
+            ['名称', 'name'], ['等级', 'rank'], ['熟练度', 'mastery'],
+            ['描述', 'description'], ['说明', 'description'], ['限制', 'limitations']
+          ]);
+          let bloodlineName = body;
+          let targetField = null;
+          for (const [field, normalized] of fields) {
+            const suffix = `·${field}`;
+            if (!body.endsWith(suffix)) continue;
+            bloodlineName = body.slice(0, -suffix.length);
+            targetField = normalized;
+            break;
+          }
+          if (!bloodlineName) continue;
+          if (typeof skills.kekkei_genkai !== 'object' || skills.kekkei_genkai === null || Array.isArray(skills.kekkei_genkai)) {
+            skills.kekkei_genkai = {};
+          }
+          if (!skills.kekkei_genkai[bloodlineName] || typeof skills.kekkei_genkai[bloodlineName] !== 'object') {
+            skills.kekkei_genkai[bloodlineName] = { name: bloodlineName };
+          }
+          if (!targetField) {
+            if (typeof state[key] === 'object' && state[key] !== null && !Array.isArray(state[key])) {
+              Object.assign(skills.kekkei_genkai[bloodlineName], state[key]);
+              skills.kekkei_genkai[bloodlineName].name ||= bloodlineName;
+            } else {
+              skills.kekkei_genkai[bloodlineName].description = String(state[key] ?? '');
+            }
+          } else {
+            skills.kekkei_genkai[bloodlineName][targetField] = state[key];
+          }
         } else if (parts[1] === '天赋' && parts[2]) {
           const talentName = parts[2];
           if (!skills.talents[talentName]) skills.talents[talentName] = {};
@@ -181,23 +225,37 @@ class StateManager {
             const targetField = fMap[field] || field;
             skills.talents[talentName][targetField] = state[key];
           }
-        } else if (parts[2]) {
-          const typeMap = { '忍术': 'jutsu', '体术': 'taijutsu', '幻术': 'genjutsu', '支援': 'support' };
+        } else {
+          const typeMap = { '\u5fcd\u672f': 'jutsu', '\u4f53\u672f': 'taijutsu', '\u5e7b\u672f': 'genjutsu', '\u652f\u63f4': 'support' };
           const type = typeMap[parts[1]];
           if (type) {
-            const jutsuName = parts[2];
+            const prefix = '\u6280\u80fd\u00b7' + parts[1] + '\u00b7';
+            const body = key.slice(prefix.length);
+            const fields = new Map([
+              ['\u540d\u79f0', 'name'], ['\u7b49\u7ea7', 'rank'], ['\u5c5e\u6027', 'element'], ['\u6d88\u8017', 'cost'],
+              ['\u6d88\u8017\u8d44\u6e90', 'resource_type'], ['\u5a01\u529b', 'power'], ['\u719f\u7ec3\u5ea6', 'mastery'],
+              ['\u63cf\u8ff0', 'description'], ['\u7c7b\u578b', 'type'], ['\u6570\u636e\u5e93ID', 'technique_id'], ['\u6765\u6e90', 'source']
+            ]);
+            let jutsuName = body;
+            let targetField = null;
+            for (const [field, normalized] of fields) {
+              const suffix = '\u00b7' + field;
+              if (!body.endsWith(suffix)) continue;
+              jutsuName = body.slice(0, -suffix.length);
+              targetField = normalized;
+              break;
+            }
             if (!skills[type][jutsuName]) skills[type][jutsuName] = {};
-            
-            if (!parts[3]) {
-              // Legacy root object: s['技能·忍术·豪火球'] = { ... }
+            if (!targetField) {
               if (typeof state[key] === 'object' && state[key] !== null) {
                 Object.assign(skills[type][jutsuName], {
                   name: state[key].name || jutsuName,
                   rank: state[key].rank || 'E',
                   element: state[key].element || '',
-                  cost: state[key].cost || 0,
-                  power: state[key].power || 0,
-                  mastery: state[key].mastery || 0,
+                  cost: state[key].cost ?? 0,
+                  resource_type: state[key].resource_type || state[key].resource || '',
+                  power: state[key].power ?? 0,
+                  mastery: state[key].mastery ?? 0,
                   description: state[key].description || '',
                   ...state[key]
                 });
@@ -205,10 +263,6 @@ class StateManager {
                 skills[type][jutsuName].name = state[key];
               }
             } else {
-              // Flat key: s['技能·忍术·豪火球·等级'] = '...'
-              const field = parts[3];
-              const fMap = { '名称': 'name', '等级': 'rank', '属性': 'element', '消耗': 'cost', '威力': 'power', '熟练度': 'mastery', '描述': 'description' };
-              const targetField = fMap[field] || field;
               skills[type][jutsuName][targetField] = state[key];
             }
           }
@@ -410,8 +464,10 @@ class StateManager {
       'player.alive': '玩家·存活', 'player.death_cause': '玩家·死因',
       'attributes.chakra': '属性·查克拉', 'attributes.chakra_current': '属性·当前查克拉',
       'attributes.spirit': '属性·精神力', 'attributes.spirit_current': '属性·当前精神力',
-      'attributes.willpower': '属性·意志力', 'attributes.willpower_current': '属性·当前意志力',
+      'attributes.vitality': '属性·生命力', 'attributes.vitality_current': '属性·当前生命力',
       'attributes.stamina': '属性·体力', 'attributes.stamina_current': '属性·当前体力',
+      // Legacy updater paths now mean the stamina resource formerly named willpower.
+      'attributes.willpower': '属性·体力', 'attributes.willpower_current': '属性·当前体力',
       'attributes.speed': '属性·速度', 'attributes.luck': '属性·幸运',
       'progression.exp': '进度·经验', 'progression.exp_to_next': '进度·下一级经验',
       'progression.jutsu_mastery': '进度·忍术熟练度', 'progression.taijutsu_mastery': '进度·体术熟练度',
@@ -429,6 +485,15 @@ class StateManager {
     const OP_MAP = { 'set': '=', 'add': '+', 'sub': '-' };
 
     const flatUpdates = [];
+    const deleteFlatEntity = (baseKey) => {
+      const deletedKeys = Object.keys(this.state)
+        .filter(stateKey => stateKey === baseKey || stateKey.startsWith(`${baseKey}·`));
+      for (const stateKey of deletedKeys) {
+        delete this.state[stateKey];
+        eventBus.emit('state:changed', { key: stateKey, value: undefined, deleted: true });
+      }
+      return deletedKeys.length;
+    };
 
     for (const v of vars) {
       if (!v) continue;
@@ -444,6 +509,27 @@ class StateManager {
       const op = v.op;
       const value = v.value;
 
+      // Collection removal protocol used by both AI prompt modes:
+      // { path: 'skills.jutsu', op: 'remove', key: '技能名' }
+      const skillCollectionMatch = path.match(/^skills\.(jutsu|taijutsu|genjutsu|support|talents|kekkei_genkai)$/);
+      if (skillCollectionMatch && op === 'remove' && v.key) {
+        const categories = {
+          jutsu: ['忍术'], taijutsu: ['体术'], genjutsu: ['幻术'],
+          support: ['支援', '辅助'], talents: ['天赋'], kekkei_genkai: ['血继限界']
+        };
+        for (const category of categories[skillCollectionMatch[1]]) {
+          deleteFlatEntity(`技能·${category}·${v.key}`);
+        }
+        continue;
+      }
+
+      const equipmentCollectionMatch = path.match(/^equipment\.(weapons|armor|tools|consumables)$/);
+      if (equipmentCollectionMatch && op === 'remove' && v.key) {
+        const typeRev = { weapons: '武器', armor: '防具', tools: '道具', consumables: '消耗品' };
+        deleteFlatEntity(`物品·${typeRev[equipmentCollectionMatch[1]]}·${v.key}`);
+        continue;
+      }
+
       // Direct path mapping
       if (PATH_MAP[path]) {
         const flatOp = OP_MAP[op] || '=';
@@ -455,12 +541,12 @@ class StateManager {
       const skillsMatch = path.match(/^skills\.(jutsu|taijutsu|genjutsu|support|talents|kekkei_genkai)\.(.+?)(?:\.(.+))?$/);
       if (skillsMatch) {
         const typeRev = { jutsu: '忍术', taijutsu: '体术', genjutsu: '幻术', support: '支援', talents: '天赋', kekkei_genkai: '血继限界' };
-        const fieldRev = { name: '名称', rank: '等级', element: '属性', cost: '消耗', power: '威力', mastery: '熟练度', description: '描述', type: '类型' };
+        const fieldRev = { name: '名称', rank: '等级', element: '属性', cost: '消耗', resource: '消耗资源', resource_type: '消耗资源', power: '威力', mastery: '熟练度', description: '描述', type: '类型', technique_id: '\u6570\u636e\u5e93ID', source: '\u6765\u6e90' };
         const type = typeRev[skillsMatch[1]] || skillsMatch[1];
         const skillName = skillsMatch[2];
         const field = skillsMatch[3];
 
-        if (op === 'set' && !field && typeof value === 'object') {
+        if (op === 'set' && !field && value !== null && typeof value === 'object' && !Array.isArray(value)) {
           // Setting entire skill object
           for (const [k, val] of Object.entries(value)) {
             const zhField = fieldRev[k] || k;
@@ -476,16 +562,8 @@ class StateManager {
           const zhField = fieldRev[field] || field;
           const flatOp = OP_MAP[op] || '=';
           flatUpdates.push({ key: `技能·${type}·${skillName}·${zhField}`, op: flatOp, value });
-        } else if (op === 'remove' && v.key) {
-          const skillPrefix = `技能·${type}·${v.key}·`;
-          const deletedKeys = [];
-          for (const stateKey of Object.keys(this.state)) {
-            if (stateKey.startsWith(skillPrefix)) deletedKeys.push(stateKey);
-          }
-          for (const stateKey of deletedKeys) {
-            delete this.state[stateKey];
-            eventBus.emit('state:changed', { key: stateKey, value: undefined, deleted: true });
-          }
+        } else if (op === 'remove' && !field) {
+          deleteFlatEntity(`技能·${type}·${v.key || skillName}`);
         }
         continue;
       }
@@ -499,7 +577,7 @@ class StateManager {
         const itemName = eqMatch[2];
         const field = eqMatch[3];
 
-        if (op === 'set' && !field && typeof value === 'object') {
+        if (op === 'set' && !field && value !== null && typeof value === 'object' && !Array.isArray(value)) {
           for (const [k, val] of Object.entries(value)) {
             const zhField = fieldRev[k] || k;
             flatUpdates.push({ key: `物品·${type}·${itemName}·${zhField}`, op: '=', value: val });
@@ -508,16 +586,8 @@ class StateManager {
           const zhField = fieldRev[field] || field;
           const flatOp = OP_MAP[op] || '=';
           flatUpdates.push({ key: `物品·${type}·${itemName}·${zhField}`, op: flatOp, value });
-        } else if (op === 'remove' && v.key) {
-          const itemPrefix = `物品·${type}·${v.key}·`;
-          const deletedKeys = [];
-          for (const stateKey of Object.keys(this.state)) {
-            if (stateKey.startsWith(itemPrefix)) deletedKeys.push(stateKey);
-          }
-          for (const stateKey of deletedKeys) {
-            delete this.state[stateKey];
-            eventBus.emit('state:changed', { key: stateKey, value: undefined, deleted: true });
-          }
+        } else if (op === 'remove' && !field) {
+          deleteFlatEntity(`物品·${type}·${v.key || itemName}`);
         }
         continue;
       }
@@ -683,6 +753,64 @@ class StateManager {
     return state;
   }
 
+  _migrateV4toV5(snapshot) {
+    const state = deepClone(snapshot);
+    const oldVitality = state['属性·体力'];
+    const oldVitalityCurrent = state['属性·当前体力'];
+    const oldStamina = state['属性·意志力'];
+    const oldStaminaCurrent = state['属性·当前意志力'];
+
+    state['属性·生命力'] = oldVitality ?? 100;
+    state['属性·当前生命力'] = oldVitalityCurrent ?? state['属性·生命力'];
+    state['属性·体力'] = oldStamina ?? 80;
+    state['属性·当前体力'] = oldStaminaCurrent ?? state['属性·体力'];
+    delete state['属性·意志力'];
+    delete state['属性·当前意志力'];
+
+    const relationships = state._relationships;
+    if (relationships && typeof relationships === 'object') {
+      for (const relationship of Object.values(relationships)) {
+        const card = relationship?.combat_stats;
+        if (!card || typeof card !== 'object') continue;
+        const hpMax = card.体力上限;
+        const hpCurrent = card.体力;
+        const staminaMax = card.意志力;
+        card.生命力上限 = hpMax ?? 100;
+        card.生命力 = hpCurrent ?? card.生命力上限;
+        card.体力上限 = staminaMax ?? 80;
+        card.体力 = staminaMax ?? card.体力上限;
+        card.精神力上限 = card.精神力上限 ?? card.精神力 ?? 10;
+        card.精神力 = Math.min(card.精神力 ?? card.精神力上限, card.精神力上限);
+        delete card.意志力;
+      }
+    }
+
+    const combat = state._combat;
+    if (combat && typeof combat === 'object') {
+      combat.enemy_vitality = combat.enemy_vitality ?? combat.enemy_stamina ?? 0;
+      combat.enemy_vitality_max = combat.enemy_vitality_max ?? combat.enemy_stamina_max ?? combat.enemy_vitality;
+      combat.enemy_stamina = combat.enemy_willpower ?? combat.enemy_stamina_resource ?? 0;
+      combat.enemy_stamina_max = combat.enemy_stamina_max_resource ?? combat.enemy_stamina;
+      combat.enemy_spirit_max = combat.enemy_spirit_max ?? combat.enemy_spirit ?? 0;
+      delete combat.enemy_willpower;
+      delete combat.enemy_stamina_resource;
+      delete combat.enemy_stamina_max_resource;
+    }
+
+    const openingAttributes = state._opening_contract?.raw?.power?.attributes;
+    if (openingAttributes && typeof openingAttributes === 'object' && !('vitality' in openingAttributes)) {
+      const oldOpeningHp = openingAttributes.stamina;
+      const oldOpeningStamina = openingAttributes.willpower;
+      openingAttributes.vitality = oldOpeningHp ?? 100;
+      openingAttributes.stamina = oldOpeningStamina ?? 80;
+      delete openingAttributes.willpower;
+    }
+
+    state._version = '5.0';
+    state._resource_model_version = 1;
+    return state;
+  }
+
   // B-06: 深合并——保留 snapshot 中存在的字段，对缺失的嵌套字段用 defaults 补齐
   // 数组/原始值/null 按 snapshot 覆盖；对象递归合并
   _deepMerge(defaults, snapshot) {
@@ -694,7 +822,10 @@ class StateManager {
     }
     const result = { ...defaults };
     for (const key of Object.keys(snapshot)) {
-      if (key in defaults) {
+      if (!isSafePathKey(key)) {
+        throw new Error(`状态还原失败: 状态快照包含不安全键 (${key})`);
+      }
+      if (Object.prototype.hasOwnProperty.call(defaults, key)) {
         result[key] = this._deepMerge(defaults[key], snapshot[key]);
       } else {
         result[key] = snapshot[key];
@@ -703,29 +834,93 @@ class StateManager {
     return result;
   }
 
-  restore(snapshot) {
-    if (!snapshot || typeof snapshot !== 'object') {
-      console.error('[StateManager] 还原失败: 快照非法');
-      return;
+  _assertSafeSnapshotStructure(snapshot) {
+    const visiting = new WeakSet();
+    const visited = new WeakSet();
+    const stack = [{ value: snapshot, path: '$', exiting: false }];
+    while (stack.length) {
+      const { value, path, exiting } = stack.pop();
+      if (!value || typeof value !== 'object') continue;
+      if (exiting) {
+        visiting.delete(value);
+        visited.add(value);
+        continue;
+      }
+      if (visited.has(value)) continue;
+      if (visiting.has(value)) throw new Error(`状态还原失败: 状态快照包含循环引用 (${path})`);
+      visiting.add(value);
+      stack.push({ value, path, exiting: true });
+      for (const key of Object.keys(value)) {
+        if (!isSafePathKey(key)) {
+          throw new Error(`状态还原失败: 状态快照包含不安全键 (${path}.${key})`);
+        }
+        const child = value[key];
+        if (child && typeof child === 'object') {
+          stack.push({ value: child, path: `${path}.${key}`, exiting: false });
+        }
+      }
     }
-    if (snapshot._version === '4.0') {
+  }
+
+  prepareRestore(snapshot) {
+    if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+      throw new TypeError('状态还原失败: 快照非法');
+    }
+    const liveBackgroundImage = typeof this.state?._ui?.settings?.backgroundImage === 'string'
+      ? this.state._ui.settings.backgroundImage
+      : '';
+    this._assertSafeSnapshotStructure(snapshot);
+    const source = deepClone(snapshot);
+    const supportedVersions = new Set(['3.0', '4.0', '5.0']);
+    if (!supportedVersions.has(source._version)) {
+      const version = source._version == null ? '缺失' : String(source._version);
+      throw new Error(`状态还原失败: 状态快照版本不受支持 (${version})`);
+    }
+    let normalized;
+    if (source._version === '5.0') {
       // B-06: 用深合并替代浅合并，保证 Schema 新增的嵌套字段在旧存档中也有默认值
-      this.state = this._deepMerge(this._buildDefaultState(), snapshot);
+      normalized = this._deepMerge(this._buildDefaultState(), source);
       // S-02: 装备槽位旧键名"道具1/2"迁移到"饰品1/2"
-      this._migrateEquipmentSlots(this.state);
-      // B-07: 读档/时间线跳转后强制重置升级守卫
-      this._levelUpNotified = false;
-      this._enforceBounds();
-      this._stateVersion++;
-      eventBus.emit('state:restored', this.state);
-      return;
+      this._migrateEquipmentSlots(normalized);
+    } else {
+      const v4 = source._version === '4.0' ? source : this._migrateV3toV4(source);
+      normalized = this._migrateV4toV5(v4);
+      normalized = this._deepMerge(this._buildDefaultState(), normalized);
     }
-    const normalized = this._migrateV3toV4(snapshot);
-    this.state = normalized;
+    normalized._continuity = migrateLegacyMemory(normalized._continuity, normalized._memory, {
+      nodeId: normalized._meta?.current_node_id || 'legacy_restore',
+      branchId: normalized._meta?.active_branch || 'branch_main',
+      turn: Number.isInteger(normalized['系统·回合数']) ? normalized['系统·回合数'] : 0,
+      gameTime: normalized['世界·时间'] || '',
+      source: 'state_restore',
+      recordedAt: 0
+    }).ledger;
+    // UI preferences are local runtime state. Timeline snapshots deliberately
+    // strip data/blob-backed images, so jumping/importing a save must not wipe
+    // a custom background that is already active on this device.
+    if (liveBackgroundImage && normalized._ui?.settings) {
+      normalized._ui.settings.backgroundImage = liveBackgroundImage;
+    }
+    const levelUpEvents = [];
+    this._enforceBounds(normalized, { levelUpEvents, updateGuard: false });
+    return { state: normalized, levelUpEvents };
+  }
+
+  commitPreparedRestore(prepared) {
+    if (!prepared?.state || typeof prepared.state !== 'object' || Array.isArray(prepared.state)) {
+      throw new TypeError('状态还原失败: 预处理快照非法');
+    }
+    this.state = prepared.state;
     this._levelUpNotified = false;
-    this._enforceBounds();
     this._stateVersion++;
+    for (const detail of prepared.levelUpEvents || []) {
+      eventBus.emit('attribute:level-up', detail);
+    }
     eventBus.emit('state:restored', this.state);
+  }
+
+  restore(snapshot) {
+    this.commitPreparedRestore(this.prepareRestore(snapshot));
   }
 
   _migrateV3toV4(old) {
@@ -752,6 +947,7 @@ class StateManager {
 
     return {
       ...base,
+      _version: '4.0',
       '玩家·姓名': p.name ?? '',
       '玩家·年龄': p.age ?? 12,
       '玩家·灵魂年龄': p.soul_age ?? 12,
@@ -859,13 +1055,13 @@ class StateManager {
     };
   }
 
-  _enforceBounds() {
-    const s = this.state;
+  _enforceBounds(state = this.state, { levelUpEvents = null, updateGuard = state === this.state } = {}) {
+    const s = state;
 
     const boundedPairs = [
       ['属性·当前查克拉', '属性·查克拉'],
       ['属性·当前精神力', '属性·精神力'],
-      ['属性·当前意志力', '属性·意志力'],
+      ['属性·当前生命力', '属性·生命力'],
       ['属性·当前体力', '属性·体力']
     ];
     for (const [curKey, maxKey] of boundedPairs) {
@@ -900,14 +1096,16 @@ class StateManager {
       s['进度·经验'] = Math.max(0, s['进度·经验'] - needed);
       s['进度·下一级经验'] = Math.max(1, Math.round(needed * 1.4));
       s['进度·突破待处理'] = (s['进度·突破待处理'] || 0) + 1;
-      eventBus.emit('attribute:level-up', { exp: s['进度·经验'], needed: s['进度·下一级经验'] });
+      const detail = { exp: s['进度·经验'], needed: s['进度·下一级经验'] };
+      if (Array.isArray(levelUpEvents)) levelUpEvents.push(detail);
+      else eventBus.emit('attribute:level-up', detail);
       levelGuard++;
     }
     // 钳制后若 exp 小于 needed，则清除升级 guard（不再需要，但保持向后兼容）
     if (typeof s['进度·经验'] === 'number'
         && typeof s['进度·下一级经验'] === 'number'
         && s['进度·经验'] < s['进度·下一级经验']) {
-      this._levelUpNotified = false;
+      if (updateGuard) this._levelUpNotified = false;
     }
 
     for (const key of Object.keys(s)) {
@@ -933,10 +1131,10 @@ class StateManager {
 
   _checkAlive() {
     const alive = this.state['玩家·存活'];
-    const staminaCur = this.state['属性·当前体力'];
-    if (alive !== '否' && typeof staminaCur === 'number' && staminaCur <= 0) {
+    const vitalityCur = this.state['属性·当前生命力'];
+    if (alive !== '否' && typeof vitalityCur === 'number' && vitalityCur <= 0) {
       this.state['玩家·存活'] = '否';
-      this.state['玩家·死因'] = this.state['玩家·死因'] || '体力耗尽';
+      this.state['玩家·死因'] = this.state['玩家·死因'] || '生命力归零';
       console.warn('[StateManager] 玩家死亡:', this.state['玩家·死因']);
       eventBus.emit('player:died', { cause: this.state['玩家·死因'] });
     }
@@ -1057,6 +1255,187 @@ class StateManager {
     });
   }
 
+  async dbReplaceTimeline({ nodes, branches, meta }) {
+    if (!this._db) await this.initDB();
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction([STORE_NODES, STORE_BRANCHES, STORE_META], 'readwrite');
+      let settled = false;
+      const fail = () => {
+        if (settled) return;
+        settled = true;
+        reject(tx.error || new Error('时间线事务写入失败'));
+      };
+      tx.oncomplete = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      tx.onerror = fail;
+      tx.onabort = fail;
+
+      try {
+        const nodeStore = tx.objectStore(STORE_NODES);
+        const branchStore = tx.objectStore(STORE_BRANCHES);
+        const metaStore = tx.objectStore(STORE_META);
+        nodeStore.clear();
+        branchStore.clear();
+        metaStore.clear();
+        for (const node of nodes) nodeStore.put(node);
+        for (const branch of branches) branchStore.put(branch);
+        metaStore.put(meta);
+      } catch (error) {
+        try { tx.abort(); } catch { /* transaction may already be inactive */ }
+        if (!settled) {
+          settled = true;
+          reject(error);
+        }
+      }
+    });
+  }
+
+  async dbCommitTimeline({ nodes = [], branches = [], meta = null }) {
+    if (!this._db) await this.initDB();
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction([STORE_NODES, STORE_BRANCHES, STORE_META], 'readwrite');
+      let settled = false;
+      const fail = () => {
+        if (settled) return;
+        settled = true;
+        reject(tx.error || new Error('时间线事务写入失败'));
+      };
+      tx.oncomplete = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      tx.onerror = fail;
+      tx.onabort = fail;
+
+      try {
+        const nodeStore = tx.objectStore(STORE_NODES);
+        const branchStore = tx.objectStore(STORE_BRANCHES);
+        const metaStore = tx.objectStore(STORE_META);
+        for (const node of nodes) nodeStore.put(node);
+        for (const branch of branches) branchStore.put(branch);
+        if (meta) metaStore.put(meta);
+      } catch (error) {
+        try { tx.abort(); } catch { /* transaction may already be inactive */ }
+        if (!settled) {
+          settled = true;
+          reject(error);
+        }
+      }
+    });
+  }
+
+  async dbMutateTimeline(mutator, { nodeKeys = null, branchKeys = null } = {}) {
+    if (typeof mutator !== 'function') throw new TypeError('时间线事务需要同步变更函数');
+    if (!this._db) await this.initDB();
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction([STORE_NODES, STORE_BRANCHES, STORE_META], 'readwrite');
+      const nodeStore = tx.objectStore(STORE_NODES);
+      const branchStore = tx.objectStore(STORE_BRANCHES);
+      const metaStore = tx.objectStore(STORE_META);
+      let settled = false;
+      let mutationError = null;
+      let mutationResult;
+      let pendingReads = 0;
+
+      const fail = () => {
+        if (settled) return;
+        settled = true;
+        reject(mutationError || tx.error || new Error('时间线事务写入失败'));
+      };
+      const abortWith = error => {
+        mutationError = error instanceof Error ? error : new Error(String(error));
+        try { tx.abort(); } catch { fail(); }
+      };
+
+      tx.oncomplete = () => {
+        if (settled) return;
+        settled = true;
+        resolve(mutationResult);
+      };
+      tx.onerror = fail;
+      tx.onabort = fail;
+
+      let nodes = [];
+      let branches = [];
+      let meta = null;
+      const applyMutation = () => {
+        if (mutationError) return;
+        try {
+          const mutation = mutator({
+            nodes: nodes.filter(Boolean),
+            branches: branches.filter(Boolean),
+            meta
+          });
+          if (mutation && typeof mutation.then === 'function') {
+            throw new TypeError('时间线事务变更函数不能是异步函数');
+          }
+          if (!mutation || typeof mutation !== 'object') {
+            throw new TypeError('时间线事务变更函数必须返回变更对象');
+          }
+
+          if (mutation.replace === true) {
+            nodeStore.clear();
+            branchStore.clear();
+            metaStore.clear();
+          }
+          for (const id of mutation.deleteNodeIds || []) nodeStore.delete(id);
+          for (const id of mutation.deleteBranchIds || []) branchStore.delete(id);
+          for (const key of mutation.deleteMetaKeys || []) metaStore.delete(key);
+          for (const node of mutation.nodes || []) nodeStore.put(node);
+          for (const branch of mutation.branches || []) branchStore.put(branch);
+          if (mutation.meta) metaStore.put(mutation.meta);
+          mutationResult = mutation.result;
+        } catch (error) {
+          abortWith(error);
+        }
+      };
+
+      try {
+        const reads = [];
+        if (Array.isArray(nodeKeys)) {
+          const nodeResults = new Array(nodeKeys.length);
+          nodeKeys.forEach((key, index) => {
+            const request = nodeStore.get(key);
+            reads.push({ request, accept: result => { nodeResults[index] = result; } });
+          });
+          nodes = nodeResults;
+        } else {
+          const request = nodeStore.getAll();
+          reads.push({ request, accept: result => { nodes = result || []; } });
+        }
+        if (Array.isArray(branchKeys)) {
+          const branchResults = new Array(branchKeys.length);
+          branchKeys.forEach((key, index) => {
+            const request = branchStore.get(key);
+            reads.push({ request, accept: result => { branchResults[index] = result; } });
+          });
+          branches = branchResults;
+        } else {
+          const request = branchStore.getAll();
+          reads.push({ request, accept: result => { branches = result || []; } });
+        }
+        const metaRequest = metaStore.get('root');
+        reads.push({ request: metaRequest, accept: result => { meta = result || null; } });
+
+        pendingReads = reads.length;
+        for (const { request, accept } of reads) {
+          request.onsuccess = () => {
+            accept(request.result);
+            pendingReads--;
+            if (pendingReads === 0) applyMutation();
+          };
+          request.onerror = () => abortWith(request.error || new Error('时间线事务读取失败'));
+        }
+      } catch (error) {
+        abortWith(error);
+      }
+    });
+  }
+
   // B-14: localStorage 配额超限时降级到 IndexedDB
   _handleLocalStorageSet(key, value) {
     try {
@@ -1098,8 +1477,8 @@ class StateManager {
       return;
     }
 
-    // 强制启用代理模式 + 加密存储
-    config.useProxy = true;
+    // HTTP 后端强制走同源代理；酒馆通过 iframe 桥接，不能误送进 HTTP 代理。
+    config.useProxy = config.backend !== 'tavern';
     
     // Update in-memory cache with plain config
     this._apiConfigCache = { ...config };
@@ -1117,7 +1496,10 @@ class StateManager {
         disableStreaming: Boolean(config.disableStreaming),
         promptPreset: config.promptPreset,
         variableUpdater: config.variableUpdater,
-        useProxy: true,
+        narrativeReview: config.narrativeReview,
+        aiCallPolicy: config.aiCallPolicy,
+        futurePlanner: config.futurePlanner,
+        useProxy: config.backend !== 'tavern',
       };
       this._handleLocalStorageSet('naruto_api_config', JSON.stringify(safeConfig));
     }
@@ -1131,8 +1513,10 @@ class StateManager {
       if (!local) return null;
       const parsed = JSON.parse(local);
       if (!parsed || typeof parsed !== 'object') return null;
-      // 老配置迁移：强制走代理
-      if (parsed.apiKey && parsed.useProxy !== false) {
+      // 老配置迁移：HTTP 后端强制走代理，酒馆始终走 iframe 桥接。
+      if (parsed.backend === 'tavern') {
+        parsed.useProxy = false;
+      } else if (parsed.apiKey && parsed.useProxy !== false) {
         parsed.useProxy = true;
       }
       return parsed;
@@ -1163,7 +1547,7 @@ class StateManager {
       const meta = await this.dbGet(STORE_META, 'naruto_api_config');
       if (meta?.value) {
         const parsed = JSON.parse(meta.value);
-        if (parsed.apiKey) parsed.useProxy = true;
+        parsed.useProxy = parsed.backend === 'tavern' ? false : Boolean(parsed.apiKey);
         return parsed;
       }
     } catch { }

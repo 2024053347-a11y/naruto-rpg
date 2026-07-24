@@ -109,9 +109,10 @@ class HelpGuide {
           <p>战斗采用回合制。每回合你可以选择攻击、防御、使用物品或撤退。</p>
           <ul>
             <li><strong>查克拉</strong>：施放忍术消耗</li>
-            <li><strong>体力</strong>：生命值，归零即死亡</li>
+            <li><strong>生命力</strong>：生命值，归零即死亡</li>
+            <li><strong>体力</strong>：施展体术消耗</li>
+            <li><strong>精神力</strong>：施展幻术消耗</li>
             <li><strong>速度</strong>：影响先攻和闪避</li>
-            <li><strong>意志力</strong>：影响承伤能力</li>
           </ul>
 
           <h3>🤝 人际关系</h3>
@@ -159,7 +160,7 @@ class HelpGuide {
 
           <div class="faq-item">
             <strong>Q: 角色死亡了？</strong>
-            <p>体力归零角色死亡。可通过时间线回溯到死亡前节点，重新选择行动避免悲剧。</p>
+            <p>生命力归零角色死亡。可通过时间线回溯到死亡前节点，重新选择行动避免悲剧。</p>
           </div>
         </div>
       `,

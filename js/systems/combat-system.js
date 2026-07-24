@@ -2,6 +2,22 @@ import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { getElementMultiplier } from '../utils/format.js';
 import { GAME_DATA, getMasteryTier } from '../data/game-data.js';
+import {
+  normalizeNpcCombatStats,
+  resolveTechniqueUsage
+} from './npc-balance.js';
+
+const PLAYER_RESOURCE_FIELDS = Object.freeze({
+  查克拉: '属性·当前查克拉',
+  精神力: '属性·当前精神力',
+  体力: '属性·当前体力'
+});
+
+const ENEMY_RESOURCE_FIELDS = Object.freeze({
+  查克拉: 'enemy_chakra',
+  精神力: 'enemy_spirit',
+  体力: 'enemy_stamina'
+});
 
 class CombatSystem {
   constructor() {
@@ -25,6 +41,11 @@ class CombatSystem {
       case 'enemy_turn':
         this._enemyTurn(combatData);
         break;
+      case 'in_progress':
+        if (combatData.actor === 'enemy') this._enemyTurn(combatData);
+        else if (combatData.actor === 'player') this._playerTurn(combatData);
+        else this._updateCombatState(combatData);
+        break;
       case 'victory':
       case 'defeat':
       case 'retreat':
@@ -34,20 +55,37 @@ class CombatSystem {
   }
 
   _startCombat(data) {
-    stateManager.setSub('_combat', {
+    const enemyName = data.enemy_name || '不明敌人';
+    const relationships = stateManager.getSub('_relationships') || {};
+    const knownCard = relationships[enemyName]?.combat_stats;
+    const source = knownCard || data;
+    const card = normalizeNpcCombatStats(source, null, {
+      fallbackRank: data.enemy_rank || stateManager.get('玩家·忍阶') || '下忍',
+      difficulty: stateManager.get('玩家·难度')
+    });
+    const combat = {
       state: 'initiating',
       turn: 0,
       is_active: true,
-      enemy_name: data.enemy_name || '不明敌人',
-      enemy_rank: data.enemy_rank || '中忍',
-      enemy_chakra: data.enemy_chakra || 80,
-      enemy_chakra_max: data.enemy_chakra_max || data.enemy_chakra || 80,
-      enemy_stamina: data.enemy_stamina || data.enemy_hp || 160,
-      enemy_stamina_max: data.enemy_stamina_max || data.enemy_hp_max || 160,
-      enemy_spirit: data.enemy_spirit || 50,
-      enemy_speed: data.enemy_speed || 30,
-      enemy_defense: data.enemy_defense || 20,
-      enemy_element: data.enemy_element || '无',
+      enemy_name: enemyName,
+      enemy_rank: card.忍阶,
+      enemy_combat_level: card.战力等级,
+      enemy_chakra: card.查克拉,
+      enemy_chakra_max: card.查克拉上限,
+      enemy_vitality: card.生命力,
+      enemy_vitality_max: card.生命力上限,
+      enemy_stamina: card.体力,
+      enemy_stamina_max: card.体力上限,
+      enemy_spirit: card.精神力,
+      enemy_spirit_max: card.精神力上限,
+      enemy_speed: card.速度,
+      enemy_luck: card.幸运,
+      enemy_ninjutsu: card.忍术造诣,
+      enemy_taijutsu: card.体术造诣,
+      enemy_genjutsu: card.幻术造诣,
+      enemy_defense: this._defenseFromNpcCard(card),
+      enemy_element: card.查克拉属性[0] || data.enemy_element || '无',
+      enemy_jutsu: card.忍术,
       enemy_style: data.enemy_style || '均衡型',
       enemy_status: data.enemy_status || [],
       environment: data.environment || {},
@@ -57,8 +95,10 @@ class CombatSystem {
       enemy_buffs: [],
       enemy_debuffs: [],
       result: null
-    });
-    eventBus.emit('combat:started', data);
+    };
+    stateManager.setSub('_combat', combat);
+    this._syncEnemyRelationship(combat);
+    eventBus.emit('combat:started', { ...data, combat });
   }
 
   _playerTurn(data) {
@@ -72,11 +112,21 @@ class CombatSystem {
     combat.state = 'player_turn';
     combat.turn = turn;
 
-    if (data.enemy_chakra !== undefined) {
-      combat.enemy_chakra = data.enemy_chakra;
-    }
-    if (data.enemy_stamina !== undefined || data.enemy_hp !== undefined) {
-      combat.enemy_stamina = data.enemy_stamina ?? data.enemy_hp;
+    const usage = this._resolvePlayerActionUsage(data);
+    const settlement = this._settlePlayerResource(usage);
+    combat.last_player_resource = usage.resource;
+    combat.last_player_resource_cost = settlement.spent;
+    combat.last_player_required_cost = usage.cost;
+    combat.last_player_chakra_cost = usage.resource === '查克拉' ? settlement.spent : 0;
+    combat.player_resource_insufficient = !settlement.succeeded;
+    combat.player_chakra_insufficient = usage.resource === '查克拉' && !settlement.succeeded;
+
+    const damageToEnemy = settlement.succeeded ? Math.max(0, Number(data.damage_to_enemy) || 0) : 0;
+    if (damageToEnemy > 0) {
+      combat.enemy_vitality = Math.max(0, (Number(combat.enemy_vitality) || 0) - damageToEnemy);
+    } else if (settlement.succeeded && (data.enemy_vitality !== undefined || data.enemy_hp !== undefined)) {
+      const reported = Math.max(0, Number(data.enemy_vitality ?? data.enemy_hp) || 0);
+      combat.enemy_vitality = Math.min(Number(combat.enemy_vitality) || 0, reported);
     }
 
     if (data.log) {
@@ -85,8 +135,12 @@ class CombatSystem {
         actor: 'player',
         action_type: data.action_type || 'attack',
         action_name: data.action_name || '攻击',
-        result: data.result || '',
-        damage: data.damage_to_enemy || 0
+        result: settlement.succeeded ? (data.result || '') : `${usage.resource}不足，招式失败`,
+        damage: damageToEnemy,
+        resource: usage.resource,
+        resource_cost: settlement.spent,
+        required_cost: usage.cost,
+        chakra_cost: combat.last_player_chakra_cost
       };
       combat.log = [...(combat.log || []), entry];
     }
@@ -96,17 +150,31 @@ class CombatSystem {
     }
 
     stateManager.setSub('_combat', combat);
+    this._syncEnemyRelationship(combat);
   }
 
   _enemyTurn(data) {
-    const combat = stateManager.getSub('_combat') || {};
+    const combat = stateManager.getSub('_combat');
+    if (!combat || typeof combat !== 'object' || !combat.is_active) {
+      console.warn('[CombatSystem] _enemyTurn called but no active combat state exists');
+      return;
+    }
     combat.state = 'enemy_turn';
 
-    if (data.damage_to_player) {
-      const currentStamina = stateManager.get('属性·当前体力') || 0;
-      const newStamina = Math.max(0, currentStamina - data.damage_to_player);
+    const usage = this._resolveEnemyActionUsage(data, combat);
+    const settlement = this._settleEnemyResource(combat, usage);
+    combat.last_enemy_resource = usage.resource;
+    combat.last_enemy_resource_cost = settlement.spent;
+    combat.last_enemy_required_cost = usage.cost;
+    combat.last_enemy_chakra_cost = usage.resource === '查克拉' ? settlement.spent : 0;
+    combat.enemy_resource_insufficient = !settlement.succeeded;
+    combat.enemy_chakra_insufficient = usage.resource === '查克拉' && !settlement.succeeded;
+
+    if (settlement.succeeded && Number(data.damage_to_player) > 0) {
+      const currentVitality = stateManager.get('属性·当前生命力') || 0;
+      const newVitality = Math.max(0, currentVitality - Number(data.damage_to_player));
       stateManager.update([
-        { key: '属性·当前体力', op: '=', value: newStamina }
+        { key: '属性·当前生命力', op: '=', value: newVitality }
       ]);
     }
 
@@ -116,8 +184,12 @@ class CombatSystem {
         actor: 'enemy',
         action_type: data.action_type || 'attack',
         action_name: data.action_name || '攻击',
-        result: data.result || '',
-        damage: data.damage_to_player || 0
+        result: settlement.succeeded ? (data.result || '') : `${usage.resource}不足，招式失败`,
+        damage: settlement.succeeded ? (data.damage_to_player || 0) : 0,
+        resource: usage.resource,
+        resource_cost: settlement.spent,
+        required_cost: usage.cost,
+        chakra_cost: combat.last_enemy_chakra_cost
       };
       combat.log = [...(combat.log || []), entry];
     }
@@ -127,6 +199,117 @@ class CombatSystem {
     }
 
     stateManager.setSub('_combat', combat);
+    this._syncEnemyRelationship(combat);
+  }
+
+  _updateCombatState(data) {
+    const combat = stateManager.getSub('_combat');
+    if (!combat || typeof combat !== 'object') return;
+    if (data.enemy_vitality !== undefined || data.enemy_hp !== undefined) {
+      const reported = Math.max(0, Number(data.enemy_vitality ?? data.enemy_hp) || 0);
+      combat.enemy_vitality = Math.min(Number(combat.enemy_vitality) || 0, reported);
+    }
+    stateManager.setSub('_combat', combat);
+    this._syncEnemyRelationship(combat);
+  }
+
+  _resolvePlayerActionUsage(data) {
+    if (!data?.action_name && data?.resource_cost === undefined && data?.cost === undefined && data?.chakra_cost === undefined) return 0;
+    const technique = this._findPlayerTechnique(data.action_name);
+    if (technique) return resolveTechniqueUsage(technique);
+    return this._resolveDeclaredActionUsage(data);
+  }
+
+  _resolveEnemyActionUsage(data, combat) {
+    if (!data?.action_name && data?.resource_cost === undefined && data?.cost === undefined && data?.chakra_cost === undefined) return 0;
+    const technique = this._findTechnique(combat.enemy_jutsu, data.action_name);
+    if (technique) return resolveTechniqueUsage(technique);
+    return this._resolveDeclaredActionUsage(data);
+  }
+
+  _resolveDeclaredActionUsage(data) {
+    return resolveTechniqueUsage({
+      action_name: data.action_name,
+      action_rank: data.action_rank || data.rank || 'D',
+      mastery: data.mastery ?? 60,
+      action_type: data.action_type || '忍术',
+      resource_type: data.resource_type || data.resource,
+      resource_cost: data.resource_cost ?? data.cost ?? data.chakra_cost
+    });
+  }
+
+  _settlePlayerResource(usage = {}) {
+    const cost = Math.max(0, Number(usage.cost) || 0);
+    const key = PLAYER_RESOURCE_FIELDS[usage.resource] || PLAYER_RESOURCE_FIELDS.查克拉;
+    const current = Math.max(0, Number(stateManager.get(key)) || 0);
+    if (current < cost) return { succeeded: false, spent: 0, current, key };
+    if (cost > 0) stateManager.update([{ key, op: '=', value: current - cost }]);
+    return { succeeded: true, spent: cost, current: current - cost, key };
+  }
+
+  _settleEnemyResource(combat, usage = {}) {
+    const cost = Math.max(0, Number(usage.cost) || 0);
+    const key = ENEMY_RESOURCE_FIELDS[usage.resource] || ENEMY_RESOURCE_FIELDS.查克拉;
+    const current = Math.max(0, Number(combat[key]) || 0);
+    if (current < cost) return { succeeded: false, spent: 0, current, key };
+    combat[key] = current - cost;
+    return { succeeded: true, spent: cost, current: combat[key], key };
+  }
+
+  _findPlayerTechnique(actionName) {
+    const groups = { 忍术: {}, 体术: {}, 幻术: {}, 支援: {} };
+    for (const [key, value] of Object.entries(stateManager.state)) {
+      const match = key.match(/^技能·(忍术|体术|幻术|支援)·(.+)·(名称|等级|属性|消耗|消耗资源|威力|熟练度|描述|类型)$/);
+      if (!match) continue;
+      const [, category, name, field] = match;
+      groups[category][name] ||= { 名称: name, 类型: category };
+      groups[category][name][field] = value;
+    }
+    return this._findTechnique(Object.values(groups).flatMap(group => Object.values(group)), actionName);
+  }
+
+  _findTechnique(techniques, actionName) {
+    if (!Array.isArray(techniques) || !actionName) return null;
+    const target = this._normalizeActionName(actionName);
+    return techniques.find(item => {
+      const name = this._normalizeActionName(item?.名称 || item?.name);
+      return name && (name === target || name.includes(target) || target.includes(name));
+    }) || null;
+  }
+
+  _normalizeActionName(value) {
+    return String(value || '').replace(/[\s·:：,，。!！?？]/g, '').replace(/之术$/u, '').trim();
+  }
+
+  _defenseFromNpcCard(card) {
+    return Math.round((card.生命力上限 || 0) * 0.18 + (card.体力上限 || 0) * 0.25);
+  }
+
+  _syncEnemyRelationship(combat) {
+    if (!combat?.enemy_name) return;
+    const relationships = stateManager.getSub('_relationships') || {};
+    const relationship = relationships[combat.enemy_name];
+    if (!relationship?.combat_stats) return;
+    relationship.combat_stats = normalizeNpcCombatStats({
+      忍阶: combat.enemy_rank,
+      查克拉: combat.enemy_chakra,
+      查克拉上限: combat.enemy_chakra_max,
+      生命力: combat.enemy_vitality,
+      生命力上限: combat.enemy_vitality_max,
+      体力: combat.enemy_stamina,
+      体力上限: combat.enemy_stamina_max,
+      速度: combat.enemy_speed,
+      精神力: combat.enemy_spirit,
+      精神力上限: combat.enemy_spirit_max,
+      幸运: combat.enemy_luck,
+      忍术造诣: combat.enemy_ninjutsu,
+      体术造诣: combat.enemy_taijutsu,
+      幻术造诣: combat.enemy_genjutsu,
+      查克拉属性: combat.enemy_element,
+      忍术: combat.enemy_jutsu
+    }, relationship.combat_stats);
+    relationships[combat.enemy_name] = relationship;
+    stateManager.setSub('_relationships', relationships);
   }
 
   _endCombat(data) {
@@ -154,7 +337,7 @@ class CombatSystem {
 
     if (attacker) {
       if (attackType === 'taijutsu') {
-        basePower += (attacker.speed || 0) * 0.25 + (attacker.stamina || 0) * 0.08 + (attacker.willpower || 0) * 0.08;
+        basePower += (attacker.speed || 0) * 0.25 + (attacker.stamina || 0) * 0.16;
       } else if (attackType === 'genjutsu') {
         basePower += (attacker.spirit || 0) * 0.25 + (attacker.chakra || 0) * 0.05;
       } else {
@@ -186,8 +369,8 @@ class CombatSystem {
 
   _estimateDefense(defender = {}) {
     return Math.round(
-      (defender.stamina || defender.enemy_stamina_max || 100) * 0.18
-      + (defender.willpower || defender.enemy_spirit || 30) * 0.25
+      (defender.vitality || defender.enemy_vitality_max || 100) * 0.18
+      + (defender.stamina || defender.enemy_stamina_max || 30) * 0.25
     );
   }
 

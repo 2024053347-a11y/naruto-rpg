@@ -142,6 +142,27 @@ export class SaveRepository {
   }
 
   /**
+   * 在同一个索引事务中检查用户槽位并新增存档。
+   * 容量不足时不会写入二进制正文，返回 false；成功时返回 true。
+   * @param {{ id: string, user_id: string, slot_name: string, preview_data: Record<string, any>, save_data: Buffer, size_bytes: number }} save
+   * @param {number} maxSlots
+   * @returns {Promise<boolean>}
+   */
+  async insertWithinUserLimit({ id, user_id, slot_name, preview_data, save_data, size_bytes }, maxSlots) {
+    return this.#index.update(async (index) => {
+      const currentCount = Object.values(index).filter((save) => save.user_id === user_id).length;
+      if (currentCount >= maxSlots) {
+        return { persist: false, result: false };
+      }
+
+      await fs.writeFile(this.#binPath(id), save_data);
+      const now = new Date().toISOString();
+      index[id] = { id, user_id, slot_name, preview_data, size_bytes, created_at: now, updated_at: now };
+      return { persist: true, result: true };
+    });
+  }
+
+  /**
    * 局部更新存档。ID 不存在时静默 no-op（沿用旧版语义）。
    * 只要存档存在，updated_at 一律刷新——即便本次没有任何字段变化。
    * @param {string} id

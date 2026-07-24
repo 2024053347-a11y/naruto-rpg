@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings editor harness</title>
+  <style>
+    :root { --ink-deep-rgb: 7, 10, 14; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    const entries = Array.from({ length: 80 }, (_, index) => ({
+      title: `Fixture entry ${String(index + 1).padStart(2, '0')}`,
+      keys: [`fixture-${index + 1}`],
+      content: `Fixture content ${index + 1}`,
+      source: 'custom',
+      enabled: true
+    }));
+
+    localStorage.setItem('naruto_worldbook_custom', JSON.stringify(entries));
+    await import('../../js/ui/worldbook-editor.js');
+
+    const editor = document.createElement('worldbook-editor');
+    document.querySelector('#app').append(editor);
+    window.__EDITOR_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

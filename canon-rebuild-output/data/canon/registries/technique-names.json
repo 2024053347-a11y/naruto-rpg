@@ -1,0 +1,6032 @@
+[
+  {
+    "id": "JT-DOJUTSU-0001",
+    "canonical_name": "畜生道",
+    "aliases": [
+      "Animal Path",
+      "Chikushōdō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0002",
+    "canonical_name": "修羅ノ攻",
+    "aliases": [
+      "Asura Attack",
+      "Shura no Kō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0003",
+    "canonical_name": "修羅道",
+    "aliases": [
+      "Asura Path",
+      "Shuradō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0004",
+    "canonical_name": "万象天引",
+    "aliases": [
+      "Banshō Ten'in",
+      "Heavenly Attraction of All Creation"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0005",
+    "canonical_name": "黒き受信器",
+    "aliases": [
+      "Black Receiver",
+      "Kuroki Jushinki"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0006",
+    "canonical_name": "天道",
+    "aliases": [
+      "Deva Path",
+      "Tendō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0007",
+    "canonical_name": "凶騒円舞",
+    "aliases": [
+      "Evil Disturbance Waltz",
+      "Kyōsō Enbu"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0008",
+    "canonical_name": "怪腕ノ火矢",
+    "aliases": [
+      "Flaming Arrow of Amazing Ability",
+      "Kaiwan no Hiya"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0009",
+    "canonical_name": "弾頭ノ火矢",
+    "aliases": [
+      "Flaming Arrow Warhead",
+      "Dantō no Hiya"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0010",
+    "canonical_name": "神·树界降誕シン·じゅかいこうたん",
+    "aliases": [
+      "God: Nativity of a World of Trees",
+      "Shin: Jukai Kōtan"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0011",
+    "canonical_name": "人間道",
+    "aliases": [
+      "Human Path",
+      "Ningendō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0012",
+    "canonical_name": "轮墓リンボ·辺獄",
+    "aliases": [
+      "Limbo: Border Jail",
+      "Rinbo: Hengoku",
+      "Wheel Grave: Border Jail"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0013",
+    "canonical_name": "威装·須佐能乎",
+    "aliases": [
+      "Majestic Attire: Susanoo",
+      "Isō: Susanoo",
+      "Majestic Attire: He with the ability to help by all means"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0014",
+    "canonical_name": "地獄道",
+    "aliases": [
+      "Naraka Path",
+      "Jigokudō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0015",
+    "canonical_name": "大日孁オオヒルメ",
+    "aliases": [
+      "Ōhirume",
+      "Great Sun Goddess"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0016",
+    "canonical_name": "外道",
+    "aliases": [
+      "Outer Path",
+      "Gedō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0017",
+    "canonical_name": "外道 轮廻天生之术",
+    "aliases": [
+      "Outer Path — Samsara of Heavenly Life Technique",
+      "Gedō — Rinne Tensei no Jutsu",
+      "Outer Path — Saṃsāra of Heavenly Life Technique"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0018",
+    "canonical_name": "餓鬼道",
+    "aliases": [
+      "Preta Path",
+      "Gakidō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0019",
+    "canonical_name": "神羅天征",
+    "aliases": [
+      "Shinra Tensei",
+      "Heavenly Subjugation of the Omnipresent God"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0020",
+    "canonical_name": "ペイン六道",
+    "aliases": [
+      "Six Paths of Pain",
+      "Pein Rikudō"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0021",
+    "canonical_name": "六道之术",
+    "aliases": [
+      "Six Paths Technique",
+      "Rikudō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0022",
+    "canonical_name": "須佐能乎スサノオ",
+    "aliases": [
+      "Susanoo",
+      "He with the ability to help by all means"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0023",
+    "canonical_name": "須佐能乎·捕斩",
+    "aliases": [
+      "Susanoo: Captive Slash",
+      "Susanoo: Hozan",
+      "He with the ability to help by all means: Captive Slash"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0024",
+    "canonical_name": "須佐能乎·潰",
+    "aliases": [
+      "Susanoo: Crush",
+      "Susanoo: Kai",
+      "He with the ability to help by all means: Crush"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0025",
+    "canonical_name": "須佐能乎·拳",
+    "aliases": [
+      "Susanoo: Fist",
+      "Susanoo: Kobushi",
+      "He with the ability to help by all means: Fist"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0026",
+    "canonical_name": "天碍震星",
+    "aliases": [
+      "Tengai Shinsei",
+      "Heavenly Obstacle Quaking Star"
+    ]
+  },
+  {
+    "id": "JT-DOJUTSU-0027",
+    "canonical_name": "八坂ノ勾玉",
+    "aliases": [
+      "Yasaka Magatama",
+      "Yasaka no Magatama",
+      "Eight Slopes Curved Jewel"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0001",
+    "canonical_name": "C0シーオー",
+    "aliases": [
+      "C0",
+      "Shī Ō"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0002",
+    "canonical_name": "C1シーワン",
+    "aliases": [
+      "C1",
+      "Shī Wan"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0003",
+    "canonical_name": "C2シーツー",
+    "aliases": [
+      "C2",
+      "Shī Tsū"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0004",
+    "canonical_name": "C3シースリー",
+    "aliases": [
+      "C3",
+      "Shī Surī"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0005",
+    "canonical_name": "C4シーフォー",
+    "aliases": [
+      "C4",
+      "Shī Fō"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0006",
+    "canonical_name": "粘土分身",
+    "aliases": [
+      "Clay Clone",
+      "Nendo Bunshin"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0007",
+    "canonical_name": "潜伏",
+    "aliases": [
+      "Concealment",
+      "Senpuku"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0008",
+    "canonical_name": "土遁结界·土牢堂无",
+    "aliases": [
+      "Earth Release Barrier: Earth Prison Dome of Magnificent Nothingness",
+      "Doton Kekkai: Dorō Dōmu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0009",
+    "canonical_name": "土遁·加重岩之术",
+    "aliases": [
+      "Earth Release: Added-Weight Rock Technique",
+      "Doton: Kajūgan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0010",
+    "canonical_name": "土遁·心中斩首之术",
+    "aliases": [
+      "Earth Release: Double Suicide Decapitation Technique",
+      "Doton: Shinjū Zanshu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0011",
+    "canonical_name": "土遁·おとし蓋",
+    "aliases": [
+      "Earth Release: Dropping Lid",
+      "Doton: Otoshibuta"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0012",
+    "canonical_name": "土遁·土流割",
+    "aliases": [
+      "Earth Release: Earth Flow Divide",
+      "Doton: Doryūkatsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0013",
+    "canonical_name": "土遁·土陵団子",
+    "aliases": [
+      "Earth Release: Earth Mausoleum Dumpling",
+      "Doton: Doryō Dango"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0014",
+    "canonical_name": "土遁·土陸返し",
+    "aliases": [
+      "Earth Release: Earth Shore Return",
+      "Doton: Doroku Gaeshi"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0015",
+    "canonical_name": "土遁·土矛",
+    "aliases": [
+      "Earth Release: Earth Spear",
+      "Doton: Domu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0016",
+    "canonical_name": "土遁·土流城壁",
+    "aliases": [
+      "Earth Release: Earth-Style Rampart",
+      "Doton: Doryū Jōheki"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0017",
+    "canonical_name": "土遁·土流壁",
+    "aliases": [
+      "Earth Release: Earth-Style Wall",
+      "Doton: Doryūheki"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0018",
+    "canonical_name": "土遁·万里土流壁",
+    "aliases": [
+      "Earth Release: Earth-Style Wall of Ten Thousand Ri",
+      "Doton: Banri Doryūheki"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0019",
+    "canonical_name": "土遁·拳岩之术",
+    "aliases": [
+      "Earth Release: Fist Rock Technique",
+      "Doton: Kengan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0020",
+    "canonical_name": "土遁·剛隷武ゴーレム之术",
+    "aliases": [
+      "Earth Release: Golem Technique",
+      "Doton: Gōremu no Jutsu",
+      "Earth Release: Strong Servant Warrior Technique"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0021",
+    "canonical_name": "土遁·大地動核",
+    "aliases": [
+      "Earth Release: Great Moving Earth Core",
+      "Doton: Daichidōkaku"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0022",
+    "canonical_name": "土遁·土竜隠れ之术",
+    "aliases": [
+      "Earth Release: Hiding Like a Mole Technique",
+      "Doton: Moguragakure no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0023",
+    "canonical_name": "土遁·軽重岩之术",
+    "aliases": [
+      "Earth Release: Light-Weight Rock Technique",
+      "Doton: Keijūgan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0024",
+    "canonical_name": "土遁·地動核",
+    "aliases": [
+      "Earth Release: Moving Earth Core",
+      "Doton: Chidōkaku"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0025",
+    "canonical_name": "土遁·开土昇掘",
+    "aliases": [
+      "Earth Release: Opening Earth Rising Excavation",
+      "Doton: Kaido Shōkutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0026",
+    "canonical_name": "土遁·練瓦之术",
+    "aliases": [
+      "Earth Release: Practice Brick Technique",
+      "Doton: Renga no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0027",
+    "canonical_name": "土遁·裂穿牙",
+    "aliases": [
+      "Earth Release: Rending Drill Fang",
+      "Doton: Ressenga"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0028",
+    "canonical_name": "土遁·岩宿崩し",
+    "aliases": [
+      "Earth Release: Rock Lodging Destruction",
+      "Doton: Iwayado Kuzushi"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0029",
+    "canonical_name": "土遁·山土之术",
+    "aliases": [
+      "Earth Release: Sandwich Technique",
+      "Doton: Sando no Jutsu",
+      "Earth Release: Mountainous Earth Technique"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0030",
+    "canonical_name": "土遁·加光岩",
+    "aliases": [
+      "Earth Release: Stone Luster",
+      "Doton: Kakōgan"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0031",
+    "canonical_name": "土遁·土中潜航",
+    "aliases": [
+      "Earth Release: Subterranean Voyage",
+      "Doton: Dochū Senkō"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0032",
+    "canonical_name": "土遁·黄泉沼",
+    "aliases": [
+      "Earth Release: Swamp of the Underworld",
+      "Doton: Yomi Numa"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0033",
+    "canonical_name": "土遁·裂土転掌",
+    "aliases": [
+      "Earth Release: Tearing Earth Turning Palm",
+      "Doton: Retsudo Tenshō"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0034",
+    "canonical_name": "土遁·超加重岩之术",
+    "aliases": [
+      "Earth Release: Ultra-Added-Weight Rock Technique",
+      "Doton: Chōkajūgan no Jutsu",
+      "Earth Release: Super Added-Weight Rock Technique"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0035",
+    "canonical_name": "土遁·超軽重岩之术",
+    "aliases": [
+      "Earth Release: Ultralight-Weight Rock Technique",
+      "Doton: Chōkeijūgan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0036",
+    "canonical_name": "土遁·土中映魚之术",
+    "aliases": [
+      "Earth Release: Underground Projection Fish Technique",
+      "Doton: Dochū Eigyo no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0037",
+    "canonical_name": "起爆粘土",
+    "aliases": [
+      "Explosive Clay",
+      "Kibaku Nendo"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0038",
+    "canonical_name": "起爆地雷",
+    "aliases": [
+      "Explosive Landmines",
+      "Kibaku Jirai"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0039",
+    "canonical_name": "岩分身之术",
+    "aliases": [
+      "Rock Clone Technique",
+      "Iwa Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0040",
+    "canonical_name": "自爆分身",
+    "aliases": [
+      "Suicide Bombing Clone",
+      "Jibaku Bunshin"
+    ]
+  },
+  {
+    "id": "JT-EARTH-0041",
+    "canonical_name": "口寄せ·土遁·追牙之术",
+    "aliases": [
+      "Summoning: Earth Release: Tracking Fang Technique",
+      "Kuchiyose: Doton: Tsuiga no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0001",
+    "canonical_name": "一切皆苦",
+    "aliases": [
+      "All is Suffering",
+      "Issai Kaiku"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0002",
+    "canonical_name": "忍连合軍之术",
+    "aliases": [
+      "Allied Shinobi Forces Technique",
+      "Shinobi Rengōgun no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0003",
+    "canonical_name": "天照",
+    "aliases": [
+      "Amaterasu",
+      "Heavenly Illumination"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0004",
+    "canonical_name": "天照·炎纏火",
+    "aliases": [
+      "Amaterasu: Flame Wrapping Fire",
+      "Amaterasu: Entenka",
+      "Heavenly Illumination: Flame Wrapping Fire"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0005",
+    "canonical_name": "芭蕉扇·火の巻",
+    "aliases": [
+      "Bashōsen: Coil of Fire",
+      "Bashōsen: Hi no Maki",
+      "Banana Palm Fan: Coil of Fire"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0006",
+    "canonical_name": "炎遁·加具土命カグツチ",
+    "aliases": [
+      "Blaze Release: Kagutsuchi",
+      "Enton: Kagutsuchi",
+      "Blaze Release: Added Tool Earth Lord"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0007",
+    "canonical_name": "炎遁·須佐能乎加具土命",
+    "aliases": [
+      "Blaze Release: Susanoo Kagutsuchi",
+      "Enton: Susanoo Kagutsuchi",
+      "Blaze Release: He with the ability to help by all means with Added Tool Earth Lord"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0008",
+    "canonical_name": "炎遁·八坂ノ勾玉",
+    "aliases": [
+      "Blaze Release: Yasaka Magatama",
+      "Enton: Yasaka no Magatama",
+      "Blaze Release: Eight Slopes Curved Jewel"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0009",
+    "canonical_name": "猫炎咆火",
+    "aliases": [
+      "Cat Flame Roaring Fire",
+      "Byōen Hōka"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0010",
+    "canonical_name": "雲流火炎斩り",
+    "aliases": [
+      "Cloud-Style Flame Beheading",
+      "Kumo-Ryū Kaengiri"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0011",
+    "canonical_name": "膨張求道玉",
+    "aliases": [
+      "Expansive Truth-Seeking Ball",
+      "Bōchō Gudōdama"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0012",
+    "canonical_name": "火遁·灰積焼",
+    "aliases": [
+      "Fire Release: Ash Pile Burning",
+      "Katon: Haisekishō"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0013",
+    "canonical_name": "火遁·大炎弾",
+    "aliases": [
+      "Fire Release: Big Flame Bullet",
+      "Katon: Dai Endan"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0014",
+    "canonical_name": "火遁·爆风乱舞",
+    "aliases": [
+      "Fire Release: Blast Wave Wild Dance",
+      "Katon: Bakufū Ranbu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0015",
+    "canonical_name": "火遁·龙火之术",
+    "aliases": [
+      "Fire Release: Dragon Fire Technique",
+      "Katon: Ryūka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0016",
+    "canonical_name": "火遁·龙炎放歌之术",
+    "aliases": [
+      "Fire Release: Dragon Flame Release Song Technique",
+      "Katon: Ryūen Hōka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0017",
+    "canonical_name": "火遁·起爆炎阵",
+    "aliases": [
+      "Fire Release: Exploding Flame Formation",
+      "Katon: Kibaku Enjin"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0018",
+    "canonical_name": "火遁·火龙炎弾",
+    "aliases": [
+      "Fire Release: Fire Dragon Flame Bullet",
+      "Katon: Karyū Endan"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0019",
+    "canonical_name": "火遁·炎弾",
+    "aliases": [
+      "Fire Release: Flame Bullet",
+      "Katon: Endan"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0020",
+    "canonical_name": "火遁·火打ち矢倉之术",
+    "aliases": [
+      "Fire Release: Flint Yagura Technique",
+      "Katon: Hiuchi Yagura no Jutsu",
+      "Fire Release: Flint Yagura"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0021",
+    "canonical_name": "火遁·豪龙火之术",
+    "aliases": [
+      "Fire Release: Great Dragon Fire Technique",
+      "Katon: Gōryūka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0022",
+    "canonical_name": "火遁·豪火滅却",
+    "aliases": [
+      "Fire Release: Great Fire Annihilation",
+      "Katon: Gōka Mekkyaku"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0023",
+    "canonical_name": "火遁·豪火滅失",
+    "aliases": [
+      "Fire Release: Great Fire Destruction",
+      "Katon: Gōka Messhitsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0024",
+    "canonical_name": "火遁·豪火球之术",
+    "aliases": [
+      "Fire Release: Great Fireball Technique",
+      "Katon: Gōkakyū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0025",
+    "canonical_name": "火遁·豪炎之术",
+    "aliases": [
+      "Fire Release: Great Flame Technique",
+      "Katon: Gōen no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0026",
+    "canonical_name": "火遁·灰尘隠れ之术",
+    "aliases": [
+      "Fire Release: Hiding in Ash and Dust Technique",
+      "Katon: Haijingakure no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0027",
+    "canonical_name": "火遁·頭刻苦",
+    "aliases": [
+      "Fire Release: Intelligent Hard Work",
+      "Katon: Zukokku"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0028",
+    "canonical_name": "火遁·凤仙火之术",
+    "aliases": [
+      "Fire Release: Phoenix Sage Fire Technique",
+      "Katon: Hōsenka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0029",
+    "canonical_name": "火遁·凤仙花爪紅",
+    "aliases": [
+      "Fire Release: Phoenix Sage Flower Nail Crimson",
+      "Katon: Hōsenka Tsumabeni"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0030",
+    "canonical_name": "火遁·蝦蟇油炎弾",
+    "aliases": [
+      "Fire Release: Toad Oil Flame Bullet",
+      "Katon: Gamayu Endan"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0031",
+    "canonical_name": "五遁大连弾之术",
+    "aliases": [
+      "Five Release Great Combo Technique",
+      "Goton Dairendan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0032",
+    "canonical_name": "幻术·燐火",
+    "aliases": [
+      "Genjutsu: Ghost Fire",
+      "Genjutsu: Rinka",
+      "Illusion Technique: Ghost Fire"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0033",
+    "canonical_name": "残月",
+    "aliases": [
+      "Morning Moon",
+      "Zangetsu"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0034",
+    "canonical_name": "ねずみ毛玉",
+    "aliases": [
+      "Mouse Hairball",
+      "Nezumi Kedama"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0035",
+    "canonical_name": "仙法·五右衛门",
+    "aliases": [
+      "Sage Art: Goemon",
+      "Senpō: Goemon",
+      "Sage Art: Five Right Defence Gate"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0036",
+    "canonical_name": "仙法·超尾獣螺旋手裏剣",
+    "aliases": [
+      "Sage Art: Super Tailed Beast Rasenshuriken",
+      "Senpō: Chō Bijū Rasenshuriken",
+      "Sage Art: Super Tailed Beast Spiralling Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0037",
+    "canonical_name": "灼遁·光轮疾风漆黒矢零式",
+    "aliases": [
+      "Scorch Release: Halo Hurricane Jet Black Arrow Style Zero",
+      "Shakuton: Kōrin Shippū Shikkoku no Ya Zeroshiki"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0038",
+    "canonical_name": "奇面ノ爆炎",
+    "aliases": [
+      "Strange Mask Exploding Flame",
+      "Kimen no Bakuen"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0039",
+    "canonical_name": "求道玉",
+    "aliases": [
+      "Truth-Seeking Ball",
+      "Gudōdama"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0040",
+    "canonical_name": "求道瞬身",
+    "aliases": [
+      "Truth-Seeking Body Flicker",
+      "Gudōshunshin"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0041",
+    "canonical_name": "求道傘",
+    "aliases": [
+      "Truth-Seeking Umbrella",
+      "Gudōkasa"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0042",
+    "canonical_name": "求道­­­­·救光",
+    "aliases": [
+      "Truth-Seeking: Saving Light",
+      "Gudō jiù Hikari"
+    ]
+  },
+  {
+    "id": "JT-FIRE-0043",
+    "canonical_name": "うちは火炎阵",
+    "aliases": [
+      "Uchiha Flame Formation",
+      "Uchiha Kaenjin"
+    ]
+  },
+  {
+    "id": "JT-GEN-0001",
+    "canonical_name": "黒暗行之术",
+    "aliases": [
+      "Bringer-of-Darkness Technique",
+      "Kokuangyo no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0002",
+    "canonical_name": "威圧写轮眼",
+    "aliases": [
+      "Coercion Sharingan",
+      "Iatsu Sharingan",
+      "Coercion Copy Wheel Eye"
+    ]
+  },
+  {
+    "id": "JT-GEN-0003",
+    "canonical_name": "魔笛·夢幻音锁",
+    "aliases": [
+      "Demonic Flute: Phantom Sound Chains",
+      "Mateki: Mugen Onsa"
+    ]
+  },
+  {
+    "id": "JT-GEN-0004",
+    "canonical_name": "魔幻·此処非之术",
+    "aliases": [
+      "Demonic Illusion: False Surroundings Technique",
+      "Magen: Kokoni Arazu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0005",
+    "canonical_name": "魔幻·奈落見之术",
+    "aliases": [
+      "Demonic Illusion: Hell Viewing Technique",
+      "Magen: Narakumi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0006",
+    "canonical_name": "魔幻·蜃鴉",
+    "aliases": [
+      "Demonic Illusion: Mirage Crow",
+      "Magen: Shinkarasu",
+      "Demonic Illusion: Clam Crow"
+    ]
+  },
+  {
+    "id": "JT-GEN-0007",
+    "canonical_name": "魔幻·镜天地転",
+    "aliases": [
+      "Demonic Illusion: Mirror Heaven and Earth Change",
+      "Magen: Kyō Tenchi-ten"
+    ]
+  },
+  {
+    "id": "JT-GEN-0008",
+    "canonical_name": "魔幻·枷杭之术",
+    "aliases": [
+      "Demonic Illusion: Shackling Stakes Technique",
+      "Magen: Kasegui no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0009",
+    "canonical_name": "魔幻·気蒸の楼閣",
+    "aliases": [
+      "Demonic Illusion: Steaming Multistoried Building",
+      "Magen: Kijō no Rōkaku"
+    ]
+  },
+  {
+    "id": "JT-GEN-0010",
+    "canonical_name": "魔幻·蝦蟇臨唱",
+    "aliases": [
+      "Demonic Illusion: Toad Confrontation Chant",
+      "Magen: Gama Rinshō"
+    ]
+  },
+  {
+    "id": "JT-GEN-0011",
+    "canonical_name": "魔幻·树缚杀",
+    "aliases": [
+      "Demonic Illusion: Tree Binding Death",
+      "Magen: Jubaku Satsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0012",
+    "canonical_name": "泡沫",
+    "aliases": [
+      "Ephemeral",
+      "Utakata"
+    ]
+  },
+  {
+    "id": "JT-GEN-0013",
+    "canonical_name": "幻术プロテクト",
+    "aliases": [
+      "Genjutsu Protect",
+      "Genjutsu Purotekuto",
+      "Illusion Technique Protect"
+    ]
+  },
+  {
+    "id": "JT-GEN-0014",
+    "canonical_name": "幻术·写轮眼",
+    "aliases": [
+      "Genjutsu: Sharingan",
+      "Illusion Technique: Copy Wheel Eye"
+    ]
+  },
+  {
+    "id": "JT-GEN-0015",
+    "canonical_name": "无限月読",
+    "aliases": [
+      "Infinite Tsukuyomi",
+      "Mugen Tsukuyomi",
+      "Infinite Moon Reader"
+    ]
+  },
+  {
+    "id": "JT-GEN-0016",
+    "canonical_name": "内なるサクラ",
+    "aliases": [
+      "Inner Sakura",
+      "Uchi Naru Sakura"
+    ]
+  },
+  {
+    "id": "JT-GEN-0017",
+    "canonical_name": "イザナギ",
+    "aliases": [
+      "Izanagi"
+    ]
+  },
+  {
+    "id": "JT-GEN-0018",
+    "canonical_name": "イザナミ",
+    "aliases": [
+      "Izanami"
+    ]
+  },
+  {
+    "id": "JT-GEN-0019",
+    "canonical_name": "別天神",
+    "aliases": [
+      "Kotoamatsukami",
+      "Distinguished Heavenly Gods"
+    ]
+  },
+  {
+    "id": "JT-GEN-0020",
+    "canonical_name": "霞従者之术",
+    "aliases": [
+      "Mist Servant Technique",
+      "Kasumi Jūsha no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0021",
+    "canonical_name": "狐狸心中之术",
+    "aliases": [
+      "Sly Mind Affect Technique",
+      "Kori Shinchū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0022",
+    "canonical_name": "涅槃精舎之术",
+    "aliases": [
+      "Temple of Nirvana Technique",
+      "Nehan Shōja no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-GEN-0023",
+    "canonical_name": "月読",
+    "aliases": [
+      "Tsukuyomi",
+      "Moon Reader"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0001",
+    "canonical_name": "黒い雷",
+    "aliases": [
+      "Black Lightning",
+      "Kuroi Kaminari"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0002",
+    "canonical_name": "乱身冲",
+    "aliases": [
+      "Body Pathway Derangement",
+      "Ranshinshō"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0003",
+    "canonical_name": "千鸟",
+    "aliases": [
+      "Chidori",
+      "One Thousand Birds"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0004",
+    "canonical_name": "千鸟流し",
+    "aliases": [
+      "Chidori Current",
+      "Chidori Nagashi",
+      "One Thousand Birds Current"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0005",
+    "canonical_name": "千鸟千本",
+    "aliases": [
+      "Chidori Senbon",
+      "One Thousand Birds Senbon"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0006",
+    "canonical_name": "千鸟鋭槍",
+    "aliases": [
+      "Chidori Sharp Spear",
+      "Chidori Eisō",
+      "One Thousand Birds Sharp Spear"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0007",
+    "canonical_name": "重流暴エルボウ",
+    "aliases": [
+      "Elbow",
+      "Erubō",
+      "Heavy-Style Outburst"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0008",
+    "canonical_name": "Fang's Rush",
+    "aliases": [
+      "Fang's Rush"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0009",
+    "canonical_name": "義雷沈怒雷斧ギロチンドロップ",
+    "aliases": [
+      "Guillotine Drop",
+      "Girochin Doroppu",
+      "Righteous Lightning Sinking Anger Lightning Axe"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0010",
+    "canonical_name": "地獄突き",
+    "aliases": [
+      "Hell Stab",
+      "Jigokuzuki"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0011",
+    "canonical_name": "インドラの矢",
+    "aliases": [
+      "Indra's Arrow",
+      "Indora no Ya"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0012",
+    "canonical_name": "神威雷切",
+    "aliases": [
+      "Kamui Lightning Cutter",
+      "Kamui Raikiri",
+      "Authority of the Gods Lightning Cutter"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0013",
+    "canonical_name": "麒麟",
+    "aliases": [
+      "Kirin",
+      "Giraffe"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0014",
+    "canonical_name": "雷我爆弾ライガーボム",
+    "aliases": [
+      "Liger Bomb",
+      "Raigā Bomu",
+      "Lightning Self Bomb"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0015",
+    "canonical_name": "雷切",
+    "aliases": [
+      "Lightning Cutter",
+      "Raikiri"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0016",
+    "canonical_name": "雷闪",
+    "aliases": [
+      "Lightning Flash",
+      "Raisen"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0017",
+    "canonical_name": "雷虐水平",
+    "aliases": [
+      "Lightning Oppression Horizontal",
+      "Raigyaku Suihei"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0018",
+    "canonical_name": "雷虐水平らいぎゃくすいへい千代舞チョップ",
+    "aliases": [
+      "Lightning Oppression Horizontal Chop",
+      "Raigyaku Suihei Choppu",
+      "Lightning Oppression Horizontal Millennial Dance"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0019",
+    "canonical_name": "雷遁チャクラモード",
+    "aliases": [
+      "Lightning Release Chakra Mode",
+      "Raiton Chakura Mōdo"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0020",
+    "canonical_name": "雷遁·黒斑差",
+    "aliases": [
+      "Lightning Release: Black Panther",
+      "Raiton: Kuropansa",
+      "Lightning Release: Black-Spotted Difference"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0021",
+    "canonical_name": "雷遁·絶牛雷犂熱刀ダブルラリアット",
+    "aliases": [
+      "Lightning Release: Double Lariat",
+      "Raiton: Daburu Rariatto",
+      "Lightning Release: Severing Bull Lightning Plough Hot Sword"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0022",
+    "canonical_name": "雷遁·伪暗",
+    "aliases": [
+      "Lightning Release: False Darkness",
+      "Raiton: Gian"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0023",
+    "canonical_name": "雷遁·四柱しばり",
+    "aliases": [
+      "Lightning Release: Four Pillar Bind",
+      "Raiton: Shichū Shibari"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0024",
+    "canonical_name": "雷遁·雷犂熱刀ラリアット",
+    "aliases": [
+      "Lightning Release: Lariat",
+      "Raiton: Rariatto",
+      "Lightning Release: Lightning Plough Hot Sword"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0025",
+    "canonical_name": "雷遁·雷獣追牙",
+    "aliases": [
+      "Lightning Release: Lightning Beast Tracking Fang",
+      "Raiton: Raijū Tsuiga"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0026",
+    "canonical_name": "雷遁·雷幻雷光柱",
+    "aliases": [
+      "Lightning Release: Lightning Illusion Flash of Lightning Pillar",
+      "Raiton: Raigen Raikōchū"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0027",
+    "canonical_name": "雷遁·影分身之术",
+    "aliases": [
+      "Lightning Release: Shadow Clone Technique",
+      "Raiton: Kage Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0028",
+    "canonical_name": "雷斗忍遇須吐励刀ライトニングストレート",
+    "aliases": [
+      "Lightning Straight",
+      "Raitoningu Sutorēto",
+      "Lightning Fight Endure Encounter Mandatory Ejection Encouraging Sword"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0029",
+    "canonical_name": "雷伝",
+    "aliases": [
+      "Lightning Transmission",
+      "Raiden"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0030",
+    "canonical_name": "磁遁·螺旋漆黒",
+    "aliases": [
+      "Magnet Release: Spiral Jet Black",
+      "Jiton: Rasen Shikkoku"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0031",
+    "canonical_name": "超ビブラート雷遁刀",
+    "aliases": [
+      "Supervibrato Lightning Release Swords",
+      "Chō Biburāto Raitontō"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0032",
+    "canonical_name": "須佐能乎·千鸟",
+    "aliases": [
+      "Susanoo: Chidori",
+      "He with the ability to help by all means: One Thousand Birds"
+    ]
+  },
+  {
+    "id": "JT-LIGHTNING-0033",
+    "canonical_name": "草薙の剣·千鸟刀",
+    "aliases": [
+      "Sword of Kusanagi: Chidori Katana",
+      "Kusanagi no Tsurugi: Chidorigatana",
+      "Grass-Mowing Sword: One Thousand Birds Katana"
+    ]
+  },
+  {
+    "id": "JT-MED-0001",
+    "canonical_name": "チャクラのメス",
+    "aliases": [
+      "Chakra Scalpel",
+      "Chakura no Mesu"
+    ]
+  },
+  {
+    "id": "JT-MED-0002",
+    "canonical_name": "創造再生",
+    "aliases": [
+      "Creation Rebirth",
+      "Sōzō Saisei"
+    ]
+  },
+  {
+    "id": "JT-MED-0003",
+    "canonical_name": "死魂之术",
+    "aliases": [
+      "Dead Soul Technique",
+      "Shikon no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-MED-0004",
+    "canonical_name": "細患抽出之术",
+    "aliases": [
+      "Delicate Illness Extraction Technique",
+      "Saikan Chūshutsu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-MED-0005",
+    "canonical_name": "治活再生之术",
+    "aliases": [
+      "Healing Resuscitation Regeneration Technique",
+      "Chikatsu Saisei no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-MED-0006",
+    "canonical_name": "蛞蝓·網疗治夥",
+    "aliases": [
+      "Katsuyu: Immense Network Healing",
+      "Katsuyu: Mōryōjika"
+    ]
+  },
+  {
+    "id": "JT-MED-0007",
+    "canonical_name": "掌仙术",
+    "aliases": [
+      "Mystical Palm Technique",
+      "Shōsen Jutsu"
+    ]
+  },
+  {
+    "id": "JT-MED-0008",
+    "canonical_name": "忍法創造再生 百豪之术",
+    "aliases": [
+      "Ninja Art Creation Rebirth — Strength of a Hundred Technique",
+      "Ninpō Sōzō Saisei — Byakugō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-MED-0009",
+    "canonical_name": "毒霧",
+    "aliases": [
+      "Poison Mist",
+      "Dokugiri"
+    ]
+  },
+  {
+    "id": "JT-MED-0010",
+    "canonical_name": "阴癒傷滅",
+    "aliases": [
+      "Yin Healing Wound Destruction",
+      "In'yu Shōmetsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0001",
+    "canonical_name": "金剛牢壁",
+    "aliases": [
+      "Adamantine Prison Wall",
+      "Kongō Rōheki",
+      "Vajra Prison Wall"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0002",
+    "canonical_name": "残光",
+    "aliases": [
+      "Afterglow",
+      "Zankō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0003",
+    "canonical_name": "空砂防壁",
+    "aliases": [
+      "Air Sand Protective Wall",
+      "Kūsa Bōheki"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0004",
+    "canonical_name": "四方八方手裏剣",
+    "aliases": [
+      "All Directions Shuriken",
+      "Shihōhappō Shuriken",
+      "Four Directions Eight Directions Shuriken"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0005",
+    "canonical_name": "共杀の灰骨",
+    "aliases": [
+      "All-Killing Ash Bones",
+      "Tomogoroshi no Haikotsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0006",
+    "canonical_name": "砂の铠",
+    "aliases": [
+      "Armour of Sand",
+      "Suna no Yoroi"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0007",
+    "canonical_name": "粘金の铠",
+    "aliases": [
+      "Armour of Sticky Gold",
+      "Nenkin no Yoroi"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0008",
+    "canonical_name": "暗杀术",
+    "aliases": [
+      "Assassination Technique",
+      "Ansatsu Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0009",
+    "canonical_name": "双魔の攻",
+    "aliases": [
+      "Attack of the Twin Demons",
+      "Sōma no Kō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0010",
+    "canonical_name": "獣人分身",
+    "aliases": [
+      "Beast Human Clone",
+      "Jūjin Bunshin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0011",
+    "canonical_name": "大玉螺旋丸",
+    "aliases": [
+      "Big Ball Rasengan",
+      "Ōdama Rasengan",
+      "Big Ball Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0012",
+    "canonical_name": "大玉螺旋连丸",
+    "aliases": [
+      "Big Ball Spiralling Serial Spheres",
+      "Ōdama Rasenrengan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0013",
+    "canonical_name": "大玉螺旋帯连丸",
+    "aliases": [
+      "Big Ball Spiralling Serial Zone Spheres",
+      "Ōdama Rasen Tairengan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0014",
+    "canonical_name": "黒秘技 機々三発",
+    "aliases": [
+      "Black Secret Technique — Machine Triple Shot",
+      "Kurohigi — Kiki Sanpatsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0015",
+    "canonical_name": "黒秘技機々一発",
+    "aliases": [
+      "Black Secret Technique Machine One Shot",
+      "Kurohigi Kiki Ippatsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0016",
+    "canonical_name": "黒秘技·山椒魚",
+    "aliases": [
+      "Black Secret Technique: Salamander",
+      "Kurohigi: Sanshōuo"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0017",
+    "canonical_name": "瞬身之术",
+    "aliases": [
+      "Body Flicker Technique",
+      "Shunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0018",
+    "canonical_name": "変わり身之术",
+    "aliases": [
+      "Body Replacement Technique",
+      "Kawarimi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0019",
+    "canonical_name": "沸遁·巧霧之术",
+    "aliases": [
+      "Boil Release: Skilled Mist Technique",
+      "Futton: Kōmu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0020",
+    "canonical_name": "沸遁·蒸気爆発",
+    "aliases": [
+      "Boil Release: Steam Explosion",
+      "Futton: Jōki Bakuhatsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0021",
+    "canonical_name": "ブービートラップ",
+    "aliases": [
+      "Booby Trap",
+      "Būbītorappu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0022",
+    "canonical_name": "蝶モード",
+    "aliases": [
+      "Butterfly Mode",
+      "Chō Mōdo"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0023",
+    "canonical_name": "カロリーコントロール",
+    "aliases": [
+      "Calorie Control",
+      "Karorī Kontorōru"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0024",
+    "canonical_name": "锁·双牙斩",
+    "aliases": [
+      "Chains: Twin Fangs Slash",
+      "Kusari: Sōgazan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0025",
+    "canonical_name": "チャクラ刀·真一文字",
+    "aliases": [
+      "Chakra Blade: Straight Line",
+      "Chakura-tō: Maichimonji"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0026",
+    "canonical_name": "崖登り業",
+    "aliases": [
+      "Cliff Climbing Practice",
+      "Gake Nobori no Gyō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0027",
+    "canonical_name": "隠れ蓑之术",
+    "aliases": [
+      "Cloak of Invisibility Technique",
+      "Kakuremino no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0028",
+    "canonical_name": "分身大爆破",
+    "aliases": [
+      "Clone Great Explosion",
+      "Bunshin Daibakuha"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0029",
+    "canonical_name": "分身之术",
+    "aliases": [
+      "Clone Technique",
+      "Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0030",
+    "canonical_name": "コンビ変化",
+    "aliases": [
+      "Combination Transformation",
+      "Konbi Henge"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0031",
+    "canonical_name": "潜砂絵猫",
+    "aliases": [
+      "Concealed Sand Picture Cat",
+      "Sensa Kaibyō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0032",
+    "canonical_name": "连続尾獣玉",
+    "aliases": [
+      "Continuous Tailed Beast Balls",
+      "Renzoku Bijūdama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0033",
+    "canonical_name": "協力尾獣玉",
+    "aliases": [
+      "Cooperation Tailed Beast Ball",
+      "Kyōryoku Bijūdama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0034",
+    "canonical_name": "万物創造之术",
+    "aliases": [
+      "Creation of All Things Technique",
+      "Banbutsu Sōzō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0035",
+    "canonical_name": "烏分身之术",
+    "aliases": [
+      "Crow Clone Technique",
+      "Karasu Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0036",
+    "canonical_name": "呪术·躯司操血",
+    "aliases": [
+      "Curse Technique: Body Controlling Manipulated Blood",
+      "Jujutsu: Kuji Sōketsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0037",
+    "canonical_name": "呪术·死司憑血",
+    "aliases": [
+      "Curse Technique: Death Controlling Possessed Blood",
+      "Jujutsu: Shiji Hyōketsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0038",
+    "canonical_name": "三日月の舞",
+    "aliases": [
+      "Dance of the Crescent Moon",
+      "Mikazuki no Mai",
+      "Dance of the Three Days' Moon"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0039",
+    "canonical_name": "早蕨の舞",
+    "aliases": [
+      "Dance of the Seedling Fern",
+      "Sawarabi no Mai"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0040",
+    "canonical_name": "式紙の舞",
+    "aliases": [
+      "Dance of the Shikigami",
+      "Shikigami no Mai",
+      "Dance of the Formula Paper"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0041",
+    "canonical_name": "刃鎌の舞·落降の刃",
+    "aliases": [
+      "Dance of the Sickle Blade: Falling Descent Blade",
+      "Hagama no Mai: Rakukō no Yaiba"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0042",
+    "canonical_name": "踊刃冒",
+    "aliases": [
+      "Dancing Blade Risk",
+      "Yōjinbō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0043",
+    "canonical_name": "斩空波",
+    "aliases": [
+      "Decapitating Airwaves",
+      "Zankūha"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0044",
+    "canonical_name": "魔笛·幻武操曲",
+    "aliases": [
+      "Demonic Flute: Illusionary Warriors Manipulating Melody",
+      "Mateki: Genbu Sōkyoku"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0045",
+    "canonical_name": "魔镜氷晶",
+    "aliases": [
+      "Demonic Mirroring Ice Crystals",
+      "Makyō Hyōshō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0046",
+    "canonical_name": "砂漠浮遊",
+    "aliases": [
+      "Desert Suspension",
+      "Sabaku Fuyū"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0047",
+    "canonical_name": "砂漠波",
+    "aliases": [
+      "Desert Wave",
+      "Sabakuha"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0048",
+    "canonical_name": "砂漠·叛奴",
+    "aliases": [
+      "Desert: Hand",
+      "Sabaku: Hando",
+      "Desert: Rebellion Slave"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0049",
+    "canonical_name": "Division",
+    "aliases": [
+      "Division"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0050",
+    "canonical_name": "尘遁·原界剥離之术",
+    "aliases": [
+      "Dust Release: Detachment of the Primitive World Technique",
+      "Jinton: Genkai Hakuri no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0051",
+    "canonical_name": "地怨虞",
+    "aliases": [
+      "Earth Grudge Fear",
+      "Jiongu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0052",
+    "canonical_name": "八岐之术",
+    "aliases": [
+      "Eight Branches Technique",
+      "Yamata no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0053",
+    "canonical_name": "八门",
+    "aliases": [
+      "Eight Gates",
+      "Hachimon"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0054",
+    "canonical_name": "斩空极波",
+    "aliases": [
+      "Extreme Decapitating Airwaves",
+      "Zankūkyokuha"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0055",
+    "canonical_name": "狸寝入り之术",
+    "aliases": [
+      "Feigning Sleep Technique",
+      "Tanuki Neiri no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0056",
+    "canonical_name": "First Axe Strike",
+    "aliases": [
+      "First Axe Strike"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0057",
+    "canonical_name": "分裂之术",
+    "aliases": [
+      "Fission Technique",
+      "Bunretsu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0058",
+    "canonical_name": "一闪",
+    "aliases": [
+      "Flash",
+      "Issen"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0059",
+    "canonical_name": "飞旋剣",
+    "aliases": [
+      "Flying Revolving Sword",
+      "Hisenken"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0060",
+    "canonical_name": "四脚之术",
+    "aliases": [
+      "Four Legs Technique",
+      "Shikyaku no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0061",
+    "canonical_name": "大咆哮",
+    "aliases": [
+      "Great Roar",
+      "Daihokō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0062",
+    "canonical_name": "毛针千本",
+    "aliases": [
+      "Hair Needle Senbon",
+      "Kebari Senbon"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0063",
+    "canonical_name": "炎の手",
+    "aliases": [
+      "Hands of Flame",
+      "Honō no Te"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0064",
+    "canonical_name": "ハーレム之术",
+    "aliases": [
+      "Harem Technique",
+      "Hāremu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0065",
+    "canonical_name": "朧分身之术",
+    "aliases": [
+      "Haze Clone Technique",
+      "Oboro Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0066",
+    "canonical_name": "天誅",
+    "aliases": [
+      "Heavenly Punishment",
+      "Tenchū"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0067",
+    "canonical_name": "天送之术",
+    "aliases": [
+      "Heavenly Transfer Technique",
+      "Tensō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0068",
+    "canonical_name": "秘伝·鱗粉隠れ之术",
+    "aliases": [
+      "Hiden: Hiding in Scale Powder Technique",
+      "Hiden: Rinpungakure no Jutsu",
+      "Secret: Hiding in Scale Powder Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0069",
+    "canonical_name": "迷彩隠れ之术",
+    "aliases": [
+      "Hiding with Camouflage Technique",
+      "Meisaigakure no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0070",
+    "canonical_name": "火影式耳順术 廓庵入鄽垂手",
+    "aliases": [
+      "Hokage-Style Sixty-Year-Old Technique — Kakuan Entering Society with Bliss-Bringing Hands",
+      "Hokage-Shiki Jijun Jutsu — Kakuan Nitten Suishu",
+      "Fire Shadow-Style Sixty-Year-Old Technique — Enclosed Hermitage Entering Society with Bliss-Bringing Hands"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0071",
+    "canonical_name": "人獣混合変化·双頭狼",
+    "aliases": [
+      "Human Beast Combination Transformation: Double-Headed Wolf",
+      "Jinjū Konbi Henge: Sōtōrō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0072",
+    "canonical_name": "人獣混合変化 参頭狼",
+    "aliases": [
+      "Human Beast Mixture Transformation — Three-Headed Wolf",
+      "Jinjū Kongō Henge — Santōrō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0073",
+    "canonical_name": "日向宗家の呪印术",
+    "aliases": [
+      "Hyūga Main Family's Juinjutsu",
+      "Hyūga Sōke no Juinjutsu",
+      "Hyūga Main Family's Cursed Seal Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0074",
+    "canonical_name": "居合斩り",
+    "aliases": [
+      "Iai Beheading",
+      "Iaigiri"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0075",
+    "canonical_name": "居合道",
+    "aliases": [
+      "Iaidō",
+      "Way of Iai"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0076",
+    "canonical_name": "氷遁·氷岩堂无",
+    "aliases": [
+      "Ice Release: Ice Rock Dome of Magnificent Nothingness",
+      "Hyōton: Hyōgan Dōmu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0077",
+    "canonical_name": "墨分身之术",
+    "aliases": [
+      "Ink Clone Technique",
+      "Sumi Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0078",
+    "canonical_name": "墨霞之术",
+    "aliases": [
+      "Ink Mist Technique",
+      "Sumigasumi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0079",
+    "canonical_name": "蟲分身之术",
+    "aliases": [
+      "Insect Clone Technique",
+      "Mushi Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0080",
+    "canonical_name": "蟲邪民具之术",
+    "aliases": [
+      "Insect Jamming Technique",
+      "Mushi Jamingu no Jutsu",
+      "Wicked Insect Folk Tools Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0081",
+    "canonical_name": "砂鉄時雨",
+    "aliases": [
+      "Iron Sand Drizzle",
+      "Satetsu Shigure",
+      "Sand Iron Drizzle"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0082",
+    "canonical_name": "砂鉄结襲",
+    "aliases": [
+      "Iron Sand Gathering Assault",
+      "Satetsu Kesshū",
+      "Sand Iron Gathering Assault"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0083",
+    "canonical_name": "砂鉄结襲·落",
+    "aliases": [
+      "Iron Sand Gathering Assault: Drop",
+      "Satetsu Kesshū: Raku",
+      "Sand Iron Gathering Assault: Drop"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0084",
+    "canonical_name": "砂鉄界法",
+    "aliases": [
+      "Iron Sand World Method",
+      "Satetsu Kaihō",
+      "Sand Iron World Method"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0085",
+    "canonical_name": "砂鉄·黒鉄乃翼",
+    "aliases": [
+      "Iron Sand: Black Iron Wings",
+      "Satetsu: Kurogane no Tsubasa",
+      "Sand Iron: Black Iron Wings"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0086",
+    "canonical_name": "観世音蓮華王",
+    "aliases": [
+      "Kanzeon Lotus King",
+      "Kanzeon Renge-Ō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0087",
+    "canonical_name": "溶遁·溶怪之术",
+    "aliases": [
+      "Lava Release: Melting Apparition Technique",
+      "Yōton: Yōkai no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0088",
+    "canonical_name": "熔遁·石灰凝之术",
+    "aliases": [
+      "Lava Release: Quicklime Congealing Technique",
+      "Yōton: Sekkaigyō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0089",
+    "canonical_name": "熔遁·护謨玉",
+    "aliases": [
+      "Lava Release: Rubber Ball",
+      "Yōton: Gomudama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0090",
+    "canonical_name": "Lava Release: Rubber Rope",
+    "aliases": [
+      "Lava Release: Rubber Rope"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0091",
+    "canonical_name": "熔遁·护謨壁",
+    "aliases": [
+      "Lava Release: Rubber Wall",
+      "Yōton: Gomuheki"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0092",
+    "canonical_name": "熔遁·灼河流岩之术",
+    "aliases": [
+      "Lava Release: Scorching Stream Rock Technique",
+      "Yōton: Shakugaryūgan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0093",
+    "canonical_name": "不尸転生",
+    "aliases": [
+      "Living Corpse Reincarnation",
+      "Fushi Tensei"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0094",
+    "canonical_name": "幻灯身之术",
+    "aliases": [
+      "Magic Lantern Body Technique",
+      "Gentōshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0095",
+    "canonical_name": "磁遁·省蜂の双刃",
+    "aliases": [
+      "Magnet Release: Conserving Bee Twin Blades",
+      "Jiton: Jakuhō no Sōjin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0096",
+    "canonical_name": "磁遁·砂金大葬",
+    "aliases": [
+      "Magnet Release: Gold Dust Imperial Funeral",
+      "Jiton: Sakin Taisō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0097",
+    "canonical_name": "操手裏剣之术",
+    "aliases": [
+      "Manipulated Shuriken Technique",
+      "Sōshuriken no Jutsu",
+      "Manipulated Hidden Hand Blade Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0098",
+    "canonical_name": "操襲刃",
+    "aliases": [
+      "Manipulating Attack Blades",
+      "Sōshūjin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0099",
+    "canonical_name": "操风車三ノ大刀",
+    "aliases": [
+      "Manipulating Windmill Triple Blades",
+      "Sōfūshasan no Tachi"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0100",
+    "canonical_name": "蜉蝣",
+    "aliases": [
+      "Mayfly",
+      "Kagerō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0101",
+    "canonical_name": "機光盾封",
+    "aliases": [
+      "Mechanical Light Shield Block",
+      "Kikō Junbū",
+      "Mechanical Light Shield Seal"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0102",
+    "canonical_name": "潜脳操砂之术",
+    "aliases": [
+      "Memory-Concealing Manipulative Sand Technique",
+      "Sennō Sōsa no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0103",
+    "canonical_name": "心乱身之术",
+    "aliases": [
+      "Mind Body Disturbance Technique",
+      "Shinranshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0104",
+    "canonical_name": "心転身之术",
+    "aliases": [
+      "Mind Body Switch Technique",
+      "Shintenshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0105",
+    "canonical_name": "心伝身阵",
+    "aliases": [
+      "Mind Body Transmission Formation",
+      "Shindenshin no Jin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0106",
+    "canonical_name": "心伝身之术",
+    "aliases": [
+      "Mind Body Transmission Technique",
+      "Shindenshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0107",
+    "canonical_name": "心転分身之术",
+    "aliases": [
+      "Mind Clone Switch Technique",
+      "Shinten Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0108",
+    "canonical_name": "神楽心眼",
+    "aliases": [
+      "Mind's Eye of the Kagura",
+      "Kagura Shingan",
+      "Mind's Eye of the Divine Entertainment"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0109",
+    "canonical_name": "镜面襲者之术",
+    "aliases": [
+      "Mirrored Sudden Attacker Technique",
+      "Kyōmen Shūja no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0110",
+    "canonical_name": "砂の怪腕",
+    "aliases": [
+      "Monstrous Sand Arm",
+      "Suna no Kaiwan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0111",
+    "canonical_name": "倍化之术",
+    "aliases": [
+      "Multi-Size Technique",
+      "Baika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0112",
+    "canonical_name": "多重影分身之术",
+    "aliases": [
+      "Multiple Shadow Clone Technique",
+      "Tajū Kage Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0113",
+    "canonical_name": "多重木遁分身之术",
+    "aliases": [
+      "Multiple Wood Release Clone Technique",
+      "Tajū Mokuton Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0114",
+    "canonical_name": "互乗起爆札",
+    "aliases": [
+      "Mutually Multiplying Explosive Tags",
+      "Gojō Kibaku Fuda"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0115",
+    "canonical_name": "针地蔵",
+    "aliases": [
+      "Needle Jizō",
+      "Hari Jizō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0116",
+    "canonical_name": "投網影缚り之术",
+    "aliases": [
+      "Net Shadow Paralysis Technique",
+      "Kage Nageami Shibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0117",
+    "canonical_name": "九尾チャクラモード",
+    "aliases": [
+      "Nine-Tails Chakra Mode",
+      "Kyūbi Chakura Mōdo"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0118",
+    "canonical_name": "タコ足分身之术",
+    "aliases": [
+      "Octopus Leg Clone Technique",
+      "Takoashi Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0119",
+    "canonical_name": "己生転生",
+    "aliases": [
+      "One's Own Life Reincarnation",
+      "Kishō Tensei"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0120",
+    "canonical_name": "大蛇丸流の変わり身之术",
+    "aliases": [
+      "Orochimaru-Style Body Replacement Technique",
+      "Orochimaru-Ryū no Kawarimi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0121",
+    "canonical_name": "紙分身",
+    "aliases": [
+      "Paper Clone",
+      "Kami Bunshin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0122",
+    "canonical_name": "紙時雨",
+    "aliases": [
+      "Paper Drizzle",
+      "Kami Shigure"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0123",
+    "canonical_name": "神の紙者之术",
+    "aliases": [
+      "Paper Person of God Technique",
+      "Kami no Shisha no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0124",
+    "canonical_name": "紙手裏剣",
+    "aliases": [
+      "Paper Shuriken",
+      "Kami Shuriken",
+      "Paper Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0125",
+    "canonical_name": "寄生分身",
+    "aliases": [
+      "Parasite Clone",
+      "Kisei Bunshin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0126",
+    "canonical_name": "寄生鬼壊之术",
+    "aliases": [
+      "Parasite Demon Demolition Technique",
+      "Kisei Kikai no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0127",
+    "canonical_name": "寄壊蟲之术",
+    "aliases": [
+      "Parasitic Destruction Insect Technique",
+      "Kikaichū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0128",
+    "canonical_name": "寄大蟲 虫食い",
+    "aliases": [
+      "Parasitic Giant Insect — Bug Bite",
+      "Kidaichū — Mushikui"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0129",
+    "canonical_name": "親子螺旋丸",
+    "aliases": [
+      "Parent and Child Rasengan",
+      "Oyako Rasengan",
+      "Parent and Child Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0130",
+    "canonical_name": "部分倍化之术",
+    "aliases": [
+      "Partial Multi-Size Technique",
+      "Bubun Baika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0131",
+    "canonical_name": "惑星螺旋丸",
+    "aliases": [
+      "Planetary Rasengan",
+      "Wakusei Rasengan",
+      "Planetary Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0132",
+    "canonical_name": "Possession",
+    "aliases": [
+      "Possession"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0133",
+    "canonical_name": "仕込针弾",
+    "aliases": [
+      "Prepared Needle Shot",
+      "Shikomishindan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0134",
+    "canonical_name": "獄砂埋葬",
+    "aliases": [
+      "Prison Sand Burial",
+      "Gokusa Maisō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0135",
+    "canonical_name": "催戸伝心",
+    "aliases": [
+      "Psycho Mind Transmission",
+      "Saiko Denshin",
+      "Holding-Door Mind Transmission"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0136",
+    "canonical_name": "流砂瀑流",
+    "aliases": [
+      "Quicksand Waterfall Flow",
+      "Ryūsa Bakuryū"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0137",
+    "canonical_name": "螺旋丸",
+    "aliases": [
+      "Rasengan",
+      "Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0138",
+    "canonical_name": "螺旋丸「渦彦」",
+    "aliases": [
+      "Rasengan: \"Uzuhiko\"",
+      "Rasengan \"Uzuhiko\"",
+      "Spiralling Sphere \"Vortex Prince\""
+    ]
+  },
+  {
+    "id": "JT-OTHER-0139",
+    "canonical_name": "赤秘技·機々三角",
+    "aliases": [
+      "Red Secret Technique: Machinery Triangles",
+      "Akahigi: Kiki Sankaku"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0140",
+    "canonical_name": "再生能力",
+    "aliases": [
+      "Regeneration Ability",
+      "Saisei Nōryoku"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0141",
+    "canonical_name": "共鳴爆破",
+    "aliases": [
+      "Resonance Blast",
+      "Kyōmei Bakuha"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0142",
+    "canonical_name": "響鳴穿",
+    "aliases": [
+      "Resonating Echo Drill",
+      "Kyōmeisen"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0143",
+    "canonical_name": "魔境の乱",
+    "aliases": [
+      "Revolt of the Demon World",
+      "Makyō no Ran"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0144",
+    "canonical_name": "縄抜け之术",
+    "aliases": [
+      "Rope Escape Technique",
+      "Nawanuke no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0145",
+    "canonical_name": "破断",
+    "aliases": [
+      "Rupture",
+      "Hadan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0146",
+    "canonical_name": "砂缚柩",
+    "aliases": [
+      "Sand Binding Coffin",
+      "Sabaku Kyū"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0147",
+    "canonical_name": "砂缚牢",
+    "aliases": [
+      "Sand Binding Prison",
+      "Sabaku Rō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0148",
+    "canonical_name": "砂分身",
+    "aliases": [
+      "Sand Clone",
+      "Suna Bunshin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0149",
+    "canonical_name": "砂時雨",
+    "aliases": [
+      "Sand Drizzle",
+      "Suna Shigure"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0150",
+    "canonical_name": "砂霰",
+    "aliases": [
+      "Sand Hail",
+      "Suna Arare"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0151",
+    "canonical_name": "砂手裏剣",
+    "aliases": [
+      "Sand Shuriken",
+      "Suna Shuriken",
+      "Sand Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0152",
+    "canonical_name": "砂瀑送葬",
+    "aliases": [
+      "Sand Waterfall Funeral",
+      "Sabaku Sōsō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0153",
+    "canonical_name": "砂瀑大葬",
+    "aliases": [
+      "Sand Waterfall Imperial Funeral",
+      "Sabaku Taisō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0154",
+    "canonical_name": "鱗粉",
+    "aliases": [
+      "Scale Powder",
+      "Rinpun"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0155",
+    "canonical_name": "散千烏之术",
+    "aliases": [
+      "Scattering Thousand Crows Technique",
+      "Sanzengarasu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0156",
+    "canonical_name": "灼遁·過蒸杀",
+    "aliases": [
+      "Scorch Release: Extremely Steaming Murder",
+      "Shakuton: Kajōsatsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0157",
+    "canonical_name": "树海侵食",
+    "aliases": [
+      "Sea of Trees Erosion",
+      "Jukai Shinshoku"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0158",
+    "canonical_name": "秘术石针",
+    "aliases": [
+      "Secret Technique Stone Needles",
+      "Hijutsu Ishibari"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0159",
+    "canonical_name": "秘术·蟲玉",
+    "aliases": [
+      "Secret Technique: Insect Sphere",
+      "Hijutsu: Mushidama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0160",
+    "canonical_name": "如雨露千本",
+    "aliases": [
+      "Senbon Shower",
+      "Jouro Senbon"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0161",
+    "canonical_name": "感知之术",
+    "aliases": [
+      "Sensing Technique",
+      "Kanchi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0162",
+    "canonical_name": "感知伝々",
+    "aliases": [
+      "Sensing Transmission",
+      "Kanchi Denden"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0163",
+    "canonical_name": "おいろけ逆ハーレム之术",
+    "aliases": [
+      "Sexy Reverse Harem Technique",
+      "Oiroke Gyaku Hāremu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0164",
+    "canonical_name": "おいろけ之术",
+    "aliases": [
+      "Sexy Technique",
+      "Oiroke no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0165",
+    "canonical_name": "おいろけ·男の子どうし之术",
+    "aliases": [
+      "Sexy: Boy on Boy Technique",
+      "Oiroke: Otokonoko Dōshi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0166",
+    "canonical_name": "おいろけ·女の子どうし之术",
+    "aliases": [
+      "Sexy: Girl on Girl Technique",
+      "Oiroke: Onnanoko Dōshi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0167",
+    "canonical_name": "影分身之术",
+    "aliases": [
+      "Shadow Clone Technique",
+      "Kage Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0168",
+    "canonical_name": "影掴み之术",
+    "aliases": [
+      "Shadow Clutch Technique",
+      "Kagezukami no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0169",
+    "canonical_name": "影寄せ之术",
+    "aliases": [
+      "Shadow Gathering Technique",
+      "Kageyose no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0170",
+    "canonical_name": "影真似影缚り之术",
+    "aliases": [
+      "Shadow Imitation Shadow Bind Technique",
+      "Kagemane Kage Shibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0171",
+    "canonical_name": "影真似手裏剣之术",
+    "aliases": [
+      "Shadow Imitation Shuriken Technique",
+      "Kagemane Shuriken no Jutsu",
+      "Shadow Imitation Hidden Hand Blade Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0172",
+    "canonical_name": "影真似之术",
+    "aliases": [
+      "Shadow Imitation Technique",
+      "Kagemane no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0173",
+    "canonical_name": "影千本",
+    "aliases": [
+      "Shadow Senbon",
+      "Kage Senbon"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0174",
+    "canonical_name": "影縫い之术",
+    "aliases": [
+      "Shadow Sewing Technique",
+      "Kage Nui no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0175",
+    "canonical_name": "影手裏剣之术",
+    "aliases": [
+      "Shadow Shuriken Technique",
+      "Kage Shuriken no Jutsu",
+      "Shadow Hidden Hand Blade Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0176",
+    "canonical_name": "影首缚り之术",
+    "aliases": [
+      "Shadow–Neck Binding Technique",
+      "Kage–Kubishibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0177",
+    "canonical_name": "象転之术",
+    "aliases": [
+      "Shapeshifting Technique",
+      "Shōten no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0178",
+    "canonical_name": "砂の盾",
+    "aliases": [
+      "Shield of Sand",
+      "Suna no Tate"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0179",
+    "canonical_name": "手裏剣影分身之术",
+    "aliases": [
+      "Shuriken Shadow Clone Technique",
+      "Shuriken Kage Bunshin no Jutsu",
+      "Hidden Hand Blade Shadow Clone Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0180",
+    "canonical_name": "无音杀人术サイレントキリング",
+    "aliases": [
+      "Silent Killing",
+      "Sairento Kiringu",
+      "Soundless Murder Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0181",
+    "canonical_name": "六道の阳の力",
+    "aliases": [
+      "Six Paths Yang Power",
+      "Rikudō no Yō no Chikara"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0182",
+    "canonical_name": "六道の阴の力",
+    "aliases": [
+      "Six Paths Yin Power",
+      "Rikudō no In no Chikara"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0183",
+    "canonical_name": "蛞蝓大分裂",
+    "aliases": [
+      "Slug Great Division",
+      "Katsuyu Daibunretsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0184",
+    "canonical_name": "蛇分身之术",
+    "aliases": [
+      "Snake Clone Technique",
+      "Hebi Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0185",
+    "canonical_name": "軟の改造",
+    "aliases": [
+      "Soft Physique Modification",
+      "Nan no Kaizō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0186",
+    "canonical_name": "蜘蛛缚り",
+    "aliases": [
+      "Spider Bind",
+      "Kumo Shibari"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0187",
+    "canonical_name": "蜘蛛繭",
+    "aliases": [
+      "Spider Cocoon",
+      "Kumo Mayu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0188",
+    "canonical_name": "蜘蛛粘吐",
+    "aliases": [
+      "Spider Sticking Spit",
+      "Kumonendo"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0189",
+    "canonical_name": "蜘蛛粘金",
+    "aliases": [
+      "Spider Sticky Gold",
+      "Kumo Nenkin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0190",
+    "canonical_name": "蜘蛛戦弓·凄裂",
+    "aliases": [
+      "Spider War Bow: Terrible Split",
+      "Kumo Senkyū: Suzaku"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0191",
+    "canonical_name": "蜘蛛巣域",
+    "aliases": [
+      "Spider Web Area",
+      "Kumo Sōkei"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0192",
+    "canonical_name": "蜘蛛巣花",
+    "aliases": [
+      "Spider Web Flower",
+      "Kumo Sōka"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0193",
+    "canonical_name": "蜘蛛巣开",
+    "aliases": [
+      "Spider Web Unrolling",
+      "Kumosōkai"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0194",
+    "canonical_name": "螺旋吸丸",
+    "aliases": [
+      "Spiralling Absorption Sphere",
+      "Rasenkyūgan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0195",
+    "canonical_name": "螺旋连丸",
+    "aliases": [
+      "Spiralling Serial Spheres",
+      "Rasenrengan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0196",
+    "canonical_name": "螺旋乱丸",
+    "aliases": [
+      "Spiralling Strife Spheres",
+      "Rasenrangan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0197",
+    "canonical_name": "霊化之术",
+    "aliases": [
+      "Spirit Transformation Technique",
+      "Reika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0198",
+    "canonical_name": "胞子之术",
+    "aliases": [
+      "Spore Technique",
+      "Hōshi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0199",
+    "canonical_name": "嵐遁·励挫锁苛素レイザーサーカス",
+    "aliases": [
+      "Storm Release: Laser Circus",
+      "Ranton: Reizā Sākasu",
+      "Storm Release: Encouraging Crushing Chain Tormenting Principle"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0200",
+    "canonical_name": "成りかわり之术",
+    "aliases": [
+      "Substitute Technique",
+      "Narikawari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0201",
+    "canonical_name": "连弾砂時雨",
+    "aliases": [
+      "Successive Shots Sand Drizzle",
+      "Rendan Suna Shigure"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0202",
+    "canonical_name": "超獣伪画",
+    "aliases": [
+      "Super Beast Imitating Drawing",
+      "Chōjū Giga"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0203",
+    "canonical_name": "超神伪画",
+    "aliases": [
+      "Super God Imitating Drawing",
+      "Chōshin Giga"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0204",
+    "canonical_name": "超ミニ尾獣玉",
+    "aliases": [
+      "Super Mini-Tailed Beast Ball",
+      "Chō Mini Bijūdama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0205",
+    "canonical_name": "超倍化之术",
+    "aliases": [
+      "Super Multi-Size Technique",
+      "Chō Baika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0206",
+    "canonical_name": "草薙の剣·空の太刀",
+    "aliases": [
+      "Sword of Kusanagi: Longsword of the Sky",
+      "Kusanagi no Tsurugi: Kū no Tachi",
+      "Grass-Mowing Sword: Longsword of the Sky"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0207",
+    "canonical_name": "尾獣玉",
+    "aliases": [
+      "Tailed Beast Ball",
+      "Bijūdama"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0208",
+    "canonical_name": "尾獣重炮",
+    "aliases": [
+      "Tailed Beast Heavy Cannon",
+      "Bijū Jūhō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0209",
+    "canonical_name": "尾獣螺旋丸",
+    "aliases": [
+      "Tailed Beast Rasengan",
+      "Bijū Rasengan",
+      "Tailed Beast Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0210",
+    "canonical_name": "Tailed Beast Telepathy",
+    "aliases": [
+      "Tailed Beast Telepathy"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0211",
+    "canonical_name": "遠眼镜之术",
+    "aliases": [
+      "Telescope Technique",
+      "Tōmegane no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0212",
+    "canonical_name": "金缚り之术",
+    "aliases": [
+      "Temporary Paralysis Technique",
+      "Kanashibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0213",
+    "canonical_name": "十方",
+    "aliases": [
+      "Ten Directions",
+      "Jippō",
+      "Ten Directions, Everywhere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0214",
+    "canonical_name": "天変地異",
+    "aliases": [
+      "Tenpenchii",
+      "Natural Disaster Befalling Heaven and Earth"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0215",
+    "canonical_name": "第三の眼",
+    "aliases": [
+      "Third Eye",
+      "Daisan no Me"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0216",
+    "canonical_name": "千手操武",
+    "aliases": [
+      "Thousand Hands Manipulation Force",
+      "Senju Sōbu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0217",
+    "canonical_name": "蝦蟇平 影操り之术",
+    "aliases": [
+      "Toad Flatness — Shadow Manipulation Technique",
+      "Gamadaira — Kageayatsuri no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0218",
+    "canonical_name": "蝦蟇油弾",
+    "aliases": [
+      "Toad Oil Bullet",
+      "Gamayudan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0219",
+    "canonical_name": "舌歯粘酸",
+    "aliases": [
+      "Tongue Tooth Sticky Acid",
+      "Zesshi Nensan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0220",
+    "canonical_name": "頂上化仏",
+    "aliases": [
+      "Top Transformed Buddha",
+      "Chōjō Kebutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0221",
+    "canonical_name": "変化之术",
+    "aliases": [
+      "Transformation Technique",
+      "Henge no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0222",
+    "canonical_name": "変化·金剛如意",
+    "aliases": [
+      "Transformation: Adamantine Staff",
+      "Henge: Kongōnyoi",
+      "Transformation: Vajra Nyoi"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0223",
+    "canonical_name": "送信木",
+    "aliases": [
+      "Transmission Wood",
+      "Sōshinki"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0224",
+    "canonical_name": "木登り修業",
+    "aliases": [
+      "Tree Climbing Practice",
+      "Ki Nobori no Shugyō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0225",
+    "canonical_name": "蛙変える之术",
+    "aliases": [
+      "Turning into a Frog Technique",
+      "Kaeru Kaeru no Jutsu",
+      "Frog Conversion Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0226",
+    "canonical_name": "双牙斩",
+    "aliases": [
+      "Twin Fangs Slash",
+      "Sōgazan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0227",
+    "canonical_name": "双蛇相杀之术",
+    "aliases": [
+      "Twin Snakes Mutual Death Technique",
+      "Sōjasōsai no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0228",
+    "canonical_name": "うちは流剣术「刃衣」",
+    "aliases": [
+      "Uchiha Style Blade Technique: Hagoromo",
+      "Uchiha Ryū Kenjutsu \"Hagoromo\"",
+      "Uchiha Style Sword Technique \"Blade Mantle\""
+    ]
+  },
+  {
+    "id": "JT-OTHER-0229",
+    "canonical_name": "うちは流剣术",
+    "aliases": [
+      "Uchiha Style Kenjutsu",
+      "Uchiha Ryū Kenjutsu",
+      "Uchiha Style Sword Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0230",
+    "canonical_name": "最硬絶対防御·守鶴の盾",
+    "aliases": [
+      "Ultimately Hard Absolute Defence: Shield of Shukaku",
+      "Saikō Zettai Bōgyo: Shukaku no Tate"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0231",
+    "canonical_name": "超大玉螺旋丸",
+    "aliases": [
+      "Ultra-Big Ball Rasengan",
+      "Chōōdama Rasengan",
+      "Ultra-Big Ball Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0232",
+    "canonical_name": "螺旋超多连丸",
+    "aliases": [
+      "Ultra-Many Spiralling Serial Spheres",
+      "Rasen Chō Tarengan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0233",
+    "canonical_name": "消写顔之术",
+    "aliases": [
+      "Vanishing Facial Copy Technique",
+      "Shōshagan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0234",
+    "canonical_name": "水面歩行の業",
+    "aliases": [
+      "Water Surface Walking Practice",
+      "Suimen Hokō no Gyō"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0235",
+    "canonical_name": "乱獅子髪之术",
+    "aliases": [
+      "Wild Lion's Mane Technique",
+      "Ranjishigami no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0236",
+    "canonical_name": "知狼朽",
+    "aliases": [
+      "Wisdom Wolf Decay",
+      "Chirōkyū"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0237",
+    "canonical_name": "木分身之术",
+    "aliases": [
+      "Wood Clone Technique",
+      "Moku Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0238",
+    "canonical_name": "木遁秘术·树界降誕",
+    "aliases": [
+      "Wood Release Secret Technique: Nativity of a World of Trees",
+      "Mokuton Hijutsu: Jukai Kōtan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0239",
+    "canonical_name": "木遁·花树界降臨",
+    "aliases": [
+      "Wood Release: Advent of a World of Flowering Trees",
+      "Mokuton: Kajukai Kōrin"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0240",
+    "canonical_name": "木遁·挿し木之术",
+    "aliases": [
+      "Wood Release: Cutting Technique",
+      "Mokuton: Sashiki no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0241",
+    "canonical_name": "木遁·四柱家之术",
+    "aliases": [
+      "Wood Release: Four-Pillar House Technique",
+      "Mokuton: Shichūka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0242",
+    "canonical_name": "木遁·四柱牢之术",
+    "aliases": [
+      "Wood Release: Four-Pillar Prison Technique",
+      "Mokuton: Shichūrō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0243",
+    "canonical_name": "木遁·大树林之术",
+    "aliases": [
+      "Wood Release: Great Forest Technique",
+      "Mokuton: Daijurin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0244",
+    "canonical_name": "木遁·大槍树",
+    "aliases": [
+      "Wood Release: Great Spear Tree",
+      "Mokuton: Daisōju"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0245",
+    "canonical_name": "木遁·皆布袋之术",
+    "aliases": [
+      "Wood Release: Hotei Technique",
+      "Mokuton: Hotei no Jutsu",
+      "Wood Release: Cloth Sack Technique"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0246",
+    "canonical_name": "木遁·树海降誕",
+    "aliases": [
+      "Wood Release: Nativity of a Sea of Trees",
+      "Mokuton: Jukai Kōtan"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0247",
+    "canonical_name": "木遁·连柱家之术",
+    "aliases": [
+      "Wood Release: Serial Pillar Houses Technique",
+      "Mokuton: Renchūka no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0248",
+    "canonical_name": "Wood Release: Stocks",
+    "aliases": [
+      "Wood Release: Stocks"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0249",
+    "canonical_name": "木遁·木龙之术",
+    "aliases": [
+      "Wood Release: Wood Dragon Technique",
+      "Mokuton: Mokuryū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0250",
+    "canonical_name": "木遁·木人之术",
+    "aliases": [
+      "Wood Release: Wood Human Technique",
+      "Mokuton: Mokujin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-OTHER-0251",
+    "canonical_name": "木遁·木錠壁",
+    "aliases": [
+      "Wood Release: Wood Locking Wall",
+      "Mokuton: Mokujōheki"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0001",
+    "canonical_name": "心転傀儡呪印之术",
+    "aliases": [
+      "Mind Puppet Switch Cursed Seal Technique",
+      "Shinten Kugutsu Juin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0002",
+    "canonical_name": "仕込み傀儡·针々八波",
+    "aliases": [
+      "Prepared Puppet: Eight Waves of Needles",
+      "Shikomi Kugutsu: Shinshin Happa"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0003",
+    "canonical_name": "操演·人身冴功",
+    "aliases": [
+      "Puppet Performance: Skilful Achievement with a Human Body",
+      "Sōen: Hitomi Gokū"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0004",
+    "canonical_name": "傀儡之术",
+    "aliases": [
+      "Puppet Technique",
+      "Kugutsu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0005",
+    "canonical_name": "傀儡之术·義手千本",
+    "aliases": [
+      "Puppet Technique: Prosthetic Arm Senbon",
+      "Kugutsu no Jutsu: Gishu Senbon",
+      "Puppet Technique: Prosthetic Arm Needles"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0006",
+    "canonical_name": "傀儡·父と母",
+    "aliases": [
+      "Puppet: Father and Mother",
+      "Kugutsu: Chichi to Haha"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0007",
+    "canonical_name": "赤秘技·百機の操演",
+    "aliases": [
+      "Red Secret Technique: Performance of a Hundred Puppets",
+      "Akahigi: Hyakki no Sōen"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0008",
+    "canonical_name": "白秘技·十機近松の集",
+    "aliases": [
+      "White Secret Technique: The Chikamatsu Collection of Ten Puppets",
+      "Shirohigi: Jikki Chikamatsu no Shū"
+    ]
+  },
+  {
+    "id": "JT-PUPPET-0009",
+    "canonical_name": "白秘技·十機近松の集·天の攻",
+    "aliases": [
+      "White Secret Technique: The Chikamatsu Collection of Ten Puppets: Heaven Attack",
+      "Shirohigi: Jikki Chikamatsu no Shū: Ten no Kō"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0001",
+    "canonical_name": "金剛封锁",
+    "aliases": [
+      "Adamantine Sealing Chains",
+      "Kongō Fūsa",
+      "Vajra Sealing Chains"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0002",
+    "canonical_name": "结界法阵",
+    "aliases": [
+      "Barrier Method Formation",
+      "Kekkai Hōjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0003",
+    "canonical_name": "结界符·眼装甲",
+    "aliases": [
+      "Barrier Talisman: Armoured Eye",
+      "Kekkaifu: Gansōkō"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0004",
+    "canonical_name": "结界·天蓋法阵",
+    "aliases": [
+      "Barrier: Canopy Method Formation",
+      "Kekkai: Tengai Hōjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0005",
+    "canonical_name": "结界·蝦蟇瓢牢",
+    "aliases": [
+      "Barrier: Toad Gourd Prison",
+      "Kekkai: Gama Hyōrō"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0006",
+    "canonical_name": "封术吸印",
+    "aliases": [
+      "Blocking Technique Absorption Seal",
+      "Fūjutsu Kyūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0007",
+    "canonical_name": "チャクラコントロール·缚",
+    "aliases": [
+      "Chakra Control: Bind",
+      "Chakura Kontorōru: Baku"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0008",
+    "canonical_name": "地爆天星",
+    "aliases": [
+      "Chibaku Tensei",
+      "Heavenly Body Bursting from the Earth"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0009",
+    "canonical_name": "布缚り之术",
+    "aliases": [
+      "Cloth Binding Technique",
+      "Nunoshibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0010",
+    "canonical_name": "契約封印",
+    "aliases": [
+      "Contract Seal",
+      "Keiyaku Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0011",
+    "canonical_name": "舌禍根絶の印",
+    "aliases": [
+      "Cursed Tongue Eradication Seal",
+      "Zekka Konzetsu no In"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0012",
+    "canonical_name": "封黒法印",
+    "aliases": [
+      "Dark Sealing Method",
+      "Fūkoku Hōin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0013",
+    "canonical_name": "尸鬼封尽",
+    "aliases": [
+      "Dead Demon Consuming Seal",
+      "Shiki Fūjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0014",
+    "canonical_name": "魔像の锁",
+    "aliases": [
+      "Demonic Statue Chains",
+      "Mazō no Kusari"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0015",
+    "canonical_name": "砂漠層大葬封印",
+    "aliases": [
+      "Desert Layered Imperial Funeral Seal",
+      "Sabaku Sōtaisō Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0016",
+    "canonical_name": "八卦の封印式",
+    "aliases": [
+      "Eight Trigrams Sealing Style",
+      "Hakke no Fūin Shiki"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0017",
+    "canonical_name": "封入之术",
+    "aliases": [
+      "Enclosing Technique",
+      "Fūnyū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0018",
+    "canonical_name": "解邪法印",
+    "aliases": [
+      "Evil Releasing Method",
+      "Kaija Hōin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0019",
+    "canonical_name": "封邪法印",
+    "aliases": [
+      "Evil Sealing Method",
+      "Fūja Hōin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0020",
+    "canonical_name": "指刻封印",
+    "aliases": [
+      "Finger Carving Seal",
+      "Shikoku Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0021",
+    "canonical_name": "封火法印",
+    "aliases": [
+      "Fire Sealing Method",
+      "Fūka Hōin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0022",
+    "canonical_name": "五行封印",
+    "aliases": [
+      "Five Elements Seal",
+      "Gogyō Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0023",
+    "canonical_name": "五行解印",
+    "aliases": [
+      "Five Elements Unseal",
+      "Gogyō Kaiin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0024",
+    "canonical_name": "五封结界",
+    "aliases": [
+      "Five-Seal Barrier",
+      "Gofū Kekkai"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0025",
+    "canonical_name": "飞雷神·導雷",
+    "aliases": [
+      "Flying Thunder God: Guiding Thunder",
+      "Hiraishin: Dōrai"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0026",
+    "canonical_name": "禁個呪の札",
+    "aliases": [
+      "Forbidden Individual Curse Tag",
+      "Kinkoju no Fuda"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0027",
+    "canonical_name": "四黒霧阵",
+    "aliases": [
+      "Four Black Fogs Formation",
+      "Shikokumujin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0028",
+    "canonical_name": "四赤阳阵",
+    "aliases": [
+      "Four Red Yang Formation",
+      "Shisekiyōjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0029",
+    "canonical_name": "四象封印",
+    "aliases": [
+      "Four Symbols Seal",
+      "Shishō Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0030",
+    "canonical_name": "四紫炎阵",
+    "aliases": [
+      "Four Violet Flames Formation",
+      "Shishienjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0031",
+    "canonical_name": "蝦蟇隠れ之术",
+    "aliases": [
+      "Hiding in a Toad Technique",
+      "Gamagakure no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0032",
+    "canonical_name": "鉄甲封印",
+    "aliases": [
+      "Iron Armour Seal",
+      "Tekkō Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0033",
+    "canonical_name": "神威カムイ",
+    "aliases": [
+      "Kamui",
+      "Authority of the Gods"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0034",
+    "canonical_name": "磁鉄粒封掌",
+    "aliases": [
+      "Magnet Iron Grain Seal Palm",
+      "Jitetsu Ryūfūshō"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0035",
+    "canonical_name": "裏四象封印",
+    "aliases": [
+      "Reverse Four Symbols Sealing",
+      "Ura Shishō Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0036",
+    "canonical_name": "仙法·明神门",
+    "aliases": [
+      "Sage Art: Gate of the Great God",
+      "Senpō: Myōjinmon"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0037",
+    "canonical_name": "仙法·磁遁螺旋丸",
+    "aliases": [
+      "Sage Art: Magnet Release Rasengan",
+      "Senpō: Jiton Rasengan",
+      "Sage Art: Magnet Release Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0038",
+    "canonical_name": "封印鉄壁",
+    "aliases": [
+      "Sealed Iron Wall",
+      "Fūin Teppeki"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0039",
+    "canonical_name": "封印术·獅子閉哮",
+    "aliases": [
+      "Sealing Technique: Lion Closing Roar",
+      "Fūinjutsu: Shishi Heikō"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0040",
+    "canonical_name": "封印术·億怒端数煩流奴オクトパスホールド",
+    "aliases": [
+      "Sealing Technique: Octopus Hold",
+      "Fūinjutsu: Okutopasu Hōrudo",
+      "Sealing Technique: Hundred-Million, Angry, Fraction, Trouble-Style Guys"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0041",
+    "canonical_name": "封印术·幻龙九封尽",
+    "aliases": [
+      "Sealing Technique: Phantom Dragons Nine Consuming Seals",
+      "Fūinjutsu: Genryū Kyūfūjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0042",
+    "canonical_name": "封印术·虎視眈弾",
+    "aliases": [
+      "Sealing Technique: Tiger Vision Staring Bullet",
+      "Fūinjutsu: Koshi Tandan"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0043",
+    "canonical_name": "自業呪缚の印",
+    "aliases": [
+      "Self-Cursing Seal",
+      "Jigō Jubaku no In"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0044",
+    "canonical_name": "再生结界",
+    "aliases": [
+      "Self-Repairing Barrier",
+      "Saisei Kekkai"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0045",
+    "canonical_name": "感知结界",
+    "aliases": [
+      "Sensing Barrier",
+      "Kanchi Kekkai"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0046",
+    "canonical_name": "六道 地爆天星",
+    "aliases": [
+      "Six Paths — Chibaku Tensei",
+      "Rikudō — Chibaku Tensei",
+      "Six Paths — Heavenly Body Bursting from the Earth"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0047",
+    "canonical_name": "六道十尾柩印",
+    "aliases": [
+      "Six Paths Ten-Tails Coffin Seal",
+      "Rikudō Jūbi Kyūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0048",
+    "canonical_name": "六赤阳阵",
+    "aliases": [
+      "Six Red Yang Formation",
+      "Musekiyōjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0049",
+    "canonical_name": "百豪の印",
+    "aliases": [
+      "Strength of a Hundred Seal",
+      "Byakugō no In"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0050",
+    "canonical_name": "一糸灯阵",
+    "aliases": [
+      "String Light Formation",
+      "Isshi Tōjin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0051",
+    "canonical_name": "口寄せ·雷光剣化",
+    "aliases": [
+      "Summoning: Lightning Flash Blade Creation",
+      "Kuchiyose: Raikō Kenka"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0052",
+    "canonical_name": "解尾法印",
+    "aliases": [
+      "Tail Releasing Method",
+      "Kaibi Hōin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0053",
+    "canonical_name": "尾獣封印",
+    "aliases": [
+      "Tailed Beast Sealing",
+      "Bijū Fūin"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0054",
+    "canonical_name": "三宝吸潰",
+    "aliases": [
+      "Three Jewels Suction Crushing",
+      "Sanbō Kyūkai"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0055",
+    "canonical_name": "緊缚金锁之术",
+    "aliases": [
+      "Tight Binding Golden Chain Technique",
+      "Kinbaku Kingusari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0056",
+    "canonical_name": "転写封印·天照",
+    "aliases": [
+      "Transcription Seal: Amaterasu",
+      "Tensha Fūin: Amaterasu",
+      "Transcription Seal: Illuminating Heaven"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0057",
+    "canonical_name": "开封之术",
+    "aliases": [
+      "Unsealing Technique",
+      "Kaifū no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0058",
+    "canonical_name": "木遁·榜排之术",
+    "aliases": [
+      "Wood Release: Hōbi Technique",
+      "Mokuton: Hōbi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0059",
+    "canonical_name": "木遁·黙杀缚り之术",
+    "aliases": [
+      "Wood Release: Smothering Binding Technique",
+      "Mokuton: Mokusatsu Shibari no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEAL-0060",
+    "canonical_name": "阴封印·解",
+    "aliases": [
+      "Yin Seal: Release",
+      "Infūin: Kai"
+    ]
+  },
+  {
+    "id": "JT-SEN-0001",
+    "canonical_name": "再胞吸引",
+    "aliases": [
+      "Cellular Regeneration Absorption",
+      "Saibō Kyūin"
+    ]
+  },
+  {
+    "id": "JT-SEN-0002",
+    "canonical_name": "再胞排出",
+    "aliases": [
+      "Cellular Regeneration Ejection",
+      "Saibō Haishutsu"
+    ]
+  },
+  {
+    "id": "JT-SEN-0003",
+    "canonical_name": "锁",
+    "aliases": [
+      "Chain",
+      "Kusari"
+    ]
+  },
+  {
+    "id": "JT-SEN-0004",
+    "canonical_name": "地の呪印",
+    "aliases": [
+      "Cursed Seal of Earth",
+      "Chi no Juin"
+    ]
+  },
+  {
+    "id": "JT-SEN-0005",
+    "canonical_name": "天の呪印",
+    "aliases": [
+      "Cursed Seal of Heaven",
+      "Ten no Juin"
+    ]
+  },
+  {
+    "id": "JT-SEN-0006",
+    "canonical_name": "舌戦缚",
+    "aliases": [
+      "Fighting Tongue Bind",
+      "Zessenbaku"
+    ]
+  },
+  {
+    "id": "JT-SEN-0007",
+    "canonical_name": "舌戦斩",
+    "aliases": [
+      "Fighting Tongue Slash",
+      "Zessenzan"
+    ]
+  },
+  {
+    "id": "JT-SEN-0008",
+    "canonical_name": "大蛇突き",
+    "aliases": [
+      "Great Snake Thrust",
+      "Daijatsuki"
+    ]
+  },
+  {
+    "id": "JT-SEN-0009",
+    "canonical_name": "多蓮不自连炮",
+    "aliases": [
+      "Multiple Lotus Nonself Connected Cannons",
+      "Taren Fujizuho"
+    ]
+  },
+  {
+    "id": "JT-SEN-0010",
+    "canonical_name": "大蛇丸の呪印术",
+    "aliases": [
+      "Orochimaru's Juinjutsu",
+      "Orochimaru no Juinjutsu",
+      "Orochimaru's Cursed Seal Technique"
+    ]
+  },
+  {
+    "id": "JT-SEN-0011",
+    "canonical_name": "仙法木遁·真数千手",
+    "aliases": [
+      "Sage Art Wood Release: True Several Thousand Hands",
+      "Senpō Mokuton: Shin Sūsenju"
+    ]
+  },
+  {
+    "id": "JT-SEN-0012",
+    "canonical_name": "仙法·両生之术",
+    "aliases": [
+      "Sage Art: Amphibian Technique",
+      "Senpō: Ryōsei no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEN-0013",
+    "canonical_name": "仙法·蛙鳴き",
+    "aliases": [
+      "Sage Art: Frog Call",
+      "Senpō: Kawazu Naki"
+    ]
+  },
+  {
+    "id": "JT-SEN-0014",
+    "canonical_name": "仙法·无機転生",
+    "aliases": [
+      "Sage Art: Inorganic Reincarnation",
+      "Senpō: Muki Tensei"
+    ]
+  },
+  {
+    "id": "JT-SEN-0015",
+    "canonical_name": "仙法·超大玉螺旋多连丸",
+    "aliases": [
+      "Sage Art: Many Ultra-Big Ball Spiralling Serial Spheres",
+      "Senpō: Chōōdama Rasen Tarengan"
+    ]
+  },
+  {
+    "id": "JT-SEN-0016",
+    "canonical_name": "仙法·嵐遁光牙",
+    "aliases": [
+      "Sage Art: Storm Release Light Fang",
+      "Senpō: Ranton Kōga"
+    ]
+  },
+  {
+    "id": "JT-SEN-0017",
+    "canonical_name": "仙法·白激之术",
+    "aliases": [
+      "Sage Art: White Rage Technique",
+      "Senpō: Hakugeki no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SEN-0018",
+    "canonical_name": "仙法·阴遁雷派",
+    "aliases": [
+      "Sage Art: Yin Release Lightning Dispatch",
+      "Senpō: Inton Raiha"
+    ]
+  },
+  {
+    "id": "JT-SEN-0019",
+    "canonical_name": "仙人モード",
+    "aliases": [
+      "Sage Mode",
+      "Sennin Mōdo"
+    ]
+  },
+  {
+    "id": "JT-SEN-0020",
+    "canonical_name": "仙人化",
+    "aliases": [
+      "Sage Transformation",
+      "Senninka"
+    ]
+  },
+  {
+    "id": "JT-SEN-0021",
+    "canonical_name": "六道仙人モード",
+    "aliases": [
+      "Six Paths Sage Mode",
+      "Rikudō Sennin Mōdo"
+    ]
+  },
+  {
+    "id": "JT-SEN-0022",
+    "canonical_name": "六道仙术",
+    "aliases": [
+      "Six Paths Senjutsu",
+      "Rikudō Senjutsu",
+      "Six Paths Sage Technique"
+    ]
+  },
+  {
+    "id": "JT-SEN-0023",
+    "canonical_name": "六道·国津守",
+    "aliases": [
+      "Six Paths: Kunitsukami",
+      "Rikudō: Kunitsukami",
+      "Six Paths: Guardian of the Land"
+    ]
+  },
+  {
+    "id": "JT-SEN-0024",
+    "canonical_name": "伝異遠影",
+    "aliases": [
+      "Strange Transmission Distant Shadow",
+      "Den'ien'ei"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0001",
+    "canonical_name": "天之御中アメノミナカ",
+    "aliases": [
+      "Amenominaka",
+      "Heavenly Governing Inside"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0002",
+    "canonical_name": "天手力アメノテジカラ",
+    "aliases": [
+      "Amenotejikara",
+      "Heavenly Hand Power"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0003",
+    "canonical_name": "増幅口寄せ之术",
+    "aliases": [
+      "Amplification Summoning Technique",
+      "Zōfuku Kuchiyose no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0004",
+    "canonical_name": "蛇睨呪缚",
+    "aliases": [
+      "Binding Snake Glare Spell",
+      "Jagei Jubaku"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0005",
+    "canonical_name": "飞雷阵之术",
+    "aliases": [
+      "Flying Thunder Formation Technique",
+      "Hiraijin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0006",
+    "canonical_name": "飞雷神 ニの段",
+    "aliases": [
+      "Flying Thunder God — Second Step",
+      "Hiraishin — Ni no Dan"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0007",
+    "canonical_name": "飞雷神互瞬回し之术",
+    "aliases": [
+      "Flying Thunder God Mutually Instantaneous Revolving Technique",
+      "Hiraishin Goshun Mawashi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0008",
+    "canonical_name": "飞雷神斩り",
+    "aliases": [
+      "Flying Thunder God Slash",
+      "Hiraishingiri"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0009",
+    "canonical_name": "飞雷神之术",
+    "aliases": [
+      "Flying Thunder God Technique",
+      "Hiraishin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0010",
+    "canonical_name": "万蛇羅ノ阵",
+    "aliases": [
+      "Formation of Ten Thousand Snakes",
+      "Mandara no Jin",
+      "Formation of Ten Thousand Snakes Silk"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0011",
+    "canonical_name": "潜影蛇手",
+    "aliases": [
+      "Hidden Shadow Snake Hands",
+      "Sen'ei Jashu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0012",
+    "canonical_name": "神威走り",
+    "aliases": [
+      "Kamui Running",
+      "Kamuibashiri"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0013",
+    "canonical_name": "神威走り·惨",
+    "aliases": [
+      "Kamui Running: Brutal",
+      "Kamuibashiri: San"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0014",
+    "canonical_name": "神威手裏剣",
+    "aliases": [
+      "Kamui Shuriken",
+      "Authority of the Gods Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0015",
+    "canonical_name": "潜影多蛇手",
+    "aliases": [
+      "Many Hidden Shadow Snake Hands",
+      "Sen'ei Tajashu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0016",
+    "canonical_name": "雨蜘蛛",
+    "aliases": [
+      "Rain of Spiders",
+      "Amagumo"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0017",
+    "canonical_name": "逆口寄せ之术",
+    "aliases": [
+      "Reverse Summoning Technique",
+      "Gyaku Kuchiyose no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0018",
+    "canonical_name": "螺旋闪光超轮舞吼参式",
+    "aliases": [
+      "Spiralling Flash Super Round Dance Howl Style Three",
+      "Rasen Senkō Chō Rinbukō Sanshiki"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0019",
+    "canonical_name": "口寄せ轮廻眼",
+    "aliases": [
+      "Summoning Rinnegan",
+      "Kuchiyose Rinnegan",
+      "Summoning Saṃsāra Eye"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0020",
+    "canonical_name": "口寄せ之术",
+    "aliases": [
+      "Summoning Technique",
+      "Kuchiyose no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0021",
+    "canonical_name": "口寄せ·外道魔像",
+    "aliases": [
+      "Summoning: Demonic Statue of the Outer Path",
+      "Kuchiyose: Gedō Mazō"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0022",
+    "canonical_name": "口寄せ·屋台崩し之术",
+    "aliases": [
+      "Summoning: Food Cart Destroyer Technique",
+      "Kuchiyose: Yatai Kuzushi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0023",
+    "canonical_name": "口寄せ·穢土転生",
+    "aliases": [
+      "Summoning: Impure World Reincarnation",
+      "Kuchiyose: Edo Tensei"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0024",
+    "canonical_name": "口寄せ·五重羅生门",
+    "aliases": [
+      "Summoning: Quintuple Rashōmon",
+      "Kuchiyose: Gojū Rashōmon"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0025",
+    "canonical_name": "口寄せ·羅生门",
+    "aliases": [
+      "Summoning: Rashōmon",
+      "Kuchiyose: Rashōmon"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0026",
+    "canonical_name": "口寄せ·蝦蟇口缚り",
+    "aliases": [
+      "Summoning: Toad Mouth Bind",
+      "Kuchiyose: Gamaguchi Shibari"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0027",
+    "canonical_name": "口寄せ·蝦蟇見世之术",
+    "aliases": [
+      "Summoning: Toad Shop Technique",
+      "Kuchiyose: Gama Mise no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0028",
+    "canonical_name": "口寄せ·三重羅生门",
+    "aliases": [
+      "Summoning: Triple Rashōmon",
+      "Kuchiyose: Sanjū Rashōmon"
+    ]
+  },
+  {
+    "id": "JT-SPACE-0029",
+    "canonical_name": "黄泉比良坂ヨモツヒラサカ",
+    "aliases": [
+      "Yomotsu Hirasaka",
+      "Underworld Slope Hill"
+    ]
+  },
+  {
+    "id": "JT-SUMMON-0001",
+    "canonical_name": "Spontaneous Tree Summoning",
+    "aliases": [
+      "Spontaneous Tree Summoning"
+    ]
+  },
+  {
+    "id": "JT-SUMMON-0002",
+    "canonical_name": "口寄せ·イブセ毒香み",
+    "aliases": [
+      "Summoning: Ibuse Poisoning",
+      "Kuchiyose: Ibuse Dokukami"
+    ]
+  },
+  {
+    "id": "JT-TAI-0001",
+    "canonical_name": "荒繰鷺伐刀アクロバット",
+    "aliases": [
+      "Acrobat",
+      "Akurobatto",
+      "Rough Spin Heron Striking Sword"
+    ]
+  },
+  {
+    "id": "JT-TAI-0002",
+    "canonical_name": "羅漢拳",
+    "aliases": [
+      "Arhat Fist",
+      "Rakanken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0003",
+    "canonical_name": "沸遁·怪力无双",
+    "aliases": [
+      "Boil Release: Unrivalled Strength",
+      "Futton: Kairiki Musō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0004",
+    "canonical_name": "鉞",
+    "aliases": [
+      "Broadaxe",
+      "Masakari"
+    ]
+  },
+  {
+    "id": "JT-TAI-0005",
+    "canonical_name": "蟲食い",
+    "aliases": [
+      "Bug Bite",
+      "Mushikui"
+    ]
+  },
+  {
+    "id": "JT-TAI-0006",
+    "canonical_name": "蝶弾爆撃",
+    "aliases": [
+      "Butterfly Bullet Bombing",
+      "Chōdan Bakugeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0007",
+    "canonical_name": "猫爪",
+    "aliases": [
+      "Cat Claw",
+      "Nekozume"
+    ]
+  },
+  {
+    "id": "JT-TAI-0008",
+    "canonical_name": "桜花冲",
+    "aliases": [
+      "Cherry Blossom Impact",
+      "Ōkashō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0009",
+    "canonical_name": "分身体当たり",
+    "aliases": [
+      "Clone Body Blow",
+      "Bunshin Taiatari"
+    ]
+  },
+  {
+    "id": "JT-TAI-0010",
+    "canonical_name": "雲流三日月斩り",
+    "aliases": [
+      "Cloud-Style Crescent Moon Beheading",
+      "Kumo-Ryū Mikazukigiri",
+      "Cloud-Style Three Days' Moon Beheading"
+    ]
+  },
+  {
+    "id": "JT-TAI-0011",
+    "canonical_name": "雲流表斩り",
+    "aliases": [
+      "Cloud-Style Front Beheading",
+      "Kumo-Ryū Omotegiri"
+    ]
+  },
+  {
+    "id": "JT-TAI-0012",
+    "canonical_name": "雲流裏斩り",
+    "aliases": [
+      "Cloud-Style Reverse Beheading",
+      "Kumo-Ryū Uragiri"
+    ]
+  },
+  {
+    "id": "JT-TAI-0013",
+    "canonical_name": "巻きつき",
+    "aliases": [
+      "Coiling Around",
+      "Makitsuki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0014",
+    "canonical_name": "珊瑚掌",
+    "aliases": [
+      "Coral Palm",
+      "Sangoshō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0015",
+    "canonical_name": "椿の舞",
+    "aliases": [
+      "Dance of the Camellia",
+      "Tsubaki no Mai"
+    ]
+  },
+  {
+    "id": "JT-TAI-0016",
+    "canonical_name": "鉄線化の舞·花",
+    "aliases": [
+      "Dance of the Clematis: Flower",
+      "Tessenka no Mai: Hana"
+    ]
+  },
+  {
+    "id": "JT-TAI-0017",
+    "canonical_name": "鉄線化の舞·蔓",
+    "aliases": [
+      "Dance of the Clematis: Vine",
+      "Tessenka no Mai: Tsuru"
+    ]
+  },
+  {
+    "id": "JT-TAI-0018",
+    "canonical_name": "唐松の舞",
+    "aliases": [
+      "Dance of the Larch",
+      "Karamatsu no Mai"
+    ]
+  },
+  {
+    "id": "JT-TAI-0019",
+    "canonical_name": "柳の舞",
+    "aliases": [
+      "Dance of the Willow",
+      "Yanagi no Mai"
+    ]
+  },
+  {
+    "id": "JT-TAI-0020",
+    "canonical_name": "昼虎",
+    "aliases": [
+      "Daytime Tiger",
+      "Hirudora"
+    ]
+  },
+  {
+    "id": "JT-TAI-0021",
+    "canonical_name": "攪乱体术",
+    "aliases": [
+      "Disturbance Taijutsu",
+      "Kakuran Taijutsu",
+      "Disturbance Body Technique"
+    ]
+  },
+  {
+    "id": "JT-TAI-0022",
+    "canonical_name": "ダブル肉弾戦車",
+    "aliases": [
+      "Double Human Bullet Tank",
+      "Daburu Nikudan Sensha"
+    ]
+  },
+  {
+    "id": "JT-TAI-0023",
+    "canonical_name": "酔拳",
+    "aliases": [
+      "Drunken Fist",
+      "Suiken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0024",
+    "canonical_name": "ダイナミック·エントリー",
+    "aliases": [
+      "Dynamic Entry",
+      "Dainamikku Entorī"
+    ]
+  },
+  {
+    "id": "JT-TAI-0025",
+    "canonical_name": "ダイナミックマーキング",
+    "aliases": [
+      "Dynamic Marking",
+      "Dainamikku Mākingu"
+    ]
+  },
+  {
+    "id": "JT-TAI-0026",
+    "canonical_name": "早贄",
+    "aliases": [
+      "Early Sacrifice",
+      "Hayanie"
+    ]
+  },
+  {
+    "id": "JT-TAI-0027",
+    "canonical_name": "八门遁甲の阵",
+    "aliases": [
+      "Eight Gates Released Formation",
+      "Hachimon Tonkō no Jin"
+    ]
+  },
+  {
+    "id": "JT-TAI-0028",
+    "canonical_name": "八卦掌回天",
+    "aliases": [
+      "Eight Trigrams Palms Revolving Heaven",
+      "Hakkeshō Kaiten"
+    ]
+  },
+  {
+    "id": "JT-TAI-0029",
+    "canonical_name": "八卦六十四掌",
+    "aliases": [
+      "Eight Trigrams Sixty-Four Palms",
+      "Hakke Rokujūyon Shō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0030",
+    "canonical_name": "八卦空掌",
+    "aliases": [
+      "Eight Trigrams Vacuum Palm",
+      "Hakke Kūshō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0031",
+    "canonical_name": "八卦空壁掌",
+    "aliases": [
+      "Eight Trigrams Vacuum Wall Palm",
+      "Hakke Kūhekishō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0032",
+    "canonical_name": "八十神空撃",
+    "aliases": [
+      "Eighty Gods Vacuum Attack",
+      "Yasogami Kūgeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0033",
+    "canonical_name": "噴推拳",
+    "aliases": [
+      "Erupting Propulsion Fist",
+      "Funsuiken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0034",
+    "canonical_name": "噴剛脚",
+    "aliases": [
+      "Erupting Strong Foot",
+      "Fungōkyaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0035",
+    "canonical_name": "夕象",
+    "aliases": [
+      "Evening Elephant",
+      "Sekizō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0036",
+    "canonical_name": "爆遁·地雷拳",
+    "aliases": [
+      "Explosion Release: Landmine Fist",
+      "Bakuton: Jiraiken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0037",
+    "canonical_name": "牙通牙",
+    "aliases": [
+      "Fang Passing Fang",
+      "Gatsūga"
+    ]
+  },
+  {
+    "id": "JT-TAI-0038",
+    "canonical_name": "牙転牙",
+    "aliases": [
+      "Fang Rotating Fang",
+      "Gatenga"
+    ]
+  },
+  {
+    "id": "JT-TAI-0039",
+    "canonical_name": "牙狼牙",
+    "aliases": [
+      "Fang Wolf Fang",
+      "Garōga"
+    ]
+  },
+  {
+    "id": "JT-TAI-0040",
+    "canonical_name": "花果山",
+    "aliases": [
+      "Flower–Fruit Mountain",
+      "Kakazan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0041",
+    "canonical_name": "飞爪",
+    "aliases": [
+      "Flying Claw",
+      "Hisō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0042",
+    "canonical_name": "飞燕",
+    "aliases": [
+      "Flying Swallow",
+      "Hien"
+    ]
+  },
+  {
+    "id": "JT-TAI-0043",
+    "canonical_name": "フォーメーション猪鹿蝶",
+    "aliases": [
+      "Formation Ino–Shika–Chō",
+      "Fōmēshon Ino–Shika–Chō",
+      "Formation Boar–Deer–Butterfly"
+    ]
+  },
+  {
+    "id": "JT-TAI-0044",
+    "canonical_name": "蛙組手",
+    "aliases": [
+      "Frog Kata",
+      "Kawazu Kumite"
+    ]
+  },
+  {
+    "id": "JT-TAI-0045",
+    "canonical_name": "蛙たたき",
+    "aliases": [
+      "Frog Strike",
+      "Kawazu Tataki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0046",
+    "canonical_name": "表蓮華",
+    "aliases": [
+      "Front Lotus",
+      "Omote Renge"
+    ]
+  },
+  {
+    "id": "JT-TAI-0047",
+    "canonical_name": "柔拳",
+    "aliases": [
+      "Gentle Fist",
+      "Jūken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0048",
+    "canonical_name": "柔拳法一撃身",
+    "aliases": [
+      "Gentle Fist Art One Blow Body",
+      "Jūkenhō Ichigekishin"
+    ]
+  },
+  {
+    "id": "JT-TAI-0049",
+    "canonical_name": "柔歩双獅拳",
+    "aliases": [
+      "Gentle Step Twin Lion Fists",
+      "Jūho Sōshiken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0050",
+    "canonical_name": "大猫爪撃",
+    "aliases": [
+      "Great Cat Claw Attack",
+      "Daibyō Sōgeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0051",
+    "canonical_name": "頭八刀ヘッドバット",
+    "aliases": [
+      "Headbutt",
+      "Heddo Batto",
+      "Cranial Eighth Sword"
+    ]
+  },
+  {
+    "id": "JT-TAI-0052",
+    "canonical_name": "痛天脚",
+    "aliases": [
+      "Heavenly Foot of Pain",
+      "Tsūtenkyaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0053",
+    "canonical_name": "槍天脚",
+    "aliases": [
+      "Heavenly Spear Foot",
+      "Sōtenkyaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0054",
+    "canonical_name": "角折り",
+    "aliases": [
+      "Horn Breaking",
+      "Tsunoori"
+    ]
+  },
+  {
+    "id": "JT-TAI-0055",
+    "canonical_name": "肉弾戦車",
+    "aliases": [
+      "Human Bullet Tank",
+      "Nikudan Sensha"
+    ]
+  },
+  {
+    "id": "JT-TAI-0056",
+    "canonical_name": "肉弾用々",
+    "aliases": [
+      "Human Bullet Yo-Yo",
+      "Nikudan Yōyō",
+      "Human Bullet Use"
+    ]
+  },
+  {
+    "id": "JT-TAI-0057",
+    "canonical_name": "アイアンクロー",
+    "aliases": [
+      "Iron Claw",
+      "Aian Kurō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0058",
+    "canonical_name": "熔遁チャクラモード",
+    "aliases": [
+      "Lava Release Chakra Mode",
+      "Yōton Chakura Mōdo"
+    ]
+  },
+  {
+    "id": "JT-TAI-0059",
+    "canonical_name": "熔遁·灼铠甲拳",
+    "aliases": [
+      "Lava Release: Scorching Armoured Fist",
+      "Yōton: Shakugaikōken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0060",
+    "canonical_name": "木ノ叶つむじ旋风",
+    "aliases": [
+      "Leaf Coiling Whirlwind",
+      "Konoha Tsumuji Senpū",
+      "Tree Leaf Coiling Whirlwind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0061",
+    "canonical_name": "木ノ叶落とし",
+    "aliases": [
+      "Leaf Drop",
+      "Konoha Otoshi",
+      "Tree Leaf Drop"
+    ]
+  },
+  {
+    "id": "JT-TAI-0062",
+    "canonical_name": "木ノ叶烈风",
+    "aliases": [
+      "Leaf Gale",
+      "Konoha Reppū",
+      "Tree Leaf Gale"
+    ]
+  },
+  {
+    "id": "JT-TAI-0063",
+    "canonical_name": "木ノ叶大旋风",
+    "aliases": [
+      "Leaf Great Whirlwind",
+      "Konoha Daisenpū",
+      "Tree Leaf Great Whirlwind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0064",
+    "canonical_name": "木ノ叶昇风",
+    "aliases": [
+      "Leaf Rising Wind",
+      "Konoha Shōfū",
+      "Tree Leaf Rising Wind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0065",
+    "canonical_name": "木ノ叶壊岩升",
+    "aliases": [
+      "Leaf Rock-Destroying Rise",
+      "Konoha Kaiganshō",
+      "Tree Leaf Rock-Destroying Rise"
+    ]
+  },
+  {
+    "id": "JT-TAI-0066",
+    "canonical_name": "木ノ叶剛力旋风",
+    "aliases": [
+      "Leaf Strong Whirlwind",
+      "Konoha Gōriki Senpū",
+      "Tree Leaf Strong Whirlwind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0067",
+    "canonical_name": "木ノ叶旋风",
+    "aliases": [
+      "Leaf Whirlwind",
+      "Konoha Senpū",
+      "Tree Leaf Whirlwind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0068",
+    "canonical_name": "跳弾甲櫓",
+    "aliases": [
+      "Leaping Bullet Shell Tower",
+      "Chōdan Kōro"
+    ]
+  },
+  {
+    "id": "JT-TAI-0069",
+    "canonical_name": "蛭間",
+    "aliases": [
+      "Leech Gap",
+      "Hiruma"
+    ]
+  },
+  {
+    "id": "JT-TAI-0070",
+    "canonical_name": "獅子连弾",
+    "aliases": [
+      "Lion Combo",
+      "Shishi Rendan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0071",
+    "canonical_name": "小指攻撃",
+    "aliases": [
+      "Little Toe Attack",
+      "Koyubi Kōgeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0072",
+    "canonical_name": "月影",
+    "aliases": [
+      "Moonlight",
+      "Tsukikage"
+    ]
+  },
+  {
+    "id": "JT-TAI-0073",
+    "canonical_name": "朝孔雀",
+    "aliases": [
+      "Morning Peacock",
+      "Asakujaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0074",
+    "canonical_name": "多连脚",
+    "aliases": [
+      "Multiple Connected Feet",
+      "Tarenkyaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0075",
+    "canonical_name": "多连拳",
+    "aliases": [
+      "Multiple Connected Fists",
+      "Tarenken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0076",
+    "canonical_name": "ナルト一帯连弾",
+    "aliases": [
+      "Naruto Region Combo",
+      "Naruto Ittai Rendan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0077",
+    "canonical_name": "うずまきナルト连弾",
+    "aliases": [
+      "Naruto Uzumaki Combo",
+      "Uzumaki Naruto Rendan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0078",
+    "canonical_name": "うずまきナルト二千连弾",
+    "aliases": [
+      "Naruto Uzumaki Two Thousand Combo",
+      "Uzumaki Naruto Nisen Rendan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0079",
+    "canonical_name": "夜ガイ",
+    "aliases": [
+      "Night Guy",
+      "Yagai"
+    ]
+  },
+  {
+    "id": "JT-TAI-0080",
+    "canonical_name": "忍法·真剣白刃取り",
+    "aliases": [
+      "Ninja Art: Bare-Handed Blade Block",
+      "Ninpō: Shinken Shirahadori"
+    ]
+  },
+  {
+    "id": "JT-TAI-0081",
+    "canonical_name": "千年杀し",
+    "aliases": [
+      "One Thousand Years of Death",
+      "Sennen Goroshi"
+    ]
+  },
+  {
+    "id": "JT-TAI-0082",
+    "canonical_name": "掌底",
+    "aliases": [
+      "Palm Bottom",
+      "Shōtei"
+    ]
+  },
+  {
+    "id": "JT-TAI-0083",
+    "canonical_name": "落下傘",
+    "aliases": [
+      "Parachute",
+      "Rakkasan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0084",
+    "canonical_name": "通牙",
+    "aliases": [
+      "Passing Fang",
+      "Tsūga"
+    ]
+  },
+  {
+    "id": "JT-TAI-0085",
+    "canonical_name": "活塞拳",
+    "aliases": [
+      "Piston Fist",
+      "Kassokuken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0086",
+    "canonical_name": "活塞拳·一式",
+    "aliases": [
+      "Piston Fist: Style One",
+      "Kassokuken: Ichishiki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0087",
+    "canonical_name": "傀儡·春誅撃",
+    "aliases": [
+      "Puppet: Spring Punishing Strike",
+      "Kugutsu: Haruchūgeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0088",
+    "canonical_name": "兎毛针",
+    "aliases": [
+      "Rabbit Hair Needle",
+      "Togebari"
+    ]
+  },
+  {
+    "id": "JT-TAI-0089",
+    "canonical_name": "裏蓮華",
+    "aliases": [
+      "Reverse Lotus",
+      "Ura Renge"
+    ]
+  },
+  {
+    "id": "JT-TAI-0090",
+    "canonical_name": "影舞叶",
+    "aliases": [
+      "Shadow of the Dancing Leaf",
+      "Kage Buyō"
+    ]
+  },
+  {
+    "id": "JT-TAI-0091",
+    "canonical_name": "影撫で",
+    "aliases": [
+      "Shadow Stroke",
+      "Kagenade"
+    ]
+  },
+  {
+    "id": "JT-TAI-0092",
+    "canonical_name": "双襲牙",
+    "aliases": [
+      "Sōshūga",
+      "Twin Attacking Fangs"
+    ]
+  },
+  {
+    "id": "JT-TAI-0093",
+    "canonical_name": "戟討耀角",
+    "aliases": [
+      "Spear Attack Shining Horn",
+      "Gekitō Yōkaku"
+    ]
+  },
+  {
+    "id": "JT-TAI-0094",
+    "canonical_name": "肉弾针戦車",
+    "aliases": [
+      "Spiked Human Bullet Tank",
+      "Nikudan Hari Sensha"
+    ]
+  },
+  {
+    "id": "JT-TAI-0095",
+    "canonical_name": "剛拳",
+    "aliases": [
+      "Strong Fist",
+      "Gōken"
+    ]
+  },
+  {
+    "id": "JT-TAI-0096",
+    "canonical_name": "超張り手",
+    "aliases": [
+      "Super Open Hand Slap",
+      "Chōharite"
+    ]
+  },
+  {
+    "id": "JT-TAI-0097",
+    "canonical_name": "迸火乱舞",
+    "aliases": [
+      "Surging Fire Wild Dance",
+      "Hōka Ranbu"
+    ]
+  },
+  {
+    "id": "JT-TAI-0098",
+    "canonical_name": "尾追い牙牙転牙",
+    "aliases": [
+      "Tail Chasing Fang Fang Rotating Fang",
+      "Ooiga Gatenga"
+    ]
+  },
+  {
+    "id": "JT-TAI-0099",
+    "canonical_name": "尾獣八巻き",
+    "aliases": [
+      "Tailed Beast Eight Twists",
+      "Bijū Hachimaki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0100",
+    "canonical_name": "尾獣総進撃",
+    "aliases": [
+      "Tailed Beast Full Charge",
+      "Bijū Sōshingeki"
+    ]
+  },
+  {
+    "id": "JT-TAI-0101",
+    "canonical_name": "尾獣の雷犂熱刀",
+    "aliases": [
+      "Tailed Beast Lariat",
+      "Bijū no Rariatto",
+      "Tailed Beast Lightning Plough Hot Sword"
+    ]
+  },
+  {
+    "id": "JT-TAI-0102",
+    "canonical_name": "十指穿弾",
+    "aliases": [
+      "Ten-Finger Drilling Bullets",
+      "Teshi Sendan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0103",
+    "canonical_name": "蝦蟇ドス斩",
+    "aliases": [
+      "Toad Sword Beheading",
+      "Gamadosuzan"
+    ]
+  },
+  {
+    "id": "JT-TAI-0104",
+    "canonical_name": "激 木ノ叶金剛力旋风",
+    "aliases": [
+      "Violent — Leaf Adamantine-Strength Whirlwind",
+      "Geki — Konoha Kongōriki Senpū",
+      "Violent — Tree Leaf Vajra-Strength Whirlwind"
+    ]
+  },
+  {
+    "id": "JT-TAI-0105",
+    "canonical_name": "愛の鞭",
+    "aliases": [
+      "Whip of Love",
+      "Ai no Muchi"
+    ]
+  },
+  {
+    "id": "JT-TAI-0106",
+    "canonical_name": "与作切り",
+    "aliases": [
+      "Yosaku Cut",
+      "Yosakugiri",
+      "Participation Work Cut"
+    ]
+  },
+  {
+    "id": "JT-WATER-0001",
+    "canonical_name": "无尘迷塞",
+    "aliases": [
+      "Dustless Bewildering Cover",
+      "Mujin Meisai"
+    ]
+  },
+  {
+    "id": "JT-WATER-0002",
+    "canonical_name": "天泣",
+    "aliases": [
+      "Heavenly Weeping",
+      "Tenkyū"
+    ]
+  },
+  {
+    "id": "JT-WATER-0003",
+    "canonical_name": "霧隠れ之术",
+    "aliases": [
+      "Hiding in Mist Technique",
+      "Kirigakure no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0004",
+    "canonical_name": "水化之术",
+    "aliases": [
+      "Hydrification Technique",
+      "Suika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0005",
+    "canonical_name": "雷遁·感激波",
+    "aliases": [
+      "Lightning Release: Wave of Inspiration",
+      "Raiton: Kangekiha"
+    ]
+  },
+  {
+    "id": "JT-WATER-0006",
+    "canonical_name": "雷水龙弾",
+    "aliases": [
+      "Lightning Water Dragon Bullet",
+      "Raisuiryūdan"
+    ]
+  },
+  {
+    "id": "JT-WATER-0007",
+    "canonical_name": "雨虎自在之术",
+    "aliases": [
+      "Rain Tiger at Will Technique",
+      "Ukojizai no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0008",
+    "canonical_name": "感知水球",
+    "aliases": [
+      "Sensing Water Sphere",
+      "Kanchi Suikyū"
+    ]
+  },
+  {
+    "id": "JT-WATER-0009",
+    "canonical_name": "しゃぼん玉の忍术",
+    "aliases": [
+      "Soap Bubble Ninjutsu",
+      "Shabondama no Ninjutsu",
+      "Soap Bubble Ninja Technique"
+    ]
+  },
+  {
+    "id": "JT-WATER-0010",
+    "canonical_name": "水飴鉄炮",
+    "aliases": [
+      "Starch Syrup Gun",
+      "Mizuame Teppō"
+    ]
+  },
+  {
+    "id": "JT-WATER-0011",
+    "canonical_name": "蒸危暴威ジョウキボーイ",
+    "aliases": [
+      "Steaming Danger Tyranny",
+      "Jōki Bōi"
+    ]
+  },
+  {
+    "id": "JT-WATER-0012",
+    "canonical_name": "蒸危暴威·袖切り",
+    "aliases": [
+      "Steaming Danger Tyranny: Sleeve Cutter",
+      "Jōki Bōi: Sodekiri"
+    ]
+  },
+  {
+    "id": "JT-WATER-0013",
+    "canonical_name": "千杀水翔",
+    "aliases": [
+      "Thousand Flying Water Needles of Death",
+      "Sensatsu Suishō"
+    ]
+  },
+  {
+    "id": "JT-WATER-0014",
+    "canonical_name": "颶风水渦之术",
+    "aliases": [
+      "Typhoon Water Vortex Technique",
+      "Gufū Suika no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0015",
+    "canonical_name": "水分身之术",
+    "aliases": [
+      "Water Clone Technique",
+      "Mizu Bunshin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0016",
+    "canonical_name": "水鉄炮之术",
+    "aliases": [
+      "Water Gun Technique",
+      "Mizudeppō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0017",
+    "canonical_name": "水鉄炮·2丁",
+    "aliases": [
+      "Water Gun: Two Guns",
+      "Mizudeppō: Nichō"
+    ]
+  },
+  {
+    "id": "JT-WATER-0018",
+    "canonical_name": "水牢鮫踊り之术",
+    "aliases": [
+      "Water Prison Shark Dance Technique",
+      "Suirō Sameodori no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0019",
+    "canonical_name": "水牢之术",
+    "aliases": [
+      "Water Prison Technique",
+      "Suirō no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0020",
+    "canonical_name": "水遁·千食鮫",
+    "aliases": [
+      "Water Release: A Thousand Feeding Sharks",
+      "Suiton: Senshokukō"
+    ]
+  },
+  {
+    "id": "JT-WATER-0021",
+    "canonical_name": "水遁·泡沫之术",
+    "aliases": [
+      "Water Release: Bubbles Technique",
+      "Suiton: Hōmatsu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0022",
+    "canonical_name": "水遁·爆水冲波",
+    "aliases": [
+      "Water Release: Exploding Water Colliding Wave",
+      "Suiton: Bakusui Shōha"
+    ]
+  },
+  {
+    "id": "JT-WATER-0023",
+    "canonical_name": "水遁·五食鮫",
+    "aliases": [
+      "Water Release: Five Feeding Sharks",
+      "Suiton: Goshokuzame"
+    ]
+  },
+  {
+    "id": "JT-WATER-0024",
+    "canonical_name": "水遁·大爆水冲波",
+    "aliases": [
+      "Water Release: Great Exploding Water Colliding Wave",
+      "Suiton: Dai Bakusui Shōha"
+    ]
+  },
+  {
+    "id": "JT-WATER-0025",
+    "canonical_name": "水遁·大鮫弾之术",
+    "aliases": [
+      "Water Release: Great Shark Bullet Technique",
+      "Suiton: Daikōdan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0026",
+    "canonical_name": "水遁·豪水腕之术",
+    "aliases": [
+      "Water Release: Great Water Arm Technique",
+      "Suiton: Gōsuiwan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0027",
+    "canonical_name": "水遁·大瀑布之术",
+    "aliases": [
+      "Water Release: Great Waterfall Technique",
+      "Suiton: Daibakufu no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0028",
+    "canonical_name": "水遁·鉄炮玉",
+    "aliases": [
+      "Water Release: Gunshot",
+      "Suiton: Teppōdama"
+    ]
+  },
+  {
+    "id": "JT-WATER-0029",
+    "canonical_name": "水遁·水飴拿原",
+    "aliases": [
+      "Water Release: Starch Syrup Capturing Field",
+      "Suiton: Mizuame Nabara"
+    ]
+  },
+  {
+    "id": "JT-WATER-0030",
+    "canonical_name": "水遁·楯烏帽子",
+    "aliases": [
+      "Water Release: Tate Eboshi",
+      "Suiton: Tate Eboshi",
+      "Water Release: Shield Crow Hat Child"
+    ]
+  },
+  {
+    "id": "JT-WATER-0031",
+    "canonical_name": "水遁·破奔流",
+    "aliases": [
+      "Water Release: Tearing Torrent",
+      "Suiton: Hahonryū"
+    ]
+  },
+  {
+    "id": "JT-WATER-0032",
+    "canonical_name": "水遁·水弾之术",
+    "aliases": [
+      "Water Release: Water Bullet Technique",
+      "Suiton: Suidan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0033",
+    "canonical_name": "水遁·水龙弾之术",
+    "aliases": [
+      "Water Release: Water Dragon Bullet Technique",
+      "Suiton: Suiryūdan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0034",
+    "canonical_name": "水遁·水牙弾",
+    "aliases": [
+      "Water Release: Water Fang Bullet",
+      "Suiton: Suigadan"
+    ]
+  },
+  {
+    "id": "JT-WATER-0035",
+    "canonical_name": "水遁·水阵柱",
+    "aliases": [
+      "Water Release: Water Formation Pillar",
+      "Suiton: Suijinchū"
+    ]
+  },
+  {
+    "id": "JT-WATER-0036",
+    "canonical_name": "水遁·水阵壁",
+    "aliases": [
+      "Water Release: Water Formation Wall",
+      "Suiton: Suijinheki"
+    ]
+  },
+  {
+    "id": "JT-WATER-0037",
+    "canonical_name": "水遁·水镜之术",
+    "aliases": [
+      "Water Release: Water Mirror Technique",
+      "Suiton: Mizukagami no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0038",
+    "canonical_name": "水遁·水断波",
+    "aliases": [
+      "Water Release: Water Severing Wave",
+      "Suiton: Suidanha"
+    ]
+  },
+  {
+    "id": "JT-WATER-0039",
+    "canonical_name": "水遁·水鮫弾之术",
+    "aliases": [
+      "Water Release: Water Shark Bullet Technique",
+      "Suiton: Suikōdan no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0040",
+    "canonical_name": "水遁·水喇叭",
+    "aliases": [
+      "Water Release: Water Trumpet",
+      "Suiton: Mizurappa"
+    ]
+  },
+  {
+    "id": "JT-WATER-0041",
+    "canonical_name": "水遁·滝壺之术",
+    "aliases": [
+      "Water Release: Waterfall Basin Technique",
+      "Suiton: Takitsubo no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WATER-0042",
+    "canonical_name": "水遁·泡沫乱波",
+    "aliases": [
+      "Water Release: Wild Bubble Wave",
+      "Suiton: Hōmatsu Rappa"
+    ]
+  },
+  {
+    "id": "JT-WATER-0043",
+    "canonical_name": "水遁·水乱波",
+    "aliases": [
+      "Water Release: Wild Water Wave",
+      "Suiton: Mizurappa"
+    ]
+  },
+  {
+    "id": "JT-WIND-0001",
+    "canonical_name": "芭蕉扇·风の巻",
+    "aliases": [
+      "Bashōsen: Coil of Wind",
+      "Bashōsen: Kaze no Maki",
+      "Banana Palm Fan: Coil of Wind"
+    ]
+  },
+  {
+    "id": "JT-WIND-0002",
+    "canonical_name": "大玉螺旋手裏剣",
+    "aliases": [
+      "Big Ball Rasenshuriken",
+      "Ōdama Rasenshuriken",
+      "Big Ball Spiralling Shuriken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0003",
+    "canonical_name": "风の刃",
+    "aliases": [
+      "Blade of Wind",
+      "Kaze no Yaiba"
+    ]
+  },
+  {
+    "id": "JT-WIND-0004",
+    "canonical_name": "大カマイタチ之术",
+    "aliases": [
+      "Great Sickle Weasel Technique",
+      "Daikamaitachi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0005",
+    "canonical_name": "磁鉄粒封刃",
+    "aliases": [
+      "Magnetic Iron Sand Sealing Blade",
+      "Jitetsu Ryūfūjin"
+    ]
+  },
+  {
+    "id": "JT-WIND-0006",
+    "canonical_name": "ミニ螺旋手裏剣",
+    "aliases": [
+      "Mini-Rasenshuriken",
+      "Mini Spiralling Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-WIND-0007",
+    "canonical_name": "仙法·墨散螺旋手裏剣",
+    "aliases": [
+      "Sage Art: Ink-Splatter Rasenshuriken",
+      "Senpō: Sumisan Rasenshuriken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0008",
+    "canonical_name": "仙法·熔遁螺旋手裏剣",
+    "aliases": [
+      "Sage Art: Lava Release Rasenshuriken",
+      "Senpō: Yōton Rasenshuriken",
+      "Sage Art: Lava Release Spiralling Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-WIND-0009",
+    "canonical_name": "仙法·风遁砂埃",
+    "aliases": [
+      "Sage Art: Wind Release Dust Cloud",
+      "Senpō: Fūton Sunabokori"
+    ]
+  },
+  {
+    "id": "JT-WIND-0010",
+    "canonical_name": "カマイタチ之术",
+    "aliases": [
+      "Sickle Weasel Technique",
+      "Kamaitachi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0011",
+    "canonical_name": "六道·超大玉螺旋手裏剣",
+    "aliases": [
+      "Six Paths: Ultra-Big Ball Rasenshuriken",
+      "Rikudō: Chōōdama Rasenshuriken",
+      "Six Paths: Ultra-Big Ball Spiralling Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-WIND-0012",
+    "canonical_name": "口寄せ·斩り斩り舞",
+    "aliases": [
+      "Summoning: Quick Beheading Dance",
+      "Kuchiyose: Kirikiri Mai"
+    ]
+  },
+  {
+    "id": "JT-WIND-0013",
+    "canonical_name": "尾獣玉螺旋手裏剣",
+    "aliases": [
+      "Tailed Beast Ball Rasenshuriken",
+      "Bijūdama Rasenshuriken",
+      "Tailed Beast Ball Spiralling Hidden Hand Blade"
+    ]
+  },
+  {
+    "id": "JT-WIND-0014",
+    "canonical_name": "うちは返し",
+    "aliases": [
+      "Uchiha Return",
+      "Uchihagaeshi"
+    ]
+  },
+  {
+    "id": "JT-WIND-0015",
+    "canonical_name": "风遁·気流乱舞",
+    "aliases": [
+      "Wind Release: Air Current Wild Dance",
+      "Fūton: Kiryū Ranbu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0016",
+    "canonical_name": "风遁·掛け網",
+    "aliases": [
+      "Wind Release: Cast Net",
+      "Fūton: Kakeami"
+    ]
+  },
+  {
+    "id": "JT-WIND-0017",
+    "canonical_name": "风遁·練空弾",
+    "aliases": [
+      "Wind Release: Drilling Air Bullet",
+      "Fūton: Renkūdan"
+    ]
+  },
+  {
+    "id": "JT-WIND-0018",
+    "canonical_name": "风遁·风尘之术",
+    "aliases": [
+      "Wind Release: Dust Cloud Technique",
+      "Fūton: Fūjin no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0019",
+    "canonical_name": "风遁·烈风掌",
+    "aliases": [
+      "Wind Release: Gale Palm",
+      "Fūton: Reppūshō"
+    ]
+  },
+  {
+    "id": "JT-WIND-0020",
+    "canonical_name": "风遁·大突破",
+    "aliases": [
+      "Wind Release: Great Breakthrough",
+      "Fūton: Daitoppa"
+    ]
+  },
+  {
+    "id": "JT-WIND-0021",
+    "canonical_name": "风遁·大掛け網",
+    "aliases": [
+      "Wind Release: Great Cast Net",
+      "Fūton: Ōkakeami"
+    ]
+  },
+  {
+    "id": "JT-WIND-0022",
+    "canonical_name": "风遁·大鎌いたち之术",
+    "aliases": [
+      "Wind Release: Great Sickle Weasel Technique",
+      "Fūton: Ōkamaitachi no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0023",
+    "canonical_name": "风遁·无限砂尘 大突破",
+    "aliases": [
+      "Wind Release: Infinite Sand Cloud — Great Breakthrough",
+      "Fūton: Mugen Sajin — Daitoppa"
+    ]
+  },
+  {
+    "id": "JT-WIND-0024",
+    "canonical_name": "风遁·圧害",
+    "aliases": [
+      "Wind Release: Pressure Damage",
+      "Fūton: Atsugai"
+    ]
+  },
+  {
+    "id": "JT-WIND-0025",
+    "canonical_name": "风遁·螺旋丸",
+    "aliases": [
+      "Wind Release: Rasengan",
+      "Fūton: Rasengan",
+      "Wind Release: Spiralling Sphere"
+    ]
+  },
+  {
+    "id": "JT-WIND-0026",
+    "canonical_name": "风遁·螺旋手裏剣",
+    "aliases": [
+      "Wind Release: Rasenshuriken",
+      "Fūton: Rasenshuriken",
+      "Wind Release: Spiralling Shuriken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0027",
+    "canonical_name": "风遁·螺旋连手裏剣",
+    "aliases": [
+      "Wind Release: Repeated Rasenshuriken",
+      "Fūton: Rasenrenshuriken",
+      "Wind Release: Spiralling Serial Shuriken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0028",
+    "canonical_name": "风遁·砂散弾",
+    "aliases": [
+      "Wind Release: Sand Buckshot",
+      "Fūton: Sasandan"
+    ]
+  },
+  {
+    "id": "JT-WIND-0029",
+    "canonical_name": "风遁·砂尘突破",
+    "aliases": [
+      "Wind Release: Sand Cloud Breakthrough",
+      "Fūton: Sajin Toppa"
+    ]
+  },
+  {
+    "id": "JT-WIND-0030",
+    "canonical_name": "风遁·螺旋障壁",
+    "aliases": [
+      "Wind Release: Spiralling Barrier",
+      "Fūton: Rasen Shōheki"
+    ]
+  },
+  {
+    "id": "JT-WIND-0031",
+    "canonical_name": "风遁·超大玉螺旋手裏剣",
+    "aliases": [
+      "Wind Release: Ultra-Big Ball Rasenshuriken",
+      "Fūton: Chōōdama Rasenshuriken",
+      "Wind Release: Ultra-Big Ball Spiralling Shuriken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0032",
+    "canonical_name": "风遁·真空刃",
+    "aliases": [
+      "Wind Release: Vacuum Blade",
+      "Fūton: Shinkūjin"
+    ]
+  },
+  {
+    "id": "JT-WIND-0033",
+    "canonical_name": "风遁·真空大玉",
+    "aliases": [
+      "Wind Release: Vacuum Great Sphere",
+      "Fūton: Shinkū Taigyoku"
+    ]
+  },
+  {
+    "id": "JT-WIND-0034",
+    "canonical_name": "风遁·真空连波",
+    "aliases": [
+      "Wind Release: Vacuum Serial Waves",
+      "Fūton: Shinkū Renpa"
+    ]
+  },
+  {
+    "id": "JT-WIND-0035",
+    "canonical_name": "风遁·真空玉",
+    "aliases": [
+      "Wind Release: Vacuum Sphere",
+      "Fūton: Shinkūgyoku"
+    ]
+  },
+  {
+    "id": "JT-WIND-0036",
+    "canonical_name": "风遁·真空波",
+    "aliases": [
+      "Wind Release: Vacuum Wave",
+      "Fūton: Shinkūha"
+    ]
+  },
+  {
+    "id": "JT-WIND-0037",
+    "canonical_name": "风遁·旋风拳",
+    "aliases": [
+      "Wind Release: Whirlwind Fist",
+      "Fūton: Senpūken"
+    ]
+  },
+  {
+    "id": "JT-WIND-0038",
+    "canonical_name": "风遁·风切り之术",
+    "aliases": [
+      "Wind Release: Wind Cutter Technique",
+      "Fūton: Kazekiri no Jutsu"
+    ]
+  },
+  {
+    "id": "JT-WIND-0039",
+    "canonical_name": "风波",
+    "aliases": [
+      "Wind Waves",
+      "Kazanami"
+    ]
+  },
+  {
+    "id": "JT-WIND-0040",
+    "canonical_name": "八坂ノ勾玉·尾獣ノカ",
+    "aliases": [
+      "Yasaka Magatama: Tailed Beast Noka",
+      "Yasaka no Magatama: Bijū Noka"
+    ]
+  }
+]

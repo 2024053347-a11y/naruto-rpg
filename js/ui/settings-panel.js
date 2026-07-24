@@ -1,4 +1,5 @@
 import { stateManager } from '../core/state-manager.js';
+import { aiClient } from '../core/ai-client.js';
 import { eventBus } from '../core/event-bus.js';
 import { getAgentConfig, saveAgentConfig } from '../data/agent-config.js';
 import { settingsStyles } from '../../css/components/settings-panel.css.js';
@@ -7,13 +8,37 @@ import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
 import { getVariableUpdaterPreset } from '../data/variable-updater-preset.js';
 import './memory-panel.js';
+import { CANON_DATABASE } from '../data/canon-database.js';
+import './canon-database-editor.js';
+import './worldbook-editor.js';
+import './main-preset-editor.js';
+import './variable-updater-preset-editor.js';
+import { imageStudio } from '../core/image-studio/index.js';
+import { ImageSettingsStore } from '../core/image-studio/settings.js';
+import { getMemoryConfig } from '../data/memory-config.js';
+import { resolveAICallPolicy } from '../core/ai-call-policy.js';
+import { openImageGallery } from './image-studio.js';
+import './api-config-form.js';
+import { settingsConfigGateway } from './settings-config-gateway.js';
+
+const callPolicyImageSettingsStore = new ImageSettingsStore();
 
 const THEME_PRESETS = {
-  konoha: { label: '木叶卷轴', textColor: '#e8e4d9', accentColor: '#eb613f', goldColor: '#c69c6d', backgroundColor: '#070a0e' },
-  anbu: { label: '暗部夜行', textColor: '#e6edf5', accentColor: '#6aa4ff', goldColor: '#9fb7d9', backgroundColor: '#080d16' },
-  akatsuki: { label: '晓之绯云', textColor: '#f1e8e8', accentColor: '#d7263d', goldColor: '#e0b15a', backgroundColor: '#12070a' },
-  scroll: { label: '古旧卷轴', textColor: '#3b2a18', accentColor: '#9a4b24', goldColor: '#8a5f2a', backgroundColor: '#ead7a8' },
-  mist: { label: '雾隐冷雨', textColor: '#e8f3f5', accentColor: '#6bc7d9', goldColor: '#a8d8df', backgroundColor: '#0b1a1f' }
+  konoha: { label: '木叶卷轴', textColor: '#e8e4d9', accentColor: '#eb613f', goldColor: '#c69c6d', backgroundColor: '#070a0e',
+    inkDeep: '7, 10, 14', ink: '11, 14, 19', paper: '255, 255, 255', washi: '244, 241, 234',
+    dialogueColor: '#bae6fd', thoughtColor: '#c4b5fd', markColor: '#CE93D8' },
+  anbu: { label: '暗部夜行', textColor: '#e6edf5', accentColor: '#6aa4ff', goldColor: '#9fb7d9', backgroundColor: '#080d16',
+    inkDeep: '6, 10, 18', ink: '10, 16, 26', paper: '255, 255, 255', washi: '230, 237, 245',
+    dialogueColor: '#a8c8ff', thoughtColor: '#b8a8e8', markColor: '#8fb8ff' },
+  akatsuki: { label: '晓之绯云', textColor: '#f1e8e8', accentColor: '#d7263d', goldColor: '#e0b15a', backgroundColor: '#12070a',
+    inkDeep: '18, 7, 10', ink: '24, 12, 15', paper: '255, 255, 255', washi: '241, 232, 232',
+    dialogueColor: '#f0a8a8', thoughtColor: '#d8a8c8', markColor: '#e8a0b0' },
+  scroll: { label: '古旧卷轴', textColor: '#3b2a18', accentColor: '#9a4b24', goldColor: '#8a5f2a', backgroundColor: '#ead7a8',
+    inkDeep: '226, 208, 164', ink: '240, 228, 196', paper: '80, 58, 32', washi: '70, 52, 30',
+    dialogueColor: '#8a4b1e', thoughtColor: '#6b5a9e', markColor: '#9a3b2e' },
+  mist: { label: '雾隐冷雨', textColor: '#e8f3f5', accentColor: '#6bc7d9', goldColor: '#a8d8df', backgroundColor: '#0b1a1f',
+    inkDeep: '8, 20, 25', ink: '12, 26, 32', paper: '255, 255, 255', washi: '232, 243, 245',
+    dialogueColor: '#a8e0ea', thoughtColor: '#b0c8e8', markColor: '#8fd8e8' }
 };
 
 const FONT_PRESETS = {
@@ -30,6 +55,12 @@ const FONT_PRESETS = {
 
 const DEFAULT_SETTINGS = stateManager.getDefaultState()._ui.settings;
 const localAudio = { bgm: null, ambient: null };
+const PLAYER_SECTION_ORDER = Object.freeze(['appearance', 'gameplay', 'connection', 'media']);
+const PLAYER_SECTION_FIELDS = Object.freeze({
+  appearance: Object.freeze(['themePreset', 'fontPreset', 'fontFamily', 'fontSize', 'lineHeight', 'chatMaxWidth', 'paragraphIndent', 'aiCardStyle', 'textColor', 'accentColor', 'goldColor', 'backgroundColor', 'backgroundImage', 'backgroundOpacity']),
+  gameplay: Object.freeze(['showVariableSummary', 'reasoningOpen', 'tacticalCombat']),
+  media: Object.freeze(['musicEnabled', 'musicVolume', 'musicLoop', 'musicShuffle'])
+});
 
 function clamp(value, min, max, fallback) {
   const number = Number(value);
@@ -68,46 +99,96 @@ class SettingsPanel extends HTMLElement {
 
   disconnectedCallback() {
     document.removeEventListener('keydown', this._onKeyDown);
+    this._editorObserver?.disconnect();
   }
 
   connectedCallback() {
+    this._mode = this.getAttribute('mode') === 'creator' ? 'creator' : 'player';
     this._settings = mergeSettings(stateManager.getSub('_ui').settings);
+    this._activeSection = this._activeSection || this.getAttribute('section') || 'appearance';
+    this._activeTool = this._activeTool || this.getAttribute('tool') || 'pipeline';
+    this._dirtySections = this._dirtySections || new Set();
+    this._dirtyRevisions = this._dirtyRevisions || new Map();
+    this._draftSideEffects = {
+      musicLoop: localStorage.getItem('naruto_music_loop'),
+      musicShuffle: localStorage.getItem('naruto_music_shuffle')
+    };
     this._onKeyDown = (e) => { if (e.key === 'Escape') this.close(); };
     document.addEventListener('keydown', this._onKeyDown);
     this.render();
+    const imageSettings = this.shadowRoot.querySelector('image-studio-settings');
+    if (imageSettings) imageSettings.imageStudio = imageStudio;
     this._hydrate();
     bindCustomSelects(this.shadowRoot);
+    if (this._mode === 'creator') this._selectTool(this._activeTool, { focus: false });
+    else this._selectSection(this._activeSection, { focus: false });
+  }
+
+  open({ section = 'appearance', anchor = '', tool = '', resourceId = '' } = {}) {
+    if (this._mode === 'creator' || tool) {
+      if (this.shadowRoot?.querySelector('.workbench-editor-layer.active > *')) return this;
+      const nextTool = tool || this._activeTool || 'pipeline';
+      if (this.shadowRoot?.querySelector('.panel') && nextTool === this._activeTool && !resourceId) return this;
+      this._activeTool = nextTool;
+      this._resourceId = resourceId;
+      if (this.shadowRoot?.querySelector('.panel')) this._selectTool(this._activeTool, { resourceId });
+    } else {
+      if (this.shadowRoot?.querySelector('.panel') && section === this._activeSection && !anchor) return this;
+      this._activeSection = section;
+      if (this.shadowRoot?.querySelector('.panel')) this._selectSection(section, { anchor });
+    }
+    return this;
   }
 
   render() {
     const s = this._settings;
+    const isCreator = this._mode === 'creator';
     const apiConfig = stateManager.getAPIConfig() || {};
+    const agentConfig = getAgentConfig();
+    const callPolicy = resolveAICallPolicy({
+      apiConfig,
+      agentConfig,
+      memoryConfig: getMemoryConfig(),
+      imageSettings: callPolicyImageSettingsStore.load()
+    });
     const variablePreset = getVariableUpdaterPreset();
+    const plotStats = CANON_DATABASE.getStats('plot');
+    const techniqueStats = CANON_DATABASE.getStats('techniques');
+    const imagePlayerSettings = callPolicyImageSettingsStore.load();
     this.shadowRoot.innerHTML = `
       <style>${settingsStyles}</style>
       <div class="backdrop" data-close="true">
-        <div class="panel" role="dialog" aria-modal="true" aria-label="系统设置">
+        <div class="panel${isCreator ? ' creator' : ''}" role="dialog" aria-modal="true" aria-label="${isCreator ? '创作者工作台' : '玩家设置'}">
           <div class="inner-bg"></div>
           <div class="head">
-            <div class="title"><span>巻</span>设定</div>
-            <button class="close" data-action="close">×</button>
+            <div class="title"><span>${isCreator ? '編' : '巻'}</span><div>${isCreator ? '创作者工作台' : '玩家设置'}<small>${isCreator ? '叙事资源与生成运行时' : '阅读、游玩与连接'}</small></div></div>
+            <div class="head-actions">
+              <button class="workbench-link" type="button" data-action="${isCreator ? 'open-player-settings' : 'open-creator-workbench'}">${isCreator ? '玩家设置' : '创作者工作台'}</button>
+              <button class="close" data-action="close" aria-label="关闭设置">×</button>
+            </div>
           </div>
           <div class="layout">
             <aside class="sidebar">
-              <button class="tab-btn active" data-target="tab-visual">视觉与环境</button>
-              <button class="tab-btn" data-target="tab-agent">引擎与代理</button>
-              <button class="tab-btn" data-target="tab-variable">变量更新</button>
-              <button class="tab-btn" data-target="tab-lore">世界书与预设</button>
-              <button class="tab-btn" data-target="tab-audio">忍道音律</button>
-              <button class="tab-btn" data-target="tab-memory">记忆编年</button>
-              <button class="tab-btn" data-target="tab-system">系统与归档</button>
+              ${isCreator ? `
+                <button class="tab-btn active" data-tool="pipeline" data-targets="tab-agent,tab-variable">生成管线</button>
+                <button class="tab-btn" data-tool="knowledge" data-targets="tab-lore">提示词与知识</button>
+                <button class="tab-btn" data-tool="canon" data-targets="tab-canon-plot,tab-canon-techniques">原作数据库</button>
+                <button class="tab-btn" data-tool="image" data-targets="tab-image">画面工坊</button>
+                <button class="tab-btn" data-tool="memory" data-targets="tab-memory">记忆运行时</button>
+              ` : `
+                <button class="tab-btn active" data-section="appearance" data-target="tab-visual">外观与阅读</button>
+                <button class="tab-btn" data-section="gameplay" data-target="tab-system">游玩与输出</button>
+                <button class="tab-btn" data-section="connection" data-target="tab-connection">AI 连接</button>
+                <button class="tab-btn" data-section="media" data-target="tab-audio">声音与画面</button>
+              `}
             </aside>
             <main class="content">
+              ${isCreator ? `<div class="connection-strip"><span class="connection-dot${apiConfig.model ? ' online' : ''}"></span><span>${apiConfig.model ? `主连接 · ${escHtml(apiConfig.model)}` : '主连接尚未配置'}</span><button type="button" data-action="open-player-connection">${apiConfig.model ? '查看连接' : '前往配置'}</button></div>` : ''}
               
               <!-- Tab 1: 视觉与环境 -->
               <div class="tab-pane active" id="tab-visual">
                 <div class="pane-grid">
-                  <section>
+                  <section data-anchor="typography" tabindex="-1">
                     <h3>排版与视觉</h3>
                     <div class="grid">
                       <label>视觉主题</label>
@@ -132,7 +213,7 @@ class SettingsPanel extends HTMLElement {
                       </select>
                     </div>
                   </section>
-                  <section>
+                  <section data-anchor="colors" tabindex="-1">
                     <h3>色彩与环境</h3>
                     <div class="grid">
                       <label>正文颜色</label>
@@ -154,8 +235,35 @@ class SettingsPanel extends HTMLElement {
                 </div>
               </div>
 
+              <div class="tab-pane" id="tab-connection">
+                <section class="connection-section" data-anchor="main-connection" tabindex="-1">
+                  <div class="section-heading">
+                    <div><span class="eyebrow">MAIN CONNECTION</span><h3>主 AI 连接</h3></div>
+                    <span class="owner-badge">唯一配置入口</span>
+                  </div>
+                  <p class="setting-note">正文生成使用此连接。创作者工作台中的辅助模型默认继承这里的地址、密钥与模型。</p>
+                  <api-config-form config='${escAttr(JSON.stringify(apiConfig))}' show-advanced></api-config-form>
+                </section>
+              </div>
+
+              <div class="tab-pane" id="tab-image">
+                <image-studio-settings></image-studio-settings>
+              </div>
+
               <!-- Tab 2: 引擎与代理 -->
               <div class="tab-pane" id="tab-agent">
+                <section>
+                  <h3>AI 调用策略</h3>
+                  <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
+                    <label style="display:flex;align-items:center;gap:10px;color:#e8e4d9;">
+                      <input type="checkbox" name="strictSingleCall" ${callPolicy.strictSingleCall ? 'checked' : ''}>
+                      <strong>严格单模型 · 单调用</strong>
+                    </label>
+                    <p class="setting-note" style="margin:10px 0 8px;">开启后每个游戏回合固定只发送一次主文本请求：暂停 Agent、二次变量、正文复检、未来规划、AI 记忆整理、NPC AI 总结以及自动图片规划/生成。失败后只显示手动重试，不会透明重发。主动勾选 Agent、二次变量或正文复检时会退出严格模式；设置页手动整理记忆或手动生成图片仍可单独调用。</p>
+                    <div id="ai-call-estimate" role="status" style="font-size:12px;color:var(--c-accent,#c69c6d);">${escHtml(callPolicy.estimateText)}</div>
+                    <div id="ai-call-blocked" style="margin-top:6px;font-size:11px;color:#a39f98;">${callPolicy.blockedFeatures.length ? `当前暂停：${escHtml(callPolicy.blockedFeatures.map(item => item.label).join('、'))}` : ''}</div>
+                  </div>
+                </section>
                 <section>
                    <h3>Agent 高质量正文模式</h3>
                    <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
@@ -168,8 +276,8 @@ class SettingsPanel extends HTMLElement {
                        <input type="checkbox" name="agentEnabled" ${getAgentConfig().enabled ? 'checked' : ''}>
                        <label style="color:#e8e4d9;">生成模式</label>
                        <select name="agentMode" style="background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.2); border-radius:4px; padding:4px 8px; font-size:12px;">
-                         <option value="standard" ${getAgentConfig().mode === 'standard' ? 'selected' : ''}>标准模式 (+3-4次调用, 约30-60s)</option>
-                         <option value="full" ${getAgentConfig().mode === 'full' ? 'selected' : ''}>完整模式 (+8-11次调用, 约90-180s)</option>
+                         <option value="standard" ${getAgentConfig().mode === 'standard' ? 'selected' : ''}>标准模式 (+3-5次调用, 约30-75s)</option>
+                         <option value="full" ${getAgentConfig().mode === 'full' ? 'selected' : ''}>完整模式 (+8-13次调用, 约90-210s)</option>
                        </select>
                        <label style="color:#e8e4d9;">战斗自动升级完整模式</label>
                        <input type="checkbox" name="agentAutoUpgrade" ${getAgentConfig().autoUpgrade !== false ? 'checked' : ''}>
@@ -187,8 +295,42 @@ class SettingsPanel extends HTMLElement {
                        <datalist id="settings-critic-datalist"></datalist>
                      </div>
                    </div>
-                </section>
-              </div>
+                 </section>
+                 <section>
+                   <h3>正文双阶段复检</h3>
+                   <p class="setting-note">默认关闭。开启后先静默生成草稿，再由复检模型依据当前安全证据生成一份“尚未提交”的预览。你可以应用预览、填写反馈反复重试，或保留原稿；作出选择前不会修改变量、记忆或时间线，审校记录永不显示和入库。留空项继承主模型。</p>
+                   <div class="grid variable-grid">
+                     <label>启用正文复检</label>
+                     <input type="checkbox" name="narrativeReviewEnabled" ${apiConfig.narrativeReview?.enabled ? 'checked' : ''}>
+                     <label>后端类型</label>
+                     <select name="narrativeReviewBackend">
+                       <option value="inherit">跟随主模型</option>
+                       <option value="openai">OpenAI 兼容</option>
+                       <option value="claude">Claude / Anthropic</option>
+                       <option value="deepseek">DeepSeek</option>
+                       <option value="custom">自定义兼容</option>
+                       <option value="tavern">酒馆环境</option>
+                     </select>
+                     <label>API 地址</label>
+                     <input type="text" name="narrativeReviewApiUrl" value="${escAttr(apiConfig.narrativeReview?.apiUrl || '')}" placeholder="留空继承主 API 地址">
+                     <label>API Key</label>
+                     <input type="password" name="narrativeReviewApiKey" value="${escAttr(apiConfig.narrativeReview?.apiKey || '')}" placeholder="留空继承主 API Key">
+                     <label>复检模型</label>
+                     <div class="inline-field">
+                       <input type="text" name="narrativeReviewModel" value="${escAttr(apiConfig.narrativeReview?.model || '')}" placeholder="留空继承主模型">
+                       <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="narrativeReviewModel">读取</button>
+                     </div>
+                     <label>Temperature</label>
+                     <input type="number" name="narrativeReviewTemperature" min="0" max="2" step="0.05" value="${apiConfig.narrativeReview?.temperature ?? 0.25}">
+                     <label>Max Tokens</label>
+                     <input type="number" name="narrativeReviewMaxTokens" min="1024" max="65536" step="1024" value="${apiConfig.narrativeReview?.maxTokens ?? 16384}">
+                     <label>超时（毫秒）</label>
+                     <input type="number" name="narrativeReviewTimeout" min="0" step="1000" value="${apiConfig.narrativeReview?.timeoutMs ?? 0}" title="0 表示不限制">
+                     <label>流式接收复检预览</label>
+                     <input type="checkbox" name="narrativeReviewStreaming" ${apiConfig.narrativeReview?.streaming !== false ? 'checked' : ''}>
+                   </div>
+                 </section>
+               </div>
 
               <!-- Tab 3: 变量更新 -->
               <div class="tab-pane" id="tab-variable">
@@ -254,13 +396,56 @@ class SettingsPanel extends HTMLElement {
                        <p style="margin-top:0; margin-bottom:12px; font-size:13px; color:#e8e4d9; font-weight:700;">主预设 · Narutomech</p>
                        <p style="margin-top:0; margin-bottom:16px; font-size:12px; color:#a39f98; line-height:1.6;">管理文风破限、角色扮演、CoT回映等高级预设条目。支持开关、增删、修改、拖拽排序。</p>
                        <button class="btn primary" type="button" data-action="open-main-preset-editor">打开主预设编辑器</button>
-                    </div>
-                 </section>
+                     </div>
+                   </div>
+                </section>
               </div>
+
+              <div class="tab-pane" id="tab-canon-plot" data-resource-id="plot" tabindex="-1">
+                <section>
+                  <h3>剧情数据库 · DAY / SCN / EV</h3>
+                  <div class="database-summary">
+                    <div class="database-metrics" id="canon-plot-summary">
+                      <span><strong>${plotStats.effective}</strong>启用</span><span><strong>${plotStats.modified}</strong>修改</span><span><strong>${plotStats.custom}</strong>新增</span><span><strong>${plotStats.disabled}</strong>停用</span>
+                    </div>
+                    <button class="btn primary" type="button" data-action="open-canon-plot-editor">管理剧情日</button>
+                  </div>
+                </section>
+              </div>
+
+              <div class="tab-pane" id="tab-canon-techniques" data-resource-id="techniques" tabindex="-1">
+                <section>
+                  <h3>忍术数据库 · JT</h3>
+                  <div class="database-summary">
+                    <div class="database-metrics" id="canon-techniques-summary">
+                      <span><strong>${techniqueStats.effective}</strong>启用</span><span><strong>${techniqueStats.modified}</strong>修改</span><span><strong>${techniqueStats.custom}</strong>新增</span><span><strong>${techniqueStats.disabled}</strong>停用</span>
+                    </div>
+                    <button class="btn primary" type="button" data-action="open-canon-techniques-editor">管理忍术记录</button>
+                  </div>
+                </section>
+              </div>
+
 
               <!-- Tab 4: 忍道音律 -->
               <div class="tab-pane" id="tab-audio">
-                <section>
+                <section class="media-image-section" data-anchor="image-generation" tabindex="-1">
+                  <div class="section-heading">
+                    <div><span class="eyebrow">ILLUSTRATION</span><h3>回合插图</h3></div>
+                    <button class="btn ghost" type="button" data-action="open-creator-image">画面工坊</button>
+                  </div>
+                  <p class="setting-note">这里仅控制游玩时是否生成插图。绘图后端、工作流和图像世界书在创作者工作台中配置。</p>
+                  <div class="grid compact-grid">
+                    <label>启用插图</label>
+                    <input type="checkbox" name="imageEnabled" ${imagePlayerSettings.enabled ? 'checked' : ''}>
+                    <label>生成时机</label>
+                    <select name="imageTurnMode">
+                      <option value="manual" ${imagePlayerSettings.turnMode === 'manual' ? 'selected' : ''}>手动生成</option>
+                      <option value="auto" ${imagePlayerSettings.turnMode === 'auto' ? 'selected' : ''}>每回合自动</option>
+                    </select>
+                    <span></span><button class="btn" type="button" data-action="open-image-gallery">打开图库</button>
+                  </div>
+                </section>
+                <section data-anchor="music-library" tabindex="-1">
                    <h3>音乐库 · 忍道韵律</h3>
                    <div class="music-panel">
                       <div class="music-player-bar">
@@ -296,10 +481,10 @@ class SettingsPanel extends HTMLElement {
                 <memory-panel></memory-panel>
               </div>
 
-              <!-- Tab 5: 系统与归档 -->
+              <!-- Tab 5: 游玩与输出 -->
               <div class="tab-pane" id="tab-system">
                 <div class="pane-grid">
-                  <section>
+                  <section data-anchor="output" tabindex="-1">
                      <h3>输出显示</h3>
                      <div class="grid">
                        <label>变量摘要</label>
@@ -310,36 +495,16 @@ class SettingsPanel extends HTMLElement {
                        <input type="checkbox" name="tacticalCombat">
                      </div>
                   </section>
-                  <section>
-                     <h3>存档管理 · 时间线归档</h3>
-                     <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
-                       <div class="grid" style="grid-template-columns:auto 1fr; gap:10px 16px; align-items:center;">
-                         <label style="color:#e8e4d9;">自动归档老节点</label>
-                         <input type="checkbox" name="autoArchive">
-                       </div>
-                       <p style="margin:12px 0 0; font-size:11px; color:#a39f98; line-height:1.6;">
-                         开启后,当分支节点超过 100 个时,自动归档 20 个最近祖先之外的旧节点(清空快照与对话历史,保留叙事内容)。
-                         归档后跳转旧回合会沿祖先链精确重放状态。
-                       </p>
-                       <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; align-items:center;">
-                         <button class="btn" type="button" data-action="check-storage" style="padding:8px 16px;">查看库体积</button>
-                         <button class="btn" type="button" data-action="manual-archive" style="padding:8px 16px;">立即归档</button>
-                         <span id="storage-info" style="font-size:11px; color:#a39f98;"></span>
-                       </div>
-                     </div>
-                  </section>
                 </div>
               </div>
 
             </main>
+            ${isCreator ? '<div class="workbench-editor-layer" aria-live="polite"></div>' : ''}
           </div>
           <div class="actions">
-            <button class="btn ghost" data-action="reset">重置</button>
-            <button class="btn" data-action="api-settings">契约端点</button>
-            <button class="btn" data-action="export">导出设置</button>
-            <button class="btn" data-action="import">导入设置</button>
-            <button class="btn" data-action="close">返回</button>
-            <button class="btn primary" data-action="save">封印保存</button>
+            <span class="save-state" role="status">当前页面的修改尚未应用</span>
+            <button class="btn ghost" data-action="close">${isCreator ? '返回游戏' : '放弃'}</button>
+            <button class="btn primary" data-action="save">${isCreator ? '应用管线' : '应用'}</button>
           </div>
         </div>
       </div>`;
@@ -356,6 +521,7 @@ class SettingsPanel extends HTMLElement {
     if (localStorage.getItem('naruto_music_loop') !== null) this._set('musicLoop', this._getLoop());
     if (localStorage.getItem('naruto_music_shuffle') !== null) this._set('musicShuffle', this._getShuffle());
     this._set('varUpdaterBackend', stateManager.getAPIConfig()?.variableUpdater?.backend || 'inherit');
+    this._set('narrativeReviewBackend', stateManager.getAPIConfig()?.narrativeReview?.backend || 'inherit');
   }
 
   _set(name, value) {
@@ -380,6 +546,16 @@ class SettingsPanel extends HTMLElement {
     this.shadowRoot.querySelector('[name="musicLoop"]').addEventListener('change', () => { this._setLoop(this._get('musicLoop')); this._syncAudio(); });
     this.shadowRoot.querySelector('[name="musicShuffle"]').addEventListener('change', () => { this._setShuffle(this._get('musicShuffle')); });
     this.shadowRoot.querySelector('[name="musicVolume"]').addEventListener('input', () => this._syncAudio());
+    for (const name of ['strictSingleCall', 'agentEnabled', 'agentMode', 'narrativeReviewEnabled', 'varUpdaterEnabled']) {
+      this.shadowRoot.querySelector(`[name="${name}"]`)?.addEventListener('change', event => {
+        if (['agentEnabled', 'narrativeReviewEnabled', 'varUpdaterEnabled'].includes(name) && event.target.checked) {
+          const strict = this.shadowRoot.querySelector('[name="strictSingleCall"]');
+          if (strict) strict.checked = false;
+        }
+        this._refreshAICallEstimate();
+      });
+    }
+    this.shadowRoot.addEventListener('memory-config:changed', () => this._refreshAICallEstimate());
     this.shadowRoot.querySelectorAll('.music-tab').forEach(t => t.addEventListener('click', () => this._switchMusicTab(t.dataset.tab)));
     const syncUpBtn = this.shadowRoot.querySelector('[data-action="sync-favorites-up"]');
     if (syncUpBtn) syncUpBtn.addEventListener('click', () => this._syncFavoritesToServer());
@@ -389,21 +565,122 @@ class SettingsPanel extends HTMLElement {
 
     this.shadowRoot.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        this.shadowRoot.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        this.shadowRoot.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        this.shadowRoot.getElementById(btn.dataset.target)?.classList.add('active');
+        if (this._mode === 'creator') this._selectTool(btn.dataset.tool || 'pipeline');
+        else this._selectSection(btn.dataset.section || 'appearance');
         const mp = this.shadowRoot.querySelector('memory-panel');
-        if (btn.dataset.target === 'tab-memory' && mp) mp.refreshStats();
+        if ((btn.dataset.target === 'tab-memory' || btn.dataset.tool === 'memory') && mp) mp.refreshStats();
       });
     });
 
+    const markContentDirty = (event) => {
+      const origin = event.composedPath?.()[0] || event.target;
+      if (this._mode === 'player' && origin?.name === 'musicSearch') return;
+      this._markDirty(this._mode === 'creator' ? this._activeTool : this._activeSection);
+    };
+    this.shadowRoot.querySelector('.content')?.addEventListener('input', markContentDirty);
+    this.shadowRoot.querySelector('.content')?.addEventListener('change', markContentDirty);
+
+  }
+
+  _selectSection(section, { focus = true, anchor = '' } = {}) {
+    const button = this.shadowRoot.querySelector(`.tab-btn[data-section="${section}"]`)
+      || this.shadowRoot.querySelector('.tab-btn');
+    if (!button) return;
+    this._activeSection = button.dataset.section || 'appearance';
+    this.shadowRoot.querySelectorAll('.tab-btn').forEach(item => item.classList.toggle('active', item === button));
+    this.shadowRoot.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    this.shadowRoot.getElementById(button.dataset.target)?.classList.add('active');
+    const content = this.shadowRoot.querySelector('.content');
+    if (content) content.scrollTop = 0;
+    const target = anchor
+      ? [...this.shadowRoot.querySelectorAll('[data-anchor]')].find(item => item.dataset.anchor === anchor)
+        || this.shadowRoot.getElementById(anchor)
+      : null;
+    if (target) {
+      target.scrollIntoView({ block: 'start', inline: 'nearest' });
+      if (content) {
+        const contentTop = content.getBoundingClientRect().top;
+        const targetTop = target.getBoundingClientRect().top;
+        content.scrollTop += targetTop - contentTop - 12;
+      }
+      target.focus?.({ preventScroll: true });
+    }
+    else if (focus) button.focus({ preventScroll: true });
+    this._updateSaveState();
+  }
+
+  _selectTool(tool, { focus = true, resourceId = '' } = {}) {
+    const button = this.shadowRoot.querySelector(`.tab-btn[data-tool="${tool}"]`)
+      || this.shadowRoot.querySelector('.tab-btn[data-tool]');
+    if (!button) return;
+    this._activeTool = button.dataset.tool || 'pipeline';
+    this._resourceId = resourceId || this._resourceId || '';
+    this.shadowRoot.querySelectorAll('.tab-btn').forEach(item => item.classList.toggle('active', item === button));
+    this.shadowRoot.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    for (const id of String(button.dataset.targets || '').split(',').filter(Boolean)) {
+      this.shadowRoot.getElementById(id)?.classList.add('active');
+    }
+    const content = this.shadowRoot.querySelector('.content');
+    if (content) content.scrollTop = 0;
+    const resourceTarget = this._resourceId
+      ? [...this.shadowRoot.querySelectorAll('[data-resource-id]')].find(item => item.dataset.resourceId === this._resourceId)
+      : null;
+    if (resourceTarget) {
+      resourceTarget.scrollIntoView({ block: 'start', inline: 'nearest' });
+      if (content) {
+        const contentTop = content.getBoundingClientRect().top;
+        const targetTop = resourceTarget.getBoundingClientRect().top;
+        content.scrollTop += targetTop - contentTop - 12;
+      }
+      resourceTarget.focus({ preventScroll: true });
+    }
+    const saveButton = this.shadowRoot.querySelector('.actions > [data-action="save"]');
+    if (saveButton) saveButton.hidden = this._activeTool !== 'pipeline';
+    const memory = this.shadowRoot.querySelector('memory-panel');
+    if (this._activeTool === 'memory') memory?.refreshStats?.();
+    if (focus && !resourceTarget) button.focus({ preventScroll: true });
+    this._updateSaveState();
+  }
+
+  _markDirty(section) {
+    const allowed = this._mode === 'creator'
+      ? section === 'pipeline'
+      : PLAYER_SECTION_ORDER.includes(section);
+    if (!allowed) return;
+    this._dirtySections.add(section);
+    this._dirtyRevisions.set(section, (this._dirtyRevisions.get(section) || 0) + 1);
+    this._updateSaveState();
+  }
+
+  _updateSaveState(message = '') {
+    const status = this.shadowRoot.querySelector('.save-state');
+    if (!status) return;
+    const activeKey = this._mode === 'creator' ? this._activeTool : this._activeSection;
+    status.textContent = message || (this._dirtySections.has(activeKey)
+      ? '当前页面有未应用的修改'
+      : '当前页面没有未应用的修改');
   }
 
   async _handle(action, event) {
     if (action === 'close') return this.close();
     if (action === 'save') return this._save();
-    if (action === 'api-settings') { this.close(); return eventBus.emit('app:open-api-settings'); }
+    if (action === 'open-creator-workbench') {
+      if (!await this.close()) return false;
+      return eventBus.emit('app:open-creator-workbench', { tool: 'pipeline' });
+    }
+    if (action === 'open-player-settings') {
+      if (!await this.close()) return false;
+      return eventBus.emit('app:open-settings', { section: 'appearance' });
+    }
+    if (action === 'open-player-connection') {
+      if (!await this.close()) return false;
+      return eventBus.emit('app:open-settings', { section: 'connection' });
+    }
+    if (action === 'open-creator-image') {
+      if (!await this.close()) return false;
+      return eventBus.emit('app:open-creator-workbench', { tool: 'image' });
+    }
+    if (action === 'open-image-gallery') return openImageGallery({ imageStudio });
     if (action === 'reset') return this._reset();
     if (action === 'export') {
       const json = JSON.stringify(mergeSettings(stateManager.getSub('_ui').settings), null, 2);
@@ -415,6 +692,7 @@ class SettingsPanel extends HTMLElement {
     
     if (action === 'open-main-preset-editor') {
       const editor = document.createElement('main-preset-editor');
+      if (this._mode === 'creator') return this._mountCreatorEditor(editor, { opener: event?.currentTarget });
       (document.getElementById('app') || document.body).appendChild(editor);
       return;
     }
@@ -422,19 +700,60 @@ class SettingsPanel extends HTMLElement {
     if (action === 'open-variable-updater-preset-editor') {
       const editor = document.createElement('variable-updater-preset-editor');
       editor.addEventListener('preset-saved', () => this._refreshVariablePresetSummary(), { once: true });
+      if (this._mode === 'creator') return this._mountCreatorEditor(editor, { opener: event?.currentTarget });
       (document.getElementById('app') || document.body).appendChild(editor);
       return;
     }
 
     if (action === 'open-worldbook-editor') {
       const editor = document.createElement('worldbook-editor');
+      if (this._mode === 'creator') return this._mountCreatorEditor(editor, { opener: event?.currentTarget });
       (document.getElementById('app') || document.body).appendChild(editor);
       return;
     }
+    if (action === 'open-canon-plot-editor' || action === 'open-canon-techniques-editor') {
+      const kind = action === 'open-canon-plot-editor' ? 'plot' : 'techniques';
+      const editor = document.createElement('canon-database-editor');
+      editor.databaseKind = kind;
+      editor.addEventListener('database-saved', () => this._refreshCanonDatabaseSummaries());
+      if (this._mode === 'creator') return this._mountCreatorEditor(editor, { opener: event?.currentTarget });
+      document.body.appendChild(editor);
+      return;
+    }
+
 
     if (action === 'check-storage') return this._checkStorage();
     if (action === 'manual-archive') return this._manualArchive();
     if (action === 'fetch-models') return this._fetchModelsFor(event.target);
+  }
+
+  _mountCreatorEditor(editor, { opener = null } = {}) {
+    const layer = this.shadowRoot.querySelector('.workbench-editor-layer');
+    if (!layer) return;
+    const content = this.shadowRoot.querySelector('.content');
+    this._editorContext = {
+      opener,
+      scrollTop: content?.scrollTop || 0
+    };
+    editor.setAttribute('embedded', '');
+    layer.replaceChildren(editor);
+    layer.classList.add('active');
+    this.shadowRoot.querySelectorAll('.tab-btn').forEach(button => { button.disabled = true; });
+    this._editorObserver?.disconnect();
+    this._editorObserver = new MutationObserver(() => {
+      if (!layer.children.length) {
+        layer.classList.remove('active');
+        this.shadowRoot.querySelectorAll('.tab-btn').forEach(button => { button.disabled = false; });
+        const context = this._editorContext;
+        this._editorContext = null;
+        if (content && context) content.scrollTop = context.scrollTop;
+        context?.opener?.focus?.({ preventScroll: true });
+        this._editorObserver?.disconnect();
+        this._editorObserver = null;
+      }
+    });
+    this._editorObserver.observe(layer, { childList: true });
+    return editor;
   }
 
   async _checkStorage() {
@@ -455,7 +774,7 @@ class SettingsPanel extends HTMLElement {
   async _manualArchive() {
     const confirmed = await customElements.get('game-modal').confirm({
       title: '立即归档',
-      message: '将归档所有分支中 20 个最近祖先之外的旧节点。归档后跳转旧回合会沿祖先链精确重放状态。继续?',
+      message: '将归档所有分支中 20 个最近祖先之外的旧节点，并保留状态快照以支持旧回合跳转。继续?',
       okLabel: '确认归档',
       cancelLabel: '取消'
     });
@@ -474,13 +793,24 @@ class SettingsPanel extends HTMLElement {
     const targetName = btn?.dataset?.target;
     if (!targetName) return;
     const mainConfig = stateManager.getAPIConfig() || {};
-    const apiConfig = targetName === 'varUpdaterModel' ? {
-      ...mainConfig,
-      ...(mainConfig.variableUpdater || {}),
-      backend: this._get('varUpdaterBackend') === 'inherit' ? mainConfig.backend : this._get('varUpdaterBackend'),
-      apiUrl: this._get('varUpdaterApiUrl') || mainConfig.apiUrl,
-      apiKey: this._get('varUpdaterApiKey') || mainConfig.apiKey
-    } : mainConfig;
+    let apiConfig = mainConfig;
+    if (targetName === 'varUpdaterModel') {
+      apiConfig = {
+        ...mainConfig,
+        ...(mainConfig.variableUpdater || {}),
+        backend: this._get('varUpdaterBackend') === 'inherit' ? mainConfig.backend : this._get('varUpdaterBackend'),
+        apiUrl: this._get('varUpdaterApiUrl') || mainConfig.apiUrl,
+        apiKey: this._get('varUpdaterApiKey') || mainConfig.apiKey
+      };
+    } else if (targetName === 'narrativeReviewModel') {
+      apiConfig = {
+        ...mainConfig,
+        ...(mainConfig.narrativeReview || {}),
+        backend: this._get('narrativeReviewBackend') === 'inherit' ? mainConfig.backend : this._get('narrativeReviewBackend'),
+        apiUrl: this._get('narrativeReviewApiUrl') || mainConfig.apiUrl,
+        apiKey: this._get('narrativeReviewApiKey') || mainConfig.apiKey
+      };
+    }
     if (!apiConfig.apiUrl) {
       this._showToast('请先在契约卷轴中配置 API 地址');
       return;
@@ -507,6 +837,7 @@ class SettingsPanel extends HTMLElement {
       listEl.querySelectorAll('div').forEach(item => {
         item.addEventListener('click', () => {
           input.value = item.dataset.model;
+          this._markDirty(this._mode === 'creator' ? 'pipeline' : this._activeSection);
           listEl.querySelectorAll('div').forEach(i => i.style.cssText = i.style.cssText.replace(/border-left:.*?;/, ''));
           item.style.cssText += ';background:rgba(235,97,63,0.12);color:#ff8a65;border-left:3px solid #eb613f;';
         });
@@ -517,6 +848,7 @@ class SettingsPanel extends HTMLElement {
       });
       if (!input.value && models[0]) {
         input.value = models[0];
+        this._markDirty(this._mode === 'creator' ? 'pipeline' : this._activeSection);
         listEl.querySelector('div')?.setAttribute('style', listEl.querySelector('div')?.getAttribute('style') + ';background:rgba(235,97,63,0.12);color:#ff8a65;border-left:3px solid #eb613f;');
       }
       this._showToast(`已读取 ${models.length} 个模型`);
@@ -537,23 +869,118 @@ class SettingsPanel extends HTMLElement {
     });
   }
 
-  async _save() {
-    const settings = this._collect();
-    stateManager.update([{ key: '_ui.settings', op: '=', value: settings }]);
+  async _save({ section = '', announce = true } = {}) {
+    if (this._savePromise) return false;
+    const saveKey = section || (this._mode === 'creator' ? this._activeTool : this._activeSection);
+    const saveButton = this.shadowRoot.querySelector('.actions > [data-action="save"]');
+    if (saveButton) saveButton.disabled = true;
+    this._savePromise = this._saveSection(saveKey, { announce }).finally(() => {
+      this._savePromise = null;
+      if (saveButton?.isConnected) saveButton.disabled = false;
+    });
+    return this._savePromise;
+  }
 
-    this._saveAgentConfig();
-    await this._saveVariableUpdaterConfig();
-
+  async _saveSection(saveKey, { announce = true } = {}) {
+    const revision = this._dirtyRevisions.get(saveKey) || 0;
     try {
-      await stateManager.saveUIPrefs();
-    } catch (error) {
-      try { await stateManager.saveLargeUIPrefs(); } catch { console.warn('saveLargeUIPrefs failed'); }
-      GameModal.alert({ title: '提示', message: '设置已应用。背景图过大，刷新后可能丢失。' });
-    }
+      if (this._mode === 'creator') {
+        if (saveKey !== 'pipeline') return false;
+        this._saveAgentConfig();
+        await this._saveNarrativeReviewConfig();
+        await this._saveVariableUpdaterConfig();
+        await this._saveAICallPolicyConfig();
+        const cleared = this._clearDirtyRevision(saveKey, revision);
+        if (announce) this._updateSaveState(cleared ? '生成管线已应用' : '已保存较早版本，当前页面仍有新修改');
+        eventBus.emit('settings:changed', { section: 'pipeline' });
+        return true;
+      }
 
-    applyLocalSettings(settings);
-    this.close();
-    eventBus.emit('settings:changed', settings);
+      if (saveKey === 'connection') {
+        const form = this.shadowRoot.querySelector('api-config-form');
+        const config = form?.getConfig();
+        if (!config) {
+          this._selectSection('connection');
+          this._showToast('请填写完整的 API 地址和模型名称');
+          return false;
+        }
+        const savedConfig = await settingsConfigGateway.saveMainAIConnection(config);
+        aiClient.configure(savedConfig);
+        const cleared = this._clearDirtyRevision(saveKey, revision);
+        if (announce) this._updateSaveState(cleared ? 'AI 连接已应用' : '已保存较早版本，当前页面仍有新修改');
+        eventBus.emit('settings:changed', { section: 'connection', apiConfig: savedConfig });
+        return true;
+      }
+
+      const fields = PLAYER_SECTION_FIELDS[saveKey];
+      if (!fields) return false;
+      const allSettings = this._collect();
+      const patch = {};
+      for (const field of fields) patch[field] = allSettings[field];
+      const imageSettings = saveKey === 'media' ? {
+        enabled: this._get('imageEnabled', false),
+        turnMode: this._get('imageTurnMode', 'manual')
+      } : null;
+      const settings = mergeSettings(await settingsConfigGateway.saveUISettings(patch));
+      if (imageSettings) {
+        callPolicyImageSettingsStore.update(imageSettings);
+        this._draftSideEffects = {
+          musicLoop: localStorage.getItem('naruto_music_loop'),
+          musicShuffle: localStorage.getItem('naruto_music_shuffle')
+        };
+      }
+
+      applyLocalSettings(settings);
+      this._settings = settings;
+      const cleared = this._clearDirtyRevision(saveKey, revision);
+      if (announce) this._updateSaveState(cleared ? '当前页面已应用' : '已保存较早版本，当前页面仍有新修改');
+      eventBus.emit('settings:changed', settings);
+      return true;
+    } catch (error) {
+      if (this._mode === 'player' && PLAYER_SECTION_ORDER.includes(saveKey)) {
+        this._selectSection(saveKey);
+      }
+      console.error('[SettingsPanel] 保存设置失败:', error);
+      this._showToast(`设置保存失败：${error?.message || '未知错误'}`);
+      this._updateSaveState('保存失败，修改仍保留');
+      return false;
+    }
+  }
+
+  _clearDirtyRevision(section, revision) {
+    if ((this._dirtyRevisions.get(section) || 0) !== revision) return false;
+    this._dirtySections.delete(section);
+    this._dirtyRevisions.delete(section);
+    return true;
+  }
+
+  async _saveAllDirtySections() {
+    const order = this._mode === 'creator' ? ['pipeline'] : PLAYER_SECTION_ORDER;
+    const dirtySections = order.filter(section => this._dirtySections.has(section));
+    if (this._mode === 'player' && dirtySections.includes('connection')) {
+      const config = this.shadowRoot.querySelector('api-config-form')?.getConfig();
+      if (!config) {
+        this._selectSection('connection');
+        this._showToast('请填写完整的 API 地址和模型名称');
+        return false;
+      }
+    }
+    for (const section of dirtySections) {
+      const saved = await this._save({ section, announce: false });
+      if (!saved) {
+        if (this._mode === 'creator') this._selectTool(section);
+        else this._selectSection(section);
+        return false;
+      }
+    }
+    const remaining = order.find(section => this._dirtySections.has(section));
+    if (remaining) {
+      if (this._mode === 'creator') this._selectTool(remaining);
+      else this._selectSection(remaining);
+      this._showToast('保存期间检测到新的修改，请再次应用后退出');
+      return false;
+    }
+    return true;
   }
 
   _saveAgentConfig() {
@@ -570,13 +997,11 @@ class SettingsPanel extends HTMLElement {
   async _saveVariableUpdaterConfig() {
     const root = this.shadowRoot;
     const enabled = root.querySelector('[name="varUpdaterEnabled"]')?.checked ?? false;
-    const config = stateManager.getAPIConfig() || {};
     const model = (root.querySelector('[name="varUpdaterModel"]')?.value || '').trim();
     const apiUrl = (root.querySelector('[name="varUpdaterApiUrl"]')?.value || '').trim();
     const apiKey = (root.querySelector('[name="varUpdaterApiKey"]')?.value || '').trim();
     const temperature = Number(root.querySelector('[name="varUpdaterTemperature"]')?.value);
-    config.variableUpdater = {
-      ...config.variableUpdater,
+    await settingsConfigGateway.saveAuxiliaryConfig('variableUpdater', {
       enabled,
       backend: root.querySelector('[name="varUpdaterBackend"]')?.value || 'inherit',
       apiUrl,
@@ -586,8 +1011,68 @@ class SettingsPanel extends HTMLElement {
       maxTokens: Math.max(256, Number(root.querySelector('[name="varUpdaterMaxTokens"]')?.value) || 8192),
       timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0),
       streaming: root.querySelector('[name="varUpdaterStreaming"]')?.checked ?? true
-    };
-    await stateManager.saveAPIConfig(config);
+    });
+  }
+
+  async _saveNarrativeReviewConfig() {
+    const root = this.shadowRoot;
+    const temperature = Number(root.querySelector('[name="narrativeReviewTemperature"]')?.value);
+    await settingsConfigGateway.saveAuxiliaryConfig('narrativeReview', {
+      enabled: root.querySelector('[name="narrativeReviewEnabled"]')?.checked ?? false,
+      backend: root.querySelector('[name="narrativeReviewBackend"]')?.value || 'inherit',
+      apiUrl: (root.querySelector('[name="narrativeReviewApiUrl"]')?.value || '').trim(),
+      apiKey: (root.querySelector('[name="narrativeReviewApiKey"]')?.value || '').trim(),
+      model: (root.querySelector('[name="narrativeReviewModel"]')?.value || '').trim(),
+      temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : 0.25,
+      maxTokens: Math.max(1024, Number(root.querySelector('[name="narrativeReviewMaxTokens"]')?.value) || 16384),
+      timeoutMs: Math.max(0, Number(root.querySelector('[name="narrativeReviewTimeout"]')?.value) || 0),
+      streaming: root.querySelector('[name="narrativeReviewStreaming"]')?.checked ?? true
+    });
+  }
+
+  _resolveDisplayedAICallPolicy() {
+    const root = this.shadowRoot;
+    const apiConfig = stateManager.getAPIConfig() || {};
+    return resolveAICallPolicy({
+      apiConfig: {
+        ...apiConfig,
+        aiCallPolicy: {
+          ...apiConfig.aiCallPolicy,
+          strictSingleCall: root.querySelector('[name="strictSingleCall"]')?.checked ?? true
+        },
+        variableUpdater: {
+          ...apiConfig.variableUpdater,
+          enabled: root.querySelector('[name="varUpdaterEnabled"]')?.checked ?? false
+        },
+        narrativeReview: {
+          ...apiConfig.narrativeReview,
+          enabled: root.querySelector('[name="narrativeReviewEnabled"]')?.checked ?? false
+        }
+      },
+      agentConfig: {
+        ...getAgentConfig(),
+        enabled: root.querySelector('[name="agentEnabled"]')?.checked ?? false,
+        mode: root.querySelector('[name="agentMode"]')?.value || 'standard'
+      },
+      memoryConfig: getMemoryConfig(),
+      imageSettings: callPolicyImageSettingsStore.load()
+    });
+  }
+
+  _refreshAICallEstimate() {
+    const policy = this._resolveDisplayedAICallPolicy();
+    const estimate = this.shadowRoot.querySelector('#ai-call-estimate');
+    const blocked = this.shadowRoot.querySelector('#ai-call-blocked');
+    if (estimate) estimate.textContent = policy.estimateText;
+    if (blocked) blocked.textContent = policy.blockedFeatures.length
+      ? `当前暂停：${policy.blockedFeatures.map(item => item.label).join('、')}`
+      : '';
+  }
+
+  async _saveAICallPolicyConfig() {
+    await settingsConfigGateway.saveAuxiliaryConfig('aiCallPolicy', {
+      strictSingleCall: this.shadowRoot.querySelector('[name="strictSingleCall"]')?.checked ?? true
+    });
   }
 
   _refreshVariablePresetSummary() {
@@ -596,6 +1081,20 @@ class SettingsPanel extends HTMLElement {
     const count = this.shadowRoot.querySelector('#variable-preset-count');
     if (name) name.textContent = preset.name || '未命名变量更新预设';
     if (count) count.textContent = `${preset.entries?.length || 0} 个预设条目 · ${preset.entries?.filter(entry => entry.enabled !== false).length || 0} 个已启用`;
+  }
+
+  _refreshCanonDatabaseSummaries() {
+    for (const kind of ['plot', 'techniques']) {
+      const stats = CANON_DATABASE.getStats(kind);
+      const container = this.shadowRoot.querySelector(`#canon-${kind}-summary`);
+      if (!container) continue;
+      container.innerHTML = [
+        ['启用', stats.effective],
+        ['修改', stats.modified],
+        ['新增', stats.custom],
+        ['停用', stats.disabled]
+      ].map(([label, value]) => `<span><strong>${value}</strong>${label}</span>`).join('');
+    }
   }
 
   async _reset() {
@@ -609,7 +1108,10 @@ class SettingsPanel extends HTMLElement {
     stateManager.update([{ key: '_ui.settings', op: '=', value: DEFAULT_SETTINGS }]);
     await stateManager.saveUIPrefs?.();
     applyLocalSettings(DEFAULT_SETTINGS);
-    this.close();
+    this._settings = mergeSettings(DEFAULT_SETTINGS);
+    this._dirtySections.clear();
+    this._dirtyRevisions.clear();
+    await this.close({ force: true });
   }
 
   async _import() {
@@ -617,10 +1119,13 @@ class SettingsPanel extends HTMLElement {
     if (!text) return;
     try {
       const settings = mergeSettings(JSON.parse(text));
-    stateManager.update([{ key: '_ui.settings', op: '=', value: settings }]);
+      stateManager.update([{ key: '_ui.settings', op: '=', value: settings }]);
       await stateManager.saveUIPrefs?.();
       applyLocalSettings(settings);
-      this.close();
+      this._settings = settings;
+      this._dirtySections.clear();
+      this._dirtyRevisions.clear();
+      await this.close({ force: true });
     } catch { GameModal.alert({ title: '导入失败', message: '配置 JSON 不合法' }); }
   }
 
@@ -1150,8 +1655,81 @@ class SettingsPanel extends HTMLElement {
   _play(type) { /* empty: old API */ }
   _pause(type) { /* empty: old API */ }
 
-  close() {
+  _restoreDraftSideEffects() {
+    const settings = mergeSettings(stateManager.getSub('_ui').settings);
+    applyLocalSettings(settings);
+    this._settings = settings;
+    const restoreStorage = (key, value) => {
+      if (value === null || value === undefined) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    };
+    restoreStorage('naruto_music_loop', this._draftSideEffects?.musicLoop);
+    restoreStorage('naruto_music_shuffle', this._draftSideEffects?.musicShuffle);
+    this._set('musicEnabled', settings.musicEnabled);
+    this._set('musicVolume', settings.musicVolume);
+    this._set('musicLoop', this._draftSideEffects?.musicLoop === null
+      ? settings.musicLoop
+      : this._draftSideEffects?.musicLoop === 'true');
+    this._set('musicShuffle', this._draftSideEffects?.musicShuffle === null
+      ? settings.musicShuffle
+      : this._draftSideEffects?.musicShuffle === 'true');
+    this._syncAudio();
+  }
+
+  async close(options = {}) {
+    if (this._closePromise) return this._closePromise;
+    this._closePromise = this._performClose(options).finally(() => {
+      this._closePromise = null;
+    });
+    return this._closePromise;
+  }
+
+  async _performClose({ force = false } = {}) {
+    if (!this.isConnected) return true;
+    if (this._savePromise) await this._savePromise;
+    if (!this.isConnected) return true;
+    if (!force) {
+      const embeddedEditor = this.shadowRoot.querySelector('.workbench-editor-layer.active > *');
+      if (embeddedEditor) {
+        const closeSelector = {
+          'WORLDBOOK-EDITOR': '#btn-close',
+          'MAIN-PRESET-EDITOR': '#mpe-close',
+          'VARIABLE-UPDATER-PRESET-EDITOR': '[data-action="close"]',
+          'CANON-DATABASE-EDITOR': '[data-action="close"]'
+        }[embeddedEditor.tagName];
+        embeddedEditor.shadowRoot?.querySelector(closeSelector)?.click();
+        return false;
+      }
+    }
+    if (!force && this._dirtySections?.size) {
+      const action = await GameModal.choice({
+        title: '保存修改后退出？',
+        message: '当前设置中仍有未应用的修改。你可以先应用全部修改，也可以放弃后退出。',
+        dismissValue: 'continue',
+        choices: [
+          { label: '放弃并退出', value: 'discard' },
+          { label: '继续编辑', value: 'continue', autofocus: true },
+          { label: '应用并退出', value: 'apply', primary: true }
+        ]
+      });
+      if (action === 'continue') return false;
+      if (action === 'discard') {
+        this._restoreDraftSideEffects();
+        this._dirtySections.clear();
+        this._dirtyRevisions.clear();
+        this.remove();
+        return true;
+      }
+      if (action === 'apply') {
+        const saved = await this._saveAllDirtySections();
+        if (!saved) return false;
+        this.remove();
+        return true;
+      }
+      return false;
+    }
     this.remove();
+    return true;
   }
 
   _stopAllAudio() {
@@ -1252,6 +1830,15 @@ export function applyLocalSettings(settings = stateManager.getSub('_ui').setting
   root.style.setProperty('--text-primary', s.textColor);
   root.style.setProperty('--c-shuiro', s.accentColor);
   root.style.setProperty('--c-kin', s.goldColor);
+  // 主题基调通道 + 文本美化色：取自当前主题预设，让玻璃质感/描边/对话色随主题整体切换
+  const preset = THEME_PRESETS[s.themePreset] || THEME_PRESETS.konoha;
+  root.style.setProperty('--ink-deep-rgb', preset.inkDeep);
+  root.style.setProperty('--ink-rgb', preset.ink);
+  root.style.setProperty('--paper-rgb', preset.paper);
+  root.style.setProperty('--washi-rgb', preset.washi);
+  root.style.setProperty('--chat-dialogue-color', preset.dialogueColor);
+  root.style.setProperty('--chat-thought-color', preset.thoughtColor);
+  root.style.setProperty('--chat-mark-color', preset.markColor);
   document.body.style.backgroundColor = s.backgroundColor;
   document.body.dataset.bgMode = 'image';
   if (s.backgroundImage && s.backgroundImage !== 'img/bg-home.png') {
@@ -1266,5 +1853,3 @@ export function applyLocalSettings(settings = stateManager.getSub('_ui').setting
 
 customElements.define('settings-panel', SettingsPanel);
 export default SettingsPanel;
-
-

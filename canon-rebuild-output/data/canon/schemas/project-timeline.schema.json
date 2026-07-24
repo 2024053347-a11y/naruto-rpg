@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naruto-rpg.local/schemas/project-timeline.schema.json",
+  "title": "Naruto RPG project game canon timeline shard",
+  "type": "object",
+  "required": ["schema_version", "dataset", "continuity", "calendar", "shard", "days"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": "project.timeline.v2" },
+    "dataset": { "const": "naruto-rpg-project-canon" },
+    "continuity": { "const": "curated_game_canon" },
+    "calendar": {
+      "type": "object",
+      "required": ["id", "months_per_year", "days_per_month"],
+      "properties": {
+        "id": { "const": "konoha-360-v1" },
+        "months_per_year": { "const": 12 },
+        "days_per_month": { "const": 30 }
+      },
+      "additionalProperties": false
+    },
+    "shard": {
+      "type": "object",
+      "required": ["id", "namespace", "arc_ids", "date_start", "date_end"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "namespace": { "$ref": "#/$defs/namespace" },
+        "arc_ids": { "$ref": "#/$defs/nonEmptyStrings" },
+        "date_start": { "$ref": "#/$defs/date" },
+        "date_end": { "$ref": "#/$defs/date" }
+      },
+      "additionalProperties": false
+    },
+    "days": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/day" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "namespace": {
+      "enum": ["HIST", "P1", "P2", "BOR"]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^K[0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30)$"
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "source": {
+      "type": "object",
+      "required": ["kind", "reference", "contribution"],
+      "properties": {
+        "kind": { "enum": ["manga", "anime", "databook", "game", "original"] },
+        "reference": { "type": "string", "minLength": 1 },
+        "contribution": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "fallback": {
+      "type": "object",
+      "required": ["condition", "status", "direction", "preserves"],
+      "properties": {
+        "condition": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["altered", "skipped", "postponed"] },
+        "direction": { "type": "string", "minLength": 1 },
+        "preserves": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "yearSnapshotAge": {
+      "type": "object",
+      "required": ["status", "at_year_start", "after_birthday", "birthday"],
+      "properties": {
+        "status": { "enum": ["exact", "unknown", "born_this_year"] },
+        "at_year_start": { "type": ["integer", "null"], "minimum": 0 },
+        "after_birthday": { "type": ["integer", "null"], "minimum": 0 },
+        "birthday": {
+          "anyOf": [
+            { "type": "string", "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30)$" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "exact" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "at_year_start": { "type": "integer", "minimum": 0 },
+              "after_birthday": { "type": "integer", "minimum": 0 },
+              "birthday": { "type": "string", "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30)$" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "unknown" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "at_year_start": { "type": "null" },
+              "after_birthday": { "type": "null" },
+              "birthday": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "born_this_year" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "at_year_start": { "type": "null" },
+              "after_birthday": { "const": 0 },
+              "birthday": { "type": "string", "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30)$" }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "yearSnapshotState": {
+      "type": "object",
+      "required": ["status", "affiliation", "organization_ids", "location_id", "location"],
+      "properties": {
+        "status": { "type": "string", "minLength": 1 },
+        "affiliation": { "type": "string", "minLength": 1 },
+        "organization_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^ORG-[A-Z0-9]+(-[A-Z0-9]+)*$" }
+        },
+        "location_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^LOC-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+            { "type": "null" }
+          ]
+        },
+        "location": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "yearSnapshotActualState": {
+      "type": "object",
+      "required": ["visibility"],
+      "properties": {
+        "visibility": { "enum": ["restricted", "secret"] },
+        "status": { "type": "string", "minLength": 1 },
+        "affiliation": { "type": "string", "minLength": 1 },
+        "organization_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^ORG-[A-Z0-9]+(-[A-Z0-9]+)*$" }
+        },
+        "location_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^LOC-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+            { "type": "null" }
+          ]
+        },
+        "location": { "type": "string", "minLength": 1 }
+      },
+      "anyOf": [
+        { "properties": { "status": {} }, "required": ["status"] },
+        { "properties": { "affiliation": {} }, "required": ["affiliation"] },
+        { "properties": { "location": {} }, "required": ["location"] }
+      ],
+      "additionalProperties": false
+    },
+    "yearSnapshotCharacter": {
+      "type": "object",
+      "required": ["entity_id", "name", "age", "public_state", "transition_this_year"],
+      "properties": {
+        "entity_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^CH-NAR-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+            { "type": "null" }
+          ]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "age": { "$ref": "#/$defs/yearSnapshotAge" },
+        "public_state": { "$ref": "#/$defs/yearSnapshotState" },
+        "actual_state": { "$ref": "#/$defs/yearSnapshotActualState" },
+        "transition_this_year": {
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        }
+      },
+      "additionalProperties": false
+    },
+    "yearSnapshotFaction": {
+      "type": "object",
+      "required": ["organization_id", "name", "lifecycle", "location_id", "location", "visibility", "transition_this_year"],
+      "properties": {
+        "organization_id": { "type": "string", "pattern": "^ORG-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "lifecycle": { "enum": ["forming", "mobilizing", "active", "underground", "remnant", "diaspora"] },
+        "location_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^LOC-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+            { "type": "null" }
+          ]
+        },
+        "location": { "type": "string", "minLength": 1 },
+        "visibility": { "enum": ["public", "restricted", "secret"] },
+        "transition_this_year": {
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        }
+      },
+      "additionalProperties": false
+    },
+    "yearSnapshot": {
+      "type": "object",
+      "required": ["as_of", "kind", "date_basis", "confidence", "characters", "factions", "transitions_this_year"],
+      "properties": {
+        "as_of": { "$ref": "#/$defs/date" },
+        "kind": { "const": "year_start" },
+        "date_basis": { "const": "project_allocation" },
+        "confidence": { "enum": ["mixed", "low", "medium", "high"] },
+        "characters": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/yearSnapshotCharacter" }
+        },
+        "factions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/yearSnapshotFaction" }
+        },
+        "transitions_this_year": { "$ref": "#/$defs/nonEmptyStrings" }
+      },
+      "additionalProperties": false
+    },
+    "beat": {
+      "type": "object",
+      "required": ["id", "order", "summary", "causal_role"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^EV-(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "order": { "type": "integer", "minimum": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "causal_role": { "enum": ["setup", "pressure", "choice", "turn", "resolution", "transition"] }
+      },
+      "additionalProperties": false
+    },
+    "scene": {
+      "type": "object",
+      "required": [
+        "id", "title", "thread_id", "location", "participants", "resolution_mode",
+        "requirements", "blockers", "setup", "beats", "outcomes", "state_changes",
+        "stop_condition", "fallbacks", "source_material", "design_rationale", "reference_facts"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^SCN-(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "title": { "type": "string", "minLength": 1 },
+        "thread_id": { "type": "string", "pattern": "^THR-(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "location": { "type": "string", "minLength": 1 },
+        "participants": { "$ref": "#/$defs/nonEmptyStrings" },
+        "resolution_mode": { "enum": ["interactive", "offscreen", "conditional"] },
+        "requirements": { "$ref": "#/$defs/nonEmptyStrings" },
+        "blockers": { "$ref": "#/$defs/nonEmptyStrings" },
+        "setup": { "type": "string", "minLength": 1 },
+        "beats": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/beat" }
+        },
+        "outcomes": { "$ref": "#/$defs/nonEmptyStrings" },
+        "state_changes": { "$ref": "#/$defs/nonEmptyStrings" },
+        "stop_condition": { "type": "string", "minLength": 1 },
+        "fallbacks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/fallback" }
+        },
+        "source_material": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "design_rationale": { "type": "string", "minLength": 1 },
+        "reference_facts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "day": {
+      "type": "object",
+      "required": [
+        "id", "date", "title", "arc_id", "day_goal", "start_state", "scenes",
+        "end_state", "transition", "reference_facts"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^DAY-(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "date": { "$ref": "#/$defs/date" },
+        "title": { "type": "string", "minLength": 1 },
+        "arc_id": { "type": "string", "pattern": "^ARC-(HIST|P1|P2|BOR)-[A-Z0-9]+(-[A-Z0-9]+)*$" },
+        "day_goal": { "type": "string", "minLength": 1 },
+        "start_state": { "$ref": "#/$defs/nonEmptyStrings" },
+        "scenes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/scene" }
+        },
+        "end_state": { "$ref": "#/$defs/nonEmptyStrings" },
+        "transition": { "type": "string", "minLength": 1 },
+        "year_snapshot": { "$ref": "#/$defs/yearSnapshot" },
+        "reference_facts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

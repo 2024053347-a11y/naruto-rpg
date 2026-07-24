@@ -1,0 +1,3733 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-SPACE-P01",
+    "group": "space",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 29,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-SPACE-0001",
+      "canonical_name": "天之御中アメノミナカ",
+      "aliases": [
+        "天之御中アメノミナカ"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继网罗~轮回写轮眼,时空间忍术,瞳术,神术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大筒木辉夜使用她的轮回写轮眼将周围的世界替换为她个人维度之一；当时在辉夜附近的所有人都会经历相同的地点变化。要转移如此巨大的维度需要大量的查克拉，以至于只有辉夜能够做到。对于旁观者来说，辉夜和其他所有人都似乎从之前的维度中消失了，甚至没有留下可检测的查克拉痕迹。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天之御中アメノミナカ",
+          "Amenominaka",
+          "Heavenly Governing Inside"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 679,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Amenominaka"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Amenominaka",
+        "Heavenly Governing Inside"
+      ],
+      "lookup_classes": [
+        "kekkei-mōra~rinne-sharingan,-space–time-ninjutsu,-dōjutsu,-shinjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0002",
+      "canonical_name": "天手力アメノテジカラ",
+      "aliases": [
+        "天手力アメノテジカラ",
+        "天手力"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,时空间忍术,瞳术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土将目标吸入他的神威空间或将部分目标身体转移到该空间，有效地使部分目标消失。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天手力アメノテジカラ",
+          "Amenotejikara",
+          "Heavenly Hand Power"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 674,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Amenotejikara"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Amenotejikara",
+        "Heavenly Hand Power"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-space–time-ninjutsu,-dōjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0003",
+      "canonical_name": "増幅口寄せ之术",
+      "aliases": [
+        "増幅口寄せ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土使用神威使自己的身体部分或全部虚体化，使攻击穿过他而不造成伤害。在虚体化期间，他不能攻击，但可以移动到该空间的另一部分并重新实体化。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "増幅口寄せ之术",
+          "Amplification Summoning Technique",
+          "Zōfuku Kuchiyose no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 375,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Amplification_Summoning_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Amplification Summoning Technique",
+        "Zōfuku Kuchiyose no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0004",
+      "canonical_name": "蛇睨呪缚",
+      "aliases": [
+        "蛇睨呪缚"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土从神威空间中取出物品或投射物，允许他从意想不到的方向攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "蛇睨呪缚",
+          "Binding Snake Glare Spell",
+          "Jagei Jubaku"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 290,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Binding_Snake_Glare_Spell"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Binding Snake Glare Spell",
+        "Jagei Jubaku"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0005",
+      "canonical_name": "飞雷阵之术",
+      "aliases": [
+        "飞雷阵之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,合作忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土将他接触的人或物吸入神威空间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENMA-SHIRANUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-RAIDO-NAMIASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷阵之术",
+          "Flying Thunder Formation Technique",
+          "Hiraijin no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 562,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_Formation_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder Formation Technique",
+        "Hiraijin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-cooperation-ninjutsu,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0006",
+      "canonical_name": "飞雷神 ニの段",
+      "aliases": [
+        "飞雷神 ニの段"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,手里剑术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土将神威空间的一部分与现实世界重叠，允许他捕获范围内的目标或保护盟友。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷神 ニの段",
+          "Flying Thunder God — Second Step",
+          "Hiraishin — Ni no Dan"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 502,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_God_%E2%80%94_Second_Step"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder God — Second Step",
+        "Hiraishin — Ni no Dan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-shurikenjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0007",
+      "canonical_name": "飞雷神互瞬回し之术",
+      "aliases": [
+        "飞雷神互瞬回し之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,合作忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "卡卡西使用神威扭曲空间以偏转攻击或将目标的部分身体送入神威空间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷神互瞬回し之术",
+          "Flying Thunder God Mutually Instantaneous Revolving Technique",
+          "Hiraishin Goshun Mawashi no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 641,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_God_Mutually_Instantaneous_Revolving_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder God Mutually Instantaneous Revolving Technique",
+        "Hiraishin Goshun Mawashi no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-cooperation-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0008",
+      "canonical_name": "飞雷神斩り",
+      "aliases": [
+        "飞雷神斩り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,武器术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大筒木一式将物体缩小到微观尺寸，使其在常规视野中消失。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷神斩り",
+          "Flying Thunder God Slash",
+          "Hiraishingiri"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 624,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_God_Slash"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder God Slash",
+        "Hiraishingiri"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-bukijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0009",
+      "canonical_name": "飞雷神之术",
+      "aliases": [
+        "飞雷神之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大筒木一族使用时空术在不同维度之间旅行。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "飞雷神之术",
+          "Flying Thunder God Technique",
+          "Hiraishin no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 240,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Flying_Thunder_God_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Flying Thunder God Technique",
+        "Hiraishin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0010",
+      "canonical_name": "万蛇羅ノ阵",
+      "aliases": [
+        "万蛇羅ノ阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "佐助使用轮回眼的能力在维度之间切换或在不同位置之间传送。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "万蛇羅ノ阵",
+          "Formation of Ten Thousand Snakes",
+          "Mandara no Jin",
+          "Formation of Ten Thousand Snakes Silk"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 294,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Formation_of_Ten_Thousand_Snakes"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Formation of Ten Thousand Snakes",
+        "Mandara no Jin",
+        "Formation of Ten Thousand Snakes Silk"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0011",
+      "canonical_name": "潜影蛇手",
+      "aliases": [
+        "潜影蛇手"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将目标与其自身交换位置，有时与目标意想不到地交换。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ANKO-MITARASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "潜影蛇手",
+          "Hidden Shadow Snake Hands",
+          "Sen'ei Jashu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 50,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Hidden_Shadow_Snake_Hands"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Hidden Shadow Snake Hands",
+        "Sen'ei Jashu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0012",
+      "canonical_name": "神威走り",
+      "aliases": [
+        "神威走り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,瞳术,时空间忍术,忍术",
+        "防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用时空术制造一个进入另一维度的门户。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "神威走り",
+          "Kamui Running",
+          "Kamuibashiri"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 502,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kamui_Running"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kamui Running",
+        "Kamuibashiri"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-dōjutsu,-space–time-ninjutsu,-ninjutsu",
+        "defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0013",
+      "canonical_name": "神威走り·惨",
+      "aliases": [
+        "神威走り·惨"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼~木遁,瞳术,时空间忍术,忍术",
+        "木遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "飞雷神之术允许使用者瞬间移动到他们放置的术式的任何位置。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "神威走り·惨",
+          "Kamui Running: Brutal",
+          "Kamuibashiri: San"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 605,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kamui_Running%3A_Brutal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kamui Running: Brutal",
+        "Kamuibashiri: San"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan~wood-release,-dōjutsu,-space–time-ninjutsu,-ninjutsu",
+        "wood-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0014",
+      "canonical_name": "神威手裏剣",
+      "aliases": [
+        "神威手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,时空间忍术,瞳术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "四代目火影在目标上放置飞雷神术式，允许他传送到目标的位置或附近。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "神威手裏剣",
+          "Kamui Shuriken",
+          "Authority of the Gods Hidden Hand Blade"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 689,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kamui_Shuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kamui Shuriken",
+        "Authority of the Gods Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-space–time-ninjutsu,-dōjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0015",
+      "canonical_name": "潜影多蛇手",
+      "aliases": [
+        "潜影多蛇手"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用飞雷神术式将一个位置连接到另一个位置，允许物体或人通过空间传送。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ANKO-MITARASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "潜影多蛇手",
+          "Many Hidden Shadow Snake Hands",
+          "Sen'ei Tajashu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 290,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Many_Hidden_Shadow_Snake_Hands"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Many Hidden Shadow Snake Hands",
+        "Sen'ei Tajashu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0016",
+      "canonical_name": "雨蜘蛛",
+      "aliases": [
+        "雨蜘蛛"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术,合作忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过时空术将队友传送到他们的位置，或将目标传送走。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KIDO-MARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KYODAIGUMO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雨蜘蛛",
+          "Rain of Spiders",
+          "Amagumo"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 194,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Rain_of_Spiders"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Rain of Spiders",
+        "Amagumo"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu,-cooperation-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0017",
+      "canonical_name": "逆口寄せ之术",
+      "aliases": [
+        "逆口寄せ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过时空门将攻击偏转到另一个位置。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GAMAKICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "逆口寄せ之术",
+          "Reverse Summoning Technique",
+          "Gyaku Kuchiyose no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 409,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Reverse_Summoning_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Reverse Summoning Technique",
+        "Gyaku Kuchiyose no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0018",
+      "canonical_name": "螺旋闪光超轮舞吼参式",
+      "aliases": [
+        "螺旋闪光超轮舞吼参式"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,手里剑术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用时空术包裹攻击或物体，将其送到另一个维度。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "螺旋闪光超轮舞吼参式",
+          "Spiralling Flash Super Round Dance Howl Style Three",
+          "Rasen Senkō Chō Rinbukō Sanshiki"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 639,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Spiralling_Flash_Super_Round_Dance_Howl_Style_Three"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Spiralling Flash Super Round Dance Howl Style Three",
+        "Rasen Senkō Chō Rinbukō Sanshiki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-shurikenjutsu,-space–time-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0019",
+      "canonical_name": "口寄せ轮廻眼",
+      "aliases": [
+        "口寄せ轮廻眼"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,瞳术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者操纵空间以扩大或压缩距离，使他们能够从远处攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ轮廻眼",
+          "Summoning Rinnegan",
+          "Kuchiyose Rinnegan",
+          "Summoning Saṃsāra Eye"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 374,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning_Rinnegan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning Rinnegan",
+        "Kuchiyose Rinnegan",
+        "Summoning Saṃsāra Eye"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-dōjutsu,space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0020",
+      "canonical_name": "口寄せ之术",
+      "aliases": [
+        "口寄せ之术",
+        "通灵之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 35,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将一个区域分割到另一个维度，将其与现实世界隔离。此术常用于捕获目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-EBISU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HANZO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-IBIKI-MORINO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KIDO-MARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MOTOI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHINO-ABURAME",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHISUI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SUMIRE-KAKEI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TAYUYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TSUNADE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ之术",
+          "Summoning Technique",
+          "Kuchiyose no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 29,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning Technique",
+        "Kuchiyose no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0021",
+      "canonical_name": "口寄せ·外道魔像",
+      "aliases": [
+        "口寄せ·外道魔像"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼,忍术,时空间忍术,瞳术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将另一个维度的空间部分拉到现实世界中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·外道魔像",
+          "Summoning: Demonic Statue of the Outer Path",
+          "Kuchiyose: Gedō Mazō"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 447,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Demonic_Statue_of_the_Outer_Path"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Demonic Statue of the Outer Path",
+        "Kuchiyose: Gedō Mazō"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan,-ninjutsu,-space–time-ninjutsu,-dōjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0022",
+      "canonical_name": "口寄せ·屋台崩し之术",
+      "aliases": [
+        "口寄せ·屋台崩し之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者召唤一个巨大的术式阵，将整个区域与外部世界隔离。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·屋台崩し之术",
+          "Summoning: Food Cart Destroyer Technique",
+          "Kuchiyose: Yatai Kuzushi no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 124,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Food_Cart_Destroyer_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Food Cart Destroyer Technique",
+        "Kuchiyose: Yatai Kuzushi no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0023",
+      "canonical_name": "口寄せ·穢土転生",
+      "aliases": [
+        "口寄せ·穢土転生"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术,转生忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "天手力允许使用者与视线内的任何物体或人交换位置。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·穢土転生",
+          "Summoning: Impure World Reincarnation",
+          "Kuchiyose: Edo Tensei"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 117,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Impure_World_Reincarnation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Impure World Reincarnation",
+        "Kuchiyose: Edo Tensei"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu,-reincarnation-ninjutsu,-space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0024",
+      "canonical_name": "口寄せ·五重羅生门",
+      "aliases": [
+        "口寄せ·五重羅生门"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 125,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将目标冻结在空间中，在有限的时间内阻止其移动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·五重羅生门",
+          "Summoning: Quintuple Rashōmon",
+          "Kuchiyose: Gojū Rashōmon"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 621,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Quintuple_Rash%C5%8Dmon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Quintuple Rashōmon",
+        "Kuchiyose: Gojū Rashōmon"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0025",
+      "canonical_name": "口寄せ·羅生门",
+      "aliases": [
+        "口寄せ·羅生门"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "飞雷阵之术允许多人同时传送。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAKON",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·羅生门",
+          "Summoning: Rashōmon",
+          "Kuchiyose: Rashōmon"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 204,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Rash%C5%8Dmon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Rashōmon",
+        "Kuchiyose: Rashōmon"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0026",
+      "canonical_name": "口寄せ·蝦蟇口缚り",
+      "aliases": [
+        "口寄せ·蝦蟇口缚り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者留下一个印记，作为通过时空术传送到该位置的定位点。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·蝦蟇口缚り",
+          "Summoning: Toad Mouth Bind",
+          "Kuchiyose: Gamaguchi Shibari"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 147,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Toad_Mouth_Bind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Toad Mouth Bind",
+        "Kuchiyose: Gamaguchi Shibari"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0027",
+      "canonical_name": "口寄せ·蝦蟇見世之术",
+      "aliases": [
+        "口寄せ·蝦蟇見世之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将物体或人压缩到微观尺寸，并将其封印在容器内。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·蝦蟇見世之术",
+          "Summoning: Toad Shop Technique",
+          "Kuchiyose: Gama Mise no Jutsu"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 368,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Toad_Shop_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Toad Shop Technique",
+        "Kuchiyose: Gama Mise no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0028",
+      "canonical_name": "口寄せ·三重羅生门",
+      "aliases": [
+        "口寄せ·三重羅生门"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 120,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用时空术移走部分目标的身体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HE-USES-FIVE-GATES",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NOT-THIS",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·三重羅生门",
+          "Summoning: Triple Rashōmon",
+          "Kuchiyose: Sanjū Rashōmon"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 295,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Triple_Rash%C5%8Dmon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Triple Rashōmon",
+        "Kuchiyose: Sanjū Rashōmon"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SPACE-0029",
+      "canonical_name": "黄泉比良坂ヨモツヒラサカ",
+      "aliases": [
+        "黄泉比良坂ヨモツヒラサカ"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继网罗,忍术,时空间忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者打开一个通往另一个维度的裂缝，释放出巨大的能量爆发。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BLACK-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "黄泉比良坂ヨモツヒラサカ",
+          "Yomotsu Hirasaka",
+          "Underworld Slope Hill"
+        ],
+        "tags": [
+          "space",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 681,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Yomotsu_Hirasaka"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SPACE-AUTO",
+        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Yomotsu Hirasaka",
+        "Underworld Slope Hill"
+      ],
+      "lookup_classes": [
+        "kekkei-mōra,-ninjutsu,-space–time-ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

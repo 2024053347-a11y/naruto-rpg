@@ -1,0 +1,172 @@
+{
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "scope": "multi_era_incremental",
+  "authority": "gameplay_coherence_then_source_material",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "id_policy": "era_namespaced_v2",
+  "date_version": "project_multi_era_playable_v1",
+  "supported_namespaces": [
+    "HIST",
+    "P1",
+    "P2",
+    "BOR"
+  ],
+  "included_namespaces": [
+    "HIST",
+    "P1",
+    "P2",
+    "BOR"
+  ],
+  "coverage": {
+    "date_start": "K001-01-01",
+    "date_end": "K086-07-30"
+  },
+  "shards": [
+    {
+      "id": "HIST-ANNUAL-FOUNDATIONS",
+      "namespace": "HIST",
+      "path": "shards/HIST-ANNUAL-FOUNDATIONS.json",
+      "date_start": "K001-01-01",
+      "date_end": "K086-01-01"
+    },
+    {
+      "id": "HIST-KAKASHI-GAIDEN",
+      "namespace": "HIST",
+      "path": "shards/HIST-KAKASHI-GAIDEN.json",
+      "date_start": "K050-06-01",
+      "date_end": "K050-06-05"
+    },
+    {
+      "id": "P1-START-WAVES",
+      "namespace": "P1",
+      "path": "shards/P1-START-WAVES.json",
+      "date_start": "K064-01-01",
+      "date_end": "K064-02-04"
+    },
+    {
+      "id": "P1-EXAM-CRUSH",
+      "namespace": "P1",
+      "path": "shards/P1-EXAM-CRUSH.json",
+      "date_start": "K064-03-01",
+      "date_end": "K064-04-09"
+    },
+    {
+      "id": "P1-TSUNADE",
+      "namespace": "P1",
+      "path": "shards/P1-TSUNADE.json",
+      "date_start": "K064-04-12",
+      "date_end": "K064-05-01"
+    },
+    {
+      "id": "P1-SASUKE",
+      "namespace": "P1",
+      "path": "shards/P1-SASUKE.json",
+      "date_start": "K064-05-15",
+      "date_end": "K064-06-15"
+    },
+    {
+      "id": "P2-RETURN-GAARA-TENCHI",
+      "namespace": "P2",
+      "path": "shards/P2-RETURN-GAARA-TENCHI.json",
+      "date_start": "K064-06-16",
+      "date_end": "K067-02-28"
+    },
+    {
+      "id": "P2-AKATSUKI-ITACHI-JIRAIYA",
+      "namespace": "P2",
+      "path": "shards/P2-AKATSUKI-ITACHI-JIRAIYA.json",
+      "date_start": "K067-03-01",
+      "date_end": "K067-05-30"
+    },
+    {
+      "id": "P2-BROTHERS-PAIN",
+      "namespace": "P2",
+      "path": "shards/P2-BROTHERS-PAIN.json",
+      "date_start": "K067-06-01",
+      "date_end": "K067-08-18"
+    },
+    {
+      "id": "P2-KAGE-COUNTDOWN",
+      "namespace": "P2",
+      "path": "shards/P2-KAGE-COUNTDOWN.json",
+      "date_start": "K067-09-01",
+      "date_end": "K067-12-30"
+    },
+    {
+      "id": "P2-WAR-CONFRONT",
+      "namespace": "P2",
+      "path": "shards/P2-WAR-CONFRONT.json",
+      "date_start": "K068-01-01",
+      "date_end": "K068-01-10"
+    },
+    {
+      "id": "P2-WAR-CLIMAX-A",
+      "namespace": "P2",
+      "path": "shards/P2-WAR-CLIMAX-A.json",
+      "date_start": "K068-01-11",
+      "date_end": "K068-01-20"
+    },
+    {
+      "id": "P2-WAR-CLIMAX-B",
+      "namespace": "P2",
+      "path": "shards/P2-WAR-CLIMAX-B.json",
+      "date_start": "K068-01-21",
+      "date_end": "K068-02-05"
+    },
+    {
+      "id": "P2-WAR-CLIMAX-C",
+      "namespace": "P2",
+      "path": "shards/P2-WAR-CLIMAX-C.json",
+      "date_start": "K068-02-06",
+      "date_end": "K068-02-15"
+    },
+    {
+      "id": "P2-WAR-JINCHURIKI",
+      "namespace": "P2",
+      "path": "shards/P2-WAR-JINCHURIKI.json",
+      "date_start": "K068-02-16",
+      "date_end": "K068-02-25"
+    },
+    {
+      "id": "P2-KAGUYA-FINAL",
+      "namespace": "P2",
+      "path": "shards/P2-KAGUYA-FINAL.json",
+      "date_start": "K068-02-26",
+      "date_end": "K068-03-10"
+    },
+    {
+      "id": "P2-POSTWAR-TRANSITION",
+      "namespace": "P2",
+      "path": "shards/P2-POSTWAR-TRANSITION.json",
+      "date_start": "K068-03-11",
+      "date_end": "K082-07-30"
+    },
+    {
+      "id": "BOR-SARADA-MOMOSHIKI",
+      "namespace": "BOR",
+      "path": "shards/BOR-SARADA-MOMOSHIKI.json",
+      "date_start": "K082-08-01",
+      "date_end": "K083-03-30"
+    },
+    {
+      "id": "BOR-MUJINA-AO-KAWAKI",
+      "namespace": "BOR",
+      "path": "shards/BOR-MUJINA-AO-KAWAKI.json",
+      "date_start": "K083-04-01",
+      "date_end": "K084-06-30"
+    },
+    {
+      "id": "BOR-CODE-OMNIPOTENCE-RETURN-MATSURI",
+      "namespace": "BOR",
+      "path": "shards/BOR-CODE-OMNIPOTENCE-RETURN-MATSURI.json",
+      "date_start": "K085-01-03",
+      "date_end": "K086-07-30"
+    }
+  ]
+}

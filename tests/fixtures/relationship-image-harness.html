@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relationship portrait integration harness</title>
+  <style>
+    :root { --ink-deep-rgb: 7, 10, 14; --paper-rgb: 232, 228, 217; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; min-height: 100%; margin: 0; }
+    body { background: #070a0e; color: #e8e4d9; }
+    info-panel { display: block; width: 420px; height: 760px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    const subjectId = 'relationship-subject-sakura';
+    const target = { kind: 'portrait', subjectId };
+    const thumbnailUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48"%3E%3Crect width="48" height="48" fill="%23d86b85"/%3E%3C/svg%3E';
+    const asset = {
+      id: 'relationship-portrait-asset',
+      target,
+      targetKey: `portrait:${subjectId}`,
+      thumbnailUrl,
+      contentUrl: thumbnailUrl,
+      createdAt: '2026-07-23T00:00:00.000Z'
+    };
+    const listeners = new Set();
+    let detached = false;
+    let delayedAssetContent = null;
+    let slowReadPending = false;
+    let slowReadCompleted = false;
+    const commands = [];
+
+    const createGate = () => {
+      let release;
+      const promise = new Promise(resolve => { release = resolve; });
+      return { promise, release };
+    };
+
+    const emitBindingEvent = type => {
+      const event = {
+        type,
+        target,
+        binding: { target, assetId: detached ? null : asset.id, revision: detached ? 2 : 1 }
+      };
+      for (const listener of [...listeners]) listener(event);
+    };
+
+    const { imageStudio } = await import('../../js/core/image-studio/index.js');
+    imageStudio.subscribe = listener => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    };
+    imageStudio.read = async query => {
+      if (query.type === 'target') {
+        return {
+          binding: detached
+            ? { target, assetId: null, revision: 2 }
+            : { target, assetId: asset.id, revision: 1 },
+          assets: [asset],
+          jobs: []
+        };
+      }
+      if (query.type === 'asset-content') {
+        const gate = delayedAssetContent;
+        if (gate) {
+          slowReadPending = true;
+          await gate.promise;
+          slowReadCompleted = true;
+          if (delayedAssetContent === gate) delayedAssetContent = null;
+        }
+        return new Blob(['fixture portrait'], { type: 'image/png' });
+      }
+      throw new Error(`Unexpected relationship image read: ${query.type}`);
+    };
+    imageStudio.execute = async command => {
+      commands.push(structuredClone(command));
+      return { status: 'updated' };
+    };
+
+    const { stateManager } = await import('../../js/core/state-manager.js');
+    stateManager.setSub('_relationships', {
+      小樱: {
+        affection: 45,
+        trust: 32,
+        respect: 28,
+        faction: '木叶隐村',
+        role: '医疗忍者',
+        visual_subject_id: subjectId,
+        visual_profile: {
+          subject_id: subjectId,
+          display_name: '小樱',
+          canonical_description: '粉发、碧眼',
+          locked_traits: ['粉发', '碧眼'],
+          identity_seed: 12345,
+          revision: 0
+        },
+        portrait_binding: {
+          selected_asset_id: asset.id,
+          version_group_id: `portrait:${subjectId}:versions`,
+          binding_revision: 1,
+          updated_at: Date.now()
+        }
+      }
+    });
+
+    await import('../../js/ui/panel.js');
+    const panel = document.createElement('info-panel');
+    document.querySelector('#app').appendChild(panel);
+
+    window.__RELATIONSHIP_IMAGE_HARNESS__ = {
+      subjectId,
+      commands,
+      get slowReadPending() { return slowReadPending; },
+      get slowReadCompleted() { return slowReadCompleted; },
+      beginSlowRefresh() {
+        detached = false;
+        slowReadPending = false;
+        slowReadCompleted = false;
+        delayedAssetContent = createGate();
+        emitBindingEvent('binding.changed');
+      },
+      releaseSlowRefresh() {
+        delayedAssetContent?.release();
+      },
+      detach() {
+        detached = true;
+        emitBindingEvent('binding.detached');
+      }
+    };
+    window.__RELATIONSHIP_IMAGE_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

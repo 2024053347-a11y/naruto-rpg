@@ -1,0 +1,12 @@
+{
+  "batch_id": "TL-BOR-RETURN-AUTO",
+  "replacements": [],
+  "deletions": [],
+  "unresolved": [],
+  "review_notes": [
+    "漫画章节范围：BORUTO TWO BLUE VORTEX 1-15。",
+    "自动从篇章Summary拆出10个顺序节拍。",
+    "摘要保留英文原文并标记待中文精校；需逐章核实是否混有动画扩写。",
+    "全部保持draft，不进入正式运行时索引。"
+  ]
+}

@@ -5,7 +5,9 @@ const TYPE_NAMES = {
   jutsu: ['忍术'],
   taijutsu: ['体术'],
   genjutsu: ['幻术'],
-  support: ['支援', '辅助']
+  support: ['支援', '辅助'],
+  talents: ['天赋'],
+  kekkei_genkai: ['血继限界']
 };
 
 class SkillSystem {

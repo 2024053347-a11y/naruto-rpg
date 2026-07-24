@@ -1,0 +1,426 @@
+{
+  "generated_at": "2026-07-19T01:46:43.785Z",
+  "arcs": [
+    {
+      "code": "NAR-P1-WAVES",
+      "page": "Prologue — Land of Waves",
+      "work": "NARUTO",
+      "chapters": [
+        1,
+        33
+      ],
+      "records": 272,
+      "date_window": [
+        "K064-03-01",
+        "K064-03-24"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P1-CHUNIN",
+      "page": "Chūnin Exams (Arc)",
+      "work": "NARUTO",
+      "chapters": [
+        34,
+        115
+      ],
+      "records": 143,
+      "date_window": [
+        "K064-04-01",
+        "K064-05-15"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P1-CRUSH",
+      "page": "Konoha Crush (Arc)",
+      "work": "NARUTO",
+      "chapters": [
+        116,
+        138
+      ],
+      "records": 132,
+      "date_window": [
+        "K064-05-16",
+        "K064-05-18"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P1-TSUNADE",
+      "page": "Search for Tsunade",
+      "work": "NARUTO",
+      "chapters": [
+        139,
+        171
+      ],
+      "records": 227,
+      "date_window": [
+        "K064-06-01",
+        "K064-06-20"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P1-SASUKE",
+      "page": "Sasuke Recovery Mission",
+      "work": "NARUTO",
+      "chapters": [
+        172,
+        238
+      ],
+      "records": 123,
+      "date_window": [
+        "K065-01-01",
+        "K065-01-10"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-GAIDEN",
+      "page": "Kakashi Gaiden",
+      "work": "NARUTO",
+      "chapters": [
+        239,
+        244
+      ],
+      "records": 60,
+      "date_window": [
+        "K050-06-01",
+        "K050-06-05"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-GAARA",
+      "page": "Kazekage Rescue Mission",
+      "work": "NARUTO",
+      "chapters": [
+        245,
+        281
+      ],
+      "records": 101,
+      "date_window": [
+        "K067-01-01",
+        "K067-01-20"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-TENCHI",
+      "page": "Tenchi Bridge Reconnaissance Mission",
+      "work": "NARUTO",
+      "chapters": [
+        282,
+        310
+      ],
+      "records": 95,
+      "date_window": [
+        "K067-02-01",
+        "K067-02-12"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-AKATSUKI",
+      "page": "Akatsuki Suppression Mission",
+      "work": "NARUTO",
+      "chapters": [
+        311,
+        342
+      ],
+      "records": 185,
+      "date_window": [
+        "K067-03-01",
+        "K067-03-15"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-ITACHI",
+      "page": "Itachi Pursuit Mission",
+      "work": "NARUTO",
+      "chapters": [
+        343,
+        367
+      ],
+      "records": 155,
+      "date_window": [
+        "K067-04-01",
+        "K067-04-15"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-JIRAIYA",
+      "page": "Tale of Jiraiya the Gallant",
+      "work": "NARUTO",
+      "chapters": [
+        368,
+        383
+      ],
+      "records": 37,
+      "date_window": [
+        "K067-05-01",
+        "K067-05-08"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-BROTHERS",
+      "page": "Fated Battle Between Brothers",
+      "work": "NARUTO",
+      "chapters": [
+        384,
+        412
+      ],
+      "records": 98,
+      "date_window": [
+        "K067-06-01",
+        "K067-06-12"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-PAIN",
+      "page": "Pain's Assault (Arc)",
+      "work": "NARUTO",
+      "chapters": [
+        413,
+        453
+      ],
+      "records": 132,
+      "date_window": [
+        "K067-08-01",
+        "K067-08-20"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-KAGE",
+      "page": "Five Kage Summit (Arc)",
+      "work": "NARUTO",
+      "chapters": [
+        454,
+        483
+      ],
+      "records": 109,
+      "date_window": [
+        "K067-09-01",
+        "K067-09-15"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-COUNTDOWN",
+      "page": "Fourth Shinobi World War: Countdown",
+      "work": "NARUTO",
+      "chapters": [
+        484,
+        515
+      ],
+      "records": 240,
+      "date_window": [
+        "K067-10-01",
+        "K067-12-30"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-CONFRONT",
+      "page": "Fourth Shinobi World War: Confrontation",
+      "work": "NARUTO",
+      "chapters": [
+        516,
+        559
+      ],
+      "records": 192,
+      "date_window": [
+        "K068-01-01",
+        "K068-01-01"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-CLIMAX",
+      "page": "Fourth Shinobi World War: Climax",
+      "work": "NARUTO",
+      "chapters": [
+        560,
+        639
+      ],
+      "records": 671,
+      "date_window": [
+        "K068-01-02",
+        "K068-01-02"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-JINCHURIKI",
+      "page": "Birth of the Ten-Tails' Jinchūriki",
+      "work": "NARUTO",
+      "chapters": [
+        640,
+        677
+      ],
+      "records": 297,
+      "date_window": [
+        "K068-01-03",
+        "K068-01-03"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "NAR-P2-KAGUYA",
+      "page": "Kaguya Ōtsutsuki Strikes",
+      "work": "NARUTO",
+      "chapters": [
+        678,
+        699
+      ],
+      "records": 199,
+      "date_window": [
+        "K068-01-04",
+        "K068-01-04"
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "code": "BOR-SARADA",
+      "page": "Sarada Uchiha Arc",
+      "work": "NARUTO GAIDEN",
+      "chapters": [
+        701,
+        710
+      ],
+      "records": 116,
+      "date_window": [
+        "K082-08-01",
+        "K082-08-10"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-MOMOSHIKI",
+      "page": "Versus Momoshiki Arc",
+      "work": "BORUTO",
+      "chapters": [
+        1,
+        10
+      ],
+      "records": 276,
+      "date_window": [
+        "K083-03-01",
+        "K083-03-15"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-MUJINA",
+      "page": "Mujina Bandits Arc",
+      "work": "BORUTO",
+      "chapters": [
+        11,
+        15
+      ],
+      "records": 4,
+      "date_window": [
+        "K083-04-01",
+        "K083-04-10"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-AO",
+      "page": "Ao Arc",
+      "work": "BORUTO",
+      "chapters": [
+        16,
+        23
+      ],
+      "records": 113,
+      "date_window": [
+        "K083-05-01",
+        "K083-05-15"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-KAWAKI",
+      "page": "Kawaki Arc",
+      "work": "BORUTO",
+      "chapters": [
+        24,
+        55
+      ],
+      "records": 193,
+      "date_window": [
+        "K083-06-01",
+        "K084-06-30"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-CODE",
+      "page": "Code's Assault Arc",
+      "work": "BORUTO",
+      "chapters": [
+        56,
+        67
+      ],
+      "records": 39,
+      "date_window": [
+        "K085-01-01",
+        "K085-03-30"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-OMNIPOTENCE",
+      "page": "Omnipotence Arc",
+      "work": "BORUTO",
+      "chapters": [
+        68,
+        80
+      ],
+      "records": 4,
+      "date_window": [
+        "K085-04-01",
+        "K085-06-30"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-RETURN",
+      "page": "Boruto's Return Arc",
+      "work": "BORUTO TWO BLUE VORTEX",
+      "chapters": [
+        1,
+        15
+      ],
+      "records": 10,
+      "date_window": [
+        "K086-01-01",
+        "K086-04-30"
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "code": "BOR-MATSURI",
+      "page": "Matsuri and Ryū Arc",
+      "work": "BORUTO TWO BLUE VORTEX",
+      "chapters": [
+        16,
+        25
+      ],
+      "records": 3,
+      "date_window": [
+        "K086-05-01",
+        "K086-07-30"
+      ],
+      "continuity": "boruto_manga"
+    }
+  ],
+  "total_records": 4226
+}

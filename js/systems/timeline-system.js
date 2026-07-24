@@ -1,10 +1,37 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
-import { instructionParser } from '../core/instruction-parser.js';
+import {
+  assertTimelineSave,
+  findForbiddenTimelineMedia,
+  sanitizeTimelinePersistenceValue,
+  sanitizeTimelineSnapshot
+} from '../core/timeline-save-schema.js';
+import {
+  diffContinuityLedgers,
+  prepareContinuityCommit,
+  remapContinuityDelta,
+  remapContinuityLedger
+} from '../core/continuity-ledger.js';
 import { formatGameTime, generateId, generateNodeId, truncate, getNextBranchColor, deepClone } from '../utils/format.js';
 
 const ARCHIVE_THRESHOLD = 100;
 const ARCHIVE_ANCESTOR_KEEP = 20;
+const IMAGE_STATE_SNAPSHOT_SLICES = new Set(['_relationships', '_image_worldbook_overlay']);
+
+function buildIllustrationMedia(nodeId, imageContract = null) {
+  return {
+    illustration: {
+      contract_id: imageContract ? `turn:${nodeId}:visual-contract:v1` : null,
+      contract: imageContract
+        ? sanitizeTimelinePersistenceValue(imageContract, `timeline_node.${nodeId}.media.illustration.contract`)
+        : null,
+      selected_asset_id: null,
+      version_group_id: `turn:${nodeId}:illustration`,
+      binding_revision: 0,
+      updated_at: Date.now()
+    }
+  };
+}
 
 class TimelineSystem {
   constructor() {
@@ -17,6 +44,7 @@ class TimelineSystem {
   async init() {
     if (this._initialized) return;
     await stateManager.initDB();
+    await this._sanitizeStoredTimelineNodes();
     const meta = await stateManager.dbGet('timeline_meta', 'root');
     if (meta) {
       const metaState = stateManager.getSub('_meta') || {};
@@ -27,9 +55,18 @@ class TimelineSystem {
     this._initialized = true;
   }
 
-  async createRootNode({ summary, stateSnapshot, chatHistory = [] }) {
+  async createRootNode({ summary, stateSnapshot, chatHistory = [], continuityDelta = [] }) {
     const nodeId = generateNodeId(1);
-    const snapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, 'branch_main');
+    const createdAt = Date.now();
+    const baseSnapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, 'branch_main');
+    const { snapshot, delta: committedContinuityDelta } = this._prepareContinuitySnapshot(baseSnapshot, {
+      nodeId,
+      branchId: 'branch_main',
+      turnNumber: 1,
+      gameTime: stateSnapshot?.['世界·时间'] || '',
+      recordedAt: createdAt,
+      continuityDelta
+    });
     const node = {
       id: nodeId,
       parent_id: null,
@@ -37,25 +74,25 @@ class TimelineSystem {
       branch_id: 'branch_main',
       turn_number: 1,
       depth: 0,
-      real_timestamp: Date.now(),
+      real_timestamp: createdAt,
       game_time: stateSnapshot?.['世界·时间']
         ? formatGameTime(stateSnapshot['世界·时间'])
         : '游戏开始',
       player_input: '(游戏开始 - 角色创建完成)',
       ai_response_summary: summary || '冒险开始',
       state_snapshot: snapshot,
+      continuity_delta: committedContinuityDelta,
+      continuity_revision: snapshot._continuity.revision,
       chat_history_delta: deepClone(chatHistory).slice(-40),
       chat_history: null,
       summary: summary || '冒险开始',
       tags: [],
       is_checkpoint: false,
-      created_at: Date.now(),
+      created_at: createdAt,
       accessed_count: 0,
       archived: false,
       archived_at: null
     };
-
-    await stateManager.dbPut('timeline_nodes', node);
 
     const branch = {
       id: 'branch_main',
@@ -69,17 +106,17 @@ class TimelineSystem {
       node_count: 1,
       is_active: true
     };
-    await stateManager.dbPut('timeline_branches', branch);
-
-    await stateManager.dbPut('timeline_meta', {
+    const metaEntry = {
       key: 'root',
       value: { root_id: nodeId, current_id: nodeId, active_branch: 'branch_main', total_nodes: 1 }
-    });
+    };
+    await this._commitInitialTimeline(node, branch, metaEntry);
 
     const metaState = stateManager.getSub('_meta') || {};
     metaState.current_node_id = nodeId;
     metaState.active_branch = 'branch_main';
     stateManager.setSub('_meta', metaState);
+    this._commitLiveContinuity(node);
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:node-created', node);
@@ -88,7 +125,7 @@ class TimelineSystem {
     return node;
   }
 
-  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null }) {
+  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null, imageContract = null, continuityDelta = [] }) {
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     const activeBranch = meta.active_branch;
@@ -96,107 +133,188 @@ class TimelineSystem {
 
     if (!currentId) {
       const nodeId = generateNodeId(turnCount);
-      const snapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, 'branch_main');
+      const createdAt = Date.now();
+      const baseSnapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, 'branch_main');
+      const { snapshot, delta: committedContinuityDelta } = this._prepareContinuitySnapshot(baseSnapshot, {
+        nodeId,
+        branchId: 'branch_main',
+        turnNumber: turnCount,
+        gameTime: stateSnapshot?.['世界·时间'] || '',
+        recordedAt: createdAt,
+        continuityDelta
+      });
       const cleanAiResponse = (aiResponse || '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]*>/g, '').trim();
       const cleanPlayerInput = (playerInput || '').replace(/<[^>]*>/g, '').trim();
       const summary = truncate(memorySummary || cleanAiResponse || cleanPlayerInput, 200);
       const delta = this._extractChatDelta(chatHistory);
       const node = {
         id: nodeId, parent_id: null, children_ids: [], branch_id: 'branch_main',
-        turn_number: turnCount, depth: 0, real_timestamp: Date.now(),
+        turn_number: turnCount, depth: 0, real_timestamp: createdAt,
         game_time: stateSnapshot?.['世界·时间'] ? formatGameTime(stateSnapshot['世界·时间']) : '游戏开始',
         player_input: truncate(cleanPlayerInput, 200),
         ai_response_summary: truncate(cleanAiResponse, 200),
         clean_response: cleanResponse || aiResponse || '',
+        media: buildIllustrationMedia(nodeId, imageContract),
         state_snapshot: snapshot,
+        continuity_delta: committedContinuityDelta,
+        continuity_revision: snapshot._continuity.revision,
         chat_history_delta: delta,
         chat_history: null,
-        summary: summary, tags: [], is_checkpoint: true, created_at: Date.now(), accessed_count: 0,
+        summary: summary, tags: [], is_checkpoint: true, created_at: createdAt, accessed_count: 0,
         archived: false, archived_at: null
       };
-      await stateManager.dbPut('timeline_nodes', node);
       const branch = { id: 'branch_main', name: '主线', color: '#eb613f', description: '默认时间线', created_at: Date.now(), diverged_from: null, diverged_at_turn: null, head_node_id: nodeId, node_count: 1, is_active: true };
-      await stateManager.dbPut('timeline_branches', branch);
-      await stateManager.dbPut('timeline_meta', { key: 'root', value: { root_id: nodeId, current_id: nodeId, active_branch: 'branch_main', total_nodes: 1 } });
+      const metaEntry = { key: 'root', value: { root_id: nodeId, current_id: nodeId, active_branch: 'branch_main', total_nodes: 1 } };
+      await this._commitInitialTimeline(node, branch, metaEntry);
       const metaState = stateManager.getSub('_meta') || {};
       metaState.current_node_id = nodeId;
       metaState.active_branch = 'branch_main';
       stateManager.setSub('_meta', metaState);
+      this._commitLiveContinuity(node);
       this._cacheTreeSummary();
       eventBus.emit('timeline:node-created', node);
       eventBus.emit('timeline:branch-created', branch);
       return node;
     }
 
-    const parentNode = await stateManager.dbGet('timeline_nodes', currentId);
-    if (!parentNode) return null;
-
-    let branchId = activeBranch;
-    if (this._pendingBranchFrom === currentId && parentNode.children_ids.length > 0) {
-      const branch = await this._createBranchFromNode(parentNode);
-      branchId = branch.id;
-      this._pendingBranchFrom = null;
-    }
-
     const nodeId = generateNodeId(turnCount);
-    const snapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, branchId);
     const cleanAiResponse = (aiResponse || '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]*>/g, '').trim();
     const cleanPlayerInput = (playerInput || '').replace(/<[^>]*>/g, '').trim();
     const summary = truncate(memorySummary || cleanPlayerInput || cleanAiResponse, 200);
     const delta = this._extractChatDelta(chatHistory);
+    const shouldCreateBranch = this._pendingBranchFrom === currentId;
+    const newBranchId = shouldCreateBranch ? generateId('branch') : null;
+    const expectedBranchId = activeBranch || 'branch_main';
+    const createdAt = Date.now();
+    const transactionResult = await stateManager.dbMutateTimeline(({ nodes, branches, meta: storedMetaEntry }) => {
+      if (!storedMetaEntry?.value) throw new Error('时间线元数据不存在，无法追加节点');
+      const parentNode = nodes.find(candidate => candidate.id === currentId);
+      if (!parentNode) throw new Error(`当前父节点不存在: ${currentId}`);
+      if (storedMetaEntry.value.current_id !== currentId) {
+        throw new Error('当前时间线节点已变化，本次追加请求已过期');
+      }
+      if (!Array.isArray(parentNode.children_ids)) throw new Error(`当前父节点 children_ids 无效: ${currentId}`);
+      if (nodes.some(candidate => candidate.id === nodeId)) throw new Error(`时间线节点 ID 已存在: ${nodeId}`);
 
-    const node = {
-      id: nodeId,
-      parent_id: currentId,
-      children_ids: [],
-      branch_id: branchId,
-      turn_number: turnCount,
-      depth: (parentNode.depth || 0) + 1,
-      real_timestamp: Date.now(),
-      game_time: stateSnapshot?.['世界·时间']
-        ? formatGameTime(stateSnapshot['世界·时间'])
-        : '',
-      player_input: truncate(cleanPlayerInput, 200),
-      ai_response_summary: truncate(cleanAiResponse, 200),
-      clean_response: cleanResponse || aiResponse || '',
-      state_snapshot: snapshot,
-      chat_history_delta: delta,
-      chat_history: null,
-      summary,
-      tags: [],
-      is_checkpoint: false,
-      created_at: Date.now(),
-      accessed_count: 0,
-      archived: false,
-      archived_at: null
-    };
+      const storedActiveBranch = storedMetaEntry.value.active_branch;
+      if (storedActiveBranch !== expectedBranchId) {
+        throw new Error('当前活动分支已变化，本次追加请求已过期');
+      }
+      const currentBranch = branches.find(candidate => candidate.id === storedActiveBranch);
+      if (!currentBranch) throw new Error(`活动分支不存在: ${storedActiveBranch}`);
 
-    if (!parentNode.children_ids.includes(nodeId)) {
-      parentNode.children_ids.push(nodeId);
-    }
+      const createBranch = shouldCreateBranch && parentNode.children_ids.length > 0;
+      const branchId = createBranch ? newBranchId : storedActiveBranch;
+      const baseSnapshot = this._buildNodeSnapshot(stateSnapshot, nodeId, branchId);
+      const { snapshot, delta: committedContinuityDelta } = this._prepareContinuitySnapshot(baseSnapshot, {
+        parentNode,
+        nodeId,
+        branchId,
+        turnNumber: turnCount,
+        gameTime: stateSnapshot?.['世界·时间'] || '',
+        recordedAt: createdAt,
+        continuityDelta
+      });
+      const node = {
+        id: nodeId,
+        parent_id: currentId,
+        children_ids: [],
+        branch_id: branchId,
+        turn_number: turnCount,
+        depth: (parentNode.depth || 0) + 1,
+        real_timestamp: createdAt,
+        game_time: stateSnapshot?.['世界·时间']
+          ? formatGameTime(stateSnapshot['世界·时间'])
+          : '',
+        player_input: truncate(cleanPlayerInput, 200),
+        ai_response_summary: truncate(cleanAiResponse, 200),
+        clean_response: cleanResponse || aiResponse || '',
+        media: buildIllustrationMedia(nodeId, imageContract),
+        state_snapshot: snapshot,
+        continuity_delta: committedContinuityDelta,
+        continuity_revision: snapshot._continuity.revision,
+        chat_history_delta: delta,
+        chat_history: null,
+        summary,
+        tags: [],
+        is_checkpoint: false,
+        created_at: createdAt,
+        accessed_count: 0,
+        archived: false,
+        archived_at: null
+      };
+      const updatedParent = {
+        ...parentNode,
+        children_ids: [...parentNode.children_ids, nodeId]
+      };
 
-    await stateManager.dbPut('timeline_nodes', node);
-    await stateManager.dbPut('timeline_nodes', parentNode);
+      let createdBranch = null;
+      let branchesToCommit;
+      if (createBranch) {
+        if (branches.some(branch => branch.id === newBranchId)) {
+          throw new Error(`时间线分支 ID 已存在: ${newBranchId}`);
+        }
+        createdBranch = {
+          id: newBranchId,
+          name: `IF线·${parentNode.summary || '新选择'}`,
+          color: getNextBranchColor(),
+          description: `从"${parentNode.summary || ''}"分歧`,
+          created_at: Date.now(),
+          diverged_from: parentNode.id,
+          diverged_at_turn: parentNode.turn_number,
+          head_node_id: nodeId,
+          node_count: 1,
+          is_active: true
+        };
+        branchesToCommit = [
+          ...branches.filter(branch => branch.is_active === true).map(branch => ({ ...branch, is_active: false })),
+          createdBranch
+        ];
+      } else {
+        if (!Number.isInteger(currentBranch.node_count) || currentBranch.node_count < 0) {
+          throw new Error(`活动分支 node_count 无效: ${branchId}`);
+        }
+        branchesToCommit = [{
+          ...currentBranch,
+          head_node_id: nodeId,
+          node_count: currentBranch.node_count + 1,
+          is_active: true
+        }];
+      }
 
-    const branch = await stateManager.dbGet('timeline_branches', branchId);
-    if (branch) {
-      branch.head_node_id = nodeId;
-      branch.node_count = (branch.node_count || 0) + 1;
-      await stateManager.dbPut('timeline_branches', branch);
-    }
-
-    const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
-    if (metaEntry) {
-      metaEntry.value.current_id = nodeId;
-      metaEntry.value.active_branch = branchId;
-      metaEntry.value.total_nodes = (metaEntry.value.total_nodes || 0) + 1;
-      await stateManager.dbPut('timeline_meta', metaEntry);
+      if (!Number.isInteger(storedMetaEntry.value.total_nodes) || storedMetaEntry.value.total_nodes < 0) {
+        throw new Error('时间线元数据 total_nodes 无效');
+      }
+      const metaEntry = {
+        ...storedMetaEntry,
+        value: {
+          ...storedMetaEntry.value,
+          current_id: nodeId,
+          active_branch: branchId,
+          total_nodes: storedMetaEntry.value.total_nodes + 1
+        }
+      };
+      return {
+        nodes: [node, updatedParent],
+        branches: branchesToCommit,
+        meta: metaEntry,
+        result: { node, createdBranch, branchId }
+      };
+    }, {
+      nodeKeys: [currentId, nodeId],
+      branchKeys: shouldCreateBranch ? null : [expectedBranchId]
+    });
+    const { node, createdBranch, branchId } = transactionResult;
+    if (createdBranch) {
+      this._pendingBranchFrom = null;
+      eventBus.emit('timeline:branch-created', createdBranch);
     }
 
     const metaState = stateManager.getSub('_meta') || {};
     metaState.current_node_id = nodeId;
     metaState.active_branch = branchId;
     stateManager.setSub('_meta', metaState);
+    this._commitLiveContinuity(node);
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:node-created', node);
@@ -205,9 +323,160 @@ class TimelineSystem {
     return node;
   }
 
+  async setIllustrationContract(nodeId, imageContract) {
+    const updatedNode = await stateManager.dbMutateTimeline(({ nodes }) => {
+      const node = nodes.find(candidate => candidate?.id === nodeId);
+      if (!node) {
+        const error = new Error(`时间线节点不存在: ${nodeId}`);
+        error.code = 'TARGET_GONE';
+        throw error;
+      }
+      const current = node.media?.illustration || buildIllustrationMedia(nodeId).illustration;
+      const updated = {
+        ...node,
+        media: {
+          ...(node.media || {}),
+          illustration: {
+            ...current,
+            contract_id: imageContract ? `turn:${nodeId}:visual-contract:v1` : null,
+            contract: imageContract
+              ? sanitizeTimelinePersistenceValue(imageContract, `timeline_node.${nodeId}.media.illustration.contract`)
+              : null,
+            updated_at: Date.now()
+          }
+        }
+      };
+      return { nodes: [updated], result: updated };
+    }, { nodeKeys: [nodeId], branchKeys: [] });
+    this._nodeCache.set(nodeId, updatedNode);
+    eventBus.emit('timeline:media-changed', { nodeId, media: updatedNode.media });
+    return updatedNode.media.illustration;
+  }
+
+  async bindIllustration(nodeId, {
+    assetId = null,
+    expectedRevision = null,
+    authoritativeRevision = null,
+    versionGroupId = null,
+    jobId = null
+  } = {}) {
+    const mutation = await stateManager.dbMutateTimeline(({ nodes }) => {
+      const node = nodes.find(candidate => candidate?.id === nodeId);
+      if (!node) return { result: { status: 'missing', nodeId } };
+      const current = node.media?.illustration || buildIllustrationMedia(nodeId).illustration;
+      const revision = Number(current.binding_revision) || 0;
+      const hasAuthoritativeRevision = authoritativeRevision !== null
+        && Number.isSafeInteger(Number(authoritativeRevision))
+        && Number(authoritativeRevision) >= 0;
+      const remoteRevision = hasAuthoritativeRevision ? Number(authoritativeRevision) : null;
+      if (hasAuthoritativeRevision && remoteRevision < revision) {
+        return { result: { status: 'stale', nodeId, revision, selectedAssetId: current.selected_asset_id || null } };
+      }
+      if (!hasAuthoritativeRevision && expectedRevision !== null && Number(expectedRevision) !== revision) {
+        return { result: { status: 'stale', nodeId, revision, selectedAssetId: current.selected_asset_id || null } };
+      }
+      if (hasAuthoritativeRevision
+        && remoteRevision === revision
+        && (current.selected_asset_id || null) === (assetId || null)) {
+        return { result: { status: 'unchanged', nodeId, ...current } };
+      }
+      const illustration = {
+        ...current,
+        selected_asset_id: assetId || null,
+        version_group_id: versionGroupId || current.version_group_id || `turn:${nodeId}:illustration`,
+        binding_revision: hasAuthoritativeRevision ? remoteRevision : revision + 1,
+        last_job_id: jobId || current.last_job_id || null,
+        updated_at: Date.now()
+      };
+      const updated = { ...node, media: { ...(node.media || {}), illustration } };
+      return { nodes: [updated], result: { status: 'updated', node: updated, illustration } };
+    }, { nodeKeys: [nodeId], branchKeys: [] });
+    if (mutation.status !== 'updated') return mutation;
+    this._nodeCache.set(nodeId, mutation.node);
+    eventBus.emit('timeline:media-changed', { nodeId, media: mutation.node.media });
+    return { status: 'updated', ...mutation.illustration };
+  }
+
+  async syncCurrentImageStateSlices(sliceKeys = []) {
+    if (!Array.isArray(sliceKeys)) throw new TypeError('图片状态切片必须是数组');
+    const requested = [...new Set(sliceKeys.map(String))];
+    const unsupported = requested.filter(key => !IMAGE_STATE_SNAPSHOT_SLICES.has(key));
+    if (unsupported.length) throw new TypeError(`不允许同步到时间线的图片状态切片: ${unsupported.join(', ')}`);
+    if (!requested.length) return { status: 'noop', slices: [] };
+
+    const liveMeta = stateManager.getSub('_meta') || {};
+    const nodeId = liveMeta.current_node_id;
+    if (!nodeId) return { status: 'missing-current', slices: requested };
+
+    // Capture and validate before opening the IndexedDB transaction. The
+    // transaction mutator must stay synchronous, and image bytes belong in the
+    // dedicated image store rather than a timeline/save snapshot.
+    const captured = Object.fromEntries(requested.map(key => [
+      key,
+      sanitizeTimelinePersistenceValue(stateManager.getSub(key), `state_snapshot.${key}`)
+    ]));
+
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, meta }) => {
+      if (meta?.value?.current_id !== nodeId) {
+        return {
+          result: {
+            status: 'stale',
+            nodeId,
+            currentNodeId: meta?.value?.current_id || null,
+            slices: requested
+          }
+        };
+      }
+      const node = nodes.find(candidate => candidate?.id === nodeId);
+      if (!node) return { result: { status: 'missing', nodeId, slices: requested } };
+      if (!node.state_snapshot || typeof node.state_snapshot !== 'object'
+        || Array.isArray(node.state_snapshot)) {
+        return { result: { status: 'invalid-snapshot', nodeId, slices: requested } };
+      }
+      const stateSnapshot = deepClone(node.state_snapshot);
+      for (const key of requested) stateSnapshot[key] = captured[key];
+      const updatedNode = { ...node, state_snapshot: stateSnapshot };
+      return {
+        nodes: [updatedNode],
+        result: { status: 'updated', nodeId, slices: requested, node: updatedNode }
+      };
+    }, { nodeKeys: [nodeId], branchKeys: [] });
+
+    if (mutation.status !== 'updated') return mutation;
+    this._nodeCache.set(nodeId, mutation.node);
+    eventBus.emit('timeline:image-state-synced', { nodeId, slices: requested });
+    return { status: 'updated', nodeId, slices: requested };
+  }
+
+  async _commitInitialTimeline(node, branch, metaEntry) {
+    return await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
+      if (meta || nodes.length > 0 || branches.length > 0) {
+        throw new Error('时间线已经初始化，本次根节点创建请求已过期');
+      }
+      return {
+        nodes: [node],
+        branches: [branch],
+        meta: metaEntry,
+        result: node
+      };
+    });
+  }
+
+  async _sanitizeStoredTimelineNodes() {
+    const updatedNodes = await stateManager.dbMutateTimeline(({ nodes }) => {
+      const updates = nodes
+        .filter(node => findForbiddenTimelineMedia(node, `timeline_node.${node?.id || 'unknown'}`))
+        .map(node => sanitizeTimelinePersistenceValue(node, `timeline_node.${node?.id || 'unknown'}`));
+      return { nodes: updates, result: updates };
+    }, { branchKeys: [] });
+    for (const node of updatedNodes) this._nodeCache.set(node.id, node);
+    return updatedNodes.length;
+  }
+
   async pruneForward(targetNodeId) {
     const targetNode = await stateManager.dbGet('timeline_nodes', targetNodeId);
     if (!targetNode) throw new Error('目标节点不存在');
+    const preparedRestore = this._prepareNodeRestore(targetNode);
 
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
@@ -232,6 +501,7 @@ class TimelineSystem {
     }
 
     if (descendantIds.size === 0 && targetNodeId === currentId) {
+      stateManager.commitPreparedRestore(preparedRestore);
       return { pruned: 0, restored: true };
     }
 
@@ -239,6 +509,9 @@ class TimelineSystem {
     for (const id of descendantIds) {
       await stateManager.dbDelete('timeline_nodes', id);
       this._nodeCache.delete(id);
+    }
+    if (descendantIds.size) {
+      eventBus.emit('timeline:nodes-deleted', { nodeIds: [...descendantIds], reason: 'prune' });
     }
 
     targetNode.children_ids = [];
@@ -258,11 +531,7 @@ class TimelineSystem {
       await stateManager.dbPut('timeline_meta', metaEntry);
     }
 
-    if (targetNode.state_snapshot) {
-      stateManager.restore(deepClone(targetNode.state_snapshot));
-    } else {
-      await this._replayStateFromAncestor(targetNode);
-    }
+    stateManager.commitPreparedRestore(preparedRestore);
 
     const metaState = stateManager.getSub('_meta') || {};
     metaState.current_node_id = targetNodeId;
@@ -294,12 +563,8 @@ class TimelineSystem {
 
     const targetNode = await stateManager.dbGet('timeline_nodes', targetNodeId);
     if (!targetNode) throw new Error('目标节点不存在');
-
-    if (targetNode.state_snapshot) {
-      stateManager.restore(deepClone(targetNode.state_snapshot));
-    } else {
-      await this._replayStateFromAncestor(targetNode);
-    }
+    const preparedRestore = this._prepareNodeRestore(targetNode);
+    stateManager.commitPreparedRestore(preparedRestore);
 
     const metaState = stateManager.getSub('_meta') || {};
     metaState.current_node_id = targetNodeId;
@@ -316,6 +581,7 @@ class TimelineSystem {
       metaEntry.value.active_branch = targetNode.branch_id || 'branch_main';
       await stateManager.dbPut('timeline_meta', metaEntry);
     }
+    await this._setActiveBranchFlags(targetNode.branch_id || 'branch_main');
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:jumped', {
@@ -358,23 +624,17 @@ class TimelineSystem {
     if (oldBranchId === branchId) return;
     this._pendingBranchFrom = null;
 
-    const oldBranch = await stateManager.dbGet('timeline_branches', oldBranchId);
-    if (oldBranch) {
-      oldBranch.is_active = false;
-      await stateManager.dbPut('timeline_branches', oldBranch);
-    }
-
-    branch.is_active = true;
-    await stateManager.dbPut('timeline_branches', branch);
-
+    let headNode = null;
+    let preparedRestore = null;
     if (branch.head_node_id) {
-      const headNode = await stateManager.dbGet('timeline_nodes', branch.head_node_id);
-      if (headNode?.state_snapshot) {
-        stateManager.restore(deepClone(headNode.state_snapshot));
-      } else if (headNode) {
-        await this._replayStateFromAncestor(headNode);
-      }
+      headNode = await stateManager.dbGet('timeline_nodes', branch.head_node_id);
+      if (!headNode) throw new Error('分支头节点不存在');
+      preparedRestore = this._prepareNodeRestore(headNode);
     }
+
+    await this._setActiveBranchFlags(branchId);
+
+    if (preparedRestore) stateManager.commitPreparedRestore(preparedRestore);
 
     meta.active_branch = branchId;
     meta.current_node_id = branch.head_node_id || meta.current_node_id;
@@ -389,6 +649,15 @@ class TimelineSystem {
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:branch-switched', { from: oldBranchId, to: branchId });
+  }
+
+  async _setActiveBranchFlags(branchId) {
+    const branches = await stateManager.dbGetAll('timeline_branches');
+    for (const branch of branches) {
+      const shouldBeActive = branch.id === branchId;
+      if (branch.is_active === shouldBeActive) continue;
+      await stateManager.dbPut('timeline_branches', { ...branch, is_active: shouldBeActive });
+    }
   }
 
   _extractChatDelta(chatHistory) {
@@ -513,72 +782,69 @@ class TimelineSystem {
   }
 
   async _replayStateFromAncestor(targetNode) {
-    const chain = [];
-    let cursor = targetNode;
-    let safety = 0;
-    while (cursor && safety < 200) {
-      chain.unshift(cursor);
-      if (!cursor.parent_id) break;
-      cursor = await stateManager.dbGet('timeline_nodes', cursor.parent_id);
-      safety++;
-    }
+    stateManager.commitPreparedRestore(this._prepareNodeRestore(targetNode));
+    return 0;
+  }
 
-    let startIdx = -1;
-    for (let i = chain.length - 1; i >= 0; i--) {
-      if (chain[i].state_snapshot && !chain[i].archived) {
-        startIdx = i;
-        break;
-      }
+  _prepareNodeRestore(node) {
+    const snapshot = node?.state_snapshot;
+    if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+      throw new Error(`节点 ${node?.id || 'unknown'} 缺少完整状态快照，无法精确恢复`);
     }
-    if (startIdx === -1) {
-      for (let i = chain.length - 1; i >= 0; i--) {
-        if (chain[i].state_snapshot) {
-          startIdx = i;
-          break;
-        }
-      }
-    }
-    if (startIdx === -1) {
-      throw new Error('无法找到祖先快照,无法精确恢复此回合');
-    }
-
-    stateManager.restore(deepClone(chain[startIdx].state_snapshot));
-
-    for (let i = startIdx + 1; i < chain.length; i++) {
-      const node = chain[i];
-      if (node.state_snapshot && !node.archived) {
-        stateManager.restore(deepClone(node.state_snapshot));
-      } else {
-        const raw = node.clean_response || node.ai_response_summary || '';
-        if (raw) {
-          const instructions = instructionParser.parse(raw);
-          const variables = instructions.variables || [];
-          if (variables.length > 0) {
-            const applied = variables.filter(v => v && ((typeof v.key === 'string' && v.key.trim() && ['=', '+', '-'].includes(v.op)) || (typeof v.path === 'string' && v.path.trim() && ['set', 'add', 'sub', 'assign', 'push', 'remove'].includes(v.op))));
-            if (applied.length) stateManager.batchUpdate(applied);
-          }
-        }
-      }
-    }
-    return chain.length - startIdx - 1;
+    return stateManager.prepareRestore(snapshot);
   }
 
   _buildNodeSnapshot(stateSnapshot, nodeId, branchId) {
-    const snapshot = deepClone(stateSnapshot || {});
+    const source = stateSnapshot && typeof stateSnapshot === 'object' && !Array.isArray(stateSnapshot)
+      ? stateSnapshot
+      : stateManager.snapshot();
+    const snapshot = sanitizeTimelineSnapshot(source);
     if (!snapshot._meta) snapshot._meta = {};
     snapshot._meta.current_node_id = nodeId;
     snapshot._meta.active_branch = branchId;
     return snapshot;
   }
 
+  _prepareContinuitySnapshot(snapshot, {
+    parentNode = null,
+    nodeId,
+    branchId,
+    turnNumber = 0,
+    gameTime = '',
+    recordedAt = Date.now(),
+    continuityDelta = []
+  } = {}) {
+    const prepared = prepareContinuityCommit({
+      ledger: snapshot?._continuity,
+      legacyMemory: snapshot?._memory,
+      events: continuityDelta,
+      context: {
+        nodeId,
+        branchId,
+        turn: Number.isInteger(turnNumber) ? Math.max(0, turnNumber) : 0,
+        gameTime,
+        recordedAt,
+        source: 'turn_commit'
+      }
+    });
+    snapshot._continuity = prepared.ledger;
+    const parentLedger = parentNode?.state_snapshot?._continuity;
+    return {
+      snapshot,
+      delta: diffContinuityLedgers(parentLedger, prepared.ledger)
+    };
+  }
+
+  _commitLiveContinuity(node) {
+    const ledger = node?.state_snapshot?._continuity;
+    if (ledger) stateManager.setSub('_continuity', deepClone(ledger));
+  }
+
   async _createBranchFromNode(parentNode) {
     const meta = stateManager.getSub('_meta') || {};
     const oldBranchId = meta.active_branch;
     const oldBranch = await stateManager.dbGet('timeline_branches', oldBranchId);
-    if (oldBranch) {
-      oldBranch.is_active = false;
-      await stateManager.dbPut('timeline_branches', oldBranch);
-    }
+    const previousBranch = oldBranch ? { ...oldBranch, is_active: false } : null;
 
     const newBranch = {
       id: generateId('branch'),
@@ -592,9 +858,7 @@ class TimelineSystem {
       node_count: 0,
       is_active: true
     };
-    await stateManager.dbPut('timeline_branches', newBranch);
-    eventBus.emit('timeline:branch-created', newBranch);
-    return newBranch;
+    return { branch: newBranch, previousBranch };
   }
 
   _cacheTreeSummary() {
@@ -609,6 +873,13 @@ class TimelineSystem {
   }
 
   async getExportData({ includeArchive = false } = {}) {
+    // Export/cloud-save is an explicit consistency boundary. Flush both small
+    // live image slices first so an export started immediately after a profile
+    // edit cannot race the event-driven persistence listener.
+    await this.syncCurrentImageStateSlices([
+      '_relationships',
+      '_image_worldbook_overlay'
+    ]);
     const allNodes = await this.getAllNodes();
     const branches = await this.getAllBranches();
     const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
@@ -616,21 +887,21 @@ class TimelineSystem {
     const nodes = includeArchive
       ? allNodes.map(n => { const { memory_snapshot, ...rest } = n; return rest; })
       : allNodes.map(n => {
-          const { memory_snapshot, chat_history, chat_history_delta, ...rest } = n;
+          const { memory_snapshot, chat_history, ...rest } = n;
           if (n.archived) {
-            return { ...rest, archived: true, state_snapshot: null };
+            return { ...rest, archived: true };
           }
           return { ...rest, chat_history: null };
         });
 
-    return {
+    return sanitizeTimelinePersistenceValue({
       export_version: '2.0',
       exported_at: new Date().toISOString(),
       include_archive: includeArchive,
       meta: metaEntry,
       branches,
       nodes
-    };
+    }, 'timeline_export');
   }
 
   async exportTimeline({ includeArchive = false } = {}) {
@@ -654,61 +925,163 @@ class TimelineSystem {
     }
     if (migrated.archived === undefined) migrated.archived = false;
     if (migrated.archived_at === undefined) migrated.archived_at = null;
-    return migrated;
+    if (migrated.continuity_delta === undefined) migrated.continuity_delta = [];
+    if (migrated.continuity_revision === undefined
+        && Number.isInteger(migrated.state_snapshot?._continuity?.revision)) {
+      migrated.continuity_revision = migrated.state_snapshot._continuity.revision;
+    }
+    return sanitizeTimelinePersistenceValue(migrated, `timeline_node.${migrated.id || 'unknown'}`);
   }
 
-  async importTimeline(data, { mode = 'overwrite' } = {}) {
-    if (!data || typeof data !== 'object') throw new Error('存档格式无效');
-    const incomingNodes = Array.isArray(data.nodes) ? data.nodes : [];
-    const incomingBranches = Array.isArray(data.branches) ? data.branches : [];
-    if (!incomingNodes.length || !incomingBranches.length) throw new Error('存档缺少时间线节点或分支数据');
+  _normalizeImportedTimeline(nodes, branches, data) {
+    const wrappedMeta = data.meta && typeof data.meta === 'object' && !Array.isArray(data.meta)
+      && Object.prototype.hasOwnProperty.call(data.meta, 'value');
+    const rawMeta = wrappedMeta ? data.meta.value : (data.timeline?.meta ?? data.meta);
+    if (rawMeta != null && (typeof rawMeta !== 'object' || Array.isArray(rawMeta))) {
+      throw new Error('存档格式无效: 时间线元数据必须是 JSON 对象');
+    }
+    const importedMeta = rawMeta || {};
+    const migratedNodes = nodes.map((node, index) => {
+      const migrated = this._migrateNodeV1ToV2(node);
+      if (!migrated || typeof migrated !== 'object' || Array.isArray(migrated)) return migrated;
+      return {
+        ...migrated,
+        parent_id: migrated.parent_id ?? null,
+        turn_number: Number.isInteger(migrated.turn_number) ? migrated.turn_number : index,
+        children_ids: Array.isArray(migrated.children_ids)
+          ? [...migrated.children_ids]
+          : (migrated.children_ids == null ? [] : migrated.children_ids)
+      };
+    });
 
-    await stateManager.initDB();
-
-    if (mode === 'merge') {
-      return await this._importMerge(incomingNodes, incomingBranches, data);
+    const validNodes = migratedNodes.filter(node => node && typeof node === 'object' && !Array.isArray(node));
+    const validBranches = branches.filter(branch => branch && typeof branch === 'object' && !Array.isArray(branch));
+    const soleBranchId = validBranches.length === 1 ? validBranches[0].id : null;
+    for (let index = 0; index < validNodes.length; index++) {
+      const node = validNodes[index];
+      if (node.branch_id == null && soleBranchId) node.branch_id = soleBranchId;
     }
 
-    const migratedNodes = incomingNodes.map(n => this._migrateNodeV1ToV2(n));
-    if (!migratedNodes.some(n => n?.id)) throw new Error('存档节点数据无效');
-
-    await stateManager.dbClear('timeline_nodes');
-    await stateManager.dbClear('timeline_branches');
-    await stateManager.dbClear('timeline_meta');
-
-    for (const node of migratedNodes) {
-      if (node?.id) await stateManager.dbPut('timeline_nodes', node);
+    const nodeById = new Map(validNodes.filter(node => node.id).map(node => [node.id, node]));
+    const nodesMissingChildren = new Set(
+      nodes
+        .filter(node => node && typeof node === 'object' && !Array.isArray(node) && node.children_ids == null)
+        .map(node => node.id)
+        .filter(Boolean)
+    );
+    for (const node of validNodes) {
+      if (!node.parent_id || !nodeById.has(node.parent_id) || !nodesMissingChildren.has(node.parent_id)) continue;
+      const parent = nodeById.get(node.parent_id);
+      if (!parent.children_ids.includes(node.id)) parent.children_ids.push(node.id);
     }
 
-    const latestNode = [...migratedNodes].sort((a, b) => (b.turn_number || 0) - (a.turn_number || 0))[0];
-    const importedMeta = data.meta?.value || data.timeline?.meta || {};
-    const currentId = importedMeta.current_id && migratedNodes.some(n => n.id === importedMeta.current_id)
-      ? importedMeta.current_id
-      : latestNode.id;
-    const currentNode = migratedNodes.find(n => n.id === currentId) || latestNode;
-    const activeBranch = currentNode.branch_id || importedMeta.active_branch || 'branch_main';
-
-    for (const branch of incomingBranches) {
-      if (branch?.id) await stateManager.dbPut('timeline_branches', { ...branch, is_active: branch.id === activeBranch });
+    for (const node of validNodes) {
+      const visited = new Set();
+      let cursor = node;
+      let depth = 0;
+      let complete = true;
+      while (cursor.parent_id != null) {
+        if (visited.has(cursor.id)) {
+          complete = false;
+          break;
+        }
+        visited.add(cursor.id);
+        cursor = nodeById.get(cursor.parent_id);
+        if (!cursor) {
+          complete = false;
+          break;
+        }
+        depth++;
+      }
+      if (complete) node.depth = depth;
     }
 
+    const newestNode = candidates => candidates.reduce((latest, candidate) => {
+      if (!latest) return candidate;
+      const turnDelta = (candidate.turn_number || 0) - (latest.turn_number || 0);
+      if (turnDelta !== 0) return turnDelta > 0 ? candidate : latest;
+      const timeDelta = (candidate.created_at || candidate.real_timestamp || 0)
+        - (latest.created_at || latest.real_timestamp || 0);
+      return timeDelta >= 0 ? candidate : latest;
+    }, null);
+    const roots = validNodes.filter(node => node.parent_id == null);
+    const derivedRootId = roots.length === 1 ? roots[0].id : undefined;
+    const requestedActiveBranch = importedMeta.active_branch;
+    const requestedBranch = validBranches.find(branch => branch.id === requestedActiveBranch);
+    const requestedHead = requestedBranch ? nodeById.get(requestedBranch.head_node_id) : null;
+    const derivedCurrentNode = importedMeta.current_id == null && requestedBranch
+      ? ((requestedHead?.branch_id === requestedBranch.id ? requestedHead : null)
+        || newestNode(validNodes.filter(node => node.branch_id === requestedBranch.id)))
+      : newestNode(validNodes);
+    const rootId = importedMeta.root_id ?? derivedRootId;
+    const currentId = importedMeta.current_id ?? derivedCurrentNode?.id;
+    const currentNode = nodeById.get(currentId);
+    const activeBranch = importedMeta.active_branch ?? currentNode?.branch_id ?? soleBranchId;
+
+    const normalizedBranches = branches.map(branch => {
+      if (!branch || typeof branch !== 'object' || Array.isArray(branch)) return branch;
+      const branchNodes = validNodes.filter(node => node.branch_id === branch.id);
+      const derivedHead = newestNode(branchNodes);
+      return {
+        ...branch,
+        color: branch.color || '#eb613f',
+        head_node_id: branch.head_node_id ?? derivedHead?.id,
+        node_count: branchNodes.length,
+        is_active: branch.id === activeBranch
+      };
+    });
     const metaEntry = {
       key: 'root',
       value: {
-        root_id: importedMeta.root_id || migratedNodes.find(n => !n.parent_id)?.id || migratedNodes[0].id,
+        ...importedMeta,
+        root_id: rootId,
         current_id: currentId,
         active_branch: activeBranch,
         total_nodes: migratedNodes.length
       }
     };
-    await stateManager.dbPut('timeline_meta', metaEntry);
+    const normalized = { nodes: migratedNodes, branches: normalizedBranches, meta: metaEntry };
+    assertTimelineSave(normalized);
+    return normalized;
+  }
 
-    await this._restoreImportedState(currentNode, migratedNodes);
+  async importTimeline(data, { mode = 'overwrite' } = {}) {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      throw new Error('存档格式无效: 存档根节点必须是 JSON 对象');
+    }
+    const incomingNodes = Array.isArray(data.nodes) ? data.nodes : [];
+    const incomingBranches = Array.isArray(data.branches) ? data.branches : [];
+    if (!incomingNodes.length || !incomingBranches.length) throw new Error('存档缺少时间线节点或分支数据');
 
-    const metaState = stateManager.getSub('_meta') || {};
-    metaState.current_node_id = currentId;
-    metaState.active_branch = activeBranch;
-    stateManager.setSub('_meta', metaState);
+    const normalized = this._normalizeImportedTimeline(incomingNodes, incomingBranches, data);
+
+    await stateManager.initDB();
+
+    if (mode === 'merge') {
+      return await this._importMerge(normalized.nodes, normalized.branches, normalized.meta);
+    }
+
+    const { nodes: migratedNodes, branches: normalizedBranches, meta: metaEntry } = normalized;
+    const currentId = metaEntry.value.current_id;
+    const activeBranch = metaEntry.value.active_branch;
+    const currentNode = migratedNodes.find(node => node.id === currentId);
+    const preparedRestore = this._prepareImportedState(currentNode, migratedNodes);
+    const preparedMeta = preparedRestore.state._meta && typeof preparedRestore.state._meta === 'object'
+      && !Array.isArray(preparedRestore.state._meta)
+      ? preparedRestore.state._meta
+      : {};
+    preparedRestore.state._meta = {
+      ...preparedMeta,
+      current_node_id: currentId,
+      active_branch: activeBranch
+    };
+
+    await stateManager.dbReplaceTimeline({
+      nodes: migratedNodes,
+      branches: normalizedBranches,
+      meta: metaEntry
+    });
+    stateManager.commitPreparedRestore(preparedRestore);
 
     this._pendingBranchFrom = null;
     this._initialized = true;
@@ -718,99 +1091,199 @@ class TimelineSystem {
     return currentNode;
   }
 
-  async _importMerge(incomingNodes, incomingBranches, data) {
-    const existingNodes = await stateManager.dbGetAll('timeline_nodes') || [];
-    const existingBranches = await stateManager.dbGetAll('timeline_branches') || [];
-    const existingNodeIds = new Set(existingNodes.map(n => n.id));
-    const existingBranchIds = new Set(existingBranches.map(b => b.id));
+  async _importMerge(incomingNodes, incomingBranches, incomingMeta) {
+    const imported = await stateManager.dbMutateTimeline(({ nodes: existingNodes, branches: existingBranches, meta: existingMeta }) => {
+      if (!existingMeta?.value) throw new Error('当前时间线元数据不存在，无法合并导入');
+      const attachmentNode = existingNodes.find(node => node.id === existingMeta.value.current_id);
+      if (!attachmentNode) throw new Error('当前时间线节点不存在，无法合并导入');
+      if (!Array.isArray(attachmentNode.children_ids)) throw new Error('当前时间线节点 children_ids 无效');
 
-    const branchIdMap = new Map();
-    for (const branch of incomingBranches) {
-      if (!branch?.id) continue;
-      let newId = branch.id;
-      let suffix = 0;
-      while (existingBranchIds.has(newId) || branchIdMap.has(newId)) {
-        suffix++;
-        newId = `${branch.id}_imp${suffix}`;
+      const existingNodeIds = new Set(existingNodes.map(node => node.id));
+      const existingBranchIds = new Set(existingBranches.map(branch => branch.id));
+      const branchIdMap = new Map();
+      for (const branch of incomingBranches) {
+        let newId = branch.id;
+        let suffix = 0;
+        while (existingBranchIds.has(newId)) newId = `${branch.id}_imp${++suffix}`;
+        branchIdMap.set(branch.id, newId);
+        existingBranchIds.add(newId);
       }
-      branchIdMap.set(branch.id, newId);
-      existingBranchIds.add(newId);
-    }
 
-    const nodeIdMap = new Map();
-    for (const node of incomingNodes) {
-      if (!node?.id) continue;
-      let newId = node.id;
-      let suffix = 0;
-      while (existingNodeIds.has(newId) || nodeIdMap.has(newId)) {
-        suffix++;
-        const parts = node.id.split('_');
-        if (parts.length >= 2) {
-          newId = `${parts[0]}_${parts[1]}_imp${suffix}`;
-        } else {
-          newId = `${node.id}_imp${suffix}`;
+      const nodeIdMap = new Map();
+      for (const node of incomingNodes) {
+        let newId = node.id;
+        let suffix = 0;
+        while (existingNodeIds.has(newId)) newId = `${node.id}_imp${++suffix}`;
+        nodeIdMap.set(node.id, newId);
+        existingNodeIds.add(newId);
+      }
+
+      // An imported timeline is attached below an existing node. Memory event
+      // IDs and their provenance therefore need the same collision-safe remap
+      // as node/branch IDs; cumulative ledgers repeat the same immutable IDs.
+      const incomingContinuityIds = new Set();
+      for (const node of incomingNodes) {
+        for (const event of node.continuity_delta || []) {
+          if (event?.event_id) incomingContinuityIds.add(event.event_id);
+        }
+        for (const event of node.state_snapshot?._continuity?.events || []) {
+          if (event?.event_id) incomingContinuityIds.add(event.event_id);
         }
       }
-      nodeIdMap.set(node.id, newId);
-      existingNodeIds.add(newId);
-    }
+      const eventIdMap = new Map();
+      const importEventPrefix = generateId('memory_import');
+      let importEventIndex = 0;
+      for (const eventId of incomingContinuityIds) {
+        eventIdMap.set(eventId, `${importEventPrefix}_${++importEventIndex}`);
+      }
 
-    for (const branch of incomingBranches) {
-      if (!branch?.id) continue;
-      const newBranchId = branchIdMap.get(branch.id);
-      const renamed = {
-        ...branch,
-        id: newBranchId,
-        name: `${branch.name || '导入分支'} (导入)`,
-        is_active: false,
-        head_node_id: branch.head_node_id ? nodeIdMap.get(branch.head_node_id) || null : null,
-        diverged_from: branch.diverged_from ? nodeIdMap.get(branch.diverged_from) || null : null
+      const importedRootOriginal = incomingNodes.find(node => node.id === incomingMeta.value.root_id);
+      if (!importedRootOriginal) throw new Error('导入时间线根节点不存在');
+      const importedRootId = nodeIdMap.get(importedRootOriginal.id);
+      const importedRootBranchId = branchIdMap.get(importedRootOriginal.branch_id);
+      const attachmentDepth = Number.isInteger(attachmentNode.depth) ? attachmentNode.depth : 0;
+      const attachmentTurn = Number.isInteger(attachmentNode.turn_number) ? attachmentNode.turn_number : 0;
+      const importedRootTurn = Number.isInteger(importedRootOriginal.turn_number) ? importedRootOriginal.turn_number : 0;
+      const turnOffset = attachmentTurn + 1 - importedRootTurn;
+      const incomingNodeById = new Map(incomingNodes.map(node => [node.id, node]));
+      const relativeDepth = node => {
+        let depth = 0;
+        let cursor = node;
+        while (cursor.id !== importedRootOriginal.id) {
+          cursor = incomingNodeById.get(cursor.parent_id);
+          if (!cursor) throw new Error(`导入节点 ${node.id} 无法追溯到根节点`);
+          depth++;
+        }
+        return depth;
       };
-      await stateManager.dbPut('timeline_branches', renamed);
-    }
 
-    const migratedIncoming = incomingNodes.map(n => {
-      const migrated = this._migrateNodeV1ToV2(n);
+      const migratedIncoming = incomingNodes.map(node => {
+        const id = nodeIdMap.get(node.id);
+        const branchId = branchIdMap.get(node.branch_id);
+        const turnNumber = node.turn_number + turnOffset;
+        const snapshot = node.state_snapshot && typeof node.state_snapshot === 'object'
+          ? deepClone(node.state_snapshot)
+          : node.state_snapshot;
+        if (snapshot) {
+          if (!snapshot._meta) snapshot._meta = {};
+          snapshot._meta.current_node_id = id;
+          snapshot._meta.active_branch = branchId;
+          if (snapshot._version !== '4.0' && snapshot._version !== '5.0') {
+            snapshot._meta.turn_count = turnNumber + 1;
+          } else {
+            snapshot['系统·回合数'] = turnNumber + 1;
+          }
+          if (snapshot._continuity) {
+            snapshot._continuity = remapContinuityLedger(snapshot._continuity, {
+              nodeIds: nodeIdMap,
+              branchIds: branchIdMap,
+              eventIds: eventIdMap
+            });
+          }
+        }
+        return {
+          ...node,
+          id,
+          parent_id: node.id === importedRootOriginal.id
+            ? attachmentNode.id
+            : nodeIdMap.get(node.parent_id),
+          children_ids: node.children_ids.map(childId => nodeIdMap.get(childId)),
+          branch_id: branchId,
+          turn_number: turnNumber,
+          depth: attachmentDepth + 1 + relativeDepth(node),
+          state_snapshot: snapshot,
+          continuity_delta: remapContinuityDelta(node.continuity_delta || [], {
+            nodeIds: nodeIdMap,
+            branchIds: branchIdMap,
+            eventIds: eventIdMap
+          })
+        };
+      });
+      const migratedNodeById = new Map(migratedIncoming.map(node => [node.id, node]));
+      const updatedAttachment = {
+        ...attachmentNode,
+        children_ids: [...attachmentNode.children_ids, importedRootId]
+      };
+
+      const remappedBranches = incomingBranches.map(branch => {
+        const id = branchIdMap.get(branch.id);
+        const divergedFrom = id === importedRootBranchId
+          ? attachmentNode.id
+          : (branch.diverged_from == null ? null : nodeIdMap.get(branch.diverged_from));
+        return {
+          ...branch,
+          id,
+          name: `${branch.name || '导入分支'} (导入)`,
+          is_active: false,
+          head_node_id: nodeIdMap.get(branch.head_node_id),
+          diverged_from: divergedFrom,
+          diverged_at_turn: id === importedRootBranchId
+            ? attachmentTurn
+            : (migratedNodeById.get(divergedFrom)?.turn_number ?? branch.diverged_at_turn),
+          node_count: migratedIncoming.filter(node => node.branch_id === id).length
+        };
+      });
+      const normalizedExistingBranches = existingBranches.map(branch => ({
+        ...branch,
+        is_active: branch.id === existingMeta.value.active_branch,
+        node_count: existingNodes.filter(node => node.branch_id === branch.id).length
+      }));
+      const mergedNodes = existingNodes.map(node => node.id === attachmentNode.id ? updatedAttachment : node)
+        .concat(migratedIncoming)
+        .map(node => sanitizeTimelinePersistenceValue(node, `timeline_node.${node.id || 'unknown'}`));
+      const mergedBranches = normalizedExistingBranches.concat(remappedBranches);
+      const mergedMeta = {
+        ...existingMeta,
+        value: {
+          ...existingMeta.value,
+          total_nodes: mergedNodes.length
+        }
+      };
+      assertTimelineSave({ nodes: mergedNodes, branches: mergedBranches, meta: mergedMeta });
       return {
-        ...migrated,
-        id: nodeIdMap.get(n.id) || n.id,
-        parent_id: n.parent_id ? nodeIdMap.get(n.parent_id) || null : null,
-        children_ids: (n.children_ids || []).map(cid => nodeIdMap.get(cid)).filter(Boolean),
-        branch_id: n.branch_id ? branchIdMap.get(n.branch_id) || n.branch_id : n.branch_id
+        replace: true,
+        nodes: mergedNodes,
+        branches: mergedBranches,
+        meta: mergedMeta,
+        result: { root: migratedIncoming.find(node => node.id === importedRootId), nodes: migratedIncoming, branches: remappedBranches }
       };
     });
-    for (const node of migratedIncoming) {
-      await stateManager.dbPut('timeline_nodes', node);
-    }
-
-    const existingMeta = await stateManager.dbGet('timeline_meta', 'root');
-    if (existingMeta) {
-      existingMeta.value.total_nodes = (existingMeta.value.total_nodes || 0) + migratedIncoming.length;
-      await stateManager.dbPut('timeline_meta', existingMeta);
-    }
-
     this._cacheTreeSummary();
-    eventBus.emit('timeline:imported', { nodes: migratedIncoming, branches: incomingBranches, mode: 'merge' });
+    eventBus.emit('timeline:imported', { nodes: imported.nodes, branches: imported.branches, mode: 'merge' });
     this._maybeArchive().catch(() => {});
-    return null;
+    return imported.root;
+  }
+
+  _getImportedRestorePlan(currentNode, allNodes) {
+    if (!currentNode?.id) throw new Error('导入的当前节点不存在');
+    const nodeById = new Map((allNodes || []).filter(node => node?.id).map(node => [node.id, node]));
+    const visited = new Set();
+    const chain = [];
+    let cursor = nodeById.get(currentNode?.id);
+    while (cursor) {
+      if (visited.has(cursor.id)) {
+        throw new Error('导入状态恢复失败: 父节点关系包含环');
+      }
+      visited.add(cursor.id);
+      chain.unshift(cursor);
+      if (!cursor.parent_id) break;
+      cursor = nodeById.get(cursor.parent_id);
+      if (!cursor) throw new Error('导入状态恢复失败: 父节点不存在');
+    }
+    const snapshot = chain.at(-1)?.state_snapshot;
+    if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+      throw new Error(`导入状态恢复失败: 当前节点 ${currentNode.id} 缺少有效状态快照，无法精确恢复`);
+    }
+    return { snapshot };
+  }
+
+  _prepareImportedState(currentNode, allNodes) {
+    const plan = this._getImportedRestorePlan(currentNode, allNodes);
+    return stateManager.prepareRestore(plan.snapshot);
   }
 
   async _restoreImportedState(currentNode, allNodes) {
-    if (currentNode.state_snapshot) {
-      stateManager.restore(deepClone(currentNode.state_snapshot));
-      return;
-    }
-    let snapshotToRestore = null;
-    let cursor = allNodes.find(n => n.id === currentNode.id);
-    while (cursor && !snapshotToRestore) {
-      cursor = allNodes.find(n => n.id === cursor.parent_id);
-      if (cursor && cursor.state_snapshot) snapshotToRestore = cursor.state_snapshot;
-    }
-    if (snapshotToRestore) {
-      stateManager.restore(deepClone(snapshotToRestore));
-    } else {
-      console.warn('[Timeline] 导入的存档缺少有效状态快照');
-    }
+    stateManager.commitPreparedRestore(this._prepareImportedState(currentNode, allNodes));
   }
 
   async promoteBranchToMain(branchId) {
@@ -876,6 +1349,10 @@ class TimelineSystem {
        metaState.active_branch = 'branch_main';
        stateManager.setSub('_meta', metaState);
     }
+    const activeBranch = metaEntry?.value?.active_branch === branchId
+      ? 'branch_main'
+      : (metaEntry?.value?.active_branch || 'branch_main');
+    await this._setActiveBranchFlags(activeBranch);
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:branch-promoted', { oldBranchId: branchId, newMainBranchId: 'branch_main' });
@@ -885,12 +1362,34 @@ class TimelineSystem {
     if (branchId === 'branch_main') throw new Error('Cannot delete main branch');
     const nodes = await stateManager.dbGetAll('timeline_nodes');
     const nodesToDelete = nodes.filter(n => n.branch_id === branchId);
+    const deletedIds = new Set(nodesToDelete.map(node => node.id));
+
+    for (const node of nodes) {
+      if (deletedIds.has(node.id) || !Array.isArray(node.children_ids)) continue;
+      const children = node.children_ids.filter(id => !deletedIds.has(id));
+      if (children.length === node.children_ids.length) continue;
+      node.children_ids = children;
+      await stateManager.dbPut('timeline_nodes', node);
+      this._nodeCache.set(node.id, node);
+    }
 
     for (const node of nodesToDelete) {
       await stateManager.dbDelete('timeline_nodes', node.id);
       this._nodeCache.delete(node.id);
     }
+    if (nodesToDelete.length) {
+      eventBus.emit('timeline:nodes-deleted', {
+        nodeIds: nodesToDelete.map(node => node.id),
+        reason: 'branch-delete'
+      });
+    }
     await stateManager.dbDelete('timeline_branches', branchId);
+
+    const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
+    if (metaEntry) {
+      metaEntry.value.total_nodes = Math.max(0, nodes.length - nodesToDelete.length);
+      await stateManager.dbPut('timeline_meta', metaEntry);
+    }
 
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;

@@ -1,0 +1,262 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-SUMMON-P01",
+    "group": "summon",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 2,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-SUMMON-0001",
+      "canonical_name": "树界降诞",
+      "aliases": [
+        "树界降诞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种不需要结印的最后手段术。使用者以自身细胞为媒介，消耗大量查克拉从身体中创造一个完整的树。这样做可以改变来袭攻击的轨迹。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "Spontaneous Tree Summoning",
+          "Spontaneous Tree Summoning"
+        ],
+        "tags": [
+          "summon",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 478,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Spontaneous_Tree_Summoning"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SUMMON-AUTO",
+        "reviewed_by": "manual-translation-JT-SUMMON-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Spontaneous Tree Summoning"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,",
+        "wood-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SUMMON-0002",
+      "canonical_name": "口寄せ·イブセ毒香み",
+      "aliases": [
+        "口寄せ·イブセ毒香み"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "伊武濑从目标脚下的地面出现并吞下目标，在其体内的毒气中将其毒杀。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HANZO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-IBUSE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·イブセ毒香み",
+          "Summoning: Ibuse Poisoning",
+          "Kuchiyose: Ibuse Dokukami"
+        ],
+        "tags": [
+          "summon",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 531,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Ibuse_Poisoning"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SUMMON-AUTO",
+        "reviewed_by": "manual-translation-JT-SUMMON-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Ibuse Poisoning",
+        "Kuchiyose: Ibuse Dokukami"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

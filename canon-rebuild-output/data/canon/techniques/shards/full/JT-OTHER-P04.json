@@ -1,0 +1,3136 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-OTHER-P04",
+    "group": "other",
+    "part": 4,
+    "id_start": 226,
+    "id_end": 251,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-OTHER-0226",
+      "canonical_name": "双牙斩",
+      "aliases": [
+        "双牙斩"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "武器术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "出云和子铁用他们的苦无刃从两侧攻击敌人并刺穿他们。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-IZUMO-KAMIZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOTETSU-HAGANE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "双牙斩",
+          "Twin Fangs Slash",
+          "Sōgazan"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 322,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Twin_Fangs_Slash"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Twin Fangs Slash",
+        "Sōgazan"
+      ],
+      "lookup_classes": [
+        "bukijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0227",
+      "canonical_name": "双蛇相杀之术",
+      "aliases": [
+        "双蛇相杀之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 125,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将一根绳子的两端连接到剑上，使其成为双头刃。然后使用者旋转刀片以形成盾牌，并可以用双端武器攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ANKO-MITARASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "双蛇相杀之术",
+          "Twin Snakes Mutual Death Technique",
+          "Sōjasōsai no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 50,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Twin_Snakes_Mutual_Death_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Twin Snakes Mutual Death Technique",
+        "Sōjasōsai no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0228",
+      "canonical_name": "うちは流剣术「刃衣」",
+      "aliases": [
+        "うちは流剣术「刃衣」"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,剑术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种主要用于运输的术，忍犬变得足够大以骑乘。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BORUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うちは流剣术「刃衣」",
+          "Uchiha Style Blade Technique: Hagoromo",
+          "Uchiha Ryū Kenjutsu \"Hagoromo\"",
+          "Uchiha Style Sword Technique \"Blade Mantle\""
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 27,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Uchiha_Style_Blade_Technique%3A_Hagoromo"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Uchiha Style Blade Technique: Hagoromo",
+        "Uchiha Ryū Kenjutsu \"Hagoromo\"",
+        "Uchiha Style Sword Technique \"Blade Mantle\""
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-kenjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0229",
+      "canonical_name": "うちは流剣术",
+      "aliases": [
+        "うちは流剣术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "剑术,战斗流派",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从嘴中吐出一根锋利的骨矛。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-BORUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うちは流剣术",
+          "Uchiha Style Kenjutsu",
+          "Uchiha Ryū Kenjutsu",
+          "Uchiha Style Sword Technique"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 308,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Uchiha_Style_Kenjutsu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Uchiha Style Kenjutsu",
+        "Uchiha Ryū Kenjutsu",
+        "Uchiha Style Sword Technique"
+      ],
+      "lookup_classes": [
+        "kenjutsu,-fighting-style",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0230",
+      "canonical_name": "最硬絶対防御·守鶴の盾",
+      "aliases": [
+        "最硬絶対防御·守鶴の盾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从手腕发射针头，针头后面系着非常细的线。由于线的细度和几乎完全透明，对手很难看到针线。这可用于捕获和操纵物体或人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "最硬絶対防御·守鶴の盾",
+          "Ultimately Hard Absolute Defence: Shield of Shukaku",
+          "Saikō Zettai Bōgyo: Shukaku no Tate"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 216,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ultimately_Hard_Absolute_Defence%3A_Shield_of_Shukaku"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ultimately Hard Absolute Defence: Shield of Shukaku",
+        "Saikō Zettai Bōgyo: Shukaku no Tate"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0231",
+      "canonical_name": "超大玉螺旋丸",
+      "aliases": [
+        "超大玉螺旋丸"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "阿凯用绷带保护他的手臂和手部，然后瞄准一个区域进行毁灭性的打击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BORUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MOMOSHIKI-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "超大玉螺旋丸",
+          "Ultra-Big Ball Rasengan",
+          "Chōōdama Rasengan",
+          "Ultra-Big Ball Spiralling Sphere"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 377,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ultra-Big_Ball_Rasengan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ultra-Big Ball Rasengan",
+        "Chōōdama Rasengan",
+        "Ultra-Big Ball Spiralling Sphere"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0232",
+      "canonical_name": "螺旋超多连丸",
+      "aliases": [
+        "螺旋超多连丸"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术,分身术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 70,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从嘴中吐出一种粘性极强的物质，可以将目标固定在一个位置。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "螺旋超多连丸",
+          "Ultra-Many Spiralling Serial Spheres",
+          "Rasen Chō Tarengan"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 499,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ultra-Many_Spiralling_Serial_Spheres"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ultra-Many Spiralling Serial Spheres",
+        "Rasen Chō Tarengan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu,-clone-techniques",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0233",
+      "canonical_name": "消写顔之术",
+      "aliases": [
+        "消写顔之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 52,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者跳得很高并加入一个旋转踢击以产生更大的力量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "消写顔之术",
+          "Vanishing Facial Copy Technique",
+          "Shōshagan no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 50,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Vanishing_Facial_Copy_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Vanishing Facial Copy Technique",
+        "Shōshagan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0234",
+      "canonical_name": "水面歩行の業",
+      "aliases": [
+        "水面歩行の業"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "一般技能"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种用于收集目标血液的术，通过制造一个小伤口。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水面歩行の業",
+          "Water Surface Walking Practice",
+          "Suimen Hokō no Gyō"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 12,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Surface_Walking_Practice"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Surface Walking Practice",
+        "Suimen Hokō no Gyō"
+      ],
+      "lookup_classes": [
+        "general-skill"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0235",
+      "canonical_name": "乱獅子髪之术",
+      "aliases": [
+        "乱獅子髪之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用油以产生覆盖地面的黏液，使对手难以站立或行走。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "乱獅子髪之术",
+          "Wild Lion's Mane Technique",
+          "Ranjishigami no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 374,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wild_Lion's_Mane_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wild Lion's Mane Technique",
+        "Ranjishigami no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0236",
+      "canonical_name": "知狼朽",
+      "aliases": [
+        "知狼朽"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将查克拉集中在手中，用手发出探照灯般的光。这种光可以穿透泥土和纸张等材料，揭示另一边的物体的轮廓。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-UTAKATA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAIKEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "知狼朽",
+          "Wisdom Wolf Decay",
+          "Chirōkyū"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 567,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wisdom_Wolf_Decay"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wisdom Wolf Decay",
+        "Chirōkyū"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0237",
+      "canonical_name": "木分身之术",
+      "aliases": [
+        "木分身之术",
+        "木 分身 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术,分身术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 97,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种简单的术，使用者从掌心释放出明亮的闪光，可以暂时致盲附近的对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木分身之术",
+          "Wood Clone Technique",
+          "Moku Bunshin no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 293,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Clone_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Clone Technique",
+        "Moku Bunshin no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,-clone-techniques,",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0238",
+      "canonical_name": "木遁秘术·树界降誕",
+      "aliases": [
+        "木遁秘术·树界降誕"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,秘传~千手一族,忍术",
+        "木遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将查克拉集中在他们的声音中以放大音量，允许他们从远处口头沟通。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁秘术·树界降誕",
+          "Wood Release Secret Technique: Nativity of a World of Trees",
+          "Mokuton Hijutsu: Jukai Kōtan"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 120,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release_Secret_Technique%3A_Nativity_of_a_World_of_Trees"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release Secret Technique: Nativity of a World of Trees",
+        "Mokuton Hijutsu: Jukai Kōtan"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,hiden~senju-clan,-ninjutsu",
+        "wood-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0239",
+      "canonical_name": "木遁·花树界降臨",
+      "aliases": [
+        "木遁·花树界降臨"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用绳索绑住武器然后将其扔向目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·花树界降臨",
+          "Wood Release: Advent of a World of Flowering Trees",
+          "Mokuton: Kajukai Kōrin"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 575,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Advent_of_a_World_of_Flowering_Trees"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Advent of a World of Flowering Trees",
+        "Mokuton: Kajukai Kōrin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0240",
+      "canonical_name": "木遁·挿し木之术",
+      "aliases": [
+        "木遁·挿し木之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从耳中释放出细长的耳塞，可以延长以从远处攻击目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TEN-TAILS",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBI-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·挿し木之术",
+          "Wood Release: Cutting Technique",
+          "Mokuton: Sashiki no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 605,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Cutting_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Cutting Technique",
+        "Mokuton: Sashiki no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0241",
+      "canonical_name": "木遁·四柱家之术",
+      "aliases": [
+        "木遁·四柱家之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者结印以快速产生连接两个表面的细绳或绳索。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·四柱家之术",
+          "Wood Release: Four-Pillar House Technique",
+          "Mokuton: Shichūka no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 287,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Four-Pillar_House_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Four-Pillar House Technique",
+        "Mokuton: Shichūka no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0242",
+      "canonical_name": "木遁·四柱牢之术",
+      "aliases": [
+        "木遁·四柱牢之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用查克拉包裹他们的身体，然后快速旋转以产生可用于防御或进攻的屏障。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·四柱牢之术",
+          "Wood Release: Four-Pillar Prison Technique",
+          "Mokuton: Shichūrō no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 286,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Four-Pillar_Prison_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Four-Pillar Prison Technique",
+        "Mokuton: Shichūrō no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0243",
+      "canonical_name": "木遁·大树林之术",
+      "aliases": [
+        "木遁·大树林之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从体内释放出大量粘性物质，该物质硬化并在使用者周围形成保护壳。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·大树林之术",
+          "Wood Release: Great Forest Technique",
+          "Mokuton: Daijurin no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 309,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Great_Forest_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Great Forest Technique",
+        "Mokuton: Daijurin no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0244",
+      "canonical_name": "木遁·大槍树",
+      "aliases": [
+        "木遁·大槍树"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者向面具注入大量查克拉，从面具的眼睛和嘴中释放出各种形状和形态。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBI-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·大槍树",
+          "Wood Release: Great Spear Tree",
+          "Mokuton: Daisōju"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 605,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Great_Spear_Tree"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Great Spear Tree",
+        "Mokuton: Daisōju"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,",
+        "wood-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0245",
+      "canonical_name": "木遁·皆布袋之术",
+      "aliases": [
+        "木遁·皆布袋之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从嘴中吹出一团毒雾，覆盖目标区域。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·皆布袋之术",
+          "Wood Release: Hotei Technique",
+          "Mokuton: Hotei no Jutsu",
+          "Wood Release: Cloth Sack Technique"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 621,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Hotei_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Hotei Technique",
+        "Mokuton: Hotei no Jutsu",
+        "Wood Release: Cloth Sack Technique"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0246",
+      "canonical_name": "木遁·树海降誕",
+      "aliases": [
+        "木遁·树海降誕"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "山中井野进行精神传输，使她能够接管并阅读目标的思想。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·树海降誕",
+          "Wood Release: Nativity of a Sea of Trees",
+          "Mokuton: Jukai Kōtan"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 513,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Nativity_of_a_Sea_of_Trees"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Nativity of a Sea of Trees",
+        "Mokuton: Jukai Kōtan"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0247",
+      "canonical_name": "木遁·连柱家之术",
+      "aliases": [
+        "木遁·连柱家之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "日向宁次使用柔拳从远处攻击目标的关键穴道。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·连柱家之术",
+          "Wood Release: Serial Pillar Houses Technique",
+          "Mokuton: Renchūka no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 451,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Serial_Pillar_Houses_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Serial Pillar Houses Technique",
+        "Mokuton: Renchūka no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0248",
+      "canonical_name": "木遁·枷",
+      "aliases": [
+        "木遁·枷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大和制造木制枷锁以束缚目标。这些枷锁还具有压制目标查克拉的附加效果。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "Wood Release: Stocks",
+          "Wood Release: Stocks"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 507,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Stocks"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Stocks"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0249",
+      "canonical_name": "木遁·木龙之术",
+      "aliases": [
+        "木遁·木龙之术",
+        "木 遁: 木 龙 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术,查克拉吸收术",
+        "木遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土使用他的神威空间偏转攻击或将物体吸入另一个维度。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·木龙之术",
+          "Wood Release: Wood Dragon Technique",
+          "Mokuton: Mokuryū no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 607,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Wood_Dragon_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Wood Dragon Technique",
+        "Mokuton: Mokuryū no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,-chakra-absorption-techniques",
+        "wood-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0250",
+      "canonical_name": "木遁·木人之术",
+      "aliases": [
+        "木遁·木人之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大蛇丸使用封印术将目标困在限制其移动和查克拉的结界内。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBI-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·木人之术",
+          "Wood Release: Wood Human Technique",
+          "Mokuton: Mokujin no Jutsu"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 620,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Wood_Human_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Wood Human Technique",
+        "Mokuton: Mokujin no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-OTHER-0251",
+      "canonical_name": "木遁·木錠壁",
+      "aliases": [
+        "木遁·木錠壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "犬冢牙和赤丸合作执行联合攻击，在不同方向攻击目标，使目标难以同时防御两者。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "木遁·木錠壁",
+          "Wood Release: Wood Locking Wall",
+          "Mokuton: Mokujōheki"
+        ],
+        "tags": [
+          "other",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 293,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wood_Release%3A_Wood_Locking_Wall"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-OTHER-AUTO",
+        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wood Release: Wood Locking Wall",
+        "Mokuton: Mokujōheki"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu",
+        "wood-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

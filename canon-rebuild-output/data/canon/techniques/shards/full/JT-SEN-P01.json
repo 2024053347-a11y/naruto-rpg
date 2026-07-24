@@ -1,0 +1,2883 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-SEN-P01",
+    "group": "sen",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 24,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-SEN-0001",
+      "canonical_name": "再胞吸引",
+      "aliases": [
+        "再胞吸引"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,仙术,再生术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过接触吸收目标的细胞物质，将其用于自身的细胞再生。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "再胞吸引",
+          "Cellular Regeneration Absorption",
+          "Saibō Kyūin"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 465,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cellular_Regeneration_Absorption"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cellular Regeneration Absorption",
+        "Saibō Kyūin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-senjutsu,-regeneration-techniques",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0002",
+      "canonical_name": "再胞排出",
+      "aliases": [
+        "再胞排出"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,仙术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从体内排出不需要的细胞物质，通常通过嘴以气体的形式排出。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "再胞排出",
+          "Cellular Regeneration Ejection",
+          "Saibō Haishutsu"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 414,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cellular_Regeneration_Ejection"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cellular Regeneration Ejection",
+        "Saibō Haishutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-senjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0003",
+      "canonical_name": "锁",
+      "aliases": [
+        "锁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,仙术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过从环境中吸收自然能量并将其与自身查克拉混合来激活仙人模式。这种状态大大增强了使用者的身体能力，并允许他们使用仙术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "锁",
+          "Chain",
+          "Kusari"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 415,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chain"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chain",
+        "Kusari"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-senjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0004",
+      "canonical_name": "地の呪印",
+      "aliases": [
+        "地の呪印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "咒印术,禁术,仙术"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用仙人模式的力量增强其再生能力，并提高对伤害的抵抗力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KIMIMARO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "地の呪印",
+          "Cursed Seal of Earth",
+          "Chi no Juin"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 199,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cursed_Seal_of_Earth"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cursed Seal of Earth",
+        "Chi no Juin"
+      ],
+      "lookup_classes": [
+        "juinjutsu,-kinjutsu,-senjutsu,"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0005",
+      "canonical_name": "天の呪印",
+      "aliases": [
+        "天の呪印"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "咒印术,禁术,仙术"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人利用仙人模式将自然能量集中在脚上，显著增加其踢击的力量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ANKO-MITARASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天の呪印",
+          "Cursed Seal of Heaven",
+          "Ten no Juin"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 49,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cursed_Seal_of_Heaven"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cursed Seal of Heaven",
+        "Ten no Juin"
+      ],
+      "lookup_classes": [
+        "juinjutsu,-kinjutsu,-senjutsu,"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0006",
+      "canonical_name": "舌戦缚",
+      "aliases": [
+        "舌戦缚"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术,忍术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人与他的影分身合作，利用仙人模式形成一个巨大的螺旋丸，在击中目标时释放出巨大的自然能量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "舌戦缚",
+          "Fighting Tongue Bind",
+          "Zessenbaku"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 376,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fighting_Tongue_Bind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fighting Tongue Bind",
+        "Zessenbaku"
+      ],
+      "lookup_classes": [
+        "senjutsu,-ninjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0007",
+      "canonical_name": "舌戦斩",
+      "aliases": [
+        "舌戦斩"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术,忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "深作大人和志摩大人使用他们的声音产生强大的声波攻击，可以通过共振对目标造成内部损伤。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "舌戦斩",
+          "Fighting Tongue Slash",
+          "Zessenzan"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 376,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fighting_Tongue_Slash"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fighting Tongue Slash",
+        "Zessenzan"
+      ],
+      "lookup_classes": [
+        "senjutsu,-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0008",
+      "canonical_name": "大蛇突き",
+      "aliases": [
+        "大蛇突き"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术,忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者闭上他们的眼睛并集中以收集自然能量。在此期间，他们更容易受到攻击。一旦掌握了仙人模式，收集自然能量的过程变得更快、更直观。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "大蛇突き",
+          "Great Snake Thrust",
+          "Daijatsuki"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 6,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Great_Snake_Thrust"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Great Snake Thrust",
+        "Daijatsuki"
+      ],
+      "lookup_classes": [
+        "senjutsu,-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0009",
+      "canonical_name": "多蓮不自连炮",
+      "aliases": [
+        "多蓮不自连炮"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,仙术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用仙人模式增强其柔拳。他们可以更有效地瞄准对手的穴道。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "多蓮不自连炮",
+          "Multiple Lotus Nonself Connected Cannons",
+          "Taren Fujizuho"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 462,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Multiple_Lotus_Nonself_Connected_Cannons"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Multiple Lotus Nonself Connected Cannons",
+        "Taren Fujizuho"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-senjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0010",
+      "canonical_name": "大蛇丸の呪印术",
+      "aliases": [
+        "大蛇丸の呪印术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "咒印术,禁术,仙术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 90,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用仙术查克拉增强其身体的再生能力。这允许他们再生失去的四肢和器官，尽管该过程并非瞬间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "大蛇丸の呪印术",
+          "Orochimaru's Juinjutsu",
+          "Orochimaru no Juinjutsu",
+          "Orochimaru's Cursed Seal Technique"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 49,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Orochimaru's_Juinjutsu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Orochimaru's Juinjutsu",
+        "Orochimaru no Juinjutsu",
+        "Orochimaru's Cursed Seal Technique"
+      ],
+      "lookup_classes": [
+        "juinjutsu,-kinjutsu,-senjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0011",
+      "canonical_name": "仙法木遁·真数千手",
+      "aliases": [
+        "仙法木遁·真数千手"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术,仙术",
+        "木遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "重吾激活一种状态，在该状态下他的身体发生变化，赋予他增加的力量和攻击性。此状态使他能够从身体的各个部分产生武器。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法木遁·真数千手",
+          "Sage Art Wood Release: True Several Thousand Hands",
+          "Senpō Mokuton: Shin Sūsenju"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 621,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art_Wood_Release%3A_True_Several_Thousand_Hands"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art Wood Release: True Several Thousand Hands",
+        "Senpō Mokuton: Shin Sūsenju"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,-senjutsu",
+        "wood-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0012",
+      "canonical_name": "仙法·両生之术",
+      "aliases": [
+        "仙法·両生之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "重吾使用其特殊能力将自然能量注入目标体内，使其身体开始不受控制地变化，通常导致目标变得无法移动或严重受损。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·両生之术",
+          "Sage Art: Amphibian Technique",
+          "Senpō: Ryōsei no Jutsu"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 375,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Amphibian_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Amphibian Technique",
+        "Senpō: Ryōsei no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0013",
+      "canonical_name": "仙法·蛙鳴き",
+      "aliases": [
+        "仙法·蛙鳴き"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者激活咒印以获得增强的能力和变化。咒印利用自然能量增强使用者的能力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·蛙鳴き",
+          "Sage Art: Frog Call",
+          "Senpō: Kawazu Naki"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 431,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Frog_Call"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Frog Call",
+        "Senpō: Kawazu Naki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0014",
+      "canonical_name": "仙法·无機転生",
+      "aliases": [
+        "仙法·无機転生"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将自然能量集中在脚下的地面上，然后释放它以产生强大的冲击波。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·无機転生",
+          "Sage Art: Inorganic Reincarnation",
+          "Senpō: Muki Tensei"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 582,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Inorganic_Reincarnation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Inorganic Reincarnation",
+        "Senpō: Muki Tensei"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0015",
+      "canonical_name": "仙法·超大玉螺旋多连丸",
+      "aliases": [
+        "仙法·超大玉螺旋多连丸"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术,仙术,分身术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人利用仙人模式增强他的感官，使他能够跟踪对手的查克拉并以更高的精度躲避攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·超大玉螺旋多连丸",
+          "Sage Art: Many Ultra-Big Ball Spiralling Serial Spheres",
+          "Senpō: Chōōdama Rasen Tarengan"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 499,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Many_Ultra-Big_Ball_Spiralling_Serial_Spheres"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Many Ultra-Big Ball Spiralling Serial Spheres",
+        "Senpō: Chōōdama Rasen Tarengan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu,-senjutsu,-clone-techniques",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0016",
+      "canonical_name": "仙法·嵐遁光牙",
+      "aliases": [
+        "仙法·嵐遁光牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~岚遁,忍术,仙术",
+        "岚遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人与他的影分身协调，使用螺旋丸的联合攻击，结合仙人模式的增强效果。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·嵐遁光牙",
+          "Sage Art: Storm Release Light Fang",
+          "Senpō: Ranton Kōga"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 674,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Storm_Release_Light_Fang"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Storm Release Light Fang",
+        "Senpō: Ranton Kōga"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~storm-release,-ninjutsu,-senjutsu",
+        "storm-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0017",
+      "canonical_name": "仙法·白激之术",
+      "aliases": [
+        "仙法·白激之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用仙人模式增强其体术攻击的速度和威力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·白激之术",
+          "Sage Art: White Rage Technique",
+          "Senpō: Hakugeki no Jutsu"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 580,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_White_Rage_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: White Rage Technique",
+        "Senpō: Hakugeki no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0018",
+      "canonical_name": "仙法·阴遁雷派",
+      "aliases": [
+        "仙法·阴遁雷派"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "阴遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "药师兜使用龙地洞的仙人模式，使他能够使用独特的蛇系仙术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·阴遁雷派",
+          "Sage Art: Yin Release Lightning Dispatch",
+          "Senpō: Inton Raiha"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 674,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Yin_Release_Lightning_Dispatch"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Yin Release Lightning Dispatch",
+        "Senpō: Inton Raiha"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "yin-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-SEN-0019",
+      "canonical_name": "仙人モード",
+      "aliases": [
+        "仙人モード"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用自然能量制造一个坚硬的外壳或皮肤，提供免受攻击的保护。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GAMAKICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MINATO-NAMIKAZE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-WHITE-SNAKE-SAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙人モード",
+          "Sage Mode",
+          "Sennin Mōdo"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 375,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Mode"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Mode",
+        "Sennin Mōdo"
+      ],
+      "lookup_classes": [
+        "senjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0020",
+      "canonical_name": "仙人化",
+      "aliases": [
+        "仙人化"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,战斗流派,仙术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者召唤两只巨大的蛤蟆，它们合作执行联合攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MITSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙人化",
+          "Sage Transformation",
+          "Senninka"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 349,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Transformation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Transformation",
+        "Senninka"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-fighting-style,-senjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0021",
+      "canonical_name": "六道仙人モード",
+      "aliases": [
+        "六道仙人モード"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者制造一个覆盖广阔区域的巨大幻术屏障，困住屏障内的所有目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道仙人モード",
+          "Six Paths Sage Mode",
+          "Rikudō Sennin Mōdo"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 670,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths_Sage_Mode"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths Sage Mode",
+        "Rikudō Sennin Mōdo"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0022",
+      "canonical_name": "六道仙术",
+      "aliases": [
+        "六道仙术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用自然能量增强他们的武器，在武器上注入仙术以增加伤害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEN-TAILS",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAMURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ASURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道仙术",
+          "Six Paths Senjutsu",
+          "Rikudō Senjutsu",
+          "Six Paths Sage Technique"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 638,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths_Senjutsu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths Senjutsu",
+        "Rikudō Senjutsu",
+        "Six Paths Sage Technique"
+      ],
+      "lookup_classes": [
+        "senjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0023",
+      "canonical_name": "六道·国津守",
+      "aliases": [
+        "六道·国津守"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者以仙术查克拉为基础制造螺旋丸，并将自然能量注入其中以增加其破坏力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ASURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道·国津守",
+          "Six Paths: Kunitsukami",
+          "Rikudō: Kunitsukami",
+          "Six Paths: Guardian of the Land"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 670,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths%3A_Kunitsukami"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths: Kunitsukami",
+        "Rikudō: Kunitsukami",
+        "Six Paths: Guardian of the Land"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-SEN-0024",
+      "canonical_name": "伝異遠影",
+      "aliases": [
+        "伝異遠影"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~左近右近血继限界,忍术,仙术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 97,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用仙术查克拉克服对手的防御。这种以自然能量增强的攻击可以绕过基于查克拉的防御。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "伝異遠影",
+          "Strange Transmission Distant Shadow",
+          "Den'ien'ei"
+        ],
+        "tags": [
+          "sen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 585,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Strange_Transmission_Distant_Shadow"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-SEN-AUTO",
+        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Strange Transmission Distant Shadow",
+        "Den'ien'ei"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sakon-and-ukon's-kekkei-genkai,-ninjutsu,-senjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

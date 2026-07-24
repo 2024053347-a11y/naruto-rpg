@@ -1,0 +1,12 @@
+{
+  "batch_id": "JT-WATER-P01",
+  "replacements": [],
+  "deletions": [],
+  "unresolved": [],
+  "review_notes": [
+    "自动筛选收录43条具名术。",
+    "硬条件：debut manga为NARUTO第1至700章，boruto不是Yes，unnamed jutsu不是Yes。",
+    "日文规范名、英文别名与漫画首次章节已入库；中文措辞、使用限制和公式书页码仍需人工逐条审核。",
+    "qa.status保持draft，不进入正式运行时索引。"
+  ]
+}

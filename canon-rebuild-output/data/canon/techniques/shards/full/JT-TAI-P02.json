@@ -1,0 +1,3730 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-TAI-P02",
+    "group": "tai",
+    "part": 2,
+    "id_start": 76,
+    "id_end": 106,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-TAI-0076",
+      "canonical_name": "鸣人一带连弹",
+      "aliases": [
+        "鸣人一带连弹"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,仙术,体术,禁术,分身术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人同时开启六道仙人模式和九尾查克拉模式后使用的体术攻击。利用多重影分身之术制造大量影分身包围对手，从四面八方发动攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "ナルト一帯连弾",
+          "Naruto Region Combo",
+          "Naruto Ittai Rendan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 684,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Naruto_Region_Combo"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 405,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Naruto Region Combo",
+        "Naruto Ittai Rendan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-taijutsu,-kinjutsu,-clone-techniques",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0077",
+      "canonical_name": "漩涡鸣人连弹",
+      "aliases": [
+        "漩涡鸣人连弹"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,体术,分身术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 40,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人制造四个影分身协助此术。影分身将目标踢或打入空中，本尊从影分身上跃起追击目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うずまきナルト连弾",
+          "Naruto Uzumaki Combo",
+          "Uzumaki Naruto Rendan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 77,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Naruto_Uzumaki_Combo"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 305,
+        "expected_uses": [
+          7,
+          8
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Naruto Uzumaki Combo",
+        "Uzumaki Naruto Rendan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-taijutsu,-clone-techniques",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0078",
+      "canonical_name": "漩涡鸣人二千连弹",
+      "aliases": [
+        "漩涡鸣人二千连弹"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,禁术,分身术,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 82,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人使用多重影分身之术制造一千个影分身。部分影分身将目标踢入空中后，一千个影分身从四面八方用两千只拳头击打目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うずまきナルト二千连弾",
+          "Naruto Uzumaki Two Thousand Combo",
+          "Uzumaki Naruto Nisen Rendan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 134,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Naruto_Uzumaki_Two_Thousand_Combo"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 405,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Naruto Uzumaki Two Thousand Combo",
+        "Uzumaki Naruto Nisen Rendan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu,-clone-techniques,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0079",
+      "canonical_name": "夜凯",
+      "aliases": [
+        "夜凯"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "禁术,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 180,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "夜凯是最高级别的禁术体术，只有在打开全部八门后才能施展。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "夜ガイ",
+          "Night Guy",
+          "Yagai"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 672,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Night_Guy"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "heavy",
+        "reference_pool": 575,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Night Guy",
+        "Yagai"
+      ],
+      "lookup_classes": [
+        "kinjutsu,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0080",
+      "canonical_name": "忍法·真剣白刃取り",
+      "aliases": [
+        "忍法·真剣白刃取り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此体术能让使用者避免被刃器斩伤。使用者用手掌夹住刀刃，徒手阻止武器。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIKAMARU-NARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "忍法·真剣白刃取り",
+          "Ninja Art: Bare-Handed Blade Block",
+          "Ninpō: Shinken Shirahadori"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 452,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ninja_Art%3A_Bare-Handed_Blade_Block"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ninja Art: Bare-Handed Blade Block",
+        "Ninpō: Shinken Shirahadori"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0081",
+      "canonical_name": "千年杀し",
+      "aliases": [
+        "千年杀し"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "E",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 20,
+      "power": 10,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者双手紧握，伸出食指和中指，做出虎印状。用全身重量将四根手指插入目标臀部之间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千年杀し",
+          "One Thousand Years of Death",
+          "Sennen Goroshi"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 5,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/One_Thousand_Years_of_Death"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "E",
+        "pressure": "standard",
+        "reference_pool": 110,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "One Thousand Years of Death",
+        "Sennen Goroshi"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0082",
+      "canonical_name": "掌底",
+      "aliases": [
+        "掌底"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继限界~白眼,秘传~日向一族,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术以手快速精准地刺向对手身体，将查克拉送入对手被击中的部位，可使其昏迷或造成严重内伤。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIASHI-HYU-GA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HINATA-HYU-GA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NEJI-HYU-GA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "掌底",
+          "Palm Bottom",
+          "Shōtei"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 79,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Palm_Bottom"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          7,
+          8
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Palm Bottom",
+        "Shōtei"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~byakugan,-hiden~hyūga-clan,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0083",
+      "canonical_name": "落下傘",
+      "aliases": [
+        "落下傘"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,体术,分身术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 97,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人将对手击飞到空中，制造两个到四个影分身跳入空中，影分身按住下落的对手，鸣人以膝盖先着地的方式落在他们身上。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "落下傘",
+          "Parachute",
+          "Rakkasan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 277,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Parachute"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Parachute",
+        "Rakkasan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-taijutsu,-clone-techniques,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0084",
+      "canonical_name": "通牙",
+      "aliases": [
+        "通牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "D",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 15,
+      "power": 35,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者以高速冲向目标并发动身体撞击。由于移动速度极快，使用者几乎直线移动，需预判目标动作。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-AKITA-INUZUKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-CHAMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KIBA-INUZUKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-AKAMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TSUME-INUZUKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KUROMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "通牙",
+          "Passing Fang",
+          "Tsūga"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 186,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Passing_Fang"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "D",
+        "pressure": "light",
+        "reference_pool": 170,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Passing Fang",
+        "Tsūga"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0085",
+      "canonical_name": "活塞拳",
+      "aliases": [
+        "活塞拳"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,体术,仙术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "重吾使用仙术变身能力将手臂变为活塞以增加攻击力，还可在手或肘部形成喷射口进一步增强威力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "活塞拳",
+          "Piston Fist",
+          "Kassokuken"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 351,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Piston_Fist"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Piston Fist",
+        "Kassokuken"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-taijutsu,-senjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0086",
+      "canonical_name": "活塞拳·一式",
+      "aliases": [
+        "活塞拳·一式"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继限界~重吾一族血继限界,忍术,体术,仙术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用变身能力长出喷射推进器般的手臂，增强攻击力和投掷力。这是活塞拳的强力版本。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JU-GO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "活塞拳·一式",
+          "Piston Fist: Style One",
+          "Kassokuken: Ichishiki"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 412,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Piston_Fist%3A_Style_One"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Piston Fist: Style One",
+        "Kassokuken: Ichishiki"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~jūgo's-clan's-kekkei-genkai,-ninjutsu,-taijutsu,-senjutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0087",
+      "canonical_name": "傀儡·春诛击",
+      "aliases": [
+        "傀儡·春诛击"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,体术,合作忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "千代利用傀儡演舞·傀儡操术将小樱发射到高空中，让小樱施展查克拉增强的拳击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-CHIYO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "傀儡·春誅撃",
+          "Puppet: Spring Punishing Strike",
+          "Kugutsu: Haruchūgeki"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 265,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Puppet%3A_Spring_Punishing_Strike"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Puppet: Spring Punishing Strike",
+        "Kugutsu: Haruchūgeki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-taijutsu,-cooperation-ninjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0088",
+      "canonical_name": "兎毛针",
+      "aliases": [
+        "兎毛针"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继网罗~白眼,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "兔毛针是大筒木辉夜使用的血继网罗体术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "兎毛针",
+          "Rabbit Hair Needle",
+          "Togebari"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 680,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Rabbit_Hair_Needle"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Rabbit Hair Needle",
+        "Togebari"
+      ],
+      "lookup_classes": [
+        "kekkei-mōra~byakugan,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0089",
+      "canonical_name": "裏蓮華",
+      "aliases": [
+        "裏蓮華"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "禁术,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 150,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者至少打开三门，解除身体对最大速度的限制后，以难以追踪的速度从多个方向连续击打目标，将其打入空中后摔向地面。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ROCK-LEE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "裏蓮華",
+          "Reverse Lotus",
+          "Ura Renge"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 86,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Reverse_Lotus"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "extreme",
+        "reference_pool": 405,
+        "expected_uses": [
+          2,
+          3
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Reverse Lotus",
+        "Ura Renge"
+      ],
+      "lookup_classes": [
+        "kinjutsu,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0090",
+      "canonical_name": "影舞叶",
+      "aliases": [
+        "影舞叶"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 53,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者紧跟在目标背后，仔细配合其动作，如同叶子被影子跟随一般。单纯的模仿不会造成伤害，但可为其他技巧创造机会。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ROCK-LEE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "影舞叶",
+          "Shadow of the Dancing Leaf",
+          "Kage Buyō"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 37,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Shadow_of_the_Dancing_Leaf"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 245,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Shadow of the Dancing Leaf",
+        "Kage Buyō"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0091",
+      "canonical_name": "影撫で",
+      "aliases": [
+        "影撫で"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "矶抚（或完全变身为矶抚的矢仓）可以滚成球状碾压对手，利用身上众多的尖刺突起，类似秋道一族的肉弹针战车。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAGURA-KARATACHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ISOBU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "影撫で",
+          "Shadow Stroke",
+          "Kagenade"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 571,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Shadow_Stroke"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Shadow Stroke",
+        "Kagenade"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0092",
+      "canonical_name": "双襲牙",
+      "aliases": [
+        "双襲牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "战斗流派,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "双袭牙。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "双襲牙",
+          "Sōshūga",
+          "Twin Attacking Fangs"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 595,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/S%C5%8Dsh%C5%ABga"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sōshūga",
+        "Twin Attacking Fangs"
+      ],
+      "lookup_classes": [
+        "fighting-style,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0093",
+      "canonical_name": "戟討耀角",
+      "aliases": [
+        "戟討耀角"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "重明用其前角攻击对手，冲击力之大连风压都能让受害者无法防御。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHO-MEI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "戟討耀角",
+          "Spear Attack Shining Horn",
+          "Gekitō Yōkaku"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 658,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Spear_Attack_Shining_Horn"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Spear Attack Shining Horn",
+        "Gekitō Yōkaku"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0094",
+      "canonical_name": "肉弾针戦車",
+      "aliases": [
+        "肉弾针戦車"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "阳"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者先用绳索绑住自己并挂上苦无，然后使用倍化术和肉弹战车，苦无作为尖刺增加旋转威力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHO-JI-AKIMICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "肉弾针戦車",
+          "Spiked Human Bullet Tank",
+          "Nikudan Hari Sensha"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 189,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Spiked_Human_Bullet_Tank"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 245,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Spiked Human Bullet Tank",
+        "Nikudan Hari Sensha"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "yang"
+      ]
+    },
+    {
+      "id": "JT-TAI-0095",
+      "canonical_name": "剛拳",
+      "aliases": [
+        "剛拳"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术,战斗流派",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "刚拳。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-METAL-LEE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ROCK-LEE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "剛拳",
+          "Strong Fist",
+          "Gōken"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 38,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Strong_Fist"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Strong Fist",
+        "Gōken"
+      ],
+      "lookup_classes": [
+        "taijutsu,-fighting-style",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0096",
+      "canonical_name": "超張り手",
+      "aliases": [
+        "超張り手"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术,查克拉流动",
+        "阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "阳"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用倍化术增大体型后，将查克拉注入双手，手掌如同铁锤，威力足以击裂大地。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHO-JI-AKIMICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "超張り手",
+          "Super Open Hand Slap",
+          "Chōharite"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 337,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Super_Open_Hand_Slap"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 305,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Super Open Hand Slap",
+        "Chōharite"
+      ],
+      "lookup_classes": [
+        "taijutsu,-chakra-flow",
+        "yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "yang"
+      ]
+    },
+    {
+      "id": "JT-TAI-0097",
+      "canonical_name": "迸火乱舞",
+      "aliases": [
+        "迸火乱舞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术是一连串体术攻击。使用者先用踢击攻击对手，紧接着是拳击，再用另一条腿踢击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "迸火乱舞",
+          "Surging Fire Wild Dance",
+          "Hōka Ranbu"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 7,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Surging_Fire_Wild_Dance"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Surging Fire Wild Dance",
+        "Hōka Ranbu"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0098",
+      "canonical_name": "尾追牙牙转牙",
+      "aliases": [
+        "尾追牙牙转牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "秘传~犬冢一族,体术,协作术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 109,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者与影分身和忍犬合体为三头巨狼后，蜷成球状以极速滚动冲向敌人，撕裂一切。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KIBA-INUZUKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-AKAMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾追い牙牙転牙",
+          "Tail Chasing Fang Fang Rotating Fang",
+          "Ooiga Gatenga"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 633,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tail_Chasing_Fang_Fang_Rotating_Fang"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tail Chasing Fang Fang Rotating Fang",
+        "Ooiga Gatenga"
+      ],
+      "lookup_classes": [
+        "hiden~inuzuka-clan,-taijutsu,-collaboration-techniques",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0099",
+      "canonical_name": "尾獣八巻き",
+      "aliases": [
+        "尾獣八巻き"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "奇拉比变身为完全八尾形态后，将尾巴紧紧缠绕自身，然后以巨大力量伸展开来，产生强烈旋风。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GYU-KI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾獣八巻き",
+          "Tailed Beast Eight Twists",
+          "Bijū Hachimaki"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 566,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tailed_Beast_Eight_Twists"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          7,
+          8
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tailed Beast Eight Twists",
+        "Bijū Hachimaki"
+      ],
+      "lookup_classes": [
+        "taijutsu,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0100",
+      "canonical_name": "尾獣総進撃",
+      "aliases": [
+        "尾獣総進撃"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,体术,合作忍术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "所有尾兽集结后依次攻击对手：守鹤用沙暴冲击，又旅用爪子斩击，矶抚将对手撞向孙悟空，孙悟空踢出，穆王撞向犀犬，犀犬喷酸，重明将对手击向牛鬼，牛鬼出拳，九喇嘛将对手撞入地面。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHO-MEI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GYU-KI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ISOBU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOKUO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KURAMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MATATABI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAIKEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHUKAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SON-GOKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾獣総進撃",
+          "Tailed Beast Full Charge",
+          "Bijū Sōshingeki"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 658,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tailed_Beast_Full_Charge"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tailed Beast Full Charge",
+        "Bijū Sōshingeki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-taijutsu,-cooperation-ninjutsu,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0101",
+      "canonical_name": "尾兽雷犁热刀",
+      "aliases": [
+        "尾兽雷犁热刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是八尾人柱力可用的体术。使用者进入尾兽化后冲向对手，以金刚臂一击击打对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾獣の雷犂熱刀",
+          "Tailed Beast Lariat",
+          "Bijū no Rariatto",
+          "Tailed Beast Lightning Plough Hot Sword"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 550,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tailed_Beast_Lariat"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tailed Beast Lariat",
+        "Bijū no Rariatto",
+        "Tailed Beast Lightning Plough Hot Sword"
+      ],
+      "lookup_classes": [
+        "taijutsu,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0102",
+      "canonical_name": "十指穿弾",
+      "aliases": [
+        "十指穿弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继限界~尸骨脉,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "君麻吕指尖裂开露出硬化指骨，每次挥手射出五发骨弹。骨弹高速旋转飞行，穿透皮肉和骨骼。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KIMIMARO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "十指穿弾",
+          "Ten-Finger Drilling Bullets",
+          "Teshi Sendan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 213,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ten-Finger_Drilling_Bullets"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          7,
+          8
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ten-Finger Drilling Bullets",
+        "Teshi Sendan"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~shikotsumyaku,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0103",
+      "canonical_name": "蛤蟆斩",
+      "aliases": [
+        "蛤蟆斩"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术,剑术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "蛤蟆利用其强健的腰腿精准跳向目标，在目标反应过来之前迅速挥刀斩击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAMABUNTA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GAMAKICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "蝦蟇ドス斩",
+          "Toad Sword Beheading",
+          "Gamadosuzan"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 135,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Toad_Sword_Beheading"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Toad Sword Beheading",
+        "Gamadosuzan"
+      ],
+      "lookup_classes": [
+        "taijutsu,-kenjutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0104",
+      "canonical_name": "激·木叶金刚力旋风",
+      "aliases": [
+        "激·木叶金刚力旋风"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "禁术,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 165,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "凯在开启八门遁甲后对对手施以猛烈的回旋踢。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIGHT-GUY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "激 木ノ叶金剛力旋风",
+          "Violent — Leaf Adamantine-Strength Whirlwind",
+          "Geki — Konoha Kongōriki Senpū",
+          "Violent — Tree Leaf Vajra-Strength Whirlwind"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 566,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Violent_%E2%80%94_Leaf_Adamantine-Strength_Whirlwind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Violent — Leaf Adamantine-Strength Whirlwind",
+        "Geki — Konoha Kongōriki Senpū",
+        "Violent — Tree Leaf Vajra-Strength Whirlwind"
+      ],
+      "lookup_classes": [
+        "kinjutsu,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0105",
+      "canonical_name": "愛の鞭",
+      "aliases": [
+        "愛の鞭"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者以惊人的速度和力量伸出舌头，给对手强力一击。蛤蟆也可用舌头缠绕敌人并将其砸向地面。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "愛の鞭",
+          "Whip of Love",
+          "Ai no Muchi"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 90,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Whip_of_Love"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Whip of Love",
+        "Ai no Muchi"
+      ],
+      "lookup_classes": [
+        "taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-TAI-0106",
+      "canonical_name": "与作切り",
+      "aliases": [
+        "与作切り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "武器术,体术",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "三船用其巨斧以低位的横斩攻击对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SABU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "与作切り",
+          "Yosaku Cut",
+          "Yosakugiri",
+          "Participation Work Cut"
+        ],
+        "tags": [
+          "tai",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 470,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Yosaku_Cut"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-TAI-AUTO",
+        "reviewed_by": "manual-translation-JT-TAI-P02-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Yosaku Cut",
+        "Yosakugiri",
+        "Participation Work Cut"
+      ],
+      "lookup_classes": [
+        "bukijutsu,-taijutsu",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    }
+  ],
+  "unresolved": []
+}

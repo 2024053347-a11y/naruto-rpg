@@ -38,11 +38,19 @@ class CombatArena extends HTMLElement {
 
   render() {
     const combat = stateManager.getSub('_combat');
-    if (!combat?.is_active) { this.shadowRoot.innerHTML = ''; return; }
+    if (!combat?.is_active) { this.shadowRoot.innerHTML = ''; this._prev = null; return; }
 
     const s = stateManager.get();
-    const pcp = s['属性·查克拉']>0?Math.round((s['属性·当前查克拉']/s['属性·查克拉'])*100):0;
-    const ecp = combat.enemy_chakra_max>0?Math.round((combat.enemy_chakra/combat.enemy_chakra_max)*100):50;
+    const pcp = s['属性·生命力']>0?Math.round((s['属性·当前生命力']/s['属性·生命力'])*100):0;
+    const ecp = combat.enemy_vitality_max>0?Math.round((combat.enemy_vitality/combat.enemy_vitality_max)*100):50;
+
+    // 比对上一次渲染的血量：下降则触发受击闪白；≤25% 加低血脉冲
+    const prev = this._prev || {};
+    const pHit = prev.pcp != null && pcp < prev.pcp;
+    const eHit = prev.ecp != null && ecp < prev.ecp;
+    this._prev = { pcp, ecp };
+    const pCls = `hp-fill p${pHit ? ' hit' : ''}${pcp <= 25 ? ' low' : ''}`;
+    const eCls = `hp-fill e${eHit ? ' hit' : ''}${ecp <= 25 ? ' low' : ''}`;
 
     this.shadowRoot.innerHTML = `
       <style>${combatStyles}</style>
@@ -50,14 +58,14 @@ class CombatArena extends HTMLElement {
         <div class="title">${icon('combat', 14)} 第 ${combat.turn||1} 回合</div>
         <div class="ct">
           <div class="name">${this._esc(s['玩家·姓名']||'你')}</div>
-          <div class="sub">${this._esc(s['玩家·忍阶'])} · 查克拉: ${s['属性·当前查克拉']}/${s['属性·查克拉']}</div>
-          <div class="hp-bar"><div class="hp-fill p" style="width:${pcp}%"></div></div>
+          <div class="sub">${this._esc(s['玩家·忍阶'])} · 生命 ${s['属性·当前生命力']}/${s['属性·生命力']} · 查 ${s['属性·当前查克拉']} · 体 ${s['属性·当前体力']} · 精 ${s['属性·当前精神力']}</div>
+          <div class="hp-bar"><div class="${pCls}" style="width:${pcp}%"></div></div>
         </div>
         <div class="vs">VS</div>
         <div class="ct">
           <div class="name">${this._esc(combat.enemy_name)}</div>
-          <div class="sub">${this._esc(combat.enemy_rank)} · 查克拉: ${combat.enemy_chakra}/${combat.enemy_chakra_max}</div>
-          <div class="hp-bar"><div class="hp-fill e" style="width:${ecp}%"></div></div>
+          <div class="sub">${this._esc(combat.enemy_rank)} · 生命 ${combat.enemy_vitality}/${combat.enemy_vitality_max} · 查 ${combat.enemy_chakra} · 体 ${combat.enemy_stamina} · 精 ${combat.enemy_spirit}</div>
+          <div class="hp-bar"><div class="${eCls}" style="width:${ecp}%"></div></div>
         </div>
         <div class="actions">
           <button class="btn act" data-a="体术攻击">${icon('taijutsu', 12)} 体术</button>

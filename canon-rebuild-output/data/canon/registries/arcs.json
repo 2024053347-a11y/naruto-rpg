@@ -1,0 +1,299 @@
+[
+  {
+    "id": "ARC-PROLOGUE-KYUUBI",
+    "name": "九尾之乱"
+  },
+  {
+    "id": "ARC-PART1-GRADUATION",
+    "name": "毕业与第七班"
+  },
+  {
+    "id": "ARC-PART1-WAVES",
+    "name": "波之国"
+  },
+  {
+    "id": "ARC-PART1-CHUNIN",
+    "name": "中忍考试与木叶崩溃"
+  },
+  {
+    "id": "ARC-PART1-TSUNADE",
+    "name": "寻找纲手"
+  },
+  {
+    "id": "ARC-PART1-RETRIEVAL",
+    "name": "佐助夺还"
+  },
+  {
+    "id": "ARC-KONOHA-UCHIHA",
+    "name": "宇智波灭族"
+  },
+  {
+    "id": "ARC-PART2-RETURN",
+    "name": "疾风传开端"
+  },
+  {
+    "id": "ARC-PART2-PAIN",
+    "name": "佩恩袭击木叶"
+  },
+  {
+    "id": "ARC-PART2-WAR",
+    "name": "第四次忍界大战"
+  },
+  {
+    "id": "ARC-NAR-P1-WAVES",
+    "name": "波之国篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 1,
+    "chapter_end": 33,
+    "source_page": "Prologue — Land of Waves"
+  },
+  {
+    "id": "ARC-NAR-P1-CHUNIN",
+    "name": "中忍考试篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 34,
+    "chapter_end": 115,
+    "source_page": "Chūnin Exams (Arc)"
+  },
+  {
+    "id": "ARC-NAR-P1-CRUSH",
+    "name": "木叶崩溃篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 116,
+    "chapter_end": 138,
+    "source_page": "Konoha Crush (Arc)"
+  },
+  {
+    "id": "ARC-NAR-P1-TSUNADE",
+    "name": "寻找纲手篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 139,
+    "chapter_end": 171,
+    "source_page": "Search for Tsunade"
+  },
+  {
+    "id": "ARC-NAR-P1-SASUKE",
+    "name": "佐助夺还篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 172,
+    "chapter_end": 238,
+    "source_page": "Sasuke Recovery Mission"
+  },
+  {
+    "id": "ARC-NAR-GAIDEN",
+    "name": "卡卡西外传",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 239,
+    "chapter_end": 244,
+    "source_page": "Kakashi Gaiden"
+  },
+  {
+    "id": "ARC-NAR-P2-GAARA",
+    "name": "风影夺还篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 245,
+    "chapter_end": 281,
+    "source_page": "Kazekage Rescue Mission"
+  },
+  {
+    "id": "ARC-NAR-P2-TENCHI",
+    "name": "天地桥侦察篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 282,
+    "chapter_end": 310,
+    "source_page": "Tenchi Bridge Reconnaissance Mission"
+  },
+  {
+    "id": "ARC-NAR-P2-AKATSUKI",
+    "name": "飞段角都篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 311,
+    "chapter_end": 342,
+    "source_page": "Akatsuki Suppression Mission"
+  },
+  {
+    "id": "ARC-NAR-P2-ITACHI",
+    "name": "追踪鼬篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 343,
+    "chapter_end": 367,
+    "source_page": "Itachi Pursuit Mission"
+  },
+  {
+    "id": "ARC-NAR-P2-JIRAIYA",
+    "name": "自来也豪杰物语",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 368,
+    "chapter_end": 383,
+    "source_page": "Tale of Jiraiya the Gallant"
+  },
+  {
+    "id": "ARC-NAR-P2-BROTHERS",
+    "name": "兄弟宿命之战",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 384,
+    "chapter_end": 412,
+    "source_page": "Fated Battle Between Brothers"
+  },
+  {
+    "id": "ARC-NAR-P2-PAIN",
+    "name": "佩恩袭击篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 413,
+    "chapter_end": 453,
+    "source_page": "Pain's Assault (Arc)"
+  },
+  {
+    "id": "ARC-NAR-P2-KAGE",
+    "name": "五影会谈篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 454,
+    "chapter_end": 483,
+    "source_page": "Five Kage Summit (Arc)"
+  },
+  {
+    "id": "ARC-NAR-P2-COUNTDOWN",
+    "name": "大战倒计时篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 484,
+    "chapter_end": 515,
+    "source_page": "Fourth Shinobi World War: Countdown"
+  },
+  {
+    "id": "ARC-NAR-P2-CONFRONT",
+    "name": "第四次忍界大战·交战",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 516,
+    "chapter_end": 559,
+    "source_page": "Fourth Shinobi World War: Confrontation"
+  },
+  {
+    "id": "ARC-NAR-P2-CLIMAX",
+    "name": "第四次忍界大战·高潮",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 560,
+    "chapter_end": 639,
+    "source_page": "Fourth Shinobi World War: Climax"
+  },
+  {
+    "id": "ARC-NAR-P2-JINCHURIKI",
+    "name": "十尾人柱力诞生篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 640,
+    "chapter_end": 677,
+    "source_page": "Birth of the Ten-Tails' Jinchūriki"
+  },
+  {
+    "id": "ARC-NAR-P2-KAGUYA",
+    "name": "辉夜降临篇",
+    "continuity": "manga_canon",
+    "work": "NARUTO",
+    "chapter_start": 678,
+    "chapter_end": 699,
+    "source_page": "Kaguya Ōtsutsuki Strikes"
+  },
+  {
+    "id": "ARC-BOR-SARADA",
+    "name": "佐良娜篇",
+    "continuity": "boruto_manga",
+    "work": "NARUTO GAIDEN",
+    "chapter_start": 701,
+    "chapter_end": 710,
+    "source_page": "Sarada Uchiha Arc"
+  },
+  {
+    "id": "ARC-BOR-MOMOSHIKI",
+    "name": "桃式篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 1,
+    "chapter_end": 10,
+    "source_page": "Versus Momoshiki Arc"
+  },
+  {
+    "id": "ARC-BOR-MUJINA",
+    "name": "貉强盗团篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 11,
+    "chapter_end": 15,
+    "source_page": "Mujina Bandits Arc"
+  },
+  {
+    "id": "ARC-BOR-AO",
+    "name": "青篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 16,
+    "chapter_end": 23,
+    "source_page": "Ao Arc"
+  },
+  {
+    "id": "ARC-BOR-KAWAKI",
+    "name": "川木篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 24,
+    "chapter_end": 55,
+    "source_page": "Kawaki Arc"
+  },
+  {
+    "id": "ARC-BOR-CODE",
+    "name": "考德袭击篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 56,
+    "chapter_end": 67,
+    "source_page": "Code's Assault Arc"
+  },
+  {
+    "id": "ARC-BOR-OMNIPOTENCE",
+    "name": "全能篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO",
+    "chapter_start": 68,
+    "chapter_end": 80,
+    "source_page": "Omnipotence Arc"
+  },
+  {
+    "id": "ARC-BOR-RETURN",
+    "name": "博人归来篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO TWO BLUE VORTEX",
+    "chapter_start": 1,
+    "chapter_end": 20,
+    "source_page": "Boruto's Return Arc"
+  },
+  {
+    "id": "ARC-BOR-MATSURI",
+    "name": "祭与龙篇",
+    "continuity": "boruto_manga",
+    "work": "BORUTO TWO BLUE VORTEX",
+    "chapter_start": 21,
+    "chapter_end": 30,
+    "source_page": "Matsuri and Ryū Arc"
+  },
+  {
+    "id": "ARC-YEARLY-ALMANAC",
+    "name": "K001-K086年度状态边界",
+    "continuity": "mixed_project_boundaries"
+  }
+]

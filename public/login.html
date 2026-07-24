@@ -11,6 +11,16 @@
     /* ========== Reset & Base ========== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      /* 与主应用 Cinematic Ink tokens 同值，保证品牌一致 */
+      --shuiro-rgb: 235, 97, 63;   /* 朱（主强调） */
+      --kokihi-rgb: 201, 23, 30;   /* 深红（错误/危险） */
+      --c-shuiro: #eb613f;
+      --c-kokihi: #c9171e;
+      --c-kin: #c69c6d;
+      --c-kin-bright: #e8c87a;
+    }
+
     @font-face {
       font-family: 'Ninja Fallback';
       src: local('Noto Serif SC'), local('Source Han Serif SC'), local('SimSun');
@@ -70,8 +80,8 @@
 
     /* Fire particles */
     .particle--fire {
-      background: radial-gradient(circle, rgba(255,107,53,0.8), rgba(247,147,30,0.3) 60%, transparent 70%);
-      box-shadow: 0 0 6px rgba(255,107,53,0.4);
+      background: radial-gradient(circle, rgba(var(--shuiro-rgb),0.8), rgba(247,147,30,0.3) 60%, transparent 70%);
+      box-shadow: 0 0 6px rgba(var(--shuiro-rgb),0.4);
     }
 
     /* Chakra particles */
@@ -82,7 +92,7 @@
 
     /* Ember / tiny spark */
     .particle--ember {
-      background: radial-gradient(circle, rgba(255,200,50,0.9), rgba(255,107,53,0.2) 70%, transparent);
+      background: radial-gradient(circle, rgba(255,200,50,0.9), rgba(var(--shuiro-rgb),0.2) 70%, transparent);
       box-shadow: 0 0 3px rgba(255,160,50,0.5);
     }
 
@@ -102,7 +112,7 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,107,53,0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(var(--shuiro-rgb),0.06) 0%, transparent 70%);
       animation: sealPulse 4s ease-in-out infinite;
     }
 
@@ -124,7 +134,7 @@
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 20px;
       box-shadow:
-        0 0 80px rgba(255,107,53,0.06),
+        0 0 80px rgba(var(--shuiro-rgb),0.06),
         0 0 40px rgba(79,195,247,0.04),
         0 8px 32px rgba(0,0,0,0.5),
         inset 0 1px 0 rgba(255,255,255,0.04);
@@ -156,7 +166,7 @@
       padding: 1px;
       background: linear-gradient(
         135deg,
-        rgba(255,107,53,0.2) 0%,
+        rgba(var(--shuiro-rgb),0.2) 0%,
         transparent 30%,
         rgba(79,195,247,0.15) 70%,
         transparent 100%
@@ -181,13 +191,13 @@
       margin: 0 auto 24px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid rgba(255,107,53,0.3);
-      box-shadow: 0 0 30px rgba(255,107,53,0.15), 0 0 60px rgba(255,107,53,0.05);
+      border: 2px solid rgba(var(--shuiro-rgb),0.3);
+      box-shadow: 0 0 30px rgba(var(--shuiro-rgb),0.15), 0 0 60px rgba(var(--shuiro-rgb),0.05);
       animation: logoGlow 3s ease-in-out infinite alternate;
     }
 
     @keyframes logoGlow {
-      0%   { box-shadow: 0 0 20px rgba(255,107,53,0.15), 0 0 40px rgba(255,107,53,0.05); }
+      0%   { box-shadow: 0 0 20px rgba(var(--shuiro-rgb),0.15), 0 0 40px rgba(var(--shuiro-rgb),0.05); }
       100% { box-shadow: 0 0 30px rgba(79,195,247,0.2), 0 0 60px rgba(79,195,247,0.08); }
     }
 
@@ -198,7 +208,7 @@
       letter-spacing: 8px;
       color: #e8e6e3;
       margin-bottom: 4px;
-      text-shadow: 0 0 20px rgba(255,107,53,0.2);
+      text-shadow: 0 0 20px rgba(var(--shuiro-rgb),0.2);
     }
 
     .login-subtitle {
@@ -214,7 +224,7 @@
       width: 60px;
       height: 1px;
       margin: 0 auto 32px;
-      background: linear-gradient(90deg, transparent, rgba(255,107,53,0.4), rgba(79,195,247,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(var(--shuiro-rgb),0.4), rgba(79,195,247,0.3), transparent);
     }
 
     /* ========== Discord Button ========== */
@@ -291,8 +301,8 @@
     .error-msg {
       margin-top: 20px;
       padding: 14px 18px;
-      background: rgba(220,38,38,0.12);
-      border: 1px solid rgba(220,38,38,0.25);
+      background: rgba(var(--kokihi-rgb),0.12);
+      border: 1px solid rgba(var(--kokihi-rgb),0.25);
       border-radius: 10px;
       color: #fca5a5;
       font-size: 13px;
@@ -391,7 +401,7 @@
 
     /* ========== Selection ========== */
     ::selection {
-      background: rgba(255,107,53,0.3);
+      background: rgba(var(--shuiro-rgb),0.3);
       color: #fff;
     }
   </style>
@@ -519,7 +529,7 @@
           for (let registration of registrations) registration.unregister();
         });
       }
-      window.location.href = window.location.pathname + '?v=2607151434' + new Date().getTime();
+      window.location.href = window.location.pathname + '?v=2607221448' + new Date().getTime();
     }
   }
   </script>

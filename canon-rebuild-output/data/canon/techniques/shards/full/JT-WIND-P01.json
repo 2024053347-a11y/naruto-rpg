@@ -1,0 +1,4711 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-WIND-P01",
+    "group": "wind",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 40,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-WIND-0001",
+      "canonical_name": "芭蕉扇·风之卷",
+      "aliases": [
+        "芭蕉扇·风之卷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,武器术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "挥动芭蕉扇，使用者产生一阵强风，威力足以摧毁角都的雷属性面具。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TENTEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "芭蕉扇·风の巻",
+          "Bashōsen: Coil of Wind",
+          "Bashōsen: Kaze no Maki",
+          "Banana Palm Fan: Coil of Wind"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 533,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Bash%C5%8Dsen%3A_Coil_of_Wind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Bashōsen: Coil of Wind",
+        "Bashōsen: Kaze no Maki",
+        "Banana Palm Fan: Coil of Wind"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-bukijutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0002",
+      "canonical_name": "大玉螺旋手裏剣",
+      "aliases": [
+        "大玉螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大玉螺旋手里剑是风遁·螺旋手里剑的大型变体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "大玉螺旋手裏剣",
+          "Big Ball Rasenshuriken",
+          "Ōdama Rasenshuriken",
+          "Big Ball Spiralling Shuriken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 655,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Big_Ball_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Big Ball Rasenshuriken",
+        "Ōdama Rasenshuriken",
+        "Big Ball Spiralling Shuriken"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0003",
+      "canonical_name": "风之刃",
+      "aliases": [
+        "风之刃",
+        "刃 of 风"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 90,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "马基从指尖释放查克拉，制造出一把无形的风之剑攻击对手。由于对手看不见它，而且马基的攻击非常精确，对手几乎无法防御此术。风之刃对于镰鼬之术来说就像长剑对于苦无。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风の刃",
+          "Blade of Wind",
+          "Kaze no Yaiba"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 92,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Blade_of_Wind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Blade of Wind",
+        "Kaze no Yaiba"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0004",
+      "canonical_name": "大镰鼬之术",
+      "aliases": [
+        "大镰鼬之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "手鞠使用她的巨型折扇，使多股气流相互碰撞，产生真空口袋。风从她身边向外扩散时，切割接触到的任何东西，并偏转任何向她袭来的攻击，甚至是基于声音的幻术。由于风传播得很远，此术对远距离攻击的对手特别有用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "大カマイタチ之术",
+          "Great Sickle Weasel Technique",
+          "Daikamaitachi no Jutsu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 213,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Great_Sickle_Weasel_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Great Sickle Weasel Technique",
+        "Daikamaitachi no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0005",
+      "canonical_name": "磁鉄粒封刃",
+      "aliases": [
+        "磁鉄粒封刃"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~磁遁,忍术,封印术,剑术,合作忍术",
+        "磁遁,风遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "新希用查克拉覆盖荒谷的刀刃，通过风遁操纵后者的铁砂。由于龙由新希塑造，荒谷能够使用此术解救被同样材料操纵的其他人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHINKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ARAYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "磁鉄粒封刃",
+          "Magnetic Iron Sand Sealing Blade",
+          "Jitetsu Ryūfūjin"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 18,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Magnetic_Iron_Sand_Sealing_Blade"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Magnetic Iron Sand Sealing Blade",
+        "Jitetsu Ryūfūjin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~magnet-release,-ninjutsu,-fūinjutsu,-kenjutsu,-cooperation-ninjutsu",
+        "magnet-release,-wind-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0006",
+      "canonical_name": "迷你螺旋手里剑",
+      "aliases": [
+        "迷你螺旋手里剑"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是螺旋手里剑的微型但强大的版本。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "ミニ螺旋手裏剣",
+          "Mini-Rasenshuriken",
+          "Mini Spiralling Hidden Hand Blade"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 545,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Mini-Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Mini-Rasenshuriken",
+        "Mini Spiralling Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu",
+        "wind-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0007",
+      "canonical_name": "仙法·墨散螺旋手裏剣",
+      "aliases": [
+        "仙法·墨散螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术,忍术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在获取牛鬼的力量后，鸣人用墨水形成一个螺旋手里剑。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·墨散螺旋手裏剣",
+          "Sage Art: Ink-Splatter Rasenshuriken",
+          "Senpō: Sumisan Rasenshuriken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 688,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Ink-Splatter_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Ink-Splatter Rasenshuriken",
+        "Senpō: Sumisan Rasenshuriken"
+      ],
+      "lookup_classes": [
+        "senjutsu,-ninjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0008",
+      "canonical_name": "仙法·熔遁螺旋手裏剣",
+      "aliases": [
+        "仙法·熔遁螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~熔遁,仙术,忍术,禁术",
+        "熔遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种强大的术，鸣人获取孙悟空的力后，创造一个带有熔岩核心的螺旋手里剑，其热量使刀片本身散发出蒸汽。此术的威力足以摧毁目标的双腿，扩展时能完全将十尾的树形一分为二。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·熔遁螺旋手裏剣",
+          "Sage Art: Lava Release Rasenshuriken",
+          "Senpō: Yōton Rasenshuriken",
+          "Sage Art: Lava Release Spiralling Hidden Hand Blade"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 673,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Lava_Release_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Lava Release Rasenshuriken",
+        "Senpō: Yōton Rasenshuriken",
+        "Sage Art: Lava Release Spiralling Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~lava-release,-senjutsu,-ninjutsu,-kinjutsu",
+        "lava-release,-wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0009",
+      "canonical_name": "仙法·风遁砂埃",
+      "aliases": [
+        "仙法·风遁砂埃"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "风遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "深作从口中呼出巨大的尘云，浓密到完全阻挡目标的视线。尘云大到足以隐藏如蛤蟆文太般大小的召唤物。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·风遁砂埃",
+          "Sage Art: Wind Release Dust Cloud",
+          "Senpō: Fūton Sunabokori"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 432,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Wind_Release_Dust_Cloud"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Wind Release Dust Cloud",
+        "Senpō: Fūton Sunabokori"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "wind-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0010",
+      "canonical_name": "镰鼬之术",
+      "aliases": [
+        "镰鼬之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "手鞠使用她的巨型折扇，使多股气流相互碰撞，产生真空口袋。单独的风力足以吹走来袭攻击并将目标击倒在地。如果目标被卷入风中，他们的身体会被无数的风刃切割。她还可以改变风的切割强度，例如切开武士的盔甲而不伤及内部的武士。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHIKADAI-NARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "カマイタチ之术",
+          "Sickle Weasel Technique",
+          "Kamaitachi no Jutsu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 107,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sickle_Weasel_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sickle Weasel Technique",
+        "Kamaitachi no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0011",
+      "canonical_name": "六道·超大玉螺旋手裏剣",
+      "aliases": [
+        "六道·超大玉螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在六道仙人模式下，使用六道仙术并完全转变为九喇嘛形态，鸣人创造两个整个查克拉构造的影分身。影分身在原地融合，形成三面六臂的构造。在其右臂中创造一个螺旋丸，左臂中创造一个尾兽玉螺旋手里剑，两者都注入了自然能量。它强到足以对抗宇智波佐助的最强攻击术，是鸣人的最强术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "六道·超大玉螺旋手裏剣",
+          "Six Paths: Ultra-Big Ball Rasenshuriken",
+          "Rikudō: Chōōdama Rasenshuriken",
+          "Six Paths: Ultra-Big Ball Spiralling Hidden Hand Blade"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 696,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Six_Paths%3A_Ultra-Big_Ball_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Six Paths: Ultra-Big Ball Rasenshuriken",
+        "Rikudō: Chōōdama Rasenshuriken",
+        "Six Paths: Ultra-Big Ball Spiralling Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-kinjutsu,",
+        "wind-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0012",
+      "canonical_name": "口寄せ·斩り斩り舞",
+      "aliases": [
+        "口寄せ·斩り斩り舞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "手鞠使用她的巨型折扇创造一个足以飞行数百米的旋风。挥动扇子时，她召唤镰鼬，镰鼬乘着风快速切割其路径上的一切。镰鼬产生的碎片以及该区域的其他任何东西都被风卷起，压碎被抛向的一切。由于此术的破坏范围之大，对隐藏的对手最为有用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·斩り斩り舞",
+          "Summoning: Quick Beheading Dance",
+          "Kuchiyose: Kirikiri Mai"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 214,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Quick_Beheading_Dance"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Quick Beheading Dance",
+        "Kuchiyose: Kirikiri Mai"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0013",
+      "canonical_name": "尾獣玉螺旋手裏剣",
+      "aliases": [
+        "尾獣玉螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 167,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在九喇嘛的帮助下，鸣人将他的求道玉转化为尾兽玉，并加入风属性查克拉，在其周围创造出手里剑般的刀片，然后投向目标。由此产生的爆炸比普通尾兽玉更为巨大，可以一击摧毁多个类行星的物体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "尾獣玉螺旋手裏剣",
+          "Tailed Beast Ball Rasenshuriken",
+          "Bijūdama Rasenshuriken",
+          "Tailed Beast Ball Spiralling Hidden Hand Blade"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 676,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tailed_Beast_Ball_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "heavy",
+        "reference_pool": 660,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tailed Beast Ball Rasenshuriken",
+        "Bijūdama Rasenshuriken",
+        "Tailed Beast Ball Spiralling Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0014",
+      "canonical_name": "宇智波返",
+      "aliases": [
+        "宇智波返"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,武器术,查克拉吸收术",
+        "风遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 48,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "利用团扇宇智波团扇阻挡来袭攻击，使用者通过将来袭的查克拉转化为风性质变化来无效化攻击效果，然后将其反弹。由于这种反弹既突然又出人意料，反弹的攻击对对手来说很难躲避。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うちは返し",
+          "Uchiha Return",
+          "Uchihagaeshi"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 594,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Uchiha_Return"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Uchiha Return",
+        "Uchihagaeshi"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-bukijutsu,-chakra-absorption-techniques",
+        "wind-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0015",
+      "canonical_name": "风遁·気流乱舞",
+      "aliases": [
+        "风遁·気流乱舞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过结印操纵周围的气流，形成强大的旋风用于攻击或防御。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·気流乱舞",
+          "Wind Release: Air Current Wild Dance",
+          "Fūton: Kiryū Ranbu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 612,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Air_Current_Wild_Dance"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Air Current Wild Dance",
+        "Fūton: Kiryū Ranbu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0016",
+      "canonical_name": "风遁·掛け網",
+      "aliases": [
+        "风遁·掛け網"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用巨型折扇发射出网状的锋利风刃来切割目标。与其他铁扇术使用者合作时，其威力足以伤害以惊人耐久力著称的三代雷影。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·掛け網",
+          "Wind Release: Cast Net",
+          "Fūton: Kakeami"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 552,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Cast_Net"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Cast Net",
+        "Fūton: Kakeami"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0017",
+      "canonical_name": "风遁·練空弾",
+      "aliases": [
+        "风遁·練空弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吐出高速旋转的空气弹，以强大的力量攻击目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHUKAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·練空弾",
+          "Wind Release: Drilling Air Bullet",
+          "Fūton: Renkūdan"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 135,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Drilling_Air_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Drilling Air Bullet",
+        "Fūton: Renkūdan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,",
+        "wind-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0018",
+      "canonical_name": "风遁·风尘之术",
+      "aliases": [
+        "风遁·风尘之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术创造出一股含有尘埃颗粒的高速风，能够在瞬间摧毁其中的任何东西。完成的术通过结印后放在嘴前水平重叠的双手引导。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ASUMA-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·风尘之术",
+          "Wind Release: Dust Cloud Technique",
+          "Fūton: Fūjin no Jutsu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 533,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Dust_Cloud_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Dust Cloud Technique",
+        "Fūton: Fūjin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0019",
+      "canonical_name": "风遁·烈风掌",
+      "aliases": [
+        "风遁·烈风掌"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种风遁术，使用者可以增加自身速度，或通过双手合拢压缩风并将其转化为强大的气流，力量足以击倒一个人。与手里剑或苦无结合使用时，工具的速度增加，变得更加致命。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BORUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·烈风掌",
+          "Wind Release: Gale Palm",
+          "Fūton: Reppūshō"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 373,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Gale_Palm"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Gale Palm",
+        "Fūton: Reppūshō"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0020",
+      "canonical_name": "风遁·大突破",
+      "aliases": [
+        "风遁·大突破"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吹出风，吹走面前的一切。此术本身非常简单，但其威力因使用者的技能和风的强度而有显著差异；临之书将大蛇丸对第七班使用的此术比作飓风，因为他的风能连根拔起树木。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOKAGE-YANAGIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·大突破",
+          "Wind Release: Great Breakthrough",
+          "Fūton: Daitoppa"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 46,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Great_Breakthrough"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Great Breakthrough",
+        "Fūton: Daitoppa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0021",
+      "canonical_name": "风遁·大掛け網",
+      "aliases": [
+        "风遁·大掛け網"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·大挂网的工作原理类似于其原版术，使用者利用巨型折扇创造出大量极其锋利的风刃攻击对手。这些风刃相互重叠，形成一张象征性的网，从所有角度切割目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·大掛け網",
+          "Wind Release: Great Cast Net",
+          "Fūton: Ōkakeami"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 617,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Great_Cast_Net"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Great Cast Net",
+        "Fūton: Ōkakeami"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0022",
+      "canonical_name": "风遁·大鎌いたち之术",
+      "aliases": [
+        "风遁·大鎌いたち之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用扇子或通过结印，制造出巨大的镰鼬状风刃攻击远处的敌人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·大鎌いたち之术",
+          "Wind Release: Great Sickle Weasel Technique",
+          "Fūton: Ōkamaitachi no Jutsu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 464,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Great_Sickle_Weasel_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Great Sickle Weasel Technique",
+        "Fūton: Ōkamaitachi no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0023",
+      "canonical_name": "风遁·无限砂尘 大突破",
+      "aliases": [
+        "风遁·无限砂尘 大突破"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 152,
+      "power": 300,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在准备进入尾兽模式时，我爱罗用沙子覆盖身体。用这些沙子，他能在全身形成嘴巴。他用这些嘴和常规的嘴吸气，导致身体膨胀。然后呼出风，与涂有查克拉的沙混合。由此产生的沙尘暴覆盖我爱罗面前广阔区域，非常强大，足以击倒树木并造成大量物理伤害。出于这些原因，它是对抗多个敌人的有用攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·无限砂尘 大突破",
+          "Wind Release: Infinite Sand Cloud — Great Breakthrough",
+          "Fūton: Mugen Sajin — Daitoppa"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 132,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Infinite_Sand_Cloud_%E2%80%94_Great_Breakthrough"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Infinite Sand Cloud — Great Breakthrough",
+        "Fūton: Mugen Sajin — Daitoppa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0024",
+      "canonical_name": "风遁·圧害",
+      "aliases": [
+        "风遁·圧害"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "角都的风属性面具释放的强大风术。这种龙卷风状的质量被压缩到非常高的密度后才释放。爆炸可以覆盖广大范围，对目标和其周围环境造成巨大伤害。此术还可以与火遁·头刻苦结合，大规模增强火焰的威力，引起巨大的火焰风暴。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKUZU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·圧害",
+          "Wind Release: Pressure Damage",
+          "Fūton: Atsugai"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 334,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Pressure_Damage"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Pressure Damage",
+        "Fūton: Atsugai"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0025",
+      "canonical_name": "风遁·螺旋丸",
+      "aliases": [
+        "风遁·螺旋丸"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·螺旋丸是由漩涡鸣人创造的原创术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KONOHAMARU-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·螺旋丸",
+          "Wind Release: Rasengan",
+          "Fūton: Rasengan",
+          "Wind Release: Spiralling Sphere"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 330,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Rasengan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Rasengan",
+        "Fūton: Rasengan",
+        "Wind Release: Spiralling Sphere"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0026",
+      "canonical_name": "风遁·螺旋手裏剣",
+      "aliases": [
+        "风遁·螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 120,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·螺旋手里剑是风遁·螺旋丸的手里剑形变体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·螺旋手裏剣",
+          "Wind Release: Rasenshuriken",
+          "Fūton: Rasenshuriken",
+          "Wind Release: Spiralling Shuriken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 339,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Rasenshuriken",
+        "Fūton: Rasenshuriken",
+        "Wind Release: Spiralling Shuriken"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0027",
+      "canonical_name": "风遁·螺旋连手裏剣",
+      "aliases": [
+        "风遁·螺旋连手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·螺旋连手里剑是由漩涡鸣人创造和使用的忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·螺旋连手裏剣",
+          "Wind Release: Repeated Rasenshuriken",
+          "Fūton: Rasenrenshuriken",
+          "Wind Release: Spiralling Serial Shuriken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 617,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Repeated_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Repeated Rasenshuriken",
+        "Fūton: Rasenrenshuriken",
+        "Wind Release: Spiralling Serial Shuriken"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0028",
+      "canonical_name": "风遁·砂散弾",
+      "aliases": [
+        "风遁·砂散弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "风遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在我爱罗将无数沙粒散开并压缩成子弹状投射物后，守鹤从胃中呼出巨大的风，具有炸弹般的冲击力以增加子弹的威力，创造出大规模的沙暴。此攻击威力足以轻松穿透血肉，由于术的速度和范围而难以躲避。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SHUKAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-GAARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·砂散弾",
+          "Wind Release: Sand Buckshot",
+          "Fūton: Sasandan"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 658,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Sand_Buckshot"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Sand Buckshot",
+        "Fūton: Sasandan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "wind-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0029",
+      "canonical_name": "风遁·砂尘突破",
+      "aliases": [
+        "风遁·砂尘突破"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从手掌释放出强大的风刃冲击波。其强度足以击退大规模的铁砂攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ARAYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·砂尘突破",
+          "Wind Release: Sand Cloud Breakthrough",
+          "Fūton: Sajin Toppa"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 20,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Sand_Cloud_Breakthrough"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Sand Cloud Breakthrough",
+        "Fūton: Sajin Toppa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0030",
+      "canonical_name": "风遁·螺旋障壁",
+      "aliases": [
+        "风遁·螺旋障壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用螺旋丸，木叶丸可以通过用风查克拉扩散螺旋丸来反击敌人的攻击，创造出强大的风之屏障。此术被证明强大到足以阻挡千鸟。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KONOHAMARU-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·螺旋障壁",
+          "Wind Release: Spiralling Barrier",
+          "Fūton: Rasen Shōheki"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 11,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Spiralling_Barrier"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Spiralling Barrier",
+        "Fūton: Rasen Shōheki"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0031",
+      "canonical_name": "风遁·超大玉螺旋手裏剣",
+      "aliases": [
+        "风遁·超大玉螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,禁术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·超大玉螺旋手里剑是风遁·螺旋手里剑的更进阶版本。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·超大玉螺旋手裏剣",
+          "Wind Release: Ultra-Big Ball Rasenshuriken",
+          "Fūton: Chōōdama Rasenshuriken",
+          "Wind Release: Ultra-Big Ball Spiralling Shuriken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 634,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Ultra-Big_Ball_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Ultra-Big Ball Rasenshuriken",
+        "Fūton: Chōōdama Rasenshuriken",
+        "Wind Release: Ultra-Big Ball Spiralling Shuriken"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kinjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0032",
+      "canonical_name": "风遁·真空刃",
+      "aliases": [
+        "风遁·真空刃"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,手里剑术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将蕴含风属性的查克拉呼出到武器上，以增加其锋利度、射程和杀伤力。例如，使用者可以将苦无注入查克拉使其类似临时弯刀，或注入手里剑以增加其射程和切割力。就苦无而言，包裹武器的风属性查克拉具有 独特的浅绿色。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·真空刃",
+          "Wind Release: Vacuum Blade",
+          "Fūton: Shinkūjin"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 479,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Vacuum_Blade"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Vacuum Blade",
+        "Fūton: Shinkūjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-shurikenjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0033",
+      "canonical_name": "风遁·真空大玉",
+      "aliases": [
+        "风遁·真空大玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "风遁·真空大玉的更强版本，使用者选择将先前吸入的全部气息压缩成一个巨大的、粉碎性的风查克拉球，然后从口中吐出。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·真空大玉",
+          "Wind Release: Vacuum Great Sphere",
+          "Fūton: Shinkū Taigyoku"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 479,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Vacuum_Great_Sphere"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Vacuum Great Sphere",
+        "Fūton: Shinkū Taigyoku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0034",
+      "canonical_name": "风遁·真空连波",
+      "aliases": [
+        "风遁·真空连波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者深吸一口气，然后通过快速向不同方向移动头部，以不同角度呼出多枚风刃。此术的威力可以通过与极致的吸力结合使用而大幅增强，例如由梦貘产生的吸力，增强后的攻击甚至被证明足以切开佐助的人形须佐能乎的防御。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·真空连波",
+          "Wind Release: Vacuum Serial Waves",
+          "Fūton: Shinkū Renpa"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 479,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Vacuum_Serial_Waves"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Vacuum Serial Waves",
+        "Fūton: Shinkū Renpa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0035",
+      "canonical_name": "风遁·真空玉",
+      "aliases": [
+        "风遁·真空玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "风"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者深吸一口气，呼出多个小型风查克拉冲击波，向不同方向散开，使其极难无损躲避。由于此术的特性，呼出的冲击波能够刺入并可能穿过对手的肉体。在动画中，团藏还可以压缩空气，创造出足以打破木遁穹顶的球形冲击波。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·真空玉",
+          "Wind Release: Vacuum Sphere",
+          "Fūton: Shinkūgyoku"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 477,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Vacuum_Sphere"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Vacuum Sphere",
+        "Fūton: Shinkūgyoku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0036",
+      "canonical_name": "风遁·真空波",
+      "aliases": [
+        "风遁·真空波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者深吸一口气，旋转的同时呼气，将释放的空气压缩成一把孤形的风刃，由于旋转运动覆盖相当大的区域。产生的锋利冲击波大到足以切开位于距离使用者相当远处的多个目标，对被击中者造成严重伤害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·真空波",
+          "Wind Release: Vacuum Wave",
+          "Fūton: Shinkūha"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 456,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Vacuum_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Vacuum Wave",
+        "Fūton: Shinkūha"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WIND-0037",
+      "canonical_name": "风遁·旋风拳",
+      "aliases": [
+        "风遁·旋风拳"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种将拳头包裹在风遁中，形成某种台风般的旋转风刃的术。击中个体时，术会刺穿他们的身体并用冲击波将他们吹飞。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIRAI-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·旋风拳",
+          "Wind Release: Whirlwind Fist",
+          "Fūton: Senpūken"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 14,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Whirlwind_Fist"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Whirlwind Fist",
+        "Fūton: Senpūken"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0038",
+      "canonical_name": "风遁·风切り之术",
+      "aliases": [
+        "风遁·风切り之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用查克拉或忍具（如战扇）操纵或创造外部风源，可以制造出一到多枚风刃，能够轻松切割目标。手鞠和一群来自砂隐的铁扇术使用者也将此术用作对抗强大来袭的狂风的手段。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BIRD-MASKED-ANBU-MEMBER",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TEMARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风遁·风切り之术",
+          "Wind Release: Wind Cutter Technique",
+          "Fūton: Kazekiri no Jutsu"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 425,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Release%3A_Wind_Cutter_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Release: Wind Cutter Technique",
+        "Fūton: Kazekiri no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0039",
+      "canonical_name": "风波",
+      "aliases": [
+        "风波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者挥手创造出一把巨大的风刃，可以发射向对手。此术的威力足以短暂阻止宇智波佐助的须佐能乎的移动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "风波",
+          "Wind Waves",
+          "Kazanami"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 479,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Wind_Waves"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Wind Waves",
+        "Kazanami"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    },
+    {
+      "id": "JT-WIND-0040",
+      "canonical_name": "八坂之勾玉·尾兽之加",
+      "aliases": [
+        "八坂之勾玉·尾兽之加"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,瞳术,忍术,合作忍术",
+        "风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "风"
+      ],
+      "cost": 152,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这种合作忍术是结合使用者最强远距离术的协作术，包括鸣人的风遁·螺旋手里剑、鼬的八坂之勾玉和杀人蜂的尾兽玉。这种组合只对长门使用过一次，使用者利用其引力而不需要瞄准目标。撞击时，合作术的威力足以摧毁长门的地爆天星。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "八坂ノ勾玉·尾獣ノカ",
+          "Yasaka Magatama: Tailed Beast Noka",
+          "Yasaka no Magatama: Bijū Noka"
+        ],
+        "tags": [
+          "wind",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 551,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Yasaka_Magatama%3A_Tailed_Beast_Noka"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WIND-AUTO",
+        "reviewed_by": "manual-translation-JT-WIND-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Yasaka Magatama: Tailed Beast Noka",
+        "Yasaka no Magatama: Bijū Noka"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-dōjutsu,-ninjutsu,-cooperation-ninjutsu",
+        "wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "wind"
+      ]
+    }
+  ],
+  "unresolved": []
+}

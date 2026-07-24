@@ -1,0 +1,223 @@
+[
+  {
+    "id": "ORG-KONOHA",
+    "name": "木叶隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K002-01-01", "state": "forming", "label": "木叶筹建联盟", "parent_org_id": null, "location_ids": ["LOC-LAND-FIRE"]},
+      {"from": "K002-01-01", "until": null, "state": "active", "label": "木叶隐村", "parent_org_id": null, "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-UCHIHA",
+    "name": "宇智波一族",
+    "kind": "clan",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K002-01-01", "state": "active", "label": "宇智波一族（木叶筹建同盟）", "parent_org_id": null, "location_ids": ["LOC-LAND-FIRE"]},
+      {"from": "K002-01-01", "until": "K060-01-01", "state": "active", "label": "宇智波一族（木叶内部家族）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-UCHIHA-COMPOUND"]},
+      {"from": "K060-01-01", "until": null, "state": "remnant", "label": "宇智波一族幸存血脉（非统一组织）", "parent_org_id": null, "location_ids": []}
+    ]
+  },
+  {
+    "id": "ORG-AKATSUKI",
+    "name": "晓",
+    "kind": "network",
+    "visibility": "restricted",
+    "periods": [
+      {"from": "K042-01-01", "until": "K043-01-01", "state": "forming", "label": "初代晓（筹建中）", "parent_org_id": null, "location_ids": ["LOC-LAND-RAIN"]},
+      {"from": "K043-01-01", "until": "K049-01-01", "state": "active", "label": "初代晓（雨之国和平组织）", "parent_org_id": null, "location_ids": ["LOC-LAND-RAIN"]},
+      {"from": "K049-01-01", "until": "K069-01-01", "state": "underground", "label": "长门阶段的地下晓", "parent_org_id": null, "location_ids": ["LOC-LAND-RAIN"]},
+      {"from": "K069-01-01", "until": "K071-01-01", "state": "remnant", "label": "晓残部与遗留网络（无统一指挥）", "parent_org_id": null, "location_ids": []}
+    ]
+  },
+  {
+    "id": "ORG-MYOUBOKU",
+    "name": "妙木山",
+    "kind": "summoning_faction",
+    "visibility": "restricted",
+    "periods": [
+      {"from": "K001-01-01", "until": null, "state": "active", "label": "妙木山", "parent_org_id": null, "location_ids": []}
+    ]
+  },
+  {
+    "id": "ORG-SUNA",
+    "name": "砂隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K003-01-01", "state": "forming", "label": "风之国忍族军事集团（筹建砂隐）", "parent_org_id": null, "location_ids": ["LOC-LAND-WIND"]},
+      {"from": "K003-01-01", "until": null, "state": "active", "label": "砂隐村", "parent_org_id": null, "location_ids": ["LOC-SUNA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KIRI",
+    "name": "雾隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K003-01-01", "state": "forming", "label": "水之国忍族军事集团（筹建雾隐）", "parent_org_id": null, "location_ids": ["LOC-LAND-WATER"]},
+      {"from": "K003-01-01", "until": null, "state": "active", "label": "雾隐村", "parent_org_id": null, "location_ids": ["LOC-KIRI-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-IWA",
+    "name": "岩隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K003-01-01", "state": "forming", "label": "土之国忍族军事集团（筹建岩隐）", "parent_org_id": null, "location_ids": ["LOC-LAND-EARTH"]},
+      {"from": "K003-01-01", "until": null, "state": "active", "label": "岩隐村", "parent_org_id": null, "location_ids": ["LOC-IWA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KUMO",
+    "name": "云隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K003-01-01", "state": "forming", "label": "雷之国忍族军事集团（筹建云隐）", "parent_org_id": null, "location_ids": ["LOC-LAND-LIGHTNING"]},
+      {"from": "K003-01-01", "until": null, "state": "active", "label": "云隐村", "parent_org_id": null, "location_ids": ["LOC-KUMO-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-SENJU",
+    "name": "千手一族",
+    "kind": "clan",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K002-01-01", "state": "active", "label": "千手一族（木叶筹建同盟）", "parent_org_id": null, "location_ids": ["LOC-LAND-FIRE"]},
+      {"from": "K002-01-01", "until": null, "state": "integrated", "label": "千手一族（逐步融入木叶）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-HYUGA",
+    "name": "日向一族",
+    "kind": "clan",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K002-01-01", "state": "active", "label": "日向一族（火之国忍族）", "parent_org_id": null, "location_ids": ["LOC-LAND-FIRE"]},
+      {"from": "K002-01-01", "until": null, "state": "active", "label": "日向一族（木叶内部家族）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-IRON",
+    "name": "铁之国武士政权",
+    "kind": "government",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": null, "state": "active", "label": "铁之国武士政权", "parent_org_id": null, "location_ids": ["LOC-LAND-IRON"]}
+    ]
+  },
+  {
+    "id": "ORG-UZUSHIO",
+    "name": "涡潮隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K039-01-01", "state": "active", "label": "涡潮隐村", "parent_org_id": null, "location_ids": ["LOC-UZUSHIO-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-UZUMAKI",
+    "name": "漩涡一族",
+    "kind": "clan",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K039-01-01", "state": "active", "label": "漩涡一族（以涡潮为中心）", "parent_org_id": "ORG-UZUSHIO", "location_ids": ["LOC-UZUSHIO-VILLAGE"]},
+      {"from": "K039-01-01", "until": null, "state": "diaspora", "label": "漩涡流亡者（各国分散、无统一驻地）", "parent_org_id": null, "location_ids": []}
+    ]
+  },
+  {
+    "id": "ORG-TAKI",
+    "name": "泷隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K003-01-01", "until": "K004-01-01", "state": "forming", "label": "泷隐村（形成中）", "parent_org_id": null, "location_ids": ["LOC-LAND-WATERFALLS"]},
+      {"from": "K004-01-01", "until": null, "state": "active", "label": "泷隐村", "parent_org_id": null, "location_ids": ["LOC-TAKI-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-AME",
+    "name": "雨隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "雨隐村（形成中）", "parent_org_id": null, "location_ids": ["LOC-LAND-RAIN"]},
+      {"from": "K012-01-01", "until": null, "state": "active", "label": "雨隐村", "parent_org_id": null, "location_ids": ["LOC-AME-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KUSA",
+    "name": "草隐村",
+    "kind": "village",
+    "visibility": "public",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "草隐村（形成中）", "parent_org_id": null, "location_ids": ["LOC-LAND-GRASS"]},
+      {"from": "K012-01-01", "until": null, "state": "active", "label": "草隐村", "parent_org_id": null, "location_ids": ["LOC-KUSA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KONOHA-ANBU",
+    "name": "木叶暗部",
+    "kind": "institution",
+    "visibility": "restricted",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "木叶暗部（形成中）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]},
+      {"from": "K012-01-01", "until": null, "state": "active", "label": "木叶暗部", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KONOHA-POLICE",
+    "name": "宇智波警务部队",
+    "kind": "institution",
+    "visibility": "public",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "宇智波警务部队（形成中）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]},
+      {"from": "K012-01-01", "until": "K060-01-01", "state": "active", "label": "宇智波警务部队", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KONOHA-ACADEMY",
+    "name": "木叶忍者教育机构",
+    "kind": "institution",
+    "visibility": "public",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "木叶学堂（筹建中）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-ACADEMY"]},
+      {"from": "K012-01-01", "until": "K016-01-01", "state": "active", "label": "木叶学堂", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-ACADEMY"]},
+      {"from": "K016-01-01", "until": null, "state": "active", "label": "木叶忍者学校", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-ACADEMY"]}
+    ]
+  },
+  {
+    "id": "ORG-ROOT",
+    "name": "根",
+    "kind": "secret_unit",
+    "visibility": "secret",
+    "periods": [
+      {"from": "K021-01-01", "until": "K022-01-01", "state": "forming", "label": "根（秘密筹建中）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]},
+      {"from": "K022-01-01", "until": "K069-01-01", "state": "active", "label": "根（秘密组织）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]},
+      {"from": "K069-01-01", "until": "K071-01-01", "state": "remnant", "label": "根残部（清理与整编中）", "parent_org_id": "ORG-KONOHA", "location_ids": ["LOC-KONOHA-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KINKAKU",
+    "name": "金角部队",
+    "kind": "military_unit",
+    "visibility": "restricted",
+    "periods": [
+      {"from": "K018-01-01", "until": "K019-01-01", "state": "mobilizing", "label": "金角部队（进入战时活动期）", "parent_org_id": "ORG-KUMO", "location_ids": ["LOC-KUMO-VILLAGE"]},
+      {"from": "K019-01-01", "until": "K021-01-01", "state": "active", "label": "金角部队", "parent_org_id": "ORG-KUMO", "location_ids": ["LOC-KUMO-VILLAGE"]}
+    ]
+  },
+  {
+    "id": "ORG-KIRI-SWORDS",
+    "name": "雾隐忍刀七人众",
+    "kind": "military_unit",
+    "visibility": "restricted",
+    "periods": [
+      {"from": "K046-01-01", "until": null, "state": "active", "label": "雾隐忍刀七人众", "parent_org_id": "ORG-KIRI", "location_ids": ["LOC-KIRI-VILLAGE"], "note": "K046 是本项目首次冻结其活动状态的年份，不代表组织成立年份；K049 年内遭重创但未解散。"}
+    ]
+  }
+]

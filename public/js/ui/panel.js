@@ -4,8 +4,17 @@ import { formatPercentage, escHtml, escAttr } from '../utils/format.js';
 import { equipmentSystem } from '../systems/equipment-system.js';
 import { skillSystem } from '../systems/skill-system.js';
 import { relationshipSystem } from '../systems/relationship-system.js';
+import { CUSTOM_TALENT_PLACEHOLDER, parseCustomTalentDescription } from '../systems/opening-draft.js';
+import { CANON_DATABASE } from '../data/canon-database.js';
+import {
+  calculateCombatAssessment,
+  combatAttributesFromPlayerState,
+  combatMasteriesFromPlayerState
+} from '../systems/combat-level.js';
 import GameModal from './modal.js';
 import { panelStyles } from '../../css/components/panel.css.js';
+import { imageStudio } from '../core/image-studio/index.js';
+import { mountPortraitImageControls } from './image-studio.js';
 
 class InfoPanel extends HTMLElement {
   constructor() {
@@ -19,6 +28,7 @@ class InfoPanel extends HTMLElement {
     this._skillSort = 'default';
     this._skillCompact = false;
     this._collapsedSections = {};
+    this._bondFilter = null;    // 温度等级 key 或 null
   }
 
   connectedCallback() {
@@ -204,6 +214,19 @@ class InfoPanel extends HTMLElement {
       });
     });
 
+    /* ── 羁绊绘卷：星图弹窗 / 温度筛选 ── */
+    this.shadowRoot.querySelectorAll('.bond-vt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.bv === 'chart') this._openBondChartModal();
+      });
+    });
+    this.shadowRoot.querySelectorAll('.bond-pill[data-bf]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this._bondFilter = this._bondFilter === btn.dataset.bf ? null : btn.dataset.bf;
+        this.render();
+      });
+    });
+
     if (this._tab === 'skills') {
       const search = this.shadowRoot.getElementById('skill-search');
       if (search) {
@@ -250,12 +273,12 @@ class InfoPanel extends HTMLElement {
 
     const chakra = s['属性·查克拉'];
     const chakraCur = s['属性·当前查克拉'];
-    const stamina = s['属性·体力'];
-    const staminaCur = s['属性·当前体力'];
+    const vitality = s['属性·生命力'];
+    const vitalityCur = s['属性·当前生命力'];
     const spirit = s['属性·精神力'];
     const spiritCur = s['属性·当前精神力'];
-    const willpower = s['属性·意志力'];
-    const willpowerCur = s['属性·当前意志力'];
+    const stamina = s['属性·体力'];
+    const staminaCur = s['属性·当前体力'];
     const exp = s['进度·经验'];
     const expNext = s['进度·下一级经验'];
     const promotion = s['进度·突破待处理'] ? { track: s['进度·突破待处理'] } : {};
@@ -278,7 +301,7 @@ class InfoPanel extends HTMLElement {
 
           <div class="attr-card" style="--threat-color: ${threat.color};">
             <div class="attr-threat"></div>
-            <div class="attr-label">综合危险度</div>
+            <div class="attr-label">综合战力</div>
             <div class="attr-threat-val">${tTxt} <span style="font-size:12px;opacity:0.6;font-family:var(--font-body); font-weight:normal;">${tNum}</span></div>
           </div>
 
@@ -295,10 +318,10 @@ class InfoPanel extends HTMLElement {
         <div class="attr-bento">
           <div class="attr-card full-span" style="padding: 24px;">
             ${this._newBar('查克拉', chakraCur, chakra, '#42A5F5')}
-            ${this._newBar('生命力', staminaCur, stamina, '#66BB6A')}
+            ${this._newBar('生命力', vitalityCur, vitality, '#66BB6A')}
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px;">
               ${this._newBar('精神力', spiritCur, spirit, '#CE93D8')}
-              ${this._newBar('意志力', willpowerCur, willpower, '#eb613f')}
+              ${this._newBar('体力', staminaCur, stamina, '#eb613f')}
             </div>
           </div>
         </div>
@@ -352,76 +375,40 @@ class InfoPanel extends HTMLElement {
   }
 
   _calcThreat(s) {
-    const a = s;
-    const sk = s;
-    const normalizeSkillGroup = g => {
-      if (!g) return {};
-      if (Array.isArray(g)) {
-        const obj = {};
-        g.forEach(item => { if (item && item.name) obj[item.name] = item; });
-        return obj;
-      }
-      return g;
+    const assessment = calculateCombatAssessment(
+      combatAttributesFromPlayerState(s),
+      combatMasteriesFromPlayerState(s)
+    );
+    const colors = {
+      'E级': '#a39f98',
+      'D级': '#81c784',
+      'C级': '#42A5F5',
+      'B级': '#c69c6d',
+      'A级': '#eb613f',
+      'S级': '#ef5350',
+      '超S级': '#d50000'
     };
-    const best = g => Math.max(0, ...Object.values(normalizeSkillGroup(g)).map(x => Number(x?.mastery) || 0));
-
-    const chakra = s['属性·查克拉'] || 0;
-    const spirit = s['属性·精神力'] || 0;
-    const stamina = s['属性·体力'] || 0;
-    const speed = s['属性·速度'] || 0;
-    const willpower = s['属性·意志力'] || 0;
-    const luck = s['属性·幸运'] || 0;
-
-    const skJutsu = this._scanSkills(s, '忍术');
-    const skTaijutsu = this._scanSkills(s, '体术');
-    const skGenjutsu = this._scanSkills(s, '幻术');
-
-    const nin = Math.round((chakra) * 0.45 + (spirit) * 0.25 + best(skJutsu) * 0.7);
-    const tai = Math.round((stamina) * 0.25 + (speed) * 0.9 + (willpower) * 0.2 + best(skTaijutsu) * 0.9);
-    const gen = Math.round((spirit) * 0.75 + (chakra) * 0.2 + best(skGenjutsu) * 0.9);
-    const def = Math.round((stamina) * 0.18 + (willpower) * 0.25);
-
-    const total = Math.round((nin + tai + gen + def) * 0.35 + (speed) * 0.4 + (luck) * 0.3);
-
-    const peak = Math.max(chakra, stamina, spirit, willpower, speed);
-
-    const tiers = [
-      { maxTotal: 25,  maxPeak: 20,  label: '无害平民', color: '#a39f98' },
-      { maxTotal: 55,  maxPeak: 45,  label: 'D级威胁',   color: '#81c784' },
-      { maxTotal: 100, maxPeak: 80,  label: 'C级威胁',   color: '#42A5F5' },
-      { maxTotal: 170, maxPeak: 130, label: 'B级威胁',   color: '#c69c6d' },
-      { maxTotal: 270, maxPeak: 200, label: 'A级威胁',   color: '#eb613f' },
-      { maxTotal: 400, maxPeak: 300, label: 'S级威胁',   color: '#ef5350' },
-      { maxTotal: Infinity, maxPeak: Infinity, label: '影级/神话', color: '#d50000' }
-    ];
-
-    let currentTier = tiers[0];
-    for (let i = 1; i < tiers.length; i++) {
-      const prev = tiers[i-1];
-      if (total > prev.maxTotal && peak > prev.maxPeak) {
-        currentTier = tiers[i];
-      } else {
-        break;
-      }
-    }
-
-    return { label: `${currentTier.label} (${total})`, color: currentTier.color };
+    return {
+      ...assessment,
+      label: `${assessment.level} (${assessment.roundedScore})`,
+      color: colors[assessment.level] || colors['E级']
+    };
   }
 
   _derivedBento(s){
     const chakra = s['属性·查克拉']||0;
     const spirit = s['属性·精神力']||0;
-    const stamina = s['属性·体力']||0;
+    const vitality = s['属性·生命力']||0;
     const speed = s['属性·速度']||0;
-    const willpower = s['属性·意志力']||0;
+    const stamina = s['属性·体力']||0;
     const skJutsu = this._scanSkills(s, '忍术');
     const skTaijutsu = this._scanSkills(s, '体术');
     const skGenjutsu = this._scanSkills(s, '幻术');
     const best=g=>Math.max(0,...Object.values(g||{}).map(x=>Number(x?.mastery)||0));
     const nin=Math.round((chakra)*0.45+(spirit)*0.25+best(skJutsu)*0.7);
-    const tai=Math.round((stamina)*0.25+(speed)*0.9+(willpower)*0.2+best(skTaijutsu)*0.9);
+    const tai=Math.round((stamina)*0.45+(speed)*0.9+best(skTaijutsu)*0.9);
     const gen=Math.round((spirit)*0.75+(chakra)*0.2+best(skGenjutsu)*0.9);
-    const def=Math.round((stamina)*0.18+(willpower)*0.25);
+    const def=Math.round((vitality)*0.18+(stamina)*0.25);
 
     const items = [['忍术',nin,'#42A5F5'], ['体术',tai,'#66BB6A'], ['幻术',gen,'#CE93D8'], ['防御',def,'var(--text-secondary)']];
     return items.map(([l,v,c])=>`
@@ -460,7 +447,11 @@ class InfoPanel extends HTMLElement {
   _scanSkills(s, type) {
     const prefix = `技能·${type}·`;
     const result = {};
-    const subFields = { '名称': 'name', '等级': 'rank', '属性': 'element', '消耗': 'cost', '威力': 'power', '熟练度': 'mastery', '描述': 'description' };
+    const subFields = {
+      '名称': 'name', '等级': 'rank', '属性': 'element', '消耗': 'cost', '消耗资源': 'resource_type',
+      '威力': 'power', '熟练度': 'mastery', '描述': 'description', '类型': 'type',
+      '数据库ID': 'technique_id', '来源': 'source'
+    };
     const subFieldKeys = new Set(Object.keys(subFields));
     for (const [k, v] of Object.entries(s)) {
       if (!k.startsWith(prefix)) continue;
@@ -509,25 +500,154 @@ class InfoPanel extends HTMLElement {
     return result;
   }
 
+  _bloodlineNames(value) {
+    const names = [];
+    const add = raw => {
+      const name = String(raw || '').trim();
+      if (name && !['普通血脉', '无', '未知'].includes(name) && !names.includes(name)) names.push(name);
+    };
+    const visit = input => {
+      if (!input) return;
+      if (typeof input === 'string' || typeof input === 'number') {
+        add(input);
+        return;
+      }
+      if (Array.isArray(input)) {
+        input.forEach(visit);
+        return;
+      }
+      if (typeof input !== 'object') return;
+      if (input.name || input['名称']) {
+        add(input.name || input['名称']);
+        return;
+      }
+      for (const [key, entry] of Object.entries(input)) {
+        if (entry && typeof entry === 'object') add(entry.name || entry['名称'] || key);
+        else add(key);
+      }
+    };
+    visit(value);
+    return names;
+  }
+
+  _techniqueDisplayData(input = {}, fallbackName = '', fallbackType = 'jutsu') {
+    const source = input && typeof input === 'object' ? input : {};
+    const first = (...keys) => {
+      for (const key of keys) {
+        if (source[key] !== undefined && source[key] !== null && source[key] !== '') return source[key];
+      }
+      return undefined;
+    };
+    const name = String(first('name', '名称') || fallbackName || '未命名招式').trim();
+    const sourceType = String(first('type', '类型') || fallbackType || 'jutsu').trim().toLowerCase();
+    const type = sourceType.includes('gen') || sourceType.includes('幻') ? 'genjutsu'
+      : sourceType.includes('tai') || sourceType.includes('体') ? 'taijutsu'
+        : sourceType.includes('support') || sourceType.includes('支') || sourceType.includes('辅') ? 'support' : 'jutsu';
+    const typeLabel = { jutsu: '忍术', taijutsu: '体术', genjutsu: '幻术', support: '支援' }[type];
+    const techniqueId = first('technique_id', '数据库ID');
+    const authoredSource = String(first('source', '来源') || '').toLowerCase();
+    const mayResolveCanon = techniqueId || (!source.custom && !['ai_original', 'original', 'custom'].includes(authoredSource));
+    let canonRecord = techniqueId ? CANON_DATABASE.getRecord('techniques', String(techniqueId)) : null;
+    if (!canonRecord && mayResolveCanon) canonRecord = CANON_DATABASE.resolveTechnique(name);
+    const masteryValue = Number(first('mastery', '熟练度'));
+    const canonical = canonRecord
+      ? CANON_DATABASE.toStateSkill(canonRecord, { mastery: Number.isFinite(masteryValue) ? masteryValue : 0 })
+      : null;
+    const numberOrNull = (value) => {
+      if (value === undefined || value === null || value === '') return null;
+      const number = Number(value);
+      return Number.isFinite(number) ? Math.max(0, Math.round(number)) : null;
+    };
+    const resourceFallback = type === 'genjutsu' ? '精神力' : type === 'taijutsu' ? '体力' : '查克拉';
+    const rawResource = String(first('resource_type', 'resourceType', 'resource', '消耗资源') || canonical?.resource_type || resourceFallback).trim();
+    const normalizedResource = rawResource.toLowerCase();
+    const resource = normalizedResource.includes('spirit') || normalizedResource.includes('精神') ? '精神力'
+      : normalizedResource.includes('stamina') || normalizedResource.includes('体力') ? '体力'
+        : normalizedResource.includes('chakra') || normalizedResource.includes('查克拉') ? '查克拉' : rawResource;
+    return {
+      name,
+      type,
+      typeLabel,
+      rank: String(first('rank', '等级') || canonical?.rank || 'D').toUpperCase(),
+      element: String(first('element', '属性') || canonical?.element || '').trim(),
+      resource,
+      cost: numberOrNull(first('cost', '消耗') ?? canonical?.cost),
+      power: numberOrNull(first('power', '威力') ?? canonical?.power),
+      mastery: numberOrNull(first('mastery', '熟练度') ?? canonical?.mastery) ?? 0,
+      description: String(first('description', '描述') || canonical?.description || '').trim()
+    };
+  }
+
+  _renderTechniqueStats(input, fallbackName, fallbackType, { compact = false } = {}) {
+    const technique = this._techniqueDisplayData(input, fallbackName, fallbackType);
+    const metric = (kind, label, value) => `
+      <span class="skill-technique-stat" data-stat="${kind}">
+        <span class="skill-technique-stat-label">${this._esc(label)}</span>
+        <strong>${value === null ? '未记录' : value}</strong>
+      </span>`;
+    return `<span class="skill-technique-stats${compact ? ' compact' : ''}">
+      ${metric('power', '威力', technique.power)}
+      ${metric('cost', `${technique.resource || ''}消耗`, technique.cost)}
+    </span>`;
+  }
+
+  _normalizeNpcTechniques(combatStats) {
+    if (!combatStats || typeof combatStats !== 'object') return [];
+    const groups = [
+      ['忍术', 'jutsu'], ['jutsu', 'jutsu'],
+      ['体术', 'taijutsu'], ['taijutsu', 'taijutsu'],
+      ['幻术', 'genjutsu'], ['genjutsu', 'genjutsu'],
+      ['支援', 'support'], ['support', 'support']
+    ];
+    const normalized = [];
+    const seen = new Set();
+    for (const [key, fallbackType] of groups) {
+      const group = combatStats[key];
+      const entries = Array.isArray(group)
+        ? group.map(item => [item?.name || item?.名称 || '', item])
+        : group && typeof group === 'object' ? Object.entries(group) : [];
+      for (const [fallbackName, rawValue] of entries) {
+        const raw = rawValue && typeof rawValue === 'object'
+          ? rawValue
+          : { name: fallbackName, mastery: rawValue };
+        const technique = this._techniqueDisplayData(raw, fallbackName, fallbackType);
+        const identity = `${technique.type}:${technique.name.normalize('NFKC').toLowerCase()}`;
+        if (!technique.name || seen.has(identity)) continue;
+        seen.add(identity);
+        normalized.push(technique);
+      }
+    }
+    return normalized;
+  }
+
   _renderSkills(s){
     const ju = this._scanSkills(s, '忍术');
     const tai = this._scanSkills(s, '体术');
     const gen = this._scanSkills(s, '幻术');
     const support = this._scanSkills(s, '支援');
     const talents = this._scanSkills(s, '天赋');
+    const placeholder = talents[CUSTOM_TALENT_PLACEHOLDER];
+    if (placeholder) {
+      const parsed = parseCustomTalentDescription(placeholder.description);
+      if (parsed.length || Object.keys(talents).some(name => name !== CUSTOM_TALENT_PLACEHOLDER)) {
+        delete talents[CUSTOM_TALENT_PLACEHOLDER];
+      }
+      for (const item of parsed) {
+        if (!talents[item.name]) talents[item.name] = { ...placeholder, ...item, custom: true };
+      }
+    }
     const extraNin = {};
     const auxiliary = {};
     const knowledge = {};
     Object.assign(ju, extraNin);
     Object.assign(support, auxiliary, knowledge);
 
-    let kgText = '普通血脉';
-    const kg = s['技能·血继限界'];
-    if (kg) {
-      if (typeof kg === 'string') kgText = kg;
-      else if (Array.isArray(kg)) kgText = kg.map(k => typeof k === 'string' ? k : (k.name || '')).filter(Boolean).join('、') || '普通血脉';
-      else if (typeof kg === 'object') kgText = kg.name || Object.keys(kg).join('、') || '普通血脉';
-    }
+    const kgNames = [
+      ...this._bloodlineNames(this._scanSkills(s, '血继限界')),
+      ...this._bloodlineNames(s?.skills?.kekkei_genkai),
+      ...this._bloodlineNames(s['技能·血继限界'])
+    ];
+    const kgText = [...new Set(kgNames)].join('、') || '普通血脉';
     const isNormalBloodline = kgText === '普通血脉';
 
     const cats = [['秘传忍术', ju, 'element', 'jutsu'], ['体术造诣', tai, null, 'taijutsu'], ['幻术解析', gen, null, 'genjutsu'], ['辅助技能', support, null, 'support']];
@@ -570,7 +690,7 @@ class InfoPanel extends HTMLElement {
             </div>`).join(''):`
             <div class="skill-empty">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="3"/></svg>
-              <span>血继限界尚未显现，<em>结印发起遭遇</em> 或可唤醒沉睡血脉</span>
+              <span>尚未获得特殊天赋，<em>修行与经历</em> 或可带来新的成长</span>
             </div>`}
         </div>
       </div>`
@@ -624,7 +744,7 @@ class InfoPanel extends HTMLElement {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="14" height="18" x="5" y="3" rx="2"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h4"/></svg>
         <span>尚未习得任何术，<em>修行或拜师</em> 方能掌握</span>
       </div>` : (this._skillCompact
-        ? list.map(d => this._compactSkillRow(d, color, metaKey)).join('')
+        ? list.map(d => this._compactSkillRow(d, color, metaKey, type)).join('')
         : `<div class="grid-list">${list.map(d => {
             const mColor = (m) => { if(m>=80) return '#ef5350'; if(m>=60) return '#eb613f'; if(m>=40) return '#c69c6d'; if(m>=20) return '#e8c87a'; return '#a39f98'; };
             return `<div class="skill-card" style="border-left-color: ${color};">
@@ -633,6 +753,7 @@ class InfoPanel extends HTMLElement {
                 <div class="skill-mastery-tag">${this._mt(d?.mastery||0)}</div>
               </div>
               ${d.description ? `<div style="font-size:11px; color:var(--text-secondary); line-height:1.5; margin-bottom:12px;">${this._esc(d.description)}</div>` : ''}
+              ${this._renderTechniqueStats(d, d.name, type)}
               <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
                 <div style="font-size:10px; color:var(--text-tertiary); display:flex; gap:8px;">
                   ${d[metaKey] ? `<span style="color:${color}; font-weight:bold;">${this._esc(d[metaKey])}</span>` : ''}
@@ -658,15 +779,17 @@ class InfoPanel extends HTMLElement {
       </div>`;
   }
 
-  _compactSkillRow(d, color, metaKey) {
+  _compactSkillRow(d, color, metaKey, type) {
     const el = d[metaKey] ? `<span style="color:${color};font-weight:bold;font-size:10px;">${this._esc(d[metaKey])}</span>` : '';
     const rank = `<span style="font-size:10px;color:var(--text-tertiary);">${this._esc(d.rank||'E')}</span>`;
-    return `<div class="skill-compact-row" data-action="expand-skill" data-skill="${this._escAttr(d.name)}" data-type="${this._escAttr(d._type||'')}">
+    const resolvedType = d._type || type || '';
+    return `<div class="skill-compact-row" data-action="expand-skill" data-skill="${this._escAttr(d.name)}" data-type="${this._escAttr(resolvedType)}">
       <span class="skill-name" title="${this._escAttr(d.name)}">${this._esc(d.name)}</span>
       <span class="skill-meta">${el}${rank}<span style="font-size:10px;color:var(--text-secondary);">${this._mt(d.mastery||0)}</span></span>
+      ${this._renderTechniqueStats(d, d.name, resolvedType, { compact: true })}
       <span class="skill-mastery-num" style="display:flex; align-items:center;">
         造诣 ${d.mastery||0}
-        <button class="btn-sleek skill-forget-btn" data-name="${this._escAttr(d.name)}" data-type="${this._escAttr(d._type||'')}" style="padding:2px 6px; font-size:9px; margin-left:6px; border-color:rgba(239,83,80,0.3); color:#ef5350;" onclick="event.stopPropagation();">遗忘</button>
+        <button class="btn-sleek skill-forget-btn" data-name="${this._escAttr(d.name)}" data-type="${this._escAttr(resolvedType)}" style="padding:2px 6px; font-size:9px; margin-left:6px; border-color:rgba(239,83,80,0.3); color:#ef5350;" onclick="event.stopPropagation();">遗忘</button>
       </span>
     </div>`;
   }
@@ -798,7 +921,7 @@ class InfoPanel extends HTMLElement {
       } else {
         const q = item.quality || '普通';
         if (entry.category === 'weapons') bonus.speed = (bonus.speed || 0) + Math.floor((Q[q]||0) * 0.3);
-        if (entry.category === 'armor') bonus.stamina = (bonus.stamina || 0) + (QD[q]||0);
+        if (entry.category === 'armor') bonus.vitality = (bonus.vitality || 0) + (QD[q]||0);
         if (entry.category === 'tools') bonus.luck = (bonus.luck || 0) + (QL[q]||0);
       }
     }
@@ -835,7 +958,7 @@ class InfoPanel extends HTMLElement {
     const bonusEntries = Object.entries(bonus);
     if (bonusEntries.length > 0) {
       html += `<div class="rel-stats" style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">`;
-      const lblMap = {'chakra':'查克拉上限','stamina':'体力上限','spirit':'精神上限','willpower':'意志上限','strength':'综合实力','speed':'速度','ninjutsu':'忍术','taijutsu':'体术','genjutsu':'幻术','luck':'气运', 'attack':'攻击力', 'defense':'防御力'};
+      const lblMap = {'chakra':'查克拉上限','vitality':'生命力上限','stamina':'体力上限','spirit':'精神上限','strength':'综合实力','speed':'速度','ninjutsu':'忍术','taijutsu':'体术','genjutsu':'幻术','luck':'气运', 'attack':'攻击力', 'defense':'防御力'};
       for (const [k, v] of bonusEntries) {
         if (v === 0) continue;
         const name = lblMap[k] || k;
@@ -966,7 +1089,7 @@ class InfoPanel extends HTMLElement {
             <div class="rank-badge">${x.rank||'D'}</div>
             <div>
               <div class="item-header" style="margin-bottom: 4px;">
-                <div class="item-name">${this._esc(x.title||'未知道')}</div>
+                <div class="item-name">${this._esc(x.title || x.name || x.id || '未命名任务')}</div>
               </div>
               <div class="item-desc" style="color:var(--text-secondary);">${this._esc(x.objective||'')}</div>
               <div class="rel-stats" style="margin-top:12px; border-top: none; padding-top: 0;">
@@ -988,20 +1111,32 @@ class InfoPanel extends HTMLElement {
 
   showRelModal(name) {
     const r = stateManager.getSub('_relationships') || {};
-    const d = r[name];
-    if (!d) return;
+    if (!r[name]) return;
+    // Normalize old save shapes (English keys, object maps, missing canon
+    // metadata) before building the NPC dossier.
+    const d = relationshipSystem.getRelationship(name);
 
     const Modal = customElements.get('game-modal');
     if (!Modal) return;
     const modal = new Modal();
     (document.getElementById('app') || document.body).appendChild(modal);
 
+    const t = this._tempOf(d.affection); // 情感温度（头像环/印章用色）
+    // 社交三维双向迷你条（中轴向两侧，值域 ±100）
+    const socialBar = (v, posColor, negColor = '#ef5350') => {
+      const val = Math.max(-100, Math.min(100, Number(v) || 0));
+      const w = Math.abs(val) / 2;
+      const side = val >= 0 ? 'left:50%' : 'right:50%';
+      const c = val >= 0 ? posColor : negColor;
+      return `<div class="social-bar"><div class="social-bar-fill" style="${side};width:${w}%;background:${c};box-shadow:0 0 6px ${c};"></div></div>`;
+    };
+
     const icons = {
       chakra: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>`,
-      stamina: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+      vitality: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
       speed: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
       spirit: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-      willpower: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`
+      stamina: `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`
     };
 
     // ── 渲染 NPC 战斗属性卡片 ──
@@ -1010,10 +1145,10 @@ class InfoPanel extends HTMLElement {
     if (cs) {
       const statDefs = [
         { key: '查克拉', icon: icons.chakra, color: '#00E5FF', maxKey: '查克拉上限', fmt: (v,mx) => `${v}/${mx}` },
-        { key: '体力', icon: icons.stamina, color: '#FF4D4D', maxKey: '体力上限', fmt: (v,mx) => `${v}/${mx}` },
+        { key: '生命力', icon: icons.vitality, color: '#FF4D4D', maxKey: '生命力上限', fmt: (v,mx) => `${v}/${mx}` },
         { key: '速度', icon: icons.speed, color: '#81C784', fmt: (v) => v },
         { key: '精神力', icon: icons.spirit, color: '#CE93D8', fmt: (v) => v },
-        { key: '意志力', icon: icons.willpower, color: '#FFB74D', fmt: (v) => v },
+        { key: '体力', icon: icons.stamina, color: '#FFB74D', maxKey: '体力上限', fmt: (v,mx) => `${v}/${mx}` },
       ];
       const masteryDefs = [
         { key: '忍术造诣', color: '#00E5FF' },
@@ -1066,33 +1201,34 @@ class InfoPanel extends HTMLElement {
 
     // ── 渲染忍术列表 ──
     let jutsuHtml = '';
-    const jutsus = cs?.忍术;
-    if (Array.isArray(jutsus) && jutsus.length > 0) {
+    const jutsus = this._normalizeNpcTechniques(cs);
+    if (jutsus.length > 0) {
       const rankColors = { S:'#FFB74D', A:'#ef5350', B:'#CE93D8', C:'#42A5F5', D:'#81C784', E:'#a39f98' };
-      const typeLabels = { '忍术':'NIN', '体术':'TAI', '幻术':'GEN', 'ninjutsu':'NIN', 'taijutsu':'TAI', 'genjutsu':'GEN' };
+      const typeLabels = { jutsu:'NIN', taijutsu:'TAI', genjutsu:'GEN', support:'SUP' };
       const cards = jutsus.map(j => {
-        const jName = j.名称 || j.name || '?';
-        const jRank = j.等级 || j.rank || 'D';
-        const jElem = j.属性 || j.element || '';
-        const jCost = j.消耗 ?? j.cost ?? 0;
-        const jPower = j.威力 ?? j.power ?? 0;
-        const jMast = j.熟练度 ?? j.mastery ?? 0;
-        const jDesc = j.描述 || j.description || '';
-        const jType = j.类型 || j.type || '忍术';
+        const jName = j.name || '?';
+        const jRank = j.rank || 'D';
+        const jElem = j.element || '';
+        const jCost = j.cost;
+        const jPower = j.power;
+        const jMast = j.mastery || 0;
+        const jDesc = j.description || '';
+        const jType = j.type || 'jutsu';
+        const costLabel = `${j.resource || ''}消耗`;
         const rc = rankColors[jRank] || '#a39f98';
-        return `<div class="npc-jutsu-card">
+        return `<div class="npc-jutsu-card" style="--jc:${rc}">
           <div class="jutsu-bg-glow" style="background:${rc}"></div>
           <div class="jutsu-head">
-            <span class="jutsu-rank" style="color:${rc}">${jRank}</span>
-            <span class="jutsu-type">${typeLabels[jType] || jType}</span>
+            <span class="jutsu-rank" style="color:${rc}">${this._esc(jRank)}</span>
+            <span class="jutsu-type">${typeLabels[jType] || this._esc(j.typeLabel)}</span>
             ${jElem ? `<span class="jutsu-elem">${this._esc(jElem)}</span>` : ''}
             <span class="jutsu-name">${this._esc(jName)}</span>
           </div>
           ${jDesc ? `<div class="jutsu-desc">${this._esc(jDesc)}</div>` : ''}
           <div class="jutsu-stats">
-            <span title="威力"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><path d="M14.5 17.5L3 6V3h3l11.5 11.5c.5.5.5 1.5 0 2-.5.5-1.5.5-2 0z"/><path d="M19 14l-4-4"/></svg> ${jPower}</span>
-            <span title="消耗"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> ${jCost}</span>
-            <span title="熟练度"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${jMast}</span>
+            <span class="jutsu-stat" data-stat="power"><span class="jutsu-stat-label">威力</span><strong>${jPower === null ? '未记录' : jPower}</strong></span>
+            <span class="jutsu-stat" data-stat="cost"><span class="jutsu-stat-label">${this._esc(costLabel)}</span><strong>${jCost === null ? '未记录' : jCost}</strong></span>
+            <span class="jutsu-stat" data-stat="mastery"><span class="jutsu-stat-label">熟练度</span><strong>${jMast}</strong></span>
           </div>
         </div>`;
       }).join('');
@@ -1105,77 +1241,132 @@ class InfoPanel extends HTMLElement {
 
     const css = `
       <style>
-      .npc-modal { display: flex; flex-direction: column; gap: 32px; padding: 10px; color: rgba(255,255,255,0.85); }
-      .npc-header { display: flex; gap: 20px; align-items: center; position: relative; }
-      .npc-avatar-ring { width: 72px; height: 72px; position: relative; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 12px rgba(198,156,109,0.3)); }
-      .npc-avatar-ring::before { content: ''; position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent, rgba(198,156,109,0.9), transparent); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: spin 8s linear infinite; }
+      .modal { width: min(94vw, 760px); }
+      .npc-modal { display: flex; flex-direction: column; gap: 24px; padding: 10px; color: var(--text-primary); }
+      .npc-header {
+        display: flex; gap: 20px; align-items: center; position: relative; overflow: hidden;
+        padding: 18px 18px 16px; border-radius: 12px;
+        background: radial-gradient(circle at 18% 0%, rgba(198,156,109,0.09), transparent 55%), rgba(var(--paper-rgb), 0.02);
+        border: 1px solid rgba(var(--paper-rgb), 0.05);
+      }
+      .npc-header::after {
+        content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+        background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.14), transparent);
+      }
+      .npc-stamp {
+        position: absolute; top: 12px; right: 16px; transform: rotate(-12deg);
+        font-family: var(--font-brush, cursive); font-size: 18px; font-weight: 900; letter-spacing: 5px;
+        color: var(--c-kokihi, #c9171e); border: 2px solid var(--c-kokihi, #c9171e); border-radius: 4px;
+        padding: 3px 8px 3px 12px; opacity: 0.5; pointer-events: none; line-height: 1.2;
+      }
+      .npc-avatar-ring { width: 72px; height: 72px; position: relative; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 12px rgba(198,156,109,0.3)); flex-shrink: 0; }
+      .npc-avatar-ring::before { content: ''; position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent, var(--tc, #c69c6d), transparent); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: spin 8s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
-      .npc-avatar { width: 66px; height: 66px; background: #0A0A0A; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: var(--font-brush, serif); color: #c69c6d; font-size: 32px; font-weight: bold; }
+      .npc-avatar { width: 66px; height: 66px; background: rgba(var(--ink-deep-rgb), 0.92); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: var(--font-brush, serif); color: var(--tc, #c69c6d); font-size: 32px; font-weight: bold; }
+      .npc-avatar img { width:100%; height:100%; object-fit:cover; }
 
-      .npc-id { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-      .npc-name { font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 2px; }
-      .npc-sub { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; display: flex; gap: 8px; }
+      .npc-id { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+      .npc-name-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .npc-name {
+        font-size: 22px; font-weight: 900; letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--c-kin-bright) 0%, #fff 50%, var(--c-kin-bright) 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text; background-clip: text;
+        color: transparent; -webkit-text-fill-color: transparent;
+        animation: npc-shine 5s linear infinite;
+      }
+      @keyframes npc-shine { to { background-position: 200% center; } }
+      .npc-temp {
+        flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: 2px;
+        font-family: var(--font-title, serif); color: var(--tc, #a39f98);
+        padding: 3px 10px; border-radius: 100px;
+        border: 1px solid var(--tc, #a39f98);
+        border-color: color-mix(in srgb, var(--tc, #a39f98) 45%, transparent);
+        background: color-mix(in srgb, var(--tc, #a39f98) 12%, transparent);
+        text-shadow: 0 0 8px var(--tc, transparent);
+      }
+      .npc-sub { font-size: 11px; color: var(--text-tertiary); letter-spacing: 1px; display: flex; gap: 8px; margin-top: 6px; }
+      .npc-sub span {
+        padding: 2px 10px; border-radius: 100px; font-size: 10px;
+        border: 1px solid rgba(var(--paper-rgb), 0.1); background: rgba(var(--paper-rgb), 0.03);
+        color: var(--text-secondary);
+      }
 
       .npc-social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .npc-social-item { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); display: flex; flex-direction: column; gap: 4px; }
-      .npc-social-item .social-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 2px; }
+      .npc-social-item { background: rgba(var(--paper-rgb), 0.02); padding: 12px; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); display: flex; flex-direction: column; gap: 4px; transition: background 0.2s; }
+      .npc-social-item:hover { background: rgba(var(--paper-rgb), 0.045); }
+      .npc-social-item .social-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 2px; }
       .npc-social-item .social-val { font-size: 18px; font-weight: 700; font-family: monospace; }
       .npc-social-item.affection.pos .social-val { color: #81C784; }
       .npc-social-item.affection.neg .social-val { color: #ef5350; }
       .npc-social-item.trust .social-val { color: #42A5F5; }
-      .npc-social-item.respect .social-val { color: #c69c6d; }
+      .npc-social-item.respect .social-val { color: var(--c-kin); }
+      .social-bar { margin-top: 8px; height: 2px; border-radius: 1px; background: rgba(var(--paper-rgb), 0.07); position: relative; overflow: hidden; }
+      .social-bar-fill { position: absolute; top: 0; height: 100%; border-radius: 1px; }
 
-      .npc-section-title { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.4); letter-spacing: 4px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; text-transform: uppercase; }
-      .npc-section-title .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.05), transparent); }
+      .npc-section-title { font-size: 10px; font-weight: 800; letter-spacing: 4px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; text-transform: uppercase; color: rgba(198,156,109,0.55); color: color-mix(in srgb, var(--c-kin) 65%, transparent); }
+      .npc-section-title .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--paper-rgb), 0.06), transparent); }
 
       .npc-meta-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-      .npc-rank-badge { background: rgba(198,156,109,0.1); color: #c69c6d; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 1px; border: 1px solid rgba(198,156,109,0.2); }
-      .npc-nature-tag { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 4px; font-size: 10px; border: 1px solid rgba(255,255,255,0.05); }
+      .npc-rank-badge { background: rgba(198,156,109,0.1); color: var(--c-kin); padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 1px; border: 1px solid rgba(198,156,109,0.2); }
+      .npc-nature-tag { background: rgba(var(--paper-rgb), 0.03); color: var(--text-secondary); padding: 4px 10px; border-radius: 4px; font-size: 10px; border: 1px solid rgba(var(--paper-rgb), 0.06); }
 
       .npc-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-bottom: 12px; }
-      .npc-stat-card { background: rgba(255,255,255,0.015); border-radius: 8px; padding: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); display: flex; flex-direction: column; gap: 8px; }
+      .npc-stat-card { background: rgba(var(--paper-rgb), 0.015); border-radius: 8px; padding: 12px; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); display: flex; flex-direction: column; gap: 8px; }
       .npc-stat-head { display: flex; align-items: center; gap: 8px; }
-      .npc-stat-label { font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 600; text-transform: uppercase; }
-      .npc-stat-val { font-size: 14px; font-weight: 600; color: #fff; font-family: monospace; }
+      .npc-stat-label { font-size: 10px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; }
+      .npc-stat-val { font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: monospace; }
       .npc-stat-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.6); overflow: hidden; border-radius: 1px; }
-      .npc-stat-fill { height: 100%; box-shadow: 0 0 8px currentColor; }
+      .npc-stat-fill { height: 100%; box-shadow: 0 0 8px currentColor; position: relative; overflow: hidden; }
+      .npc-stat-fill::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); background-size: 200% 100%; background-repeat: no-repeat; animation: npc-sheen 3.2s linear infinite; }
+      @keyframes npc-sheen { from { background-position: 150% 0; } to { background-position: -150% 0; } }
 
       .npc-mastery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
       .npc-stat-card.npc-mastery { padding: 12px; }
 
       .npc-jutsu-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-      .npc-jutsu-card { background: rgba(255,255,255,0.015); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); transition: background 0.2s; }
-      .npc-jutsu-card:hover { background: rgba(255,255,255,0.03); }
+      .npc-jutsu-card { background: rgba(var(--paper-rgb), 0.015); border-radius: 8px; padding: 16px 16px 16px 20px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); transition: all 0.2s; }
+      .npc-jutsu-card::before { content: ''; position: absolute; left: 0; top: 22%; bottom: 22%; width: 2px; border-radius: 1px; background: var(--jc, transparent); opacity: 0.85; transition: all 0.2s; }
+      .npc-jutsu-card:hover { background: rgba(var(--paper-rgb), 0.04); transform: translateY(-1px); }
+      .npc-jutsu-card:hover::before { top: 12%; bottom: 12%; box-shadow: 0 0 8px var(--jc, transparent); }
       .jutsu-bg-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.03; filter: blur(20px); pointer-events: none; }
       .jutsu-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
       .jutsu-rank { font-size: 14px; font-family: var(--font-brush, serif); font-weight: bold; text-shadow: 0 0 8px currentColor; line-height: 1; }
-      .jutsu-type { font-size: 9px; border: 1px solid rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
-      .jutsu-elem { font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 3px; color: rgba(255,255,255,0.5); }
-      .jutsu-name { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 1px; flex: 1; text-align: right; }
-      .jutsu-desc { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 16px; }
-      .jutsu-stats { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.3); font-family: monospace; }
-      .jutsu-stats span { display: flex; align-items: center; gap: 6px; }
+      .jutsu-type { font-size: 9px; border: 1px solid rgba(var(--paper-rgb), 0.1); padding: 2px 6px; border-radius: 3px; color: var(--text-tertiary); letter-spacing: 1px; }
+      .jutsu-elem { font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 3px; color: var(--text-secondary); }
+      .jutsu-name { font-size: 14px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px; flex: 1; text-align: right; }
+      .jutsu-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 16px; }
+      .jutsu-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+      .jutsu-stat { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 7px 8px; border-radius: 5px; background: rgba(var(--paper-rgb), 0.025); border: 1px solid rgba(var(--paper-rgb), 0.05); }
+      .jutsu-stat-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9px; color: var(--text-tertiary); letter-spacing: 0.5px; }
+      .jutsu-stat strong { color: var(--text-primary); font: 700 12px/1 var(--font-mono, monospace); }
+      .jutsu-stat[data-stat="power"] strong { color: #FF8A80; }
+      .jutsu-stat[data-stat="cost"] strong { color: #80DEEA; }
 
       .npc-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-      .npc-tag { font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
+      .npc-tag { font-size: 10px; color: var(--text-secondary); background: rgba(var(--paper-rgb), 0.03); padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
 
       .timeline-wrap { display: flex; flex-direction: column; gap: 16px; }
-      .timeline-node { position: relative; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.05); }
-      .timeline-node::before { content: ''; position: absolute; left: -3px; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.2); }
-      .tl-time { font-size: 9px; color: rgba(255,255,255,0.3); margin-bottom: 4px; letter-spacing: 1px; }
-      .tl-action { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 8px; }
+      .timeline-node { position: relative; padding-left: 16px; border-left: 1px solid rgba(var(--paper-rgb), 0.06); }
+      .timeline-node::before { content: ''; position: absolute; left: -3px; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: rgba(var(--paper-rgb), 0.2); }
+      .tl-time { font-size: 9px; color: var(--text-tertiary); margin-bottom: 4px; letter-spacing: 1px; }
+      .tl-action { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
       .tl-thought { font-size: 12px; color: rgba(198,156,109,0.8); line-height: 1.6; font-family: 'Georgia', 'Songti SC', serif; font-style: italic; background: linear-gradient(90deg, rgba(198,156,109,0.05), transparent); padding: 10px 12px; border-left: 2px solid rgba(198,156,109,0.3); border-radius: 0 4px 4px 0; }
 
       .npc-grand-summary { background: linear-gradient(135deg, rgba(198,156,109,0.06), rgba(66,165,245,0.04)); border: 1px solid rgba(198,156,109,0.12); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; }
       .npc-grand-summary::before { content: '编年'; position: absolute; top: 8px; right: 12px; font-size: 48px; font-weight: 900; opacity: 0.03; font-family: var(--font-brush, serif); letter-spacing: 8px; pointer-events: none; }
       .npc-grand-summary .gs-label { font-size: 9px; font-weight: 800; color: rgba(198,156,109,0.6); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
-      .npc-grand-summary .gs-text { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.8; }
+      .npc-grand-summary .gs-text { font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
 
       .npc-summary-list { display: flex; flex-direction: column; gap: 10px; }
       .npc-summary-card { background: rgba(66,165,245,0.03); border-left: 2px solid rgba(66,165,245,0.2); border-radius: 0 6px 6px 0; padding: 10px 14px; transition: background 0.2s; }
       .npc-summary-card:hover { background: rgba(66,165,245,0.06); }
       .npc-summary-card .sc-time { font-size: 9px; color: rgba(66,165,245,0.5); letter-spacing: 1px; margin-bottom: 4px; }
-      .npc-summary-card .sc-text { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+      .npc-summary-card .sc-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .npc-name, .npc-stat-fill::after, .npc-avatar-ring::before { animation: none; }
+      }
       </style>
     `;
 
@@ -1183,11 +1374,15 @@ class InfoPanel extends HTMLElement {
       ${css}
       <div class="npc-modal">
         <div class="npc-header">
-          <div class="npc-avatar-ring">
+          <div class="npc-stamp">绝密</div>
+          <div class="npc-avatar-ring" style="--tc:${t.color}">
             <div class="npc-avatar">${name[0]}</div>
           </div>
           <div class="npc-id">
-            <div class="npc-name">${this._esc(name)}</div>
+            <div class="npc-name-row">
+              <div class="npc-name">${this._esc(name)}</div>
+              <span class="npc-temp" style="--tc:${t.color}">${t.label}</span>
+            </div>
             <div class="npc-sub">
               ${d.faction ? `<span>${this._esc(d.faction)}</span>` : ''}
               ${d.role ? `<span>${this._esc(d.role)}</span>` : ''}
@@ -1199,16 +1394,21 @@ class InfoPanel extends HTMLElement {
           <div class="npc-social-item affection ${(d.affection||0)>=0?'pos':'neg'}">
             <div class="social-label">好感度</div>
             <div class="social-val">${d.affection||0}</div>
+            ${socialBar(d.affection, '#81C784')}
           </div>
           <div class="npc-social-item trust">
             <div class="social-label">信任度</div>
             <div class="social-val">${d.trust||0}</div>
+            ${socialBar(d.trust, '#42A5F5')}
           </div>
           <div class="npc-social-item respect">
             <div class="social-label">敬畏度</div>
             <div class="social-val">${d.respect||0}</div>
+            ${socialBar(d.respect, 'var(--c-kin)')}
           </div>
         </div>
+
+        <div id="npc-portrait-controls"></div>
 
         ${combatStatsHtml}
         ${jutsuHtml}
@@ -1219,6 +1419,72 @@ class InfoPanel extends HTMLElement {
       </div>
     `;
     modal.show({ title: '绝密情报档案', content: html, buttons: [{ label: '关闭', primary: true, onClick: () => modal.close() }] });
+    try {
+      const visual = relationshipSystem.ensureVisualProfile(name);
+      const subjectId = visual.visual_subject_id;
+      const target = { kind: 'portrait', subjectId };
+      const profile = visual.visual_profile || {};
+      const controlsHost = modal.shadowRoot?.querySelector('#npc-portrait-controls');
+      if (controlsHost) {
+        mountPortraitImageControls(controlsHost, {
+          imageStudio, subjectId, name,
+          profile: {
+            displayName: name,
+            identitySeed: profile.identity_seed,
+            appearance: profile.canonical_description || '',
+            outfit: profile.current_appearance || '',
+            style: profile.preferred_style || '',
+            negativePrompt: profile.negative_prompt || '',
+            lockedTraits: profile.locked_traits || []
+          },
+          onProfileChange: next => relationshipSystem.updateVisualProfile(name, {
+            canonical_description: next.appearance || '',
+            current_appearance: next.outfit || '',
+            preferred_style: next.style || '',
+            negative_prompt: next.negativePrompt || '',
+            locked_traits: next.lockedTraits || []
+          })
+        });
+      }
+
+      let avatarUrl = '';
+      let avatarRefreshGeneration = 0;
+      const refreshAvatar = async () => {
+        const generation = ++avatarRefreshGeneration;
+        const state = await imageStudio.read({ type: 'target', target });
+        if (generation !== avatarRefreshGeneration || !modal.isConnected) return;
+        const selectedId = state.binding?.assetId;
+        const avatar = modal.shadowRoot?.querySelector('.npc-avatar');
+        if (!selectedId) {
+          if (avatarUrl) {
+            URL.revokeObjectURL(avatarUrl);
+            avatarUrl = '';
+          }
+          if (avatar) avatar.textContent = name.slice(0, 1) || '?';
+          return;
+        }
+        const blob = await imageStudio.read({ type: 'asset-content', assetId: selectedId, variant: 'thumbnail' });
+        if (generation !== avatarRefreshGeneration || !modal.isConnected) return;
+        if (!(blob instanceof Blob)) return;
+        if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+        avatarUrl = URL.createObjectURL(blob);
+        if (avatar) avatar.innerHTML = `<img src="${avatarUrl}" alt="${this._esc(name)}的肖像">`;
+      };
+      void refreshAvatar().catch(() => {});
+      const unsubscribe = imageStudio.subscribe(event => {
+        const changed = event?.target || event?.binding?.target;
+        if (changed?.kind === 'portrait' && changed.subjectId === subjectId) void refreshAvatar().catch(() => {});
+      });
+      const observer = new MutationObserver(() => {
+        if (modal.isConnected) return;
+        avatarRefreshGeneration++;
+        observer.disconnect(); unsubscribe();
+        if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    } catch (error) {
+      console.warn('[InfoPanel] Unable to mount portrait controls:', error.message);
+    }
   }
 
   _renderGrandSummary(grandSummary) {
@@ -1285,58 +1551,296 @@ class InfoPanel extends HTMLElement {
     `;
   }
 
-  _renderRel(s){
-    const r = stateManager.getSub('_relationships') || {};
-    const e=Object.entries(r).sort((a,b) => {
-      const p1 = !!a[1]?.pinned;
-      const p2 = !!b[1]?.pinned;
-      if (p1 !== p2) return p1 ? -1 : 1;
-      return (b[1]?.affection||0)-(a[1]?.affection||0);
-    });
+  /* ── 情感温度等级 ── */
+  _tempOf(affection) {
+    const a = Number(affection) || 0;
+    if (a >= 80)  return { key: 'soul',    label: '挚友', color: 'var(--tmp-soul)' };
+    if (a >= 60)  return { key: 'friend',  label: '好友', color: 'var(--tmp-friend)' };
+    if (a >= 30)  return { key: 'warm',    label: '友好', color: 'var(--tmp-warm)' };
+    if (a >= 0)   return { key: 'neutral', label: '中立', color: 'var(--tmp-neutral)' };
+    if (a >= -30) return { key: 'cold',    label: '冷淡', color: 'var(--tmp-cold)' };
+    if (a >= -60) return { key: 'hostile', label: '敌意', color: 'var(--tmp-hostile)' };
+    return { key: 'hatred', label: '仇恨', color: 'var(--tmp-hatred)' };
+  }
+
+  /* ── 单条温度计（双向刻度条，值域 -50..50 映射为半宽百分比） ── */
+  _thermoRow(label, value, color) {
+    const v = Math.max(-50, Math.min(50, Number(value) || 0));
+    const pct = Math.abs(v) * 2; // 0..100 半宽
+    const dir = v >= 0 ? 'pos' : 'neg';
     return `
-      <div class="sec">
-        <div class="sec-title">羁绊印记</div>
-        <div class="grid-list">
-          ${e.length?e.map(([n,d])=>`
-            <div class="rel-card-wrap${d.pinned?' rel-pinned':''}" data-rel-name="${escAttr(n)}">
-              <div class="rel-actions">
-                <button class="rel-action-btn pin-btn ${d.pinned?'pin-active':''}" data-action="pin" data-rel-npc="${escAttr(n)}" title="${d.pinned?'取消置顶':'置顶'}">📌</button>
-                <button class="rel-action-btn pin-btn del-hover" data-action="delete" data-rel-npc="${escAttr(n)}" title="删除羁绊">✖</button>
-              </div>
-              <div class="rel-header">
-                <div class="rel-avatar-ring">
-                  <div class="rel-avatar">${n[0]}</div>
-                </div>
-                <div class="rel-info">
-                  <div class="rel-info-title">${this._esc(n)}${d.pinned?'<span class="rel-pin-tag">📌</span>':''}</div>
-                  <div class="rel-info-sub">
-                    ${d.faction ? `<span class="glass-pill" style="padding: 2px 8px; font-size: 9px; background:rgba(198,156,109,0.1); color:var(--c-kin-bright); border-color:rgba(198,156,109,0.2);">${this._esc(d.faction)}</span>` : ''}
-                    ${this._esc(d.role || '')}
-                  </div>
-                </div>
-              </div>
-
-              <div class="rel-dashboard">
-                <div class="dash-stat">
-                  <div class="dash-label">好感度</div>
-                  <div class="dash-value" style="color:${(d.affection||0)>=0?'var(--c-moegi)':'var(--c-kokihi)'}">${d.affection||0}</div>
-                  <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:${Math.min(100, Math.abs(d.affection||0)*2)}%; background:${(d.affection||0)>=0?'var(--c-moegi)':'var(--c-kokihi)'};"></div></div>
-                </div>
-                <div class="dash-stat">
-                  <div class="dash-label">信任度</div>
-                  <div class="dash-value">${d.trust||0}</div>
-                  <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:${Math.min(100, Math.abs(d.trust||0)*2)}%; background:#42A5F5;"></div></div>
-                </div>
-                <div class="dash-stat">
-                  <div class="dash-label">敬畏度</div>
-                  <div class="dash-value">${d.respect||0}</div>
-                  <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:${Math.min(100, Math.abs(d.respect||0)*2)}%; background:#c69c6d;"></div></div>
-                </div>
-              </div>
-
-              <div class="rel-expand-hint">点击查看绝密情报与能力档案 ▾</div>
-            </div>`).join(''):'<div class="empty">形单影只<br><em>结印发起遭遇</em>，结识同伴</div>'}
+      <div class="thermo-row">
+        <span class="thermo-label">${label}</span>
+        <div class="thermo-track">
+          <div class="thermo-fill ${dir}" style="--fc:${color}; width:${pct / 2}%;"></div>
         </div>
+        <span class="thermo-val">${v > 0 ? '+' : ''}${v}</span>
+      </div>`;
+  }
+
+  _renderRel(s) {
+    const r = stateManager.getSub('_relationships') || {};
+    const all = Object.entries(r).sort((a, b) => {
+      const p1 = !!a[1]?.pinned, p2 = !!b[1]?.pinned;
+      if (p1 !== p2) return p1 ? -1 : 1;
+      return (b[1]?.affection || 0) - (a[1]?.affection || 0);
+    });
+
+    /* 七级温度统计 */
+    const ORDER = ['soul', 'friend', 'warm', 'neutral', 'cold', 'hostile', 'hatred'];
+    const stats = Object.fromEntries(ORDER.map(k => [k, 0]));
+    all.forEach(([, d]) => { stats[this._tempOf(d.affection).key]++; });
+    const shown = this._bondFilter
+      ? all.filter(([, d]) => this._tempOf(d.affection).key === this._bondFilter)
+      : all;
+
+    const pills = ORDER.map(k => {
+      const t = this._tempOf(k === 'soul' ? 80 : k === 'friend' ? 60 : k === 'warm' ? 30 : k === 'neutral' ? 0 : k === 'cold' ? -30 : k === 'hostile' ? -60 : -100);
+      if (!stats[k]) return '';
+      const on = this._bondFilter === k;
+      return `<button class="bond-pill${on ? ' on' : ''}" style="--pc:${t.color};" data-bf="${k}" title="${on ? '取消筛选' : `只看${t.label}`}">
+        <span class="dot"></span>${t.label}<b>${stats[k]}</b>
+      </button>`;
+    }).join('');
+
+    return `
+      <div class="sec bond-wrap">
+        <div class="bond-overview">
+          <span class="bond-ov-title">羁绊绘卷</span>
+          ${pills || '<span style="font-size:10px;color:var(--text-tertiary);letter-spacing:1px;">暂无羁绊</span>'}
+          <div class="bond-view-toggle">
+            <button class="bond-vt-btn bond-chart-open" data-bv="chart" title="展开情感星图">✦ 星图</button>
+          </div>
+        </div>
+        ${this._renderEmaGrid(shown)}
+      </div>`;
+  }
+
+  /* ── 绘马卡片网格 ── */
+  _renderEmaGrid(entries) {
+    if (!entries.length) {
+      return `<div class="empty">${this._bondFilter ? '该温度带暂无羁绊' : '形单影只<br><em>结印发起遭遇</em>，结识同伴'}</div>`;
+    }
+    return `<div class="ema-grid">${entries.map(([n, d]) => {
+      const t = this._tempOf(d.affection);
+      const aff = Number(d.affection) || 0;
+      const hist = Array.isArray(d.history) ? d.history : [];
+      const tags = (Array.isArray(d.tags) ? d.tags : []).slice(0, 3);
+      return `
+        <div class="ema-card${d.pinned ? ' pinned' : ''}" style="--tc:${t.color};" data-rel-name="${escAttr(n)}">
+          <div class="rel-actions">
+            <button class="rel-action-btn pin-btn ${d.pinned ? 'pin-active' : ''}" data-action="pin" data-rel-npc="${escAttr(n)}" title="${d.pinned ? '取消置顶' : '置顶'}">📌</button>
+            <button class="rel-action-btn pin-btn del-hover" data-action="delete" data-rel-npc="${escAttr(n)}" title="删除羁绊">✖</button>
+          </div>
+          <div class="ema-head">
+            <div class="ema-head-main">
+              <div class="ema-name">${this._esc(n)}${d.pinned ? '<span class="ema-pin-mark">📌</span>' : ''}</div>
+              <div class="ema-meta">
+                ${d.faction ? `<span class="ema-faction">${this._esc(d.faction)}</span>` : ''}
+                ${d.role ? `<span>${this._esc(d.role)}</span>` : ''}
+              </div>
+            </div>
+            <div class="ema-seal" title="${t.label} · 好感 ${aff}">
+              <span class="ema-seal-lv">${t.label}</span>
+              <span class="ema-seal-val">${aff > 0 ? '+' : ''}${aff}</span>
+            </div>
+          </div>
+          <div class="ema-thermo">
+            ${this._thermoRow('好感', d.affection, t.color)}
+            ${this._thermoRow('信任', d.trust, '#42A5F5')}
+            ${this._thermoRow('敬畏', d.respect, 'var(--c-kin)')}
+          </div>
+          <div class="ema-foot">
+            ${tags.map(tg => `<span class="ema-tag">${this._esc(tg)}</span>`).join('')}
+            ${hist.length ? `<span class="ema-trend flat" title="共 ${hist.length} 次羁绊记录">∞ ${hist.length}</span>` : ''}
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  /* ── 情感星图（大弹窗版 · 920×650，多环分层） ── */
+  _openBondChartModal() {
+    const r = stateManager.getSub('_relationships') || {};
+    const all = Object.entries(r);
+    const shown = this._bondFilter ? all.filter(([, d]) => this._tempOf(d.affection).key === this._bondFilter) : all;
+
+    const Modal = customElements.get('game-modal');
+    if (!Modal) return;
+    const modal = new Modal();
+    (document.getElementById('app') || document.body).appendChild(modal);
+    modal.show({
+      title: '情感星图',
+      content: this._renderBondChart(shown),
+      buttons: [{ label: '关闭', primary: true, close: true }]
+    });
+
+    /* 节点点击开档案（弹窗叠层）+ 悬停联线高亮 */
+    modal.shadowRoot.querySelectorAll('.chart-node[data-rel-name]').forEach(node => {
+      node.addEventListener('click', () => this.showRelModal(node.dataset.relName));
+      if (node.dataset.lk !== undefined) {
+        node.addEventListener('mouseenter', () => {
+          modal.shadowRoot.querySelector(`.chart-link[data-lk="${node.dataset.lk}"]`)?.classList.add('on');
+        });
+        node.addEventListener('mouseleave', () => {
+          modal.shadowRoot.querySelector(`.chart-link[data-lk="${node.dataset.lk}"]`)?.classList.remove('on');
+        });
+      }
+    });
+  }
+
+  _renderBondChart(entries) {
+    const css = `
+      <style>
+      .modal { width: min(94vw, 860px); max-height: 92vh; }
+      .bc { display: flex; flex-direction: column; gap: 12px; }
+      .bc-wrap {
+        position: relative; width: 100%; border-radius: 12px;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(var(--paper-rgb),0.03), transparent 55%),
+          rgba(0,0,0,0.25);
+        border: 1px solid rgba(var(--paper-rgb),0.05);
+        overflow: hidden;
+      }
+      .bc-wrap svg { display: block; width: 100%; height: auto; }
+      .bc-empty { padding: 80px 20px; text-align: center; color: var(--text-tertiary); font-size: 13px; letter-spacing: 2px; }
+      .chart-guide { fill: none; stroke: rgba(var(--paper-rgb), 0.06); stroke-dasharray: 2 5; }
+      .chart-guide-label {
+        font-size: 11px; fill: var(--text-tertiary); letter-spacing: 3px;
+        text-anchor: end; opacity: 0.7; font-family: var(--font-title, serif);
+      }
+      .chart-core-ring {
+        fill: none; stroke: var(--c-shuiro); stroke-width: 1.2;
+        stroke-dasharray: 3 7; opacity: 0.5;
+        animation: bc-core-spin 26s linear infinite;
+      }
+      @keyframes bc-core-spin { to { stroke-dashoffset: -400; } }
+      .chart-node { cursor: pointer; transition: opacity 0.2s; }
+      .chart-node .halo { transition: opacity 0.25s; }
+      .chart-node:hover .halo { opacity: 0.3; }
+      .chart-node circle.core { transition: stroke-width 0.25s ease; }
+      .chart-node:hover circle.core { stroke-width: 3; }
+      .chart-node text {
+        font-family: var(--font-title, serif); fill: var(--text-secondary);
+        text-anchor: middle; pointer-events: none;
+        paint-order: stroke; stroke: rgba(3,4,6,0.9); stroke-width: 3.5px; stroke-linejoin: round;
+      }
+      .chart-node .n-val { font-family: var(--font-mono, monospace); fill: var(--text-tertiary); transition: opacity 0.2s; }
+      .bc-wrap.dense .chart-node .n-val { opacity: 0; }
+      .bc-wrap.dense .chart-node:hover .n-val { opacity: 1; }
+      .chart-link { transition: stroke-width 0.3s, opacity 0.3s; }
+      .chart-link.on { stroke-width: 5; opacity: 0.95; }
+      .bc-hint {
+        position: absolute; bottom: 10px; right: 14px; font-size: 10px;
+        color: var(--text-tertiary); letter-spacing: 1px; opacity: 0.65;
+      }
+      /* 七级温度图例 */
+      .bc-legend {
+        display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px;
+        font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px;
+      }
+      .bc-lg-item { display: inline-flex; align-items: center; gap: 5px; }
+      .bc-lg-item i {
+        width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        box-shadow: 0 0 6px currentColor;
+      }
+      @media (prefers-reduced-motion: reduce) { .chart-core-ring { animation: none; } }
+      @media (max-width: 768px) {
+        .bc-legend { gap: 4px 10px; font-size: 9px; }
+        .bc-hint { display: none; }
+      }
+      </style>`;
+
+    if (!entries.length) {
+      return `${css}<div class="bc"><div class="bc-wrap"><div class="bc-empty">星图暂无星宿 —— 结识同伴后点亮</div></div></div>`;
+    }
+
+    const W = 920, H = 650, cx = W / 2, cy = 322, ELLIPSE = 0.85;
+    const n = entries.length;
+    const player = stateManager.get('玩家·姓名') || '我';
+
+    /* 多环分层：好感越高越靠内；环数随人数自适应 */
+    const RING_RADII = n <= 7 ? [290] : n <= 16 ? [165, 295] : [110, 220, 300];
+    const RING_LABELS = RING_RADII.length === 3 ? ['亲密', '熟识', '泛泛'] : (RING_RADII.length === 2 ? ['亲近', '泛泛'] : []);
+    const sorted = [...entries].sort((a, b) => (b[1].affection || 0) - (a[1].affection || 0));
+
+    /* 按周长比例分配每环节点（内少外多），相邻环错开半格角度 */
+    const totalR = RING_RADII.reduce((s, r) => s + r, 0);
+    const counts = RING_RADII.map(r => Math.max(1, Math.round(n * r / totalR)));
+    while (counts.reduce((s, c) => s + c, 0) > n) counts[counts.length - 1]--;
+    while (counts.reduce((s, c) => s + c, 0) < n) counts[counts.length - 1]++;
+
+    const nodes = [];
+    let idx = 0;
+    for (let k = 0; k < RING_RADII.length; k++) {
+      const m = counts[k], radius = RING_RADII[k];
+      const offset = -Math.PI / 2 + (k % 2 ? Math.PI / m : 0);
+      for (let j = 0; j < m && idx < n; j++, idx++) {
+        const [name, d] = sorted[idx];
+        const aff = Number(d.affection) || 0;
+        const t = this._tempOf(aff);
+        const angle = offset + (j / m) * Math.PI * 2;
+        nodes.push({
+          name, d, t, aff,
+          x: cx + Math.cos(angle) * radius,
+          y: cy + Math.sin(angle) * radius * ELLIPSE
+        });
+      }
+    }
+
+    const links = nodes.map((nd, i) => {
+      const w = 1.2 + Math.min(100, Math.abs(nd.aff)) / 18;
+      const op = 0.16 + Math.min(100, Math.abs(nd.aff)) / 100 * 0.5;
+      return `<line class="chart-link" data-lk="${i}" x1="${cx}" y1="${cy}" x2="${nd.x.toFixed(1)}" y2="${nd.y.toFixed(1)}"
+        stroke="${nd.t.color}" stroke-width="${w.toFixed(1)}" opacity="${op.toFixed(2)}" />`;
+    }).join('');
+
+    const circles = nodes.map((nd, i) => {
+      const r = 20 + Math.min(100, Math.abs(nd.aff)) / 100 * 8; // 20..28
+      return `
+        <g class="chart-node" data-rel-name="${escAttr(nd.name)}" data-lk="${i}" transform="translate(${nd.x.toFixed(1)},${nd.y.toFixed(1)})">
+          <circle class="halo" r="${(r + 7).toFixed(1)}" fill="${nd.t.color}" opacity="0.10" />
+          <circle class="core" r="${r.toFixed(1)}" fill="rgba(10,12,16,0.92)" stroke="${nd.t.color}" stroke-width="1.8" />
+          <text y="4.5" font-size="12" font-weight="700" fill="${nd.t.color}" stroke="none">${this._esc(nd.name.slice(0, 2))}</text>
+          <text y="${(r + 15).toFixed(1)}" font-size="12">${this._esc(nd.name.length > 5 ? nd.name.slice(0, 5) + '…' : nd.name)}</text>
+          <text class="n-val" y="${(r + 28).toFixed(1)}" font-size="10">${nd.t.label} ${nd.aff > 0 ? '+' : ''}${nd.aff}</text>
+        </g>`;
+    }).join('');
+
+    const guides = RING_RADII.map((r, k) => `
+      <ellipse class="chart-guide" cx="${cx}" cy="${cy}" rx="${r}" ry="${(r * ELLIPSE).toFixed(1)}" />
+      ${RING_LABELS[k] ? `<text class="chart-guide-label" x="${cx + r - 10}" y="${cy - 10}">${RING_LABELS[k]}</text>` : ''}
+    `).join('');
+
+    const legend = [
+      ['挚友', 'var(--tmp-soul)'], ['好友', 'var(--tmp-friend)'], ['友好', 'var(--tmp-warm)'],
+      ['中立', 'var(--tmp-neutral)'], ['冷淡', 'var(--tmp-cold)'], ['敌意', 'var(--tmp-hostile)'], ['仇恨', 'var(--tmp-hatred)']
+    ].map(([label, color]) => `<span class="bc-lg-item" style="color:${color}"><i style="background:${color}"></i><span style="color:var(--text-tertiary)">${label}</span></span>`).join('');
+
+    return `
+      ${css}
+      <div class="bc">
+        <div class="bc-wrap${n > 30 ? ' dense' : ''}">
+          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="情感星图">
+            <defs>
+              <radialGradient id="bondCore" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(235,97,63,0.35)" />
+                <stop offset="100%" stop-color="rgba(235,97,63,0)" />
+              </radialGradient>
+            </defs>
+            ${guides}
+            ${links}
+            <circle cx="${cx}" cy="${cy}" r="70" fill="url(#bondCore)" />
+            <g class="chart-node" transform="translate(${cx},${cy})">
+              <circle class="chart-core-ring" r="44" />
+              <circle r="34" fill="rgba(14,18,24,0.95)" stroke="var(--c-shuiro)" stroke-width="2.4" />
+              <text y="5" font-size="14" font-weight="800" fill="var(--c-shuiro)" stroke="none">${this._esc(String(player).slice(0, 2))}</text>
+              <text y="56" font-size="13" font-weight="700">${this._esc(player)}</text>
+            </g>
+            ${circles}
+          </svg>
+          <div class="bc-hint">内环 = 情感更深 · 线宽 = 羁绊强度 · 点按星宿查看档案${n > 30 ? ' · 悬停查看数值' : ''}</div>
+        </div>
+        <div class="bc-legend">${legend}</div>
       </div>`;
   }
 

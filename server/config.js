@@ -22,12 +22,49 @@ function toPositiveInt(value, fallback) {
   return Number.isNaN(parsed) || parsed <= 0 ? fallback : parsed;
 }
 
+/**
+ * Express trust proxy 配置。默认不信任请求头；只有部署在明确的可信反代后方时才应配置。
+ * 支持 true、正整数跳数，以及 Express/proxy-addr 接受的地址或命名网段字符串。
+ * @param {string | undefined} value
+ * @returns {boolean | number | string}
+ */
+function parseTrustProxy(value) {
+  const normalized = value?.trim();
+  if (!normalized || normalized === '0' || normalized.toLowerCase() === 'false') return false;
+  if (normalized.toLowerCase() === 'true') return true;
+  if (/^\d+$/.test(normalized)) return Number.parseInt(normalized, 10);
+  return normalized;
+}
+
+function parseOriginList(value) {
+  return [...new Set(String(value || '').split(',').map(item => item.trim()).filter(Boolean).map(item => {
+    try {
+      const url = new URL(item);
+      return ['http:', 'https:', 'ws:', 'wss:'].includes(url.protocol) ? url.origin : '';
+    } catch { return ''; }
+  }).filter(Boolean))];
+}
+
+/**
+ * Clash/Mihomo 的 fake-IP DNS 通常使用 198.18.0.0/15。开发环境默认兼容，
+ * 生产环境保持关闭；两种环境都允许通过显式 true/false 覆盖。
+ */
+export function resolveAiProxyAllowFakeIpDns(env = process.env) {
+  const explicit = String(env.AI_PROXY_ALLOW_FAKE_IP_DNS ?? '').trim().toLowerCase();
+  if (explicit === 'true') return true;
+  if (explicit === 'false') return false;
+  return String(env.NODE_ENV || 'development').trim().toLowerCase() !== 'production';
+}
+
 /** 应用全局配置（deepFreeze 防止运行期被意外篡改） */
 export const config = deepFreeze({
   port: toPositiveInt(process.env.PORT, 3000),
   nodeEnv: NODE_ENV,
   auth: {
     bypass: AUTH_BYPASS_REQUESTED && NODE_ENV !== 'production'
+  },
+  http: {
+    trustProxy: parseTrustProxy(process.env.TRUST_PROXY)
   },
   discord: {
     clientId: process.env.DISCORD_CLIENT_ID,
@@ -41,7 +78,20 @@ export const config = deepFreeze({
   },
   saves: {
     maxSlots: toPositiveInt(process.env.MAX_SAVE_SLOTS, 1),
-    maxSizeMb: toPositiveInt(process.env.MAX_SAVE_SIZE_MB, 200)
+    maxSizeMb: toPositiveInt(process.env.MAX_SAVE_SIZE_MB, 200),
+    maxPreviewSizeKb: toPositiveInt(process.env.MAX_SAVE_PREVIEW_SIZE_KB, 64)
+  },
+  imageAssets: {
+    maxBytes: toPositiveInt(process.env.IMAGE_ASSET_QUOTA_MB, 1024) * 1024 * 1024,
+    maxAssets: toPositiveInt(process.env.IMAGE_ASSET_MAX_COUNT, 500),
+    maxOriginalBytes: toPositiveInt(process.env.IMAGE_ASSET_MAX_ORIGINAL_MB, 20) * 1024 * 1024,
+    maxThumbnailBytes: toPositiveInt(process.env.IMAGE_ASSET_MAX_THUMBNAIL_KB, 512) * 1024,
+    maxMetadataBytes: toPositiveInt(process.env.IMAGE_ASSET_MAX_METADATA_KB, 32) * 1024,
+    maxPixels: toPositiveInt(process.env.IMAGE_ASSET_MAX_PIXELS, 16000000),
+    maxSide: toPositiveInt(process.env.IMAGE_ASSET_MAX_SIDE, 8192),
+    maxSelections: toPositiveInt(process.env.IMAGE_ASSET_MAX_SELECTIONS, 5000),
+    activeReferenceTtlMs: toPositiveInt(process.env.IMAGE_ASSET_ACTIVE_REFERENCE_TTL_MINUTES, 60) * 60 * 1000,
+    connectSources: parseOriginList(process.env.IMAGE_LOCAL_CONNECT_SOURCES)
   },
   storage: {
     dataDir: path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'))
@@ -49,8 +99,11 @@ export const config = deepFreeze({
   proxy: {
     enabled: process.env.PROXY_ENABLED === 'true',
     url: process.env.PROXY_URL || '',
+    allowFakeIpDns: resolveAiProxyAllowFakeIpDns(process.env),
     timeoutMs: toPositiveInt(process.env.AI_PROXY_TIMEOUT_MS, 120000),
-    maxResponseMb: toPositiveInt(process.env.AI_PROXY_MAX_RESPONSE_MB, 20)
+    maxResponseMb: toPositiveInt(process.env.AI_PROXY_MAX_RESPONSE_MB, 20),
+    imageTimeoutMs: toPositiveInt(process.env.IMAGE_PROXY_TIMEOUT_MS, 300000),
+    imageMaxResponseMb: toPositiveInt(process.env.IMAGE_PROXY_MAX_RESPONSE_MB, 32)
   }
 });
 

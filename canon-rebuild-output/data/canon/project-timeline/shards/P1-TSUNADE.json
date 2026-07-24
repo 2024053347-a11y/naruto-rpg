@@ -1,0 +1,2279 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P1-TSUNADE",
+    "namespace": "P1",
+    "arc_ids": [
+      "ARC-P1-ITACHI",
+      "ARC-P1-TSUNADE"
+    ],
+    "date_start": "K064-04-12",
+    "date_end": "K064-05-01"
+  },
+  "days": [
+    {
+      "id": "DAY-P1-ITACHI-412",
+      "date": "K064-04-12",
+      "title": "晓的木叶侦察",
+      "arc_id": "ARC-P1-ITACHI",
+      "day_goal": "在木叶最脆弱的继任期引入尾兽威胁，同时限制知情范围和战斗规模。",
+      "start_state": [
+        "K064-04-09已完成实际死者的战后追悼；三代的生死、履职能力和代理权限继承上一分片的真实记录。",
+        "木叶守备仍在重建，警戒等级由入侵损害、玩家预警与当前合法指挥者决定。",
+        "宇智波鼬与干柿鬼鲛只有仍执行晓的九尾侦察任务时才接近木叶。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-ITACHI-ENTRY-01",
+          "title": "雨后的入村",
+          "thread_id": "THR-P1-AKATSUKI-RECON",
+          "location": "木叶正门",
+          "participants": [
+            "宇智波鼬",
+            "干柿鬼鲛",
+            "木叶守备忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "鼬与鬼鲛仍执行九尾侦察任务。",
+            "木叶正门仍允许经核验的吊唁与重建人员通行。"
+          ],
+          "blockers": [
+            "木叶已获得二人外貌、查克拉或装束的可靠预警并封闭门岗。",
+            "鼬或鬼鲛已退出当前侦察任务。"
+          ],
+          "setup": "鼬与鬼鲛试图用低调装束混入战后重建、探病与吊唁实际死者的人流，避免大规模交战并寻找鸣人位置。",
+          "beats": [
+            {
+              "id": "EV-P1-ITACHI-ENTRY-01-01",
+              "order": 10,
+              "summary": "二人利用守备交接与经核验的战后人流接近村内。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-ITACHI-ENTRY-01-02",
+              "order": 20,
+              "summary": "鼬限制鬼鲛行动，优先收集人柱力与领导层情报。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-ITACHI-ENTRY-01-03",
+              "order": 30,
+              "summary": "木叶感知与巡逻线出现可疑但不完整记录。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "晓获得木叶战后状态的初步情报。",
+            "部分上忍开始追查可疑访客。"
+          ],
+          "state_changes": [
+            "晓侦察线程进入村内。"
+          ],
+          "stop_condition": "二人通过门岗进入村内观察区，或被守备拦在村外。",
+          "fallbacks": [
+            {
+              "condition": "门岗识破二人、玩家提前封锁村门或改变守备交接。",
+              "status": "postponed",
+              "direction": "改为村外观察、另择入口或在暴露风险过高时撤退；不得无视有效封锁进入木叶。",
+              "preserves": "保留晓调查九尾现状的动机，以及木叶守备对可疑访客形成记录的机会。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鼬与鬼鲛进入木叶",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "给潜入行为合理路径，同时不让普通NPC凭数据库直接识别晓的全貌。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-ITACHI-JONIN-01",
+          "title": "上忍截击",
+          "thread_id": "THR-P1-AKATSUKI-RECON",
+          "location": "木叶河岸",
+          "participants": [
+            "宇智波鼬",
+            "干柿鬼鲛",
+            "猿飞阿斯玛",
+            "夕日红",
+            "旗木卡卡西",
+            "迈特凯"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鼬与鬼鲛已进入村内且尚未取得鸣人位置。",
+            "阿斯玛与红根据巡逻记录在河岸确认可疑二人。"
+          ],
+          "blockers": [
+            "晓已在门岗暴露后撤离。",
+            "截击上忍被调离、失去行动能力或已掌握足以避免月读的对策。"
+          ],
+          "setup": "阿斯玛与红拦截可疑二人，卡卡西认出鼬并加入；鼬以月读重创卡卡西，凯的增援迫使晓撤离。",
+          "beats": [
+            {
+              "id": "EV-P1-ITACHI-JONIN-01-01",
+              "order": 10,
+              "summary": "木叶上忍要求二人表明身份。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-ITACHI-JONIN-01-02",
+              "order": 20,
+              "summary": "鬼鲛与阿斯玛交手，红的幻术被鼬反制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-ITACHI-JONIN-01-03",
+              "order": 30,
+              "summary": "卡卡西警告同伴避免写轮眼直视，但仍被月读击中。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-ITACHI-JONIN-01-04",
+              "order": 40,
+              "summary": "凯到场后，鼬决定避免扩大伤亡并撤离。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶确认鼬与一名鲛肌使用者潜入。",
+            "卡卡西遭受严重精神创伤。"
+          ],
+          "state_changes": [
+            "卡卡西住院。",
+            "晓知道鸣人不在卡卡西直接保护下。"
+          ],
+          "stop_condition": "晓脱离河岸且木叶伤员被送医，或截击因玩家分支以其他结果结束。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前增援、警告卡卡西或阻止双方在河岸接触。",
+              "status": "altered",
+              "direction": "按实际兵力与情报结算拘捕、短战或晓撤离；卡卡西未被月读命中时不得强制令其昏迷住院。",
+              "preserves": "保留木叶确认S级叛忍威胁及晓需要决定继续侦察还是撤出的压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鼬鬼鲛对木叶上忍",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "战斗目标是情报与撤离，不把晓写成无理由在村内屠杀。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶在基准线确认S级叛忍入侵；实际确认范围取决于门岗与河岸接触。",
+        "卡卡西只有遭月读时才失去行动能力。",
+        "仍在执行任务的鼬与鬼鲛继续寻找鸣人。"
+      ],
+      "transition": "只有木叶确认晓正在接近鸣人且自来也仍承担保护时，K064-04-12夜间才把鸣人转移到近郊驿镇并留下受限门岗记录；K064-04-13佐助是否得知、追赶及同行均由实际泄露与拦截结果决定。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-ITACHI-413",
+      "date": "K064-04-13",
+      "title": "兄弟再会与撤退",
+      "arc_id": "ARC-P1-ITACHI",
+      "day_goal": "让佐助的创伤复发成为后续离村线的真实原因，同时让自来也的介入合理终止晓的捕捉。",
+      "start_state": [
+        "基准侦察分支中，鼬与鬼鲛通过实际跟踪确认鸣人随自来也前往近郊驿镇；被拦截或撤退分支保留各自真实位置。",
+        "佐助只有从警戒失言或其他实际渠道得知鼬出现后才会追查，且不知道晓的完整任务。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-ITACHI-SASUKE-PURSUIT-01",
+          "title": "循路追兄",
+          "thread_id": "THR-P1-SASUKE-TRAUMA",
+          "location": "木叶至近郊驿镇的驿道",
+          "participants": [
+            "宇智波佐助",
+            "木叶门卫",
+            "驿道旅人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助仍具备离村急行能力。",
+            "自来也与鸣人的昨夜出行在门岗留有受限登记。"
+          ],
+          "blockers": [
+            "佐助被医疗或守备人员有效控制。",
+            "鼬的出现未传到佐助耳中，或鸣人并未转移至该驿镇。"
+          ],
+          "setup": "佐助核对昨夜出村登记与沿途目击，压下等待增援的命令，独自沿驿道追向自来也和鸣人的落脚镇。",
+          "beats": [
+            {
+              "id": "EV-P1-ITACHI-SASUKE-PURSUIT-01-01",
+              "order": 10,
+              "summary": "警戒人员只泄露鼬已出现，未提供晓的目标与位置。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-ITACHI-SASUKE-PURSUIT-01-02",
+              "order": 20,
+              "summary": "佐助从门岗记录得知自来也和鸣人的出行方向。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-ITACHI-SASUKE-PURSUIT-01-03",
+              "order": 30,
+              "summary": "佐助决定独自急行，消耗体力并放弃等待护卫。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "佐助以可追踪路线抵达近郊驿镇。",
+            "木叶门岗留下他擅自离村的时间记录。"
+          ],
+          "state_changes": [
+            "佐助体力有所消耗。",
+            "后续增援可以沿登记路线追踪。"
+          ],
+          "stop_condition": "佐助抵达驿镇并确认鸣人所在旅馆，或被玩家成功劝回、拦下。",
+          "fallbacks": [
+            {
+              "condition": "玩家封锁登记、陪同佐助、说服他等待增援或选择另一条追踪路线。",
+              "status": "altered",
+              "direction": "按玩家获得的情报和同行人员推进追踪；若佐助未到旅馆，跳过兄弟走廊冲突，不得把他强制送到鼬面前。",
+              "preserves": "保留佐助得知鼬活动后必须处理的复仇冲动，以及门岗能追溯擅自离村的事实。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助追赶鼬",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足警戒失言、门岗记录和近郊急行路线"
+            }
+          ],
+          "design_rationale": "补足佐助从木叶到驿镇的移动与情报来源，不让他凭未知坐标瞬移。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-ITACHI-SASUKE-01",
+          "title": "走廊中的兄弟",
+          "thread_id": "THR-P1-SASUKE-TRAUMA",
+          "location": "火之国驿镇旅馆走廊",
+          "participants": [
+            "宇智波佐助",
+            "宇智波鼬",
+            "干柿鬼鲛",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助已抵达驿镇旅馆。",
+            "鼬与鬼鲛仍在旅馆内试图接近鸣人。"
+          ],
+          "blockers": [
+            "佐助未追到驿镇、鼬已撤离或玩家已把双方隔离。",
+            "佐助已失去战斗能力或不再选择攻击鼬。"
+          ],
+          "setup": "佐助追上鼬并使用千鸟攻击，却被轻易制止；鼬用月读迫使他重历灭族创伤。",
+          "beats": [
+            {
+              "id": "EV-P1-ITACHI-SASUKE-01-01",
+              "order": 10,
+              "summary": "佐助越过队伍与医疗限制独自追赶。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-ITACHI-SASUKE-01-02",
+              "order": 20,
+              "summary": "千鸟被鼬单手控制，实力差距公开显现。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-ITACHI-SASUKE-01-03",
+              "order": 30,
+              "summary": "鼬以月读重现灭族记忆并强化憎恨命令。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-ITACHI-SASUKE-01-04",
+              "order": 40,
+              "summary": "佐助失去行动能力。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助对现有成长道路产生严重怀疑。",
+            "鸣人亲历佐助被鼬压倒。"
+          ],
+          "state_changes": [
+            "佐助精神重创并需要转运回木叶医院。",
+            "复仇压力显著上升。"
+          ],
+          "stop_condition": "佐助由鸣人或赶到的木叶人员接管，鼬不再继续攻击他；若月读被阻止，则按实际伤势结算。",
+          "fallbacks": [
+            {
+              "condition": "玩家阻止佐助直视鼬、协助撤离鸣人或改变兄弟交锋的伤势结果。",
+              "status": "altered",
+              "direction": "依据实际接触结算佐助的身体与精神伤势；未中月读时不得强制写入同等昏迷，但鼬造成的复仇压力可按亲历内容保留。",
+              "preserves": "保留兄弟再会对佐助成长路线的冲击，以及鸣人对晓威胁的亲历。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助再遇鼬",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把后续嫉妒和离村选择建立在具体失败与操控创伤上，不把佐助简化成突然变坏。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-ITACHI-JIRAIYA-01",
+          "title": "蛤蟆食道封锁",
+          "thread_id": "THR-P1-AKATSUKI-RECON",
+          "location": "火之国驿镇旅馆",
+          "participants": [
+            "自来也",
+            "漩涡鸣人",
+            "宇智波鼬",
+            "干柿鬼鲛"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "自来也已返回旅馆并确认晓以鸣人为目标。",
+            "鼬与鬼鲛仍在旅馆范围且尚未带走鸣人。"
+          ],
+          "blockers": [
+            "鸣人已被安全转移、晓已撤离或自来也无法发动蛤蟆口缚。",
+            "玩家已拘束任一方并使基准封锁失去对象。"
+          ],
+          "setup": "自来也返回并用蛤蟆口缚困住鼬与鬼鲛；鼬使用天照打开逃生通道，二人放弃本次捕捉。",
+          "beats": [
+            {
+              "id": "EV-P1-ITACHI-JIRAIYA-01-01",
+              "order": 10,
+              "summary": "自来也确认敌人目标是鸣人。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-ITACHI-JIRAIYA-01-02",
+              "order": 20,
+              "summary": "蛤蟆食道封闭旅馆通道。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-ITACHI-JIRAIYA-01-03",
+              "order": 30,
+              "summary": "天照烧穿无法常规突破的墙面。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-ITACHI-JIRAIYA-01-04",
+              "order": 40,
+              "summary": "鼬与鬼鲛撤离火之国。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人未被晓带走。",
+            "自来也获得晓正在关注九尾的可靠情报。"
+          ],
+          "state_changes": [
+            "晓本次侦察结束。",
+            "若天照实际使用，其痕迹成为受限能力情报。"
+          ],
+          "stop_condition": "鼬与鬼鲛离开追踪范围，或在玩家改变封锁结果后进入明确的新状态。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前转移鸣人、改变旅馆封锁或迫使晓从另一方向撤退。",
+              "status": "altered",
+              "direction": "按当前位置和能力结算保护、追击或撤离；只有鼬实际使用天照时才记录其痕迹，不能为补情报强制施术。",
+              "preserves": "保留晓捕捉九尾的威胁被自来也确认，以及鸣人当日必须脱离直接捕捉风险。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·自来也阻止晓捕捉鸣人",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "明确敌人撤离是风险判断而非被随意击败，也避免同日继续无限追战。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "晓在基准线撤出木叶周边。",
+        "若遭月读，佐助与卡卡西均需高水平医疗；佐助的实际状态由走廊分支决定。"
+      ],
+      "transition": "K064-04-13夜间仅按实际门岗记录、伤员位置和已送达报告执行接回、警戒或继续搜寻；K064-04-14是否向自来也发送寻找纲手的密令，取决于当前领导与医疗需求。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-414",
+      "date": "K064-04-14",
+      "title": "寻找纲手的授权",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "把实际领导需求、高水平医疗危机和旅途目标组成一项可验证任务，并给鸣人离村学习留下明确许可。",
+      "start_state": [
+        "三代死亡或无法履职时，木叶需要长期继任或有期限的代理方案；三代能够履职时保留现任火影权限。",
+        "卡卡西、佐助及其他伤员的实际精神与身体伤势按04-12至13病历记录，未受伤者不进入纲手治疗需求。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-MANDATE-01",
+          "title": "领导与医疗人选会议",
+          "thread_id": "THR-P1-KONOHA-POLITICS",
+          "location": "火影楼临时会议室",
+          "participants": [
+            "木叶长老",
+            "上忍班代表",
+            "当前合法指挥代表"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "木叶存在尚未解决的继任、代理、高水平医疗或人柱力保护需求。",
+            "木叶掌握自来也的实际落脚点并能安全送出密令。"
+          ],
+          "blockers": [
+            "当前领导与医疗体系已能处理全部需求，或合法指挥层决定暂不寻找纲手。",
+            "自来也失去行动能力、拒绝参与或无法取得联系。"
+          ],
+          "setup": "当前合法领导层按三代真实状态评估自来也与纲手：存在领导空缺时讨论继任，三代仍在任时只讨论代理、医疗支援与对晓应对；获批任务及实际病历摘要封入密令。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-MANDATE-01-01",
+              "order": 10,
+              "summary": "木叶核对现任火影状态、重建、外交与实际病历中的医疗需求。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-MANDATE-01-02",
+              "order": 20,
+              "summary": "与会者按当前缺口决定继任邀请、代理协助、医疗征召或暂不派遣。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-MANDATE-01-03",
+              "order": 30,
+              "summary": "传令忍者只携获批内容前往自来也最后确认的位置。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "纲手是否成为火影候选、医疗支援对象或两者兼有，由本次会议的真实需求决定。",
+            "自来也尚未现场接受任何职位或寻找任务。"
+          ],
+          "state_changes": [
+            "任务密令离开木叶时记录签发者、目的、病历披露范围与临时权限。"
+          ],
+          "stop_condition": "领导安排、任务目标、密令收件人和未公开病历范围均登记完成。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变继任程序、医疗优先级、候选人或密令送达方式。",
+              "status": "postponed",
+              "direction": "由当前合法指挥层重新评估任务目标与搜寻人选；命令未送达前不得宣称自来也已接受任务，三代幸存时不得伪造火影空缺。",
+              "preserves": "保留木叶需要稳定领导、高水平医疗与人柱力保护的现实压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·五代火影人选",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "三代幸存不能被下一分片悄悄改写为死亡，寻找纲手也必须有当前政治或医疗依据。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-DEPART-01",
+          "title": "师徒启程",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "火之国近郊驿镇",
+          "participants": [
+            "自来也",
+            "漩涡鸣人",
+            "木叶传令忍者"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "自来也收到寻找纲手的正式授权。",
+            "鸣人仍需由自来也保护且身体允许继续旅行。"
+          ],
+          "blockers": [
+            "鸣人被晓带走、需住院或被安排给其他保护者。",
+            "自来也拒绝任务、失去行动能力或密令尚未送达。"
+          ],
+          "setup": "自来也在实际所在地点收到密令，按其中的继任、代理或医疗目标作出回复；只有寻找纲手获批且鸣人同意同行时，实际成员才核对线索与补给后出发。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-DEPART-01-01",
+              "order": 10,
+              "summary": "传令忍者交付任务授权及最小必要病历摘要。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-DEPART-01-02",
+              "order": 20,
+              "summary": "自来也决定接受、拒绝或要求修改任务，并向鸣人说明保护、寻找与训练目的。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-DEPART-01-03",
+              "order": 30,
+              "summary": "玩家可决定是否同行、先护送伤员回村或要求调整路线与公开范围。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-DEPART-01-04",
+              "order": 40,
+              "summary": "实际出发成员补齐水、口粮、训练耗材与伤药后离开驿镇。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "获批分支中鸣人进入自来也直接保护，寻找纲手的现场行动开始。"
+          ],
+          "state_changes": [
+            "实际出发成员的位置转为已登记的火之国驿道。",
+            "队伍消耗并补充一轮旅行物资。"
+          ],
+          "stop_condition": "已接受任务的成员完成驿镇补给并踏上第一段驿道，或密令被正式拒绝、改签或回传。",
+          "fallbacks": [
+            {
+              "condition": "玩家拒绝同行、要求先护送佐助回村或改变搜寻队成员。",
+              "status": "altered",
+              "direction": "按实际任务成员重新核对保护责任、线索、补给和第一段路线；不得把未同行者写进后续旅程。",
+              "preserves": "保留寻找火影候选人与保护九尾人柱力两项任务需求。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·寻找纲手启程",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "承接近郊驿镇位置并补足密令与补给交接"
+            }
+          ],
+          "design_rationale": "让任务接受、保护安排和出发选择发生在自来也实际所在地点，不以三代固定死亡强迫启程。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中寻找纲手任务开始，鸣人在自来也保护下继续离村旅行；分支以密令回复和实际成员为准。"
+      ],
+      "transition": "K064-04-15按实际路线赶路并在驿站询问赌债线索；若鸣人与自来也同行且状态允许，K064-04-16才开始螺旋丸教学。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-416",
+      "date": "K064-04-16",
+      "title": "螺旋丸第一阶段",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "建立新术的来源、原理和分阶段训练，不允许仅因数据库命中就直接掌握。",
+      "start_state": [
+        "自来也与鸣人在驿镇追踪纲手。",
+        "鸣人希望获得能与千鸟相比的高阶忍术。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-RASENGAN-01",
+          "title": "水球旋转",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "火之国驿镇郊外",
+          "participants": [
+            "自来也",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "自来也具备示范螺旋丸的体力与教学意愿。",
+            "鸣人已休息到能进行形态变化训练且携带水球耗材。"
+          ],
+          "blockers": [
+            "鸣人或自来也正遭追击、重伤或查克拉不足。",
+            "玩家已选择不同训练目标或鸣人已在分支中掌握同等阶段。"
+          ],
+          "setup": "自来也示范无印查克拉形态变化并用水球训练不规则旋转；鸣人需要通过反复试验找到多向扰动。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-01-01",
+              "order": 10,
+              "summary": "自来也解释螺旋丸不依赖结印但要求极高形态控制。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-01-02",
+              "order": 20,
+              "summary": "鸣人的单向旋转无法破坏水球。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-01-03",
+              "order": 30,
+              "summary": "玩家选择改变旋转方向、辅助手法或当日训练强度。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-01-04",
+              "order": 40,
+              "summary": "成功方案用另一只手或外部刺激制造多方向流动。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-01-05",
+              "order": 50,
+              "summary": "水球破裂时，第一阶段才完成。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人理解螺旋丸第一阶段。",
+            "完整成术仍需威力与维持训练。"
+          ],
+          "state_changes": [
+            "螺旋丸保持未掌握状态并记录阶段进度。",
+            "水球耗材减少，鸣人查克拉与手臂耐力有所消耗。"
+          ],
+          "stop_condition": "鸣人完成一次可重复的水球破坏并在当日安全上限停止。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变训练方法、提前成功或在达到安全上限前停止。",
+              "status": "altered",
+              "direction": "按实际练习记录控制进度、查克拉、手臂负荷和剩余耗材；一次成功不得自动写成完整掌握。",
+              "preserves": "保留螺旋丸必须经教学与分阶段验证才能掌握的技能边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·螺旋丸水球训练",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把学习过程拆成可验证阶段，并保持体力与查克拉消耗。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的第一阶段完成度、体力与耗材按训练实际结果记录。",
+        "基准调查线把纲手行踪指向短册街方向。"
+      ],
+      "transition": "K064-04-17按当前线索继续赶路或训练恢复；K064-04-18大蛇丸仅在仍掌握纲手位置时先一步接触。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-418",
+      "date": "K064-04-18",
+      "title": "大蛇丸的交易",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "让纲手面对一个有真实诱惑和政治代价的选择，并让双方的交易期限推动后续汇合。",
+      "start_state": [
+        "大蛇丸双臂被封，急需纲手治疗。",
+        "纲手长期离村并受亲人死亡创伤影响。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-OROCHI-01",
+          "title": "复活条件",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街外围废墟",
+          "participants": [
+            "纲手",
+            "静音",
+            "大蛇丸",
+            "药师兜"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "大蛇丸双臂封印仍未解除并需要纲手治疗。",
+            "纲手与静音仍在短册街附近且大蛇丸掌握接触渠道。"
+          ],
+          "blockers": [
+            "大蛇丸已死亡、双臂已恢复或无法抵达会面。",
+            "纲手已明确拒绝且不愿听取条件。"
+          ],
+          "setup": "大蛇丸提出以秽土转生复活绳树和断为条件，要求纲手治疗双臂；纲手索要考虑时间。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-OROCHI-01-01",
+              "order": 10,
+              "summary": "大蛇丸展示双臂封印并提出治疗要求。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-OROCHI-01-02",
+              "order": 20,
+              "summary": "他利用纲手最深的丧失提出复活交换。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-OROCHI-01-03",
+              "order": 30,
+              "summary": "纲手没有立即答应，约定期限后答复。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "纲手进入高风险道德抉择。",
+            "静音明确反对并考虑求援。"
+          ],
+          "state_changes": [
+            "大蛇丸与纲手约定再次会面。"
+          ],
+          "stop_condition": "双方离开废墟且未开始治疗。",
+          "fallbacks": [
+            {
+              "condition": "玩家截获大蛇丸、警告纲手或使交易条件失去价值。",
+              "status": "postponed",
+              "direction": "按实际状态改为威胁、撤退或另寻治疗者；复活条件未被提出时，不得让纲手凭空知道交易内容。",
+              "preserves": "保留大蛇丸解除封印的需求，以及纲手必须面对亲人创伤与公共代价的选择压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·大蛇丸向纲手交易",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "给予纲手真实犹豫时间，同时防止AI把交易写成已成交事实。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-TRACE-01",
+          "title": "短册街线索",
+          "thread_id": "THR-P1-TSUNADE-SEARCH",
+          "location": "短册街赌场",
+          "participants": [
+            "自来也",
+            "漩涡鸣人",
+            "赌馆人员"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "自来也与鸣人已抵达短册街并持有纲手嗜赌及欠债的公开线索。",
+            "赌场人员近期确实见过纲手或静音。"
+          ],
+          "blockers": [
+            "纲手未在短册街活动，或玩家已通过其他可靠渠道找到她。",
+            "赌场人员被收买、失踪或无法提供可核验信息。"
+          ],
+          "setup": "自来也与鸣人从赌债账目和目击信息确认纲手仍在短册街活动。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-TRACE-01-01",
+              "order": 10,
+              "summary": "二人核对多条互相矛盾的赌场传闻。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-TRACE-01-02",
+              "order": 20,
+              "summary": "鸣人在搜寻间隙继续橡皮球阶段训练。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-TRACE-01-03",
+              "order": 30,
+              "summary": "玩家选择核对账目、询问目击者或分头守候，并承担相应时间成本。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-TRACE-01-04",
+              "order": 40,
+              "summary": "可靠线索把会面窗口缩小到两日内。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "寻找方确定纲手所在城市。"
+          ],
+          "state_changes": [
+            "自来也与鸣人只掌握纲手常去赌场及旅店片区，不掌握大蛇丸的秘密会面。"
+          ],
+          "stop_condition": "二人在赌场取得可验证的近期账目与目击线索。",
+          "fallbacks": [
+            {
+              "condition": "玩家采用追踪术、公开悬赏或直接找到纲手。",
+              "status": "altered",
+              "direction": "按实际调查渠道确定会面时间与知情范围；不得把大蛇丸交易或精确坐标作为赌场人员自动知道的事实。",
+              "preserves": "保留寻找方必须通过项目内信息来源定位纲手。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·短册街寻人",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "用调查连接旅程，不让角色依靠预训练知识直接知道目标坐标。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "纲手对大蛇丸条件的实际答复仍需记录。",
+        "寻找方是否进入短册街取决于前序旅行与调查结果。"
+      ],
+      "transition": "K064-04-19双方按各自已知信息考虑或继续调查；只有找到纲手且她愿意见面时，K064-04-20才在酒馆会谈。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-420",
+      "date": "K064-04-20",
+      "title": "与纲手会面及赌约",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "让火影继任、个人创伤和鸣人的价值观在一次可交互争执中相撞。",
+      "start_state": [
+        "自来也有正式邀请纲手回村的授权。",
+        "纲手正承受大蛇丸交易压力。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-MEET-01",
+          "title": "酒馆里的火影争论",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街酒馆",
+          "participants": [
+            "纲手",
+            "静音",
+            "自来也",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "自来也持有正式继任邀请并已找到纲手。",
+            "纲手仍未接受大蛇丸交易或木叶职位。"
+          ],
+          "blockers": [
+            "纲手已离开短册街、失去行动能力或已作出不可逆阵营选择。",
+            "鸣人未同行或不再以火影为目标。"
+          ],
+          "setup": "自来也提出五代火影邀请，纲手以历代火影之死否定理想；鸣人因她贬低火影梦想而挑战。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-MEET-01-01",
+              "order": 10,
+              "summary": "自来也说明木叶伤亡与继任需求。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-MEET-01-02",
+              "order": 20,
+              "summary": "纲手以绳树和断的死亡反驳火影理想。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-MEET-01-03",
+              "order": 30,
+              "summary": "鸣人公开维护自己的火影目标并发起挑战。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-MEET-01-04",
+              "order": 40,
+              "summary": "纲手用一根手指轻易击败鸣人，却注意到未完成螺旋丸。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "纲手知道鸣人继承了与亲人相似的理想。",
+            "继任邀请仍未被接受。"
+          ],
+          "state_changes": [
+            "鸣人与纲手形成价值冲突。"
+          ],
+          "stop_condition": "争执与短暂交手停止，是否进入赌约由双方当场选择。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变谈判语气、阻止交手或提出不同的继任条件。",
+              "status": "altered",
+              "direction": "让纲手按当前创伤、利益和木叶状态回应；不得因缺少鸣人挑衅就强制复制一指击倒与赌约。",
+              "preserves": "保留木叶继任请求与纲手对火影理想的真实冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人初遇纲手",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "争执源自不同损失经验，不能把纲手写成单纯嘲讽后立刻被说服。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-WAGER-01",
+          "title": "七日螺旋丸赌约",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "短册街酒馆外",
+          "participants": [
+            "纲手",
+            "漩涡鸣人",
+            "自来也",
+            "静音"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "酒馆争执已结束且纲手注意到鸣人的未完成螺旋丸。",
+            "初代项链仍由纲手持有并可作为赌注。"
+          ],
+          "blockers": [
+            "项链已在当前分支交给他人、遗失或不再属于纲手。",
+            "鸣人拒绝赌约或已完整掌握螺旋丸。"
+          ],
+          "setup": "纲手提出七日完成螺旋丸并以初代项链作为赌注；鸣人和玩家决定是否接受或协商条件。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-WAGER-01-01",
+              "order": 10,
+              "summary": "纲手质疑鸣人能否在短期完成A级形态变化。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-WAGER-01-02",
+              "order": 20,
+              "summary": "鸣人选择接受、拒绝或协商七日期限。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-WAGER-01-03",
+              "order": 30,
+              "summary": "若双方同意，初代项链才成为赌约和纲手情感风险的象征。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "螺旋丸训练获得明确期限。",
+            "纲手的选择与鸣人的表现产生联系。"
+          ],
+          "state_changes": [
+            "若赌约成立，期限为K064-04-27；初代项链仍由纲手保管。"
+          ],
+          "stop_condition": "赌约条件和双方承诺说清后分开，或玩家分支明确拒绝赌约。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变期限、赌注或拒绝以项链作为条件。",
+              "status": "altered",
+              "direction": "记录实际期限与赌注；若不用项链，后续不得自动交付项链，改以承诺、训练验证或其他双方认可的代价结算。",
+              "preserves": "保留鸣人必须在明确期限内验证训练成果，以及纲手承担情感风险的选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·螺旋丸赌约",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "固定期限服务训练节奏，也给大蛇丸交易线足够交叉空间。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "纲手对火影邀请的答复按会谈结果记录。",
+        "若赌约成立，鸣人的期限为K064-04-27。"
+      ],
+      "transition": "K064-04-21仅在鸣人继续学习且身体允许时进入第二阶段；没有赌约也可按师徒训练目标推进。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-421",
+      "date": "K064-04-21",
+      "title": "橡皮球阶段",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "用稳定练习和失败反馈推进形态变化，而不是突然完成A级忍术。",
+      "start_state": [
+        "鸣人的水球阶段进度来自04-16实际结果。",
+        "若七日赌约成立，则剩余六日。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-RASENGAN-02",
+          "title": "提高旋转威力",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "短册街郊外训练地",
+          "participants": [
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人已完成水球阶段且手掌没有妨碍训练的开放伤。",
+            "自来也能够观察并携带足量橡皮球与基础伤药。"
+          ],
+          "blockers": [
+            "鸣人查克拉未恢复、手掌伤势恶化或遭遇现实任务。",
+            "玩家已用其他方法完成威力阶段。"
+          ],
+          "setup": "鸣人尝试以更高密度查克拉破坏橡皮球，手掌受伤且控制多次崩溃。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-02-01",
+              "order": 10,
+              "summary": "自来也说明第二阶段要求旋转威力而非单纯速度。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-02-02",
+              "order": 20,
+              "summary": "鸣人的查克拉从单一点泄漏。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-02-03",
+              "order": 30,
+              "summary": "玩家选择降低次数处理手伤、继续有限尝试或调整掌心标记。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-02-04",
+              "order": 40,
+              "summary": "安全方案用掌心标记集中感觉并逐步扩大破坏。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "鸣人找到提高威力的训练方法。"
+          ],
+          "state_changes": [
+            "手掌出现训练伤，查克拉需要恢复。",
+            "橡皮球耗材按尝试次数减少。"
+          ],
+          "stop_condition": "当天达到自来也设定的手掌伤势或查克拉停止线。",
+          "fallbacks": [
+            {
+              "condition": "玩家调整练习量、使用医疗支持或因伤提前停止。",
+              "status": "altered",
+              "direction": "按实际次数更新橡皮球、查克拉、体力和手掌伤势；未完成稳定破坏前不得进入完整成术状态。",
+              "preserves": "保留第二阶段的威力验证和恢复成本。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·螺旋丸橡皮球训练",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把伤势作为训练约束，禁止为了期限无休止施术。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第二阶段方法、完成度、手伤与剩余耗材按当日训练结果记录。"
+      ],
+      "transition": "K064-04-22继续练习与休息；K064-04-23静音说明纲手的过去。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-423",
+      "date": "K064-04-23",
+      "title": "项链与旧伤",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "让鸣人理解纲手的恐血、亲人和项链风险，但限制这些私人信息的传播。",
+      "start_state": [
+        "鸣人继续训练。",
+        "静音担忧大蛇丸的交易和纲手状态。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-SHIZUNE-01",
+          "title": "静音的警告",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街旅店",
+          "participants": [
+            "静音",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "静音担忧纲手可能接受大蛇丸交易。",
+            "鸣人已参与赌约且尚不了解项链与恐血症的因果。"
+          ],
+          "blockers": [
+            "静音与鸣人失去信任、无法私下交谈或纲手已公开说明全部事实。",
+            "鸣人未参与赌约。"
+          ],
+          "setup": "静音说明绳树与断的死亡、初代项链的意义以及纲手的恐血症，请鸣人不要把赌约当作普通奖品。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-01-01",
+              "order": 10,
+              "summary": "静音确认鸣人对纲手过去所知有限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-01-02",
+              "order": 20,
+              "summary": "她只披露理解当前风险所必需的私人事实。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-01-03",
+              "order": 30,
+              "summary": "鸣人决定继续完成赌约但不轻视项链。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "鸣人理解纲手拒绝火影的创伤因果。",
+            "静音与鸣人建立有限合作。"
+          ],
+          "state_changes": [
+            "纲手私人信息只在静音主动告知的范围内流动。"
+          ],
+          "stop_condition": "谈话结束且鸣人返回训练，其他人不会自动获得内容。",
+          "fallbacks": [
+            {
+              "condition": "玩家拒绝听取、追问超出必要范围或把信息转告他人。",
+              "status": "altered",
+              "direction": "只传播静音实际说出的内容，并由各角色按亲历决定是否保密；不得自动公开纲手的私人创伤。",
+              "preserves": "保留鸣人理解赌约情感代价和静音寻求阻止交易的动机。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·静音讲述纲手过去",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "避免世界书隐藏真相自动变成所有角色共同知识。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-RASENGAN-03",
+          "title": "橡皮球破裂",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "短册街郊外训练地",
+          "participants": [
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人掌握正确的橡皮球发力方法。",
+            "手掌伤势与查克拉允许进行有限验证。"
+          ],
+          "blockers": [
+            "训练伤恶化、橡皮球耗尽或现实威胁打断训练。",
+            "玩家已通过等价验证完成第二阶段。"
+          ],
+          "setup": "鸣人将查克拉集中到掌心标记并尝试破坏橡皮球，成功后才进入把旋转、威力和球形维持合并的最终阶段。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-03-01",
+              "order": 10,
+              "summary": "鸣人重复先前失败并调整手掌受力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-03-02",
+              "order": 20,
+              "summary": "玩家决定当日继续一次验证、改换受力方式或先恢复手伤。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-03-03",
+              "order": 30,
+              "summary": "橡皮球从内部破裂时，第二阶段完成。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-03-04",
+              "order": 40,
+              "summary": "自来也展示气球维持阶段和完整术的差距。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人完成第二阶段。"
+          ],
+          "state_changes": [
+            "螺旋丸训练进入维持阶段。",
+            "手掌伤势与查克拉消耗仍需当晚恢复。"
+          ],
+          "stop_condition": "鸣人确认橡皮球破裂可重复一次后停止训练并处理手伤。",
+          "fallbacks": [
+            {
+              "condition": "玩家改用不同控制方法、提前成功或选择延后恢复。",
+              "status": "altered",
+              "direction": "记录实际完成度和伤势；未完成可重复破坏时，将最终阶段顺延并同步调整赌约结果。",
+              "preserves": "保留训练进度必须由可重复结果证明，而不是由日期自动解锁。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·螺旋丸第二阶段完成",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "阶段成功不等于完整掌握，必须继续保留技能状态边界。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人是否完成第二阶段按可重复验证结果记录。",
+        "只有静音实际告知时，鸣人才知道纲手交易风险。"
+      ],
+      "transition": "K064-04-24按训练完成度进入最终维持阶段或继续恢复；K064-04-25纲手面对仍有效的大蛇丸交易。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-425",
+      "date": "K064-04-25",
+      "title": "选择前的拉扯",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "让纲手的决定在多方压力中成熟，并让自来也针对背叛风险采取合理防备。",
+      "start_state": [
+        "大蛇丸约定期限临近。",
+        "鸣人尚未稳定完成螺旋丸。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-DECISION-01",
+          "title": "无法兑现的复活",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街旅店客房",
+          "participants": [
+            "纲手",
+            "静音"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "大蛇丸的交易期限仍有效且纲手尚未作最终答复。",
+            "静音知道交易条件并能与纲手私下交谈。"
+          ],
+          "blockers": [
+            "大蛇丸交易已失效或纲手已明确拒绝。",
+            "静音失去行动能力、被隔离或不再反对交易。"
+          ],
+          "setup": "静音直接质问复活交易的代价，纲手在亲人记忆、木叶责任与大蛇丸可信度之间摇摆。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-DECISION-01-01",
+              "order": 10,
+              "summary": "静音列出治疗大蛇丸对木叶和更多平民的风险。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-DECISION-01-02",
+              "order": 20,
+              "summary": "纲手承认复活诱惑仍然真实。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-DECISION-01-03",
+              "order": 30,
+              "summary": "她没有向静音公布最终答案。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "纲手的选择保持开放但不再能假装交易无害。"
+          ],
+          "state_changes": [
+            "静音准备在必要时阻止会面。"
+          ],
+          "stop_condition": "谈话在旅店客房结束，二人尚未离开短册街。",
+          "fallbacks": [
+            {
+              "condition": "玩家参与劝说、提供新证据或改变纲手与静音的信任。",
+              "status": "altered",
+              "direction": "让纲手依据当前信息作出或延后决定；若她已拒绝，不得再强制安排摇摆与下药。",
+              "preserves": "保留纲手必须亲自承担交易选择及静音反对大蛇丸的立场。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·纲手的抉择",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "尊重重大创伤选择的复杂性，防止一段说教瞬间治愈。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "纲手尚未公开最终答案。",
+        "静音决定在会面时阻止交易。",
+        "自来也未被下药且保持完整行动能力。"
+      ],
+      "transition": "K064-04-26鸣人继续最终训练并恢复手掌伤势；K064-04-27上午赌约到期，纲手约自来也午间谈话后才前往会面。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-427",
+      "date": "K064-04-27",
+      "title": "会面前夜与赌约到期",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "把训练成果保持为“接近完成”，并让静音、鸣人与自来也有合理路径追到次日战场。",
+      "start_state": [
+        "纲手仍在短册街并准备当日赴约。",
+        "鸣人训练进入最后一天。",
+        "自来也尚未受药物影响。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-RASENGAN-04",
+          "title": "影分身辅助成形",
+          "thread_id": "THR-P1-RASENGAN-TRAINING",
+          "location": "短册街郊外训练地",
+          "participants": [
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人已完成旋转与威力阶段。",
+            "手掌伤势、查克拉与影分身能力允许进行最终验证。"
+          ],
+          "blockers": [
+            "鸣人前置阶段未完成、查克拉不足或训练伤妨碍结印。",
+            "玩家选择延后赌约或改用不同完成方法。"
+          ],
+          "setup": "鸣人发现单手无法同时维持旋转与外形，必须选择控制方案并尝试短暂形成稳定螺旋丸。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-04-01",
+              "order": 10,
+              "summary": "气球训练反复因外形崩解失败。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-04-02",
+              "order": 20,
+              "summary": "玩家选择让影分身承担第二只控制手、继续单手试验或延后验证。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RASENGAN-04-03",
+              "order": 30,
+              "summary": "采用影分身方案时，螺旋丸可短暂稳定但尚未在实战命中。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人形成可用于一次实战验证的螺旋丸。"
+          ],
+          "state_changes": [
+            "技能状态从训练中转为初步掌握，仍受高消耗和双手协作限制。",
+            "当日上午训练消耗使鸣人不能无成本连续施术。"
+          ],
+          "stop_condition": "完成一次稳定成形后立即停止继续透支。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前完成、失败或采用不依赖影分身的控制方案。",
+              "status": "altered",
+              "direction": "记录实际成形方式、消耗和稳定时间；未能稳定成形时，后续战斗不得自动使用完整螺旋丸。",
+              "preserves": "保留技能必须经实际训练获得，且初步掌握仍有资源与操作限制。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人完成螺旋丸",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "承认鸣人的创造性解决方案，同时不把一次成形写成完全精通。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-JIRAIYA-WATCH-01",
+          "title": "自来也的防备",
+          "thread_id": "THR-P1-TSUNADE-SEARCH",
+          "location": "短册街酒馆",
+          "participants": [
+            "自来也",
+            "纲手"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "纲手尚未放弃赴约且能接触酒食。",
+            "自来也愿意赴约并未提前识破具体药物。"
+          ],
+          "blockers": [
+            "纲手已拒绝大蛇丸或决定公开求援。",
+            "自来也拒绝饮食、已验出药物或对药效具有有效防备。"
+          ],
+          "setup": "纲手午间约自来也饮酒，自来也试探她是否接触大蛇丸并表明会阻止危害木叶的选择；纲手把药混入酒食后离开。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-JIRAIYA-WATCH-01-01",
+              "order": 10,
+              "summary": "自来也用共同经历与交易风险试探纲手立场。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-JIRAIYA-WATCH-01-02",
+              "order": 20,
+              "summary": "纲手把药混入酒食以限制当日追赶。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-TSUNADE-JIRAIYA-WATCH-01-03",
+              "order": 30,
+              "summary": "自来也察觉异常时，肌力与查克拉协调已经下降。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "自来也当日下午无法以完整状态追赶。",
+            "纲手的离开使静音确认会面迫近。"
+          ],
+          "state_changes": [
+            "自来也进入数小时的重度虚弱，次日仅剩影响通灵与体术的药效残余。"
+          ],
+          "stop_condition": "纲手离开酒馆前往城外，自来也开始代谢药物并留下可被静音发现的状态。",
+          "fallbacks": [
+            {
+              "condition": "玩家提醒自来也、替换酒食或说服纲手不下药。",
+              "status": "altered",
+              "direction": "按实际摄入量记录药效强度和持续时间；未摄入时，自来也保持完整战力并可更早追上纲手。",
+              "preserves": "保留自来也阻止危害木叶的立场，以及纲手是否削弱追兵的真实选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·纲手给自来也下药",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把下药压到会面当日并明确药效曲线，避免自来也无故虚弱数天。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-SHIZUNE-INTERCEPT-01",
+          "title": "师徒拦路",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街北郊驿道",
+          "participants": [
+            "纲手",
+            "静音"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "静音确认纲手已沿北郊驿道赴约。",
+            "静音仍能行动并坚持阻止交易。"
+          ],
+          "blockers": [
+            "纲手已放弃赴约、选择与静音合作或走了无法追踪的路线。",
+            "静音已被其他事件重伤或拘束。"
+          ],
+          "setup": "静音从酒馆异状与纲手行装判断她已赴约，在北郊驿道追上并尝试阻止；纲手若仍坚持赴约，会制伏静音但避免致命伤。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-INTERCEPT-01-01",
+              "order": 10,
+              "summary": "静音用行装、方向和自来也的药效确认纲手行动。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-INTERCEPT-01-02",
+              "order": 20,
+              "summary": "静音要求纲手停止交易并交代木叶风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SHIZUNE-INTERCEPT-01-03",
+              "order": 30,
+              "summary": "纲手按当前决定让路、同行或以非致命手段突破。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "静音是否还能追赶与求援获得明确结果。"
+          ],
+          "state_changes": [
+            "基准线中静音受轻伤但保持行动能力，纲手继续前往约定荒原。"
+          ],
+          "stop_condition": "纲手与静音的道路冲突结束，二人位置和伤势均明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家陪同静音、说服纲手或改变拦截胜负。",
+              "status": "altered",
+              "direction": "按实际决定推进合作、撤回或非致命冲突；若纲手被成功拦下，次日交易场景不得强制发生。",
+              "preserves": "保留静音反对交易的独立行动，以及纲手亲自决定是否继续赴约。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·静音阻止纲手",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把静音曾经阻止纲手的失败落成独立事件，并允许玩家改变纲手是否继续赴约。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-PURSUIT-01",
+          "title": "静音求援",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街北郊驿道",
+          "participants": [
+            "静音",
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "静音仍能传递纲手路线。",
+            "自来也或鸣人至少一人选择追赶并具备移动能力。"
+          ],
+          "blockers": [
+            "纲手已被成功拦下或交易地点已失效。",
+            "追赶者全部无法移动、拒绝介入或获得了交易已经结束的可靠消息。"
+          ],
+          "setup": "仍能行动的静音返回驿道岔口，向完成训练的鸣人与逐渐恢复的自来也说明拦截结果、纲手路线和药效，三人组织追赶。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-PURSUIT-01-01",
+              "order": 10,
+              "summary": "静音只披露交易、路线和伤势所需事实。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-PURSUIT-01-02",
+              "order": 20,
+              "summary": "队伍评估自来也药效、鸣人训练消耗与静音伤势。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-PURSUIT-01-03",
+              "order": 30,
+              "summary": "三人按可维持速度追向约定荒原，并安排途中休息与警戒。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "阻止交易的一方按明确路线出发。"
+          ],
+          "state_changes": [
+            "基准线中自来也仍有药效残余，鸣人查克拉未满，静音带轻伤。"
+          ],
+          "stop_condition": "追赶队离开北郊岔口，并记录预计次日清晨抵达荒原。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变追赶成员、休息时长、路线或优先处理伤员。",
+              "status": "altered",
+              "direction": "按实际成员、速度与情报决定抵达时间；迟到时允许交易先推进，提前时允许玩家介入，禁止强制次日同时到场。",
+              "preserves": "保留交易的时间压力、已公开路线及每名追赶者的真实资源状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·静音追赶纲手",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "补足从分散训练到三忍战场的空间转移，并把追赶速度绑定到实际伤势与药效。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的螺旋丸状态由训练结果决定。",
+        "纲手是否继续赴约由拦截结果决定。",
+        "基准追赶队带着明确药效、伤势和路线接近荒原。"
+      ],
+      "transition": "K064-04-27夜间追赶队按伤势轮换赶路；基准线于K064-04-28清晨抵达短册街外荒原，玩家改变速度时按实际抵达时间推进交易。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-428",
+      "date": "K064-04-28",
+      "title": "三忍决战",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "依次结算交易拒绝、鸣人与兜的生死战、三忍与通灵兽战场，保持不同冲突层级。",
+      "start_state": [
+        "基准线中纲手抵达约定荒原；若04-27拦截改变结果，则按实际位置开始。",
+        "大蛇丸仍需要治疗双臂。",
+        "追赶队的抵达时间由前夜路线、药效与伤势决定。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-REFUSAL-01",
+          "title": "治疗的假动作",
+          "thread_id": "THR-P1-TSUNADE-CHOICE",
+          "location": "短册街外荒原",
+          "participants": [
+            "纲手",
+            "大蛇丸",
+            "药师兜"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "纲手仍选择赴约并抵达荒原。",
+            "大蛇丸与兜仍在场且交易尚未失效。"
+          ],
+          "blockers": [
+            "纲手在04-27已被说服返回、交易已公开取消或大蛇丸无法到场。",
+            "玩家提前拘束任一方，使医疗接触不可能发生。"
+          ],
+          "setup": "纲手假意接受条件，在医疗查克拉接触前暴露杀意并试图攻击大蛇丸，交易彻底破裂。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-REFUSAL-01-01",
+              "order": 10,
+              "summary": "大蛇丸再次承诺复活绳树与断。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-REFUSAL-01-02",
+              "order": 20,
+              "summary": "纲手接近双臂并选择把机会用于攻击。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-REFUSAL-01-03",
+              "order": 30,
+              "summary": "兜识破查克拉性质并阻止接触。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "纲手在基准线拒绝治疗大蛇丸。",
+            "她的实际选择决定双方是否进入公开敌对。"
+          ],
+          "state_changes": [
+            "基准线中复活交易关闭。"
+          ],
+          "stop_condition": "纲手完成拒绝、接受、拖延或撤离中的明确选择，双方据此改变距离与阵营状态。",
+          "fallbacks": [
+            {
+              "condition": "玩家揭露陷阱、改变纲手决定或让兜未能识破攻击。",
+              "status": "altered",
+              "direction": "按纲手实际选择推进拒绝、接受、拖延或撤离；若她治疗大蛇丸，必须更新其双臂与阵营后果，不得强制恢复拒绝和三忍战。",
+              "preserves": "保留纲手对交易的自主决定，以及每种选择对木叶和大蛇丸力量状态的后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·纲手拒绝大蛇丸交易",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "决定必须由纲手作出；玩家介入可改变信息和机会，但不能替她无因选择。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-KABUTO-01",
+          "title": "恐血与螺旋丸验证",
+          "thread_id": "THR-P1-TSUNADE-BATTLE",
+          "location": "短册街外荒原",
+          "participants": [
+            "纲手",
+            "静音",
+            "药师兜",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "纲手已拒绝交易并与大蛇丸一方敌对。",
+            "兜仍能战斗，且至少一名追赶者已抵达荒原。"
+          ],
+          "blockers": [
+            "交易未破裂、兜已被控制或追赶队尚未抵达。",
+            "纲手未受恐血影响且已自行结束兜的威胁。"
+          ],
+          "setup": "交易破裂时，兜利用医疗忍术切断肌肉控制并试图以鲜血触发纲手恐血；抵达的鸣人、静音与玩家必须选择保护、撤离或反击。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-KABUTO-01-01",
+              "order": 10,
+              "summary": "兜用医疗知识和兵粮丸维持战斗。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-KABUTO-01-02",
+              "order": 20,
+              "summary": "若接触鲜血，纲手的创伤反应限制其行动。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-KABUTO-01-03",
+              "order": 30,
+              "summary": "鸣人或玩家选择如何阻止兜继续攻击。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-KABUTO-01-04",
+              "order": 40,
+              "summary": "只有鸣人已完成成形、保有足够查克拉并创造命中条件时，螺旋丸才完成实战验证。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人的螺旋丸根据实际命中与否记录验证结果。",
+            "纲手是否克服僵直由她受到的保护、伤势与选择决定。"
+          ],
+          "state_changes": [
+            "基准线中鸣人重伤且查克拉大幅消耗，兜受重创后准备撤离；分支按实际命中更新。"
+          ],
+          "stop_condition": "兜不再压制纲手与鸣人，或玩家一方明确撤出该局部冲突。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变抵达时机、阻止鲜血刺激、保护鸣人或创造不同的击败兜方式。",
+              "status": "altered",
+              "direction": "按实际技能、查克拉、伤势与站位结算；未满足螺旋丸条件时保留未验证状态，不得补写同等命中。",
+              "preserves": "保留兜的医疗战术威胁，以及鸣人训练成果必须经过真实条件验证。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人螺旋丸对兜",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "技能成功必须支付命中条件、资源与受伤代价，不能作为无条件秒杀。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-SANNIN-01",
+          "title": "三忍与通灵兽",
+          "thread_id": "THR-P1-TSUNADE-BATTLE",
+          "location": "短册街外荒原",
+          "participants": [
+            "纲手",
+            "自来也",
+            "大蛇丸",
+            "蛞蝓",
+            "蛤蟆文太",
+            "万蛇"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "纲手拒绝治疗大蛇丸且双方仍公开敌对。",
+            "至少两名三忍仍能战斗或指挥通灵，追赶队已抵达。"
+          ],
+          "blockers": [
+            "纲手接受交易、双方达成停战或大蛇丸一方已撤离/被控制。",
+            "自来也药效或查克拉状态使其无法参战且无人能接替防线。"
+          ],
+          "setup": "若交易已破裂且三方仍具备战力，纲手保管着初代项链并决定是否承担火影责任；三忍依据当前查克拉、药效与通灵契约扩大或避免战场。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-SANNIN-01-01",
+              "order": 10,
+              "summary": "纲手若克服恐血，先按紧急程度救治己方伤员。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SANNIN-01-02",
+              "order": 20,
+              "summary": "只有对应忍者具备查克拉与契约时，通灵兽才进入战场。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SANNIN-01-03",
+              "order": 30,
+              "summary": "纲手、自来也与玩家按当前药效和伤势对抗或逼退大蛇丸。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-SANNIN-01-04",
+              "order": 40,
+              "summary": "双方在撤退、拘捕或失去战斗能力后停止追击。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "大蛇丸是否仍受双臂封印、纲手是否返村，均按本次实际结算。"
+          ],
+          "state_changes": [
+            "初代项链仍由纲手保管，等待伤员稳定后按有效赌约结算。",
+            "纲手阵营与火影承诺按她的选择更新。"
+          ],
+          "stop_condition": "所有敌对方均已撤离、被控制或失去战斗能力，伤员进入明确救治链。",
+          "fallbacks": [
+            {
+              "condition": "玩家促成谈判、提前击退大蛇丸、阻止通灵或改变纲手的返村决定。",
+              "status": "altered",
+              "direction": "按现存阵营、契约、查克拉和伤势选择小规模交战、谈判或撤退；不得为了还原三忍画面强制通灵或强制纲手就任。",
+              "preserves": "保留大蛇丸双臂状态、所有已发生伤势与纲手政治选择的连续后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·三忍对决",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "三忍战结算政治选择和个人成长，不只是大型招式展示，也不强制召出资源不足的通灵兽。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中大蛇丸撤退且双臂仍被封，纲手决定返回木叶；所有分支以场景实际结果为准。",
+        "鸣人的螺旋丸掌握度由实际成形与命中记录决定。"
+      ],
+      "transition": "K064-04-29先按实际伤势治疗、确认敌我去向，再决定是否以及由谁返木叶。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-429",
+      "date": "K064-04-29",
+      "title": "治疗与返村决定",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "给大战伤员恢复、纲手就任承诺和返程安排一天完整缓冲。",
+      "start_state": [
+        "荒原冲突已经停止。",
+        "参战者伤势、查克拉、药效与去向已按04-28分支记录。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-RECOVERY-01",
+          "title": "医者的承诺",
+          "thread_id": "THR-P1-TSUNADE-AFTERMATH",
+          "location": "短册街临时治疗点",
+          "participants": [
+            "纲手",
+            "静音",
+            "自来也",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "荒原冲突已结束且治疗点安全。",
+            "纲手或静音至少一人能进行伤情评估。"
+          ],
+          "blockers": [
+            "敌方仍控制治疗点或所有医疗者失去行动能力。",
+            "玩家已把伤员送往其他医疗链。"
+          ],
+          "setup": "纲手与静音按实际伤情稳定鸣人和己方伤员，核对螺旋丸赌约是否成立、是否完成，以及纲手是否已承诺回村。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RECOVERY-01-01",
+              "order": 10,
+              "summary": "医疗者按危及生命、失血、内伤、查克拉衰竭的顺序处置。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RECOVERY-01-02",
+              "order": 20,
+              "summary": "只有赌约成立、鸣人完成约定且项链仍由纲手持有时，她才把初代项链交给鸣人。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RECOVERY-01-03",
+              "order": 30,
+              "summary": "玩家根据复查选择立即返程、安排驮运或让伤员继续留治。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RECOVERY-01-04",
+              "order": 40,
+              "summary": "返程成员、医疗运送条件与给木叶的信使内容被确认。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "每名己方伤员获得可移动、需担架或必须留治的明确状态。",
+            "纲手是否成为五代火影形成可传达的正式答复。"
+          ],
+          "state_changes": [
+            "满足条件时初代项链在此唯一一次从纲手库存转入鸣人库存。",
+            "返木叶任务按实际成员进入准备。"
+          ],
+          "stop_condition": "伤员稳定，项链归属只记录一次，返程资格与政治答复均明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变伤员、赌约结果、项链归属或纲手返村决定。",
+              "status": "altered",
+              "direction": "按现有医疗者和物资稳定伤员；项链仅在实际满足赌约时交付，未满足时继续由当前持有人保管。",
+              "preserves": "保留所有实际伤势、有效承诺、物品唯一归属和木叶是否收到返村消息的连续性。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·三忍战后",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "重大承诺落到医疗、物品和行程状态中，避免重复交付或无伤返程。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-RETURN-DEPART-01",
+          "title": "踏上归途",
+          "thread_id": "THR-P1-TSUNADE-RETURN",
+          "location": "短册街东门驿站",
+          "participants": [
+            "纲手",
+            "静音",
+            "自来也",
+            "漩涡鸣人",
+            "驿站人员"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名获授权的返村成员决定前往木叶。",
+            "所有同行伤员达到安全移动标准或有驮运方案。"
+          ],
+          "blockers": [
+            "纲手决定不返村且无人承担回报任务。",
+            "关键伤员必须继续留治或东门路线被敌对力量封锁。"
+          ],
+          "setup": "达到移动标准的返程成员在东门驿站补充两日口粮、水、绷带与露营装备，向木叶派出先行信使后于傍晚启程。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-RETURN-DEPART-01-01",
+              "order": 10,
+              "summary": "队伍按伤势决定步行、搀扶与驮运安排。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RETURN-DEPART-01-02",
+              "order": 20,
+              "summary": "玩家确认直达路线、夜间警戒与第一处宿营点。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-RETURN-DEPART-01-03",
+              "order": 30,
+              "summary": "先行信使携带纲手答复和预计抵达时间出发。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "返程不再从治疗点瞬间跳到木叶。",
+            "木叶只获得信使实际携带的政治与医疗信息。"
+          ],
+          "state_changes": [
+            "消耗返程补给费用并增加两日旅行物资。",
+            "队伍于K064-04-29傍晚离开短册街。"
+          ],
+          "stop_condition": "返程队伍越过东门并抵达当夜宿营点，不能移动者留在明确照护地点。",
+          "fallbacks": [
+            {
+              "condition": "玩家延后出发、改变成员、路线、补给或信使内容。",
+              "status": "altered",
+              "direction": "按实际选择重算抵达日和木叶知情范围；未启程时不得在05-01写成已抵村。",
+              "preserves": "保留实际伤势、物资消耗、政治答复与旅行时间。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足短册街至木叶的两日返程、伤员运送与先行信使"
+            }
+          ],
+          "design_rationale": "补足返村路线、伤员运送、装备与情报交接。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准返程队伍于K064-04-29傍晚启程，项链归属与每名伤员状态均唯一记录。",
+        "木叶先行收到纲手是否返村及预计抵达时间。"
+      ],
+      "transition": "K064-04-30全日沿火之国东部驿道赶路，中午补水、夜间露营并复查鸣人伤势；基准线K064-05-01黎明完成最后一程，午前抵达木叶。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-TSUNADE-501",
+      "date": "K064-05-01",
+      "title": "五代火影就任",
+      "arc_id": "ARC-P1-TSUNADE",
+      "day_goal": "完成权力交接并让纲手的医疗能力优先处理此前持续存在的伤患。",
+      "start_state": [
+        "基准返程队伍于午前抵达木叶；若04-29未启程或途中延误，则本日场景按实际状态跳过或延期。",
+        "火影职位仍由临时指挥维持。",
+        "卡卡西、佐助和李的实际伤情来自此前医疗记录。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-TSUNADE-HEAL-01",
+          "title": "重伤者诊疗",
+          "thread_id": "THR-P1-KONOHA-MEDICAL",
+          "location": "木叶医院",
+          "participants": [
+            "纲手",
+            "静音",
+            "旗木卡卡西",
+            "宇智波佐助",
+            "李洛克",
+            "医疗忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "纲手已抵达木叶医院且具备治疗所需体力。",
+            "卡卡西、佐助或李仍有病历所载的未解决伤情。"
+          ],
+          "blockers": [
+            "纲手尚未抵村、医疗查克拉不足或患者已由其他方式康复/死亡/转院。",
+            "患者拒绝非紧急治疗且具备知情决定能力。"
+          ],
+          "setup": "纲手抵村后先核对病历，只治疗实际存在的月读后遗症，再评估李的脊柱和手术风险，给每名患者不同恢复计划。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-HEAL-01-01",
+              "order": 10,
+              "summary": "卡卡西与佐助仅在仍有月读后遗症时接受对应治疗。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-TSUNADE-HEAL-01-02",
+              "order": 20,
+              "summary": "接受治疗者苏醒后仍需短期恢复和心理观察。",
+              "causal_role": "transition"
+            },
+            {
+              "id": "EV-P1-TSUNADE-HEAL-01-03",
+              "order": 30,
+              "summary": "纲手向李说明手术成功率与失败代价，由李作出选择。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "遭月读且仍昏迷的卡卡西与佐助在基准线恢复意识。",
+            "李的治疗路线有明确知情同意。"
+          ],
+          "state_changes": [
+            "佐助若接受治疗则回到可行动状态，但创伤不会被治疗术抹除。",
+            "医院获得新的诊疗计划。"
+          ],
+          "stop_condition": "每名仍在院的重伤者都有基于当前病历的诊断、治疗结果与后续安排。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变治疗顺序、先前避免月读或对李的手术选择提供新方案。",
+              "status": "altered",
+              "direction": "只治疗实际存在的伤情，按紧急度和纲手剩余查克拉排序；未中月读者不得被写成从月读昏迷中苏醒。",
+              "preserves": "保留病历连续性、患者知情同意和精神创伤不会被身体治疗抹除。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·纲手治疗木叶伤员",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "医疗不能删除人物心理因果；佐助若苏醒，仍会携带鼬带来的失败与比较压力。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-TSUNADE-INAUGURATION-01",
+          "title": "火影袍与权力交接",
+          "thread_id": "THR-P1-KONOHA-POLITICS",
+          "location": "火影楼任命厅",
+          "participants": [
+            "纲手",
+            "静音",
+            "木叶长老",
+            "木叶上忍代表",
+            "木叶居民代表"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "纲手已抵达木叶且仍愿意接受五代火影任命。",
+            "木叶合法临时指挥与任命代表已在火影楼集结。"
+          ],
+          "blockers": [
+            "纲手尚未抵村、明确拒绝任命或失去履职能力。",
+            "当前分支已有合法火影且未启动交接。"
+          ],
+          "setup": "纲手抵村并短暂休整后接受五代火影任命，临时指挥移交权限，并向代表公布重建、医疗和防务优先级。",
+          "beats": [
+            {
+              "id": "EV-P1-TSUNADE-INAUGURATION-01-01",
+              "order": 10,
+              "summary": "长老与上忍确认纲手的返村答复及任命程序。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-TSUNADE-INAUGURATION-01-02",
+              "order": 20,
+              "summary": "纲手在玩家可见的政治条件下决定是否公开接受职责。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-TSUNADE-INAUGURATION-01-03",
+              "order": 30,
+              "summary": "只有她接受后，行政权限与印信才完成移交。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中纲手成为五代火影，木叶结束临时领导状态。"
+          ],
+          "state_changes": [
+            "只有任命实际完成时，世界状态中的现任火影才更新为纲手。"
+          ],
+          "stop_condition": "任命完成或延期理由、临时指挥者和下一次议程均明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家提出任命条件、要求先救治伤员或改变权力交接程序。",
+              "status": "postponed",
+              "direction": "保留临时指挥并安排延后任命；纲手未正式接受前不得更新现任火影、印信与任务权限。",
+              "preserves": "保留木叶解决领导真空的需求和纲手对职位的最终自主选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·纲手就任五代火影",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "就任既是象征也是制度变化，必须更新下游NPC权限和任务来源。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中纲手正式成为五代火影，卡卡西与佐助在需要治疗时苏醒；分支按任命与病历实际结果更新。",
+        "木叶重建获得明确的临时或正式领导链。"
+      ],
+      "transition": "K064-05-02起按实际任命状态恢复重建、医疗与常规任务；佐助若于本日苏醒，其身体至少需要数日复查，创伤与实力焦虑可在K064-05-15前持续发展。",
+      "reference_facts": []
+    }
+  ]
+}

@@ -4,8 +4,10 @@
 const STORAGE_KEY = 'naruto_memory_config';
 
 export const MEMORY_CONFIG_DEFAULTS = {
+  // AI 后台任务默认全部关闭；本地压缩、章节投影和检索不消耗 API。
+  aiCompressionEnabled: false,
   // 深度整理
-  deepEnabled: true,
+  deepEnabled: false,
   deepCycle: 36,              // 每 N 回合整理一次 (12-100)
   deepModel: 'main',          // 'main' | 'updater' — 整理用哪个模型配置
   // 分层窗口
@@ -18,7 +20,7 @@ export const MEMORY_CONFIG_DEFAULTS = {
   recallEnabled: true,        // <recall> 协议
   recallLifetime: 3,          // 召回单有效回合数
   // 置顶角色自动总结
-  npcSummaryEnabled: true,
+  npcSummaryEnabled: false,
   npcSummaryFrequency: 10,      // 每 N 次互动总结一次 (5-30)
 };
 
@@ -39,9 +41,10 @@ function clampConfig(cfg) {
     const n = Number(out[key]);
     out[key] = Number.isFinite(n) ? Math.min(max, Math.max(min, Math.round(n))) : MEMORY_CONFIG_DEFAULTS[key];
   }
-  out.deepEnabled = out.deepEnabled !== false;
+  out.aiCompressionEnabled = out.aiCompressionEnabled === true;
+  out.deepEnabled = out.deepEnabled === true;
   out.recallEnabled = out.recallEnabled !== false;
-  out.npcSummaryEnabled = out.npcSummaryEnabled !== false;
+  out.npcSummaryEnabled = out.npcSummaryEnabled === true;
   out.deepModel = out.deepModel === 'updater' ? 'updater' : 'main';
   return out;
 }

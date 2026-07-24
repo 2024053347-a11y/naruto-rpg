@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image studio behavior harness</title>
+  <style>
+    :root { --ink-deep-rgb: 7, 10, 14; --paper-rgb: 232, 228, 217; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    const fixtureImageUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24"%3E%3Crect width="24" height="24" fill="%2311161d"/%3E%3C/svg%3E';
+    const assets = Array.from({ length: 90 }, (_, index) => ({
+      id: `fixture-asset-${String(index + 1).padStart(3, '0')}`,
+      title: `Fixture image ${String(index + 1).padStart(3, '0')}`,
+      createdAt: new Date(Date.UTC(2026, 0, 1, 0, index)).toISOString(),
+      providerId: 'fixture',
+      thumbnailUrl: fixtureImageUrl,
+      contentUrl: fixtureImageUrl,
+      target: { kind: 'portrait', subjectId: 'fixture-subject' }
+    }));
+
+    const listeners = new Set();
+    let selectedAssetId = assets[0].id;
+    let bindingRevision = 0;
+    const worldbook = {
+      global: Array.from({ length: 6 }, (_, index) => ({
+        id: `fixture-worldbook-${index + 1}`,
+        name: `Fixture worldbook ${index + 1}`,
+        enabled: true,
+        keywords: [`fixture-${index + 1}`],
+        secondaryKeywords: [],
+        prompt: `Prompt ${index + 1}`,
+        negativePrompt: '',
+        priority: index
+      })),
+      overlay: []
+    };
+    window.__IMAGE_STUDIO_CALLS__ = [];
+    window.__IMAGE_STUDIO_ASSETS__ = assets;
+    window.__IMAGE_MODEL_PROBE__ = {
+      result: {
+        status: 'ready',
+        model: '',
+        models: ['gpt-4.1', 'gpt-image-1', 'text-embedding-3-small', 'flux-pro'],
+        imageModels: ['flux-pro', 'gpt-image-1']
+      },
+      error: '',
+      gate: null,
+      completed: 0
+    };
+    window.__MAIN_API_CONFIG__ = {
+      apiUrl: 'https://relay.example/v1/chat/completions',
+      apiKey: 'main-api-secret',
+      model: 'gpt-4.1-language-only',
+      backend: 'claude'
+    };
+    window.__IMAGE_STUDIO__ = {
+      subscribe(listener) {
+        listeners.add(listener);
+        return () => listeners.delete(listener);
+      },
+      async read(query) {
+        window.__IMAGE_STUDIO_CALLS__.push({ kind: 'read', ...query });
+        if (query.type === 'gallery') {
+          const offset = Number(query.offset || 0);
+          const limit = Number(query.limit || 40);
+          return { items: assets.slice(offset, offset + limit), total: assets.length };
+        }
+        if (query.type === 'quota') {
+          return { usedBytes: 1024, limitBytes: 1024 ** 3, assetCount: assets.length, assetLimit: 500 };
+        }
+        if (query.type === 'target') {
+          return {
+            binding: { assetId: selectedAssetId, revision: bindingRevision, target: query.target },
+            assets: assets.slice(0, 18),
+            jobs: []
+          };
+        }
+        if (query.type === 'settings') return { enabled: true };
+        if (query.type === 'worldbook') return worldbook;
+        throw new Error(`Unexpected fixture read: ${query.type}`);
+      },
+      async execute(command) {
+        window.__IMAGE_STUDIO_CALLS__.push({ kind: 'execute', ...command });
+        if (command.type === 'probe') {
+          if (window.__IMAGE_MODEL_PROBE__.gate) await window.__IMAGE_MODEL_PROBE__.gate;
+          window.__IMAGE_MODEL_PROBE__.completed += 1;
+          if (window.__IMAGE_MODEL_PROBE__.error) {
+            throw new Error(window.__IMAGE_MODEL_PROBE__.error);
+          }
+          return structuredClone(window.__IMAGE_MODEL_PROBE__.result);
+        }
+        if (command.type === 'protect') {
+          const asset = assets.find(item => item.id === command.assetId);
+          if (asset) asset.protected = command.protected;
+        }
+        if (command.type === 'delete') {
+          const index = assets.findIndex(item => item.id === command.assetId);
+          if (index >= 0) assets.splice(index, 1);
+        }
+        if (command.type === 'select') {
+          selectedAssetId = command.assetId;
+          bindingRevision++;
+        }
+        for (const listener of listeners) listener({ type: `asset:${command.type}`, assetId: command.assetId });
+        return { status: 'updated' };
+      }
+    };
+
+    const imageStudioUi = await import('../../js/ui/image-studio.js');
+    const mount = document.querySelector('#app');
+    const view = new URLSearchParams(location.search).get('view') || 'gallery';
+    let component;
+    if (view === 'portrait') {
+      component = window.__IMAGE_PORTRAIT__ = imageStudioUi.mountPortraitImageControls(mount, {
+        imageStudio: window.__IMAGE_STUDIO__,
+        target: { kind: 'portrait', subjectId: 'fixture-subject' },
+        subjectName: 'Fixture Ninja',
+        profile: {
+          appearance: 'Initial appearance', outfit: 'Initial outfit', style: 'Initial style',
+          lockedTraits: ['Initial trait'], negativePrompt: 'Initial negative prompt'
+        }
+      });
+    } else if (view === 'settings') {
+      document.body.style.overflow = 'auto';
+      component = window.__IMAGE_SETTINGS__ = imageStudioUi.mountImageStudioSettings(mount, {
+        imageStudio: window.__IMAGE_STUDIO__,
+        adapter: {
+          async readMainApiConfig() {
+            if (window.__MAIN_API_CONFIG_GATE__) await window.__MAIN_API_CONFIG_GATE__;
+            return structuredClone(window.__MAIN_API_CONFIG__);
+          }
+        }
+      });
+    } else {
+      component = window.__IMAGE_GALLERY__ = imageStudioUi.openImageGallery({
+        imageStudio: window.__IMAGE_STUDIO__, mount
+      });
+    }
+    await component.refresh();
+    window.__IMAGE_STUDIO_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

@@ -4,6 +4,9 @@ import { icon } from '../utils/icons.js';
 import { escHtml, escAttr, formatGameTime } from '../utils/format.js';
 import { getAgentConfig } from '../data/agent-config.js';
 import { instructionParser } from '../core/instruction-parser.js';
+import { isNarrativeReviewEnabled } from '../core/narrative-review.js';
+import { imageStudio } from '../core/image-studio/index.js';
+import { mountTurnIllustration } from './image-studio.js';
 import { atmosphereManager } from './atmosphere-manager.js';
 
 class AppShell {
@@ -191,6 +194,12 @@ class AppShell {
   _bindEvents() {
     this._turnUpdates = [];
     this._captureUpdates = false;
+    this._reviewDecisionOff?.();
+    this._reviewDecisionOff = eventBus.on('pipeline:review-decision', request => {
+      const Modal = customElements.get('game-modal');
+      if (!Modal?.reviewPreview) throw new Error('正文复检预览界面尚未加载');
+      return Modal.reviewPreview(request || {});
+    });
     eventBus.on('state:batch-changed', (e) => {
       if (this._captureUpdates && e.updates && e.updates.length) this._turnUpdates.push(...e.updates);
     });
@@ -246,9 +255,14 @@ class AppShell {
       this._updateStreaming(instructionParser.cleanupPartialResponse(response));
     });
 
+    eventBus.on('pipeline:review-started', () => {
+      this._updateStreaming('', '草稿完成 · 正在复检最终正文…');
+    });
+
     // Agent 模式：仅 writer/writer-polish 阶段的流式片段作为正文实时显示
     // （outline/critic 等中间阶段是 JSON，不进正文）
     eventBus.on('agent:stream', ({ agent, chunk }) => {
+      if (isNarrativeReviewEnabled(stateManager.getAPIConfig() || {})) return;
       if (agent !== 'writer' && agent !== 'writer-polish') return;
       if (!chunk) return;
       // writer-polish 会重写正文，切换阶段时重置累积
@@ -283,8 +297,9 @@ class AppShell {
       }
     });
 
-    eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError }) => {
+    eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError, timelineNodeId }) => {
       this._finalizeMessage(cleanResponse, rawResponse, thinkContent, isPartial, hasHUD, this._lastDice);
+      if (!isPartial && timelineNodeId) void this._mountTurnIllustration(timelineNodeId, cleanResponse);
       // Update turn display inline (method was removed)
       const turnEl = this.element.querySelector('#status-turn');
       if (turnEl) turnEl.textContent = `第 ${Number(stateManager.get('系统·回合数')) || turnCount || 1} 回合`;
@@ -296,14 +311,19 @@ class AppShell {
       this._captureUpdates = false;
     });
 
+    eventBus.on('image:contract-ready', ({ nodeId }) => {
+      const element = [...(this.element?.querySelectorAll('image-turn-illustration[data-node-id]') || [])]
+        .find(candidate => candidate.dataset.nodeId === String(nodeId));
+      if (!element) return;
+      void stateManager.dbGet('timeline_nodes', nodeId).then(node => {
+        element.contract = node?.media?.illustration?.contract || null;
+      });
+    });
+
     eventBus.on('pipeline:error', ({ error, isTruncated, partialResponse, lastUserInput }) => {
       this._setProcessing(false);
       this._captureUpdates = false;
-      if (this._streamingEl) {
-        const cursor = this._streamingEl.querySelector('.typing-cursor');
-        if (cursor) cursor.remove();
-        this._streamingEl = null;
-      }
+      this._settleStreamingError();
       const container = this.element?.querySelector('#chat-messages') || this.element;
       if (!container) return;
 
@@ -462,23 +482,62 @@ class AppShell {
     eventBus.on('equipment:used', ({ name, effect }) => {
       this._showToast(`使用: ${name}`);
       let effectText = '';
-      if (effect.heal) effectText += `恢复${effect.heal}点体力 `;
+      if (effect.heal) effectText += `恢复${effect.heal}点生命力 `;
       if (effect.chakra) effectText += `恢复${effect.chakra}点查克拉 `;
       this._addPendingAction(`使用了 ${name}${effectText ? `，${effectText}` : ''}`);
     });
 
     eventBus.on('mission:added', (mission) => {
       this._showToast(`接取任务: [${mission?.rank || 'D'}] ${mission?.title || ''}`);
+      this._captureMissionUpdate(mission, 'added');
+    });
+    eventBus.on('mission:updated-active', (mission) => {
+      this._captureMissionUpdate(mission, 'updated');
+    });
+    eventBus.on('mission:progress', (mission) => {
+      this._captureMissionUpdate(mission, 'progress');
     });
     eventBus.on('mission:completed', (mission) => {
       this._showToast(`完成任务: ${mission?.title || ''}`);
+      this._captureMissionUpdate(mission, 'completed');
     });
     eventBus.on('mission:failed', (mission) => {
       this._showToast(`任务失败: ${mission?.title || ''}`);
+      this._captureMissionUpdate(mission, 'failed');
+    });
+    eventBus.on('mission:abandoned', (mission) => {
+      this._showToast(`放弃任务: ${mission?.title || ''}`);
+      this._captureMissionUpdate(mission, 'abandoned');
     });
 
     eventBus.on('pipeline:warning', ({ warning }) => {
       this._showToast(warning);
+    });
+  }
+
+  _captureMissionUpdate(mission, action = 'updated') {
+    if (!this._captureUpdates || !mission) return;
+    const title = String(mission.title || mission.id || '未命名任务');
+    const rank = String(mission.rank || 'D');
+    const actionLabels = {
+      added: '已接取', updated: '已更新', progress: '进度更新',
+      completed: '已完成', failed: '已失败', abandoned: '已放弃'
+    };
+    const progress = mission.progress && typeof mission.progress === 'object' ? mission.progress : {};
+    const progressParts = [];
+    if (progress.note) progressParts.push(String(progress.note));
+    if (Number.isFinite(Number(progress.current_step)) && Number.isFinite(Number(progress.total_steps)) && Number(progress.total_steps) > 0) {
+      progressParts.push(`${Number(progress.current_step)}/${Number(progress.total_steps)}`);
+    }
+    const objective = mission.objective || mission.description || '';
+    const detail = [actionLabels[action] || actionLabels.updated, ...progressParts, objective].filter(Boolean).join(' · ');
+    this._turnUpdates ||= [];
+    this._turnUpdates.push({
+      key: `任务·${mission.id || title}`,
+      label: `[${rank}] ${title}`,
+      op: '=',
+      value: detail,
+      _readOnly: true
     });
   }
 
@@ -671,7 +730,7 @@ class AppShell {
     this._addSystemMessage(text, type);
   }
 
-  renderSinglePage(text) {
+  renderSinglePage(text, { timelineNodeId = null } = {}) {
     this._showGame();
     const msgs = this.element.querySelector('#chat-messages');
     if (!msgs) return;
@@ -690,6 +749,7 @@ class AppShell {
       wrap.appendChild(arena);
       msgs.appendChild(wrap);
     }
+    if (timelineNodeId) void this._mountTurnIllustration(timelineNodeId, text);
     this._scroll();
   }
 
@@ -708,7 +768,21 @@ class AppShell {
     window.setTimeout(() => toast.remove(), 2600);
   }
 
-  _updateStreaming(text) {
+  _settleStreamingError() {
+    const streamingEl = this._streamingEl;
+    if (!streamingEl) return;
+    streamingEl.querySelector('.typing-cursor')?.remove();
+    const content = streamingEl.querySelector('.chat-content');
+    if (content?.classList?.contains('streaming-placeholder')) {
+      // Hidden thinking/review text has no safe partial body to preserve.
+      streamingEl.remove();
+    } else {
+      streamingEl.classList.remove('is-streaming');
+    }
+    this._streamingEl = null;
+  }
+
+  _updateStreaming(text, placeholder = '流式连接正常 · 正在回映与校验…') {
     if (!this._streamingEl) {
       const msgs = this.element.querySelector('#chat-messages');
       // Single page paradigm: Clear the "正在结印..." system message before streaming
@@ -719,8 +793,41 @@ class AppShell {
       msgs.appendChild(this._streamingEl);
     }
     const content = this._streamingEl.querySelector('.chat-content');
-    content.innerHTML = this._renderMarkdown(text);
+    if (text) {
+      content.classList.remove('streaming-placeholder');
+      content.innerHTML = this._renderMarkdown(text);
+    } else {
+      // 思考/审校内容仍保持隐藏，但明确告诉用户连接正在持续接收数据。
+      content.classList.add('streaming-placeholder');
+      content.textContent = placeholder;
+    }
     this._scroll();
+  }
+
+  async _mountTurnIllustration(nodeId, fallbackPrompt = '') {
+    try {
+      const settings = await imageStudio.read({ type: 'settings' });
+      if (!settings.enabled) return;
+      const node = await stateManager.dbGet('timeline_nodes', nodeId);
+      if (!node) return;
+      const message = this.element?.querySelector('#chat-messages .chat-message--ai:last-of-type');
+      const content = message?.querySelector('.chat-content');
+      if (!content) return;
+      content.querySelector('[data-image-turn-host]')?.remove();
+      const host = document.createElement('div');
+      host.dataset.imageTurnHost = String(nodeId);
+      host.style.marginTop = '14px';
+      content.appendChild(host);
+      const element = mountTurnIllustration(host, {
+        imageStudio, nodeId,
+        contract: node.media?.illustration?.contract || null,
+        prompt: node.media?.illustration?.contract ? '' : (node.clean_response || fallbackPrompt || ''),
+        mode: settings.turnMode === 'automatic' ? 'auto' : 'manual'
+      });
+      element.dataset.nodeId = String(nodeId);
+    } catch (error) {
+      console.warn('[AppShell] Unable to mount turn illustration:', error.message);
+    }
   }
 
   _finalizeMessage(text, _rawText, thinkContent, isPartial = false, hasHUD = false, dice = null) {
@@ -877,7 +984,7 @@ class AppShell {
     let rows = '';
     for (const u of groupedMap.values()) {
       const k = u.key || u.path || '';
-      const label = this._beautifyVarKey(k);
+      const label = u.label || this._beautifyVarKey(k);
       let curVal = stateManager.get(k);
       if (curVal === undefined) curVal = u.value; // Fallback for synthetic keys
 
@@ -904,7 +1011,7 @@ class AppShell {
       rows += `<div class="vu-row" data-key="${this._escAttr(k)}" data-val="${this._escAttr(String(curVal))}">
         <span class="vu-label">${this._esc(label)}</span>
         <span class="vu-value-cell">${valDisplay}${deltaHtml}</span>
-        <button class="vu-edit-btn" data-key="${this._escAttr(k)}" title="修正此变量">✎</button>
+        ${u._readOnly ? '' : `<button class="vu-edit-btn" data-key="${this._escAttr(k)}" title="修正此变量">✎</button>`}
       </div>`;
     }
 
@@ -1039,9 +1146,9 @@ class AppShell {
   _beautifyVarKey(key) {
     const map = {
       '属性·查克拉': '查克拉上限', '属性·当前查克拉': '查克拉',
+      '属性·生命力': '生命力上限', '属性·当前生命力': '生命力',
       '属性·体力': '体力上限', '属性·当前体力': '体力',
       '属性·精神力': '精神力上限', '属性·当前精神力': '精神力',
-      '属性·意志力': '意志上限', '属性·当前意志力': '意志',
       '属性·速度': '速度', '属性·幸运': '运势',
       '进度·经验': '历练', '进度·下一级经验': '升级需求',
       '进度·忍术熟练度': '忍术造诣', '进度·体术熟练度': '体术造诣',
@@ -1077,6 +1184,9 @@ class AppShell {
     // Dynamic: 关系·铁火 → 铁火 (人物数据)
     const relM = key.match(/^关系·(.+)$/);
     if (relM) return `[人物] ${relM[1]}`;
+
+    const missionM = key.match(/^任务·(.+)$/);
+    if (missionM) return `[任务] ${missionM[1]}`;
 
     return key.split('·').pop() || key;
   }
@@ -1204,11 +1314,8 @@ class AppShell {
   _renderMarkdown(text) {
     if (!text) return '';
 
-    const styles = [];
-    let processed = text.replace(/<style[\s>][\s\S]*?<\/style>/gi, (match) => {
-      styles.push(match.replace(/<\/?style[\s>]/gi, ''));
-      return '';
-    });
+    // AI 正文不是受信任的样式来源；完整丢弃样式块，不把 CSS 带入页面或 document.head。
+    let processed = text.replace(/<style(?:\s[^>]*)?>[\s\S]*?<\/style\s*>/gi, '');
 
     const guaxiangBlocks = [];
     processed = processed.replace(/≈卦象判定≈\n?([\s\S]*?)卦象：([^\n]+)\n?([\s\S]*?)(?:≈卦终≈|$)/g, (match, action, resultLine, narrative) => {
@@ -1270,20 +1377,6 @@ class AppShell {
 
     html = html.replace(/(?![^<]*>)【(.+?)】/g, (match, content) => '<span style="color:var(--c-kin);font-size:12px;font-family:var(--font-title);">【' + content + '】</span>');
 
-    if (styles.length) {
-      const sanitized = styles.map(s => this._sanitizeStyle(s)).filter(Boolean);
-      if (sanitized.length) {
-        const styleEl = document.createElement('style');
-        styleEl.textContent = sanitized.join('\n');
-        styleEl.dataset.dynamicStyle = '';
-        html = `<div class="preset-styles" hidden>${styleEl.outerHTML}</div>${html}`;
-        queueMicrotask(() => {
-          const host = this.element?.querySelector('.preset-styles style');
-          if (host) document.head.appendChild(host.cloneNode(true));
-        });
-      }
-    }
-
     html = html.replace(/<p>\s*%%%GUAXIANG_(\d+)%%%\s*<\/p>/g, '%%%GUAXIANG_$1%%%');
     html = html.replace(/<br>\s*%%%GUAXIANG_(\d+)%%%\s*(?:<br>)?/g, '%%%GUAXIANG_$1%%%');
     html = html.replace(/%%%GUAXIANG_(\d+)%%%/g, (match, id) => guaxiangBlocks[id]);
@@ -1308,17 +1401,6 @@ class AppShell {
     return html;
   }
 
-  _sanitizeStyle(cssText) {
-    if (!cssText || typeof cssText !== 'string') return '';
-    // 拦截危险 CSS 构造: expression(), javascript:, vbscript:, @import, -moz-binding, behavior
-    const dangerous = /expression\s*\(|javascript:|vbscript:|@import|-moz-binding|behavior\s*:|url\s*\(\s*['"]?\s*javascript:/i;
-    if (dangerous.test(cssText)) {
-      console.warn('[AppShell] Blocked dangerous CSS, dropping style block');
-      return '';
-    }
-    return cssText;
-  }
-
   _unescapeSafeHtml(html) {
     const safeTags = ['div', 'details', 'summary', 'span'];
     for (const tag of safeTags) {
@@ -1331,25 +1413,9 @@ class AppShell {
     return html;
   }
 
-  _sanitizeAttrs(attrString) {
-    if (!attrString) return '';
-    // 仅保留 class、style、data-* 属性；剔除 on* 事件处理器、src/href/srcdoc、formaction、xlink:href 等
-    const allowed = /^([a-zA-Z][\w-]*)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s'">]+))?$/;
-    const parts = String(attrString).split(/\s+/).filter(Boolean);
-    const out = [];
-    for (const part of parts) {
-      const m = part.match(allowed);
-      if (!m) continue;
-      const name = m[1].toLowerCase();
-      if (name.startsWith('on')) continue;
-      if (name.startsWith('data-')) { out.push(part); continue; }
-      if (name === 'class' || name === 'style') {
-        // style 内部再做一次危险字符串过滤
-        if (name === 'style' && /expression\s*\(|javascript:|vbscript:|@import|-moz-binding|behavior\s*:|url\s*\(\s*['"]?\s*javascript:/i.test(m[2] || '')) continue;
-        out.push(part);
-      }
-    }
-    return out.length ? ' ' + out.join(' ') : '';
+  _sanitizeAttrs(_attrString) {
+    // AI 原始标签只保留结构；任何属性都可能复用应用现有 CSS/行为形成旁路。
+    return '';
   }
 
   _esc(str) {

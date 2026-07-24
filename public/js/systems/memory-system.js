@@ -4,6 +4,8 @@ import { formatGameTime } from '../utils/format.js';
 import { WORLD_BOOK_ENTRIES } from '../data/worldbook/index.js';
 import { KNOWLEDGE_BASE } from '../data/knowledge-base.js';
 import { getMemoryConfig } from '../data/memory-config.js';
+import { createContinuityCasToken, isContinuityCasCurrent } from '../core/continuity-ledger.js';
+import { assertNoProtectedFutureLeak } from '../core/protected-future-guard.js';
 
 const KEEP_TURN_SUMMARIES_AFTER_COMPRESSION = 3;
 const TURN_SUMMARY_LIMIT = 900;
@@ -34,6 +36,20 @@ const DEEP_INPUT_CHAR_LIMIT = 12000;
 const DEEP_OUTPUT_MAX_TOKENS = 3000;
 const COMPRESSION_INPUT_CHAR_LIMIT = 6000;
 const NPC_NOTE_LIMIT_PER_NPC = 10;
+
+function isAuxiliaryMemoryOutputSafe(value, futureGuard, stage) {
+  try {
+    assertNoProtectedFutureLeak(value, futureGuard?.protectedFuture, {
+      stage,
+      allowedEvidence: futureGuard?.allowedEvidence || null
+    });
+    return true;
+  } catch (error) {
+    if (error?.code !== 'PROTECTED_FUTURE_LEAK') throw error;
+    console.warn(`[MemorySystem] Rejected future-contaminated ${stage}; raw memory retained for retry`);
+    return false;
+  }
+}
 
 class MemorySystem {
   constructor() {
@@ -404,27 +420,27 @@ class MemorySystem {
     }
   }
 
-  aiCompress(client) {
+  aiCompress(client, { futureGuard = null } = {}) {
     if (this._compressionPromise) return this._compressionPromise;
-    const task = this._runAiCompression(client).finally(() => {
+    const task = this._runAiCompression(client, { futureGuard }).finally(() => {
       if (this._compressionPromise === task) this._compressionPromise = null;
     });
     this._compressionPromise = task;
     return task;
   }
 
-  async _runAiCompression(client) {
+  async _runAiCompression(client, { futureGuard = null } = {}) {
     // 编排: 滚动压缩 → 章节升级 → 卷升级。各自独立版本防护,单次调用最多3个AI请求
     let did = false;
-    try { did = (await this._aiCompressPending(client)) || did; } catch {}
-    try { did = (await this._aiUpgradeChapter(client)) || did; } catch {}
-    try { did = (await this._aiUpgradeVolume(client)) || did; } catch {}
+    try { did = (await this._aiCompressPending(client, futureGuard)) || did; } catch {}
+    try { did = (await this._aiUpgradeChapter(client, futureGuard)) || did; } catch {}
+    try { did = (await this._aiUpgradeVolume(client, futureGuard)) || did; } catch {}
     return did;
   }
 
-  async _aiCompressPending(client) {
+  async _aiCompressPending(client, futureGuard = null) {
     const memory = this._loadMemory();
-    const revision = this._memoryRevision(memory);
+    const boundary = this._captureAsyncBoundary(memory);
     const pending = memory._pendingCompressionText || '';
     const chunk = pending.slice(0, COMPRESSION_INPUT_CHAR_LIMIT);
     if (chunk.trim().length < 200) return false;
@@ -438,12 +454,15 @@ class MemorySystem {
       const summary = await client.chat(prompt, { temperature: 0.3, max_tokens: 1024 });
       if (summary && summary.length > 40) {
         const current = this._loadMemory();
-        if (this._memoryRevision(current) !== revision) {
-          console.warn('[MemorySystem] AI compression aborted: memory modified during call');
+        if (!this._isAsyncBoundaryCurrent(boundary, current)) {
+          console.warn('[MemorySystem] AI compression aborted: branch, node or memory changed during call');
           return false;
         }
         const previous = current.compressed_summary || '';
         const cleanSummary = summary.trim().replace(/^[阶段摘要AI摘要]*[:：\s]*/, '');
+        if (!isAuxiliaryMemoryOutputSafe(cleanSummary, futureGuard, 'memory-ai-compression')) {
+          return false;
+        }
         current.compressed_summary = `${previous}\n[AI摘要] ${cleanSummary}`.slice(-COMPRESSED_SUMMARY_LIMIT);
         current._pendingCompressionText = pending.slice(chunk.length);
         this._saveMemory(current);
@@ -455,12 +474,12 @@ class MemorySystem {
     return false;
   }
 
-  async _aiUpgradeChapter(client) {
+  async _aiUpgradeChapter(client, futureGuard = null) {
     const memory = this._loadMemory();
     const chapters = this._parseChapterData(memory.chapters);
     const target = chapters.find(c => c.raw);
     if (!target) return false;
-    const revision = this._memoryRevision(memory);
+    const boundary = this._captureAsyncBoundary(memory);
 
     const prompt = [
       { role: 'system', content: '你是剧情编年史官。为以下RPG剧情段落写标题和摘要。第一行输出标题(≤14字,不带引号和书名号),从第二行起输出摘要(≤380字),保留: 关键NPC及态度变化、地点变换、重要决策与后果、未解线索。不加其他前缀。' },
@@ -471,7 +490,8 @@ class MemorySystem {
       const out = await client.chat(prompt, { temperature: 0.3, max_tokens: 800 });
       if (out && out.trim().length > 30) {
         const fresh = this._loadMemory();
-        if (this._memoryRevision(fresh) !== revision) return false;
+        if (!this._isAsyncBoundaryCurrent(boundary, fresh)) return false;
+        if (!isAuxiliaryMemoryOutputSafe(out, futureGuard, 'memory-chapter-upgrade')) return false;
         const freshChapters = this._parseChapterData(fresh.chapters);
         const ch = freshChapters.find(c => c.id === target.id);
         if (!ch || !ch.raw) return false;
@@ -490,12 +510,12 @@ class MemorySystem {
     return false;
   }
 
-  async _aiUpgradeVolume(client) {
+  async _aiUpgradeVolume(client, futureGuard = null) {
     const memory = this._loadMemory();
     const volumes = this._parseChapterData(memory.volumes);
     const target = volumes.find(v => v.raw);
     if (!target) return false;
-    const revision = this._memoryRevision(memory);
+    const boundary = this._captureAsyncBoundary(memory);
 
     const prompt = [
       { role: 'system', content: '将以下多章剧情摘要浓缩为一段卷级总述(≤550字),保留: 主线推进脉络、关键NPC关系变化、重大转折、未解伏笔。只输出总述,不加前缀。' },
@@ -506,7 +526,8 @@ class MemorySystem {
       const out = await client.chat(prompt, { temperature: 0.3, max_tokens: 900 });
       if (out && out.trim().length > 30) {
         const fresh = this._loadMemory();
-        if (this._memoryRevision(fresh) !== revision) return false;
+        if (!this._isAsyncBoundaryCurrent(boundary, fresh)) return false;
+        if (!isAuxiliaryMemoryOutputSafe(out, futureGuard, 'memory-volume-upgrade')) return false;
         const freshVols = this._parseChapterData(fresh.volumes);
         const v = freshVols.find(x => x.id === target.id);
         if (!v || !v.raw) return false;
@@ -614,20 +635,20 @@ class MemorySystem {
     };
   }
 
-  deepConsolidate(client, { force = false } = {}) {
+  deepConsolidate(client, { force = false, futureGuard = null } = {}) {
     if (this._deepConsolidationPromise) return this._deepConsolidationPromise;
-    const task = this._runDeepConsolidation(client, { force }).finally(() => {
+    const task = this._runDeepConsolidation(client, { force, futureGuard }).finally(() => {
       if (this._deepConsolidationPromise === task) this._deepConsolidationPromise = null;
     });
     this._deepConsolidationPromise = task;
     return task;
   }
 
-  async _runDeepConsolidation(client, { force = false } = {}) {
+  async _runDeepConsolidation(client, { force = false, futureGuard = null } = {}) {
     const cfg = getMemoryConfig();
     if (!force && !cfg.deepEnabled) return false;
     const memory = this._loadMemory();
-    const revision = this._memoryRevision(memory);
+    const boundary = this._captureAsyncBoundary(memory);
     const currentTurn = Number(stateManager.get('系统·回合数')) || 0;
     const lastDeep = Number(memory.meta?.last_deep_turn) || 0;
     if (!force && currentTurn - lastDeep < cfg.deepCycle) return false;
@@ -650,8 +671,11 @@ class MemorySystem {
     if (!parsed) return false;
 
     const fresh = this._loadMemory();
-    if (this._memoryRevision(fresh) !== revision) {
-      console.warn('[MemorySystem] Deep consolidation aborted: memory modified during call');
+    if (!this._isAsyncBoundaryCurrent(boundary, fresh)) {
+      console.warn('[MemorySystem] Deep consolidation aborted: branch, node or memory changed during call');
+      return false;
+    }
+    if (!isAuxiliaryMemoryOutputSafe(parsed, futureGuard, 'memory-deep-consolidation')) {
       return false;
     }
 
@@ -1135,7 +1159,7 @@ class MemorySystem {
         if (entArr.some(e => item.includes(e))) matched.push(item);
         else rest.push(item);
       }
-      memory.archived = [...matched, ...rest].slice(0, cfg.archivedLimit).join('\n');
+      memory.archived = [...matched, ...rest].slice(-cfg.archivedLimit).join('\n');
     };
     archiveOlder('facts', cfg.factsLimit);
     archiveOlder('long_term', 60);
@@ -1218,6 +1242,28 @@ class MemorySystem {
 
   _memoryRevision(memory) {
     return JSON.stringify(memory || {});
+  }
+
+  _captureAsyncBoundary(memory) {
+    const state = stateManager.get();
+    return {
+      memoryRevision: this._memoryRevision(memory),
+      continuityToken: createContinuityCasToken({
+        nodeId: state?._meta?.current_node_id || 'uncommitted-root',
+        branchId: state?._meta?.active_branch || 'branch_main',
+        ledger: state?._continuity
+      })
+    };
+  }
+
+  _isAsyncBoundaryCurrent(boundary, memory) {
+    if (!boundary || this._memoryRevision(memory) !== boundary.memoryRevision) return false;
+    const state = stateManager.get();
+    return isContinuityCasCurrent(boundary.continuityToken, {
+      nodeId: state?._meta?.current_node_id || 'uncommitted-root',
+      branchId: state?._meta?.active_branch || 'branch_main',
+      ledger: state?._continuity
+    });
   }
 
   _tokenize(text) {

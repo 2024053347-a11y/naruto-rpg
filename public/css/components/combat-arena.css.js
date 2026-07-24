@@ -33,7 +33,7 @@
         @keyframes scene-in { from{opacity:0;transform:translateY(-8px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
         .title { grid-column:1/-1; text-align:center; font-size:14px; color:#c69c6d; font-weight:700; letter-spacing:2px; font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif; }
         .ct {
-          text-align:center; padding:14px; background:rgba(7,10,14,0.48); border-radius:4px; border:1px solid rgba(232,228,217,0.10);
+          text-align:center; padding:14px; background:rgba(var(--ink-deep-rgb),0.48); border-radius:4px; border:1px solid rgba(232,228,217,0.10);
           box-shadow: inset 0 1px 0 rgba(232,228,217,0.04);
           position: relative;
           z-index: 1;
@@ -41,9 +41,18 @@
         .ct .name { font-size:14px; color:#c69c6d; margin-bottom:5px; font-weight:600; font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif; }
         .ct .sub { font-size:11px; color:#6e6a65; margin-bottom:5px; }
         .hp-bar { height:5px; background:var(--surface-4, #2c3744); margin-top:6px; overflow:hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.45); }
-        .hp-fill { height:100%; transition:width 0.6s cubic-bezier(0.8,0,0.2,1); box-shadow:0 0 16px currentColor; }
+        .hp-fill { height:100%; transition:width 0.6s cubic-bezier(0.8,0,0.2,1); box-shadow:0 0 16px currentColor; position:relative; }
         .hp-fill.p { background:linear-gradient(90deg,#1B5E20,#66BB6A); }
         .hp-fill.e { background:linear-gradient(90deg,#B71C1C,#ef5350); }
+        /* 受击闪白（JS 比对前后血量，命中时播放一次） */
+        .hp-fill.hit::after {
+          content:''; position:absolute; inset:0; background:#fff; pointer-events:none;
+          animation: hp-hit-flash 0.45s ease-out forwards;
+        }
+        @keyframes hp-hit-flash { from { opacity:0.85; } to { opacity:0; } }
+        /* 低血量（≤25%）红色脉冲警告 */
+        .hp-fill.low { animation: hp-low-pulse 1.2s ease-in-out infinite; }
+        @keyframes hp-low-pulse { 0%,100% { filter:brightness(1); } 50% { filter:brightness(1.7); } }
         .vs { font-size:22px; color:#c9171e; text-shadow:0 0 12px rgba(201,23,30,0.4), 0 0 24px rgba(63,215,255,0.16); text-align:center; font-weight:800; font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif; position:relative; z-index:1; }
         .actions { grid-column:1/-1; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
         .btn {
@@ -58,8 +67,10 @@
         .btn.d { border-color:rgba(201,23,30,0.3); color:#ef5350; }
         .btn.d:hover { background:rgba(201,23,30,0.06); }
         .log { grid-column:1/-1; font-size:11px; color:#6e6a65; padding:8px 12px; background:rgba(0,0,0,0.2); border-radius:2px; max-height:60px; overflow-y:auto; font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif; position:relative; z-index:1; }
-        @media (prefers-reduced-motion: reduce) { .scene::after { animation: none; } }
-      </style>
-
-`;
+        @media (prefers-reduced-motion: reduce) {
+          .scene::after { animation: none; }
+          .hp-fill.low { animation: none; }
+          .hp-fill.hit::after { animation-duration: 0.01ms; }
+        }
+      `;
 

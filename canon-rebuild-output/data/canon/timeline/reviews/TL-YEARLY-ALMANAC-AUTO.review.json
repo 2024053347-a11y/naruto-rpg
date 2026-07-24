@@ -1,0 +1,11 @@
+{
+  "batch_id": "TL-YEARLY-ALMANAC-AUTO",
+  "replacements": [],
+  "deletions": [],
+  "unresolved": [],
+  "review_notes": [
+    "从86个年度文件生成209条可检索事件。",
+    "生日事件精确到项目月日并分配为morning；其他年度状态默认安排在当年第一日dawn。",
+    "用户提供但原著未明确的年份保持allocated/draft。"
+  ]
+}

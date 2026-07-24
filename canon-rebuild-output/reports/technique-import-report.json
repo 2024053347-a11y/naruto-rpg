@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-07-18T12:16:37.086Z",
+  "enumerated_pages": 3026,
+  "manga_named_records": 741,
+  "groups": {
+    "DOJUTSU": 27,
+    "EARTH": 41,
+    "FIRE": 43,
+    "GEN": 23,
+    "LIGHTNING": 33,
+    "MED": 10,
+    "OTHER": 251,
+    "PUPPET": 9,
+    "SEAL": 60,
+    "SEN": 24,
+    "SPACE": 29,
+    "SUMMON": 2,
+    "TAI": 106,
+    "WATER": 43,
+    "WIND": 40
+  },
+  "entity_registry_size": 412
+}

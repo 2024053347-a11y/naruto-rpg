@@ -1,0 +1,3915 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-LIGHTNING-P01",
+    "group": "lightning",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 33,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-LIGHTNING-0001",
+      "canonical_name": "黒い雷",
+      "aliases": [
+        "黒い雷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,战斗流派",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "黑雷是一种传说级的雷遁形态，由第三代雷影开创，并闻名地将这一秘术独自传授给了达鲁伊。顾名思义，产生的雷电呈漆黑之色，其破坏力远超普通雷电，威力极其强大，但关于它的信息并不多。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-THIRD-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-DARUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "黒い雷",
+          "Black Lightning",
+          "Kuroi Kaminari"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 526,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Black_Lightning"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Black Lightning",
+        "Kuroi Kaminari"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fighting-style,",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0002",
+      "canonical_name": "乱身冲",
+      "aliases": [
+        "乱身冲"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,医疗忍术",
+        "雷遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种只有纲手掌握的高级医疗忍术。纲手通过赋予查克拉电的特性来制造电场。当她用手击打目标时，电流涌入对方的神经系统，重新排列身体的信号。通常情况下，大脑通过电信号控制身体运动。但在此术影响下，这些信号会产生与目标意图完全相反的动作。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TSUNADE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "乱身冲",
+          "Body Pathway Derangement",
+          "Ranshinshō"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 164,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Body_Pathway_Derangement"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Body Pathway Derangement",
+        "Ranshinshō"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-medical-ninjutsu,",
+        "lightning-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0003",
+      "canonical_name": "千鸟",
+      "aliases": [
+        "千鸟"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "千鸟是将大量雷遁查克拉集中并缠绕在手上形成的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIDARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千鸟",
+          "Chidori",
+          "One Thousand Birds"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 113,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chidori"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chidori",
+        "One Thousand Birds"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0004",
+      "canonical_name": "千鸟流し",
+      "aliases": [
+        "千鸟流し"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动",
+        "雷遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "千鸟流是佐助在大蛇丸处修行时开发的忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千鸟流し",
+          "Chidori Current",
+          "Chidori Nagashi",
+          "One Thousand Birds Current"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 308,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chidori_Current"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chidori Current",
+        "Chidori Nagashi",
+        "One Thousand Birds Current"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow",
+        "lightning-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0005",
+      "canonical_name": "千鸟千本",
+      "aliases": [
+        "千鸟千本"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "千鸟千本是千鸟的一种变体，利用形态变化制造出无数锋利的千本，以极快的速度连续射向敌人。通过增加查克拉量，千本的数量也会相应增加。与写轮眼配合使用时效果更为致命，因为可以让使用者精确瞄准目标的要害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千鸟千本",
+          "Chidori Senbon",
+          "One Thousand Birds Senbon"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 357,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chidori_Senbon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chidori Senbon",
+        "One Thousand Birds Senbon"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0006",
+      "canonical_name": "千鸟鋭槍",
+      "aliases": [
+        "千鸟鋭槍"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "原始的千鸟通过将其塑形为适合放电的形态，并结合使用者的「突刺」来获得威力。此术利用形态变化将千鸟变成长枪或刀刃形状，使其适合中距离攻击，最大射程约五米。增加的射程降低了对使用者的风险，还能用于突袭和捕捉。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千鸟鋭槍",
+          "Chidori Sharp Spear",
+          "Chidori Eisō",
+          "One Thousand Birds Sharp Spear"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 343,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Chidori_Sharp_Spear"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Chidori Sharp Spear",
+        "Chidori Eisō",
+        "One Thousand Birds Sharp Spear"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0007",
+      "canonical_name": "重流暴",
+      "aliases": [
+        "重流暴"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在雷遁查克拉模式的覆盖下，艾以极强的力量向对手使出肘击。这一招的威力足以将处于完全仙人化状态的重吾击飞撞在墙上，使其无法继续战斗。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "重流暴エルボウ",
+          "Elbow",
+          "Erubō",
+          "Heavy-Style Outburst"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 462,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Elbow"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Elbow",
+        "Erubō",
+        "Heavy-Style Outburst"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0008",
+      "canonical_name": "牙之急袭",
+      "aliases": [
+        "牙之急袭"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,剑术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "林檎雨由利利用「牙」配合敏捷的旋转动作，一边自转一边横扫目标，击中周围的所有敌人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-AMEYURI-RINGO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "Fang's Rush",
+          "Fang's Rush"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 523,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fang's_Rush"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fang's Rush"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-kenjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0009",
+      "canonical_name": "义雷沉怒雷斧",
+      "aliases": [
+        "义雷沉怒雷斧"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在雷遁查克拉模式的覆盖下，艾跳至对手上方的空中进行下劈踢击，利用下落动量增加攻击威力。此术最好在将对手击倒后的瞬间使用，以减少对方的反应时间，因为使用者无法在半空中使用瞬身术来提高速度，也无法在半空中躲避反击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "義雷沈怒雷斧ギロチンドロップ",
+          "Guillotine Drop",
+          "Girochin Doroppu",
+          "Righteous Lightning Sinking Anger Lightning Axe"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 464,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Guillotine_Drop"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Guillotine Drop",
+        "Girochin Doroppu",
+        "Righteous Lightning Sinking Anger Lightning Axe"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0010",
+      "canonical_name": "地獄突き",
+      "aliases": [
+        "地獄突き"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "地狱突刺是第三代雷影最强的术，他将大量雷遁查克拉集中到单手的指尖，然后做出突刺动作，能够以类似于千鸟和雷切的方式贯穿目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-THIRD-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "地獄突き",
+          "Hell Stab",
+          "Jigokuzuki"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 554,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Hell_Stab"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 305,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Hell Stab",
+        "Jigokuzuki"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0011",
+      "canonical_name": "インドラの矢",
+      "aliases": [
+        "インドラの矢"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~轮回眼~永恒万花筒写轮眼,瞳术,忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "因陀罗之矢是宇智波佐助最强的攻击性术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "インドラの矢",
+          "Indra's Arrow",
+          "Indora no Ya"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 696,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Indra's_Arrow"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Indra's Arrow",
+        "Indora no Ya"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~rinnegan~eternal-mangekyō-sharingan,-dōjutsu,-ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0012",
+      "canonical_name": "神威雷切",
+      "aliases": [
+        "神威雷切"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,时空间忍术,瞳术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 152,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在获得带土的六道之力后，卡卡西制造出蕴含神威力量的雷切。被此术刺穿的一切都会被瞬间传送至神威空间。结合神威的虚化能力，此术让卡卡西能够回避敌人的反击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "神威雷切",
+          "Kamui Lightning Cutter",
+          "Kamui Raikiri",
+          "Authority of the Gods Lightning Cutter"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 689,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kamui_Lightning_Cutter"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          10,
+          11
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kamui Lightning Cutter",
+        "Kamui Raikiri",
+        "Authority of the Gods Lightning Cutter"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-space–time-ninjutsu,-dōjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0013",
+      "canonical_name": "麒麟",
+      "aliases": [
+        "麒麟"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 120,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "麒麟是宇智波佐助创造的一种极为强大的雷遁忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "麒麟",
+          "Kirin",
+          "Giraffe"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 391,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kirin"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kirin",
+        "Giraffe"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0014",
+      "canonical_name": "雷我爆弹",
+      "aliases": [
+        "雷我爆弹"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷我爆弹是第四代雷影使用的必杀技。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷我爆弾ライガーボム",
+          "Liger Bomb",
+          "Raigā Bomu",
+          "Lightning Self Bomb"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 463,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Liger_Bomb"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 305,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Liger Bomb",
+        "Raigā Bomu",
+        "Lightning Self Bomb"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0015",
+      "canonical_name": "雷切",
+      "aliases": [
+        "雷切"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 120,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷切是旗木卡卡西的千鸟的别名。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷切",
+          "Lightning Cutter",
+          "Raikiri"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 30,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Cutter"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Cutter",
+        "Raikiri"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0016",
+      "canonical_name": "雷闪",
+      "aliases": [
+        "雷闪"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,手里剑术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者向对手发射注入雷遁查克拉的风魔手里剑，将其击退。雷电留下的轨迹还能暂时麻痹对手。此术也可在半空中使用，但射程较短。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷闪",
+          "Lightning Flash",
+          "Raisen"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 387,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Flash"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Flash",
+        "Raisen"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-shurikenjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0017",
+      "canonical_name": "雷虐水平",
+      "aliases": [
+        "雷虐水平"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在雷遁查克拉模式的覆盖下，艾对对手做出简单的反手水平手刀，其威力足以击碎宇智波佐助的须佐能乎肋骨。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷虐水平",
+          "Lightning Oppression Horizontal",
+          "Raigyaku Suihei"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 463,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Oppression_Horizontal"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Oppression Horizontal",
+        "Raigyaku Suihei"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0018",
+      "canonical_name": "雷虐水平千代舞",
+      "aliases": [
+        "雷虐水平千代舞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "覆盖着雷遁查克拉模式，艾从高处跃下，对对手从上往下的进行一记简单而有力的水平手刀，利用下落惯性增强打击力度。如果攻击威力不足以穿透对手防御，还可以将对手压入地面以阻止其逃脱后续攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷虐水平らいぎゃくすいへい千代舞チョップ",
+          "Lightning Oppression Horizontal Chop",
+          "Raigyaku Suihei Choppu",
+          "Lightning Oppression Horizontal Millennial Dance"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 563,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Oppression_Horizontal_Chop"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 245,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Oppression Horizontal Chop",
+        "Raigyaku Suihei Choppu",
+        "Lightning Oppression Horizontal Millennial Dance"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0019",
+      "canonical_name": "雷遁チャクラモード",
+      "aliases": [
+        "雷遁チャクラモード"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动",
+        "雷遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 48,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将雷遁查克拉包裹全身，以提高身体能力，更多雷电带来更大的提升。随着使用者缠绕的雷电查克拉增多，头发会竖起。雷电增强体术威力，形成所谓的忍体术。雷电还能防御大多数攻击，接触时将其弹开。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-A-THIRD-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁チャクラモード",
+          "Lightning Release Chakra Mode",
+          "Raiton Chakura Mōdo"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 460,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release_Chakra_Mode"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release Chakra Mode",
+        "Raiton Chakura Mōdo"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow",
+        "lightning-release,",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0020",
+      "canonical_name": "雷遁·黒斑差",
+      "aliases": [
+        "雷遁·黒斑差"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "达鲁伊从体内生成黑雷，以黑豹形态释放，电击任何接触到的目标。其快速移动可用于同时攻击多个对手。在水上战斗时，可以扩散覆盖广阔范围。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DARUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·黒斑差",
+          "Lightning Release: Black Panther",
+          "Raiton: Kuropansa",
+          "Lightning Release: Black-Spotted Difference"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 526,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Black_Panther"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Black Panther",
+        "Raiton: Kuropansa",
+        "Lightning Release: Black-Spotted Difference"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0021",
+      "canonical_name": "雷遁·绝牛雷犁热刀",
+      "aliases": [
+        "雷遁·绝牛雷犁热刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术,协作术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷遁·绝牛雷犁热刀是雷遁·雷犁热刀的强化版，由两人一前一后同时对对手施展，形成剪切效果，速度接近光速。成功命中时，威力足以将目标斩首，将其头颅击飞至数米高空。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·絶牛雷犂熱刀ダブルラリアット",
+          "Lightning Release: Double Lariat",
+          "Raiton: Daburu Rariatto",
+          "Lightning Release: Severing Bull Lightning Plough Hot Sword"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 473,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Double_Lariat"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 405,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Double Lariat",
+        "Raiton: Daburu Rariatto",
+        "Lightning Release: Severing Bull Lightning Plough Hot Sword"
+      ],
+      "lookup_classes": [
+        "taijutsu,-collaboration-techniques",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0022",
+      "canonical_name": "雷遁·伪暗",
+      "aliases": [
+        "雷遁·伪暗"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中发射出长枪形状的雷电贯穿敌人。其破坏力足以贯穿岩石，杀伤力极高。使用者可以增加长枪数量以攻击多个敌人，加上雷电的极速，这是一项难以躲避的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKUZU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·伪暗",
+          "Lightning Release: False Darkness",
+          "Raiton: Gian"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 334,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_False_Darkness"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: False Darkness",
+        "Raiton: Gian"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0023",
+      "canonical_name": "雷遁·四柱しばり",
+      "aliases": [
+        "雷遁·四柱しばり"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从体内释放出四根雷柱，将对手束缚在中央。雷柱之间会产生强大的雷电场，对被困在其中的敌人造成持续电击伤害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ZO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·四柱しばり",
+          "Lightning Release: Four Pillar Bind",
+          "Raiton: Shichū Shibari"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 425,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Four_Pillar_Bind"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Four Pillar Bind",
+        "Raiton: Shichū Shibari"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0024",
+      "canonical_name": "雷遁·雷犁热刀",
+      "aliases": [
+        "雷遁·雷犁热刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷遁·雷犁热刀是一种强力的体术，使用者以接近光速的速度冲向对手，用缠绕着查克拉的勾臂攻击。成功命中可以直接击穿目标的胸膛，即使不会立即致命，若不治疗也终将死亡。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·雷犂熱刀ラリアット",
+          "Lightning Release: Lariat",
+          "Raiton: Rariatto",
+          "Lightning Release: Lightning Plough Hot Sword"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 413,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Lariat"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 405,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Lariat",
+        "Raiton: Rariatto",
+        "Lightning Release: Lightning Plough Hot Sword"
+      ],
+      "lookup_classes": [
+        "taijutsu,",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0025",
+      "canonical_name": "雷遁·雷獣追牙",
+      "aliases": [
+        "雷遁·雷獣追牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "卡卡西在手中形成雷切，以猎犬形态向对手发射。猎犬速度极快且行动不可预测，极难躲避。卡卡西的手通过雷电绳索与猎犬相连，调整查克拉量可以自由操控其速度和射程。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·雷獣追牙",
+          "Lightning Release: Lightning Beast Tracking Fang",
+          "Raiton: Raijū Tsuiga"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 421,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Lightning_Beast_Tracking_Fang"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Lightning Beast Tracking Fang",
+        "Raiton: Raijū Tsuiga"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0026",
+      "canonical_name": "雷遁·雷幻雷光柱",
+      "aliases": [
+        "雷遁·雷幻雷光柱"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "雷遁,阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷遁·雷幻雷光柱是一种利用雷遁查克拉的幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-C",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·雷幻雷光柱",
+          "Lightning Release: Lightning Illusion Flash of Lightning Pillar",
+          "Raiton: Raigen Raikōchū"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 461,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Lightning_Illusion_Flash_of_Lightning_Pillar"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Lightning Illusion Flash of Lightning Pillar",
+        "Raiton: Raigen Raikōchū"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "lightning-release,-yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0027",
+      "canonical_name": "雷遁·影分身之术",
+      "aliases": [
+        "雷遁·影分身之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,分身术",
+        "雷遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 70,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术允许使用者制造注入雷电的影分身。因为是影分身，所以能够发动术式并与环境互动。如果分身受伤，它会恢复为自然的雷电状态，同时电击接触到的物体。但与普通影分身不同，它变回雷电时不会向使用者传回查克拉。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·影分身之术",
+          "Lightning Release: Shadow Clone Technique",
+          "Raiton: Kage Bunshin no Jutsu"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 422,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Shadow_Clone_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Shadow Clone Technique",
+        "Raiton: Kage Bunshin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-clone-techniques,",
+        "lightning-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0028",
+      "canonical_name": "雷斗忍遇须吐励刀",
+      "aliases": [
+        "雷斗忍遇须吐励刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍体术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在雷遁查克拉模式下，使用者以最高速度冲向对手并出拳打击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-A-THIRD-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷斗忍遇須吐励刀ライトニングストレート",
+          "Lightning Straight",
+          "Raitoningu Sutorēto",
+          "Lightning Fight Endure Encounter Mandatory Ejection Encouraging Sword"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 542,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Straight"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Straight",
+        "Raitoningu Sutorēto",
+        "Lightning Fight Endure Encounter Mandatory Ejection Encouraging Sword"
+      ],
+      "lookup_classes": [
+        "nintaijutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0029",
+      "canonical_name": "雷伝",
+      "aliases": [
+        "雷伝"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~写轮眼,忍术,分身术",
+        "雷遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 132,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "卡卡西和他的影分身分别在双手中制造雷切，两者之间用锋利的雷电绳索连接。其威力足以轻松切断尾兽的查克拉手臂。此术也可以缠绕目标进行束缚。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷伝",
+          "Lightning Transmission",
+          "Raiden"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 568,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Transmission"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Transmission",
+        "Raiden"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-ninjutsu,-clone-techniques",
+        "lightning-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0030",
+      "canonical_name": "磁遁·螺旋漆黒",
+      "aliases": [
+        "磁遁·螺旋漆黒"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~磁遁,忍术,咒印术,封印术,仙术,合作忍术",
+        "磁遁,雷遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "鸣人形成磁遁螺旋丸，佐助使用强化版千鸟，从两侧同时攻击对手，通过螺旋丸的咒印标记封锁对手的行动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "磁遁·螺旋漆黒",
+          "Magnet Release: Spiral Jet Black",
+          "Jiton: Rasen Shikkoku"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 674,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Magnet_Release%3A_Spiral_Jet_Black"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Magnet Release: Spiral Jet Black",
+        "Jiton: Rasen Shikkoku"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~magnet-release,-ninjutsu,-juinjutsu,-fūinjutsu,-senjutsu,-cooperation-ninjutsu",
+        "magnet-release,-lightning-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0031",
+      "canonical_name": "超ビブラート雷遁刀",
+      "aliases": [
+        "超ビブラート雷遁刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,剑术",
+        "雷遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "超振动雷遁刀是奇拉比使用的一种查克拉流动形式，通常与他标志性的剑术和武器搭配使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KILLER-B",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "超ビブラート雷遁刀",
+          "Supervibrato Lightning Release Swords",
+          "Chō Biburāto Raitontō"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 411,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Supervibrato_Lightning_Release_Swords"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Supervibrato Lightning Release Swords",
+        "Chō Biburāto Raitontō"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-kenjutsu",
+        "lightning-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0032",
+      "canonical_name": "須佐能乎·千鸟",
+      "aliases": [
+        "須佐能乎·千鸟"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~永恒万花筒写轮眼,瞳术,忍术",
+        "雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "雷"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "千鸟在完全体须佐能乎中的应用，佐助用须佐能乎的左手制造出巨大的千鸟。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "須佐能乎·千鸟",
+          "Susanoo: Chidori",
+          "He with the ability to help by all means: One Thousand Birds"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 695,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Susanoo%3A_Chidori"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Susanoo: Chidori",
+        "He with the ability to help by all means: One Thousand Birds"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~eternal-mangekyō-sharingan,-dōjutsu,-ninjutsu",
+        "lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-0033",
+      "canonical_name": "草薙の剣·千鸟刀",
+      "aliases": [
+        "草薙の剣·千鸟刀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,剑术",
+        "雷遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "雷"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术让佐助将千鸟注入他的直刀中。这使得刀刃几乎无法防御，因为放射着雷光的鸣叫刀刃可以轻松切断钢铁。此外，如果对手被刺中，身体会因电流导致肌肉收缩而麻痹，使其无法动弹。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "草薙の剣·千鸟刀",
+          "Sword of Kusanagi: Chidori Katana",
+          "Kusanagi no Tsurugi: Chidorigatana",
+          "Grass-Mowing Sword: One Thousand Birds Katana"
+        ],
+        "tags": [
+          "lightning",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 308,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sword_of_Kusanagi%3A_Chidori_Katana"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-LIGHTNING-AUTO",
+        "reviewed_by": "manual-translation-JT-LIGHTNING-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sword of Kusanagi: Chidori Katana",
+        "Kusanagi no Tsurugi: Chidorigatana",
+        "Grass-Mowing Sword: One Thousand Birds Katana"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-kenjutsu",
+        "lightning-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "lightning"
+      ]
+    }
+  ],
+  "unresolved": []
+}

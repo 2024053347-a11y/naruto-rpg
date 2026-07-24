@@ -1,0 +1,83 @@
+{
+  "id": "project_balance_v2",
+  "cost_values": "integer_1_to_300",
+  "power_values": [
+    0,
+    10,
+    35,
+    70,
+    120,
+    200,
+    300
+  ],
+  "defaults": {
+    "E": [
+      5,
+      10
+    ],
+    "D": [
+      12,
+      35
+    ],
+    "C": [
+      25,
+      70
+    ],
+    "B": [
+      45,
+      120
+    ],
+    "A": [
+      70,
+      200
+    ],
+    "S": [
+      100,
+      300
+    ]
+  },
+  "note": "项目平衡值，不是漫画或公式书原始数值。",
+  "resource_types": {
+    "chakra": "忍术与多数支援术",
+    "spirit": "幻术",
+    "stamina": "体术"
+  },
+  "reference_pools": {
+    "E": {
+      "chakra": 50,
+      "spirit": 43,
+      "stamina": 110
+    },
+    "D": {
+      "chakra": 100,
+      "spirit": 88,
+      "stamina": 170
+    },
+    "C": {
+      "chakra": 190,
+      "spirit": 165,
+      "stamina": 245
+    },
+    "B": {
+      "chakra": 270,
+      "spirit": 230,
+      "stamina": 305
+    },
+    "A": {
+      "chakra": 415,
+      "spirit": 350,
+      "stamina": 405
+    },
+    "S": {
+      "chakra": 660,
+      "spirit": 555,
+      "stamina": 575
+    },
+    "特": {
+      "chakra": 1550,
+      "spirit": 1350,
+      "stamina": 900
+    }
+  },
+  "method": "逐术根据资源类型、覆盖范围、持续性、控制难度、召唤/封印/禁术特征与体术负荷评估；rank仅作参考，不直接决定cost。"
+}

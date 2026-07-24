@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "canon:validate": "node scripts/validate-canon.mjs",
+    "canon:build": "node scripts/build-indexes.mjs",
+    "canon:import-jutsu": "node scripts/import-manga-jutsu.mjs",
+    "canon:finalize-jutsu": "node scripts/finalize-technique-import.mjs",
+    "canon:build-years": "node scripts/build-yearly-almanac.mjs",
+    "canon:import-plots": "node scripts/import-manga-plot-events.mjs",
+    "canon:build-history": "node scripts/build-historical-events.mjs",
+    "canon:fix-times": "node scripts/fix-event-times.mjs",
+    "canon:translate-batch-001": "node scripts/manual-translate-batch-001.mjs",
+    "canon:translate-batch-002": "node scripts/manual-translate-batch-002.mjs",
+    "canon:translate-batch-003": "node scripts/manual-translate-batch-003.mjs",
+    "canon:translate-batch-004": "node scripts/manual-translate-batch-004.mjs",
+    "canon:translate-batch-005": "node scripts/manual-translate-batch-005.mjs",
+    "canon:translate-batch-006": "node scripts/manual-translate-batch-006.mjs",
+    "canon:translate-batch-007": "node scripts/manual-translate-batch-007.mjs",
+    "canon:translate-batch-008": "node scripts/manual-translate-batch-008.mjs",
+    "canon:translate-batch-009": "node scripts/manual-translate-batch-009.mjs"
+  }
+}

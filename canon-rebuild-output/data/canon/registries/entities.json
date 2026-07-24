@@ -1,0 +1,1433 @@
+[
+  {
+    "id": "CH-NAR-NARUTO",
+    "name": "漩涡鸣人"
+  },
+  {
+    "id": "CH-NAR-SASUKE",
+    "name": "宇智波佐助"
+  },
+  {
+    "id": "CH-NAR-SAKURA",
+    "name": "春野樱"
+  },
+  {
+    "id": "CH-NAR-KAKASHI",
+    "name": "旗木卡卡西"
+  },
+  {
+    "id": "CH-NAR-IRUKA",
+    "name": "海野伊鲁卡"
+  },
+  {
+    "id": "CH-NAR-MIZUKI",
+    "name": "水木"
+  },
+  {
+    "id": "CH-NAR-HIRUZEN",
+    "name": "猿飞日斩"
+  },
+  {
+    "id": "CH-NAR-MINATO",
+    "name": "波风水门"
+  },
+  {
+    "id": "CH-NAR-KUSHINA",
+    "name": "漩涡玖辛奈"
+  },
+  {
+    "id": "CH-NAR-OBITO",
+    "name": "宇智波带土"
+  },
+  {
+    "id": "CH-NAR-ZABUZA",
+    "name": "桃地再不斩"
+  },
+  {
+    "id": "CH-NAR-HAKU",
+    "name": "白"
+  },
+  {
+    "id": "CH-NAR-OROCHIMARU",
+    "name": "大蛇丸"
+  },
+  {
+    "id": "CH-NAR-GAARA",
+    "name": "我爱罗"
+  },
+  {
+    "id": "CH-NAR-TSUNADE",
+    "name": "纲手"
+  },
+  {
+    "id": "CH-NAR-JIRAIYA",
+    "name": "自来也"
+  },
+  {
+    "id": "CH-NAR-ROCKLEE",
+    "name": "李洛克"
+  },
+  {
+    "id": "CH-NAR-NEJI",
+    "name": "日向宁次"
+  },
+  {
+    "id": "CH-NAR-HINATA",
+    "name": "日向雏田"
+  },
+  {
+    "id": "CH-NAR-SHIKAMARU",
+    "name": "奈良鹿丸"
+  },
+  {
+    "id": "CH-NAR-ITACHI",
+    "name": "宇智波鼬"
+  },
+  {
+    "id": "CH-NAR-PAIN",
+    "name": "佩恩"
+  },
+  {
+    "id": "ORG-UCHIHA",
+    "name": "宇智波一族"
+  },
+  {
+    "id": "ORG-KONOHA",
+    "name": "木叶隐村"
+  },
+  {
+    "id": "CH-NAR-GARI",
+    "name": "<!-- Gari",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-A-FOURTH-RAIKAGE",
+    "name": "A (Fourth Raikage)",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-A-THIRD-RAIKAGE",
+    "name": "A (Third Raikage)",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AKAMARU",
+    "name": "Akamaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AKATSUCHI",
+    "name": "Akatsuchi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AKITA-INUZUKA",
+    "name": "Akita Inuzuka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ALLIED-SHINOBI-FORCES",
+    "name": "Allied Shinobi Forces",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AMEYURI-RINGO",
+    "name": "Ameyuri Ringo",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ANKO-MITARASHI",
+    "name": "Anko Mitarashi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AO",
+    "name": "Ao",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AOBA-YAMASHIRO",
+    "name": "Aoba Yamashiro",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-AODA",
+    "name": "Aoda",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ARAYA",
+    "name": "Araya",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ASUMA-SARUTOBI",
+    "name": "Asuma Sarutobi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ASURA-O-TSUTSUKI",
+    "name": "Asura Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ATSUI",
+    "name": "Atsui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BAKI",
+    "name": "Baki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BIRD-MASKED-ANBU-MEMBER",
+    "name": "Bird-Masked Anbu Member",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BLACK-ZETSU",
+    "name": "Black Zetsu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BOAR-MASKED-ANBU-MEMBER",
+    "name": "Boar-Masked Anbu Member",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BORO",
+    "name": "Boro",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-BORUTO-UZUMAKI",
+    "name": "Boruto Uzumaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-C",
+    "name": "C",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHAMARU",
+    "name": "Chamaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHINO",
+    "name": "Chino",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHIRIKU",
+    "name": "Chiriku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHIYO",
+    "name": "Chiyo",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHO-CHO-AKIMICHI",
+    "name": "Chōchō Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHO-JI-AKIMICHI",
+    "name": "Chōji Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHO-JU-RO",
+    "name": "Chōjūrō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHO-MEI",
+    "name": "Chōmei",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHO-ZA-AKIMICHI",
+    "name": "Chōza Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-CHU-KICHI",
+    "name": "Chūkichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DAEN-NARA",
+    "name": "Daen Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DAN-KATO",
+    "name": "Dan Katō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DANZO-SHIMURA",
+    "name": "Danzō Shimura",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DARUI",
+    "name": "Darui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DEIDARA",
+    "name": "Deidara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DEMONIC-STATUE-OF-THE-OUTER-PATH",
+    "name": "Demonic Statue of the Outer Path",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DODAI",
+    "name": "Dodai",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DOSU-KINUTA",
+    "name": "Dosu Kinuta",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-DO-TO-AKIMICHI",
+    "name": "Dōtō Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-EAGLE-MASKED-ANBU-MEMBER",
+    "name": "Eagle-Masked Anbu Member",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-EBISU",
+    "name": "Ebisu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ENSUI-NARA",
+    "name": "Ensui Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FUGAKU-UCHIHA",
+    "name": "Fugaku Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FUGUKI-SUIKAZAN",
+    "name": "Fuguki Suikazan",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FUKASAKU",
+    "name": "Fukasaku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FUTSU",
+    "name": "Futsu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FU",
+    "name": "Fū",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-FU-YAMANAKA",
+    "name": "Fū Yamanaka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GAMA",
+    "name": "Gama",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GAMABUNTA",
+    "name": "Gamabunta",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GAMAKICHI",
+    "name": "Gamakichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GAMAMARU",
+    "name": "Gamamaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GENGETSU-HO-ZUKI",
+    "name": "Gengetsu Hōzuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GENMA-SHIRANUI",
+    "name": "Genma Shiranui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GIANT-CRUSTACEAN",
+    "name": "Giant Crustacean",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-GYU-KI",
+    "name": "Gyūki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+    "name": "Hagoromo Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HAMURA-O-TSUTSUKI",
+    "name": "Hamura Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HAN",
+    "name": "Han",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HANA-INUZUKA",
+    "name": "Hana Inuzuka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HANABI-HYU-GA",
+    "name": "Hanabi Hyūga",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HANZO",
+    "name": "Hanzō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HASHIRAMA-SENJU",
+    "name": "Hashirama Senju",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HAYATE-GEKKO",
+    "name": "Hayate Gekkō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIASHI-HYU-GA",
+    "name": "Hiashi Hyūga",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIDAN",
+    "name": "Hidan",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIDARI",
+    "name": "Hidari",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIMAWARI-UZUMAKI",
+    "name": "Himawari Uzumaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HINATA-HYU-GA",
+    "name": "Hinata Hyūga",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIRUZEN-SARUTOBI",
+    "name": "Hiruzen Sarutobi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HIZASHI-HYU-GA",
+    "name": "Hizashi Hyūga",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HYO",
+    "name": "Hyō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-IBIKI-MORINO",
+    "name": "Ibiki Morino",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-IBUSE",
+    "name": "Ibuse",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-INDRA-O-TSUTSUKI",
+    "name": "Indra Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-INO-YAMANAKA",
+    "name": "Ino Yamanaka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-INOICHI-YAMANAKA",
+    "name": "Inoichi Yamanaka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-INOJIN-YAMANAKA",
+    "name": "Inojin Yamanaka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-IRUKA-UMINO",
+    "name": "Iruka Umino",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ISHIKAWA",
+    "name": "Ishikawa",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ISOBU",
+    "name": "Isobu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ITACHI-UCHIHA",
+    "name": "Itachi Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ITTAN",
+    "name": "Ittan",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-IZUMO-KAMIZUKI",
+    "name": "Izumo Kamizuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JIJI",
+    "name": "Jiji",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JININ-AKEBINO",
+    "name": "Jinin Akebino",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JINPACHI-MUNASHI",
+    "name": "Jinpachi Munashi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JIRO-BO",
+    "name": "Jirōbō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JURA",
+    "name": "Jura",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-JU-GO",
+    "name": "Jūgo",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KABUTO-YAKUSHI",
+    "name": "Kabuto Yakushi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAGARI",
+    "name": "Kagari",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+    "name": "Kaguya Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAKASHI-HATAKE",
+    "name": "Kakashi Hatake",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAKKO",
+    "name": "Kakkō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAKOI",
+    "name": "Kakoi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAKUZU",
+    "name": "Kakuzu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KANKURO",
+    "name": "Kankurō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KARIN",
+    "name": "Karin",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KARUI",
+    "name": "Karui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KARYU",
+    "name": "Karyū",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KASUGA-NARA",
+    "name": "Kasuga Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KATSUYU",
+    "name": "Katsuyu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KAWAKI",
+    "name": "Kawaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KIBA-INUZUKA",
+    "name": "Kiba Inuzuka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KIDO-MARU",
+    "name": "Kidōmaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KILLER-B",
+    "name": "Killer B",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KIMIMARO",
+    "name": "Kimimaro",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KIN-TSUCHI",
+    "name": "Kin Tsuchi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KINKAKU",
+    "name": "Kinkaku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KINSHIKI-O-TSUTSUKI",
+    "name": "Kinshiki Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KIRI-NINJA",
+    "name": "Kiri (ninja)",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KISAME-HOSHIGAKI",
+    "name": "Kisame Hoshigaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KITSUCHI",
+    "name": "Kitsuchi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KITO",
+    "name": "Kitō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KOJI-KASHIN",
+    "name": "Koji Kashin",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KOKAGE-YANAGIKAGE",
+    "name": "Kokage Yanagikage",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KOKUO",
+    "name": "Kokuō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KONAN",
+    "name": "Konan",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KONOHAMARU-SARUTOBI",
+    "name": "Konohamaru Sarutobi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KOTETSU-HAGANE",
+    "name": "Kotetsu Hagane",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KURAMA",
+    "name": "Kurama",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KURENAI-YU-HI",
+    "name": "Kurenai Yūhi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KUROMARU",
+    "name": "Kuromaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KUROTSUCHI",
+    "name": "Kurotsuchi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KUSHIMARU-KURIARARE",
+    "name": "Kushimaru Kuriarare",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KUSHINA-UZUMAKI",
+    "name": "Kushina Uzumaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KUSSAKU",
+    "name": "Kussaku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KYODAIGUMO",
+    "name": "Kyodaigumo",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-KYOHO-FUEFUKI",
+    "name": "Kyohō Fuefuki}}",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-LOG",
+    "name": "Log",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MABUI",
+    "name": "Mabui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MADARA-UCHIHA",
+    "name": "Madara Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAEN-NARA",
+    "name": "Maen Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAHIRU",
+    "name": "Mahiru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAKARO-AKIMICHI",
+    "name": "Makaro Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAKI",
+    "name": "Maki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAKINAMI-SENKA",
+    "name": "Makinami Senka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAMUSHI",
+    "name": "Mamushi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MANDA",
+    "name": "Manda",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MANDA-II",
+    "name": "Manda II",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MANGETSU-HO-ZUKI",
+    "name": "Mangetsu Hōzuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MARUTEN-AKIMICHI",
+    "name": "Maruten Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MATATABI",
+    "name": "Matatabi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MAWASHI-DOKURAKU",
+    "name": "Mawashi Dokuraku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MEI-TERUMI",
+    "name": "Mei Terumī",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-METAL-LEE",
+    "name": "Metal Lee",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MIFUNE",
+    "name": "Mifune",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MIGHT-DUY",
+    "name": "Might Duy",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MIGHT-GUY",
+    "name": "Might Guy",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MINATO-NAMIKAZE",
+    "name": "Minato Namikaze",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MIRAI-SARUTOBI",
+    "name": "Mirai Sarutobi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MISUMI-TSURUGI",
+    "name": "Misumi Tsurugi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MITSUKI",
+    "name": "Mitsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MOGUSA",
+    "name": "Mogusa",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MOMOSHIKI-OTSUTSUKI",
+    "name": "Momoshiki Otsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MOMOSHIKI-O-TSUTSUKI",
+    "name": "Momoshiki Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MONKEY-KING-ENMA",
+    "name": "Monkey King: Enma",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MONZAEMON-CHIKAMATSU",
+    "name": "Monzaemon Chikamatsu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MOTOI",
+    "name": "Motoi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MUBI",
+    "name": "Mubi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MUGINO",
+    "name": "Mugino",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MUI",
+    "name": "Mui",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MUTA-ABURAME",
+    "name": "Muta Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MU",
+    "name": "Mū",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NAGATO",
+    "name": "Nagato",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NARUTO-UZUMAKI",
+    "name": "Naruto Uzumaki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NEJI-HYU-GA",
+    "name": "Neji Hyūga",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NISHI-SENSOR",
+    "name": "Nishi (sensor)",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NONOTA",
+    "name": "Nonota",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NONO-YAKUSHI",
+    "name": "Nonō Yakushi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-OBITO-UCHIHA",
+    "name": "Obito Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-OBORO",
+    "name": "Oboro",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-OMOI",
+    "name": "Omoi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-PAKURA",
+    "name": "Pakura",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RAIDO-NAMIASHI",
+    "name": "Raidō Namiashi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RASA",
+    "name": "Rasa",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RIN-NOHARA",
+    "name": "Rin Nohara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ROCK-LEE",
+    "name": "Rock Lee",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RYU",
+    "name": "Ryū",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RYU-KI",
+    "name": "Ryūki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-RO-SHI",
+    "name": "Rōshi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SABU",
+    "name": "Sabu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAGAN",
+    "name": "Sagan",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAI",
+    "name": "Sai",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAIKEN",
+    "name": "Saiken",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAKON",
+    "name": "Sakon",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAKURA-HARUNO",
+    "name": "Sakura Haruno",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SANTA-YAMANAKA",
+    "name": "Santa Yamanaka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SARADA-UCHIHA",
+    "name": "Sarada Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SASORI",
+    "name": "Sasori",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SASUKE-UCHIHA",
+    "name": "Sasuke Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SAZANAMI-SENKA",
+    "name": "Sazanami Senka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHAMON",
+    "name": "Shamon",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIBAI-O-TSUTSUKI",
+    "name": "Shibai Ōtsutsuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIBI-ABURAME",
+    "name": "Shibi Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIGURE",
+    "name": "Shigure",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIKADAI-NARA",
+    "name": "Shikadai Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIKAKU-NARA",
+    "name": "Shikaku Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIKAMARU-NARA",
+    "name": "Shikamaru Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIKURO-ABURAME",
+    "name": "Shikuro Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIMA",
+    "name": "Shima",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIMON-HIJIRI",
+    "name": "Shimon Hijiri",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIN",
+    "name": "Shin",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHINKI",
+    "name": "Shinki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHINO-ABURAME",
+    "name": "Shino Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHISUI-UCHIHA",
+    "name": "Shisui Uchiha",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHITO-AKIMICHI",
+    "name": "Shitō Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHIZUNE",
+    "name": "Shizune",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SHUKAKU",
+    "name": "Shukaku",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SON-GOKU",
+    "name": "Son Gokū",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SUIGETSU-HO-ZUKI",
+    "name": "Suigetsu Hōzuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SUMASHI",
+    "name": "Sumashi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SUMIRE-KAKEI",
+    "name": "Sumire Kakei",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-SUZAKU-NARA",
+    "name": "Suzaku Nara",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TAISEKI",
+    "name": "Taiseki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TAKANAMI-SENKA",
+    "name": "Takanami Senka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TASUKI",
+    "name": "Tasuki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TATSUMA-ABURAME",
+    "name": "Tatsuma Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TAYUYA",
+    "name": "Tayuya",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TEMARI",
+    "name": "Temari",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TEN-TAILS",
+    "name": "Ten-Tails",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TENTEN",
+    "name": "Tenten",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-THIRD-KAZEKAGE",
+    "name": "Third Kazekage",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TOBI-ZETSU",
+    "name": "Tobi (Zetsu)",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TOBIRAMA-SENJU",
+    "name": "Tobirama Senju",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TONBO-TOBITAKE",
+    "name": "Tonbo Tobitake",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TORIFU-AKIMICHI",
+    "name": "Torifu Akimichi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TOROI",
+    "name": "Toroi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TORUNE-ABURAME",
+    "name": "Torune Aburame",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-TSUME-INUZUKA",
+    "name": "Tsume Inuzuka",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-UTAKATA",
+    "name": "Utakata",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-WARAJI",
+    "name": "Waraji",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-WHITE-SNAKE-SAGE",
+    "name": "White Snake Sage",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-WHITE-ZETSU",
+    "name": "White Zetsu",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-WHITE-ZETSU-ARMY",
+    "name": "White Zetsu Army",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YAGURA-KARATACHI",
+    "name": "Yagura Karatachi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YAHIKO",
+    "name": "Yahiko",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YAMATO",
+    "name": "Yamato",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YASHAMARU",
+    "name": "Yashamaru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YOSHITERU",
+    "name": "Yoshiteru",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-YUGITO-NII",
+    "name": "Yugito Nii",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ZABUZA-MOMOCHI",
+    "name": "Zabuza Momochi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ZAJI",
+    "name": "Zaji",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ZAKU-ABUMI",
+    "name": "Zaku Abumi",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ZO",
+    "name": "Zō",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-ZO-RI",
+    "name": "Zōri",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HE-CREATED-A-TECHNIQUE-LIKE-THIS-ONE-BASED-OFF-HIS-RESEARCH-",
+    "name": "he created a technique like this one based off his research which has its own article -->",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HE-DIDN-T-USE-THIS-TECHNIQUE-HE-JUST-MANIFESTED-OROCHIMARU-S",
+    "name": "he didn't use this technique. He just manifested Orochimaru's true form -->",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-HE-USES-FIVE-GATES",
+    "name": "he uses five gates",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-NOT-THIS",
+    "name": "not this -->",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-THE-FOURTH-DATABOOK-IMPLIED-THAT-IT-IS-A-USER",
+    "name": "the Fourth Databook implied that it is a user -->",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-THE-FOURTH-DATABOOK-STATES-IT-IS-A-USER",
+    "name": "the Fourth Databook states it is a user -->",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-O-NOKI",
+    "name": "Ōnoki",
+    "source": "manga_user_locator"
+  },
+  {
+    "id": "CH-NAR-MITO-UZUMAKI",
+    "name": "漩涡水户",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-HOMURA-MITOKADO",
+    "name": "水户门炎",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-KOHARU-UTATANE",
+    "name": "转寝小春",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-KAGAMI-UCHIHA",
+    "name": "宇智波镜",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-GINKAKU",
+    "name": "银角",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-EBIZO",
+    "name": "海老藏",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-SAKUMO-HATAKE",
+    "name": "旗木朔茂",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-MIKOTO-UCHIHA",
+    "name": "宇智波美琴",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-KARURA",
+    "name": "加瑠罗",
+    "source": "project_early_history_roster"
+  },
+  {
+    "id": "CH-NAR-NAWAKI",
+    "name": "绳树",
+    "source": "project_early_history_roster"
+  }
+]

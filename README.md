@@ -1,18 +1,31 @@
 # 忍者手记 — 火影忍者 AI 文字跑团
 
-一个以火影忍者世界观为背景的 **AI 单人文字跑团游戏**（PWA），由多智能体叙事管道驱动，支持角色养成、战斗、人际关系、世界状态等完整 RPG 系统。
+当前正式版本：**v3.0.0**
+
+一个以火影忍者世界观为背景的 **AI 单人文字跑团游戏**（PWA）。v3 以证据链叙事管道、完整项目正史、规范忍术数据库和可迁移长期存档为核心，支持角色养成、战斗、人际关系、分支时间线、私人图片资产与云存档。
+
+正式站：https://www.qiwu.asia/
+
+## v3 概览
+
+- **完整项目正史**：K001-K086，覆盖 HIST、P1、P2、BOR 四个时代，包含 385 个剧情日、786 个场景和 2894 个原子事件
+- **规范忍术数据库**：741 条忍术记录，统一名称、等级、属性、资源、消耗、威力、条件和来源
+- **证据链 AI 管道**：严格单次调用或增强模式、可见推演、二次变量自检、可选正文复检、提示词追踪和未来剧情隔离
+- **可靠状态提交**：连续性账本、原子回合提交、分支隔离、开局契约和旧存档迁移
+- **私人图片工作室**：支持 OpenAI 兼容生图、A1111/Forge、ComfyUI、人物肖像、回合插图、版本图库和云同步
 
 ## 特性
 
-- **多智能体叙事管道** — GM 编排 Brainstormer → Outliner → Critic 审查 → Writer 写作，可选高质量 Agent 模式
+- **多智能体叙事管道** — GM 编排 Brainstormer → Outliner → Critic 审查 → Writer 写作，可选高质量 Agent 模式与二阶段正文复检
 - **完整 RPG 系统** — 查克拉、体力、精神、意志、速度、幸运六维属性，装备系统，忍术技能
-- **战斗系统** — 回合制战斗，招式交换、查克拉消耗、暴击/闪避
+- **战斗系统** — 回合制战斗，查克拉/精神力/体力分离结算，正史忍术消耗、暴击/闪避与 NPC 忍阶平衡
 - **人际关系** — 与 NPC 的好感度、信任、尊重动态变化
 - **世界状态** — 天气、时间线、地点、势力关系随游戏推进演变
 - **任务系统** — 按忍阶自动生成任务，支持主线/支线
-- **记忆系统** — 全局剧情记忆 + NPC 独立视角记忆
-- **角色创建** — 自定义姓名、忍村、查克拉属性、初始属性分配
-- **知识库** — 内置火影忍者世界观条目，AI 参考生成一致性内容
+- **记忆系统** — 连续性账本、全局剧情记忆、NPC 独立视角记忆、阶段摘要与深度整合
+- **角色创建** — 自定义姓名、家族、忍村、血继、天赋、忍术、关系、时代日期与初始属性
+- **知识库** — 内置项目正史、火影世界书和规范忍术数据库，按角色与时代进行证据投影
+- **图片工作室** — 本地或云端生成回合插图与人物肖像，提供版本管理、恢复和私人图库
 - **PWA 支持** — 可安装到桌面，离线使用
 - **移动端适配** — 响应式布局，手机/PC 均可畅玩
 
@@ -21,14 +34,17 @@
 ```
 js/
 ├── core/           # 核心引擎
-│   ├── pipeline.js          # 消息管道（单次生成模式）
+│   ├── pipeline.js          # 证据链消息与变量提交管道
 │   ├── agent-pipeline.js    # 多智能体叙事管道
 │   ├── agent-runner.js      # Agent 调用执行器
 │   ├── agent-manifests.js   # Agent 上下文注入配置
 │   ├── agent-prompts.js     # Agent System Prompt
 │   ├── ai-client.js         # AI API 客户端
 │   ├── state-manager.js     # 状态管理 + IndexedDB
-│   └── event-bus.js         # 事件总线
+│   ├── turn-evidence.js     # 回合证据编译与受众投影
+│   ├── continuity-ledger.js # 不可变连续性账本
+│   ├── narrative-review.js  # 可选二阶段正文复检
+│   └── image-studio/        # 多后端图片生成与资产管理
 ├── systems/        # 游戏系统
 │   ├── combat-system.js     # 战斗系统
 │   ├── mission-system.js    # 任务系统
@@ -42,7 +58,9 @@ js/
 │   ├── knowledge-base.js    # 火影世界观知识库
 │   ├── game-data.js         # 属性/平衡/难度配置
 │   ├── agent-config.js      # Agent 模式配置
-│   └── worldbook/           # 角色/地点/时间线图鉴
+│   ├── canon-database.js    # 规范忍术数据库运行时
+│   ├── generated/           # 构建生成的正史运行时
+│   └── worldbook/           # 角色/地点/时代知识库
 ├── ui/             # UI 组件
 │   ├── app-shell.js         # 应用外壳
 │   ├── character-creator.js # 角色创建
@@ -74,6 +92,8 @@ npm test
 npm run build
 ```
 
+`npm test` 会验证项目时间线、忍术数据库、AI 调用策略、未来剧情隔离、连续性、变量更新、开局、战斗、图片资产、服务端安全、部署脚本和 `public/` 同步状态。
+
 根目录的 `js/`、`css/`、`img/` 和 `assets/` 是应用源码；`public/` 中的同名内容是服务端部署镜像，会在 `npm start`、`npm run dev` 和 `npm run build` 前由 `npm run sync-public` 自动生成。登录页、管理页和法律文档仍由 `public/` 单独维护。
 
 ## Agent 模式
@@ -84,6 +104,61 @@ npm run build
 |------|--------|---------|---------|
 | 标准 | 大纲 → 合理性审查 + 角色审查 → 写作 → 风格审查 | +4 次 | 日常探索、对话 |
 | 完整 | 头脑风暴 → 大纲 → 审查 ×2 → 角色代理 → 写作 → 细节审查 + 风格审查 → 润色 | +7~10 次 | 重大剧情、战斗 |
+
+不需要辅助调用时可选择严格单次调用模式。变量更新器、记忆压缩、正文复检和自动绘图均可独立开启，调用策略会在每回合开始时冻结，避免生成阶段与提交阶段职责漂移。
+
+## 正式部署
+
+### Windows
+
+发布入口为 `部署正式站.bat`，底层使用 `deploy.ps1`。服务器地址和 SSH 密钥只写入被忽略的 `deploy.local.psd1`，可从 `deploy.local.example.psd1` 创建。
+
+```powershell
+# 离线检查正式部署包，不连接服务器
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -Mode production -DryRun
+
+# 正式部署，必须显式确认
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -Mode production -ConfirmProduction
+```
+
+### Linux/Mac
+
+```bash
+# 完整部署 (构建 + 上传 + 重启)
+bash deploy-v3.sh
+
+# 仅构建，不连接服务器
+bash deploy-v3.sh --dry-run
+
+# 跳过构建，仅上传
+bash deploy-v3.sh --skip-build
+```
+
+### 版本信息生成
+
+```bash
+# 输出到 stdout
+node scripts/generate-version.mjs
+
+# 写入文件
+node scripts/generate-version.mjs --out public/version.json
+```
+
+### 部署流程
+
+```
+1. 构建项目        → npm run build
+2. 生成版本信息    → node scripts/generate-version.mjs --out public/version.json
+3. 上传静态资源    → 排除 .env / *.db / save/ / logs/
+4. 远端操作:
+   - 备份旧版本
+   - 上传新版本
+   - 清理缓存
+   - 重启服务
+   - 健康检查
+```
+
+部署器会构建并同步 `public/`，生成 `version.json`，排除 `.env`、云存档和运行数据库，校验部署包内容与 SHA-256，重试上传，更新静态站和后端，重启服务并验证线上缓存版本与 v3 发布版本。正式站发布前应先运行 `npm test`。
 
 ## 难度等级
 
@@ -97,10 +172,11 @@ npm run build
 
 ## 技术栈
 
-- 纯前端 JavaScript (ES Modules)，无框架
+- JavaScript ES Modules + Node.js/Express，无前端框架
 - IndexedDB 持久化（时间线存档）
 - Service Worker (PWA)
 - Web Components (Custom Elements)
+- JSON 文件持久化服务端、Discord OAuth、云存档与私人图片资产
 
 ## License
 

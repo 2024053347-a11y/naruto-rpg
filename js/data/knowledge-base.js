@@ -1,4 +1,5 @@
 import { WORLD_BOOK_ENTRIES } from './worldbook/index.js';
+import { CANON_DATABASE } from './canon-database.js';
 
 export const KNOWLEDGE_BASE = {
   entries: [
@@ -174,9 +175,9 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     return this._loadCustomEntries();
   },
 
-  buildContext({ query = '', state = {}, memory = {}, maxEntries = 8, budget = 5600 } = {}) {
+  buildContext({ query = '', state = {}, memory = {}, maxEntries = 8, budget = 5600, includeCanon = true } = {}) {
     // 增量检测: 场景未变时复用上次结果,跳过搜索+格式化开销
-    const fp = this._sceneFingerprint(state, memory);
+    const fp = `${CANON_DATABASE.revision}|${includeCanon ? 'canon' : 'worldbook'}|${this._sceneFingerprint(state, memory, query)}`;
     if (this._sceneCacheKey === fp && this._sceneCacheOutput !== null) {
       return this._sceneCacheOutput;
     }
@@ -215,7 +216,12 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       if (selected.length >= maxEntries) break;
     }
 
-    if (!selected.length) { this._sceneCacheOutput = ''; return ''; }
+    const canonContext = includeCanon ? CANON_DATABASE.buildContext({
+      query, state, memory,
+      maxTechniques: 6,
+      budget: Math.max(1200, budget)
+    }) : '';
+    if (!selected.length && !canonContext) { this._sceneCacheOutput = ''; return ''; }
     const timelineLabel = this._currentTimelineLabel(state);
     this._sceneCacheOutput = [
       `[世界书检索结果 - 分层注入，必须优先采用]`,
@@ -225,9 +231,14 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
       `- 若条目包含未来信息，只作为幕后一致性约束，不得让当前角色提前知道或提前发生。`,
       `- “已灭亡/已死亡/已叛逃/已成立”等结论必须看当前年份；未来才发生的结果不能回写到早期时间线。`,
       `- 与玩家记忆、任务、当前位置冲突时，优先遵守动态状态。`,
-      `- 回复中的地点、NPC年龄/状态、组织公开程度必须与上述条目保持一致。`
+      `- 回复中的地点、NPC年龄/状态、组织公开程度必须与上述条目保持一致。`,
+      canonContext
     ].join('\n');
     return this._sceneCacheOutput;
+  },
+
+  buildCanonContext(options = {}) {
+    return CANON_DATABASE.buildContext(options);
   },
 
   matchAndGetContent(text, maxResults = 3) {
@@ -289,19 +300,29 @@ S级任务: 影级任务，涉及国家机密或超强敌人。报酬: 500000两
     this._sceneCacheOutput = null;
   },
 
-  _sceneFingerprint(state, memory) {
+  _sceneFingerprint(state, memory, query = '') {
     const loc = state['世界·地点'] || '';
     const rels = state._relationships || {};
     const names = Object.keys(rels).sort().join(',');
     const missions = state._missions || {};
     const activeTitles = Object.values(missions.active || {}).map(m => m.title || '').sort().join(',');
     const memBrief = (memory?.recent_summary || '').slice(-100);
-    return `${loc}|${names}|${activeTitles}|${memBrief}`;
+    const calendar = typeof state['世界·时间'] === 'string'
+      ? state['世界·时间']
+      : JSON.stringify(state['世界·时间'] || '');
+    const branch = state?._meta?.active_branch || state?._timeline?.active_branch || state?.branch_id || 'branch_main';
+    const timelineDecisions = String(state['世界·活跃事件'] || '');
+    return `${query}|${calendar}|${loc}|${branch}|${names}|${activeTitles}|${timelineDecisions}|${memBrief}`;
   },
 
   _cacheKey(query, state, memory) {
     const missionId = state?._missions?.active ? (typeof state._missions.active === 'object' ? state._missions.active.id || '1' : '') : '';
-    return `${query}|${state?.['世界·地点'] || ''}|${state?.['世界·时间']?.year || ''}|${state?._combat?.is_active ? 'c' : ''}|${missionId}`;
+    const calendar = typeof state?.['世界·时间'] === 'string'
+      ? state['世界·时间']
+      : JSON.stringify(state?.['世界·时间'] || '');
+    const branch = state?._meta?.active_branch || state?._timeline?.active_branch || state?.branch_id || 'branch_main';
+    const timelineDecisions = String(state?.['世界·活跃事件'] || '');
+    return `${query}|${state?.['世界·地点'] || ''}|${calendar}|${branch}|${timelineDecisions}|${state?._combat?.is_active ? 'c' : ''}|${missionId}`;
   },
 
   getEntry(title) {

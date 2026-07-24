@@ -26,6 +26,8 @@ class VariableUpdaterPresetEditor extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         :host { position:fixed; inset:0; z-index:100002; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; color:#e8e4d9; font-family:'Noto Sans SC',system-ui,sans-serif; background:rgba(3,5,8,.94); backdrop-filter:blur(10px); }
+        :host([embedded]) { position:relative; inset:auto; z-index:auto; width:100%; height:100%; padding:0; background:transparent; backdrop-filter:none; }
+        :host([embedded]) .editor { width:100%; height:100%; border:0; border-radius:0; box-shadow:none; }
         .editor { width:min(1040px,100%); height:min(88vh,900px); display:flex; flex-direction:column; overflow:hidden; background:#0d1117; border:1px solid rgba(198,156,109,.24); border-radius:12px; box-shadow:0 24px 80px rgba(0,0,0,.55); }
         header,.toolbar,footer { flex:none; display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.07); }
         header { justify-content:space-between; }
@@ -42,7 +44,7 @@ class VariableUpdaterPresetEditor extends HTMLElement {
         input:focus,select:focus,textarea:focus { border-color:#eb613f; }
         .macro-bar { padding:10px 16px; color:#999; font-size:11px; line-height:1.8; border-bottom:1px solid rgba(255,255,255,.06); }
         code { margin-right:8px; color:#ffad8f; user-select:all; }
-        main { flex:1; min-height:0; overflow:auto; padding:10px 16px 24px; }
+        main { flex:1; min-height:0; overflow:auto; overflow-anchor:none; padding:10px 16px 24px; }
         .entry { border-bottom:1px solid rgba(255,255,255,.06); border-left:2px solid transparent; }
         .entry.open { border-left-color:#eb613f; background:rgba(255,255,255,.018); }
         .entry-head { display:flex; align-items:center; gap:9px; padding:12px 10px; cursor:pointer; }
@@ -62,7 +64,26 @@ class VariableUpdaterPresetEditor extends HTMLElement {
         textarea { width:100%; min-height:260px; resize:vertical; font:12px/1.65 'JetBrains Mono',Consolas,monospace; white-space:pre-wrap; }
         .empty { padding:60px 20px; text-align:center; color:#777; }
         input[type=file] { display:none; }
-        @media(max-width:700px) { :host{padding:0}.editor{height:100vh;border-radius:0}.entry-body{padding-left:12px}.field{grid-template-columns:1fr}.actions{justify-content:flex-end}header{align-items:flex-start}textarea{min-height:220px} }
+        @media(max-width:700px) {
+          :host{padding:0}
+          .editor{height:100dvh;border-radius:0;border-left:0;border-right:0}
+          header{flex-direction:column;align-items:stretch;padding:10px 12px}
+          .actions{width:100%;justify-content:flex-start;gap:6px}
+          .toolbar{align-items:stretch;padding:10px 12px;gap:6px}
+          .toolbar input{flex:1 1 100%;min-width:0}
+          .macro-bar{padding:8px 12px}
+          main{padding:6px 8px 18px}
+          .entry-head{flex-wrap:wrap;gap:6px;padding:10px 8px}
+          .index,.toggle{flex:none}
+          .entry-name{flex:1 1 130px}
+          .role{order:1}
+          .entry-tools{display:none;order:2;width:100%;justify-content:flex-end}
+          .entry.open .entry-tools{display:flex}
+          .entry-body{padding:0 8px 14px}
+          .field{grid-template-columns:1fr}
+          footer{flex-wrap:wrap;padding:9px 12px}
+          textarea{min-height:220px}
+        }
       </style>
       <section class="editor" role="dialog" aria-modal="true" aria-label="变量更新预设编辑器">
         <header>
@@ -91,11 +112,68 @@ class VariableUpdaterPresetEditor extends HTMLElement {
     this._bind();
   }
 
+  _captureViewState() {
+    const root = this.shadowRoot;
+    const main = root?.querySelector('main');
+    const active = root?.activeElement;
+    const activeItem = active?.closest?.('.entry');
+    const activeIndex = Number(activeItem?.dataset.index);
+    let selector = '';
+    if (active?.id) selector = `#${active.id}`;
+    else if (active?.dataset.action) selector = `[data-action="${active.dataset.action}"]`;
+    else if (active?.dataset.field) selector = `[data-field="${active.dataset.field}"]`;
+
+    return {
+      scrollTop: main?.scrollTop || 0,
+      scrollLeft: main?.scrollLeft || 0,
+      active: active && selector ? {
+        entry: Number.isInteger(activeIndex) ? this._preset.entries[activeIndex] : null,
+        selector,
+        selectionStart: typeof active.selectionStart === 'number' ? active.selectionStart : null,
+        selectionEnd: typeof active.selectionEnd === 'number' ? active.selectionEnd : null,
+        scrollTop: active.scrollTop || 0,
+        scrollLeft: active.scrollLeft || 0
+      } : null
+    };
+  }
+
+  _renderPreservingView({ state = this._captureViewState(), focusEntry = null, focusSelector = '', reveal = false } = {}) {
+    this._render();
+    const root = this.shadowRoot;
+    const main = root.querySelector('main');
+    if (main) {
+      main.scrollTop = state.scrollTop;
+      main.scrollLeft = state.scrollLeft;
+    }
+
+    const focusState = focusSelector ? { entry: focusEntry, selector: focusSelector } : state.active;
+    let focusTarget = null;
+    if (focusState?.entry) {
+      const index = this._preset.entries.indexOf(focusState.entry);
+      focusTarget = index >= 0
+        ? root.querySelector(`.entry[data-index="${index}"] ${focusState.selector}`)
+        : null;
+    } else if (focusState?.selector) {
+      focusTarget = root.querySelector(focusState.selector);
+    }
+
+    if (!focusTarget) return;
+    focusTarget.focus({ preventScroll: true });
+    if (focusState === state.active) {
+      if (focusState.selectionStart !== null && typeof focusTarget.setSelectionRange === 'function') {
+        focusTarget.setSelectionRange(focusState.selectionStart, focusState.selectionEnd);
+      }
+      focusTarget.scrollTop = focusState.scrollTop;
+      focusTarget.scrollLeft = focusState.scrollLeft;
+    }
+    if (reveal) focusTarget.closest('.entry')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
   _renderEntry(entry, index) {
     const open = this._expanded === index;
     return `
       <article class="entry${open ? ' open' : ''}" data-index="${index}">
-        <div class="entry-head">
+        <div class="entry-head" tabindex="-1">
           <span class="index">${index + 1}</span>
           <button class="toggle${entry.enabled !== false ? ' on' : ''}" data-action="toggle" title="启用/停用"></button>
           <span class="entry-name${entry.enabled === false ? ' off' : ''}">${escHtml(entry.name || '未命名条目')}</span>
@@ -126,9 +204,13 @@ class VariableUpdaterPresetEditor extends HTMLElement {
     }));
     root.querySelectorAll('.entry-head').forEach(head => head.addEventListener('click', event => {
       if (event.target.closest('[data-action]')) return;
+      const main = root.querySelector('main');
+      const scrollTop = main?.scrollTop || 0;
       this._sync();
       this._expanded = Number(head.closest('.entry').dataset.index);
-      this._render();
+      root.querySelector('.entry.open')?.classList.remove('open');
+      head.closest('.entry').classList.add('open');
+      if (main) main.scrollTop = scrollTop;
     }));
     root.querySelector('#import-file')?.addEventListener('change', event => this._importFile(event.target.files?.[0]));
   }
@@ -156,29 +238,63 @@ class VariableUpdaterPresetEditor extends HTMLElement {
       return this._render();
     }
     if (action === 'add') {
+      const viewState = this._captureViewState();
       this._sync();
-      this._preset.entries.push({ id: `custom_${Date.now()}`, name: '新预设条目', enabled: true, role: 'system', content: '' });
+      const newEntry = { id: `custom_${Date.now()}`, name: '新预设条目', enabled: true, role: 'system', content: '' };
+      this._preset.entries.push(newEntry);
       this._expanded = this._preset.entries.length - 1;
-      return this._render();
+      return this._renderPreservingView({
+        state: viewState,
+        focusEntry: newEntry,
+        focusSelector: '[data-field="name"]',
+        reveal: true
+      });
     }
 
     const index = Number(entryElement?.dataset.index);
     if (!Number.isInteger(index)) return;
+    const viewState = this._captureViewState();
     this._sync();
-    if (action === 'toggle') this._preset.entries[index].enabled = this._preset.entries[index].enabled === false;
-    if (action === 'up' && index > 0) {
+    if (action === 'toggle') {
+      const entry = this._preset.entries[index];
+      entry.enabled = entry.enabled === false;
+      entryElement.querySelector('.toggle')?.classList.toggle('on', entry.enabled);
+      entryElement.querySelector('.entry-name')?.classList.toggle('off', !entry.enabled);
+      return;
+    }
+    if (action === 'up') {
+      if (index <= 0) return;
+      const movedEntry = this._preset.entries[index];
       [this._preset.entries[index - 1], this._preset.entries[index]] = [this._preset.entries[index], this._preset.entries[index - 1]];
       this._expanded = index - 1;
+      return this._renderPreservingView({
+        state: viewState,
+        focusEntry: movedEntry,
+        focusSelector: '[data-action="up"]'
+      });
     }
-    if (action === 'down' && index < this._preset.entries.length - 1) {
+    if (action === 'down') {
+      if (index >= this._preset.entries.length - 1) return;
+      const movedEntry = this._preset.entries[index];
       [this._preset.entries[index + 1], this._preset.entries[index]] = [this._preset.entries[index], this._preset.entries[index + 1]];
       this._expanded = index + 1;
+      return this._renderPreservingView({
+        state: viewState,
+        focusEntry: movedEntry,
+        focusSelector: '[data-action="down"]'
+      });
     }
     if (action === 'delete') {
       const confirmed = await GameModal.confirm({ title: '删除预设条目', message: `确认删除「${this._preset.entries[index].name}」？` });
       if (!confirmed) return;
+      const neighbor = this._preset.entries[index + 1] || this._preset.entries[index - 1] || null;
       this._preset.entries.splice(index, 1);
       this._expanded = Math.min(index, this._preset.entries.length - 1);
+      return this._renderPreservingView({
+        state: viewState,
+        focusEntry: neighbor,
+        focusSelector: '.entry-head'
+      });
     }
     this._render();
   }

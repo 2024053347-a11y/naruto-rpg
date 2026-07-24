@@ -2,7 +2,19 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import { stateManager } from '../js/core/state-manager.js';
+import { instructionParser } from '../js/core/instruction-parser.js';
+import { MessagePipeline } from '../js/core/pipeline.js';
+import { buildVariableUpdaterMessages } from '../js/core/variable-updater.js';
+import { generateMainVarInstructions } from '../js/data/var-schema.js';
+import { DEFAULT_VARIABLE_UPDATER_PRESET } from '../js/data/variable-updater-preset.js';
+import { resolveCanonTechnique } from '../js/data/canon-database.js';
 import { equipmentSystem } from '../js/systems/equipment-system.js';
+import {
+  CUSTOM_TALENT_PLACEHOLDER,
+  buildOpeningState,
+  createOpeningDraft
+} from '../js/systems/opening-draft.js';
+import { createOpeningContract } from '../js/systems/opening-contract.js';
 import { skillSystem } from '../js/systems/skill-system.js';
 
 let passed = 0;
@@ -75,6 +87,338 @@ test('skill forget buttons bind outside the equipment-only block', () => {
   assert.match(source, /}\s*this\.shadowRoot\.querySelectorAll\('\.skill-forget-btn'\)/);
   assert.match(source, /skillSystem\.forgetSkill\(type, name\)/);
   assert.doesNotMatch(source, /support:\s*'辅助'/);
+});
+
+test('AI collection remove deletes every flat item and skill field', () => {
+  stateManager.update([
+    { key: '技能·忍术·火遁·豪火球·等级', op: '=', value: 'C' },
+    { key: '技能·忍术·火遁·豪火球·描述', op: '=', value: '喷出火球' },
+    { key: '物品·消耗品·绷带·数量', op: '=', value: 2 },
+    { key: '物品·消耗品·绷带·品质', op: '=', value: '普通' },
+    { key: '物品·消耗品·绷带·描述', op: '=', value: '止血用品' }
+  ]);
+
+  stateManager.batchUpdate([
+    { path: 'skills.jutsu', op: 'remove', key: '火遁·豪火球' },
+    { path: 'equipment.consumables', op: 'remove', key: '绷带' }
+  ]);
+
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes('火遁·豪火球')), []);
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes('物品·消耗品·绷带')), []);
+});
+
+test('AI deletion supports every skill category including legacy support fields', () => {
+  const snapshot = stateManager.getDefaultState();
+  snapshot['技能·辅助·医疗术·等级'] = 'B';
+  stateManager.restore(snapshot);
+  stateManager.update([
+    { key: '技能·天赋·查克拉控制·描述', op: '=', value: '控制精准' },
+    { key: '技能·血继限界·写轮眼·熟练度', op: '=', value: 50 }
+  ]);
+
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [
+    { path: 'skills.support', op: 'remove', key: '医疗术' },
+    { path: 'skills.talents', op: 'remove', key: '查克拉控制' },
+    { path: 'skills.kekkei_genkai', op: 'remove', key: '写轮眼' }
+  ] }, true);
+
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => (
+    key.includes('医疗术') || key.includes('查克拉控制') || key.includes('写轮眼')
+  )), []);
+});
+
+test('opening bloodline flat fields project to one normalized nested skill', () => {
+  stateManager.update([
+    { key: '技能·血继限界·磁遁·名称', op: '=', value: '磁遁' },
+    { key: '技能·血继限界·磁遁·等级', op: '=', value: '初醒' },
+    { key: '技能·血继限界·磁遁·熟练度', op: '=', value: 40 },
+    { key: '技能·血继限界·磁遁·描述', op: '=', value: '操纵细小金属。' }
+  ]);
+
+  assert.deepEqual(stateManager.get().skills.kekkei_genkai['磁遁'], {
+    name: '磁遁',
+    rank: '初醒',
+    mastery: 40,
+    description: '操纵细小金属。'
+  });
+});
+
+test('opening bloodline details stay readable in the AI skill summary', () => {
+  stateManager.update([
+    { key: '技能·血继限界·磁遁·名称', op: '=', value: '磁遁' },
+    { key: '技能·血继限界·磁遁·等级', op: '=', value: '初醒' },
+    { key: '技能·血继限界·磁遁·熟练度', op: '=', value: 40 },
+    { key: '技能·血继限界·磁遁·描述', op: '=', value: '操纵细小金属。' }
+  ]);
+
+  const pipeline = new MessagePipeline({});
+  const summary = pipeline._summarizeSkillsCompact(pipeline._scanFlatSkills(stateManager.state), 5);
+  assert.match(summary, /磁遁/);
+  assert.match(summary, /初醒/);
+  assert.match(summary, /40/);
+  assert.match(summary, /操纵细小金属/);
+  assert.doesNotMatch(summary, /\[object Object\]/);
+});
+
+test('AI can progress an explicit opening bloodline during the first story turn', () => {
+  const draft = createOpeningDraft('custom', {
+    identity: { name: '磁遁测试者' },
+    campaign: { aiCompletionMode: 'fill' },
+    talents: [{
+      type: 'kekkei_genkai',
+      name: '磁遁',
+      rank: '初醒',
+      mastery: 40,
+      description: '操纵细小金属。',
+      limitations: '大质量目标无效。'
+    }]
+  });
+  const openingState = buildOpeningState(draft, stateManager.getDefaultState());
+  openingState._opening_contract = createOpeningContract({ choices: draft, state: openingState });
+  stateManager.restore(openingState);
+
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [
+    { path: 'skills.kekkei_genkai.磁遁.mastery', op: 'set', value: 47 },
+    { path: 'skills.kekkei_genkai.磁遁.description', op: 'set', value: '磁场控制比开局时更加稳定。' }
+  ] }, true);
+
+  assert.equal(stateManager.get('技能·血继限界·磁遁·熟练度'), 47);
+  assert.equal(stateManager.get('技能·血继限界·磁遁·描述'), '磁场控制比开局时更加稳定。');
+});
+
+test('AI-generated talent replaces the legacy custom talent placeholder', () => {
+  stateManager.update([
+    { key: `技能·天赋·${CUSTOM_TALENT_PLACEHOLDER}·名称`, op: '=', value: CUSTOM_TALENT_PLACEHOLDER },
+    { key: `技能·天赋·${CUSTOM_TALENT_PLACEHOLDER}·描述`, op: '=', value: '等待AI生成具体天赋' }
+  ]);
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.talents.天才武感', op: 'set',
+    value: { name: '天才武感', rank: '先天', mastery: 20, description: '体术学习速度极快。' }
+  }] }, true);
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes(CUSTOM_TALENT_PLACEHOLDER)), []);
+  assert.equal(stateManager.get('技能·天赋·天才武感·名称'), '天才武感');
+});
+
+test('AI-generated bloodline also replaces the legacy custom talent placeholder', () => {
+  stateManager.update([
+    { key: `技能·天赋·${CUSTOM_TALENT_PLACEHOLDER}·名称`, op: '=', value: CUSTOM_TALENT_PLACEHOLDER },
+    { key: `技能·天赋·${CUSTOM_TALENT_PLACEHOLDER}·描述`, op: '=', value: '等待AI生成具体血继' }
+  ]);
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.kekkei_genkai.磁遁', op: 'set',
+    value: { name: '磁遁', rank: '初醒', mastery: 20, description: '操纵金属砂。' }
+  }] }, true);
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes(CUSTOM_TALENT_PLACEHOLDER)), []);
+  assert.equal(stateManager.get('技能·血继限界·磁遁·名称'), '磁遁');
+});
+
+test('legacy AI bloodline collection writes are not silently discarded', () => {
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.kekkei_genkai', op: 'set', value: '写轮眼·单勾玉'
+  }] }, true);
+
+  assert.equal(stateManager.get('技能·血继限界'), '写轮眼·单勾玉');
+});
+
+test('AI removal of equipped gear clears its slot and applied bonus', () => {
+  stateManager.update([
+    { key: '物品·武器·查克拉刀·数量', op: '=', value: 1 },
+    { key: '物品·武器·查克拉刀·品质', op: '=', value: '精良' }
+  ]);
+  const initialSpeed = stateManager.get('属性·速度');
+  assert.equal(equipmentSystem.equip('weapon', '查克拉刀', 'weapons'), true);
+  assert.ok(stateManager.get('属性·速度') > initialSpeed);
+
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({
+    variables: [{ path: 'equipment.weapons', op: 'remove', key: '查克拉刀' }]
+  }, true);
+
+  assert.equal(stateManager.get('物品·已装备·武器'), '');
+  assert.equal(stateManager.get('属性·速度'), initialSpeed);
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.startsWith('物品·武器·查克拉刀')), []);
+});
+
+test('multiple AI removals on the same collection are not deduplicated', () => {
+  stateManager.update([
+    { key: '技能·忍术·火遁·豪火球·等级', op: '=', value: 'C' },
+    { key: '技能·忍术·水遁·水乱波·等级', op: '=', value: 'C' }
+  ]);
+
+  const pipeline = new MessagePipeline({});
+  const parsed = instructionParser.parse([
+    '<variable>{"path":"skills.jutsu","op":"remove","key":"火遁·豪火球"}</variable>',
+    '<variable>{"path":"skills.jutsu","op":"remove","key":"水遁·水乱波"}</variable>'
+  ].join('\n'));
+  assert.equal(parsed.variables.length, 2);
+  pipeline._applyInstructions(parsed, true);
+
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes('豪火球') || key.includes('水乱波')), []);
+});
+
+test('legacy zero or depleted quantities are normalized to complete item deletion', () => {
+  stateManager.update([
+    { key: '物品·防具·忍甲·数量', op: '=', value: 1 },
+    { key: '物品·防具·忍甲·品质', op: '=', value: '精良' },
+    { key: '物品·消耗品·兵粮丸·数量', op: '=', value: 2 },
+    { key: '物品·消耗品·兵粮丸·描述', op: '=', value: '恢复体力' }
+  ]);
+  assert.equal(equipmentSystem.equip('armor', '忍甲', 'armor'), true);
+
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [
+    { key: '物品·防具·忍甲·数量', op: '=', value: 0 },
+    { path: 'equipment.consumables.兵粮丸.quantity', op: 'sub', value: 2 }
+  ] }, true);
+
+  assert.equal(stateManager.get('物品·已装备·防具'), '');
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes('忍甲') || key.includes('兵粮丸')), []);
+});
+
+test('item-specific remove paths still use equipment cleanup', () => {
+  stateManager.update([
+    { key: '物品·道具·护符·数量', op: '=', value: 1 },
+    { key: '物品·道具·护符·品质', op: '=', value: '精良' }
+  ]);
+  const initialLuck = stateManager.get('属性·幸运');
+  assert.equal(equipmentSystem.equip('accessory1', '护符', 'tools'), true);
+  assert.ok(stateManager.get('属性·幸运') > initialLuck);
+
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({
+    variables: [{ path: 'equipment.tools.护符', op: 'remove' }]
+  }, true);
+
+  assert.equal(stateManager.get('物品·已装备·饰品1'), '');
+  assert.equal(stateManager.get('属性·幸运'), initialLuck);
+  assert.deepEqual(Object.keys(stateManager.state).filter(key => key.includes('护符')), []);
+});
+
+test('valid entity removals do not emit invalid-variable warnings', () => {
+  stateManager.update([{ key: '技能·忍术·分身术·等级', op: '=', value: 'E' }]);
+  const warnings = [];
+  const originalWarn = console.warn;
+  console.warn = (...args) => warnings.push(args.join(' '));
+  try {
+    const pipeline = new MessagePipeline({});
+    pipeline._applyInstructions({
+      variables: [{ path: 'skills.jutsu', op: 'remove', key: '分身术' }]
+    });
+  } finally {
+    console.warn = originalWarn;
+  }
+  assert.doesNotMatch(warnings.join('\n'), /invalid or duplicated/);
+});
+
+test('main and secondary prompts explain complete item and skill deletion', () => {
+  const mainPrompt = generateMainVarInstructions(false);
+  const secondaryPrompt = DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content).join('\n');
+
+  assert.match(mainPrompt, /物品彻底删除[\s\S]*equipment\.consumables[\s\S]*"op":"remove"/);
+  assert.match(mainPrompt, /忍术遗忘[\s\S]*skills\.jutsu[\s\S]*"op":"remove"/);
+  assert.doesNotMatch(mainPrompt, /【物品删除】设0/);
+  assert.match(secondaryPrompt, /学习\/创造\/练习\/升级\/遗忘\/删除/);
+  assert.match(secondaryPrompt, /最后一件[\s\S]*op="remove"/);
+});
+
+test('runtime deletion protocol also upgrades saved legacy updater presets', () => {
+  const legacyPreset = {
+    name: '旧自定义预设',
+    entries: [{
+      id: 'legacy',
+      enabled: true,
+      role: 'system',
+      content: '物品用完时，把 quantity 设置为 0。'
+    }]
+  };
+  const messages = buildVariableUpdaterMessages(legacyPreset, {});
+  const prompt = messages.map(message => message.content).join('\n');
+
+  assert.match(prompt, /系统强制删除协议/);
+  assert.match(prompt, /equipment\.分类[\s\S]*"op":"remove"/);
+  assert.match(prompt, /skills\.分类[\s\S]*"op":"remove"/);
+  assert.equal(messages.at(-1).role, 'system');
+});
+
+test('runtime deletion protocol does not hide an empty updater preset', () => {
+  const messages = buildVariableUpdaterMessages({ name: '空预设', entries: [] }, {});
+  assert.deepEqual(messages, []);
+});
+
+test('new player canon technique replaces AI fields but keeps mastery', () => {
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.jutsu.Amaterasu', op: 'set',
+    value: { name: 'Amaterasu', rank: 'E', cost: 1, power: 1, mastery: 72, description: 'wrong AI data' }
+  }] }, true);
+
+  const skill = stateManager.get().skills.jutsu['\u5929\u7167'];
+  assert.equal(skill.technique_id, 'JT-FIRE-0003');
+  assert.equal(skill.source, 'canon');
+  assert.equal(skill.rank, '\u7279');
+  assert.equal(skill.resource_type, '\u67e5\u514b\u62c9');
+  assert.equal(skill.cost, 105);
+  assert.equal(skill.power, 200);
+  assert.equal(skill.mastery, 72);
+  assert.notEqual(skill.description, 'wrong AI data');
+});
+
+test('new player original technique keeps AI values within safe bounds', () => {
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.genjutsu.Original Dream', op: 'set',
+    value: { name: 'Original Dream', type: 'genjutsu', cost: -5, power: 999, mastery: 140 }
+  }] }, true);
+
+  const skill = stateManager.get().skills.genjutsu['Original Dream'];
+  assert.equal(skill.source, 'ai_original');
+  assert.equal(skill.resource_type, '\u7cbe\u795e\u529b');
+  assert.equal(skill.cost, 1);
+  assert.equal(skill.power, 300);
+  assert.equal(skill.mastery, 100);
+});
+
+test('ambiguous canon alias stays original and existing skills remain editable', () => {
+  assert.equal(resolveCanonTechnique('Suiton: Mizurappa').status, 'ambiguous');
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.jutsu.Suiton: Mizurappa', op: 'set',
+    value: { name: 'Suiton: Mizurappa', cost: 22, power: 66, mastery: 44 }
+  }, {
+    path: 'skills.jutsu.\u706b\u9041\u00b7\u8c6a\u706b\u7403\u4e4b\u672f', op: 'set',
+    value: { name: '\u706b\u9041\u00b7\u8c6a\u706b\u7403\u4e4b\u672f', cost: 1, power: 1, mastery: 61 }
+  }] }, true);
+
+  assert.equal(stateManager.get().skills.jutsu['Suiton: Mizurappa'].source, 'ai_original');
+  const canonicalName = '\u706b\u9041\u00b7\u8c6a\u706b\u7403\u4e4b\u672f';
+  assert.equal(stateManager.get().skills.jutsu[canonicalName].technique_id, 'JT-FIRE-0024');
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.jutsu.' + canonicalName + '.cost', op: 'set', value: 9
+  }] }, true);
+  assert.equal(stateManager.get().skills.jutsu[canonicalName].cost, 9);
+});
+
+test('renaming an existing player technique does not canonicalize it as new', () => {
+  const pipeline = new MessagePipeline({});
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.genjutsu.Original Dream', op: 'set',
+    value: { name: 'Original Dream', type: 'genjutsu', cost: 12, power: 34, mastery: 56 }
+  }] }, true);
+
+  pipeline._applyInstructions({ variables: [{
+    path: 'skills.genjutsu.Original Dream.name', op: 'set', value: 'Amaterasu'
+  }] }, true);
+
+  const skill = stateManager.get().skills.genjutsu['Original Dream'];
+  assert.equal(skill.name, 'Amaterasu');
+  assert.equal(skill.source, 'ai_original');
+  assert.equal(skill.cost, 12);
+  assert.equal(stateManager.get().skills.jutsu['\u5929\u7167'], undefined);
 });
 
 console.log(`\n${passed} inventory/skill regression tests passed.`);

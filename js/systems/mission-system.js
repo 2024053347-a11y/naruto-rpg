@@ -68,10 +68,69 @@ class MissionSystem {
     const missions = stateManager.getSub('_missions') || {};
     const active = missions.active || {};
 
+    const existing = data.id ? active[data.id] : null;
+    if (existing) {
+      const patch = { ...data };
+      for (const alias of ['name', 'mission_name', 'missionName', 'task_name', '任务名', '任务名称']) {
+        delete patch[alias];
+      }
+      if (!this._usableMissionTitle(patch.title)) delete patch.title;
+      for (const key of ['rank', 'location', 'client']) {
+        if (!this._missionText(patch[key])) delete patch[key];
+      }
+
+      delete patch.reward;
+      delete patch.requester;
+      delete patch.ryo_reward;
+      delete patch.exp_reward;
+      delete patch.reward_ryo;
+      delete patch.reward_exp;
+
+      const rewardRyo = data.reward?.ryo ?? data.ryo_reward ?? data.reward_ryo;
+      const rewardExp = data.reward?.exp ?? data.exp_reward ?? data.reward_exp;
+      if (rewardRyo !== undefined && rewardRyo !== null && rewardRyo !== '') patch.reward_ryo = rewardRyo;
+      if (rewardExp !== undefined && rewardExp !== null && rewardExp !== '') patch.reward_exp = rewardExp;
+
+      if (data.progress && typeof data.progress === 'object' && !Array.isArray(data.progress)) {
+        patch.progress = { ...(existing.progress || {}), ...data.progress };
+      } else {
+        delete patch.progress;
+      }
+      if (Array.isArray(data.steps)) {
+        patch.progress = {
+          ...(existing.progress || {}),
+          ...(patch.progress || {}),
+          steps: data.steps,
+          total_steps: patch.progress?.total_steps ?? data.steps.length
+        };
+      }
+      if (Array.isArray(data.clues)) {
+        patch.clues = this._mergeClues(existing.clues || [], data.clues);
+      } else {
+        delete patch.clues;
+      }
+
+      const updated = {
+        ...existing,
+        ...patch,
+        id: existing.id,
+        status: 'active',
+        created_at: existing.created_at,
+        updated_at: Date.now()
+      };
+      active[existing.id] = updated;
+      missions.active = active;
+      stateManager.setSub('_missions', missions);
+      eventBus.emit('mission:updated-active', updated);
+      return updated;
+    }
+
+    const missionId = data.id || `mission_${Date.now()}`;
+
     const mission = {
-      id: data.id || `mission_${Date.now()}`,
+      id: missionId,
       rank: data.rank || 'D',
-      title: data.title || '未知任务',
+      title: this._usableMissionTitle(data.title) || this._deriveMissionTitle(data),
       description: data.description || '',
       type: data.type || '杂务',
       client: data.client || data.requester || '',
@@ -79,27 +138,13 @@ class MissionSystem {
       objective: data.objective || data.description || '',
       risk: data.risk || '低',
       deadline: data.deadline || '',
-      reward_ryo: data.reward?.ryo || data.ryo_reward || 0,
-      reward_exp: data.reward?.exp || data.exp_reward || 0,
+      reward_ryo: data.reward?.ryo ?? data.ryo_reward ?? data.reward_ryo ?? 0,
+      reward_exp: data.reward?.exp ?? data.exp_reward ?? data.reward_exp ?? 0,
       clues: data.clues || [],
       progress: data.progress || { current_step: 0, total_steps: data.steps?.length || 0, steps: data.steps || [] },
       status: 'active',
       created_at: Date.now()
     };
-
-    const existing = active[mission.id];
-    if (existing) {
-      mission.id = existing.id;
-      mission.created_at = existing.created_at;
-      mission.progress = { ...(existing.progress || {}), ...(mission.progress || {}) };
-      mission.clues = this._mergeClues(existing.clues || [], mission.clues || []);
-      mission.updated_at = Date.now();
-      active[mission.id] = { ...existing, ...mission };
-      missions.active = active;
-      stateManager.setSub('_missions', missions);
-      eventBus.emit('mission:updated-active', active[mission.id]);
-      return active[mission.id];
-    }
 
     active[mission.id] = mission;
     missions.active = active;
@@ -209,6 +254,13 @@ class MissionSystem {
 
   _normalizeInstruction(data) {
     const next = { ...data };
+    for (const key of ['title', 'name', 'mission_name', 'missionName', 'task_name', '任务名', '任务名称']) {
+      const title = this._usableMissionTitle(next[key]);
+      if (title) {
+        next.title = title;
+        break;
+      }
+    }
     const isNewMissionStatus = next.status === 'accepted' || next.status === 'in_progress';
     if (isNewMissionStatus) next.status = 'active';
     if (next.progress_update && !next.progress) {
@@ -219,6 +271,46 @@ class MissionSystem {
       if (!isNewMissionStatus) next.status = 'progress';
     }
     return next;
+  }
+
+  _deriveMissionTitle(data) {
+    for (const value of [data.objective, data.description]) {
+      const text = this._missionText(value);
+      if (!text) continue;
+      const firstSentence = text.split(/[\r\n。！？!?；;]/, 1)[0].trim() || text;
+      return firstSentence.length > 32 ? `${firstSentence.slice(0, 31)}…` : firstSentence;
+    }
+
+    const rawId = this._missionText(data.id);
+    if (rawId) {
+      const readableId = rawId
+        .replace(/^mission[_:\-\s]*/i, '')
+        .replace(/[_-]+/g, ' ')
+        .trim();
+      return readableId ? `任务·${readableId}` : `任务·${rawId}`;
+    }
+    return '新任务';
+  }
+
+  _usableMissionTitle(value) {
+    const title = this._missionText(value);
+    if (!title || /^(?:未知任务|未命名任务|未知|unknown(?:\s+(?:mission|task))?)$/i.test(title)) return '';
+    return title;
+  }
+
+  _missionText(value) {
+    if (typeof value === 'string' || typeof value === 'number') {
+      return String(value).replace(/\s+/g, ' ').trim();
+    }
+    if (Array.isArray(value)) {
+      return value.map(item => this._missionText(item)).filter(Boolean).join('、');
+    }
+    if (!value || typeof value !== 'object') return '';
+    for (const key of ['title', 'name', 'summary', 'description', 'objective', 'target', 'text']) {
+      const text = this._missionText(value[key]);
+      if (text) return text;
+    }
+    return '';
   }
 
   _mergeClues(existing, incoming) {

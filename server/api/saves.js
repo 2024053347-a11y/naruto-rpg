@@ -5,6 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { config } from '../config.js';
 import * as db from '../db/index.js';
 import { requireAuth } from '../middleware/auth.js';
+import { inspectTimelineSave } from '../../js/core/timeline-save-schema.js';
 
 // 存档可达数百 MB，同步 gzip 会长时间冻结事件循环，故使用异步版本
 const gzip = promisify(zlib.gzip);
@@ -20,6 +21,19 @@ router.use(json({ limit: `${config.saves.maxSizeMb + 1}mb` }));
 // 路径参数安全校验：只允许 UUID 和字母数字+连字符格式
 function validateSaveId(id) {
   return typeof id === 'string' && /^[a-zA-Z0-9_-]+$/.test(id) && id.length <= 64 && !id.includes('..');
+}
+
+function getPreviewDataError(value) {
+  if (value === undefined) return null;
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return '存档预览数据必须为 JSON 对象';
+  }
+
+  const sizeBytes = Buffer.byteLength(JSON.stringify(value), 'utf8');
+  if (sizeBytes > config.saves.maxPreviewSizeKb * 1024) {
+    return `存档预览数据过大！最大允许 ${config.saves.maxPreviewSizeKb}KB`;
+  }
+  return null;
 }
 
 /**
@@ -79,12 +93,16 @@ router.post('/', async (req, res) => {
   if (typeof slot_name !== 'string' || !slot_name.trim()) {
     return res.status(400).json({ error: '存档名称必须为非空字符串' });
   }
-  if (save_data == null || typeof save_data !== 'object') {
-    return res.status(400).json({ error: '存档数据必须为 JSON 对象或数组' });
-  }
+  const previewDataError = getPreviewDataError(preview_data);
+  if (previewDataError) return res.status(400).json({ error: previewDataError });
+  const saveInspection = inspectTimelineSave(save_data);
+  if (!saveInspection.valid) return res.status(400).json({
+    error: '存档数据不是有效的时间线存档',
+    details: saveInspection.errors.slice(0, 4)
+  });
 
   try {
-    // 1. 检查槽位数量限制
+    // 1. 满槽时先做廉价快拒；最终仍由仓储内的原子检查兜住并发竞争。
     const currentCount = await db.getUserSaveCount(userId);
     if (currentCount >= config.saves.maxSlots) {
       return res.status(400).json({ error: `云存档已满！每个用户最多允许创建 ${config.saves.maxSlots} 个存档。请先删除部分旧存档。` });
@@ -102,17 +120,20 @@ router.post('/', async (req, res) => {
     // 3. gzip 压缩存档内容
     const compressedData = await gzip(jsonString);
 
-    // 4. 生成唯一 ID 并存入数据库
+    // 4. 生成唯一 ID，并在同一个仓储事务中检查槽位与写入存档
     const saveId = randomUUID();
     const normalizedSlotName = slot_name.trim().substring(0, 50);
-    await db.insertSave({
+    const inserted = await db.insertSaveWithinUserLimit({
       id: saveId,
       user_id: userId,
       slot_name: normalizedSlotName,
       preview_data: preview_data || {},
       save_data: compressedData,
       size_bytes: sizeBytes
-    });
+    }, config.saves.maxSlots);
+    if (!inserted) {
+      return res.status(400).json({ error: `云存档已满！每个用户最多允许创建 ${config.saves.maxSlots} 个存档。请先删除部分旧存档。` });
+    }
 
     console.log(`[API SAVES] User ${req.user.username} created new save: ${slot_name} (${saveId})`);
     res.status(201).json({
@@ -138,8 +159,14 @@ router.put('/:id', async (req, res) => {
   if (slot_name !== undefined && (typeof slot_name !== 'string' || !slot_name.trim())) {
     return res.status(400).json({ error: '存档名称必须为非空字符串' });
   }
-  if (save_data !== undefined && (save_data == null || typeof save_data !== 'object')) {
-    return res.status(400).json({ error: '存档数据必须为 JSON 对象或数组' });
+  const previewDataError = getPreviewDataError(preview_data);
+  if (previewDataError) return res.status(400).json({ error: previewDataError });
+  if (save_data !== undefined) {
+    const saveInspection = inspectTimelineSave(save_data);
+    if (!saveInspection.valid) return res.status(400).json({
+      error: '存档数据不是有效的时间线存档',
+      details: saveInspection.errors.slice(0, 4)
+    });
   }
 
   try {

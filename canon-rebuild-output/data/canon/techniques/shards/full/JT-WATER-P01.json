@@ -1,0 +1,5210 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-WATER-P01",
+    "group": "water",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 43,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-WATER-0001",
+      "canonical_name": "无尘迷塞",
+      "aliases": [
+        "无尘迷塞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "无尘迷塞利用水蒸气弯曲使用者周围的光线，使其隐形。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "无尘迷塞",
+          "Dustless Bewildering Cover",
+          "Mujin Meisai"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 524,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Dustless_Bewildering_Cover"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Dustless Bewildering Cover",
+        "Mujin Meisai"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0002",
+      "canonical_name": "天泣",
+      "aliases": [
+        "天泣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "天泣是千手扉间使用的忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天泣",
+          "Heavenly Weeping",
+          "Tenkyū"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 661,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Heavenly_Weeping"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Heavenly Weeping",
+        "Tenkyū"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0003",
+      "canonical_name": "霧隠れ之术",
+      "aliases": [
+        "霧隠れ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "D",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 15,
+      "power": 10,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术是雾隐忍者的专长。使用者用查克拉充满空气并控制雾的浓度。一旦雾浓到对手看不见，他们就无法对使用者进行有效的防御。桃地再不斩曾著名地使用此术进行暗杀；雾气可以利用周围的水制造，感知型忍者仍然可以在视线受阻的情况下找到目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MEI-TERUMI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "霧隠れ之术",
+          "Hiding in Mist Technique",
+          "Kirigakure no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 12,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Hiding_in_Mist_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "D",
+        "pressure": "standard",
+        "reference_pool": 100,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Hiding in Mist Technique",
+        "Kirigakure no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0004",
+      "canonical_name": "水化之术",
+      "aliases": [
+        "水化之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~鬼灯一族,忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术是鬼灯一族的标志，允许使用者随意液化身体的任何部位，从头发到手臂的肌肉。当使用者受到物理攻击时，被击中的部位变成液体，使攻击穿过而不造成伤害。使用者然后凝固回原形。此术通常是自主的，允许族人自动液化。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MANGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SUIGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HE-CREATED-A-TECHNIQUE-LIKE-THIS-ONE-BASED-OFF-HIS-RESEARCH-",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水化之术",
+          "Hydrification Technique",
+          "Suika no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 346,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Hydrification_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Hydrification Technique",
+        "Suika no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden~hōzuki-clan,-ninjutsu,",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0005",
+      "canonical_name": "雷遁·感激波",
+      "aliases": [
+        "雷遁·感激波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "雷遁,水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种同时使用水遁和雷遁的术。达鲁伊从口中释放出巨大的水波后，将雷电混入其中，瞬间电击困在水中的目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DARUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷遁·感激波",
+          "Lightning Release: Wave of Inspiration",
+          "Raiton: Kangekiha"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 461,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Release%3A_Wave_of_Inspiration"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Release: Wave of Inspiration",
+        "Raiton: Kangekiha"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "lightning-release,-water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WATER-0006",
+      "canonical_name": "雷水龙弾",
+      "aliases": [
+        "雷水龙弾",
+        "雷 水 龙 弹"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "水遁,雷遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雷水龙弹是照美冥和艾使用的合作忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-A-FOURTH-RAIKAGE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MEI-TERUMI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雷水龙弾",
+          "Lightning Water Dragon Bullet",
+          "Raisuiryūdan"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 588,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Lightning_Water_Dragon_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Lightning Water Dragon Bullet",
+        "Raisuiryūdan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "water-release,-lightning-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WATER-0007",
+      "canonical_name": "雨虎自在之术",
+      "aliases": [
+        "雨虎自在之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "雨虎自在术是一种接触型感知忍术，允许使用者自由操纵掺入自身查克拉的雨。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雨虎自在之术",
+          "Rain Tiger at Will Technique",
+          "Ukojizai no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 368,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Rain_Tiger_at_Will_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Rain Tiger at Will Technique",
+        "Ukojizai no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0008",
+      "canonical_name": "感知水球",
+      "aliases": [
+        "感知水球"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 117,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过形成一个水球，使用者可以用它来监视特定区域的查克拉信号。个体或群体在水球中表现为大小不一的气泡，查克拉越大气泡越大。水球本身并不是很好的探测方式，需要现场报告来定位应追踪的目标。当与感知屏障连接时，这种不精确性会得到缓解。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-AO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-INOICHI-YAMANAKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKOI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KUSSAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "感知水球",
+          "Sensing Water Sphere",
+          "Kanchi Suikyū"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 419,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sensing_Water_Sphere"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sensing Water Sphere",
+        "Kanchi Suikyū"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0009",
+      "canonical_name": "しゃぼん玉の忍术",
+      "aliases": [
+        "しゃぼん玉の忍术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,战斗流派",
+        "水遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "肥皂泡忍术是水遁性质变化的一个分支忍术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-UTAKATA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-CHINO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "しゃぼん玉の忍术",
+          "Soap Bubble Ninjutsu",
+          "Shabondama no Ninjutsu",
+          "Soap Bubble Ninja Technique"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 564,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Soap_Bubble_Ninjutsu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Soap Bubble Ninjutsu",
+        "Shabondama no Ninjutsu",
+        "Soap Bubble Ninja Technique"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-fighting-style",
+        "water-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0010",
+      "canonical_name": "水飴鉄炮",
+      "aliases": [
+        "水飴鉄炮"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者揉合查克拉和自然能量，将其转化为大量高粘度水存在于口中，然后用难以置信的力量向外吐出。此术投射物般的力量加上其庞大的体积，使其能够迅速覆盖广阔区域。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAMAKICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水飴鉄炮",
+          "Starch Syrup Gun",
+          "Mizuame Teppō"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 642,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Starch_Syrup_Gun"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Starch Syrup Gun",
+        "Mizuame Teppō"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0011",
+      "canonical_name": "蒸危暴威",
+      "aliases": [
+        "蒸危暴威"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,分身术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 97,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "蒸危暴威是鬼灯幻月的绝技。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "蒸危暴威ジョウキボーイ",
+          "Steaming Danger Tyranny",
+          "Jōki Bōi"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 556,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Steaming_Danger_Tyranny"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Steaming Danger Tyranny",
+        "Jōki Bōi"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-clone-techniques,",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0012",
+      "canonical_name": "蒸危暴威·袖切り",
+      "aliases": [
+        "蒸危暴威·袖切り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,武器术,分身术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 97,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用蒸危暴威，其能在其中一只手上形成一把斧头。斧头可用于战斗目的。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "蒸危暴威·袖切り",
+          "Steaming Danger Tyranny: Sleeve Cutter",
+          "Jōki Bōi: Sodekiri"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 556,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Steaming_Danger_Tyranny%3A_Sleeve_Cutter"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Steaming Danger Tyranny: Sleeve Cutter",
+        "Jōki Bōi: Sodekiri"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-bukijutsu,-clone-techniques",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0013",
+      "canonical_name": "千杀水翔",
+      "aliases": [
+        "千杀水翔"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~雪之一族,忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从附近的水源中创造出一千根长针，包围目标。使用者仔细瞄准目标并以高速发射针。被针击中的目标会受到严重伤害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "千杀水翔",
+          "Thousand Flying Water Needles of Death",
+          "Sensatsu Suishō"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 24,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Thousand_Flying_Water_Needles_of_Death"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Thousand Flying Water Needles of Death",
+        "Sensatsu Suishō"
+      ],
+      "lookup_classes": [
+        "hiden~yuki-clan,-ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0014",
+      "canonical_name": "颶风水渦之术",
+      "aliases": [
+        "颶风水渦之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "风遁,水遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这种合作忍术利用投出的风遁·螺旋丸的狂暴旋转来吞噬水遁·破奔流产生的水流，制造出大量的水蒸气。一旦发动，强风在高浓度雾中旋转，形成坚固的屏障。螺旋丸剧烈旋转产生的雾也有剥夺敌人视野的效果。当然，雾在逃跑时可用作烟幕。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "颶风水渦之术",
+          "Typhoon Water Vortex Technique",
+          "Gufū Suika no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 337,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Typhoon_Water_Vortex_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Typhoon Water Vortex Technique",
+        "Gufū Suika no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "wind-release,-water-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WATER-0015",
+      "canonical_name": "水分身之术",
+      "aliases": [
+        "水分身之术",
+        "水 分身 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,分身术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 32,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术起源于雾隐村。利用周围的水，使用者创造出一个或多个自身的复制体。与标准分身术不同，这些水分身在物理上是真实的，允许它们与他人互动甚至执行与使用者相同的术。虽然单个水分身对标准下忍来说可能相当具有挑战性，在动画中，分身也可以分散成雾，作为烟幕短暂覆盖该区域。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水分身之术",
+          "Water Clone Technique",
+          "Mizu Bunshin no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 12,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Clone_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Clone Technique",
+        "Mizu Bunshin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-clone-techniques",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0016",
+      "canonical_name": "水鉄炮之术",
+      "aliases": [
+        "水鉄炮之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~鬼灯一族,忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水铁炮之术是鬼灯一族使用的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MANGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SUIGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水鉄炮之术",
+          "Water Gun Technique",
+          "Mizudeppō no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 556,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Gun_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Gun Technique",
+        "Mizudeppō no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden~hōzuki-clan,-ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0017",
+      "canonical_name": "水鉄炮·2丁",
+      "aliases": [
+        "水鉄炮·2丁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~鬼灯一族,忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水铁炮之术的更致命版本，使用者不是使用一只手，而是同时使用双手，像双持武器一样同时发射两发强力的水弹。此术的威力足以摧毁带土部分面部。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SUIGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水鉄炮·2丁",
+          "Water Gun: Two Guns",
+          "Mizudeppō: Nichō"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 663,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Gun%3A_Two_Guns"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Gun: Two Guns",
+        "Mizudeppō: Nichō"
+      ],
+      "lookup_classes": [
+        "hiden~hōzuki-clan,-ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0018",
+      "canonical_name": "水牢鮫踊り之术",
+      "aliases": [
+        "水牢鮫踊り之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "S",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在使用水遁·爆水冲波后，鬼鲛将水形成一个巨大的牢笼。由于他充当水穹的中心，水穹会改变位置以反映他移动的方向，使得目标在他持续追击时难以逃脱。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水牢鮫踊り之术",
+          "Water Prison Shark Dance Technique",
+          "Suirō Sameodori no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 472,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Prison_Shark_Dance_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "S",
+        "pressure": "standard",
+        "reference_pool": 660,
+        "expected_uses": [
+          5,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Prison Shark Dance Technique",
+        "Suirō Sameodori no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release,",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WATER-0019",
+      "canonical_name": "水牢之术",
+      "aliases": [
+        "水牢之术",
+        "水牢术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 28,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术将目标困在水球中；水可以从周围环境抽取或从使用者口中吐出。构成水球的水明显很重，因此被困在水牢中的人通常无法自行逃脱。日向宁次能够通过同时从所有穴位释放查克拉来摧毁水牢而逃脱。在晓秘传中，干柿鬼鲛通过增加水牢内的水量而逃脱。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水牢之术",
+          "Water Prison Technique",
+          "Suirō no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 13,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Prison_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Prison Technique",
+        "Suirō no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0020",
+      "canonical_name": "水遁·千食鮫",
+      "aliases": [
+        "水遁·千食鮫"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水遁·千食鲛是水遁·五食鲛的更强版本，使用者创造出一千条水鲨鱼，形成巨大浪潮般涌向并攻击对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·千食鮫",
+          "Water Release: A Thousand Feeding Sharks",
+          "Suiton: Senshokukō"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 506,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_A_Thousand_Feeding_Sharks"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: A Thousand Feeding Sharks",
+        "Suiton: Senshokukō"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0021",
+      "canonical_name": "水遁·泡沫之术",
+      "aliases": [
+        "水遁·泡沫之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "吹出数十个气泡后，使用者操纵它们从各个方向包围敌人。只需与对手最轻微的物理接触就能使这些气泡破裂，产生虽小但强大的爆炸。使用者然后可以通过打响指使它们同时引爆。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-UTAKATA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·泡沫之术",
+          "Water Release: Bubbles Technique",
+          "Suiton: Hōmatsu no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 564,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Bubbles_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Bubbles Technique",
+        "Suiton: Hōmatsu no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0022",
+      "canonical_name": "水遁·爆水冲波",
+      "aliases": [
+        "水遁·爆水冲波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吐出大量水，用前进的洪流吞噬并压垮敌人。使用者可以乘浪而行，以高速移动并攻击已失去平衡的敌人。创造的水量与使用的查克拉量成正比；当与鬼鲛庞大的查克拉一起使用时，即使是干燥的荒地也能变成一片小海洋。之后多余的水可用于额外的水遁术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·爆水冲波",
+          "Water Release: Exploding Water Colliding Wave",
+          "Suiton: Bakusui Shōha"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 256,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Exploding_Water_Colliding_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Exploding Water Colliding Wave",
+        "Suiton: Bakusui Shōha"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0023",
+      "canonical_name": "水遁·五食鮫",
+      "aliases": [
+        "水遁·五食鮫"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将手放在水源表面，从五个指尖向水中释放查克拉，将其转化为五条凶猛的鲨鱼。鲨鱼以高速环绕目标，产生汹涌的水流剥夺猎物的行动自由，其锋利的牙齿在每次连续攻击中撕裂敌人。在动画中，这些鲨鱼可以从周围的水中再生，使其难以被摧毁。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·五食鮫",
+          "Water Release: Five Feeding Sharks",
+          "Suiton: Goshokuzame"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 258,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Five_Feeding_Sharks"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Five Feeding Sharks",
+        "Suiton: Goshokuzame"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0024",
+      "canonical_name": "水遁·大爆水冲波",
+      "aliases": [
+        "水遁·大爆水冲波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吐出一片巨大的水花，然后迅速扩大并形成一个巨大的水牢，将目标困在其中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·大爆水冲波",
+          "Water Release: Great Exploding Water Colliding Wave",
+          "Suiton: Dai Bakusui Shōha"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 471,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Great_Exploding_Water_Colliding_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Great Exploding Water Colliding Wave",
+        "Suiton: Dai Bakusui Shōha"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0025",
+      "canonical_name": "水遁·大鮫弾之术",
+      "aliases": [
+        "水遁·大鮫弾之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉吸收术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 78,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水遁·大鲛弹之术是水遁·水鲛弹之术的更强版本。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·大鮫弾之术",
+          "Water Release: Great Shark Bullet Technique",
+          "Suiton: Daikōdan no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 506,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Great_Shark_Bullet_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "standard",
+        "reference_pool": 415,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Great Shark Bullet Technique",
+        "Suiton: Daikōdan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-absorption-techniques",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0026",
+      "canonical_name": "水遁·豪水腕之术",
+      "aliases": [
+        "水遁·豪水腕之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~鬼灯一族,忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过将水化之术付诸实用，手臂的肌肉被暂时增大和强化。水分从全身聚集并压缩到整条手臂，像即时充气一样。然而，由于必须适当控制体内的水分平衡，此术的难度非常高。此术赋予使用者超人的力量，能轻松打破岩壁和钢门。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SUIGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·豪水腕之术",
+          "Water Release: Great Water Arm Technique",
+          "Suiton: Gōsuiwan no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 348,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Great_Water_Arm_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Great Water Arm Technique",
+        "Suiton: Gōsuiwan no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden~hōzuki-clan,-ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0027",
+      "canonical_name": "水遁·大瀑布之术",
+      "aliases": [
+        "水遁·大瀑布之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 90,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "大量的水从现有水源引导或从口中喷出数十米高；同时操纵如此多的水需要大量的查克拉。到达足够高度后，水像巨大瀑布一样倾泻到目标区域。瀑布的力量足以挖空地面，冲走区域内的一切。之后残余的一切看起来就像发生了某种自然灾害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·大瀑布之术",
+          "Water Release: Great Waterfall Technique",
+          "Suiton: Daibakufu no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 15,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Great_Waterfall_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Great Waterfall Technique",
+        "Suiton: Daibakufu no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0028",
+      "canonical_name": "水遁·鉄炮玉",
+      "aliases": [
+        "水遁·鉄炮玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用查克拉在体内产生水。然后将水从口中以球状投射物吐出，其破坏力取决于注入其中的查克拉量。水球快速飞向目标，撞击时造成严重伤害。当蛤蟆文太使用此术时，水球不仅特别大，而且由于在空中发射而更加致命，增加了重力带来的力量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAMABUNTA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·鉄炮玉",
+          "Water Release: Gunshot",
+          "Suiton: Teppōdama"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 135,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Gunshot"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Gunshot",
+        "Suiton: Teppōdama"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0029",
+      "canonical_name": "水遁·水飴拿原",
+      "aliases": [
+        "水遁·水飴拿原"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 32,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者吐出高粘度水覆盖地面。这种粘稠的液体流可用于形成粘性陷阱，抑制目标的机动性。使用者可以用此术有效地减少敌人的活动区域，在战场上获得优势。此术的正常范围通常只有几米，但可以制造出一整个池塘的糖浆。糖浆可以在创造后被操纵移动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-IZUMO-KAMIZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAIKEN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水飴拿原",
+          "Water Release: Starch Syrup Capturing Field",
+          "Suiton: Mizuame Nabara"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 326,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Starch_Syrup_Capturing_Field"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Starch Syrup Capturing Field",
+        "Suiton: Mizuame Nabara"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0030",
+      "canonical_name": "水遁·楯乌帽子",
+      "aliases": [
+        "水遁·楯乌帽子"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~鬼灯一族,忍术",
+        "水遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水月使用水化之术与水源融合后，可以形成一道巨大的波浪，形似恶魔鱼。水月可以用这种形态与更大的对手战斗，或者用来保护盟友免受攻击。虽然它强到足以 物理性地推开尾兽模式的杀人蜂，但不足以承受近距离的尾兽玉，之后水月失去意识，陷入果冻状状态。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SUIGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·楯烏帽子",
+          "Water Release: Tate Eboshi",
+          "Suiton: Tate Eboshi",
+          "Water Release: Shield Crow Hat Child"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 414,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Tate_Eboshi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Tate Eboshi",
+        "Suiton: Tate Eboshi",
+        "Water Release: Shield Crow Hat Child"
+      ],
+      "lookup_classes": [
+        "hiden~hōzuki-clan,-ninjutsu",
+        "water-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0031",
+      "canonical_name": "水遁·破奔流",
+      "aliases": [
+        "水遁·破奔流"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术在使用者手中产生螺旋水，高速射向敌人。在动画中，它也被展示可以从周围区域以汹涌的波浪形式召唤。它还可以与风遁·螺旋丸结合，创造出飓风水涡之术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·破奔流",
+          "Water Release: Tearing Torrent",
+          "Suiton: Hahonryū"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 337,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Tearing_Torrent"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Tearing Torrent",
+        "Suiton: Hahonryū"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0032",
+      "canonical_name": "水遁·水弾之术",
+      "aliases": [
+        "水遁·水弾之术",
+        "水 遁: 水 弹 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "水遁·水弹之术是一种高度多变的水遁术，有许多变体。在胃中揉合查克拉后，使用者以强大的急流形式向预定目标吐出大量水。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MEI-TERUMI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MOMOSHIKI-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水弾之术",
+          "Water Release: Water Bullet Technique",
+          "Suiton: Suidan no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 612,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Bullet_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Bullet Technique",
+        "Suiton: Suidan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0033",
+      "canonical_name": "水遁·水龙弾之术",
+      "aliases": [
+        "水遁·水龙弾之术",
+        "水 遁: 水 龙 弹 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将水塑造成龙的形状，然后将其导向目标。水冲击目标，造成显著的物理伤害。理想情况下，使用者会利用已有的水源施展此术，但足够熟练的使用者可以自己创造水，从口中吐出龙。使用者越有天赋，构成龙的水量就越大。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MEI-TERUMI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MOMOSHIKI-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ZABUZA-MOMOCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水龙弾之术",
+          "Water Release: Water Dragon Bullet Technique",
+          "Suiton: Suiryūdan no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 15,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Dragon_Bullet_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Dragon Bullet Technique",
+        "Suiton: Suiryūdan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0034",
+      "canonical_name": "水遁·水牙弾",
+      "aliases": [
+        "水遁·水牙弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者水下形成投射物；由于高度压缩，构成投射物的水是高压的。投射物然后以高速从水中射向目标，通过添加旋转运动可以使其更致命。此术在水中进行的战斗中特别有用，因为投射物可以从任何方向（理想情况下是盲点）射向目标。使用者通常会在使用此术前试图分散目标的注意力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水牙弾",
+          "Water Release: Water Fang Bullet",
+          "Suiton: Suigadan"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 142,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Fang_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Fang Bullet",
+        "Suiton: Suigadan"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0035",
+      "canonical_name": "水遁·水阵柱",
+      "aliases": [
+        "水遁·水阵柱"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种防御术，将体内揉合的查克拉转化为水，然后从口中以密集的弯曲急流吐出，几乎瞬间形成圆形屏障，可用于拦截来袭攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MEI-TERUMI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水阵柱",
+          "Water Release: Water Formation Pillar",
+          "Suiton: Suijinchū"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 577,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Formation_Pillar"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Formation Pillar",
+        "Suiton: Suijinchū"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0036",
+      "canonical_name": "水遁·水阵壁",
+      "aliases": [
+        "水遁·水阵壁",
+        "水 遁: 水 阵 壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中向地面吐出水柱，水环绕他们并上升形成墙壁。水墙保护其范围内的任何人免受攻击，墙的强度由注入的查克拉量决定。使用者控制墙的持续时间以及用水量。由于水是透明的，墙不会阻碍使用者的视线，使他们能够无阻碍地做出下一步行动。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BORO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-DARUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水阵壁",
+          "Water Release: Water Formation Wall",
+          "Suiton: Suijinheki"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 120,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Formation_Wall"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Formation Wall",
+        "Suiton: Suijinheki"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0037",
+      "canonical_name": "水遁·水镜之术",
+      "aliases": [
+        "水遁·水镜之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传,忍术",
+        "水遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者在对手面前创造一个大而平的圆形水面。其表面像镜子一样完美地反射攻击目标。通过用杖钩住\"镜子\"并将其旋转90度，反射从镜子中出现并实体化，与镜子中的目标碰撞。由于这些反射使用了与其对应者完全相同的术——无论其类型如何——它们完全反击了攻击，同时将其弹回。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAGURA-KARATACHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水镜之术",
+          "Water Release: Water Mirror Technique",
+          "Suiton: Mizukagami no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 564,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Mirror_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Mirror Technique",
+        "Suiton: Mizukagami no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden,-ninjutsu",
+        "water-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0038",
+      "canonical_name": "水遁·水断波",
+      "aliases": [
+        "水遁·水断波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在胃中揉合查克拉并将其转化为水后，使用者将其作为高压水流喷出，威力足以轻松切断神树的树根。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TOBIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水断波",
+          "Water Release: Water Severing Wave",
+          "Suiton: Suidanha"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 646,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Severing_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Severing Wave",
+        "Suiton: Suidanha"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0039",
+      "canonical_name": "水遁·水鮫弾之术",
+      "aliases": [
+        "水遁·水鮫弾之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者用手操纵一定量的水；通过向一个方向 推出手，被操纵的水就向那个方向发射。在移动过程中，水体呈现鲨鱼的形状，只要使用者保持手伸出，额外的水就会跟随其后。由于鲨鱼的移动速度和水量，它在撞击时会造成巨大伤害。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水鮫弾之术",
+          "Water Release: Water Shark Bullet Technique",
+          "Suiton: Suikōdan no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 141,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Shark_Bullet_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Shark Bullet Technique",
+        "Suiton: Suikōdan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0040",
+      "canonical_name": "水遁·水喇叭",
+      "aliases": [
+        "水遁·水喇叭"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "水"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过拢起的手从口中发射出一股巨大的水 水流。这看起来像在吹喇叭，因此得名。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KUROTSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水喇叭",
+          "Water Release: Water Trumpet",
+          "Suiton: Mizurappa"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 514,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Water_Trumpet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Water Trumpet",
+        "Suiton: Mizurappa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0041",
+      "canonical_name": "水遁·滝壺之术",
+      "aliases": [
+        "水遁·滝壺之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种通过在没有水脉的地方开发泉水并操纵形成的水流形成波浪来创造瀑布的术。这是一种非常方便的术，可用于训练或放松。另一方面，由于它大规模改变环境，它也有通过迷惑敌人来隐藏自己位置的效果。只要使用者持续注入查克拉，水源、瀑布和水潭的宽度都可以扩大。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·滝壺之术",
+          "Water Release: Waterfall Basin Technique",
+          "Suiton: Takitsubo no Jutsu"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 316,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Waterfall_Basin_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Waterfall Basin Technique",
+        "Suiton: Takitsubo no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    },
+    {
+      "id": "JT-WATER-0042",
+      "canonical_name": "水遁·泡沫乱波",
+      "aliases": [
+        "水遁·泡沫乱波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者吐出大量泡沫状气泡，覆盖地面并降低摩擦力，大大限制对手的移动。气泡以猛烈的力量吐出，能够冲走大多数攻击，如油和火。此术也可用作有效的烟幕。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GIANT-CRUSTACEAN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·泡沫乱波",
+          "Water Release: Wild Bubble Wave",
+          "Suiton: Hōmatsu Rappa"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 374,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Wild_Bubble_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Wild Bubble Wave",
+        "Suiton: Hōmatsu Rappa"
+      ],
+      "lookup_classes": [
+        "ninjutsu,",
+        "water-release,",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-WATER-0043",
+      "canonical_name": "水遁·水乱波",
+      "aliases": [
+        "水遁·水乱波"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "水"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者以瀑布般的方式从口中喷出水来冲走目标。使用者可以通过揉合并释放的查克拉量自由控制此术的威力。虽然被认为是基础水遁术，但它有许多变体。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-YAHIKO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "水遁·水乱波",
+          "Water Release: Wild Water Wave",
+          "Suiton: Mizurappa"
+        ],
+        "tags": [
+          "water",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 373,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Water_Release%3A_Wild_Water_Wave"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-WATER-AUTO",
+        "reviewed_by": "manual-translation-JT-WATER-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Water Release: Wild Water Wave",
+        "Suiton: Mizurappa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "water"
+      ]
+    }
+  ],
+  "unresolved": []
+}

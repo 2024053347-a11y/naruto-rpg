@@ -1,0 +1,3737 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P2-KAGE-COUNTDOWN",
+    "namespace": "P2",
+    "arc_ids": [
+      "ARC-P2-FIVE-KAGE-SUMMIT",
+      "ARC-P2-WAR-DECLARATION",
+      "ARC-P2-ALLIANCE-MOBILIZATION",
+      "ARC-P2-JINCHURIKI-PROTECTION"
+    ],
+    "date_start": "K067-09-01",
+    "date_end": "K067-12-30"
+  },
+  "days": [
+    {
+      "id": "DAY-P2-KAGE-901",
+      "date": "K067-09-01",
+      "title": "战后权力与外交证据",
+      "arc_id": "ARC-P2-FIVE-KAGE-SUMMIT",
+      "day_goal": "先审计佩恩袭击后的真实领导权、损失和涉晓证据，再决定木叶是否以及由谁参加五影会谈。",
+      "start_state": [
+        "承接P2-BROTHERS-PAIN实际末端：纲手、长门、自来也、木叶设施与伤亡状态均不得由本分片改写。",
+        "佐助的阵营、位置、是否袭击奇拉比以及谁掌握鼬真相，只以此前已发生记录为准。",
+        "三代火影若早已死亡便不能恢复权限；纲手、团藏与其他代理人的职权必须有现存任命链。",
+        "D末日已经结算云隐照会、木叶正式答复及负责人；本日只复核未决回执与新增证据，不重复使者初次到达。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-KAGE-KONOHA-AUDIT-01",
+          "title": "木叶战后权力审计",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "木叶临时政务厅",
+          "participants": [
+            "现任火影或合法代理",
+            "木叶顾问",
+            "奈良鹿久",
+            "情报与医疗负责人",
+            "玩家角色（若具有政务、情报或救灾权限）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "P2-BROTHERS-PAIN已经结算木叶领导、伤亡和设施状态。",
+            "至少一名仍具合法权限者能够召集临时政务会议。"
+          ],
+          "blockers": [
+            "木叶权力争议尚无任何可执行的临时规则。",
+            "袭击仍在持续，政务厅无法安全集中。"
+          ],
+          "setup": "临时政务厅将火影任命文书、伤亡名册、医院承载量、村防缺口和晓情报分开核对；玩家只能凭实际职权质询、补证或提议代表人。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-KONOHA-AUDIT-01-01",
+              "order": 10,
+              "summary": "负责人逐项确认谁仍能签发外交与军事命令。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-KONOHA-AUDIT-01-02",
+              "order": 20,
+              "summary": "情报班区分佩恩袭击亲历、送达报告与尚未证实的幕后推断。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-KONOHA-AUDIT-01-03",
+              "order": 30,
+              "summary": "玩家选择支持现任者出席、推举受限代表，或要求先解决任命争议。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-KAGE-KONOHA-AUDIT-01-04",
+              "order": 40,
+              "summary": "会议签署一份带证据等级与公开范围的会谈授权。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶的会谈席位与权限来源可追踪。",
+            "佩恩战损和晓情报不会被夸大为全村皆知。"
+          ],
+          "state_changes": [
+            "记录现任领导、替代代表、可动用护卫、战后库存、机密证据持有人与尚未修复设施。"
+          ],
+          "stop_condition": "授权书、护卫上限和不能披露的情报清单均完成签署。",
+          "fallbacks": [
+            {
+              "condition": "木叶权力争议尚无任何可执行的临时规则。；袭击仍在持续，政务厅无法安全集中。",
+              "status": "altered",
+              "direction": "由火之国大名授权的联络官和幸存值勤指挥者先组成受限代表团；若仍在交战则延期出席并以加密通信提交证据。",
+              "preserves": "保留木叶必须以真实领导权和战损进入跨国安全协商的因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第454章及五影会谈前置",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把佩恩战后分支状态转化为可审计的外交授权"
+            }
+          ],
+          "design_rationale": "五影资格必须来自当前分支中的合法权力，而非自动把团藏放上席位。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-KAGE-CLOUD-DEMAND-01",
+          "title": "云隐照会的回执复核",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "木叶外交接待所与加密联络席",
+          "participants": [
+            "木叶外交联络忍者",
+            "萨姆伊小队或实际云隐联络人（若仍在场）",
+            "鸣人或佐井（仅在实际到场且获准陈述时）",
+            "玩家角色（若获准参与复核）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "D末日已归档一份可认证的云隐照会及木叶正式答复或联合调查决定。",
+            "木叶已指定能维护后续回执的外交负责人。"
+          ],
+          "blockers": [
+            "D明确没有有效照会，或云隐已正式撤回且没有新增事项。",
+            "档案损毁且云隐通信无法重新认证。"
+          ],
+          "setup": "外交席调出D末日已经签署的云隐照会与木叶答复，只处理尚未解决的证据请求、联合搜救和返程回执；没有新证据时不得复演使者初次到达或重新制造鸣人受伤。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-CLOUD-DEMAND-01-01",
+              "order": 10,
+              "summary": "联络忍者核对D末日答复、负责人、未决证据和云隐是否确认收件。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-CLOUD-DEMAND-01-02",
+              "order": 20,
+              "summary": "云隐联络人若仍在场或取得通信，只能补充新证据或指出原答复中的具体争议。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-CLOUD-DEMAND-01-03",
+              "order": 30,
+              "summary": "实际获准到场的鸣人、佐井或玩家可提交有限陈述、申请联合调查或维持原答复；缺席者不生成发言。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-KAGE-CLOUD-DEMAND-01-04",
+              "order": 40,
+              "summary": "双方更新后续负责人、返程或通信路线及五影会谈议题，不重置已经成立的法律状态。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "D末日的正式答复被确认、补充或依法复议，不会重复受理同一原始照会。",
+            "只有实际参与者获得新增证据，鸣人缺席时其伤势、声望和任务许可保持原状态。"
+          ],
+          "state_changes": [
+            "记录回执状态、新增证据、后续负责人、联络路线、实际参与者伤势及奇拉比信息的知情范围。"
+          ],
+          "stop_condition": "既有答复的回执与未决事项完成登记，联络人离开或结束认证通信。",
+          "fallbacks": [
+            {
+              "condition": "D明确没有有效照会，或云隐已正式撤回且没有新增事项。；档案损毁且云隐通信无法重新认证。",
+              "status": "altered",
+              "direction": "没有有效照会时跳过引渡复核，改为整理可独立证明的晓共同威胁；通信中断时保留D末日答复，不制造第二次到访。",
+              "preserves": "保留佐助问题正在破坏村际关系并迫使各方建立共同裁决机制。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第452-453章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足外交文书、披露权限与返程时间"
+            }
+          ],
+          "design_rationale": "旧PAIN资料末端已写萨姆伊小队抵达，D也已完成正式答复；本场承接KAGE旧资料的后续争议和离开，不重复跨分片事件。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶参会权限、战损底账和晓情报等级已经明确。",
+        "D末日的云隐照会答复已完成回执复核、补充或依法结案，没有重复受理。"
+      ],
+      "transition": "K067-09-02至04用于各村接收雷影召集令并核验代表资格；K067-09-05才开始跨国行程。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-KAGE-905",
+      "date": "K067-09-05",
+      "title": "代表团启程与鸣人的请愿",
+      "arc_id": "ARC-P2-FIVE-KAGE-SUMMIT",
+      "day_goal": "给五村代表、护卫和鸣人一行真实旅行路线，同时限制私人请愿不能替代正式外交。",
+      "start_state": [
+        "五村分别掌握的晓、尾兽与战损证据并不相同。",
+        "木叶代表和护卫来自K067-09-01授权；佐助相关情报仍按持有人隔离。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-KAGE-DELEGATIONS-01",
+          "title": "五路代表团登记",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "各国边境联络站与铁之国入境口",
+          "participants": [
+            "五村实际领导或获授权代表",
+            "各代表团护卫",
+            "三船麾下武士联络官"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "雷影或替代召集者已向各村送达议题与安全保证。",
+            "铁之国同意提供中立会场。"
+          ],
+          "blockers": [
+            "某村没有获承认的代表或正在发生无法离开的本土危机。",
+            "铁之国撤回中立承诺。"
+          ],
+          "setup": "各代表团按本国现实领导权出发，在边境登记路线、护卫、封存证据和预计抵达日；铁之国只承认签章与身份均可核验者。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-DELEGATIONS-01-01",
+              "order": 10,
+              "summary": "各村分别封存可公开、仅影级和来源未证实的材料。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-DELEGATIONS-01-02",
+              "order": 20,
+              "summary": "雪路、伤员和护卫上限迫使代表团安排宿营与轮换。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-DELEGATIONS-01-03",
+              "order": 30,
+              "summary": "铁之国联络官核验身份后分配互不冲突的入境路线。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "所有实际参会者有明确出发点、路线和到达条件。"
+          ],
+          "state_changes": [
+            "记录每村代表、护卫、证据封条、旅途消耗和预计K067-09-09前后抵达。"
+          ],
+          "stop_condition": "各代表团完成铁之国入境登记或留下明确缺席原因。",
+          "fallbacks": [
+            {
+              "condition": "某村没有获承认的代表或正在发生无法离开的本土危机。；铁之国撤回中立承诺。",
+              "status": "altered",
+              "direction": "缺席村通过受限通信或后到代表参与；会场失效时转至共同承认的边境据点并延期正式表决。",
+              "preserves": "保留五方必须在中立规则下交换证据并决定联合应对。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第454-456章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足多国旅行、入境核验和证据封存"
+            }
+          ],
+          "design_rationale": "让各村领导不在同一天从世界各处瞬移到会场。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-KAGE-NARUTO-PETITION-01",
+          "title": "雪路上的雷影请愿",
+          "thread_id": "THR-P2-SASUKE-AFTERMATH",
+          "location": "铁之国南部驿站",
+          "participants": [
+            "鸣人",
+            "卡卡西或实际获批护送者",
+            "大和或实际封印支援者（若随行）",
+            "第四代雷影或云隐代表",
+            "玩家角色（若随木叶或云隐一方获准在场）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人实际知道佐助被云隐追捕、自愿请愿并取得旅行与医疗许可。",
+            "鸣人与实际护送者已经按登记路线抵达铁之国南部驿站。",
+            "云隐代表仍在可安全接触的赴会路线。"
+          ],
+          "blockers": [
+            "鸣人伤势或九尾封印风险不允许远行。",
+            "佐助已被依法拘捕、洗清嫌疑或确认死亡。"
+          ],
+          "setup": "鸣人只能在获得旅行许可、医疗允许且追上云隐代表后请求暂缓处置佐助；玩家可帮助他提交证据或阻止私人承诺越权。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-NARUTO-PETITION-01-01",
+              "order": 10,
+              "summary": "实际获批护送者先说明鸣人没有代表木叶撤销国际追捕的权限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-NARUTO-PETITION-01-02",
+              "order": 20,
+              "summary": "鸣人以佐助仍可能被利用为由请求留出调查与拘捕机会。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-NARUTO-PETITION-01-03",
+              "order": 30,
+              "summary": "玩家选择补交证据、提出限时拘捕方案、接受拒绝或中止会面。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-KAGE-NARUTO-PETITION-01-04",
+              "order": 40,
+              "summary": "雷影或代表以奇拉比实际状态和本村伤亡作出书面答复。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "私人关系不会自动撤销追捕令。",
+            "鸣人、实际护送者和玩家只知道会面中披露的云隐信息。"
+          ],
+          "state_changes": [
+            "记录请愿答复、鸣人身体与精神消耗、实际随行成员位置以及下一段雪路补给。"
+          ],
+          "stop_condition": "云隐代表离开驿站继续赴会，木叶小队停止尾随或取得正式同行许可。",
+          "fallbacks": [
+            {
+              "condition": "鸣人伤势或九尾封印风险不允许远行。；佐助已被依法拘捕、洗清嫌疑或确认死亡。",
+              "status": "altered",
+              "direction": "由鸣人提交书面陈述并留在木叶恢复；案件已结时改为参与处置复核，不复演跪求与冲突。",
+              "preserves": "保留鸣人必须面对个人承诺与国际责任冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第457-458章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足旅行许可、医疗限制和正式答复"
+            }
+          ],
+          "design_rationale": "保留鸣人的主动请求，但让跨国司法拥有明确边界。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "实际代表团正在铁之国境内分段行进。",
+        "鸣人的请愿结果与身体状态已登记，不能在会场自动替木叶表态。"
+      ],
+      "transition": "K067-09-06至09用于雪路行进、护卫轮换和会前材料核验；正式会议在K067-09-10召开。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-KAGE-910",
+      "date": "K067-09-10",
+      "title": "五影会谈：证据与领导权",
+      "arc_id": "ARC-P2-FIVE-KAGE-SUMMIT",
+      "day_goal": "在佐助介入之前先让五方交换责任、尾兽和晓的证据，并检验主持人与联盟候选人的独立判断。",
+      "start_state": [
+        "各代表已抵达或登记缺席。",
+        "每村只携带K067-09-05封存的证据；未送达的鼬、佩恩或带土真相不能进入讨论。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-KAGE-SUMMIT-DEBATE-01",
+          "title": "中立席上的责任争论",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "铁之国五影会谈厅",
+          "participants": [
+            "三船",
+            "五村实际代表",
+            "获准列席护卫",
+            "玩家角色（若是正式书记、护卫或代表）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少三个大国与铁之国代表到场，其他村已有可处理的缺席规则。",
+            "会场安检和发言权限已经生效。"
+          ],
+          "blockers": [
+            "代表身份被推翻或会场遭到无法控制的袭击。",
+            "共享证据不足以证明存在跨国威胁。"
+          ],
+          "setup": "三船按议程逐项讨论晓的雇佣记录、尾兽失守、领导被操控疑点与当前战损；玩家可提出证物、质疑来源或要求把未证实内容列为调查项。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-SUMMIT-DEBATE-01-01",
+              "order": 10,
+              "summary": "各村先确认自身代表权限与可披露证据。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-SUMMIT-DEBATE-01-02",
+              "order": 20,
+              "summary": "历史雇佣、奇拉比事件和佩恩袭击引发相互指责。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-SUMMIT-DEBATE-01-03",
+              "order": 30,
+              "summary": "玩家选择推动共同威胁清单、追责优先，或暂缓联盟表决。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-KAGE-SUMMIT-DEBATE-01-04",
+              "order": 40,
+              "summary": "三船形成已证实、争议和保密三栏会议纪要。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "会谈拥有真实证据底稿而非各影凭模型知识争吵。",
+            "联盟仍需经过领导与指挥审计。"
+          ],
+          "state_changes": [
+            "记录各村承认的责任、拒绝披露项、公开知识和需后续验证的带土身份说法。"
+          ],
+          "stop_condition": "首轮议程结束，所有代表收到相同的已证实威胁清单。",
+          "fallbacks": [
+            {
+              "condition": "代表身份被推翻或会场遭到无法控制的袭击。；共享证据不足以证明存在跨国威胁。",
+              "status": "altered",
+              "direction": "改为临时情报协定和下一次表决日期；遭袭时先疏散并由幸存代表通过封存纪要继续谈判。",
+              "preserves": "保留各村必须把分散威胁认知转化为共同决策的功能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第458-459章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立证据分级、议程和会议纪要"
+            }
+          ],
+          "design_rationale": "联盟必须建立在可共享证据上，避免把幕后事实直接变成外交常识。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-KAGE-DANZO-AUDIT-01",
+          "title": "止水之眼的异常",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "铁之国五影会谈厅",
+          "participants": [
+            "木叶实际代表",
+            "三船",
+            "青或其他感知护卫",
+            "各村护卫"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "团藏实际持有可用的止水眼并在会场施术。",
+            "青或等价感知者到场且有能力辨认异常。"
+          ],
+          "blockers": [
+            "团藏未参会、未持有该眼或没有施术。",
+            "识别者缺席、失能或证据不足。"
+          ],
+          "setup": "只有团藏实际参会、持有止水写轮眼且尝试影响主持判断时，青或等价感知者才可能从查克拉特征发现异常。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-DANZO-AUDIT-01-01",
+              "order": 10,
+              "summary": "主持人提出联盟指挥候选人并要求理由。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-DANZO-AUDIT-01-02",
+              "order": 20,
+              "summary": "感知者比对眼部查克拉与已知证物，提出可复核的操控疑点。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-DANZO-AUDIT-01-03",
+              "order": 30,
+              "summary": "会议暂停候选表决，封存影像与证词并限制涉事代表权限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "团藏的联盟领导资格按证据处理。",
+            "未持有或未使用止水眼的分支不会凭空出现操控指控。"
+          ],
+          "state_changes": [
+            "记录谁亲眼识别异常、团藏是否受限、木叶席位是否转为临时代表以及止水眼信息的保密范围。"
+          ],
+          "stop_condition": "联盟候选表决被恢复、延期或改由无争议代表提出。",
+          "fallbacks": [
+            {
+              "condition": "团藏未参会、未持有该眼或没有施术。；识别者缺席、失能或证据不足。",
+              "status": "skipped",
+              "direction": "跳过操控揭露，改以战损、问责和指挥能力正常审查木叶候选；后续证据出现再启动调查。",
+              "preserves": "保留联盟领导必须通过独立审计，不能因主持人一句话直接任命。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第459章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足操控证据的复核与席位处置"
+            }
+          ],
+          "design_rationale": "把团藏丑闻绑定到实际眼睛、行为与识别者。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "各国拥有一份分级会议纪要。",
+        "木叶代表和联盟候选资格已经审计或明确延期。"
+      ],
+      "transition": "K067-09-11仅在佐助实际追随带土、取得路线且突破铁之国警戒时发生会场外围袭击。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-KAGE-911",
+      "date": "K067-09-11",
+      "title": "会场外围的佐助危机",
+      "arc_id": "ARC-P2-FIVE-KAGE-SUMMIT",
+      "day_goal": "把佐助介入拆成武士警戒、各影迎击和木叶代表撤离三条独立线程，并结算视力、查克拉与伤员。",
+      "start_state": [
+        "佐助是否到场、鹰小队成员与装备状态取决于此前分支。",
+        "五影及护卫只在实际抵达且未被会前事件撤换时参与。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-KAGE-SAMURAI-BREACH-01",
+          "title": "武士警戒线被突破",
+          "thread_id": "THR-P2-SASUKE-SUMMIT",
+          "location": "铁之国会场外围回廊",
+          "participants": [
+            "佐助或实际袭击者",
+            "鹰小队可行动成员",
+            "三船麾下武士",
+            "白绝（若仍可行动）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍以会场目标为敌并取得铁之国路线。",
+            "至少一名鹰小队成员能突破边境和武士外圈。"
+          ],
+          "blockers": [
+            "佐助未与带土合作、已被控制或主动放弃袭会。",
+            "铁之国提前捕获或成功劝退袭击者。"
+          ],
+          "setup": "袭击者必须从已知路线突破武士警戒；白绝只能在知晓位置且未被控制时泄露佐助行踪。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-SAMURAI-BREACH-01-01",
+              "order": 10,
+              "summary": "武士按入境名册发现未授权查克拉与武器。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-SAMURAI-BREACH-01-02",
+              "order": 20,
+              "summary": "袭击者选择潜入、强攻或撤退，警报改变会场门禁。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-SAMURAI-BREACH-01-03",
+              "order": 30,
+              "summary": "幸存武士传递人数、能力和最后方向，不推断袭击者全部目标。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "会场获得有限而可验证的袭击情报。",
+            "武士伤亡和鹰小队消耗按实际交锋记录。"
+          ],
+          "state_changes": [
+            "记录每名袭击者位置、伤势、查克拉、装备，武士伤亡和警报传播范围。"
+          ],
+          "stop_condition": "袭击者进入内层、被捕、撤退或失去继续突破能力。",
+          "fallbacks": [
+            {
+              "condition": "佐助未与带土合作、已被控制或主动放弃袭会。；铁之国提前捕获或成功劝退袭击者。",
+              "status": "skipped",
+              "direction": "跳过袭会战，改由白绝或其他信使远程施压会议；武士保留警戒但不生成战伤。",
+              "preserves": "保留佐助阵营选择会影响联盟对晓和宇智波问题的判断。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第460-461章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足边境潜入、警报与武士伤亡结算"
+            }
+          ],
+          "design_rationale": "不把旧资料中的整座会场击败压成一句无成本潜入。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-KAGE-KAGE-BATTLE-01",
+          "title": "雷影与佐助的高风险交锋",
+          "thread_id": "THR-P2-SASUKE-SUMMIT",
+          "location": "铁之国会场柱廊",
+          "participants": [
+            "佐助",
+            "第四代雷影或实际迎击者",
+            "达鲁伊",
+            "我爱罗与砂隐护卫（若到场）",
+            "鹰小队可行动成员",
+            "玩家角色（若是会场护卫或袭击方同伴）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助已经突破外围且仍具战斗能力。",
+            "至少一名合法护卫能够在柱廊拦截。"
+          ],
+          "blockers": [
+            "袭会未发生或佐助在外围已被控制。",
+            "玩家已促成投降、秘密会见或安全撤离。"
+          ],
+          "setup": "迎击者根据武士警报截住佐助；万花筒、须佐能乎、天照和雷遁铠甲只能按当前掌握与剩余查克拉使用，玩家可促成撤离、拘捕或继续交锋。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-KAGE-BATTLE-01-01",
+              "order": 10,
+              "summary": "双方先确认目标是拘捕、复仇、刺杀代表还是突围。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-KAGE-BATTLE-01-02",
+              "order": 20,
+              "summary": "高阶术造成视力、查克拉、肢体与建筑风险快速累积。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-KAGE-BATTLE-01-03",
+              "order": 30,
+              "summary": "玩家选择掩护伤员、切断追击、协助拘捕或承担继续战斗代价。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-KAGE-KAGE-BATTLE-01-04",
+              "order": 40,
+              "summary": "我爱罗或实际调停者给出最后撤离窗口，随后各方结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "原作中的断臂、重伤与脱逃都不是强制结果。",
+            "佐助不能无消耗连续挑战所有影。"
+          ],
+          "state_changes": [
+            "逐人记录肢体伤势、视力、查克拉、武器、当前位置和亲眼见到的能力。"
+          ],
+          "stop_condition": "佐助被拘捕、转移、撤离柱廊或任何一方达到医疗停止线。",
+          "fallbacks": [
+            {
+              "condition": "袭会未发生或佐助在外围已被控制。；玩家已促成投降、秘密会见或安全撤离。",
+              "status": "altered",
+              "direction": "按实际袭击者与守卫重算拘捕或撤离；若无战斗则保留外交对佐助案件的裁决，不补写断臂和万花筒消耗。",
+              "preserves": "保留佐助行动会公开其危险程度并迫使各村共同处置。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第462-466章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足战场分段、医疗停止线和资源结算"
+            }
+          ],
+          "design_rationale": "把多影围攻改为可中止的资源战，并给玩家清晰介入点。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-KAGE-REPRESENTATIVE-EXIT-01",
+          "title": "木叶席位的撤离",
+          "thread_id": "THR-P2-SUMMIT-DIPLOMACY",
+          "location": "铁之国会场北侧出口",
+          "participants": [
+            "木叶实际代表",
+            "木叶护卫",
+            "青或实际追踪者",
+            "铁之国武士"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "木叶代表确有离席动机并仍具移动能力。",
+            "会场已发布相应限制或袭击造成安全窗口。"
+          ],
+          "blockers": [
+            "代表已经被合法拘留或主动配合审计。",
+            "木叶代表不是团藏且不存在逃离理由。"
+          ],
+          "setup": "木叶代表只有在权限被暂停、涉案证据出现或会场失守时才离席；追踪者必须获得本村命令和可用感知线索。",
+          "beats": [
+            {
+              "id": "EV-P2-KAGE-REPRESENTATIVE-EXIT-01-01",
+              "order": 10,
+              "summary": "会场书记记录离席原因和代表最后持有的封存材料。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-KAGE-REPRESENTATIVE-EXIT-01-02",
+              "order": 20,
+              "summary": "护卫在保护代表、接受调查或追击佐助之间作出职责选择。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-KAGE-REPRESENTATIVE-EXIT-01-03",
+              "order": 30,
+              "summary": "铁之国封闭一条出口并向追踪方提供最后可验证方向。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "木叶席位不会因代表逃离而自动转给另一人。",
+            "追踪者只知道感知和目击所得。"
+          ],
+          "state_changes": [
+            "记录代表、护卫、追踪者路线，止水眼或其他证物状态及会场对木叶的临时处置。"
+          ],
+          "stop_condition": "离席者离开会场管制区、接受扣留或失去追踪者。",
+          "fallbacks": [
+            {
+              "condition": "代表已经被合法拘留或主动配合审计。；木叶代表不是团藏且不存在逃离理由。",
+              "status": "skipped",
+              "direction": "代表留场继续审计，追踪者改协助会场防卫；木叶席位由原授权继续，不制造逃亡。",
+              "preserves": "保留会谈必须在袭击中维持合法席位和证据链。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第466-468章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足撤离职责、证物和席位状态"
+            }
+          ],
+          "design_rationale": "把团藏逃离、青追踪与会场席位分开结算，适应非团藏代表。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "会场袭击的参与者、伤势、查克拉与位置已经分场结算。",
+        "木叶席位仍由明确授权或临时规则管理。"
+      ],
+      "transition": "K067-09-12由幸存代表恢复会议，带土只有在具备通信或到场条件时提出尾兽要求。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-KAGE-912",
+      "date": "K067-09-12",
+      "title": "战争宣言与临时联盟",
+      "arc_id": "ARC-P2-WAR-DECLARATION",
+      "day_goal": "让战争宣言包含可验证要求、敌方能力的不确定性和各村的现实答复，再建立可撤回的临时联盟。",
+      "start_state": [
+        "会场已完成袭击后的安检与伤员转移。",
+        "各方对带土身份、十尾历史和月之眼计划只掌握亲耳听闻与已有证物，不能自动判定全部为真。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-DECLARATION-01",
+          "title": "尾兽要求与战争威胁",
+          "thread_id": "THR-P2-WAR-DECLARATION",
+          "location": "铁之国五影会谈厅",
+          "participants": [
+            "带土或其可验证投影/信使",
+            "三船",
+            "五村实际代表与护卫"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "带土阵营仍有现实兵力与夺取剩余尾兽的目标。",
+            "敌方能够安全到场、投影或送达可验证通牒。"
+          ],
+          "blockers": [
+            "晓已失去作战能力或全部尾兽目标均不存在。",
+            "通牒被伪造、截断或敌方选择继续隐蔽。"
+          ],
+          "setup": "带土说明自己控制的尾兽资源，要求交出仍存活且未被晓控制的人柱力，并宣称十尾与无限月读计划；听众只把这些内容记为敌方陈述。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-DECLARATION-01-01",
+              "order": 10,
+              "summary": "敌方以已掌握的尾兽、会场渗透或其他证据证明威胁能力。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-DECLARATION-01-02",
+              "order": 20,
+              "summary": "代表逐项询问交付对象、期限和拒绝后果，不接受无法核验的历史为事实。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-DECLARATION-01-03",
+              "order": 30,
+              "summary": "各村拒绝交人、寻求谈判或按实际人柱力状态提出替代答复。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-DECLARATION-01-04",
+              "order": 40,
+              "summary": "敌方留下开战条件和通信痕迹后撤离。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "战争是否发动拥有明确触发条件。",
+            "十尾与月之眼信息按敌方陈述、可信推断和隐藏事实分层。"
+          ],
+          "state_changes": [
+            "记录宣战者、目标人柱力、最后期限、各代表答复和具体知情人。"
+          ],
+          "stop_condition": "敌方离场且会场确认没有即时二次袭击。",
+          "fallbacks": [
+            {
+              "condition": "晓已失去作战能力或全部尾兽目标均不存在。；通牒被伪造、截断或敌方选择继续隐蔽。",
+              "status": "altered",
+              "direction": "按敌方剩余目标改为限定战争、绑架行动或情报对峙；没有现实威胁时跳过大战宣言并继续联合追捕。",
+              "preserves": "保留各村必须共同回应跨国尾兽威胁。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第467章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足通牒条件、证据等级和各村答复"
+            }
+          ],
+          "design_rationale": "战争不能因篇章标题自动开始，也不能让带土的独白直接成为公共真相。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-ALLIANCE-PROVISIONAL-01",
+          "title": "临时联盟议定书",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "铁之国五影会谈厅",
+          "participants": [
+            "三船",
+            "各村实际代表",
+            "各村书记与情报护卫",
+            "玩家角色（若具正式代表或军事参谋身份）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少三个大国确认敌方威胁无法单独应对。",
+            "参会代表具备签署临时安全协议的权限。"
+          ],
+          "blockers": [
+            "代表权限被本国撤销或联盟条款无法达到最低互信。",
+            "宣战威胁被证实不成立。"
+          ],
+          "setup": "代表们先签署情报共享、防御互助和人柱力保护的临时条款，正式兵权仍需回村批准；玩家可修改指挥、保密或退出条件。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-PROVISIONAL-01-01",
+              "order": 10,
+              "summary": "书记列出敌方目标、各村可提供兵种和当前无法承诺的资源。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-PROVISIONAL-01-02",
+              "order": 20,
+              "summary": "历史敌意与木叶席位争议阻碍统一指挥。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-PROVISIONAL-01-03",
+              "order": 30,
+              "summary": "玩家选择支持雷影、联合参谋制或分区指挥，并设定审计与撤换规则。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-PROVISIONAL-01-04",
+              "order": 40,
+              "summary": "各代表签署临时议定书并派出回村传令队。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "忍者联军以临时法律文本成立，而非一天内完成全部动员。",
+            "指挥候选仍要接受各村批准。"
+          ],
+          "state_changes": [
+            "记录签署村、临时总指挥、参谋席位、共享情报等级、传令路线与正式批准期限。"
+          ],
+          "stop_condition": "每个代表签署、附保留意见或正式拒绝，传令队离场。",
+          "fallbacks": [
+            {
+              "condition": "代表权限被本国撤销或联盟条款无法达到最低互信。；宣战威胁被证实不成立。",
+              "status": "altered",
+              "direction": "先建立区域防御与情报网，保留后续加入窗口；威胁不成立时改为联合调查协定。",
+              "preserves": "保留跨村合作需要明确指挥、情报和退出规则。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第468章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设计临时联盟、回村批准和审计机制"
+            }
+          ],
+          "design_rationale": "把联盟成立与兵力集结拆开，给政治响应和玩家谈判留下空间。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "战争通牒的真实性、期限和目标已记录。",
+        "临时联盟已成立、缩小或未成立；任何一种结果都有返村批准流程。"
+      ],
+      "transition": "K067-09-13至15用于伤员稳定、使团离境和加密传令；K067-09-16云隐按奇拉比实际位置执行搜索或保护。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-916",
+      "date": "K067-09-16",
+      "title": "奇拉比的踪迹与鲛肌渗透",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "结算奇拉比失踪案、鬼鲛袭击与云隐救援，避免错误死亡报告污染联盟判断。",
+      "start_state": [
+        "奇拉比是否曾被鹰小队捕获、逃脱或一直在村内，以此前实际状态为准。",
+        "鬼鲛、鲛肌和云隐搜索队的生死、位置与资源继承现有记录。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-BEE-SEARCH-01",
+          "title": "云雷峡搜索与接触",
+          "thread_id": "THR-P2-JINCHURIKI-PROTECTION",
+          "location": "雷之国云雷峡外缘",
+          "participants": [
+            "奇拉比",
+            "萨布或实际同行者",
+            "鬼鲛（若仍存活）",
+            "云隐搜索队",
+            "玩家角色（若编入搜索或护卫）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "奇拉比仍存活并位于搜索可达区域。",
+            "鬼鲛仍具袭击动机、路线和可用鲛肌。"
+          ],
+          "blockers": [
+            "奇拉比已安全归队且鬼鲛被确认死亡或控制。",
+            "玩家提前发现替身或切断鲛肌藏身条件。"
+          ],
+          "setup": "搜索队沿实际痕迹找到奇拉比或袭击现场；鬼鲛若到场，吸收查克拉和水牢都有范围与持续消耗，奇拉比必须顾及同行者和尾兽暴露风险。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-BEE-SEARCH-01-01",
+              "order": 10,
+              "summary": "搜索队先确认奇拉比本人、同行者与敌方数量。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-BEE-SEARCH-01-02",
+              "order": 20,
+              "summary": "鬼鲛用鲛肌压缩战场，逼迫奇拉比在完全尾兽化、保护平民和撤离间取舍。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-BEE-SEARCH-01-03",
+              "order": 30,
+              "summary": "玩家选择呼叫雷影、协助撤离、破坏水牢或保护情报。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-BEE-SEARCH-01-04",
+              "order": 40,
+              "summary": "交锋在增援抵达、鬼鲛撤离或任一方失能时结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "奇拉比的真实生死与位置进入云隐指挥链。",
+            "鬼鲛是否以白绝替身伪造死亡必须有实际手段。"
+          ],
+          "state_changes": [
+            "记录奇拉比、八尾、鬼鲛、鲛肌、同行者的查克拉、伤势、装备、位置和目击知识。"
+          ],
+          "stop_condition": "奇拉比进入云隐保护、鬼鲛被控制/逃脱，或搜索队建立持续追踪。",
+          "fallbacks": [
+            {
+              "condition": "奇拉比已安全归队且鬼鲛被确认死亡或控制。；玩家提前发现替身或切断鲛肌藏身条件。",
+              "status": "altered",
+              "direction": "改为安全接回与反渗透检查；没有鬼鲛时不制造假尸，保留晓仍会寻找人柱力的保护压力。",
+              "preserves": "保留联盟必须基于真实人柱力状态制定保护方案。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第470-473章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足搜索路线、援军通信和假死证据链"
+            }
+          ],
+          "design_rationale": "把旧资料的假死与鲛肌藏身变成有条件的谍报行动。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "奇拉比、八尾、鬼鲛和鲛肌的状态已由目击与检查分开记录。",
+        "云隐向联盟发送的是带置信度的报告，而非自动确认鬼鲛死亡。"
+      ],
+      "transition": "K067-09-17至19用于云隐医疗、反渗透和铁之国返程；K067-09-20处理佐助、木叶代表与第七班的追击后果。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-920",
+      "date": "K067-09-20",
+      "title": "团藏追击与第七班决裂",
+      "arc_id": "ARC-P2-FIVE-KAGE-SUMMIT",
+      "day_goal": "在两处独立战场结算木叶代表、佐助、香燐与第七班的行动，死亡和眼睛转移均服从实际前置。",
+      "start_state": [
+        "木叶代表是否逃离、佐助是否还能追击、带土是否愿意提供转移，都继承K067-09-11结果。",
+        "鸣人、卡卡西、小樱和同伴必须从各自实际位置旅行到铁之国，且只掌握已告知信息。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-DANZO-SASUKE-01",
+          "title": "桥上的木叶旧账",
+          "thread_id": "THR-P2-SASUKE-AFTERMATH",
+          "location": "铁之国北境石桥",
+          "participants": [
+            "佐助（若到场）",
+            "木叶离席代表及护卫",
+            "香燐或实际鹰小队支援者",
+            "带土（若介入）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍选择追击木叶代表且能抵达石桥。",
+            "目标代表尚未被铁之国拘留或安全返村。"
+          ],
+          "blockers": [
+            "佐助未袭会、被捕或已放弃复仇路线。",
+            "木叶代表提前接受审判、失踪或死亡。"
+          ],
+          "setup": "双方只以实际持有的宇智波灭族证据、止水眼、伊邪那岐条件和会场行为对质；佐助的视力与查克拉继承前战，不能满状态开战。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-DANZO-SASUKE-01-01",
+              "order": 10,
+              "summary": "双方先确认追击目标、证物和撤退路线。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-DANZO-SASUKE-01-02",
+              "order": 20,
+              "summary": "禁术、写轮眼与人质行为迅速消耗双方身体和政治退路。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-DANZO-SASUKE-01-03",
+              "order": 30,
+              "summary": "战斗以投降、拘捕、死亡、撤离或第三方转移中的实际结果收束。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "团藏、护卫、香燐和佐助的生死不被标题预定。",
+            "灭族真相只进入亲耳听闻者与后续报告。"
+          ],
+          "state_changes": [
+            "记录尸体/俘虏、止水眼与手臂、佐助视力和查克拉、香燐伤势、带土取得的物品及知识范围。"
+          ],
+          "stop_condition": "追击目标失去继续作战能力且胜方完成证物、伤员和撤离处理。",
+          "fallbacks": [
+            {
+              "condition": "佐助未袭会、被捕或已放弃复仇路线。；木叶代表提前接受审判、失踪或死亡。",
+              "status": "altered",
+              "direction": "改为铁之国证据听证、押送袭击或带土回收行动；缺失人物不以替身补回原作决斗。",
+              "preserves": "保留宇智波灭族证据、木叶领导合法性和佐助阵营必须被重新结算。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第476-481章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足前战消耗、证物、遗体和俘虏交接"
+            }
+          ],
+          "design_rationale": "保留政治旧账的对质，但不强制团藏死亡、香燐被刺或眼睛被毁。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-TEAM7-COLLISION-01",
+          "title": "第七班的处置选择",
+          "thread_id": "THR-P2-SASUKE-AFTERMATH",
+          "location": "铁之国北境旧桥下游林地",
+          "participants": [
+            "鸣人（若随实际追踪队到场）",
+            "卡卡西（若随实际追踪队到场）",
+            "小樱（若随实际追踪队到场）",
+            "佐助（若仍在场）",
+            "香燐（若仍在场）",
+            "玩家角色（若随任一追踪队到场）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一支第七班相关追踪队取得真实路线并按旅行时间抵达。",
+            "本场参与名单只包含该追踪队实际到达且仍可行动的成员。",
+            "佐助或其行动后果仍在可接触区域。"
+          ],
+          "blockers": [
+            "佐助已被铁之国控制或早已转移。",
+            "追踪队被召回、失能或没有定位依据。"
+          ],
+          "setup": "实际追踪者依据嗅觉、仙人感知或正式路线赶到；只有真实携带的毒刃、现存伤势、佐助视力与香燐伤情进入结算，缺席的第七班成员不会被标题召来。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-TEAM7-COLLISION-01-01",
+              "order": 10,
+              "summary": "到场者先辨认伤员、敌对目标和仍可使用的武器。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TEAM7-COLLISION-01-02",
+              "order": 20,
+              "summary": "鸣人与佐助若均到场，只围绕各自实际经历和当前选择对话；任一人缺席时由实际追踪者处理证据、伤员和法律任务。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TEAM7-COLLISION-01-03",
+              "order": 30,
+              "summary": "玩家选择救治香燐、拘捕佐助、阻止在场者互杀、协助撤退或接受决斗风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TEAM7-COLLISION-01-04",
+              "order": 40,
+              "summary": "带土或其他撤离者只有在仍可行动且支付空间术代价时才能带走佐助。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "实际到场者与佐助的关系、佐助法律身份和香燐去向按现场选择更新。",
+            "中毒、视力衰退和查克拉消耗持续到医疗处理。"
+          ],
+          "state_changes": [
+            "逐名记录实际到场者的位置、伤势、毒素、视力、查克拉、武器、承诺、俘虏与听闻内容；缺席者保持上一确认状态。"
+          ],
+          "stop_condition": "双方脱离攻击距离，所有留场伤员由明确人员接管。",
+          "fallbacks": [
+            {
+              "condition": "佐助已被铁之国控制或早已转移。；追踪队被召回、失能或没有定位依据。",
+              "status": "altered",
+              "direction": "追踪队只处理现场证据与伤员，随后返村；佐助已被控制时改为押送与法律听证，不强制重演鸣佐碰撞。",
+              "preserves": "保留第七班必须面对佐助当前选择并决定救援、拘捕与关系边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第482-487章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "整合追踪旅行、医疗、毒素与分支处置"
+            }
+          ],
+          "design_rationale": "把连续对白和三次未遂刺杀压成一个可改变的处置场景。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶代表、佐助、香燐与第七班均有明确生死、伤势、位置和知识状态。",
+        "任何眼睛移植或火影继任尚未自动发生。"
+      ],
+      "transition": "K067-09-21至23用于分批返村、押送和医疗；K067-09-24各村开始本国批准与木叶领导处置。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-924",
+      "date": "K067-09-24",
+      "title": "返村批准与木叶领导处置",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "让五村分别批准临时联盟，并按纲手和木叶代表的真实状态确定火影权限。",
+      "start_state": [
+        "各代表已带回或传回K067-09-12议定书。",
+        "木叶领导候选的生死、伤势、会场行为与证据已结算。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-RATIFICATION-01",
+          "title": "五村分别批准联盟",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "五村政务机关与加密通信站",
+          "participants": [
+            "五村实际领导机构",
+            "各国大名联络官",
+            "军事与后勤参谋"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "临时议定书已安全送达各村。",
+            "各村仍有合法机构可以批准跨国军事协定。"
+          ],
+          "blockers": [
+            "通牒被撤销或证实无现实敌军。",
+            "某村政变、断讯或本土危机阻止表决。"
+          ],
+          "setup": "各村在不同地点审核临时条款、可派兵力、本土防御底线和财政补给；批准时间与保留意见分别记录。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-RATIFICATION-01-01",
+              "order": 10,
+              "summary": "参谋按战损名册扣除不能出征的伤员与守备。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-RATIFICATION-01-02",
+              "order": 20,
+              "summary": "大名与村方围绕兵权、经费和跨村指挥承担风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-RATIFICATION-01-03",
+              "order": 30,
+              "summary": "各村批准、限期批准或拒绝，并发送带签章回执。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联盟成员资格和兵力承诺逐村成立。",
+            "未批准者仍可保持情报或区域防御合作。"
+          ],
+          "state_changes": [
+            "记录每村签章、承诺兵力区间、留守比例、补给额度、保留意见与下一次复核日。"
+          ],
+          "stop_condition": "所有受邀村均发出正式回执或明确延迟原因。",
+          "fallbacks": [
+            {
+              "condition": "通牒被撤销或证实无现实敌军。；某村政变、断讯或本土危机阻止表决。",
+              "status": "altered",
+              "direction": "该村先承诺情报与边境防御，兵力在恢复合法决策后再加入；整体联盟按实际成员缩编。",
+              "preserves": "保留联盟规模必须由各村现实承诺决定。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第488-489章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足各村批准、财政与留守兵力审计"
+            }
+          ],
+          "design_rationale": "给国家决策、财政和本土防御足够时间，不让联盟一夜完成。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-HOKAGE-AUTHORITY-01",
+          "title": "火影权限复核",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "木叶火影楼或临时政务厅",
+          "participants": [
+            "纲手（若存活）",
+            "旗木卡卡西（若具资格）",
+            "火之国大名代表",
+            "木叶顾问与上忍班长",
+            "玩家角色（若具任命见证资格）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "木叶已收到会谈和K067-09-20处置报告。",
+            "至少一套大名或村内紧急任命程序仍可执行。"
+          ],
+          "blockers": [
+            "木叶仍在失去中央指挥的即时攻击中。",
+            "所有候选均失能且大名通信中断。"
+          ],
+          "setup": "会议依据现任者医疗能力、代表是否死亡或失信、候选人的同意与大名程序决定继续任职、临时代理或新任命。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-HOKAGE-AUTHORITY-01-01",
+              "order": 10,
+              "summary": "医疗负责人说明纲手或其他现任者能否持续办公和参战。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-HOKAGE-AUTHORITY-01-02",
+              "order": 20,
+              "summary": "顾问核对会场证据、战时合法性与候选人的现实职责。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-HOKAGE-AUTHORITY-01-03",
+              "order": 30,
+              "summary": "玩家选择支持复职、限权代理、卡卡西候选或依法延后，并要求交接清单。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-HOKAGE-AUTHORITY-01-04",
+              "order": 40,
+              "summary": "任命文件明确生效时刻、战时权限和复核条件。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "纲手醒来不会自动抹去已合法完成的任命，团藏死亡也不会自动让卡卡西继任。"
+          ],
+          "state_changes": [
+            "记录火影/代理、印章、情报权限、联军席位、医疗限制与未决调查。"
+          ],
+          "stop_condition": "一名现实可用的合法负责人取得战时签字权，或木叶明确采用集体代理。",
+          "fallbacks": [
+            {
+              "condition": "木叶仍在失去中央指挥的即时攻击中。；所有候选均失能且大名通信中断。",
+              "status": "altered",
+              "direction": "由奈良鹿久等值勤参谋组成限权战时委员会，待通信恢复后补办任命；不得复活旧火影填补席位。",
+              "preserves": "保留木叶需要可被联盟承认的战时指挥权。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第488-489章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足任命程序、印章交接和医疗限制"
+            }
+          ],
+          "design_rationale": "彻底阻止三代、纲手、团藏和卡卡西权限按原作自动重置。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "各村联盟资格与兵力承诺已经分别记录。",
+        "木叶拥有可执行且可审计的战时领导权。"
+      ],
+      "transition": "K067-09-25至30用于授权回执汇总和伤员恢复；K067-10-02建立联合情报底账与指挥框架。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1002",
+      "date": "K067-10-02",
+      "title": "联盟情报底账与指挥框架",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "统一可共享的敌情、人员与资源口径，同时保留各村机密和错误情报的置信度。",
+      "start_state": [
+        "联盟成员与木叶席位已由K067-09-24确定。",
+        "鬼鲛、佐助、带土、兜和尾兽状态只按已送达报告进入底账。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-INTEL-MATRIX-01",
+          "title": "敌我情报矩阵",
+          "thread_id": "THR-P2-ALLIANCE-INTEL",
+          "location": "云隐联合情报筹备室",
+          "participants": [
+            "各村情报代表",
+            "感知与密码班负责人",
+            "奈良鹿久或实际联合参谋",
+            "玩家角色（若是获准情报官）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少三个成员村已派出具授权的情报代表。",
+            "加密存储和访问登记能够运行。"
+          ],
+          "blockers": [
+            "联盟未成立或成员拒绝任何情报共享。",
+            "通信系统被敌方证实完全渗透。"
+          ],
+          "setup": "筹备室按来源、时间、亲历者和置信度录入晓成员、尾兽、空间术、白绝与兜线索；玩家可挑战错误合并或限制敏感材料传播。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-MATRIX-01-01",
+              "order": 10,
+              "summary": "各村先提交允许共享的原始报告而非结论。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-MATRIX-01-02",
+              "order": 20,
+              "summary": "同名、假死、替身和带土自称造成冲突记录。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-MATRIX-01-03",
+              "order": 30,
+              "summary": "玩家选择合并、保留并列假设或要求外勤复核。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-MATRIX-01-04",
+              "order": 40,
+              "summary": "参谋发布第一版敌我矩阵与查询权限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联盟知道什么、不知道什么和为何推断均可追踪。"
+          ],
+          "state_changes": [
+            "记录鬼鲛假死置信度、带土身份称谓、兜最后踪迹、佐助位置、尾兽状态和各条知情权限。"
+          ],
+          "stop_condition": "每条高危情报都有来源、置信度、负责人和下次更新触发。",
+          "fallbacks": [
+            {
+              "condition": "联盟未成立或成员拒绝任何情报共享。；通信系统被敌方证实完全渗透。",
+              "status": "altered",
+              "direction": "建立双边分区情报簿并以人工信使同步高危摘要；渗透时更换密码、缩小共享面。",
+              "preserves": "保留联军需要共同敌情但必须维持知识边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第489-490章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设计来源、置信度、访问控制和复核机制"
+            }
+          ],
+          "design_rationale": "防止不同战场和幕后真相在联盟成立时自动合并为全知数据库。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-COMMAND-DRAFT-01",
+          "title": "联军指挥草案",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "云隐联合参谋厅",
+          "participants": [
+            "联盟实际总指挥候选",
+            "各村军事参谋",
+            "三船代表",
+            "医疗与后勤负责人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "联盟至少有一名获各成员承认的总指挥候选。",
+            "各村已提交可用兵力区间。"
+          ],
+          "blockers": [
+            "总指挥资格仍有未决欺骗或叛变指控。",
+            "兵力回执不足以形成跨村部队。"
+          ],
+          "setup": "参谋依据已承诺兵种、各村领导能力和历史冲突起草总指挥、战斗分队、情报、医疗与后勤链，暂不把未报到人员写进编制。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-DRAFT-01-01",
+              "order": 10,
+              "summary": "各村提交能出征的人员类别与留守底线。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-DRAFT-01-02",
+              "order": 20,
+              "summary": "跨村军衔、通信和医疗标准冲突迫使参谋设置联合岗位。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-DRAFT-01-03",
+              "order": 30,
+              "summary": "草案明确总指挥、参谋长、分区指挥与替补顺序。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军拥有待人员报到后生效的指挥草案。"
+          ],
+          "state_changes": [
+            "记录指挥候选、替补、下令渠道、医疗转运权和后勤问责。"
+          ],
+          "stop_condition": "草案送回各村确认且所有空缺均标明，不虚构人员。",
+          "fallbacks": [
+            {
+              "condition": "总指挥资格仍有未决欺骗或叛变指控。；兵力回执不足以形成跨村部队。",
+              "status": "altered",
+              "direction": "采用各村分区防御和联合联络官，待资格与兵力闭合后再启用统一指挥。",
+              "preserves": "保留命令链必须匹配真实领导和实际到场兵力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第489-491章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足联军岗位、替补和下令渠道"
+            }
+          ],
+          "design_rationale": "先设计职责再集结人员，避免一份原作名单覆盖已改变的存活与任职。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "联盟拥有带知识权限的敌我矩阵和待确认指挥草案。"
+      ],
+      "transition": "K067-10-03至07用于各村复核草案和侦察兜；K067-10-08若兜与带土均具条件才形成敌方合作。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1008",
+      "date": "K067-10-08",
+      "title": "兜的筹码与佐助的选择",
+      "arc_id": "ARC-P2-WAR-DECLARATION",
+      "day_goal": "建立兜与带土合作的可撤回条件，并把佐助的眼睛移植作为有来源、有恢复期的选择。",
+      "start_state": [
+        "兜是否吸收大蛇丸能力、掌握秽土转生以及知晓带土据点均须有此前来源。",
+        "佐助的视力、阵营和是否在带土控制范围内继承K067-09-20。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KABUTO-PACT-01",
+          "title": "秽土转生的交易",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "山之墓场外围洞窟",
+          "participants": [
+            "药师兜",
+            "带土",
+            "白绝（若存在）"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "兜仍存活并掌握可用秽土转生与至少一个合法样本。",
+            "带土仍有战争资源且兜能找到其据点。"
+          ],
+          "blockers": [
+            "兜被捕、样本库被毁或术式未完成。",
+            "带土失去据点或拒绝暴露战争计划。"
+          ],
+          "setup": "兜以实际取得的遗体样本展示有限秽土对象，要求佐助或研究资源；带土以战争期间不得接触佐助、提供白绝样本等条件回应。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KABUTO-PACT-01-01",
+              "order": 10,
+              "summary": "兜只通灵已有样本且未被玩家阻断的对象作为证明。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KABUTO-PACT-01-02",
+              "order": 20,
+              "summary": "双方以隐藏棺材、据点情报和背叛风险互相威慑。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KABUTO-PACT-01-03",
+              "order": 30,
+              "summary": "合作条款明确样本、目标、佐助禁区和违约后果。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "敌方兵力增幅有施术者、样本与合作条件。",
+            "联盟不会自动知道棺中对象。"
+          ],
+          "state_changes": [
+            "记录兜可召唤名单、带土实际看见内容、合作条款、据点位置与双方保留的秘密。"
+          ],
+          "stop_condition": "双方接受、拒绝或以临时试用条款分开行动。",
+          "fallbacks": [
+            {
+              "condition": "兜被捕、样本库被毁或术式未完成。；带土失去据点或拒绝暴露战争计划。",
+              "status": "altered",
+              "direction": "兜以独立第三方行动或只提供情报；带土用现有白绝与晓残部备战，不补写秽土军团。",
+              "preserves": "保留敌方兵力与互不信任的合作会改变联盟准备。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第489-490章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足遗体样本、契约与知识隔离"
+            }
+          ],
+          "design_rationale": "秽土大军不能由篇章标题凭空出现，名单必须随遗体与玩家干预变化。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-SASUKE-EYES-01",
+          "title": "万花筒移植决定",
+          "thread_id": "THR-P2-SASUKE-AFTERMATH",
+          "location": "带土据点医疗间或实际拘押医疗点",
+          "participants": [
+            "佐助",
+            "带土或实际医疗负责人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鼬的眼睛仍存在且由当前医疗者实际掌握。",
+            "佐助仍存活、具自主决定能力并有移植需求。"
+          ],
+          "blockers": [
+            "眼睛已毁、被封存于他处或医学上不可用。",
+            "佐助被拘押且拒绝手术，或视力没有衰退。"
+          ],
+          "setup": "只有佐助持有鼬的可移植眼睛、视力确实衰退且自主同意时才进行手术；无菌条件、恢复期与眼睛来源必须记录。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-SASUKE-EYES-01-01",
+              "order": 10,
+              "summary": "医疗者说明移植来源、失明风险、恢复时间和依赖关系。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SASUKE-EYES-01-02",
+              "order": 20,
+              "summary": "佐助选择接受、延期、拒绝或在拘押医疗中封存眼睛。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SASUKE-EYES-01-03",
+              "order": 30,
+              "summary": "手术分支进入遮光、感染监测和禁止战斗的恢复期。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "永恒万花筒不会在手术当日直接满状态使用。"
+          ],
+          "state_changes": [
+            "记录双眼来源、施术者、手术结果、视力、查克拉、恢复地点、知情人和可行动日期。"
+          ],
+          "stop_condition": "佐助进入明确恢复方案或眼睛被封存并放弃移植。",
+          "fallbacks": [
+            {
+              "condition": "眼睛已毁、被封存于他处或医学上不可用。；佐助被拘押且拒绝手术，或视力没有衰退。",
+              "status": "altered",
+              "direction": "采用保守治疗、封存证物或继续失明风险管理；不得凭空生成永恒万花筒。",
+              "preserves": "保留佐助必须为继续使用万花筒承担选择与恢复成本。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第487-488章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足手术来源、恢复期和能力启用条件"
+            }
+          ],
+          "design_rationale": "眼睛转移必须有物品链、同意与身体代价。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "兜与带土的合作状态、秽土样本范围和秘密已记录。",
+        "佐助处于手术恢复、保守治疗、拘押或其他实际路线。"
+      ],
+      "transition": "K067-10-09至14用于联盟侦察与佐助恢复；K067-10-15确认联合指挥和人柱力保护方案。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1015",
+      "date": "K067-10-15",
+      "title": "联合指挥与人柱力保护决策",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "在实际兵力、敌情和人柱力意愿之间确定指挥链、保护地点与知情范围。",
+      "start_state": [
+        "各村已回复K067-10-02指挥草案。",
+        "鸣人、奇拉比、尾兽及其护卫的当前生死和位置已经核验。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-COMMAND-CONFIRM-01",
+          "title": "联军指挥链确认",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "云隐联合参谋厅",
+          "participants": [
+            "各村实际领导",
+            "联军总指挥与参谋候选",
+            "三船代表",
+            "玩家角色（若具参谋或代表资格）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少三村已批准统一或分区指挥框架。",
+            "候选人的状态与到岗时间可核验。"
+          ],
+          "blockers": [
+            "多数成员撤回兵力承诺。",
+            "核心候选失能且没有替补规则。"
+          ],
+          "setup": "会议以逐村回执确认总指挥、总参谋、各战斗部队和情报医疗链；玩家可针对缺席、伤势或利益冲突调整任命。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-CONFIRM-01-01",
+              "order": 10,
+              "summary": "书记核对每名候选人的存活、任职和可到岗日期。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-CONFIRM-01-02",
+              "order": 20,
+              "summary": "村际不信任与本土留守需求暴露指挥空缺。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-CONFIRM-01-03",
+              "order": 30,
+              "summary": "玩家选择确认、替换、缩编或采用分区指挥。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-COMMAND-CONFIRM-01-04",
+              "order": 40,
+              "summary": "命令链和替补顺序由各村签章生效。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军指挥只包含现实可用人员。"
+          ],
+          "state_changes": [
+            "记录总指挥、总参谋、分队长候选、替补、通信权限与撤换条件。"
+          ],
+          "stop_condition": "每个生效岗位有本人、替补或明确空缺处理。",
+          "fallbacks": [
+            {
+              "condition": "多数成员撤回兵力承诺。；核心候选失能且没有替补规则。",
+              "status": "altered",
+              "direction": "降级为区域联防，保留联合情报与后勤；岗位空缺由相邻分区临时承接并限时复核。",
+              "preserves": "保留战时命令必须能从联盟领导传到实际部队。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第491章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足岗位审计、签章和替补顺序"
+            }
+          ],
+          "design_rationale": "为F提供可执行命令链，同时容纳死亡、叛逃和未任职分支。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-JINCHURIKI-DECISION-01",
+          "title": "人柱力保护听证",
+          "thread_id": "THR-P2-JINCHURIKI-PROTECTION",
+          "location": "云隐联合安全会议室",
+          "participants": [
+            "鸣人（若获通知）",
+            "奇拉比（若获通知）",
+            "实际火影与雷影",
+            "封印、医疗和护卫负责人",
+            "玩家角色（若具代理或护卫身份）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名剩余人柱力仍自由且是敌方现实目标。",
+            "联盟能提供一个可守卫地点或移动方案。"
+          ],
+          "blockers": [
+            "人柱力已被敌方控制、死亡或拒绝联盟保护并成功离开。",
+            "岛龟或候选地点已暴露且无法防守。"
+          ],
+          "setup": "会议比较前线价值、被夺取风险、封印稳定度与本人意愿；对未获通知者只能讨论保护方案，不能伪造其同意。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-DECISION-01-01",
+              "order": 10,
+              "summary": "医疗与封印负责人分别提交鸣人与奇拉比的当前风险。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-DECISION-01-02",
+              "order": 20,
+              "summary": "领导层提出岛龟、村内堡垒、移动护卫或有限参战方案。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-DECISION-01-03",
+              "order": 30,
+              "summary": "玩家与获通知的人柱力选择地点、训练、知情程度和离开条件。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-DECISION-01-04",
+              "order": 40,
+              "summary": "方案明确谁能下令、谁负责说明战争以及何时重新评估。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "保护不等于强制欺骗，参战也不是无条件放行。"
+          ],
+          "state_changes": [
+            "记录两名人柱力的知情、同意、位置计划、封印风险、护卫、训练目标与离开触发。"
+          ],
+          "stop_condition": "每名存活人柱力获得一份独立、可执行且可复核的方案。",
+          "fallbacks": [
+            {
+              "condition": "人柱力已被敌方控制、死亡或拒绝联盟保护并成功离开。；岛龟或候选地点已暴露且无法防守。",
+              "status": "altered",
+              "direction": "按实际目标改用分散护卫、诱饵或有限前线任务；没有人柱力时转为保护尾兽与封印器物。",
+              "preserves": "保留敌方夺取尾兽风险与本人行动权之间的核心冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第491-492章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足保护听证、知情边界和复核条件"
+            }
+          ],
+          "design_rationale": "让岛龟隔离与参战争议成为玩家可介入的政治选择。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "联军指挥链已签章生效或明确降级。",
+        "鸣人与奇拉比分别拥有保护、训练和知情方案。"
+      ],
+      "transition": "K067-10-16至21用于护卫编组和岛龟航线保密；K067-10-22实施转移。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1022",
+      "date": "K067-10-22",
+      "title": "岛龟转移与训练契约",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "完成从各自所在地到岛龟的可追踪转移，并明确训练不是无期限软禁或无条件力量赠予。",
+      "start_state": [
+        "岛龟路线、护卫和替代地点来自K067-10-15。",
+        "鸣人和奇拉比是否知晓战争、是否同意前往均保留各自记录。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-ISLAND-TRANSFER-01",
+          "title": "海上保护转移",
+          "thread_id": "THR-P2-JINCHURIKI-PROTECTION",
+          "location": "雷之国港口至岛龟秘密航线",
+          "participants": [
+            "鸣人（若转移）",
+            "奇拉比（若转移）",
+            "大和或实际封印支援者",
+            "基与护卫班",
+            "玩家角色（若编入护送）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名目标人柱力接受或被合法命令转移。",
+            "岛龟仍安全、可航行且未被敌方定位。"
+          ],
+          "blockers": [
+            "人柱力拒绝并成功获得替代安排。",
+            "航线暴露、岛龟失能或护卫物资不足。"
+          ],
+          "setup": "护送队核验身份、补给、封印应急物资和航线知情名单；若采用生态调查掩护，玩家可反对欺骗或限定披露时点。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-TRANSFER-01-01",
+              "order": 10,
+              "summary": "港口按名单装载食水、药品、通信器和封印器材。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-TRANSFER-01-02",
+              "order": 20,
+              "summary": "海况与保密要求限制航速和对外联络。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-TRANSFER-01-03",
+              "order": 30,
+              "summary": "玩家选择公开战争目的、采用有限掩护、改变航线或中止暴露的转移。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-TRANSFER-01-04",
+              "order": 40,
+              "summary": "队伍登陆岛龟并完成库存与人员签收。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "所有转移者有实际路线、消耗和知情状态。"
+          ],
+          "state_changes": [
+            "记录岛龟位置密级、人员名单、食水天数、医疗物资、通信窗口和两名人柱力的态度。"
+          ],
+          "stop_condition": "登陆签收完成或护送因暴露转至替代保护点。",
+          "fallbacks": [
+            {
+              "condition": "人柱力拒绝并成功获得替代安排。；航线暴露、岛龟失能或护卫物资不足。",
+              "status": "altered",
+              "direction": "转移至已批准的村内堡垒或移动护卫路线；暴露时先疏散并更换通信密钥。",
+              "preserves": "保留保护地点、训练资源和敌方定位风险必须同步结算。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第492章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足港口、航行、库存与保密名单"
+            }
+          ],
+          "design_rationale": "修复旧资料把鸣人与各村决策直接切到岛上的空间跳跃。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-TRAINING-CONTRACT-01",
+          "title": "尾兽训练的边界",
+          "thread_id": "THR-P2-NARUTO-TRAINING",
+          "location": "岛龟真理瀑布营地",
+          "participants": [
+            "鸣人",
+            "奇拉比",
+            "基",
+            "大和或实际封印支援者",
+            "玩家角色（若参与训练或安全监督）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人实际抵达岛龟且九尾仍封印在其体内。",
+            "奇拉比与八尾关系允许其提供指导。"
+          ],
+          "blockers": [
+            "鸣人未到岛、九尾状态已改变或医疗评估禁止训练。",
+            "奇拉比拒绝、失能或八尾无法协助。"
+          ],
+          "setup": "奇拉比评估鸣人的封印、九尾关系和情绪状态，再决定是否指导真理瀑布与查克拉抽取；玩家可设定停止线、拒绝强制或选择替代控制训练。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-CONTRACT-01-01",
+              "order": 10,
+              "summary": "训练者说明失败可能导致精神崩溃、封印松动与营地伤亡。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-CONTRACT-01-02",
+              "order": 20,
+              "summary": "鸣人面对公众认可、佐助和父母议题形成的真实阴影。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-CONTRACT-01-03",
+              "order": 30,
+              "summary": "玩家选择继续真理瀑布、先做关系支持、采用封印技术或延期。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-CONTRACT-01-04",
+              "order": 40,
+              "summary": "训练方案写明每次时长、医疗观察和八尾支援上限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人获得一条有代价且可暂停的控制路线。"
+          ],
+          "state_changes": [
+            "记录训练同意、精神状态、九尾封印强度、奇拉比支援承诺和每日查克拉上限。"
+          ],
+          "stop_condition": "首轮训练计划获各方确认，尚未强制宣告控制成功。",
+          "fallbacks": [
+            {
+              "condition": "鸣人未到岛、九尾状态已改变或医疗评估禁止训练。；奇拉比拒绝、失能或八尾无法协助。",
+              "status": "altered",
+              "direction": "采用大和/封印班监督的基础控制、心理支持或暂停训练；不凭空获得九尾查克拉模式。",
+              "preserves": "保留鸣人需要面对自身仇恨并与尾兽力量建立可控关系。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第493-495章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足训练同意、停止线和替代课程"
+            }
+          ],
+          "design_rationale": "压缩旧资料的重复回忆，让心理冲突服务当前角色状态。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "岛龟或替代地点已接收人员与物资。",
+        "鸣人的训练条件、知情状态和停止线已明确。"
+      ],
+      "transition": "K067-10-23至30用于适应、基础训练和海上补给；K067-11-01进入真理瀑布的实际心理试炼。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1101",
+      "date": "K067-11-01",
+      "title": "真理瀑布的自我对峙",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "让鸣人面对由当前经历形成的愤怒与不信任，并以关系支持而非简单击败影像完成第一阶段。",
+      "start_state": [
+        "鸣人已签署训练方案且身体达到精神试炼标准。",
+        "他面对的阴影只能来自实际遭遇、公开赞誉、佐助冲突与九尾经历。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-TRUTH-FALLS-01",
+          "title": "瀑布中的另一种声音",
+          "thread_id": "THR-P2-NARUTO-TRAINING",
+          "location": "岛龟真理瀑布",
+          "participants": [
+            "鸣人",
+            "奇拉比",
+            "基",
+            "玩家角色（若是获准陪练或心理支持者）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人愿意参与且精神、身体状态达到训练门槛。",
+            "奇拉比或等价导师能够维持外部安全。"
+          ],
+          "blockers": [
+            "鸣人拒绝、失去意识或近期创伤需要先治疗。",
+            "营地遭袭或封印监护不足。"
+          ],
+          "setup": "鸣人在监护下进入试炼，外部人员只能观察生命体征；玩家通过此前关系帮助他辨认愤怒来源，不能代替他接受自己。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-TRUTH-FALLS-01-01",
+              "order": 10,
+              "summary": "阴影以鸣人实际被排斥、被利用和突然受赞誉的记忆质疑其选择。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRUTH-FALLS-01-02",
+              "order": 20,
+              "summary": "正面对打只复制相同能力并增加精神消耗。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRUTH-FALLS-01-03",
+              "order": 30,
+              "summary": "玩家选择提醒具体关系、要求暂停、让鸣人表达怨恨或继续对抗。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRUTH-FALLS-01-04",
+              "order": 40,
+              "summary": "鸣人承认而非删除阴影，试炼入口才稳定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "成功分支获得进入封印训练的心理条件；失败分支保留复训与支持方案。"
+          ],
+          "state_changes": [
+            "记录鸣人精神力、体力、具体触发记忆、玩家关系影响和下一次训练许可。"
+          ],
+          "stop_condition": "鸣人主动退出或与阴影达成足以稳定意识的整合。",
+          "fallbacks": [
+            {
+              "condition": "鸣人拒绝、失去意识或近期创伤需要先治疗。；营地遭袭或封印监护不足。",
+              "status": "altered",
+              "direction": "暂停试炼，转为谈话、记忆核对和低强度控制训练；已完成类似整合时直接评估下一阶段。",
+              "preserves": "保留控制九尾前必须处理自身仇恨与身份压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第493-495章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把心理试炼绑定当前记忆与关系状态"
+            }
+          ],
+          "design_rationale": "心理成长要继承玩家改变后的经历，不复述与当前存档无关的固定台词。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人完成、延期或替代了心理试炼，精神消耗与下一步许可清楚。"
+      ],
+      "transition": "K067-11-02至04用于恢复与封印准备；K067-11-05只有满足停止线才尝试抽取九尾查克拉。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1105",
+      "date": "K067-11-05",
+      "title": "九尾查克拉争夺",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "以封印、八尾支援和身体承载能力为约束结算九尾查克拉控制，不预定成功。",
+      "start_state": [
+        "鸣人已完成心理门槛或得到等价安全许可。",
+        "九尾、八尾、大和与封印钥匙的状态均继承当前分支。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KURAMA-CHAKRA-01",
+          "title": "封印内的拉锯",
+          "thread_id": "THR-P2-NARUTO-TRAINING",
+          "location": "岛龟封印训练室与鸣人意识空间",
+          "participants": [
+            "鸣人",
+            "九尾",
+            "奇拉比与八尾（若能支援）",
+            "大和或实际封印支援者",
+            "玩家角色（若负责外部封印或意识陪同）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人仍是九尾人柱力并自愿开启训练。",
+            "至少一套有效外部压制和紧急闭合手段可用。"
+          ],
+          "blockers": [
+            "九尾已被抽离、封印钥匙不可用或鸣人未恢复。",
+            "营地警报要求立即终止训练。"
+          ],
+          "setup": "鸣人按计划开启有限封印，尝试分离九尾查克拉；外部人员监控泄漏、木遁/封印库存与八尾支援时间。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KURAMA-CHAKRA-01-01",
+              "order": 10,
+              "summary": "封印钥匙只开启预定幅度，所有人确认紧急闭合信号。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KURAMA-CHAKRA-01-02",
+              "order": 20,
+              "summary": "九尾的查克拉与仇恨反向侵蚀鸣人，八尾支援快速消耗。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KURAMA-CHAKRA-01-03",
+              "order": 30,
+              "summary": "玩家选择继续抽取、立即闭合、牺牲外部封印器材或请求意识内援助。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KURAMA-CHAKRA-01-04",
+              "order": 40,
+              "summary": "训练以成功分离、部分失控或安全中止结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "成功时鸣人只获得本次实际分离的查克拉及感知变化。",
+            "失败不会自动被父母残留查克拉挽回。"
+          ],
+          "state_changes": [
+            "记录九尾封印形态、鸣人查克拉与精神力、八尾消耗、封印器材、大和体力和能力启用限制。"
+          ],
+          "stop_condition": "封印重新闭合，意识与外部身体均稳定或进入紧急医疗。",
+          "fallbacks": [
+            {
+              "condition": "九尾已被抽离、封印钥匙不可用或鸣人未恢复。；营地警报要求立即终止训练。",
+              "status": "altered",
+              "direction": "安全闭合并改练封印控制、仙人模式或团队战术；九尾已改变时按现存尾兽关系训练。",
+              "preserves": "保留鸣人需要在战争前提升尾兽控制且不能无代价获得力量。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第496-499章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足封印幅度、资源监控和失败结算"
+            }
+          ],
+          "design_rationale": "新力量必须有来源、协助、代价和失败路线。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "九尾训练结果、鸣人负担、外部支援消耗和能力限制已经登记。"
+      ],
+      "transition": "K067-11-06仅用于意识与身体稳定；若水门或玖辛奈残留查克拉确实被此前封印设置保留，K067-11-07才发生私密交接。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1107",
+      "date": "K067-11-07",
+      "title": "玖辛奈的私密交接",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "仅在封印残留真实存在时，让鸣人获得出生夜与面具男的第一手家族信息，并限制传播范围。",
+      "start_state": [
+        "玖辛奈残留查克拉不是公共幽灵，必须来自鸣人封印中的实际设置。",
+        "外部的奇拉比、大和与玩家只能观察身体反应，不能自动听见意识内对话。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KUSHINA-TRUTH-01",
+          "title": "母亲留下的查克拉",
+          "thread_id": "THR-P2-NARUTO-TRAINING",
+          "location": "鸣人意识空间",
+          "participants": [
+            "鸣人",
+            "玖辛奈的封印残留查克拉"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "玖辛奈残留查克拉确实被封印并尚未耗尽。",
+            "鸣人在意识空间达到其触发条件。"
+          ],
+          "blockers": [
+            "残留查克拉不存在、已耗尽或封印路线被改变。",
+            "鸣人已通过其他安全方式完成训练且未触发危机。"
+          ],
+          "setup": "残留查克拉在九尾仇恨超过阈值时显现，以锁链协助稳定封印，并向鸣人讲述她亲历的分娩、袭击和封印选择。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KUSHINA-TRUTH-01-01",
+              "order": 10,
+              "summary": "玖辛奈先证明身份与残留查克拉来源。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KUSHINA-TRUTH-01-02",
+              "order": 20,
+              "summary": "她只叙述自己亲历或水门当时明确告知的出生夜事实。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KUSHINA-TRUTH-01-03",
+              "order": 30,
+              "summary": "鸣人决定追问、原谅、保留隐私或在醒后提交有限情报。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KUSHINA-TRUTH-01-04",
+              "order": 40,
+              "summary": "残留查克拉耗尽前帮助封印闭合并告别。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人获得关于父母、出生夜与面具男的私密第一手信息。",
+            "外部人员只知道鸣人稳定下来，除非他主动披露。"
+          ],
+          "state_changes": [
+            "记录鸣人新知识、精神状态、玖辛奈残留耗尽程度和可披露选择。"
+          ],
+          "stop_condition": "封印稳定且残留查克拉消散、休眠或因分支未触发。",
+          "fallbacks": [
+            {
+              "condition": "残留查克拉不存在、已耗尽或封印路线被改变。；鸣人已通过其他安全方式完成训练且未触发危机。",
+              "status": "skipped",
+              "direction": "由现存封印记录、可信见证者或医疗档案提供有限出生信息；没有来源的内容保持未知。",
+              "preserves": "保留鸣人理解封印来源并取得可用于识别面具男的有限线索。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第500-504章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "压缩回忆并明确意识内知识边界"
+            }
+          ],
+          "design_rationale": "把大量恋爱回忆压缩为身份、封印和敌情所需因果，严格隔离知识。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-TRAINING-DEBRIEF-01",
+          "title": "新能力医疗复核",
+          "thread_id": "THR-P2-NARUTO-TRAINING",
+          "location": "岛龟医疗与封印帐篷",
+          "participants": [
+            "鸣人",
+            "奇拉比",
+            "大和或实际封印支援者",
+            "医疗忍者",
+            "玩家角色（若参与训练监督）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人完成了某种九尾查克拉控制结果并恢复意识。",
+            "医疗与封印人员仍可进行复核。"
+          ],
+          "blockers": [
+            "训练完全中止或鸣人进入急救。",
+            "能力没有出现可测试变化。"
+          ],
+          "setup": "鸣人醒来后展示实际获得的能力，医疗班测量速度、感知、查克拉泄漏和肌肉负担；他自行决定是否披露意识内家族信息。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-DEBRIEF-01-01",
+              "order": 10,
+              "summary": "医疗班先检查生命体征、封印与外部器材消耗。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-DEBRIEF-01-02",
+              "order": 20,
+              "summary": "新速度或恶意感知可能超过身体控制并造成碰撞风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-DEBRIEF-01-03",
+              "order": 30,
+              "summary": "玩家选择限制使用、安排复训、报告联盟或保留私密信息。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-TRAINING-DEBRIEF-01-04",
+              "order": 40,
+              "summary": "负责人签署允许使用的场景与停止标准。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "新能力拥有清晰使用限制和知情范围。"
+          ],
+          "state_changes": [
+            "记录鸣人可用形态、持续时间、速度控制、恶意感知、恢复需求与披露对象。"
+          ],
+          "stop_condition": "医疗和封印负责人完成书面复核，鸣人进入休息或受限训练。",
+          "fallbacks": [
+            {
+              "condition": "训练完全中止或鸣人进入急救。；能力没有出现可测试变化。",
+              "status": "altered",
+              "direction": "记录失败原因并回到恢复与替代训练；没有新能力时不制造展示场面。",
+              "preserves": "保留训练结果必须转化为可操作的能力与限制。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第505章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足能力测试、医疗限制和披露选择"
+            }
+          ],
+          "design_rationale": "避免训练成功后立刻以无限速度和查克拉投入任何战场。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的力量、身体负担与私密知识范围已闭合。"
+      ],
+      "transition": "K067-11-08至11用于恢复和常规巡检；K067-11-12若鬼鲛确实藏于鲛肌才会被恶意感知或安检发现。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1112",
+      "date": "K067-11-12",
+      "title": "岛上反渗透与鬼鲛突围",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "检验保护区是否已被渗透，并让鬼鲛情报卷轴、凯的八门消耗和俘虏处置可追踪。",
+      "start_state": [
+        "鬼鲛是否真实存活并藏入鲛肌，来自K067-09-16检查结果。",
+        "鸣人的恶意感知仅在实际获得且身体允许时可用于发现。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KISAME-DETECTED-01",
+          "title": "鲛肌中的敌意",
+          "thread_id": "THR-P2-ALLIANCE-INTEL",
+          "location": "岛龟训练区与瀑布通道",
+          "participants": [
+            "鬼鲛（若潜伏）",
+            "鸣人（若在岛上且可行动）",
+            "奇拉比（若在岛上且可行动）",
+            "凯或实际追击者",
+            "青叶、基或实际警戒者",
+            "玩家角色（若担任岛上警戒）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鬼鲛此前成功潜伏且仍能行动。",
+            "岛上存在能发现异常或触发安检的人员。"
+          ],
+          "blockers": [
+            "鬼鲛已确认死亡、被捕或从未进入鲛肌。",
+            "玩家此前拆检鲛肌并控制潜伏者。"
+          ],
+          "setup": "恶意感知、鲛肌异常或例行安检暴露潜伏者；鬼鲛携带的卷轴只包含其实际观察到的兵力、位置和训练信息。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DETECTED-01-01",
+              "order": 10,
+              "summary": "警戒者确认异常来自鲛肌内部而非持刀者本人。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DETECTED-01-02",
+              "order": 20,
+              "summary": "鬼鲛夺取卷轴并向海岸突围，实际追击者受地形与同伴安全限制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DETECTED-01-03",
+              "order": 30,
+              "summary": "玩家选择封锁海岸、保护实际在场的人柱力、夺卷、活捉或让疲劳者退出。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DETECTED-01-04",
+              "order": 40,
+              "summary": "追击在卷轴被控制、信使脱离或鬼鲛失能时结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "岛龟暴露程度由卷轴和信使是否送出决定。",
+            "凯开第六/第七门必须留下肌肉与体力代价。"
+          ],
+          "state_changes": [
+            "记录卷轴内容、信使状态、鬼鲛生死/俘虏、实际追击者的门数与伤势、到场人柱力消耗、缺席者位置和岛龟警戒等级。"
+          ],
+          "stop_condition": "突围线路被截断或情报信使离开可追范围，所有追击者停止追加无补给追逐。",
+          "fallbacks": [
+            {
+              "condition": "鬼鲛已确认死亡、被捕或从未进入鲛肌。；玩家此前拆检鲛肌并控制潜伏者。",
+              "status": "skipped",
+              "direction": "跳过突围，改为常规反渗透演练与航线换密；没有潜伏者不生成卷轴外泄。",
+              "preserves": "保留敌方可能通过侦察定位人柱力，迫使联盟调整保护。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第505-507章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足卷轴内容、追击边界和八门伤势"
+            }
+          ],
+          "design_rationale": "合并旧资料中的重复招式说明，聚焦情报是否外泄及身体代价。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鬼鲛、情报卷轴、信使和岛龟暴露程度已明确。",
+        "所有高强度追击者进入医疗或恢复限制。"
+      ],
+      "transition": "K067-11-13至14用于俘虏安全与卷轴拆检；K067-11-15进行审讯和泄密通报。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1115",
+      "date": "K067-11-15",
+      "title": "鬼鲛的最后情报",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "在活捉、死亡、脱逃三种分支中结算鬼鲛知识与联盟保护区泄密，而不把其回忆公开给所有人。",
+      "start_state": [
+        "K067-11-12已确定鬼鲛与卷轴状态。",
+        "审讯者只能提取俘虏实际记忆，陷阱与自杀必须有未被解除的手段。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KISAME-DEBRIEF-01",
+          "title": "俘虏、陷阱与泄密通报",
+          "thread_id": "THR-P2-ALLIANCE-INTEL",
+          "location": "岛龟临时审讯区与联合通信站",
+          "participants": [
+            "鬼鲛（若被俘）",
+            "青叶或实际审讯者",
+            "凯",
+            "岛龟警戒负责人",
+            "联盟情报值勤官"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鬼鲛被俘、遗留卷轴或成功送出信使中的至少一项成立。",
+            "联盟仍有安全通信渠道处理结果。"
+          ],
+          "blockers": [
+            "鬼鲛和全部载体均在接触前彻底消失。",
+            "审讯区遭袭导致无法完成安全处置。"
+          ],
+          "setup": "审讯前核对束缚、咬舌、通灵和卷轴陷阱；鬼鲛可选择沉默、自毁或有限泄露，情报官同时判断敌方是否已取得岛龟位置。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DEBRIEF-01-01",
+              "order": 10,
+              "summary": "警戒班列出俘虏仍可使用的身体、通灵与封印手段。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DEBRIEF-01-02",
+              "order": 20,
+              "summary": "审讯触及雾隐旧任务和带土计划时，鬼鲛尝试保护情报。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DEBRIEF-01-03",
+              "order": 30,
+              "summary": "审讯以取得有限记忆、俘虏死亡、脱逃或安全中止结算。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KISAME-DEBRIEF-01-04",
+              "order": 40,
+              "summary": "联盟按最坏且有证据的泄密程度更换航线与密码。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鬼鲛的过去只属于提取者和获授权情报官。",
+            "岛龟是否暴露有明确置信度。"
+          ],
+          "state_changes": [
+            "记录鬼鲛遗体/俘虏状态、鲛肌归属、取得情报、卷轴陷阱、敌方已知内容与换密命令。"
+          ],
+          "stop_condition": "俘虏风险解除且泄密通报送达各影。",
+          "fallbacks": [
+            {
+              "condition": "鬼鲛和全部载体均在接触前彻底消失。；审讯区遭袭导致无法完成安全处置。",
+              "status": "altered",
+              "direction": "依据现场痕迹发布有限暴露警报并保留未知，不凭模型补出鬼鲛记忆；遭袭时优先转移人员与证物。",
+              "preserves": "保留反渗透结果会改变岛龟安全和敌我情报差。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第507-508章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "区分回忆、审讯所得与联盟通报"
+            }
+          ],
+          "design_rationale": "旧资料的大段回忆不是当前事件，只保留影响审讯选择和情报范围的事实。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鬼鲛及其情报载体已结案或保留明确追踪状态。",
+        "岛龟按暴露等级进入换密、迁移或继续隐蔽。"
+      ],
+      "transition": "K067-11-16至19用于通信换密；K067-11-20推进带土在雨隐获取轮回眼的独立幕后行动。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1120",
+      "date": "K067-11-20",
+      "title": "雨隐的轮回眼争夺",
+      "arc_id": "ARC-P2-WAR-DECLARATION",
+      "day_goal": "以长门遗体、小南立场和带土能力的真实状态结算轮回眼去向，保持为受限幕后知识。",
+      "start_state": [
+        "长门、小南、弥彦与雨隐状态严格继承P2-BROTHERS-PAIN。",
+        "带土只有在知道遗体位置且仍具空间术、伊邪那岐条件时才能发动夺取。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-KONAN-OBITO-01",
+          "title": "纸海与墓所",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "雨隐隐秘墓所水域",
+          "participants": [
+            "小南（若存活并守墓）",
+            "带土",
+            "雨隐实际守墓者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "长门遗体或轮回眼仍在可争夺状态。",
+            "带土掌握可信地点并能抵达雨隐。"
+          ],
+          "blockers": [
+            "遗体已被火化、转移至未知处或轮回眼不存在。",
+            "带土失去空间术、备用眼或行动能力。"
+          ],
+          "setup": "带土寻找长门遗体或轮回眼；小南只用实际准备的起爆符、地形与情报设伏，伊邪那岐需要可牺牲写轮眼和持续时间。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-KONAN-OBITO-01-01",
+              "order": 10,
+              "summary": "守墓者先转移无关人员并封闭通道。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KONAN-OBITO-01-02",
+              "order": 20,
+              "summary": "纸海伏击与空间术围绕五分钟窗口和备用眼展开。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-KONAN-OBITO-01-03",
+              "order": 30,
+              "summary": "胜方处理伤员、遗体、轮回眼与现场痕迹。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "小南死亡、带土夺眼或守墓成功均非强制。",
+            "联盟不会自动知道这场离屏战。"
+          ],
+          "state_changes": [
+            "记录小南/带土伤势与生死、使用的写轮眼、长门遗体、轮回眼数量、雨隐痕迹和实际知情者。"
+          ],
+          "stop_condition": "轮回眼被带走、成功保住或因遗体不存在而停止搜索。",
+          "fallbacks": [
+            {
+              "condition": "遗体已被火化、转移至未知处或轮回眼不存在。；带土失去空间术、备用眼或行动能力。",
+              "status": "altered",
+              "direction": "带土改追查转移链或使用现有眼睛备战；守墓者不存在时由现实保管人处理，不复活小南。",
+              "preserves": "保留轮回眼归属会改变带土战争能力且知识必须受限。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第509-511章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足遗体保管、能力代价和幕后知识边界"
+            }
+          ],
+          "design_rationale": "把大量象征性回忆移入背景，只结算战争能力与遗体责任。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "轮回眼、长门遗体、小南和带土的状态已在敌方/雨隐私密记录中闭合。"
+      ],
+      "transition": "K067-11-21至25用于带土恢复与联盟侦察；K067-11-26由实际侦察证据更新敌军规模。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1126",
+      "date": "K067-11-26",
+      "title": "敌军规模与秽土预警",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "让联盟通过侦察获得有限的白绝、兜与秽土线索，并据此调整兵力而非全知敌方名单。",
+      "start_state": [
+        "红豆或替代侦察队的成员、位置与权限来自当前木叶和联盟编制。",
+        "兜与带土的合作及样本范围只在敌方记录中完整存在。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-SCOUT-KABUTO-01",
+          "title": "山之墓场侦察",
+          "thread_id": "THR-P2-ALLIANCE-INTEL",
+          "location": "山之墓场外围峡谷",
+          "participants": [
+            "红豆或实际侦察队长",
+            "联盟侦察与感知忍者",
+            "兜的警戒生物或白绝"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "联盟掌握足以定位山之墓场外围的线索。",
+            "至少一支可隐蔽行动的侦察队可用。"
+          ],
+          "blockers": [
+            "据点已迁移或侦察线索为敌方诱饵。",
+            "侦察队在出发前失能或被召回。"
+          ],
+          "setup": "侦察队从尸体、蛇蜕、足迹、地热和通信截获中推断据点，不得直接看见地下全部军队；队长决定继续观察或先送回证据。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-SCOUT-KABUTO-01-01",
+              "order": 10,
+              "summary": "队伍标记尸体死亡方式、蛇类痕迹与白色组织样本。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SCOUT-KABUTO-01-02",
+              "order": 20,
+              "summary": "敌方警戒逼迫队伍在更深侦察和保住报告之间取舍。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SCOUT-KABUTO-01-03",
+              "order": 30,
+              "summary": "信使携带分级报告离开，留守者建立撤退标记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联盟获得白绝数量区间、兜活动与秽土可能性的有限证据。"
+          ],
+          "state_changes": [
+            "记录侦察队位置、伤势、样本、估算置信度、传信路线和敌方是否察觉。"
+          ],
+          "stop_condition": "至少一份报告脱离敌方追踪或全队被迫中止侦察。",
+          "fallbacks": [
+            {
+              "condition": "据点已迁移或侦察线索为敌方诱饵。；侦察队在出发前失能或被召回。",
+              "status": "altered",
+              "direction": "保留宽区搜索和远程样本分析，以高不确定性规划；不得填入完整十万白绝与秽土名单。",
+              "preserves": "保留敌军规模不确定性会影响联军部署和补给余量。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第512-513章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足侦察、样本、估算与信使路线"
+            }
+          ],
+          "design_rationale": "联军只能由侦察逐步知道敌军，不能读取K067-10-08幕后交易。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-INTEL-UPDATE-01",
+          "title": "敌军估算更新",
+          "thread_id": "THR-P2-ALLIANCE-INTEL",
+          "location": "云隐联合情报室",
+          "participants": [
+            "联盟情报代表",
+            "联军总指挥与参谋",
+            "封印班负责人",
+            "医疗后勤负责人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一份可验证侦察报告已经送达。",
+            "联盟情报与指挥机构仍能通信。"
+          ],
+          "blockers": [
+            "样本被污染且没有独立证据。",
+            "联盟指挥链已瓦解或通信被切断。"
+          ],
+          "setup": "情报室将侦察样本与旧档案比对，只把白绝数量写成区间，把秽土转生写成需尸体样本和施术者的高危可能。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-UPDATE-01-01",
+              "order": 10,
+              "summary": "分析员核对样本、尸体和截获通信的来源链。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-UPDATE-01-02",
+              "order": 20,
+              "summary": "最坏估算超过现有封印班与医疗容量。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-INTEL-UPDATE-01-03",
+              "order": 30,
+              "summary": "指挥部增加夜间口令、封印器材和身份核验，不公开未证实名单。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军准备针对伪装与不死敌人的现实措施。"
+          ],
+          "state_changes": [
+            "更新敌军规模区间、秽土预警范围、口令轮换、封印班需求和公开/机密版本。"
+          ],
+          "stop_condition": "更新后的敌情摘要送达各分区筹备负责人。",
+          "fallbacks": [
+            {
+              "condition": "样本被污染且没有独立证据。；联盟指挥链已瓦解或通信被切断。",
+              "status": "altered",
+              "direction": "以未知伪装敌军为压力测试，增加通用封印与身份核验；不宣称知道具体秽土者。",
+              "preserves": "保留联军必须为白绝和秽土威胁留出资源。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第512-513章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足置信区间、公开版本和资源响应"
+            }
+          ],
+          "design_rationale": "把敌方隐藏事实转化为有置信度的战前准备。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "联盟获得有限敌军规模和秽土预警，并调整身份核验、封印与医疗需求。"
+      ],
+      "transition": "K067-11-27至K067-12-02用于各村按新估算集结；K067-12-03完成部队报到与分区。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1203",
+      "date": "K067-12-03",
+      "title": "联军报到与战区编成",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "把各村真实到场人员编成战斗、情报、医疗、封印与后勤单位，并保留本土守备。",
+      "start_state": [
+        "兵力承诺、战损和指挥链分别来自K067-09-24与K067-10-15。",
+        "已死亡、叛逃、住院、被俘或仍在岛龟者不能出现在报到名册。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-MUSTER-01",
+          "title": "联军报到审计",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "雷之国联合集结营",
+          "participants": [
+            "各村报到部队",
+            "联军参谋与军需官",
+            "医疗筛查班",
+            "玩家角色（若为参战忍者或编制官）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少两村的承诺兵力已经抵达集结营。",
+            "集结营具备身份和医疗筛查能力。"
+          ],
+          "blockers": [
+            "集结地暴露并遭袭。",
+            "通信失败导致无法核验大批人员。"
+          ],
+          "setup": "每名参战者核验村籍、技能、伤势、装备和近亲/旧敌冲突；玩家可申报真实专长、医疗限制或申请调整分队。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-MUSTER-01-01",
+              "order": 10,
+              "summary": "军需官核对人员与装备是否和各村回执一致。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-MUSTER-01-02",
+              "order": 20,
+              "summary": "伤员、身份疑点和跨村旧怨造成编制空缺。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-MUSTER-01-03",
+              "order": 30,
+              "summary": "玩家选择接受岗位、申请替换、留守或进入医疗复核。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-MUSTER-01-04",
+              "order": 40,
+              "summary": "参谋按实际报到数锁定第一版战区名册。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军名册只包含现实到场且通过筛查者。"
+          ],
+          "state_changes": [
+            "记录每分区人数、专长、装备、伤病、指挥官、替补和留守人员。"
+          ],
+          "stop_condition": "所有到场者进入明确单位、医疗观察或返村留守。",
+          "fallbacks": [
+            {
+              "condition": "集结地暴露并遭袭。；通信失败导致无法核验大批人员。",
+              "status": "altered",
+              "direction": "按村分散集结并通过联络官建立临时编组；可疑人员隔离，不为凑数取消筛查。",
+              "preserves": "保留真实兵力、伤势和专长决定战区编成。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章前战争准备",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设计报到、医疗筛查、编制和留守审计"
+            }
+          ],
+          "design_rationale": "为F提供可用战区兵力，避免原作固定名单覆盖玩家造成的状态。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-SUPPLY-NET-01",
+          "title": "十日补给与后送线",
+          "thread_id": "THR-P2-ALLIANCE-LOGISTICS",
+          "location": "雷之国联合军需仓与后送站",
+          "participants": [
+            "联军军需官",
+            "医疗班负责人",
+            "各战区后勤联络员",
+            "铁之国运输队"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "第一版战区名册已锁定。",
+            "至少一条从成员国到集结地的运输线可用。"
+          ],
+          "blockers": [
+            "仓库被破坏、运输线中断或实际物资低于最低出征标准。",
+            "战区人数仍大幅变化。"
+          ],
+          "setup": "军需官按实际人数配置十日口粮、饮水、封印卷轴、绷带、解毒剂、担架和通信电池，并为冬季山路设置前进仓。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-SUPPLY-NET-01-01",
+              "order": 10,
+              "summary": "仓库按战区距离与人员数量建立最低库存。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SUPPLY-NET-01-02",
+              "order": 20,
+              "summary": "封印器材、血浆与冬装不足迫使参谋调整优先级。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-SUPPLY-NET-01-03",
+              "order": 30,
+              "summary": "运输队登记车队、护卫、补给点和伤员返程容量。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每战区有可量化的首轮补给与医疗后送能力。"
+          ],
+          "state_changes": [
+            "记录口粮天数、封印器材、药品、运输队、前进仓、担架位和短缺项。"
+          ],
+          "stop_condition": "所有生效战区取得最低库存或明确因短缺延后。",
+          "fallbacks": [
+            {
+              "condition": "仓库被破坏、运输线中断或实际物资低于最低出征标准。；战区人数仍大幅变化。",
+              "status": "altered",
+              "direction": "缩编先遣部队、延后缺补给战区并设置本地采购；不让无口粮和医疗单位开拔。",
+              "preserves": "保留兵力规模受补给、冬季运输和后送能力约束。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章前战争准备",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足口粮、封印、医疗和运输网络"
+            }
+          ],
+          "design_rationale": "大战不能只有兵力名单而没有持续作战与伤员后送条件。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第一版战区名册、装备、伤病和十日补给均可查询。",
+        "缺员或缺物资战区明确延后，不以原作人数填补。"
+      ],
+      "transition": "K067-12-04至11进行队列训练、口令演练和前进仓运输；K067-12-12若岛龟位置暴露，敌方才可发起捕获行动。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1212",
+      "date": "K067-12-12",
+      "title": "岛龟袭击与大和风险",
+      "arc_id": "ARC-P2-JINCHURIKI-PROTECTION",
+      "day_goal": "以泄密结果、敌方侦察和岛龟防御为前置结算兜的袭击，并避免强制大和被俘。",
+      "start_state": [
+        "岛龟是否暴露取决于K067-11-12至15的卷轴和信使结果。",
+        "兜、迪达拉秽土体、万蛇二代、大野木与护卫必须从实际位置出发并承担移动和术式代价。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-ISLAND-ASSAULT-01",
+          "title": "海上截击与岛龟倾覆风险",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "雷之国近海外海与岛龟背部",
+          "participants": [
+            "药师兜（若行动）",
+            "可用秽土飞行单位",
+            "大野木或实际联盟增援",
+            "岛龟守卫",
+            "玩家角色（若在护卫或增援方）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "敌方确实获得岛龟位置且兜仍有捕获目标的合作动机。",
+            "兜拥有可抵达外海的飞行或通灵手段。"
+          ],
+          "blockers": [
+            "岛龟位置未泄露、已迁移出情报范围或诱饵成功。",
+            "兜被捕、合作破裂或可用通灵/秽土单位不存在。"
+          ],
+          "setup": "敌方须先定位移动岛龟并突破海空警戒；巨蛇牵引、爆遁和尘遁都可能伤及岛龟与人柱力，玩家可优先稳岛、拦敌或疏散。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-ASSAULT-01-01",
+              "order": 10,
+              "summary": "警戒班确认来袭方向并向岛内发出分级警报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-ASSAULT-01-02",
+              "order": 20,
+              "summary": "敌方用飞行与巨蛇试图倾覆岛龟，守方高威力术受友军目标限制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-ASSAULT-01-03",
+              "order": 30,
+              "summary": "玩家选择保护岛龟、追击兜、切断通灵或转移人柱力。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-ASSAULT-01-04",
+              "order": 40,
+              "summary": "交锋以敌方登陆/撤离、岛龟稳定或保护目标转移结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "岛龟位置、损伤和敌方获取的进入路线明确。"
+          ],
+          "state_changes": [
+            "记录岛龟航向与伤势、敌我查克拉、通灵体、秽土体、增援位置和内部警报范围。"
+          ],
+          "stop_condition": "岛龟恢复可控航行、被迫停靠或保护目标完成撤离。",
+          "fallbacks": [
+            {
+              "condition": "岛龟位置未泄露、已迁移出情报范围或诱饵成功。；兜被捕、合作破裂或可用通灵/秽土单位不存在。",
+              "status": "altered",
+              "direction": "敌方攻击诱饵或继续搜索；联盟趁机换航线，不强制制造大和被俘和岛龟受伤。",
+              "preserves": "保留保护区泄密会触发敌方捕获行动并迫使联盟重新部署。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第513-514章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足海空定位、友伤限制和岛龟伤势"
+            }
+          ],
+          "design_rationale": "把跨海追逐拆成有定位来源、友伤限制和移动结算的战斗。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-YAMATO-CAPTURE-01",
+          "title": "封印支援者的撤离窗口",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "岛龟外壳裂谷与撤离通道",
+          "participants": [
+            "大和或实际封印支援者",
+            "药师兜（若登陆）",
+            "青叶、基与联盟守卫",
+            "玩家角色（若参与撤离）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "大和或具等价研究价值者实际在岛龟且兜已突破外层。",
+            "兜知道目标价值并仍能带人撤离。"
+          ],
+          "blockers": [
+            "目标未在岛上、提前转移或由玩家严密保护。",
+            "兜未登陆、失能或撤离能力被切断。"
+          ],
+          "setup": "兜只有识别木遁价值并实际登陆后才会转向捕获大和；守卫先保护鸣人与封印资料，再决定营救或封闭通道。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-YAMATO-CAPTURE-01-01",
+              "order": 10,
+              "summary": "撤离组核对鸣人、奇拉比和封印资料是否已离开危险区。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-YAMATO-CAPTURE-01-02",
+              "order": 20,
+              "summary": "兜以蛇化与麻痹手段争夺木遁使用者，守卫不能同时守住所有通道。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-YAMATO-CAPTURE-01-03",
+              "order": 30,
+              "summary": "玩家选择协助大和撤离、封门、交换目标、追踪俘虏或保存封印资料。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-YAMATO-CAPTURE-01-04",
+              "order": 40,
+              "summary": "场景以大和安全、被俘、失踪或兜撤退结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "大和被俘不是固定结果，替代封印支援者也不会自动复制其命运。"
+          ],
+          "state_changes": [
+            "记录俘虏/失踪者、伤势、追踪标记、木遁情报、封印资料、鸣人知情与守卫位置。"
+          ],
+          "stop_condition": "兜离开岛龟或被控制，撤离通道完成清点。",
+          "fallbacks": [
+            {
+              "condition": "目标未在岛上、提前转移或由玩家严密保护。；兜未登陆、失能或撤离能力被切断。",
+              "status": "altered",
+              "direction": "兜只能带走样本、资料或空手撤离；目标缺席时不凭空生成俘虏，敌军强化幅度相应降低。",
+              "preserves": "保留敌方试图利用木遁强化白绝，结果取决于真实捕获。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第514-515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足撤离、追踪、俘虏与资料状态"
+            }
+          ],
+          "design_rationale": "把大和作为敌军增幅资源的因果做成可防止的玩家节点。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "岛龟损伤、航向、警戒与暴露状态已更新。",
+        "大和或实际封印支援者的生死、位置、俘虏和资料状态明确。"
+      ],
+      "transition": "K067-12-13至17用于岛龟迁移、伤员治疗与敌我追踪；K067-12-18结算敌军强化和联盟情报响应。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1218",
+      "date": "K067-12-18",
+      "title": "敌军强化与保护区迁移",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "把白绝强化幅度绑定俘虏和尾兽查克拉资源，同时让联盟依据实际袭击结果迁移岛龟并更新敌情。",
+      "start_state": [
+        "K067-12-12已确定兜取得的人、样本和情报。",
+        "带土的轮回眼、白绝数量与尾兽资源以幕后实际状态为准。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-ZETSU-AUGMENT-01",
+          "title": "白绝军的强化条件",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "山之墓场地下培养区",
+          "participants": [
+            "药师兜",
+            "带土",
+            "被俘的木遁使用者（若存在）",
+            "白绝培养体"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "带土仍拥有白绝培养体与可用尾兽查克拉。",
+            "兜仍参与合作并有可用强化方法。"
+          ],
+          "blockers": [
+            "培养区被毁、合作破裂或强化资源被救回。",
+            "俘虏/样本不存在且既有资源不足。"
+          ],
+          "setup": "兜只能用实际俘虏、取得样本或既有柱间细胞提高白绝质量；数量受培养体、尾兽查克拉和时间限制。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ZETSU-AUGMENT-01-01",
+              "order": 10,
+              "summary": "双方核对岛龟行动带回的人、样本与损失。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ZETSU-AUGMENT-01-02",
+              "order": 20,
+              "summary": "强化会消耗培养资源并增加俘虏死亡与失控风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ZETSU-AUGMENT-01-03",
+              "order": 30,
+              "summary": "敌方决定强化比例、保留实验体和首批部署时间。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "十万白绝不是无条件精确事实，敌军规模按资源形成区间。"
+          ],
+          "state_changes": [
+            "记录白绝数量区间、强化比例、俘虏生命状态、尾兽查克拉消耗、兜控制手段和带土知情。"
+          ],
+          "stop_condition": "首批可部署白绝数量与完成日确定。",
+          "fallbacks": [
+            {
+              "condition": "培养区被毁、合作破裂或强化资源被救回。；俘虏/样本不存在且既有资源不足。",
+              "status": "altered",
+              "direction": "按现有未强化白绝出战或缩小规模；资源被夺回时降低侦察、伪装和正面战力。",
+              "preserves": "保留敌军质量和数量随玩家阻止捕获而变化。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第514-515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "量化培养资源、时间和强化幅度"
+            }
+          ],
+          "design_rationale": "敌军规模必须能追溯到培养资源与捕获结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-ISLAND-RELOCATE-01",
+          "title": "岛龟迁移与战事披露",
+          "thread_id": "THR-P2-JINCHURIKI-PROTECTION",
+          "location": "移动岛龟指挥舱与联盟通信网",
+          "participants": [
+            "岛龟指挥者",
+            "鸣人（若仍在联盟保护下）",
+            "奇拉比（若仍在联盟保护下）",
+            "联盟总指挥",
+            "实际护卫负责人",
+            "玩家角色（若在岛上或联合指挥）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "岛龟仍可移动或有替代转运手段。",
+            "至少一名人柱力仍在联盟保护下。"
+          ],
+          "blockers": [
+            "岛龟完全失能且人员已经撤离。",
+            "人柱力在会前已突破封锁或被敌方捕获。"
+          ],
+          "setup": "袭击后继续隐瞒战争已更难维持；指挥部必须分别面向仍在保护下的每名人柱力决定披露范围、受控参战与迁移路线，死亡、被捕、离岛或失联者不会被召回会议。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-RELOCATE-01-01",
+              "order": 10,
+              "summary": "守卫提交袭击、俘虏和岛龟损伤的可披露报告。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-RELOCATE-01-02",
+              "order": 20,
+              "summary": "实际在场的人柱力质疑限制与外界异常，强行隐瞒会降低对应关系的信任。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-RELOCATE-01-03",
+              "order": 30,
+              "summary": "玩家选择逐人完整告知、有限告知、谈判受控参战或坚持隔离并承担后果。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ISLAND-RELOCATE-01-04",
+              "order": 40,
+              "summary": "指挥部签署新航线、护卫、通信和各存活目标的离开条件。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每名实际在场人柱力的知情和行动意愿由本场分别明确；缺席者保留最后确认状态。"
+          ],
+          "state_changes": [
+            "记录新航线、岛龟损伤、护卫补员、实际在场者知识、信任、参战申请与阻拦条件，并记录缺席者最后位置和责任人。"
+          ],
+          "stop_condition": "岛龟开始新航线，且每名仍在保护下的人柱力收到明确决定或留下拒绝记录。",
+          "fallbacks": [
+            {
+              "condition": "岛龟完全失能且人员已经撤离。；人柱力在会前已突破封锁或被敌方捕获。",
+              "status": "altered",
+              "direction": "在替代保护点进行同样的知情与参战听证；已离岛者进入追踪和前线协调，不假装仍被隔离。",
+              "preserves": "保留保护、信任与战场需求的冲突必须在开战前结算。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第514-515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足袭击后的披露、迁移与参战规则"
+            }
+          ],
+          "design_rationale": "保护区遭袭后不能继续用无后果的生态调查无限欺骗鸣人。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "敌军可部署白绝规模、强化来源与俘虏状态已在幕后记录。",
+        "联盟知道袭击所得有限信息，岛龟航线和人柱力知情/参战状态已更新。"
+      ],
+      "transition": "K067-12-19至23用于新航线、战区补给前推和最后口令轮换；K067-12-24进行开战前全体状态复核。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1224",
+      "date": "K067-12-24",
+      "title": "开战前状态复核",
+      "arc_id": "ARC-P2-ALLIANCE-MOBILIZATION",
+      "day_goal": "在部队开拔前逐战区核验兵力、补给、敌情、医疗和人柱力决策，允许因缺口延期。",
+      "start_state": [
+        "联军名册与补给来自K067-12-03，岛龟与敌军情报已在K067-12-18更新。",
+        "任何后续伤病、失踪、俘虏和权限变化必须从名册中扣除。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-FINAL-READINESS-01",
+          "title": "战区战备签署",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "联军联合集结营指挥广场",
+          "participants": [
+            "联军总指挥",
+            "总参谋",
+            "各实际战区指挥官",
+            "医疗、情报、封印与后勤负责人",
+            "玩家角色（若为参战者或军官）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一个战区完成报到和最低补给。",
+            "总指挥或合法分区指挥仍可签发命令。"
+          ],
+          "blockers": [
+            "集结营遭袭、命令链中断或身份核验失败。",
+            "战区低于最低人员、医疗或补给标准。"
+          ],
+          "setup": "每个战区用同一清单报告人员、口粮、封印器材、通信、夜间口令、医疗后送和首个目标；玩家可申报缺口或拒绝不成立的命令。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-FINAL-READINESS-01-01",
+              "order": 10,
+              "summary": "各战区按当前名册点名并扣除新增伤病与失踪。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-FINAL-READINESS-01-02",
+              "order": 20,
+              "summary": "敌军数量不确定和身份伪装风险迫使部队保留预备队。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-FINAL-READINESS-01-03",
+              "order": 30,
+              "summary": "玩家选择确认出征、要求补给、调整岗位或因安全缺口延期。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-FINAL-READINESS-01-04",
+              "order": 40,
+              "summary": "总指挥只对通过最低标准的战区签发开拔令。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "各战区是否成立、何时开拔与为何延期均明确。"
+          ],
+          "state_changes": [
+            "逐战区记录人员、位置、口粮、封印物资、医疗位、通信频率、首个目标、预备队和开拔许可。"
+          ],
+          "stop_condition": "每个战区取得开拔、限时补正或取消中的一种书面状态。",
+          "fallbacks": [
+            {
+              "condition": "集结营遭袭、命令链中断或身份核验失败。；战区低于最低人员、医疗或补给标准。",
+              "status": "altered",
+              "direction": "缩编为侦察/防御先遣并延后主力；命令链中断时按已签署分区规则就地防守。",
+              "preserves": "保留战争只能从实际可用战区、补给和命令开始。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立逐战区战备清单和延期规则"
+            }
+          ],
+          "design_rationale": "给F一份可直接承接的实际动员结果，而非模糊的联军已经准备。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-JINCHURIKI-STATUS-01",
+          "title": "人柱力最后行动决定",
+          "thread_id": "THR-P2-JINCHURIKI-PROTECTION",
+          "location": "岛龟或实际保护点指挥室",
+          "participants": [
+            "鸣人（若仍可自主行动）",
+            "奇拉比（若仍可自主行动）",
+            "实际护卫指挥者",
+            "联盟总指挥联络员",
+            "玩家角色（若为护卫、同伴或联络员）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名人柱力仍可自主行动。",
+            "联盟能够向保护点送达可信战备摘要。"
+          ],
+          "blockers": [
+            "人柱力被捕、昏迷或保护点断讯。",
+            "战争未达到任何开拔条件。"
+          ],
+          "setup": "联络员提交战区成立和敌方移动的有限证据，每名仍可自主行动的人柱力分别依据知情、训练、封印与信任决定留守、突破、获准出战或继续申请；缺席者只保留最后确认状态和搜救责任。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-STATUS-01-01",
+              "order": 10,
+              "summary": "与会者逐人核对身体、尾兽合作、位置和敌方定位风险。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-STATUS-01-02",
+              "order": 20,
+              "summary": "战场伤亡预期与被夺取后果形成相反压力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-STATUS-01-03",
+              "order": 30,
+              "summary": "玩家选择支持实际在场者留守、申请受控出战、协商触发条件或阻止危险突破。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-JINCHURIKI-STATUS-01-04",
+              "order": 40,
+              "summary": "逐人决定写入联盟命令并通知相关战区，不共享私密训练记忆。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "F开始时每名存活人柱力的行动权限、缺席原因和责任人明确。"
+          ],
+          "state_changes": [
+            "逐名记录位置、伤势、查克拉、尾兽关系、战争知识、出战许可、护卫和下一次复核触发；死亡、被捕或失联者不生成同意。"
+          ],
+          "stop_condition": "每名可自主行动者接受决定、提出明确异议或实际离开保护点，其他人的最后状态也送达指挥链。",
+          "fallbacks": [
+            {
+              "condition": "人柱力被捕、昏迷或保护点断讯。；战争未达到任何开拔条件。",
+              "status": "altered",
+              "direction": "由护卫按既有紧急规则保护并持续寻求本人意见；没有开战时保留训练和防御状态。",
+              "preserves": "保留尾兽保护和参战选择会改变初期战局。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足开战前本人决策和战区通报"
+            }
+          ],
+          "design_rationale": "大战开端必须承接本人选择和现实权限，不能突然把两人传送到前线。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "各战区获得开拔、补正或取消状态。",
+        "鸣人与奇拉比的知识、位置、资源和行动权限已明确。"
+      ],
+      "transition": "K067-12-25至29只执行已签署的补正、前进仓补给和侦察移动；K067-12-30完成双方开战阈值与F交接。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-COUNTDOWN-1230",
+      "date": "K067-12-30",
+      "title": "大战阈值与初期部署交接",
+      "arc_id": "ARC-P2-WAR-DECLARATION",
+      "day_goal": "锁定敌我开战条件、第一批移动和全部连续性状态，让下一分片从现实部署开始。",
+      "start_state": [
+        "K067-12-24的战备签署已生效。",
+        "敌方白绝、秽土对象、带土、兜、佐助和俘虏状态来自实际幕后记录，不以旧名单补齐。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-COUNTDOWN-ENEMY-MARCH-01",
+          "title": "敌方首批开拔",
+          "thread_id": "THR-P2-ENEMY-MOBILIZATION",
+          "location": "山之墓场与实际敌军集结出口",
+          "participants": [
+            "带土",
+            "药师兜（若合作）",
+            "可用白绝部队",
+            "实际可召唤的秽土对象"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "战争通牒仍有效且敌方具备可部署兵力。",
+            "带土或兜能够向部队下达行动命令。"
+          ],
+          "blockers": [
+            "敌方合作破裂、据点被摧毁或兵力不足。",
+            "双方达成有效停火或尾兽目标已不可争夺。"
+          ],
+          "setup": "敌方按真实培养规模、样本和控制符部署首批部队；兜维持秽土需要持续施术，带土保留人柱力捕获目标与预备队。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ENEMY-MARCH-01-01",
+              "order": 10,
+              "summary": "兜核对每具秽土体的样本、控制符和可召唤状态。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ENEMY-MARCH-01-02",
+              "order": 20,
+              "summary": "带土按白绝数量、联盟位置与剩余尾兽目标划分侦察和正面兵力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ENEMY-MARCH-01-03",
+              "order": 30,
+              "summary": "首批部队从明确出口开拔，预备队与施术者留在记录位置。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "敌方是否按基准发动战争及首批规模明确。"
+          ],
+          "state_changes": [
+            "记录带土、兜、佐助、白绝、秽土体、俘虏、外道魔像与预备队的位置、资源和命令。"
+          ],
+          "stop_condition": "首批敌军越过集结出口，或因合作破裂/资源不足取消开拔。",
+          "fallbacks": [
+            {
+              "condition": "敌方合作破裂、据点被摧毁或兵力不足。；双方达成有效停火或尾兽目标已不可争夺。",
+              "status": "altered",
+              "direction": "改为小规模渗透、绑架或据点防御；没有开拔时F从联盟侦察与有限冲突开始。",
+              "preserves": "保留战争形态必须由敌方现实兵力和目标决定。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "锁定敌方首批部署、施术者和预备队"
+            }
+          ],
+          "design_rationale": "F需要敌军现实部署，不需要本分片提前演出第一轮交锋。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-COUNTDOWN-ALLIANCE-DEPART-01",
+          "title": "联军先遣开拔",
+          "thread_id": "THR-P2-ALLIANCE-COMMAND",
+          "location": "雷之国联合集结营各出口",
+          "participants": [
+            "联军总指挥与参谋",
+            "实际成立的各战区先遣队",
+            "情报、医疗、封印与后勤单位",
+            "玩家角色（若在开拔名册）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一个战区有有效开拔令且敌军移动报告达到响应阈值。",
+            "补给、通信与医疗最低标准仍成立。"
+          ],
+          "blockers": [
+            "敌军报告被证实为假或总指挥撤销开拔。",
+            "天气、破坏或身份危机使出口不安全。"
+          ],
+          "setup": "总指挥依据敌军移动报告只放行K067-12-24通过战备的单位；玩家核对自己的岗位、补给、路线、通信和撤退规则后决定出发或报告新阻断。",
+          "beats": [
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-DEPART-01-01",
+              "order": 10,
+              "summary": "各出口最后点名并核对口令、地图、口粮和医疗牌。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-DEPART-01-02",
+              "order": 20,
+              "summary": "敌方移动迫使先遣队在速度与保持补给线之间选择。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-DEPART-01-03",
+              "order": 30,
+              "summary": "玩家选择随所属战区开拔、申请调岗、报告无法出征或执行留守任务。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-COUNTDOWN-ALLIANCE-DEPART-01-04",
+              "order": 40,
+              "summary": "指挥部记录每支部队实际离营时刻和第一夜宿营线。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "F开始时每个战区的人员、位置、补给和任务可直接读取。"
+          ],
+          "state_changes": [
+            "逐战区记录实际开拔人数、指挥官、路线、首夜位置、口粮、封印器材、医疗容量、通信与预备队。"
+          ],
+          "stop_condition": "所有获准先遣队离营或明确留营，尚未发生第一轮交锋。",
+          "fallbacks": [
+            {
+              "condition": "敌军报告被证实为假或总指挥撤销开拔。；天气、破坏或身份危机使出口不安全。",
+              "status": "altered",
+              "direction": "先遣队留营防守或改走备用路线，侦察单位先行验证；不得为了标题强制开战。",
+              "preserves": "保留联军从实际动员结果进入初期交战。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第515章",
+              "contribution": "提供人物动机、冲突次序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "完成逐战区路线、首夜位置和资源交接"
+            }
+          ],
+          "design_rationale": "以移动和资源交接收束倒计时，把战斗完整留给F。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "联盟领导、总指挥、总参谋、战区指挥与替补顺序以本分片实际签章为准。",
+        "各战区开拔/留营状态、人数、伤势、口粮、封印物资、医疗后送、通信、首夜位置与第一目标均已记录。",
+        "鸣人与奇拉比的位置、九尾/八尾关系、身体和查克拉、战争知识、护卫与参战权限明确。",
+        "佐助与带土的位置、视力/眼睛、伤势、阵营和知识明确；兜合作条款、秽土样本、白绝规模、俘虏与外道魔像状态明确。",
+        "鬼鲛、小南、长门遗体、轮回眼、团藏/木叶代表、香燐和大和均有生死、遗体/俘虏、物品与知情范围记录。",
+        "战争是否按基准发动取决于敌我首批部队是否实际越过集结线；未发动分支保留侦察、停火或有限冲突入口。"
+      ],
+      "transition": "P2-WAR-CONFRONT从K068-01-01读取本日实际开拔的战区、敌军、补给、位置与人柱力决策；不得补入未报到人员、未召唤秽土者或未发生的伤亡。",
+      "reference_facts": [
+        "旧资料把会谈、联盟、训练和动员压在过短窗口；本分片保留核心因果，重排为四个月的旅行、批准、训练、侦察、集结与补给过程。"
+      ]
+    }
+  ]
+}

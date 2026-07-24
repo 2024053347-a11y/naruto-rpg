@@ -1,0 +1,175 @@
+{
+  "schema_version": "naruto.yearly-almanac.v1",
+  "calendar": "konoha-360-v1",
+  "year": "K003",
+  "era": "建村初期",
+  "continuity": "manga_canon",
+  "date_basis": "project_allocation",
+  "annual_events": [
+    "终结之谷决战在本项目中发生；斑自此公开推定死亡、真实转入隐秘地下活动。",
+    "K003-04-01：三船出生。"
+  ],
+  "birthdays": [
+    {
+      "entity_id": null,
+      "name": "三船",
+      "date": "K003-04-01",
+      "type": "birth"
+    }
+  ],
+  "character_ages": [
+    {
+      "entity_id": "CH-NAR-HASHIRAMA-SENJU",
+      "name": "千手柱间",
+      "birth_year": -32,
+      "birthday": "10-23",
+      "age_at_year_start": 34,
+      "age_after_birthday": 35,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-MADARA-UCHIHA",
+      "name": "宇智波斑",
+      "birth_year": -32,
+      "birthday": "12-24",
+      "age_at_year_start": 34,
+      "age_after_birthday": 35,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-TOBIRAMA-SENJU",
+      "name": "千手扉间",
+      "birth_year": -28,
+      "birthday": "02-19",
+      "age_at_year_start": 30,
+      "age_after_birthday": 31,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KINKAKU",
+      "name": "金角",
+      "birth_year": -24,
+      "birthday": "03-07",
+      "age_at_year_start": 26,
+      "age_after_birthday": 27,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-GINKAKU",
+      "name": "银角",
+      "birth_year": -24,
+      "birthday": "03-07",
+      "age_at_year_start": 26,
+      "age_after_birthday": 27,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KAKUZU",
+      "name": "角都",
+      "birth_year": -24,
+      "birthday": "08-15",
+      "age_at_year_start": 26,
+      "age_after_birthday": 27,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-O-NOKI",
+      "name": "大野木",
+      "birth_year": -11,
+      "birthday": "10-08",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-CHIYO",
+      "name": "千代",
+      "birth_year": -6,
+      "birthday": "10-15",
+      "age_at_year_start": 8,
+      "age_after_birthday": 9,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-DANZO-SHIMURA",
+      "name": "志村团藏",
+      "birth_year": -5,
+      "birthday": "01-06",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HIRUZEN",
+      "name": "猿飞日斩",
+      "birth_year": -5,
+      "birthday": "02-08",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HOMURA-MITOKADO",
+      "name": "水户门炎",
+      "birth_year": -5,
+      "birthday": "05-08",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KOHARU-UTATANE",
+      "name": "转寝小春",
+      "birth_year": -5,
+      "birthday": "09-01",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-TORIFU-AKIMICHI",
+      "name": "秋道取风",
+      "birth_year": -5,
+      "birthday": "09-15",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KAGAMI-UCHIHA",
+      "name": "宇智波镜",
+      "birth_year": -5,
+      "birthday": "09-15",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "猿飞琵琶湖",
+      "birth_year": -5,
+      "birthday": "09-15",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-EBIZO",
+      "name": "海老藏",
+      "birth_year": -4,
+      "birthday": "01-26",
+      "age_at_year_start": 6,
+      "age_after_birthday": 7,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "三船",
+      "birth_year": 3,
+      "birthday": "04-01",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    }
+  ]
+}

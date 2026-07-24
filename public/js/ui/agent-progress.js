@@ -1,4 +1,5 @@
 import { eventBus } from '../core/event-bus.js';
+import { ImageContractStreamFilter } from '../core/image-studio/contracts.js';
 
 const STAGES = [
   { key: 'state_snap',       kanji: '凝', label: '界域快照' },
@@ -20,6 +21,8 @@ class AgentProgress extends HTMLElement {
     this._completedStages = new Set();
     this._detail = '';
     this._streamText = '';
+    this._streamAgent = null;
+    this._streamFilter = new ImageContractStreamFilter();
     this._unsubs = [];
   }
 
@@ -43,7 +46,12 @@ class AgentProgress extends HTMLElement {
     }
     this._currentStage = stage;
     this._detail = detail || '';
-    this._streamText = ''; 
+    this._streamText = '';
+    this._streamAgent = null;
+    this._streamFilter = new ImageContractStreamFilter();
+    if (this._streamEl) {
+      this._streamEl.textContent = '';
+    }
     
     if (stage === 'done') {
       this._completedStages.add('archive');
@@ -58,15 +66,23 @@ class AgentProgress extends HTMLElement {
     this._update();
     setTimeout(() => this.remove(), 3000);
   }
-  
+
   _onStream(agent, chunk) {
-    this._streamText += chunk;
+    if (!chunk) return;
+    // Planner 的未来推演可以展示；NPC 私密意图与审校记录不能伪装成正文。
+    if (String(agent || '').startsWith('char-') || String(agent || '').startsWith('critic-')) return;
+    if (this._streamAgent !== agent) {
+      this._streamAgent = agent;
+      this._streamText = '';
+      this._streamFilter = new ImageContractStreamFilter();
+    }
+
+    this._streamText += this._streamFilter.push(chunk);
     if (this._streamEl) {
-      const displayLength = 1000; 
-      const textToShow = this._streamText.length > displayLength 
-        ? '...' + this._streamText.slice(-displayLength) 
+      const displayLength = 1000;
+      this._streamEl.textContent = this._streamText.length > displayLength
+        ? `...${this._streamText.slice(-displayLength)}`
         : this._streamText;
-      this._streamEl.textContent = textToShow;
       this._streamEl.scrollTop = this._streamEl.scrollHeight;
     }
   }

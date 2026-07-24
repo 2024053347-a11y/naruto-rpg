@@ -1,19 +1,34 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { GAME_DATA } from '../data/game-data.js';
+import {
+  calculateCombatLevel,
+  combatAttributesFromPlayerState,
+  combatMasteriesFromPlayerState
+} from './combat-level.js';
 
 const ATTR_MAP = {
   chakra: '属性·查克拉',
   chakra_current: '属性·当前查克拉',
   spirit: '属性·精神力',
   spirit_current: '属性·当前精神力',
-  willpower: '属性·意志力',
-  willpower_current: '属性·当前意志力',
+  vitality: '属性·生命力',
+  vitality_current: '属性·当前生命力',
   stamina: '属性·体力',
   stamina_current: '属性·当前体力',
   speed: '属性·速度',
   luck: '属性·幸运'
 };
+
+const COMBAT_LEVEL_INPUT_KEYS = new Set([
+  '属性·查克拉', '属性·生命力', '属性·精神力', '属性·体力', '属性·速度', '属性·幸运',
+  '进度·忍术熟练度', '进度·体术熟练度', '进度·幻术熟练度'
+]);
+
+function affectsCombatLevel(key) {
+  return COMBAT_LEVEL_INPUT_KEYS.has(key)
+    || /^技能·(忍术|体术|幻术)·/.test(String(key || ''));
+}
 
 class AttributeSystem {
   getAttribute(name) {
@@ -36,9 +51,9 @@ class AttributeSystem {
     const bestGenjutsu = best(skills.genjutsu);
     return {
       ninjutsu_power: Math.round((attributes.chakra || 0) * 0.45 + (attributes.spirit || 0) * 0.25 + bestJutsu * 0.7),
-      taijutsu_power: Math.round((attributes.stamina || 0) * 0.25 + (attributes.speed || 0) * 0.9 + (attributes.willpower || 0) * 0.2 + bestTaijutsu * 0.9),
+      taijutsu_power: Math.round((attributes.stamina || 0) * 0.45 + (attributes.speed || 0) * 0.9 + bestTaijutsu * 0.9),
       genjutsu_power: Math.round((attributes.spirit || 0) * 0.75 + (attributes.chakra || 0) * 0.2 + bestGenjutsu * 0.9),
-      defense: Math.round((attributes.stamina || 0) * 0.18 + (attributes.willpower || 0) * 0.25),
+      defense: Math.round((attributes.vitality || 0) * 0.18 + (attributes.stamina || 0) * 0.25),
       evasion: Math.round((attributes.speed || 0) * 0.6 + (attributes.luck || 0) * 0.8),
       chakra_control: Math.round((attributes.spirit || 0) * 0.5 + (attributes.chakra || 0) * 0.15 + bestJutsu * 0.35),
       initiative: Math.round((attributes.speed || 0) * 0.8 + (attributes.spirit || 0) * 0.15 + (attributes.luck || 0) * 0.5)
@@ -85,9 +100,9 @@ class AttributeSystem {
     return a.spirit > 0 ? Math.round((a.spirit_current / a.spirit) * 100) : 0;
   }
 
-  getWillpowerPct() {
+  getVitalityPct() {
     const a = this.getAttributes();
-    return a.willpower > 0 ? Math.round((a.willpower_current / a.willpower) * 100) : 0;
+    return a.vitality > 0 ? Math.round((a.vitality_current / a.vitality) * 100) : 0;
   }
 
   getStaminaPct() {
@@ -112,6 +127,13 @@ class AttributeSystem {
     return newVal;
   }
 
+  consumeVitality(amount) {
+    const current = stateManager.get('属性·当前生命力');
+    const newVal = Math.max(0, current - amount);
+    stateManager.update([{ key: '属性·当前生命力', op: '=', value: newVal }]);
+    return newVal;
+  }
+
   restoreChakra(amount) {
     const max = stateManager.get('属性·查克拉');
     const current = stateManager.get('属性·当前查克拉');
@@ -126,7 +148,7 @@ class AttributeSystem {
     const pairs = [
       ['chakra', 'chakra_current'],
       ['spirit', 'spirit_current'],
-      ['willpower', 'willpower_current'],
+      ['vitality', 'vitality_current'],
       ['stamina', 'stamina_current']
     ];
     for (const [maxK, curK] of pairs) {
@@ -141,6 +163,14 @@ class AttributeSystem {
     const current = stateManager.get('属性·当前体力');
     const newVal = Math.min(max, current + amount);
     stateManager.update([{ key: '属性·当前体力', op: '=', value: newVal }]);
+    return newVal;
+  }
+
+  restoreVitality(amount) {
+    const max = stateManager.get('属性·生命力');
+    const current = stateManager.get('属性·当前生命力');
+    const newVal = Math.min(max, current + amount);
+    stateManager.update([{ key: '属性·当前生命力', op: '=', value: newVal }]);
     return newVal;
   }
 
@@ -182,53 +212,13 @@ class AttributeSystem {
   }
 
   evaluatePowerLevel() {
-    const attrs = this.getAttributes();
-    const chakra = attrs.chakra || 0;
-    const spirit = attrs.spirit || 0;
-    const willpower = attrs.willpower || 0;
-    const vitality = attrs.stamina || 0;
-    const speed = attrs.speed || 0;
-    const luck = attrs.luck || 0;
-
-    const nin = stateManager.get('进度·忍术熟练度') || 0;
-    const tai = stateManager.get('进度·体术熟练度') || 0;
-    const gen = stateManager.get('进度·幻术熟练度') || 0;
-    const def = stateManager.get('进度·防御熟练度') || 0;
-
-    const coreScore = (chakra * 0.08) + (spirit * 0.08) + (willpower * 0.08) + (vitality * 0.08) + (speed * 0.06) + (luck * 0.02);
-    const masteryScore = (nin * 0.15) + (tai * 0.15) + (gen * 0.15) + (def * 0.15);
-
-    const totalScore = coreScore + masteryScore;
-    const maxMastery = Math.max(nin, tai, gen);
-
-    const benchmarks = [
-      { level: '超S级', score: 350, mastery: 95 },
-      { level: 'S级', score: 250, mastery: 85 },
-      { level: 'A级', score: 180, mastery: 75 },
-      { level: 'B级', score: 120, mastery: 60 },
-      { level: 'C级', score: 70, mastery: 40 },
-      { level: 'D级', score: 30, mastery: 20 },
-      { level: 'E级', score: 0, mastery: 0 }
-    ];
-
-    let newLevel = 'E级';
-    for (let i = 0; i < benchmarks.length; i++) {
-      const b = benchmarks[i];
-      if (totalScore >= b.score) {
-        if (maxMastery >= b.mastery) {
-          newLevel = b.level;
-          break;
-        } else {
-          const prevIndex = i + 1;
-          const prevLevel = benchmarks[prevIndex] ? benchmarks[prevIndex].level : 'E级';
-          newLevel = prevLevel.replace('级', '级精英');
-          break;
-        }
-      }
-    }
+    const state = stateManager.state;
+    const attrs = combatAttributesFromPlayerState(state);
+    const masteries = combatMasteriesFromPlayerState(state);
+    const newLevel = calculateCombatLevel(attrs, masteries);
 
     const currentLevel = this.getPowerLevel();
-    if (newLevel !== currentLevel && newLevel !== currentLevel.replace('级精英', '级')) {
+    if (newLevel !== currentLevel) {
       stateManager.update([{ key: '玩家·战力等级', op: '=', value: newLevel }]);
       eventBus.emit('attribute:power-level-up', { level: newLevel });
     }
@@ -243,4 +233,8 @@ class AttributeSystem {
 
 export const attributeSystem = new AttributeSystem();
 eventBus.on('pipeline:vars-updated', () => attributeSystem.evaluatePowerLevel());
+eventBus.on('state:restored', () => attributeSystem.evaluatePowerLevel());
+eventBus.on('state:batch-changed', ({ updates = [] } = {}) => {
+  if (updates.some(update => affectsCombatLevel(update?.key))) attributeSystem.evaluatePowerLevel();
+});
 export default attributeSystem;

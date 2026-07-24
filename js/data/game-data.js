@@ -24,8 +24,9 @@ export const GAME_DATA = {
 
   attributes: {
     chakra: { name: '查克拉量', icon: 'chakra', description: '忍术威力、查克拉上限、学习速度', color: '#42A5F5' },
+    vitality: { name: '生命力', icon: 'stamina', description: '生命值上限、承伤与生存能力', color: '#66BB6A' },
+    stamina: { name: '体力', icon: 'willpower', description: '体术与高强度身体行动的资源', color: '#eb613f' },
     spirit: { name: '精神力', icon: 'spirit', description: '幻术抗性、感知能力、意志检定', color: '#CE93D8' },
-    willpower: { name: '意志力', icon: 'willpower', description: '体术威力、HP上限、异常抵抗', color: '#eb613f' },
     speed: { name: '速度', icon: 'speed', description: '先手概率、闪避率、行动顺序', color: '#81C784' },
     luck: { name: '幸运', icon: 'luck', description: '暴击率、掉落品质、随机事件', color: '#ef5350' }
   },
@@ -34,9 +35,9 @@ export const GAME_DATA = {
     baseAttributeRange: [5, 20],
     chakraMultiplier: 1,
     spiritMultiplier: 1,
-    willpowerMultiplier: 1,
-    staminaBase: 20,
-    staminaMultiplier: 2,
+    staminaMultiplier: 1,
+    vitalityBase: 20,
+    vitalityMultiplier: 2,
     speedMultiplier: 1,
     startingLuckMultiplier: 1,
     resourceGrowthStep: 2,
@@ -45,13 +46,13 @@ export const GAME_DATA = {
   },
 
   rankBenchmarks: {
-    '忍校学生': { chakra: [20, 80], stamina: [80, 180], speed: [15, 45], spirit: [15, 70], willpower: [60, 160], luck: [5, 25], skillMastery: [0, 35] },
-    '下忍': { chakra: [40, 160], stamina: [120, 260], speed: [25, 75], spirit: [35, 140], willpower: [100, 240], luck: [5, 35], skillMastery: [20, 60] },
-    '中忍': { chakra: [80, 300], stamina: [180, 380], speed: [45, 110], spirit: [70, 260], willpower: [150, 340], luck: [5, 50], skillMastery: [45, 75] },
-    '特别上忍': { chakra: [120, 420], stamina: [220, 480], speed: [65, 140], spirit: [100, 360], willpower: [180, 430], luck: [5, 65], skillMastery: [70, 90] },
-    '上忍': { chakra: [180, 650], stamina: [280, 650], speed: [85, 180], spirit: [150, 550], willpower: [230, 580], luck: [5, 80], skillMastery: [80, 100] },
-    '精英上忍': { chakra: [320, 1000], stamina: [420, 900], speed: [120, 240], spirit: [260, 850], willpower: [350, 800], luck: [5, 95], skillMastery: [90, 100] },
-    '影级': { chakra: [600, 2500], stamina: [650, 1400], speed: [160, 320], spirit: [500, 2200], willpower: [550, 1250], luck: [5, 120], skillMastery: [95, 100] }
+    '忍校学生': { chakra: [20, 80], vitality: [80, 180], speed: [15, 45], spirit: [15, 70], stamina: [60, 160], luck: [5, 25], skillMastery: [0, 35] },
+    '下忍': { chakra: [40, 160], vitality: [120, 260], speed: [25, 75], spirit: [35, 140], stamina: [100, 240], luck: [5, 35], skillMastery: [20, 60] },
+    '中忍': { chakra: [80, 300], vitality: [180, 380], speed: [45, 110], spirit: [70, 260], stamina: [150, 340], luck: [5, 50], skillMastery: [45, 75] },
+    '特别上忍': { chakra: [120, 420], vitality: [220, 480], speed: [65, 140], spirit: [100, 360], stamina: [180, 430], luck: [5, 65], skillMastery: [70, 90] },
+    '上忍': { chakra: [180, 650], vitality: [280, 650], speed: [85, 180], spirit: [150, 550], stamina: [230, 580], luck: [5, 80], skillMastery: [80, 100] },
+    '精英上忍': { chakra: [320, 1000], vitality: [420, 900], speed: [120, 240], spirit: [260, 850], stamina: [350, 800], luck: [5, 95], skillMastery: [90, 100] },
+    '影级': { chakra: [600, 2500], vitality: [650, 1400], speed: [160, 320], spirit: [500, 2200], stamina: [550, 1250], luck: [5, 120], skillMastery: [95, 100] }
   },
 
   talents: {
@@ -62,7 +63,7 @@ export const GAME_DATA = {
     },
     '努力的天才': {
       id: '努力的天才', description: '经验获取+20%，全属性成长+10%',
-      statBonus: { willpower: 3 },
+      statBonus: { stamina: 3 },
       effects: { exp_boost: 0.2, growth_boost: 0.1 }
     },
     '血继限界继承者': {
@@ -72,7 +73,7 @@ export const GAME_DATA = {
     },
     '体术专家': {
       id: '体术专家', description: '体术伤害+25%，连击概率+15%',
-      statBonus: { willpower: 2, speed: 1 },
+      statBonus: { stamina: 2, speed: 1 },
       effects: { taijutsu_damage: 0.25, combo_chance: 0.15 }
     },
     '幻术天赋': {
@@ -110,7 +111,7 @@ export const GAME_DATA = {
       equipment: { tools: { '破旧的忍者手册': { quantity: 1, quality: '破旧' } } },
       ryo: 100,
       location: '木叶孤儿院',
-      statBonus: { willpower: 2 },
+      statBonus: { stamina: 2 },
       relationships: {}
     },
     '外村移民': {
@@ -258,20 +259,22 @@ export const GAME_DATA = {
     const get = (key) => Math.max(5, (baseAttrs[key] || 5) + (statBonus[key] || 0));
     const chakraBase = get('chakra');
     const spiritBase = get('spirit');
-    const willBase = get('willpower');
+    const staminaBase = Math.max(5, (baseAttrs.stamina ?? baseAttrs.willpower ?? 5) + (statBonus.stamina ?? statBonus.willpower ?? 0));
     const speedBase = get('speed');
     const luckBase = get('luck');
     const chakra = chakraBase * this.balance.chakraMultiplier;
     const spirit = spiritBase * this.balance.spiritMultiplier;
-    const willpower = willBase * this.balance.willpowerMultiplier;
-    const stamina = this.balance.staminaBase + willBase * this.balance.staminaMultiplier;
+    const stamina = staminaBase * this.balance.staminaMultiplier;
+    const vitality = Number.isFinite(Number(baseAttrs.vitality))
+      ? Math.max(5, Number(baseAttrs.vitality) + (statBonus.vitality || 0))
+      : this.balance.vitalityBase + staminaBase * this.balance.vitalityMultiplier;
     return {
       chakra, chakra_current: chakra,
       spirit, spirit_current: spirit,
-      willpower, willpower_current: willpower,
+      vitality, vitality_current: vitality,
+      stamina, stamina_current: stamina,
       speed: speedBase * this.balance.speedMultiplier,
       luck: luckBase * this.balance.startingLuckMultiplier,
-      stamina, stamina_current: stamina
     };
   },
 

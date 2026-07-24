@@ -19,10 +19,15 @@ class MemoryPanel extends HTMLElement {
         <section>
           <h3>深度整理</h3>
           <div class="grid">
+            <label>启用 AI 滚动压缩</label>
+            <div>
+              <input type="checkbox" name="memAiCompressionEnabled" ${cfg.aiCompressionEnabled ? 'checked' : ''}>
+              <div class="hint" style="font-size:10px;color:var(--c-text-muted);margin-top:2px;">默认关闭。达到压缩阈值时会产生额外后台模型调用；关闭后仍会使用本地无 API 压缩。</div>
+            </div>
             <label>启用深度整理</label>
             <div>
               <input type="checkbox" name="memDeepEnabled" ${cfg.deepEnabled ? 'checked' : ''}>
-              <div class="hint" style="font-size:10px;color:var(--c-text-muted);margin-top:2px;">开启后系统会在后台定期清理旧记忆，固化重要情节。</div>
+              <div class="hint" style="font-size:10px;color:var(--c-text-muted);margin-top:2px;">默认关闭。开启后系统会在后台定期调用模型清理旧记忆，固化重要情节。</div>
             </div>
             <label>整理周期(回合)</label>
             <div>
@@ -111,7 +116,7 @@ class MemoryPanel extends HTMLElement {
       </div>`;
 
     // 字段变更即时保存
-    const memFields = ['memDeepEnabled','memDeepCycle','memDeepModel','memChapterWindow',
+    const memFields = ['memAiCompressionEnabled','memDeepEnabled','memDeepCycle','memDeepModel','memChapterWindow',
       'memMaxTurnSummaries','memPromptBudget','memFactsLimit','memArchivedLimit',
       'memRecallEnabled','memRecallLifetime','memNpcSummaryEnabled','memNpcSummaryFrequency'];
     for (const f of memFields) {
@@ -135,7 +140,8 @@ class MemoryPanel extends HTMLElement {
   }
 
   _onFieldChange() {
-    saveMemoryConfig({
+    const config = saveMemoryConfig({
+      aiCompressionEnabled: this._getVal('memAiCompressionEnabled'),
       deepEnabled: this._getVal('memDeepEnabled'),
       deepCycle: Number(this._getVal('memDeepCycle')) || 36,
       deepModel: this._getVal('memDeepModel') === 'updater' ? 'updater' : 'main',
@@ -149,6 +155,11 @@ class MemoryPanel extends HTMLElement {
       npcSummaryEnabled: this._getVal('memNpcSummaryEnabled'),
       npcSummaryFrequency: Number(this._getVal('memNpcSummaryFrequency')) || 10
     });
+    this.dispatchEvent(new CustomEvent('memory-config:changed', {
+      bubbles: true,
+      composed: true,
+      detail: { config }
+    }));
   }
 
   /* ────────── 统计与浏览 ────────── */

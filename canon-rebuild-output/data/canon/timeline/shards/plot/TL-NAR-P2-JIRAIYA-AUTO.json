@@ -1,0 +1,2912 @@
+{
+  "$schema": "../../../schemas/timeline-event.schema.json",
+  "schema_version": "naruto.timeline.v1",
+  "dataset": "naruto-manga-databook",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "TL-NAR-P2-JIRAIYA-AUTO",
+    "arc_id": "ARC-NAR-P2-JIRAIYA",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 37,
+    "date_start": "K067-05-01",
+    "date_end": "K067-05-08",
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 368,
+        "chapter_end": 383
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0001",
+      "title": "自来也豪杰物语·剧情节拍001",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "dawn",
+        "day_order": 1100010,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也潜入雨隐村。",
+      "facts": [
+        "自来也潜入雨隐村。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0002",
+      "title": "自来也豪杰物语·剧情节拍002",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "morning",
+        "day_order": 1100020,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0001"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也告诉纲手，他要亲自去晓组织最可能藏身的地方——雨隐村搜集情报。",
+      "facts": [
+        "自来也告诉纲手，他要亲自去晓组织最可能藏身的地方——雨隐村搜集情报。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0001"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0003",
+      "title": "自来也豪杰物语·剧情节拍003",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "noon",
+        "day_order": 1100030,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0002"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也成功进入雨隐村后几秒钟，就被佩恩察觉了。",
+      "facts": [
+        "自来也成功进入雨隐村后几秒钟，就被佩恩察觉了。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0004",
+      "title": "自来也豪杰物语·剧情节拍004",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "afternoon",
+        "day_order": 1100040,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0003"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也在村里徘徊，向居民们打听他们的首领佩恩。",
+      "facts": [
+        "自来也在村里徘徊，向居民们打听他们的首领佩恩。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0003"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0005",
+      "title": "自来也豪杰物语·剧情节拍005",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "evening",
+        "day_order": 1100050,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0004"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在搜集情报无果后，他抓住了两名雨隐忍者，他们告诉他佩恩和天使大人（小南）统治着村子。",
+      "facts": [
+        "在搜集情报无果后，他抓住了两名雨隐忍者，他们告诉他佩恩和天使大人（小南）统治着村子。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0004"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0006",
+      "title": "自来也豪杰物语·剧情节拍006",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-01",
+        "scheduled_end": "K067-05-01",
+        "time_of_day": "night",
+        "day_order": 1100060,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0005"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也试图说服两人带他去见佩恩，但他们拒绝了。",
+      "facts": [
+        "自来也试图说服两人带他去见佩恩，但他们拒绝了。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0005"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0007",
+      "title": "自来也豪杰物语·剧情节拍007",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-02",
+        "scheduled_end": "K067-05-02",
+        "time_of_day": "late_night",
+        "day_order": 1100070,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0006"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "与此同时，佩恩知道有入侵者潜入了村子，命令小南去搜索入侵者。",
+      "facts": [
+        "与此同时，佩恩知道有入侵者潜入了村子，命令小南去搜索入侵者。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0006"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0008",
+      "title": "自来也豪杰物语·剧情节拍008",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-02",
+        "scheduled_end": "K067-05-02",
+        "time_of_day": "dawn",
+        "day_order": 1100080,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0007"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "她随后变成多张折纸，在村中搜寻入侵者。",
+      "facts": [
+        "她随后变成多张折纸，在村中搜寻入侵者。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0007"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-proofread-fix-001"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0009",
+      "title": "自来也豪杰物语·剧情节拍009",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-02",
+        "scheduled_end": "K067-05-02",
+        "time_of_day": "morning",
+        "day_order": 1100090,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0008"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "小南找到了自来也，并通知了佩恩，佩恩随后在一个秘密房间内切换了身体。",
+      "facts": [
+        "小南找到了自来也，并通知了佩恩，佩恩随后在一个秘密房间内切换了身体。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0008"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0010",
+      "title": "自来也豪杰物语·剧情节拍010",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-02",
+        "scheduled_end": "K067-05-02",
+        "time_of_day": "noon",
+        "day_order": 1100100,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0009"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也进入仙人模式。",
+      "facts": [
+        "自来也进入仙人模式。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0009"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0011",
+      "title": "自来也豪杰物语·剧情节拍011",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-02",
+        "scheduled_end": "K067-05-02",
+        "time_of_day": "afternoon",
+        "day_order": 1100110,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0010"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "小南随后上前攻击自来也，两人战斗了一段时间，不相上下。",
+      "facts": [
+        "小南随后上前攻击自来也，两人战斗了一段时间，不相上下。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0010"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0012",
+      "title": "自来也豪杰物语·剧情节拍012",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-03",
+        "scheduled_end": "K067-05-03",
+        "time_of_day": "evening",
+        "day_order": 1100120,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0011"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也随后谈起了他与小南、弥彦和长门的往事。",
+      "facts": [
+        "自来也随后谈起了他与小南、弥彦和长门的往事。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0011"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0013",
+      "title": "自来也豪杰物语·剧情节拍013",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-03",
+        "scheduled_end": "K067-05-03",
+        "time_of_day": "night",
+        "day_order": 1100130,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0012"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在讲述了他与这三个孩子的相处经历后，他问小南他们是否已死。",
+      "facts": [
+        "在讲述了他与这三个孩子的相处经历后，他问小南他们是否已死。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0012"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0014",
+      "title": "自来也豪杰物语·剧情节拍014",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-03",
+        "scheduled_end": "K067-05-03",
+        "time_of_day": "late_night",
+        "day_order": 1100140,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0013"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "小南没有回答，而是用她的式纸之舞攻击，但自来也用火遁进行反击。",
+      "facts": [
+        "小南没有回答，而是用她的式纸之舞攻击，但自来也用火遁进行反击。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0013"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0015",
+      "title": "自来也豪杰物语·剧情节拍015",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-03",
+        "scheduled_end": "K067-05-03",
+        "time_of_day": "dawn",
+        "day_order": 1100150,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0014"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "小南制造了无数纸手里剑，但自来也用油使其失效，并用火遁攻击她。",
+      "facts": [
+        "小南制造了无数纸手里剑，但自来也用油使其失效，并用火遁攻击她。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0014"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0016",
+      "title": "自来也豪杰物语·剧情节拍016",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-03",
+        "scheduled_end": "K067-05-03",
+        "time_of_day": "morning",
+        "day_order": 1100160,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0015"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也试图逼问小南关于佩恩的身份，但被佩恩的变身打断。",
+      "facts": [
+        "自来也试图逼问小南关于佩恩的身份，但被佩恩的变身打断。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0015"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0017",
+      "title": "自来也豪杰物语·剧情节拍017",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-04",
+        "scheduled_end": "K067-05-04",
+        "time_of_day": "noon",
+        "day_order": 1100170,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0016"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "佩恩召唤了一个巨大的多头犬通灵兽攻击自来也。",
+      "facts": [
+        "佩恩召唤了一个巨大的多头犬通灵兽攻击自来也。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0016"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0018",
+      "title": "自来也豪杰物语·剧情节拍018",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-04",
+        "scheduled_end": "K067-05-04",
+        "time_of_day": "afternoon",
+        "day_order": 1100180,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0017"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也用螺旋丸攻击通灵兽，但它分裂成了两个。",
+      "facts": [
+        "自来也用螺旋丸攻击通灵兽，但它分裂成了两个。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0017"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0019",
+      "title": "自来也豪杰物语·剧情节拍019",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-04",
+        "scheduled_end": "K067-05-04",
+        "time_of_day": "evening",
+        "day_order": 1100190,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0018"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也逃走了，但被通灵兽追赶。",
+      "facts": [
+        "自来也逃走了，但被通灵兽追赶。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0018"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0020",
+      "title": "自来也豪杰物语·剧情节拍020",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-04",
+        "scheduled_end": "K067-05-04",
+        "time_of_day": "night",
+        "day_order": 1100200,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0019"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也逃入下水道，通灵兽被卡住了，但仍在追他。",
+      "facts": [
+        "自来也逃入下水道，通灵兽被卡住了，但仍在追他。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0019"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0021",
+      "title": "自来也豪杰物语·剧情节拍021",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-04",
+        "scheduled_end": "K067-05-04",
+        "time_of_day": "late_night",
+        "day_order": 1100210,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0020"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "被困在下水道里，自来也决定进入仙人模式，召唤深作和志麻两位蛤蟆仙人。",
+      "facts": [
+        "被困在下水道里，自来也决定进入仙人模式，召唤深作和志麻两位蛤蟆仙人。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0020"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0022",
+      "title": "自来也豪杰物语·剧情节拍022",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-05",
+        "scheduled_end": "K067-05-05",
+        "time_of_day": "dawn",
+        "day_order": 1100220,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0021"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在两位仙人的协助下，自来也准备再次挑战佩恩。",
+      "facts": [
+        "在两位仙人的协助下，自来也准备再次挑战佩恩。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0021"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0023",
+      "title": "自来也豪杰物语·剧情节拍023",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-05",
+        "scheduled_end": "K067-05-05",
+        "time_of_day": "morning",
+        "day_order": 1100230,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0022"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也用蛙鸣之术迷惑了佩恩的通灵兽。",
+      "facts": [
+        "自来也用蛙鸣之术迷惑了佩恩的通灵兽。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0022"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0024",
+      "title": "自来也豪杰物语·剧情节拍024",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-05",
+        "scheduled_end": "K067-05-05",
+        "time_of_day": "noon",
+        "day_order": 1100240,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0023"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在鸣人这一边，鸣人从自来也的蛤蟆那里收到了关于情报收集的最新消息。",
+      "facts": [
+        "在鸣人这一边，鸣人从自来也的蛤蟆那里收到了关于情报收集的最新消息。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0023"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0025",
+      "title": "自来也豪杰物语·剧情节拍025",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-05",
+        "scheduled_end": "K067-05-05",
+        "time_of_day": "afternoon",
+        "day_order": 1100250,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0024"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也遇到了佩恩的六道分身。",
+      "facts": [
+        "自来也遇到了佩恩的六道分身。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0024"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0026",
+      "title": "自来也豪杰物语·剧情节拍026",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-05",
+        "scheduled_end": "K067-05-05",
+        "time_of_day": "evening",
+        "day_order": 1100260,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0025"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也意识到他们拥有共享视野。",
+      "facts": [
+        "自来也意识到他们拥有共享视野。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0025"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0027",
+      "title": "自来也豪杰物语·剧情节拍027",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-06",
+        "scheduled_end": "K067-05-06",
+        "time_of_day": "night",
+        "day_order": 1100270,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0026"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "尽管如此，自来也还是成功击败了四个佩恩分身。",
+      "facts": [
+        "尽管如此，自来也还是成功击败了四个佩恩分身。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0026"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0028",
+      "title": "自来也豪杰物语·剧情节拍028",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-06",
+        "scheduled_end": "K067-05-06",
+        "time_of_day": "late_night",
+        "day_order": 1100280,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0027"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也用结界术将剩下的两个佩恩困住。",
+      "facts": [
+        "自来也用结界术将剩下的两个佩恩困住。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0027"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0029",
+      "title": "自来也豪杰物语·剧情节拍029",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-06",
+        "scheduled_end": "K067-05-06",
+        "time_of_day": "dawn",
+        "day_order": 1100290,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0028"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "当自来也准备抓住佩恩问话时，他被一个佩恩从背后偷袭。",
+      "facts": [
+        "当自来也准备抓住佩恩问话时，他被一个佩恩从背后偷袭。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0028"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0030",
+      "title": "自来也豪杰物语·剧情节拍030",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-06",
+        "scheduled_end": "K067-05-06",
+        "time_of_day": "morning",
+        "day_order": 1100300,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0029"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "被攻击后，自来也失去了左臂，声带也被破坏。",
+      "facts": [
+        "被攻击后，自来也失去了左臂，声带也被破坏。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0029"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0031",
+      "title": "自来也豪杰物语·剧情节拍031",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-06",
+        "scheduled_end": "K067-05-06",
+        "time_of_day": "noon",
+        "day_order": 1100310,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0030"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也在墙上留下了关于佩恩秘密的暗号信息。",
+      "facts": [
+        "自来也在墙上留下了关于佩恩秘密的暗号信息。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0030"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0032",
+      "title": "自来也豪杰物语·剧情节拍032",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-07",
+        "scheduled_end": "K067-05-07",
+        "time_of_day": "afternoon",
+        "day_order": 1100320,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0031"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "临死前，自来也回忆了他的人生，想起了他写的书《自来也豪杰物语》中关于预言之子的内容。",
+      "facts": [
+        "临死前，自来也回忆了他的人生，想起了他写的书《自来也豪杰物语》中关于预言之子的内容。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0031"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0033",
+      "title": "自来也豪杰物语·剧情节拍033",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-07",
+        "scheduled_end": "K067-05-07",
+        "time_of_day": "evening",
+        "day_order": 1100330,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0032"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也感叹他本想让鸣人成为预言之子来打破诅咒，但现在他只能把这个期望托付给鸣人了。",
+      "facts": [
+        "自来也感叹他本想让鸣人成为预言之子来打破诅咒，但现在他只能把这个期望托付给鸣人了。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0032"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0034",
+      "title": "自来也豪杰物语·剧情节拍034",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-07",
+        "scheduled_end": "K067-05-07",
+        "time_of_day": "night",
+        "day_order": 1100340,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0033"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也被佩恩吸入深海，沉入了海底。",
+      "facts": [
+        "自来也被佩恩吸入深海，沉入了海底。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0033"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0035",
+      "title": "自来也豪杰物语·剧情节拍035",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-07",
+        "scheduled_end": "K067-05-07",
+        "time_of_day": "late_night",
+        "day_order": 1100350,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0034"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "自来也的死讯传回木叶，纲手和鸣人悲痛不已。",
+      "facts": [
+        "自来也的死讯传回木叶，纲手和鸣人悲痛不已。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0034"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0036",
+      "title": "自来也豪杰物语·剧情节拍036",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-07",
+        "scheduled_end": "K067-05-07",
+        "time_of_day": "dawn",
+        "day_order": 1100360,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0035"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "鸣人深受打击，无法接受自来也的死讯，陷入悲伤之中。",
+      "facts": [
+        "鸣人深受打击，无法接受自来也的死讯，陷入悲伤之中。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0035"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    },
+    {
+      "id": "EV-NAR-P2-JIRAIYA-0037",
+      "title": "自来也豪杰物语·剧情节拍037",
+      "aliases": [
+        "Tale of Jiraiya the Gallant"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-NAR-P2-JIRAIYA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-05-08",
+        "scheduled_end": "K067-05-08",
+        "time_of_day": "morning",
+        "day_order": 1100370,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-05-01",
+          "latest": "K067-05-08"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-NAR-P2-JIRAIYA-0036"
+        ],
+        "rationale": "依据NARUTO漫画第368-383章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "鸣人后来振作起来，发誓要继承自来也的意志，找到阻止循环仇恨的方法。",
+      "facts": [
+        "鸣人后来振作起来，发誓要继承自来也的意志，找到阻止循环仇恨的方法。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-NAR-P2-JIRAIYA-0036"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "自来也豪杰物语",
+          "Tale of Jiraiya the Gallant"
+        ],
+        "tags": [
+          "manga_canon",
+          "nar-p2-jiraiya",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter_start": 368,
+          "chapter_end": 383,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Tale_of_Jiraiya_the_Gallant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-NAR-P2-JIRAIYA-AUTO",
+        "reviewed_by": "manual-translation-NAR-P2-JIRAIYA-BATCH-ALL"
+      }
+    }
+  ],
+  "unresolved": []
+}

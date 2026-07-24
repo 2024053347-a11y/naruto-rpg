@@ -1,0 +1,303 @@
+{
+  "schema_version": "naruto.timeline.manifest.v1",
+  "calendar": "konoha-360-v1",
+  "authority": "worldbook_then_manga_then_databook",
+  "date_allocation": {
+    "status": "frozen",
+    "version": "project_dates_v3",
+    "frozen_at": "2026-07-18",
+    "rule": "原著没有绝对日期时，由项目依据世界书年份、漫画顺序和相对时长分配唯一运行日期。后续史料修正日期时不得改变事件ID。"
+  },
+  "shards": [
+    {
+      "id": "TL-YEARLY-ALMANAC-AUTO",
+      "path": "shards/TL-YEARLY-ALMANAC-AUTO.json",
+      "id_range": [
+        1,
+        209
+      ],
+      "continuity": "mixed_project_boundaries"
+    },
+    {
+      "id": "TL-PROLOGUE-P01",
+      "path": "shards/TL-PROLOGUE-P01.json",
+      "id_range": [
+        1,
+        99
+      ]
+    },
+    {
+      "id": "TL-PART1-P01",
+      "path": "shards/TL-PART1-P01.json",
+      "id_range": [
+        1,
+        99
+      ]
+    },
+    {
+      "id": "TL-LATER-ERAS-P01",
+      "path": "shards/TL-LATER-ERAS-P01.json",
+      "id_range": [
+        1,
+        99
+      ]
+    },
+    {
+      "id": "TL-NAR-P1-WAVES-AUTO",
+      "path": "shards/plot/TL-NAR-P1-WAVES-AUTO.json",
+      "id_range": [
+        1,
+        272
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P1-CHUNIN-AUTO",
+      "path": "shards/plot/TL-NAR-P1-CHUNIN-AUTO.json",
+      "id_range": [
+        1,
+        143
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P1-CRUSH-AUTO",
+      "path": "shards/plot/TL-NAR-P1-CRUSH-AUTO.json",
+      "id_range": [
+        1,
+        132
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P1-TSUNADE-AUTO",
+      "path": "shards/plot/TL-NAR-P1-TSUNADE-AUTO.json",
+      "id_range": [
+        1,
+        227
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P1-SASUKE-AUTO",
+      "path": "shards/plot/TL-NAR-P1-SASUKE-AUTO.json",
+      "id_range": [
+        1,
+        123
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-GAIDEN-AUTO",
+      "path": "shards/plot/TL-NAR-GAIDEN-AUTO.json",
+      "id_range": [
+        1,
+        60
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-GAARA-AUTO",
+      "path": "shards/plot/TL-NAR-P2-GAARA-AUTO.json",
+      "id_range": [
+        1,
+        101
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-TENCHI-AUTO",
+      "path": "shards/plot/TL-NAR-P2-TENCHI-AUTO.json",
+      "id_range": [
+        1,
+        95
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-AKATSUKI-AUTO",
+      "path": "shards/plot/TL-NAR-P2-AKATSUKI-AUTO.json",
+      "id_range": [
+        1,
+        185
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-ITACHI-AUTO",
+      "path": "shards/plot/TL-NAR-P2-ITACHI-AUTO.json",
+      "id_range": [
+        1,
+        155
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-JIRAIYA-AUTO",
+      "path": "shards/plot/TL-NAR-P2-JIRAIYA-AUTO.json",
+      "id_range": [
+        1,
+        37
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-BROTHERS-AUTO",
+      "path": "shards/plot/TL-NAR-P2-BROTHERS-AUTO.json",
+      "id_range": [
+        1,
+        98
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-PAIN-AUTO",
+      "path": "shards/plot/TL-NAR-P2-PAIN-AUTO.json",
+      "id_range": [
+        1,
+        132
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-KAGE-AUTO",
+      "path": "shards/plot/TL-NAR-P2-KAGE-AUTO.json",
+      "id_range": [
+        1,
+        109
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-COUNTDOWN-AUTO",
+      "path": "shards/plot/TL-NAR-P2-COUNTDOWN-AUTO.json",
+      "id_range": [
+        1,
+        240
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-CONFRONT-AUTO",
+      "path": "shards/plot/TL-NAR-P2-CONFRONT-AUTO.json",
+      "id_range": [
+        1,
+        192
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-CLIMAX-AUTO",
+      "path": "shards/plot/TL-NAR-P2-CLIMAX-AUTO.json",
+      "id_range": [
+        1,
+        671
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-JINCHURIKI-AUTO",
+      "path": "shards/plot/TL-NAR-P2-JINCHURIKI-AUTO.json",
+      "id_range": [
+        1,
+        297
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-NAR-P2-KAGUYA-AUTO",
+      "path": "shards/plot/TL-NAR-P2-KAGUYA-AUTO.json",
+      "id_range": [
+        1,
+        199
+      ],
+      "continuity": "manga_canon"
+    },
+    {
+      "id": "TL-BOR-SARADA-AUTO",
+      "path": "shards/plot/TL-BOR-SARADA-AUTO.json",
+      "id_range": [
+        1,
+        116
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-MOMOSHIKI-AUTO",
+      "path": "shards/plot/TL-BOR-MOMOSHIKI-AUTO.json",
+      "id_range": [
+        1,
+        276
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-MUJINA-AUTO",
+      "path": "shards/plot/TL-BOR-MUJINA-AUTO.json",
+      "id_range": [
+        1,
+        4
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-AO-AUTO",
+      "path": "shards/plot/TL-BOR-AO-AUTO.json",
+      "id_range": [
+        1,
+        113
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-KAWAKI-AUTO",
+      "path": "shards/plot/TL-BOR-KAWAKI-AUTO.json",
+      "id_range": [
+        1,
+        193
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-CODE-AUTO",
+      "path": "shards/plot/TL-BOR-CODE-AUTO.json",
+      "id_range": [
+        1,
+        39
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-OMNIPOTENCE-AUTO",
+      "path": "shards/plot/TL-BOR-OMNIPOTENCE-AUTO.json",
+      "id_range": [
+        1,
+        4
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-RETURN-AUTO",
+      "path": "shards/plot/TL-BOR-RETURN-AUTO.json",
+      "id_range": [
+        1,
+        10
+      ],
+      "continuity": "boruto_manga"
+    },
+    {
+      "id": "TL-BOR-MATSURI-AUTO",
+      "path": "shards/plot/TL-BOR-MATSURI-AUTO.json",
+      "id_range": [
+        1,
+        3
+      ],
+      "continuity": "boruto_manga"
+    }
+  ],
+  "tombstones": [],
+  "continuities": {
+    "manga_canon": "NARUTO漫画1-700章",
+    "boruto_manga": "NARUTO外传与BORUTO漫画独立连续性"
+  }
+}

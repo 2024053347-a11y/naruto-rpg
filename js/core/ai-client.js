@@ -1,16 +1,307 @@
 import { eventBus } from './event-bus.js';
 
-// 检测是否在酒馆 iframe 环境中
-const USE_PROXY = typeof location !== 'undefined' && location.hostname.includes('qiwu.asia');
 export const isTavernEnv = typeof globalThis !== 'undefined' && typeof globalThis.generate === 'function';
+// 浏览器版默认可使用同源代理；酒馆 iframe 没有本项目服务端，必须直连酒馆桥接 API。
+const USE_PROXY = typeof location !== 'undefined' && !isTavernEnv;
+
+function withLocalProtocol(value) {
+  const raw = String(value || '').trim();
+  if (!raw || /^[a-z][a-z\d+.-]*:\/\//i.test(raw)) return raw;
+  if (/^(?:localhost|127(?:\.\d{1,3}){3}|0\.0\.0\.0|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|\[?::1\]?)(?::|\/|$)/i.test(raw)) {
+    return `http://${raw}`;
+  }
+  return raw;
+}
+
+function isPrivateIpv4(hostname) {
+  const parts = hostname.split('.').map(Number);
+  if (parts.length !== 4 || parts.some(part => !Number.isInteger(part) || part < 0 || part > 255)) return false;
+  return parts[0] === 10
+    || parts[0] === 127
+    || (parts[0] === 169 && parts[1] === 254)
+    || (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31)
+    || (parts[0] === 192 && parts[1] === 168)
+    || parts.every(part => part === 0);
+}
+
+export function isLocalNetworkApiUrl(value) {
+  let parsed;
+  try { parsed = new URL(withLocalProtocol(value)); } catch { return false; }
+  const hostname = parsed.hostname.replace(/^\[|\]$/g, '').toLowerCase();
+  if (hostname === 'localhost' || hostname.endsWith('.localhost') || hostname.endsWith('.local')) return true;
+  if (hostname === 'host.docker.internal' || hostname === 'gateway.docker.internal') return true;
+  if (hostname === '::1' || hostname.startsWith('fe80:') || /^f[cd][0-9a-f]:/.test(hostname)) return true;
+  const mapped = hostname.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+  return isPrivateIpv4(mapped?.[1] || hostname);
+}
+
+export function normalizeApiBaseUrl(value, backend = 'openai') {
+  const raw = withLocalProtocol(value);
+  if (!raw) return '';
+  let parsed;
+  try { parsed = new URL(raw); } catch { return raw.replace(/\/+$/, ''); }
+
+  parsed.search = '';
+  parsed.hash = '';
+  let pathname = parsed.pathname.replace(/\/+$/, '');
+  const endpointSuffixes = backend === 'claude'
+    ? ['/messages', '/models']
+    : ['/chat/completions', '/models'];
+  for (const suffix of endpointSuffixes) {
+    if (pathname.toLowerCase().endsWith(suffix)) {
+      pathname = pathname.slice(0, -suffix.length).replace(/\/+$/, '');
+      break;
+    }
+  }
+  if (backend !== 'claude' && isLocalNetworkApiUrl(parsed.href) && (!pathname || pathname === '/')) {
+    pathname = '/v1';
+  }
+  parsed.pathname = pathname || '/';
+  return parsed.toString().replace(/\/$/, '');
+}
+
+function wrapLocalNetworkError(targetUrl, error) {
+  const parsed = new URL(withLocalProtocol(targetUrl));
+  const wrapped = new Error(
+    `无法连接本地模型服务 ${parsed.origin}。请确认服务和端口已启动，并允许当前网页跨域访问（CORS/OLLAMA_ORIGINS）；HTTPS 页面还需允许访问本地网络。`
+  );
+  wrapped.cause = error;
+  return wrapped;
+}
+
+function createStreamAbortScope(parentSignal, timeoutMs) {
+  const controller = new AbortController();
+  let timedOut = false;
+  let timeoutId = null;
+  const abortFromParent = () => {
+    if (controller.signal.aborted) return;
+    if (timeoutId !== null) clearTimeout(timeoutId);
+    controller.abort(parentSignal?.reason);
+  };
+
+  if (parentSignal?.aborted) abortFromParent();
+  else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
+
+  if (!controller.signal.aborted) {
+    timeoutId = setTimeout(() => {
+      if (controller.signal.aborted) return;
+      timedOut = true;
+      controller.abort();
+    }, timeoutMs);
+  }
+
+  return {
+    signal: controller.signal,
+    get timedOut() { return timedOut; },
+    get cancelled() { return parentSignal?.aborted === true && !timedOut; },
+    dispose() {
+      if (timeoutId !== null) clearTimeout(timeoutId);
+      parentSignal?.removeEventListener('abort', abortFromParent);
+    }
+  };
+}
+
+function createCancelledError(reason) {
+  const error = new Error(reason instanceof Error ? reason.message : 'AI request cancelled');
+  error.name = 'AbortError';
+  error.isCancelled = true;
+  if (reason instanceof Error) error.cause = reason;
+  return error;
+}
+
+function normalizeAbortError(error, signal) {
+  const normalized = createCancelledError(signal?.reason || error);
+  if (normalized !== error && error instanceof Error) normalized.cause = error;
+  return normalized;
+}
+
+function waitWithAbort(delayMs, signal) {
+  if (signal?.aborted) return Promise.reject(createCancelledError(signal.reason));
+  return new Promise((resolve, reject) => {
+    const onAbort = () => {
+      clearTimeout(timer);
+      signal?.removeEventListener('abort', onAbort);
+      reject(createCancelledError(signal?.reason));
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, delayMs);
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
+function extractSseData(frame) {
+  const dataLines = [];
+  for (let line of String(frame || '').split(/\r\n|\r|\n/)) {
+    line = line.replace(/^\uFEFF/, '');
+    if (line === 'data') {
+      dataLines.push('');
+      continue;
+    }
+    if (!line.startsWith('data:')) continue;
+    let value = line.slice(5);
+    if (value.startsWith(' ')) value = value.slice(1);
+    dataLines.push(value);
+  }
+  return dataLines.length ? dataLines.join('\n') : null;
+}
+
+const STREAM_COMPLETE = Symbol('stream-complete');
+
+/**
+ * 增量读取一个可能是 SSE、也可能是普通 JSON 的响应体。
+ * 返回原始文本用于非流式兼容回退，同时在完整 SSE 事件到达时立即回调。
+ */
+async function consumeStreamingBody(body, onData, signal) {
+  const reader = body?.getReader?.();
+  if (!reader) return { eventCount: 0, rawText: '' };
+  if (signal?.aborted) throw createCancelledError(signal.reason);
+
+  const decoder = new TextDecoder();
+  let rawText = '';
+  let eventCount = 0;
+  let lineBuffer = '';
+  let frameLines = [];
+  let previousEndedWithCr = false;
+  let cancelRequested = false;
+  let streamComplete = false;
+
+  const dispatchFrame = () => {
+    const payload = extractSseData(frameLines.join('\n'));
+    frameLines = [];
+    if (payload === null) return;
+    eventCount++;
+    if (!payload.trim()) return;
+    if (onData?.(payload) === STREAM_COMPLETE) streamComplete = true;
+  };
+
+  const finishLine = () => {
+    if (lineBuffer) frameLines.push(lineBuffer);
+    else dispatchFrame();
+    lineBuffer = '';
+  };
+
+  // Parse line endings as a state machine so CRLF can never backtrack into CR + LF.
+  // A trailing CR is processed immediately; a leading LF in the next network chunk is
+  // then swallowed as the second half of that same line ending.
+  const consumeText = (text, flush = false) => {
+    let index = 0;
+    if (previousEndedWithCr && text.length > 0) {
+      if (text[0] === '\n') index = 1;
+      previousEndedWithCr = false;
+    }
+
+    for (; index < text.length && !streamComplete; index++) {
+      const character = text[index];
+      if (character === '\r') {
+        finishLine();
+        if (text[index + 1] === '\n') index++;
+        else if (index === text.length - 1) previousEndedWithCr = true;
+      } else if (character === '\n') {
+        finishLine();
+      } else {
+        lineBuffer += character;
+      }
+    }
+
+    if (flush) {
+      previousEndedWithCr = false;
+      if (lineBuffer) {
+        frameLines.push(lineBuffer);
+        lineBuffer = '';
+      }
+      if (frameLines.length > 0) dispatchFrame();
+    }
+  };
+
+  const cancelReader = reason => {
+    if (cancelRequested || typeof reader.cancel !== 'function') return Promise.resolve();
+    cancelRequested = true;
+    try {
+      return Promise.resolve(reader.cancel(reason)).catch(() => {});
+    } catch {
+      return Promise.resolve();
+    }
+  };
+  const abortReader = () => { void cancelReader(signal?.reason); };
+  signal?.addEventListener('abort', abortReader, { once: true });
+  if (signal?.aborted) abortReader();
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        const tail = decoder.decode();
+        rawText += tail;
+        consumeText(tail, true);
+        break;
+      }
+      const text = decoder.decode(value, { stream: true });
+      rawText += text;
+      consumeText(text, false);
+      if (streamComplete) {
+        await cancelReader('SSE stream completed');
+        break;
+      }
+    }
+    if (signal?.aborted) throw createCancelledError(signal.reason);
+  } catch (error) {
+    await cancelReader(error);
+    throw error;
+  } finally {
+    signal?.removeEventListener('abort', abortReader);
+    reader.releaseLock?.();
+  }
+
+  return { eventCount, rawText };
+}
+
+function parseJsonResponse(rawText, label) {
+  try {
+    return JSON.parse(String(rawText || '').replace(/^\uFEFF/, ''));
+  } catch (error) {
+    throw new Error(`${label} 返回了无法解析的响应: ${error.message}`);
+  }
+}
+
+function parseSseJsonPayload(payload, label) {
+  try {
+    return JSON.parse(payload);
+  } catch (error) {
+    const malformed = new Error(`${label} 返回了损坏的 SSE 事件: ${error.message}`);
+    malformed.cause = error;
+    throw malformed;
+  }
+}
+
+function createStreamPayloadError(data, label) {
+  const details = data?.error ?? (data?.type === 'error' ? data : null);
+  if (!details) return null;
+
+  const message = typeof details === 'string'
+    ? details
+    : (details.message || details.error?.message || data?.message || JSON.stringify(details));
+  const error = new Error(`${label} 流错误: ${message}`);
+  const status = Number(details?.status_code ?? details?.status ?? data?.status_code ?? data?.status);
+  const kind = String(details?.code || details?.type || data?.code || '').toLowerCase();
+  if (Number.isFinite(status)) error.statusCode = status;
+  error.isRateLimited = status === 429 || /rate.?limit|quota/.test(kind);
+  error.isAuthError = status === 401 || status === 403 || /auth|permission|invalid.?api.?key/.test(kind);
+  error.isOverloaded = status >= 500 || /overload|server.?error/.test(kind);
+  return error;
+}
 
 export class AIAdapter {
   _fetch(url, init) {
-    if (!USE_PROXY && init && init.headers) {
+    if (init && init.headers) {
       const h = init.headers;
       const realUrl = h['x-target-url'];
-      if (realUrl) {
+      const localTarget = realUrl && isLocalNetworkApiUrl(realUrl);
+      if (realUrl && (!USE_PROXY || localTarget)) {
         const nh = { 'Content-Type': 'application/json' };
+        const accept = h.Accept || h.accept;
+        if (accept) nh.Accept = accept;
         const keyHeader = h['x-api-key-header'] || 'Authorization';
         if (h['x-user-api-key']) {
           if (keyHeader.toLowerCase() === 'authorization') {
@@ -22,12 +313,21 @@ export class AIAdapter {
         for (const fwd of ['anthropic-version', 'anthropic-beta']) {
           if (h[fwd]) nh[fwd] = h[fwd];
         }
-        return fetch(realUrl, { ...init, headers: nh });
+        const request = fetch(realUrl, { ...init, headers: nh });
+        return localTarget ? request.catch(error => {
+          if (error?.name === 'AbortError' || init.signal?.aborted) {
+            throw normalizeAbortError(error, init.signal);
+          }
+          throw wrapLocalNetworkError(realUrl, error);
+        }) : request;
       }
     }
     return fetch(url, init);
   }
   async chat(messages, options) { throw new Error('Not implemented'); }
+  async chatDetailed(messages, options) {
+    return { text: await this.chat(messages, options), finishReason: null, usage: null };
+  }
   async chatStream(messages, options, onChunk) { throw new Error('Not implemented'); }
   getModelInfo() { return { name: 'unknown', contextWindow: 4096 }; }
   validateConfig(config) { return true; }
@@ -44,7 +344,7 @@ class TavernAdapter extends AIAdapter {
   getModelInfo() { return { name: this.model, contextWindow: 128000 }; }
   validateConfig() { return true; }
 
-  _buildOptions(userInput, combinedSystem, stream) {
+  _buildOptions(userInput, combinedSystem, stream, options = {}) {
     const opts = {
       user_input: userInput,
       should_stream: stream,
@@ -53,6 +353,9 @@ class TavernAdapter extends AIAdapter {
         'world_info_before',
       ],
     };
+    if (Number.isFinite(options.max_tokens) && options.max_tokens > 0) {
+      opts.max_tokens = options.max_tokens;
+    }
     if (this.proxyPreset) {
       opts.custom_api = { proxy_preset: this.proxyPreset, model: this.model };
     } else if (this.model && this.model !== 'tavern-default') {
@@ -65,7 +368,7 @@ class TavernAdapter extends AIAdapter {
     const userMsg = [...messages].reverse().find(m => m.role === 'user');
     const userInput = userMsg?.content || '';
     const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
-    const opts = this._buildOptions(userInput, combinedSystem, false);
+    const opts = this._buildOptions(userInput, combinedSystem, false, options);
     try {
       const result = await globalThis.generateRaw(opts);
       return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
@@ -78,20 +381,71 @@ class TavernAdapter extends AIAdapter {
     const userMsg = [...messages].reverse().find(m => m.role === 'user');
     const userInput = userMsg?.content || '';
     const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
-
-    const EV = 'iframe_events.STREAM_TOKEN_RECEIVED_FULLY';
-    const h = (t) => { if (onChunk) onChunk(t); };
+    const abortScope = createStreamAbortScope(options.signal, options.timeout ?? 90000);
+    const generationId = globalThis.crypto?.randomUUID?.()
+      || `naruto-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const EV = globalThis.iframe_events?.STREAM_TOKEN_RECEIVED_INCREMENTALLY
+      ?? 'js_stream_token_received_incrementally';
+    let fullContent = '';
+    const h = (chunk, id) => {
+      if (abortScope.signal.aborted || id !== generationId || !chunk) return;
+      fullContent += chunk;
+      onChunk?.(chunk);
+    };
     const eo = globalThis.eventOn;
-    if (eo) eo(EV, h);
+    const removeListener = globalThis.eventRemoveListener;
+    const opts = this._buildOptions(userInput, combinedSystem, true, options);
+    opts.generation_id = generationId;
+    let unsubscribe = null;
+    let rejectOnAbort;
+    let abortHandled = false;
+    const aborted = new Promise((_, reject) => { rejectOnAbort = reject; });
+    const stopGeneration = () => {
+      try {
+        const result = globalThis.stopGenerationById?.(generationId);
+        if (result && typeof result.catch === 'function') result.catch(() => {});
+      } catch { /* best-effort stop for older Tavern bridges */ }
+    };
+    const abortGeneration = () => {
+      if (abortHandled) return;
+      abortHandled = true;
+      stopGeneration();
+      const error = createCancelledError(abortScope.signal.reason);
+      error.isTimeout = abortScope.timedOut;
+      error.isCancelled = abortScope.cancelled;
+      error.partialResponse = fullContent || null;
+      rejectOnAbort(error);
+    };
 
-    const opts = this._buildOptions(userInput, combinedSystem, true);
     try {
-      const result = await globalThis.generateRaw(opts);
-      if (eo) eo(EV, h);
+      if (abortScope.signal.aborted) throw createCancelledError(abortScope.signal.reason);
+      if (typeof eo === 'function') {
+        const disposer = eo(EV, h);
+        if (typeof disposer === 'function') unsubscribe = disposer;
+        else if (typeof removeListener === 'function') unsubscribe = () => removeListener(EV, h);
+      }
+      abortScope.signal.addEventListener('abort', abortGeneration, { once: true });
+      const generation = Promise.resolve(globalThis.generateRaw(opts));
+      if (abortScope.signal.aborted) abortGeneration();
+      const result = await Promise.race([generation, aborted]);
+      if (abortScope.signal.aborted) throw createCancelledError(abortScope.signal.reason);
       return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
     } catch (e) {
-      if (eo) eo(EV, h);
-      throw new Error(`酒馆流式生成失败: ${e.message}`);
+      if (abortScope.signal.aborted) {
+        const cancelled = createCancelledError(abortScope.signal.reason || e);
+        cancelled.isTimeout = abortScope.timedOut;
+        cancelled.isCancelled = abortScope.cancelled;
+        cancelled.partialResponse = fullContent || null;
+        throw cancelled;
+      }
+      const wrapped = new Error(`酒馆流式生成失败: ${e.message}`);
+      wrapped.cause = e;
+      if (fullContent) wrapped.partialResponse = fullContent;
+      throw wrapped;
+    } finally {
+      abortScope.signal.removeEventListener('abort', abortGeneration);
+      try { unsubscribe?.(); } catch { /* cleanup is best-effort across Tavern versions */ }
+      abortScope.dispose();
     }
   }
 }
@@ -100,7 +454,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   constructor(config) {
     super();
     this.apiKey = config.apiKey || '';
-    this.apiUrl = (config.apiUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
+    this.apiUrl = normalizeApiBaseUrl(config.apiUrl || 'https://api.openai.com/v1', config.backend || 'openai');
     this.model = config.model || 'gpt-4o';
   }
 
@@ -109,30 +463,52 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const response = await this._fetch(`/api/ai-proxy`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-target-url': `${this.apiUrl}/chat/completions`,
-        'x-user-api-key': this.apiKey,
-        'x-api-key-header': 'Authorization'
-      },
-      body: JSON.stringify({
-        model: this.model,
-        messages,
-        temperature: options.temperature ?? 0.9,
-        max_tokens: options.max_tokens ?? 4096,
-        top_p: options.top_p ?? 0.9,
-        frequency_penalty: options.frequency_penalty ?? 0.2,
-        stream: false
-      })
-    });
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`API Error ${response.status}: ${err}`);
+    return (await this.chatDetailed(messages, options)).text;
+  }
+
+  async chatDetailed(messages, options = {}) {
+    const abortScope = createStreamAbortScope(options.signal, options.timeout ?? 90000);
+    try {
+      const response = await this._fetch(`/api/ai-proxy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-target-url': `${this.apiUrl}/chat/completions`,
+          'x-user-api-key': this.apiKey,
+          'x-api-key-header': 'Authorization'
+        },
+        body: JSON.stringify({
+          model: this.model,
+          messages,
+          temperature: options.temperature ?? 0.9,
+          max_tokens: options.max_tokens ?? 4096,
+          top_p: options.top_p ?? 0.9,
+          frequency_penalty: options.frequency_penalty ?? 0.2,
+          stream: false
+        }),
+        signal: abortScope.signal
+      });
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`API Error ${response.status}: ${err}`);
+      }
+      const data = await response.json();
+      return {
+        text: data.choices?.[0]?.message?.content || '',
+        finishReason: data.choices?.[0]?.finish_reason ?? null,
+        usage: data.usage ?? null
+      };
+    } catch (error) {
+      if (error.name === 'AbortError' || abortScope.signal.aborted) {
+        const aborted = normalizeAbortError(error, abortScope.signal);
+        aborted.isTimeout = abortScope.timedOut;
+        aborted.isCancelled = abortScope.cancelled;
+        throw aborted;
+      }
+      throw error;
+    } finally {
+      abortScope.dispose();
     }
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content || '';
   }
 
   async chatStream(messages, options = {}, onChunk) {
@@ -143,18 +519,11 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       if (attempt > 0) {
-        await new Promise(r => setTimeout(r, retryDelay * Math.pow(2, attempt - 1)));
+        await waitWithAbort(retryDelay * Math.pow(2, attempt - 1), options.signal);
         eventBus.emit('pipeline:retrying', { attempt, maxRetries });
       }
       try {
-        const internalController = new AbortController();
-        const timer = setTimeout(() => internalController.abort(), timeoutMs);
-
-        const signal = options.signal || internalController.signal;
-        const onExternalAbort = () => internalController.abort();
-        if (options.signal) {
-          options.signal.addEventListener('abort', onExternalAbort);
-        }
+        const abortScope = createStreamAbortScope(options.signal, timeoutMs);
 
         let fullContent = '';
         try {
@@ -162,6 +531,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Accept': 'text/event-stream',
               'x-target-url': `${this.apiUrl}/chat/completions`,
               'x-user-api-key': this.apiKey,
               'x-api-key-header': 'Authorization'
@@ -176,9 +546,8 @@ class OpenAICompatibleAdapter extends AIAdapter {
               stream: true,
               stream_options: { include_usage: true }
             }),
-            signal: signal
+            signal: abortScope.signal
           });
-          clearTimeout(timer);
 
           if (!response.ok) {
             const err = await response.text();
@@ -191,76 +560,69 @@ class OpenAICompatibleAdapter extends AIAdapter {
           }
 
           if (!response.body) {
-            fullContent = await this.chat(messages, options);
+            if (options.strictSingleRequest) {
+              throw new Error('当前为严格单调用模式，但服务未返回可读取的流；本回合不会自动改用第二次非流式请求，请手动重试或关闭流式输出');
+            }
+            fullContent = await this.chat(messages, { ...options, signal: abortScope.signal });
             return fullContent;
           }
 
-          const contentType = response.headers.get('content-type') || '';
-          if (!contentType.includes('text/event-stream')) {
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-            const content = data.choices?.[0]?.message?.content || '';
-            if (content) {
-              if (onChunk) onChunk(content);
-              return content;
+          let lastUsage = null;
+          const { eventCount, rawText } = await consumeStreamingBody(response.body, payload => {
+            if (payload.trim() === '[DONE]') return STREAM_COMPLETE;
+            const data = parseSseJsonPayload(payload, 'AI');
+            const streamError = createStreamPayloadError(data, 'AI');
+            if (streamError) {
+              streamError.partialResponse = fullContent || null;
+              throw streamError;
             }
-            throw new Error(`AI 未返回有效回复: ${JSON.stringify(data)}`);
+            if (data.usage && data.usage.total_tokens) lastUsage = data.usage;
+            const content = data.choices?.[0]?.delta?.content || '';
+            if (content) { fullContent += content; onChunk?.(content); }
+          }, abortScope.signal);
+          if (lastUsage) eventBus.emit('ai:usage', lastUsage);
+          if (eventCount > 0) {
+            if (fullContent) return fullContent;
+            throw new Error('AI 流已结束，但没有返回有效正文');
           }
 
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let buffer = '';
-          let lastUsage = null;
-          while (true) {
-            const { done, value } = await reader.read();
-            buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
-            const parts = buffer.split('\n\n');
-            buffer = parts.pop() || '';
-            if (done && buffer.trim()) { parts.push(buffer); buffer = ''; }
-            const lines = parts.flatMap(part => part.split('\n')).filter(line => line.startsWith('data: '));
-            for (const line of lines) {
-              const jsonStr = line.slice(6).trim();
-              if (jsonStr.startsWith('[DONE]')) {
-                if (lastUsage) eventBus.emit('ai:usage', lastUsage);
-                continue;
-              }
-              try {
-                const data = JSON.parse(jsonStr);
-                if (data.usage && data.usage.total_tokens) lastUsage = data.usage;
-                const content = data.choices?.[0]?.delta?.content || '';
-                if (content) { fullContent += content; onChunk?.(content); }
-              } catch { /* skip malformed chunks */ }
-            }
-            if (done) {
-              if (lastUsage) eventBus.emit('ai:usage', lastUsage);
-              break;
-            }
+          const data = parseJsonResponse(rawText, 'AI');
+          if (data.error) throw createStreamPayloadError(data, 'AI');
+          const content = data.choices?.[0]?.message?.content || '';
+          if (content) {
+            onChunk?.(content);
+            return content;
           }
-          return fullContent || null;
+          throw new Error(`AI 未返回有效回复: ${JSON.stringify(data)}`);
         } catch (fetchError) {
-          clearTimeout(timer);
-          if (fetchError.name === 'AbortError') {
-            const partial = fullContent || null;
-            if (partial && attempt === maxRetries) return partial;
-            fetchError.isTimeout = true;
-            fetchError.partialResponse = partial;
+          let failure = fetchError;
+          const partial = failure.partialResponse || fullContent || null;
+          if (failure.name === 'AbortError' || abortScope.signal.aborted) {
+            failure = normalizeAbortError(failure, abortScope.signal);
+            failure.isTimeout = abortScope.timedOut;
+            failure.isCancelled = abortScope.cancelled;
           }
-          if (fetchError.statusCode === 429 && attempt < maxRetries) {
-            await new Promise(r => setTimeout(r, (retryDelay * 3) * Math.pow(2, attempt)));
+          if (partial) failure.partialResponse = partial;
+          if (failure.isCancelled) {
+            lastError = failure;
+            throw failure;
           }
-          if (onChunk && fetchError.partialResponse) {
-            lastError = new Error(`生成被截断，已收到 ${fetchError.partialResponse.length} 字。${attempt < maxRetries ? '正在重试...' : '可点击重试。'}`);
-            lastError.partialResponse = fetchError.partialResponse;
-          } else {
-            lastError = fetchError;
+          // 流式回调只能追加，已经向 UI 发出内容后透明重试会造成重复或分叉正文。
+          if (partial) {
+            lastError = failure;
+            throw failure;
           }
-          if (fetchError.isAuthError || attempt >= maxRetries) throw lastError;
+          if (failure.statusCode === 429 && attempt < maxRetries) {
+            await waitWithAbort((retryDelay * 3) * Math.pow(2, attempt), options.signal);
+          }
+          lastError = failure;
+          if (failure.isAuthError || failure.isCancelled || attempt >= maxRetries) throw lastError;
         } finally {
-          if (options.signal) options.signal.removeEventListener('abort', onExternalAbort);
+          abortScope.dispose();
         }
       } catch (outerError) {
         lastError = outerError;
-        if (outerError.isAuthError) throw outerError;
+        if (outerError.isAuthError || outerError.isCancelled || outerError.partialResponse) throw outerError;
         if (attempt >= maxRetries) throw outerError;
       }
     }
@@ -272,7 +634,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   static async listModels(config) {
-    const apiUrl = (config.apiUrl || 'https://api.openai.com/v1').replace(/\/+$/, '');
+    const apiUrl = normalizeApiBaseUrl(config.apiUrl || 'https://api.openai.com/v1', config.backend || 'openai');
     const response = await new AIAdapter()._fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
@@ -302,7 +664,7 @@ class ClaudeAdapter extends AIAdapter {
   constructor(config) {
     super();
     this.apiKey = config.apiKey || '';
-    this.apiUrl = (config.apiUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
+    this.apiUrl = normalizeApiBaseUrl(config.apiUrl || 'https://api.anthropic.com/v1', 'claude');
     this.model = config.model || 'claude-sonnet-4-20250514';
   }
 
@@ -339,9 +701,12 @@ class ClaudeAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
+    return (await this.chatDetailed(messages, options)).text;
+  }
+
+  async chatDetailed(messages, options = {}) {
     const timeoutMs = options.timeout ?? 90000;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const abortScope = createStreamAbortScope(options.signal, timeoutMs);
 
     try {
       const { system, messages: chatMsgs } = this._convertMessages(messages);
@@ -363,19 +728,31 @@ class ClaudeAdapter extends AIAdapter {
           'anthropic-beta': 'prompt-caching-2024-07-31'
         },
         body: JSON.stringify(body),
-        signal: controller.signal
+        signal: abortScope.signal
       });
-      clearTimeout(timer);
       if (!response.ok) {
         const err = await response.text();
         throw new Error(`Claude API Error ${response.status}: ${err}`);
       }
       const data = await response.json();
-      return data.content?.[0]?.text || '';
+      const text = Array.isArray(data.content)
+        ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
+        : '';
+      return {
+        text,
+        finishReason: data.stop_reason ?? null,
+        usage: data.usage ?? null
+      };
     } catch (e) {
-      clearTimeout(timer);
-      if (e.name === 'AbortError') throw new Error('Claude API 请求超时');
+      if (e.name === 'AbortError' || abortScope.signal.aborted) {
+        const aborted = normalizeAbortError(e, abortScope.signal);
+        aborted.isTimeout = abortScope.timedOut;
+        aborted.isCancelled = abortScope.cancelled;
+        throw aborted;
+      }
       throw e;
+    } finally {
+      abortScope.dispose();
     }
   }
 
@@ -387,18 +764,11 @@ class ClaudeAdapter extends AIAdapter {
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       if (attempt > 0) {
-        await new Promise(r => setTimeout(r, retryDelay * Math.pow(2, attempt - 1)));
+        await waitWithAbort(retryDelay * Math.pow(2, attempt - 1), options.signal);
         eventBus.emit('pipeline:retrying', { attempt, maxRetries });
       }
       try {
-        const internalController = new AbortController();
-        const timer = setTimeout(() => internalController.abort(), timeoutMs);
-
-        const signal = options.signal || internalController.signal;
-        const onExternalAbort = () => internalController.abort();
-        if (options.signal) {
-          options.signal.addEventListener('abort', onExternalAbort);
-        }
+        const abortScope = createStreamAbortScope(options.signal, timeoutMs);
 
         let fullContent = '';
         try {
@@ -415,6 +785,7 @@ class ClaudeAdapter extends AIAdapter {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Accept': 'text/event-stream',
               'x-target-url': `${this.apiUrl}/messages`,
               'x-user-api-key': this.apiKey,
               'x-api-key-header': 'x-api-key',
@@ -422,9 +793,8 @@ class ClaudeAdapter extends AIAdapter {
               'anthropic-beta': 'prompt-caching-2024-07-31'
             },
             body: JSON.stringify(body),
-            signal: signal
+            signal: abortScope.signal
           });
-          clearTimeout(timer);
 
           if (!response.ok) {
             const err = await response.text();
@@ -436,79 +806,79 @@ class ClaudeAdapter extends AIAdapter {
             throw statusErr;
           }
           if (!response.body) {
-            fullContent = await this.chat(messages, options);
+            if (options.strictSingleRequest) {
+              throw new Error('当前为严格单调用模式，但服务未返回可读取的流；本回合不会自动改用第二次非流式请求，请手动重试或关闭流式输出');
+            }
+            fullContent = await this.chat(messages, { ...options, signal: abortScope.signal });
             return fullContent;
           }
 
-          const contentType = response.headers.get('content-type') || '';
-          if (!contentType.includes('text/event-stream')) {
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-            const content = data.content?.[0]?.text || '';
-            if (content) {
-              if (onChunk) onChunk(content);
-              return content;
+          let lastUsage = null;
+          const { eventCount, rawText } = await consumeStreamingBody(response.body, payload => {
+            if (payload.trim() === '[DONE]') return STREAM_COMPLETE;
+            const data = parseSseJsonPayload(payload, 'Claude AI');
+            const streamError = createStreamPayloadError(data, 'Claude AI');
+            if (streamError) {
+              streamError.partialResponse = fullContent || null;
+              throw streamError;
             }
-            throw new Error(`Claude AI 未返回有效回复: ${JSON.stringify(data)}`);
+            if (data.type === 'message_start' && data.message?.usage) {
+              lastUsage = data.message.usage;
+            }
+            if (data.type === 'content_block_delta') {
+              const text = data.delta?.text || '';
+              if (text) {
+                fullContent += text;
+                onChunk?.(text);
+              }
+            }
+            if (data.type === 'message_stop') return STREAM_COMPLETE;
+          }, abortScope.signal);
+          if (lastUsage) eventBus.emit('ai:usage', lastUsage);
+          if (eventCount > 0) {
+            if (fullContent) return fullContent;
+            throw new Error('Claude AI 流已结束，但没有返回有效正文');
           }
 
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let buffer = '';
-          let lastUsage = null;
-          while (true) {
-            const { done, value } = await reader.read();
-            buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
-            const parts = buffer.split('\n\n');
-            buffer = parts.pop() || '';
-            if (done && buffer.trim()) { parts.push(buffer); buffer = ''; }
-            const lines = parts.flatMap(part => part.split('\n')).filter(line => line.startsWith('data: '));
-            for (const line of lines) {
-              const jsonStr = line.slice(6).trim();
-              try {
-                const data = JSON.parse(jsonStr);
-                if (data.type === 'message_start' && data.message?.usage) {
-                  lastUsage = data.message.usage;
-                }
-                if (data.type === 'content_block_delta') {
-                  const text = data.delta?.text || '';
-                  if (text) {
-                    fullContent += text;
-                    onChunk?.(text);
-                  }
-                }
-              } catch { /* skip malformed SSE chunks */ }
-            }
-            if (done) {
-              if (lastUsage) eventBus.emit('ai:usage', lastUsage);
-              break;
-            }
+          const data = parseJsonResponse(rawText, 'Claude AI');
+          if (data.error) throw createStreamPayloadError(data, 'Claude AI');
+          const content = Array.isArray(data.content)
+            ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
+            : '';
+          if (content) {
+            onChunk?.(content);
+            return content;
           }
-          return fullContent || null;
+          throw new Error(`Claude AI 未返回有效回复: ${JSON.stringify(data)}`);
         } catch (fetchError) {
-          clearTimeout(timer);
-          if (fetchError.name === 'AbortError') {
-            const partial = fullContent || null;
-            if (partial && attempt === maxRetries) return partial;
-            fetchError.isTimeout = true;
-            fetchError.partialResponse = partial;
+          let failure = fetchError;
+          const partial = failure.partialResponse || fullContent || null;
+          if (failure.name === 'AbortError' || abortScope.signal.aborted) {
+            failure = normalizeAbortError(failure, abortScope.signal);
+            failure.isTimeout = abortScope.timedOut;
+            failure.isCancelled = abortScope.cancelled;
           }
-          if (fetchError.statusCode === 429 && attempt < maxRetries) {
-            await new Promise(r => setTimeout(r, (retryDelay * 3) * Math.pow(2, attempt)));
+          if (partial) failure.partialResponse = partial;
+          if (failure.isCancelled) {
+            lastError = failure;
+            throw failure;
           }
-          if (onChunk && fetchError.partialResponse) {
-            lastError = new Error(`生成被截断，已收到 ${fetchError.partialResponse.length} 字。${attempt < maxRetries ? '正在重试...' : '可点击重试。'}`);
-            lastError.partialResponse = fetchError.partialResponse;
-          } else {
-            lastError = fetchError;
+          // 流式回调只能追加，已经向 UI 发出内容后透明重试会造成重复或分叉正文。
+          if (partial) {
+            lastError = failure;
+            throw failure;
           }
-          if (fetchError.isAuthError || attempt >= maxRetries) throw lastError;
+          if (failure.statusCode === 429 && attempt < maxRetries) {
+            await waitWithAbort((retryDelay * 3) * Math.pow(2, attempt), options.signal);
+          }
+          lastError = failure;
+          if (failure.isAuthError || failure.isCancelled || attempt >= maxRetries) throw lastError;
         } finally {
-          if (options.signal) options.signal.removeEventListener('abort', onExternalAbort);
+          abortScope.dispose();
         }
       } catch (outerError) {
         lastError = outerError;
-        if (outerError.isAuthError) throw outerError;
+        if (outerError.isAuthError || outerError.isCancelled || outerError.partialResponse) throw outerError;
         if (attempt >= maxRetries) throw outerError;
       }
     }
@@ -520,7 +890,7 @@ class ClaudeAdapter extends AIAdapter {
   }
 
   static async listModels(config) {
-    const apiUrl = (config.apiUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
+    const apiUrl = normalizeApiBaseUrl(config.apiUrl || 'https://api.anthropic.com/v1', 'claude');
     const response = await new AIAdapter()._fetch(`/api/ai-proxy`, {
       method: 'GET',
       headers: {
@@ -563,24 +933,29 @@ export class AIClient {
   }
 
   configure(config) {
-    this._config = config;
-    this._useProxy = config.useProxy === true;
-
     const backend = config.backend || 'openai';
+    const normalizedApiUrl = backend === 'tavern'
+      ? (config.apiUrl || '')
+      : normalizeApiBaseUrl(config.apiUrl || '', backend);
+    this._config = { ...config, apiUrl: normalizedApiUrl };
+    this._useProxy = backend !== 'tavern'
+      && config.useProxy === true
+      && !isLocalNetworkApiUrl(normalizedApiUrl);
+
     switch (backend) {
       case 'tavern':
-        this.adapter = new TavernAdapter(config);
+        this.adapter = new TavernAdapter(this._config);
         break;
       case 'claude':
-        this.adapter = new ClaudeAdapter(config);
+        this.adapter = new ClaudeAdapter(this._config);
         break;
       case 'deepseek':
-        this.adapter = new DeepSeekAdapter(config);
+        this.adapter = new DeepSeekAdapter(this._config);
         break;
       case 'custom':
       case 'openai':
       default:
-        this.adapter = new OpenAICompatibleAdapter(config);
+        this.adapter = new OpenAICompatibleAdapter(this._config);
         break;
     }
   }
@@ -595,15 +970,31 @@ export class AIClient {
     return this.adapter.chat(messages, options);
   }
 
+  async chatDetailed(messages, options = {}) {
+    if (!this.adapter) throw new Error('AI client not configured');
+    if (this._useProxy) return this._proxyChat(messages, options, false, undefined, true);
+    return this.adapter.chatDetailed(messages, options);
+  }
+
   async chatStream(messages, options = {}, onChunk) {
     if (!this.adapter) throw new Error('AI client not configured');
-    this._abortController = new AbortController();
-    if (this._useProxy) {
-      options = { ...options, signal: this._abortController.signal };
-      return this._proxyChat(messages, options, true, onChunk);
+    const requestController = new AbortController();
+    const callerSignal = options.signal;
+    const abortFromCaller = () => requestController.abort(callerSignal?.reason);
+    if (callerSignal?.aborted) abortFromCaller();
+    else callerSignal?.addEventListener('abort', abortFromCaller, { once: true });
+    this._abortController = requestController;
+    const requestOptions = { ...options, signal: requestController.signal };
+
+    try {
+      if (this._useProxy) {
+        return await this._proxyChat(messages, requestOptions, true, onChunk);
+      }
+      return await this.adapter.chatStream(messages, requestOptions, onChunk);
+    } finally {
+      callerSignal?.removeEventListener('abort', abortFromCaller);
+      if (this._abortController === requestController) this._abortController = null;
     }
-    options = { ...options, signal: this._abortController.signal };
-    return this.adapter.chatStream(messages, options, onChunk);
   }
 
   cancel() {
@@ -614,7 +1005,7 @@ export class AIClient {
   }
 
   // ── 代理模式：所有请求经 /api/ai-proxy 转发 ──
-  async _proxyChat(messages, options, stream, onChunk) {
+  async _proxyChat(messages, options, stream, onChunk, detailed = false) {
     const config = this._config || {};
     const targetUrl = this._buildApiUrl();
     const apiKeyHeader = config.backend === 'claude' ? 'x-api-key' : 'Authorization';
@@ -624,13 +1015,21 @@ export class AIClient {
     const requestController = new AbortController();
     const parentSignal = options.signal;
     let timedOut = false;
-    const abortFromParent = () => requestController.abort(parentSignal?.reason);
+    let timeoutId = null;
+    const abortFromParent = () => {
+      if (requestController.signal.aborted) return;
+      if (timeoutId !== null) clearTimeout(timeoutId);
+      requestController.abort(parentSignal?.reason);
+    };
     if (parentSignal?.aborted) abortFromParent();
     else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
-    const timeoutId = setTimeout(() => {
-      timedOut = true;
-      requestController.abort();
-    }, timeoutMs);
+    if (!requestController.signal.aborted) {
+      timeoutId = setTimeout(() => {
+        if (requestController.signal.aborted) return;
+        timedOut = true;
+        requestController.abort();
+      }, timeoutMs);
+    }
     if (!parentSignal) this._abortController = requestController;
 
     const isClaude = config.backend === 'claude';
@@ -640,6 +1039,7 @@ export class AIClient {
       'x-user-api-key': config.apiKey || '',
       'x-api-key-header': apiKeyHeader,
     };
+    if (stream) headers.Accept = 'text/event-stream';
     if (isClaude) {
       headers['anthropic-version'] = '2023-06-01';
       headers['anthropic-beta'] = 'prompt-caching-2024-07-31';
@@ -655,11 +1055,16 @@ export class AIClient {
       max_tokens: options.max_tokens ?? 4096,
       stream: stream || false,
     };
+    // Keep proxied OpenAI-compatible streaming aligned with the direct adapter.
+    // Some relays do not start their SSE response unless stream_options is present.
+    if (stream && !isClaude) body.stream_options = { include_usage: true };
     if (converted.system) body.system = converted.system;
     if (options.top_p !== undefined) body.top_p = options.top_p;
+    let streamedContent = '';
 
     try {
-      const response = await new AIAdapter()._fetch('/api/ai-proxy', {
+      // useProxy 是显式配置；不能再按部署 hostname 把请求静默改成浏览器直连。
+      const response = await fetch('/api/ai-proxy', {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
@@ -668,55 +1073,89 @@ export class AIClient {
 
       if (!response.ok) {
         const err = await response.text().catch(() => '');
-        throw new Error(`代理错误 ${response.status}: ${err.slice(0, 200)}`);
+        const statusError = new Error(`代理错误 ${response.status}: ${err.slice(0, 200)}`);
+        statusError.statusCode = response.status;
+        statusError.isRateLimited = response.status === 429;
+        statusError.isAuthError = response.status === 401 || response.status === 403;
+        statusError.isOverloaded = response.status >= 500;
+        throw statusError;
       }
 
-      const contentType = response.headers.get('content-type') || '';
-      if (stream && onChunk && contentType.includes('text/event-stream')) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        let fullContent = '';
-        while (true) {
-          const { done, value } = await reader.read();
-          buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
-          const parts = buffer.split(/\r?\n\r?\n/);
-          buffer = parts.pop() || '';
-          if (done && buffer.trim()) { parts.push(buffer); buffer = ''; }
-          
-          const lines = parts.flatMap(part => part.split('\n')).filter(l => l.startsWith('data: '));
-          for (const line of lines) {
-            const json = line.slice(6).trim();
-            if (json === '[DONE]') continue;
-            try {
-              const data = JSON.parse(json);
-              const text = data.choices?.[0]?.delta?.content || data.delta?.text || '';
-              if (text) { fullContent += text; onChunk(text); }
-            } catch {}
+      let data;
+      if (stream && response.body) {
+        const consumed = await consumeStreamingBody(response.body, payload => {
+          if (payload.trim() === '[DONE]') return STREAM_COMPLETE;
+          const event = parseSseJsonPayload(payload, '代理 AI');
+          const streamError = createStreamPayloadError(event, '代理 AI');
+          if (streamError) {
+            streamError.partialResponse = streamedContent || null;
+            throw streamError;
           }
-          if (done) break;
+          const text = event.choices?.[0]?.delta?.content || event.delta?.text || '';
+          if (text) { streamedContent += text; onChunk?.(text); }
+          if (event.type === 'message_stop') return STREAM_COMPLETE;
+        }, requestController.signal);
+        if (consumed.eventCount > 0) {
+          if (streamedContent) return streamedContent;
+          throw new Error('代理 AI 流已结束，但没有返回有效正文');
         }
-        return fullContent || null;
+        data = parseJsonResponse(consumed.rawText, '代理 AI');
+      } else {
+        data = await response.json();
       }
 
       // 非流式或未按流返回（例如报错提示）
-      const data = await response.json();
       if (data.error) {
-        throw new Error(data.error.message || JSON.stringify(data.error));
+        throw createStreamPayloadError(data, '代理 AI');
       }
       // Try to extract content from various response formats
-      return data.choices?.[0]?.message?.content
-        || data.content?.[0]?.text
+      const claudeText = Array.isArray(data.content)
+        ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
+        : '';
+      const text = data.choices?.[0]?.message?.content
+        || claudeText
         || data.choices?.[0]?.text
         || '';
-    } catch (e) {
-      if (timedOut) {
-        throw new Error(`代理请求超时（${timeoutMs}ms）`);
+      if (stream && text) onChunk?.(text);
+      if (detailed) {
+        return {
+          text,
+          finishReason: isClaude
+            ? (data.stop_reason ?? null)
+            : (data.choices?.[0]?.finish_reason ?? null),
+          usage: data.usage ?? null
+        };
       }
-      if (e.name === 'AbortError') throw e;
-      throw new Error(`代理请求失败: ${e.message}`);
+      return text;
+    } catch (e) {
+      const partial = e.partialResponse || streamedContent || null;
+      if (partial) e.partialResponse = partial;
+      if (timedOut) {
+        const timeoutError = new Error(`代理请求超时（${timeoutMs}ms）`);
+        timeoutError.name = 'AbortError';
+        timeoutError.isTimeout = true;
+        timeoutError.isCancelled = false;
+        timeoutError.partialResponse = partial;
+        timeoutError.cause = e;
+        throw timeoutError;
+      }
+      if (e.name === 'AbortError' || requestController.signal.aborted) {
+        const aborted = normalizeAbortError(e, requestController.signal);
+        aborted.isTimeout = false;
+        aborted.isCancelled = parentSignal?.aborted === true;
+        aborted.partialResponse = partial;
+        throw aborted;
+      }
+      const wrapped = new Error(`代理请求失败: ${e.message}`);
+      wrapped.cause = e;
+      wrapped.partialResponse = partial;
+      wrapped.isAuthError = e.isAuthError;
+      wrapped.isRateLimited = e.isRateLimited;
+      wrapped.isOverloaded = e.isOverloaded;
+      wrapped.statusCode = e.statusCode;
+      throw wrapped;
     } finally {
-      clearTimeout(timeoutId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
       parentSignal?.removeEventListener('abort', abortFromParent);
       if (this._abortController === requestController) this._abortController = null;
     }
@@ -725,7 +1164,7 @@ export class AIClient {
   _buildApiUrl() {
     const config = this._config || {};
     const backend = config.backend || 'openai';
-    const baseUrl = (config.apiUrl || '').replace(/\/+$/, '');
+    const baseUrl = normalizeApiBaseUrl(config.apiUrl || '', backend);
     switch (backend) {
       case 'claude':
         return `${baseUrl || 'https://api.anthropic.com/v1'}/messages`;

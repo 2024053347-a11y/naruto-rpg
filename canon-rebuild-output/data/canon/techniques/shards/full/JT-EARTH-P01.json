@@ -1,0 +1,4926 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-EARTH-P01",
+    "group": "earth",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 41,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-EARTH-0001",
+      "canonical_name": "C0·自爆",
+      "aliases": [
+        "C0·自爆"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术",
+        "爆遁,土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "迪达拉爆炸粘土的最高形式C0，是作为最后手段使用的自爆技术。迪达拉露出胸前缝着的嘴巴，解开缝线后喂入一大团粘土。他胸前的嘴巴与心脏直接相连，因此能积累大量查克拉。它直接从心脏的经络中揉合查克拉，不间断地进行直到爆炸的那一刻。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "C0シーオー",
+          "C0",
+          "Shī Ō"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 362,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/C0"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "C0",
+        "Shī Ō"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu",
+        "explosion-release,-earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0002",
+      "canonical_name": "C1·黏土蜘蛛",
+      "aliases": [
+        "C1·黏土蜘蛛"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术",
+        "爆遁,土遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "爆炸粘土最基本且最多用途的形式。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "C1シーワン",
+          "C1",
+          "Shī Wan"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 247,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/C1"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "C1",
+        "Shī Wan"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,",
+        "explosion-release,-earth-release,",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0003",
+      "canonical_name": "C2·黏土巨龙",
+      "aliases": [
+        "C2·黏土巨龙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术",
+        "爆遁,土遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "迪达拉的专长之一，需要用到双手掌心的嘴巴，创造出一条巨大的龙。龙本身能够飞行，迪达拉安全地骑在龙背上时，龙可以吐出较小的粘土人偶，像制导导弹一样攻击对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "C2シーツー",
+          "C2",
+          "Shī Tsū"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 357,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/C2"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "C2",
+        "Shī Tsū"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,",
+        "explosion-release,-earth-release,",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0004",
+      "canonical_name": "C3·十八番",
+      "aliases": [
+        "C3·十八番"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术",
+        "爆遁,土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "迪达拉威力最强大的大规模炸弹，一旦激活就会变成一个巨大的雕像，迪达拉从上方将其投向目标。其爆炸威力足以摧毁整个村庄。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "C3シースリー",
+          "C3",
+          "Shī Surī"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 249,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/C3"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "C3",
+        "Shī Surī"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,",
+        "explosion-release,-earth-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0005",
+      "canonical_name": "C4·迦楼罗",
+      "aliases": [
+        "C4·迦楼罗"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术",
+        "爆遁,土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "迪达拉为对抗写轮眼及其产生的幻术而创造的一种真正可怕的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "C4シーフォー",
+          "C4",
+          "Shī Fō"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 360,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/C4"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "C4",
+        "Shī Fō"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu",
+        "explosion-release,-earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0006",
+      "canonical_name": "粘土分身",
+      "aliases": [
+        "粘土分身"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传,忍术,分身术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 97,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "迪达拉极具便利性的术，超越大多数\"分身术\"。这个分身有双重作用——既是替身，也是捕获敌人的陷阱。由粘土制成，分身可以承受攻击并通过将敌人吸入体内来捕获他们。分身在被穿透的瞬间展现出其本质形态。当粘土变硬时，敌人被巧妙地固定住。如果在分身中加入起爆粘土，它就可以自行引爆。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "粘土分身",
+          "Clay Clone",
+          "Nendo Bunshin"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 277,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Clay_Clone"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Clay Clone",
+        "Nendo Bunshin"
+      ],
+      "lookup_classes": [
+        "hiden,-ninjutsu,-clone-techniques",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0007",
+      "canonical_name": "潜伏",
+      "aliases": [
+        "潜伏"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,医疗忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者钻入地下，从对手脚下发起攻击。药师兜利用查克拉手术刀试图切断目标的肌腱。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "潜伏",
+          "Concealment",
+          "Senpuku"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 164,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Concealment"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Concealment",
+        "Senpuku"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-medical-ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0008",
+      "canonical_name": "土遁结界·土牢堂无",
+      "aliases": [
+        "土遁结界·土牢堂无"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉吸收术,结界忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者围绕目标或多个目标创造一个土质穹顶，将其困在其中。穹顶的墙壁内有查克拉流动，能迅速修复囚犯可能造成的任何损伤。如果使用者与穹顶保持接触，就能吸收被囚禁者的查克拉，使他们逐渐变弱；次郎坊喜欢这样做以从敌人那里获取养分。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁结界·土牢堂无",
+          "Earth Release Barrier: Earth Prison Dome of Magnificent Nothingness",
+          "Doton Kekkai: Dorō Dōmu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 186,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release_Barrier%3A_Earth_Prison_Dome_of_Magnificent_Nothingness"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release Barrier: Earth Prison Dome of Magnificent Nothingness",
+        "Doton Kekkai: Dorō Dōmu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-absorption-techniques,-barrier-ninjutsu",
+        "earth-release,",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0009",
+      "canonical_name": "土遁·加重岩之术",
+      "aliases": [
+        "土遁·加重岩之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 40,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种根据使用者意愿增强目标重力的术。敌人的机动性降低，被重力压垮——在某些情况下出现石化症状并开始崩解。利用沙漠地区，使用者可以轻松地将敌人活埋在沙中。当此术应用于自身时，速度会降低，但增加的重量大幅提升力量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·加重岩之术",
+          "Earth Release: Added-Weight Rock Technique",
+          "Doton: Kajūgan no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 466,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Added-Weight_Rock_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Added-Weight Rock Technique",
+        "Doton: Kajūgan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0010",
+      "canonical_name": "土遁·心中斩首之术",
+      "aliases": [
+        "土遁·心中斩首之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "D",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 15,
+      "power": 10,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "潜伏在地下时，使用者抓住目标并将其拖入地下，只留下头部露在地表。受害者在这种状态下无法移动，很容易受到拷问或斩首。然而并不需要采取如此极端的措施。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·心中斩首之术",
+          "Earth Release: Double Suicide Decapitation Technique",
+          "Doton: Shinjū Zanshu no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 7,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Double_Suicide_Decapitation_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "D",
+        "pressure": "standard",
+        "reference_pool": 100,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Double Suicide Decapitation Technique",
+        "Doton: Shinjū Zanshu no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0011",
+      "canonical_name": "土遁·落盖",
+      "aliases": [
+        "土遁·落盖"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者创造出一个巨大的野猪形土盖，从高空中落下砸向目标，将其困住。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-BOAR-MASKED-ANBU-MEMBER",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·おとし蓋",
+          "Earth Release: Dropping Lid",
+          "Doton: Otoshibuta"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 425,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Dropping_Lid"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Dropping Lid",
+        "Doton: Otoshibuta"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0012",
+      "canonical_name": "土遁·土流割",
+      "aliases": [
+        "土遁·土流割"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过将手掌中浓缩的查克拉注入地下流动的龙脉，可以撕裂大地，造成巨大的裂缝。裂缝的长度、宽度、方向和曲线都由使用者塑造和控制。操纵龙脉需要精细的查克拉控制，但如果拥有这种技巧，可以用此术将敌我之间的空间一分为二，摧毁敌方营寨或防御工事，甚至可以用于攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土流割",
+          "Earth Release: Earth Flow Divide",
+          "Doton: Doryūkatsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 396,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth_Flow_Divide"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth Flow Divide",
+        "Doton: Doryūkatsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0013",
+      "canonical_name": "土遁·土陵団子",
+      "aliases": [
+        "土遁·土陵団子"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用查克拉和巨大的体力，使用者举起附近大量的泥土。土块巨大到能在对手身上投下阴影，可能吓跑他们。当使用者抛出土块时，会在撞击点造成严重的破坏。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土陵団子",
+          "Earth Release: Earth Mausoleum Dumpling",
+          "Doton: Doryō Dango"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 188,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth_Mausoleum_Dumpling"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth Mausoleum Dumpling",
+        "Doton: Doryō Dango"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0014",
+      "canonical_name": "土遁·土陸返し",
+      "aliases": [
+        "土遁·土陸返し"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 28,
+      "power": 35,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在获取次郎坊的脱氧核糖核酸后，药师兜通过他的\"怪异传远影\"术能够使用此术。在兜的使用中，地面从他的两侧升起，从而将逼近的天照火焰从他身边移开。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土陸返し",
+          "Earth Release: Earth Shore Return",
+          "Doton: Doroku Gaeshi"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 189,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth_Shore_Return"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth Shore Return",
+        "Doton: Doroku Gaeshi"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0015",
+      "canonical_name": "土遁·土矛",
+      "aliases": [
+        "土遁·土矛"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过将查克拉注入全身，使用者大幅提高自身的防御力和攻击力，使身体硬化如铁。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKUZU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土矛",
+          "Earth Release: Earth Spear",
+          "Doton: Domu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 314,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth_Spear"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth Spear",
+        "Doton: Domu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0016",
+      "canonical_name": "土遁·土流城壁",
+      "aliases": [
+        "土遁·土流城壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 48,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术通过以查克拉塑造地面并增加土量，使巨大的壁垒在使用者脚下升起。根据使用者的想象，壁垒的形状可以从平坦地面到陡峭的针状山峰不等。如果使用者过度增加土方量，则必须控制查克拉消耗。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土流城壁",
+          "Earth Release: Earth-Style Rampart",
+          "Doton: Doryū Jōheki"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 316,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth-Style_Rampart"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth-Style Rampart",
+        "Doton: Doryū Jōheki"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0017",
+      "canonical_name": "土遁·土流壁",
+      "aliases": [
+        "土遁·土流壁",
+        "土 遁: 土-流 壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 48,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术允许使用者用泥土制造保护墙。一种方法是将体内的查克拉转化为土质材料从口中吐出；使用者越熟练，能创造的土量就越大。泥土迅速堆积成防御墙，阻挡来袭的攻击。虽然泥质材料本身就很坚固，但再涂上一层查克拉进一步强化，使其更耐火和水的攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KARYU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-YAMATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIJI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土流壁",
+          "Earth Release: Earth-Style Wall",
+          "Doton: Doryūheki"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 120,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth-Style_Wall"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth-Style Wall",
+        "Doton: Doryūheki"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0018",
+      "canonical_name": "土遁·万里土流壁",
+      "aliases": [
+        "土遁·万里土流壁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "土遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种合作忍术，多名土遁使用者同时结印，然后从口中吐出泥浆流，凝固成多根土柱。这些柱子从地面向上生长，共同形成一道坚硬的防御墙。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·万里土流壁",
+          "Earth Release: Earth-Style Wall of Ten Thousand Ri",
+          "Doton: Banri Doryūheki"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 554,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Earth-Style_Wall_of_Ten_Thousand_Ri"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Earth-Style Wall of Ten Thousand Ri",
+        "Doton: Banri Doryūheki"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "earth-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0019",
+      "canonical_name": "土遁·拳岩之术",
+      "aliases": [
+        "土遁·拳岩之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "忍术,体术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过将手臂包裹在岩石中，使用者可以对对手打出强力硬化的一拳，同时避免与目标直接接触。必要时可以增加岩石的重量以进一步提高拳头的破坏力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·拳岩之术",
+          "Earth Release: Fist Rock Technique",
+          "Doton: Kengan no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 529,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Fist_Rock_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Fist Rock Technique",
+        "Doton: Kengan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-taijutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0020",
+      "canonical_name": "土遁·刚隶武之术",
+      "aliases": [
+        "土遁·刚隶武之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术允许使用者创造一个由岩石组成的大型人形生物，既可以从使用者口中吐出，也可以从预先存在的土源形成。根据使用者的不同，魔像可以瞬间形成。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-AKATSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·剛隷武ゴーレム之术",
+          "Earth Release: Golem Technique",
+          "Doton: Gōremu no Jutsu",
+          "Earth Release: Strong Servant Warrior Technique"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 466,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Golem_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Golem Technique",
+        "Doton: Gōremu no Jutsu",
+        "Earth Release: Strong Servant Warrior Technique"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0021",
+      "canonical_name": "土遁·大地動核",
+      "aliases": [
+        "土遁·大地動核"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术赋予使用者在其周围特定区域内自由降低或升高地形的能力，类似于其原版术但规模大得多。这允许他们制造巨大的坑洞或高地，其中之一大到足以困住十尾。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·大地動核",
+          "Earth Release: Great Moving Earth Core",
+          "Doton: Daichidōkaku"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 612,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Great_Moving_Earth_Core"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Great Moving Earth Core",
+        "Doton: Daichidōkaku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0022",
+      "canonical_name": "土遁·土竜隠れ之术",
+      "aliases": [
+        "土遁·土竜隠れ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 28,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术通过向泥土中注入查克拉将其变成细沙，使使用者能像鼹鼠一样在其中挖掘。这种效果环绕全身（而不仅仅是手），使其刚好足够一个人通过。尽管在地下，使用者可以通过感知磁力来精确定位自己的位置。他们还能感知地表的情况，利用这些信息对敌人发起突袭。也可以深藏地下以逃脱。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRO-BO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KUROTSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OROCHIMARU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SAI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土竜隠れ之术",
+          "Earth Release: Hiding Like a Mole Technique",
+          "Doton: Moguragakure no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 164,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Hiding_Like_a_Mole_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Hiding Like a Mole Technique",
+        "Doton: Moguragakure no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0023",
+      "canonical_name": "土遁·軽重岩之术",
+      "aliases": [
+        "土遁·軽重岩之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "与其对应术相反，此术减轻重力，使物体变得更轻。大气和身体都可以被减轻以进行飞行并提高机动性。经过充分练习，使用者可以通过特定的身体动作控制空中飞行。然而，对自己或他人使用此术的后果是被影响者的物理攻击力会下降。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ISHIKAWA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·軽重岩之术",
+          "Earth Release: Light-Weight Rock Technique",
+          "Doton: Keijūgan no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 466,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Light-Weight_Rock_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Light-Weight Rock Technique",
+        "Doton: Keijūgan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0024",
+      "canonical_name": "土遁·地動核",
+      "aliases": [
+        "土遁·地動核"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者通过将手掌放在地面上，使特定区域的地面升高或降低，形成土墙或陷阱来困住敌人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITTAN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·地動核",
+          "Earth Release: Moving Earth Core",
+          "Doton: Chidōkaku"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 517,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Moving_Earth_Core"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Moving Earth Core",
+        "Doton: Chidōkaku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0025",
+      "canonical_name": "土遁·开土昇掘",
+      "aliases": [
+        "土遁·开土昇掘"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用此术，使用者可以将地下深处的东西带到地表。目标被巨大的力量和速度抛向空中，其效果的外观和规模几乎如同火山喷发。它可以将大量隐藏在地下的士兵一次性逼出地面。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KUROTSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·开土昇掘",
+          "Earth Release: Opening Earth Rising Excavation",
+          "Doton: Kaido Shōkutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 521,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Opening_Earth_Rising_Excavation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Opening Earth Rising Excavation",
+        "Doton: Kaido Shōkutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0026",
+      "canonical_name": "土遁·練瓦之术",
+      "aliases": [
+        "土遁·練瓦之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是岩隐忍者使用的一种基础土遁术。结印后，使用者将手放在地面上，通过操纵已有的泥土升起形成坚固的墙壁作为防御屏障。虽然薄弱，但这些墙壁在多人使用时可以作为临时路障，减缓大型强力攻击的速度。此术使用起来极为简单，甚至可以教给每个人。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-CHO-JI-AKIMICHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-INO-YAMANAKA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIKAMARU-NARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·練瓦之术",
+          "Earth Release: Practice Brick Technique",
+          "Doton: Renga no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 630,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Practice_Brick_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Practice Brick Technique",
+        "Doton: Renga no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0027",
+      "canonical_name": "土遁·裂穿牙",
+      "aliases": [
+        "土遁·裂穿牙"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者潜伏在敌人下方，突然从地面冲出发动攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·裂穿牙",
+          "Earth Release: Rending Drill Fang",
+          "Doton: Ressenga"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 260,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Rending_Drill_Fang"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Rending Drill Fang",
+        "Doton: Ressenga"
+      ],
+      "lookup_classes": [
+        "ninjutsu,",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0028",
+      "canonical_name": "土遁·岩宿崩し",
+      "aliases": [
+        "土遁·岩宿崩し"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 40,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术破坏洞穴维持平衡的支撑点。通过移除支撑点（如一块岩石），即使是最坚固的洞穴也会变得脆弱并最终崩塌。岩隐忍者的惯用战术是将对手引诱进洞穴然后施展此术。石块逐渐落在对手身上，最终引起洞穴坍塌，将他们全部消灭。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKKO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MUGINO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·岩宿崩し",
+          "Earth Release: Rock Lodging Destruction",
+          "Doton: Iwayado Kuzushi"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 243,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Rock_Lodging_Destruction"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Rock Lodging Destruction",
+        "Doton: Iwayado Kuzushi"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0029",
+      "canonical_name": "土遁·山土之术",
+      "aliases": [
+        "土遁·山土之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "无"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在动画中，此术可以以较小规模对一群敌人使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KITSUCHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·山土之术",
+          "Earth Release: Sandwich Technique",
+          "Doton: Sando no Jutsu",
+          "Earth Release: Mountainous Earth Technique"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 537,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Sandwich_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Sandwich Technique",
+        "Doton: Sando no Jutsu",
+        "Earth Release: Mountainous Earth Technique"
+      ],
+      "lookup_classes": [
+        "ninjutsu,",
+        "earth-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0030",
+      "canonical_name": "土遁·加光岩",
+      "aliases": [
+        "土遁·加光岩"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者使用土遁创造出类似宝石的东西。在《佐助真传》小说中，这些宝石被描述为仅用查克拉形成。在漫画改编中，宇智波佐助被描绘成将现有岩石改造成宝石。虽然这些宝石看起来自然，但它们往往有太多杂质而没有市场价值，因此大多数忍者不会费心制作。由于宝石是用查克拉创造的，因此可以被感知型忍者探测到。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·加光岩",
+          "Earth Release: Stone Luster",
+          "Doton: Kakōgan"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 2,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Stone_Luster"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Stone Luster",
+        "Doton: Kakōgan"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0031",
+      "canonical_name": "土遁·土中潜航",
+      "aliases": [
+        "土遁·土中潜航"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种将使用者周围的泥土转化为流体的术，使他们能够在地下高速游动接近敌人。由于地下是盲区，目标毫无防备，使用者可以发起突袭。将此术与武器结合使用，还能获得极佳的\"突击忍术\"效果。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KISAME-HOSHIGAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土中潜航",
+          "Earth Release: Subterranean Voyage",
+          "Doton: Dochū Senkō"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 255,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Subterranean_Voyage"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Subterranean Voyage",
+        "Doton: Dochū Senkō"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0032",
+      "canonical_name": "土遁·黄泉沼",
+      "aliases": [
+        "土遁·黄泉沼"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 90,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将目标脚下的地面变成泥沼，使目标陷入其中。泥浆中注入查克拉使其具有粘性，困住目标防止逃脱。沼泽的大小和深度由使用者的技能和使用的查克拉量决定；理想情况下会大到使目标完全沉没。对多个或特别大的目标最为有效。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·黄泉沼",
+          "Earth Release: Swamp of the Underworld",
+          "Doton: Yomi Numa"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 166,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Swamp_of_the_Underworld"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 415,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Swamp of the Underworld",
+        "Doton: Yomi Numa"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0033",
+      "canonical_name": "土遁·裂土転掌",
+      "aliases": [
+        "土遁·裂土転掌"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是岩隐村教授的基础术之一。通过将手掌放在地面上，使用者破碎并移动当地的泥土。使用者的查克拉控制越好，能破碎的土量就越大。尽管相对简单，此术在战斗中仍然有效，尤其是多人同时使用时。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SUMASHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·裂土転掌",
+          "Earth Release: Tearing Earth Turning Palm",
+          "Doton: Retsudo Tenshō"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 244,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Tearing_Earth_Turning_Palm"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Tearing Earth Turning Palm",
+        "Doton: Retsudo Tenshō"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0034",
+      "canonical_name": "土遁·超加重岩之术",
+      "aliases": [
+        "土遁·超加重岩之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "土遁·加重岩之术的进阶版本，使用者大幅增加目标的重量，但程度远超过原版术。在某些情况下，此术可用于增加攻击的威力。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·超加重岩之术",
+          "Earth Release: Ultra-Added-Weight Rock Technique",
+          "Doton: Chōkajūgan no Jutsu",
+          "Earth Release: Super Added-Weight Rock Technique"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 556,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Ultra-Added-Weight_Rock_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Ultra-Added-Weight Rock Technique",
+        "Doton: Chōkajūgan no Jutsu",
+        "Earth Release: Super Added-Weight Rock Technique"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0035",
+      "canonical_name": "土遁·超軽重岩之术",
+      "aliases": [
+        "土遁·超軽重岩之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术是土遁·轻重岩之术的更进阶版本，使用者大幅降低目标的重量，程度远超过原版术。使用者可以用此术举起通常无法举起的巨大物体，如陨石或岛屿。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·超軽重岩之术",
+          "Earth Release: Ultralight-Weight Rock Technique",
+          "Doton: Chōkeijūgan no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 515,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Ultralight-Weight_Rock_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Ultralight-Weight Rock Technique",
+        "Doton: Chōkeijūgan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0036",
+      "canonical_name": "土遁·土中映魚之术",
+      "aliases": [
+        "土遁·土中映魚之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 20,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术允许使用者像鱼在水中游动一样悄无声息地从土面浮现。出现时或出现后，使用者通常处于有利位置进行暗杀或游击攻击。为了在攻击时不被发现，使用者经常将此术与分身术结合使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAGARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MAHIRU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MUBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBORO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "土遁·土中映魚之术",
+          "Earth Release: Underground Projection Fish Technique",
+          "Doton: Dochū Eigyo no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 63,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Earth_Release%3A_Underground_Projection_Fish_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Earth Release: Underground Projection Fish Technique",
+        "Doton: Dochū Eigyo no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0037",
+      "canonical_name": "起爆粘土",
+      "aliases": [
+        "起爆粘土"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术,战斗流派",
+        "爆遁,土遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "起爆粘土是迪达拉的标志性技能，最初在他作为恐怖炸弹袭击者时期使用，后来作为晓组织成员时继续使用。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "起爆粘土",
+          "Explosive Clay",
+          "Kibaku Nendo"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 247,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Explosive_Clay"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Explosive Clay",
+        "Kibaku Nendo"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,-fighting-style",
+        "explosion-release,-earth-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0038",
+      "canonical_name": "起爆地雷",
+      "aliases": [
+        "起爆地雷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术,合作忍术",
+        "爆遁,土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在创造C2龙后，迪达拉让粘土龙产生许多粘土地雷，并由其伙伴将其埋入地下，从而让毫无戒心的受害者踩到地雷上然后爆炸。这些地雷在被踩到时会自动爆炸，不受迪达拉的控制。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-WHITE-ZETSU-ARMY",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "起爆地雷",
+          "Explosive Landmines",
+          "Kibaku Jirai"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 358,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Explosive_Landmines"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Explosive Landmines",
+        "Kibaku Jirai"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,-cooperation-ninjutsu",
+        "explosion-release,-earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0039",
+      "canonical_name": "岩分身之术",
+      "aliases": [
+        "岩分身之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,分身术",
+        "土遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "土"
+      ],
+      "cost": 97,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吐出泥土，形成一个或多个相同的分身。与其他分身不同，这种方法产生的分身在被足够的力量击中后不会消失，而是会碎裂。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-O-NOKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "岩分身之术",
+          "Rock Clone Technique",
+          "Iwa Bunshin no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 513,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Rock_Clone_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          15,
+          16
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Rock Clone Technique",
+        "Iwa Bunshin no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-clone-techniques",
+        "earth-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0040",
+      "canonical_name": "自爆分身",
+      "aliases": [
+        "自爆分身"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~爆遁,秘传,忍术,分身术",
+        "爆遁,土遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在创造影分身后，它会摄入一些起爆粘土然后爆炸，制造出可用于逃脱的佯攻。通过\"自爆宣言\"提高敌人的警惕，利用这个机会与影分身交换位置。据说爆炸威力足以摧毁整片森林。此术需要熟练运用言语技巧；在这种使用许多\"艺术\"戏弄敌人的基础上，它确实达到了目的。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DEIDARA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "自爆分身",
+          "Suicide Bombing Clone",
+          "Jibaku Bunshin"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 277,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Suicide_Bombing_Clone"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Suicide Bombing Clone",
+        "Jibaku Bunshin"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~explosion-release,-hiden,-ninjutsu,-clone-techniques",
+        "explosion-release,-earth-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-EARTH-0041",
+      "canonical_name": "口寄せ·土遁·追牙之术",
+      "aliases": [
+        "口寄せ·土遁·追牙之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,时空间忍术",
+        "土遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "土"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "当使用者因某种原因找不到目标时，他们使用此术在地下召唤一群忍犬。忍犬利用其优越的嗅觉追踪目标，汇聚到目标位置，然后一起从地面冲出并用牙齿咬住目标。目标以这种方式被捕获后，召唤者可以轻松找到他们并将其解决。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "口寄せ·土遁·追牙之术",
+          "Summoning: Earth Release: Tracking Fang Technique",
+          "Kuchiyose: Doton: Tsuiga no Jutsu"
+        ],
+        "tags": [
+          "earth",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 29,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Summoning%3A_Earth_Release%3A_Tracking_Fang_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-EARTH-AUTO",
+        "reviewed_by": "manual-translation-JT-EARTH-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Summoning: Earth Release: Tracking Fang Technique",
+        "Kuchiyose: Doton: Tsuiga no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-space–time-ninjutsu",
+        "earth-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "earth"
+      ]
+    }
+  ],
+  "unresolved": []
+}

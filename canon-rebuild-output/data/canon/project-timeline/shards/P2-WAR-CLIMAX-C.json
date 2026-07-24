@@ -1,0 +1,2480 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P2-WAR-CLIMAX-C",
+    "namespace": "P2",
+    "arc_ids": [
+      "ARC-P2-OBITO-TRUTH",
+      "ARC-P2-TEN-TAILS-REVIVAL",
+      "ARC-P2-ALLIANCE-LAST-STAND",
+      "ARC-P2-HOKAGE-RETURN"
+    ],
+    "date_start": "K068-02-06",
+    "date_end": "K068-02-15"
+  },
+  "days": [
+    {
+      "id": "DAY-P2-WAR-C-206",
+      "date": "K068-02-06",
+      "title": "破面后的质问",
+      "arc_id": "ARC-P2-OBITO-TRUTH",
+      "day_goal": "把带土身份从少数目击者的视觉确认推进为可核验情报，同时限制琳与神无毗桥真相的传播，并结算卡卡西短暂失能造成的战术缺口。",
+      "start_state": [
+        "H 的基准交接为带土面具已破，卡卡西、凯、鸣人与奇拉比仍在主战场；若面具未破或确认者不同，本日只能从实际证据开始。",
+        "卡卡西已因连续神威、战斗伤势与确认旧友身份承受显著身体和精神负荷，不能按满状态继续作战。",
+        "秽土转生是否解除及斑是否仍以例外状态存在，必须读取 H 的实际记录；现场人员不知道带土失踪后的完整经历。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-OBITO-QUESTION-01",
+          "title": "卡卡西的有限质问",
+          "thread_id": "THR-P2-OBITO-TRUTH",
+          "location": "主战场破碎岩原",
+          "participants": [
+            "旗木卡卡西",
+            "宇智波带土",
+            "漩涡鸣人",
+            "迈特凯",
+            "奇拉比",
+            "九喇嘛",
+            "玩家角色（若实际编入主战场小队）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "带土面具已经破裂，且卡卡西或其他水门班旧识仍在可视、可听范围。",
+            "主战场尚未被十尾或其他攻击迫使双方完全撤离。"
+          ],
+          "blockers": [
+            "面具未破、容貌被替身伪装或可靠旧识均不在场。",
+            "卡卡西昏迷、死亡或已被转移，无法亲自质问。"
+          ],
+          "setup": "卡卡西只能依据面容、写轮眼共鸣和亲历记忆询问带土为何活着、为何没有归队；带土以琳之死和现实无意义回应，但没有向全场讲述斑的救治、雾隐布置或月之眼计划的完整形成过程。玩家必须在保护卡卡西、追问证据和抢占战位之间选择。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-OBITO-QUESTION-01-01",
+              "order": 10,
+              "summary": "卡卡西报出只有水门班成员能够核对的称呼与旧伤细节，鸣人和凯据此把“疑似带土”提升为高可信战场情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-OBITO-QUESTION-01-02",
+              "order": 20,
+              "summary": "带土承认名字并提到卡卡西亲手让琳死亡，却拒绝说明自己被救、复健和受斑教导的过程。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-OBITO-QUESTION-01-03",
+              "order": 30,
+              "summary": "玩家选择掩护精神失衡的卡卡西、继续质证身份，或优先阻止带土控制外道魔像；选择决定下一轮阵位与知情范围。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-OBITO-QUESTION-01-04",
+              "order": 40,
+              "summary": "现场记录仅确认带土身份、其敌对立场和琳之死是动机节点，不把幕后因果写入普通联军知识。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中卡卡西确认敌人为昔日同伴带土，但未获得完整解释。",
+            "鸣人、凯、奇拉比和实际在场玩家只知道亲耳听见的内容。"
+          ],
+          "state_changes": [
+            "记录每名目击者的确认依据、卡卡西精神负荷、当前阵位以及带土公开承认的有限事实。"
+          ],
+          "stop_condition": "卡卡西恢复到能够响应战术口令，或由同伴撤到掩体；带土身份情报被标注为“现场高可信、未全军通报”。",
+          "fallbacks": [
+            {
+              "condition": "身份缺少可靠目击，或卡卡西无法进行对话。",
+              "status": "altered",
+              "direction": "保留“敌方空间术使用者身份需要核验”的调查线；由现存目击者保存证据，推迟私人对质，不用旁白替角色确认。",
+              "preserves": "保留破面造成的情报突破、卡卡西的情绪后果和带土知识隔离。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第599-600章",
+              "contribution": "提供带土身份确认、卡卡西质问与有限回应"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足目击证据、玩家入口、战术阵位和知识分级"
+            }
+          ],
+          "design_rationale": "把身份确认与动机回忆分开，避免一段回忆让现场所有人获得斑、白绝和雾隐的幕后知识。",
+          "reference_facts": [
+            "带土被斑救治、由白绝义体复健并继承月之眼计划是幕后事实，除带土、斑与相关白绝外不因本场自动公开。",
+            "琳成为三尾容器及其死亡现场的完整因果不等于卡卡西当时掌握的事实。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-C-MADARA-ARRIVAL-01",
+          "title": "斑抵达与双线威胁",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "主战场外道魔像阵位",
+          "participants": [
+            "宇智波斑",
+            "宇智波带土",
+            "漩涡鸣人",
+            "奇拉比",
+            "旗木卡卡西",
+            "迈特凯"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "H 末端记录斑未随秽土解除消失，并仍能从五影战场移动。",
+            "外道魔像、带土及至少一名目标人柱力仍在主战场。"
+          ],
+          "blockers": [
+            "斑已被封印、解除、策反或无法跨越两处战场。",
+            "五影战场结果已阻断斑离开。"
+          ],
+          "setup": "若斑仍以秽土例外存在并从五影战场完成移动，他抵达后只报告五影已被重创，不提供可验证死亡名单；蛞蝓分体仍按实际存活与通灵条件救治五影。斑与带土重新分配捕获八尾、九尾和拖住卡卡西、凯的任务。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-MADARA-ARRIVAL-01-01",
+              "order": 10,
+              "summary": "感知者先确认来者查克拉、秽土状态与移动方向，不能凭一句话认定五影全灭。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-MADARA-ARRIVAL-01-02",
+              "order": 20,
+              "summary": "斑归还或接收团扇并责问十尾提前复活、轮回天生未按计划执行，暴露两名敌人之间存在控制权分歧。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-MADARA-ARRIVAL-01-03",
+              "order": 30,
+              "summary": "敌方把鸣人与奇拉比列为优先捕获目标，主战场人员据此重排护卫和撤离路线。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中斑与带土在主战场会合，五影状态保持“重伤、救治中、未由敌方证词确认死亡”。"
+          ],
+          "state_changes": [
+            "记录斑抵达路线、秽土例外、团扇归属、敌方分工和五影情报的可信等级。"
+          ],
+          "stop_condition": "敌我双方完成第一轮阵位调整，或斑缺席时由带土单独承担魔像控制。",
+          "fallbacks": [
+            {
+              "condition": "斑未能抵达，或其秽土例外已经失效。",
+              "status": "altered",
+              "direction": "由带土按现有控制力单独推进魔像，降低敌方协同和捕获效率；五影结果仍由其战场与蛞蝓救援结算。",
+              "preserves": "保留敌方争夺人柱力和十尾准备进入下一阶段的压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第601章",
+              "contribution": "提供斑抵达、五影重伤报告与敌方分工"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足跨战场移动、证词可信度和分支阵容"
+            }
+          ],
+          "design_rationale": "让斑从另一战场抵达具有状态前提，并防止敌方夸大战果直接改写五影生死。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "带土身份只进入卡卡西、凯、鸣人、奇拉比及实际在场者的高可信知识；完整过去仍为受限幕后事实。",
+        "卡卡西仍在主战场但需要同伴掩护，神威次数、查克拉和精神状态已登记。",
+        "斑若抵达则与带土形成双控制者威胁；五影仍按各自实际伤情救治，未被敌方台词判死。"
+      ],
+      "transition": "夜间只允许短距离换位、包扎和尾兽查克拉协调；K068-02-07从敌方捕获人柱力的实际阵位与卡卡西剩余神威能力开始。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-207",
+      "date": "K068-02-07",
+      "title": "双控制者的捕获战",
+      "arc_id": "ARC-P2-TEN-TAILS-REVIVAL",
+      "day_goal": "结算斑、带土与外道魔像对八尾九尾的捕获尝试，让卡卡西的空间术、凯的体力和两只尾兽的查克拉消耗进入十尾复活条件。",
+      "start_state": [
+        "主战场人员位置继承前日，不允许五影、联军主力或木叶地下人员无移动突然出现。",
+        "鸣人与九喇嘛、奇拉比与牛鬼仍保有多少可用查克拉必须读取 H 和前日战斗结算。",
+        "卡卡西只能使用已登记的神威次数；凯已身心疲惫，不能连续使用高门或昼虎而无代价。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-BEAST-CAPTURE-01",
+          "title": "木龙与人柱力撤位",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "外道魔像前方战壕",
+          "participants": [
+            "宇智波斑",
+            "漩涡鸣人",
+            "九喇嘛",
+            "奇拉比",
+            "牛鬼",
+            "迈特凯",
+            "玩家角色（若属于人柱力护卫或感知班）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名敌方控制者能够驱动木遁、黑棒或外道魔像。",
+            "鸣人或奇拉比仍在可捕获范围且保有尾兽联系。"
+          ],
+          "blockers": [
+            "两名人柱力均已安全撤离或尾兽已被前置分支抽离。",
+            "控制者被封印、失去轮回眼权限或与魔像断开。"
+          ],
+          "setup": "斑若在场，以木龙和须佐能乎压制两名人柱力；带土单独作战时则依靠外道魔像锁链和空间术。玩家可选择保护撤位、破坏控制媒介或保留力量等待十尾显形，不能同时完成所有目标。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-BEAST-CAPTURE-01-01",
+              "order": 10,
+              "summary": "护卫班测量木龙、锁链或黑棒对尾兽查克拉的吸收速度，标出可切断节点。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-BEAST-CAPTURE-01-02",
+              "order": 20,
+              "summary": "九喇嘛与牛鬼的外衣因吸收和前序战斗下降，凯只剩一次高强度掩护窗口。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-BEAST-CAPTURE-01-03",
+              "order": 30,
+              "summary": "玩家选择护送鸣人、协助奇拉比、破坏魔像连接或保存医疗撤离通道。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-BEAST-CAPTURE-01-04",
+              "order": 40,
+              "summary": "各目标按实际投入结算位置、伤势和剩余查克拉，未被捕获的尾兽本体仍留在人柱力体内。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中八尾、九尾未被完整捕获，但敌方取得的既有碎片仍足以继续不完全复活。"
+          ],
+          "state_changes": [
+            "更新鸣人、奇拉比、九喇嘛、牛鬼、凯与玩家的体力和查克拉；记录被吸收的具体来源及外道魔像获得量。"
+          ],
+          "stop_condition": "两名人柱力脱离当前束缚或被实际捕获；控制媒介数量和魔像进度完成登记。",
+          "fallbacks": [
+            {
+              "condition": "捕获目标或控制手段与基准不同。",
+              "status": "altered",
+              "direction": "按现存人柱力、尾兽碎片和控制者重算十尾完成度；不凭标题补回不存在的八尾或九尾。",
+              "preserves": "保留十尾复活取决于实际尾兽资源、护卫选择会改变代价的核心因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第601-608章",
+              "contribution": "提供斑的木遁压制、八尾九尾协战与魔像准备"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足查克拉账、护卫选择和捕获失败后的完成度"
+            }
+          ],
+          "design_rationale": "把尾兽力量当作可追踪资源，避免“完美人柱力”在连续大战中无限输出。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-KAMUI-COUNTER-01",
+          "title": "神威维度的反击窗口",
+          "thread_id": "THR-P2-OBITO-TRUTH",
+          "location": "主战场与神威空间交界",
+          "participants": [
+            "旗木卡卡西",
+            "宇智波带土",
+            "漩涡鸣人",
+            "九喇嘛"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "卡卡西仍拥有对应万花筒并能完成至少一次神威。",
+            "带土继续使用同源空间虚化，鸣人与九喇嘛能够协调一次查克拉转移。"
+          ],
+          "blockers": [
+            "卡卡西昏迷、眼睛失效或已困在其他位置。",
+            "带土停止虚化、空间被封锁或九喇嘛拒绝继续支出。"
+          ],
+          "setup": "若卡卡西仍能施展神威，鸣人与九喇嘛用一次有来源的查克拉转移让他进入神威空间，在带土虚化时从内部攻击；行动只建立战术弱点，不让卡卡西得到带土全部记忆。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-KAMUI-COUNTER-01-01",
+              "order": 10,
+              "summary": "鸣人和卡卡西用已观察到的虚化时机确认现实空间与神威空间共享命中窗口。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAMUI-COUNTER-01-02",
+              "order": 20,
+              "summary": "九喇嘛只转移足够一次往返和一轮攻击的查克拉，并从自身储备扣除。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAMUI-COUNTER-01-03",
+              "order": 30,
+              "summary": "卡卡西从内部造成可核验伤势后返回或滞留，带土开始针对这一弱点改变虚化节奏。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中带土首次因跨维度协同受伤，卡卡西的神威与精神负荷进一步增加。"
+          ],
+          "state_changes": [
+            "记录九喇嘛转移量、卡卡西神威次数、双方伤势和卡卡西是否回到现实空间。"
+          ],
+          "stop_condition": "卡卡西完成一次内部攻击并安全返回，或因资源不足终止行动并保留弱点情报。",
+          "fallbacks": [
+            {
+              "condition": "神威协同缺少施术者、查克拉或共享空间条件。",
+              "status": "altered",
+              "direction": "改由感知和实体化时机进行常规牵制，保留弱点但不强制内部命中；卡卡西进入医疗或后备位。",
+              "preserves": "保留带土空间术可以被亲历者分析、每次尝试必须付出资源。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第608-609章",
+              "contribution": "提供九尾查克拉支援与神威空间夹击"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足施术次数、返程状态和知识边界"
+            }
+          ],
+          "design_rationale": "把关键破解建立在观察、查克拉来源和次数上，而非让神威成为无限传送。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "两名人柱力与尾兽的剩余查克拉、伤势和位置均已结算。",
+        "十尾复活所需资源按实际尾兽碎片计算，不以原作阵容自动补齐。",
+        "卡卡西若完成神威反击则继续处于高消耗状态，带土知道空间弱点已被利用。"
+      ],
+      "transition": "K068-02-08敌方只能用实际收集的尾兽查克拉推进魔像；盟军利用夜间短轮换修补战壕，但不存在完全恢复。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-208",
+      "date": "K068-02-08",
+      "title": "不完全十尾复活",
+      "arc_id": "ARC-P2-TEN-TAILS-REVIVAL",
+      "day_goal": "让外道魔像转化具有控制者、尾兽份额和准备时间，先结算盟军阻断尝试，再确认十尾第一形态及其能力边界。",
+      "start_state": [
+        "敌方仍控制外道魔像，且至少收集了一尾至七尾主体及八尾、九尾的实际碎片或替代资源。",
+        "鸣人、奇拉比和卡卡西均继承前日消耗，联合尾兽玉不是免费重置。",
+        "远方联军主力仍在行军和通信中，本日不能在攻击开始前全员到场。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-REVIVAL-INTERRUPT-01",
+          "title": "屏障前的最后阻断",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "外道魔像转化屏障外围",
+          "participants": [
+            "漩涡鸣人",
+            "九喇嘛",
+            "奇拉比",
+            "牛鬼",
+            "旗木卡卡西",
+            "宇智波带土",
+            "宇智波斑",
+            "玩家角色（若仍能在主战场行动）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "魔像仍在转化，至少一名有外道权限的控制者持续连接。",
+            "鸣人或奇拉比还有一次联合攻击所需的查克拉。"
+          ],
+          "blockers": [
+            "魔像已被封印、转移或失去足够尾兽资源。",
+            "两名人柱力均无法行动且没有替代攻击手段。"
+          ],
+          "setup": "敌方把实际尾兽资源注入魔像并维持屏障。鸣人与奇拉比可合并一次尾兽玉，卡卡西可尝试转移局部，玩家则在破坏屏障、救援耗尽者或扰乱控制者之间选择。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-REVIVAL-INTERRUPT-01-01",
+              "order": 10,
+              "summary": "感知班确认魔像能量上升来自已封入主体与八尾九尾碎片，并标出控制者和屏障节点。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-REVIVAL-INTERRUPT-01-02",
+              "order": 20,
+              "summary": "九喇嘛与牛鬼说明合击会耗尽当前可战储备，失败后需要由普通忍者争取恢复时间。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-REVIVAL-INTERRUPT-01-03",
+              "order": 30,
+              "summary": "玩家决定攻击屏障节点、保护施术中的人柱力、干扰带土或预留撤离路线。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-REVIVAL-INTERRUPT-01-04",
+              "order": 40,
+              "summary": "爆炸后依据魔像残余查克拉和控制链判断复活、延迟或畸变，不能把烟尘当作确认死亡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中联合攻击未能阻止不完全十尾复活，但延缓了它稳定并消耗敌方控制力。"
+          ],
+          "state_changes": [
+            "扣除尾兽玉、神威和玩家行动的查克拉；记录屏障损害、魔像完成度和所有人的新阵位。"
+          ],
+          "stop_condition": "烟尘散开并由感知、视觉和尾兽反馈三方确认魔像状态，伤员撤到最低安全距离。",
+          "fallbacks": [
+            {
+              "condition": "魔像资源、控制者或盟军攻击能力已改变。",
+              "status": "altered",
+              "direction": "按实际完成度生成延迟、畸变或失败的十尾状态；阻断成功时转入看守与追击控制者，不强制复活。",
+              "preserves": "保留十尾是否复活取决于尾兽资源与控制链，盟军投入改变后续强度。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第609-610章",
+              "contribution": "提供联合尾兽玉攻击与十尾复活"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足复活材料、屏障节点、资源扣除和可变结果"
+            }
+          ],
+          "design_rationale": "保留阻断行动的真实价值，同时不把基准失败写成无视玩家投入的过场。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-TEN-TAILS-FIRST-01",
+          "title": "十尾第一形态测绘",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "十尾显形后的主战场撤离圈",
+          "participants": [
+            "十尾",
+            "宇智波带土",
+            "宇智波斑",
+            "漩涡鸣人",
+            "九喇嘛",
+            "奇拉比",
+            "牛鬼",
+            "旗木卡卡西",
+            "迈特凯"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "外道魔像已按实际资源转化为可行动的十尾形态。",
+            "至少一名尾兽或仙人感知者能观察其第一轮行动。"
+          ],
+          "blockers": [
+            "复活被完全阻止。",
+            "十尾立即失控并离开当前战区，无法完成现场测绘。"
+          ],
+          "setup": "十尾实际复活后，带土和斑用触须或黑棒连接进行初步控制；尾兽方只能在恢复间隙测量其自然能量、射界和行动模式。它没有普通恶意感知信号，不能因鸣人感知不到就被误判为消失。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-TEN-TAILS-FIRST-01-01",
+              "order": 10,
+              "summary": "鸣人切换仙人感知，九喇嘛和牛鬼用不同感知方式交叉确认十尾规模与无情感特征。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-TEN-TAILS-FIRST-01-02",
+              "order": 20,
+              "summary": "十尾第一次冲击迫使卡卡西、凯和普通忍者撤出尾兽正面射界。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-TEN-TAILS-FIRST-01-03",
+              "order": 30,
+              "summary": "两只尾兽制定轮流恢复与短促齐射方案，并把人柱力最低查克拉线告知同伴。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中确认十尾为不完全第一形态，斑与带土仍需共同或轮流维持控制。"
+          ],
+          "state_changes": [
+            "记录十尾形态、控制连接、自然能量特征、第一轮射界、尾兽恢复周期及撤离圈。"
+          ],
+          "stop_condition": "首轮攻击结束，盟军建立暂时观察线并把“无法恶意感知”作为能力情报而非隐身结论。",
+          "fallbacks": [
+            {
+              "condition": "十尾未复活或形态与基准差异过大。",
+              "status": "altered",
+              "direction": "改为封锁魔像残骸、追踪失控体或评估畸变形态；后续所有十尾场景读取该状态。",
+              "preserves": "保留敌方战略兵器需要被实际识别、能力不能靠模型知识预载。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第610章",
+              "contribution": "提供十尾显形、自然能量特征与尾兽对抗"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足形态测绘、射界和恢复轮换"
+            }
+          ],
+          "design_rationale": "在大战升级前建立可供后续指挥使用的能力情报和恢复节奏。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "十尾是否复活、完成度、第一形态、控制者及射界已经明确。",
+        "鸣人与奇拉比处于尾兽查克拉低谷，卡卡西和凯退至观察与掩护位。",
+        "联军远程指挥只收到感知班实际发送的形态报告，不知道带土私人动机。"
+      ],
+      "transition": "十尾首轮攻击后的控制适应期给远方部队一夜完成最后行军段；K068-02-09从联军实际抵达批次与可用通信开始。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-209",
+      "date": "K068-02-09",
+      "title": "忍者联军集结",
+      "arc_id": "ARC-P2-ALLIANCE-LAST-STAND",
+      "day_goal": "让分散战区的联军依靠鹿久与亥一的通信、行军和先遣侦察分批抵达，以跨村协同暂时限制十尾，而不是瞬间传送全军。",
+      "start_state": [
+        "联军总部仍能汇总 F 至 H 各战区存活、伤势、封印看守和补给状态。",
+        "只有收到主战场坐标且能够脱离原战区的部队可以赶到；封印看守和重伤者不会被抽空。",
+        "十尾仍在主战场，鸣人与奇拉比需要普通部队争取尾兽恢复时间。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-ALLIANCE-MARCH-01",
+          "title": "分批行军与留守名单",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "联军总部通信室与各战区行军线",
+          "participants": [
+            "奈良鹿久",
+            "山中亥一",
+            "麻布依",
+            "青",
+            "各战区指挥官",
+            "封印班",
+            "医疗班"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "总部通信链仍可用，且至少两个战区已有可抽调部队。",
+            "主战场坐标与十尾射界已由可靠感知者送达。"
+          ],
+          "blockers": [
+            "总部已毁或亥一无法承担广域通信。",
+            "原战区仍在激战，部队不能脱离。"
+          ],
+          "setup": "总部依据各战区实际结果指定先遣、主力、医疗运输和留守封印班；亥一的广域心传身只能传达必要坐标与战术，连续使用计入精神和查克拉负荷。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-MARCH-01-01",
+              "order": 10,
+              "summary": "各战区上报可移动人数、伤员、封印看守、食水和最后已知敌情，总部拒绝抽走不可替代的看守。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-MARCH-01-02",
+              "order": 20,
+              "summary": "鹿久按距离和速度排出先遣、主力与医疗梯次，麻布依核对通信和物资而非传送整支军队。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-MARCH-01-03",
+              "order": 30,
+              "summary": "亥一分批发送坐标、十尾射界和友军识别信号，每批接收者及负荷被登记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "联军形成可解释的抵达顺序，原战区仍保留最低封印、医疗和警戒力量。"
+          ],
+          "state_changes": [
+            "记录每批部队来源、人数级别、出发时刻、预计抵达、携行补给和留守责任；更新亥一精神负荷。"
+          ],
+          "stop_condition": "最后一支获准主力离开原战区，总部确认没有无人看守的秽土封印或伤员点。",
+          "fallbacks": [
+            {
+              "condition": "中央通信或可抽调兵力不足。",
+              "status": "altered",
+              "direction": "改用传讯鹰、近距山中忍者和地区指挥官接力集结；只能让实际收到坐标并完成行军者抵达。",
+              "preserves": "保留联军增援依赖通信、移动和后方留守，不以固定人数强制集结。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第611-612章",
+              "contribution": "提供联军增援与总部统一战略"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足各战区出发批次、留守封印和通信负荷"
+            }
+          ],
+          "design_rationale": "解决全军同屏的移动与后方责任问题，并给总部资源消耗留下记录。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-ALLIANCE-ARRIVAL-01",
+          "title": "先遣偏转尾兽玉",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "主战场南侧抵达走廊",
+          "participants": [
+            "漩涡鸣人",
+            "日向日足",
+            "日向雏田",
+            "山中井野",
+            "油女一族忍者",
+            "雾隐先遣队",
+            "玩家角色（若随先遣队抵达）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "井野、日向观察者及至少一支遮蔽班实际随先遣抵达。",
+            "带土或其他控制者仍与十尾保持可被短时干扰的连接。"
+          ],
+          "blockers": [
+            "井野已失能或没有清晰目标。",
+            "十尾完全自主发射，控制者的身体偏转不再影响射线。"
+          ],
+          "setup": "先遣队在十尾蓄积尾兽玉时先行抵达。井野只有在获得视线、同伴保护和短暂精神连接时才能偏转控制者；日向、油女与雾隐分别负责落点观察、干扰和遮蔽。玩家决定保护哪条协作链。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-ARRIVAL-01-01",
+              "order": 10,
+              "summary": "先遣感知者把尾兽玉轴线和带土控制位置同步给井野、日向与遮蔽班。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-ARRIVAL-01-02",
+              "order": 20,
+              "summary": "井野尝试短时控制导致高精神风险，虫群和浓雾必须同时削弱敌方修正射线的能力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-ARRIVAL-01-03",
+              "order": 30,
+              "summary": "玩家选择保护井野连接、掩护日向观察、维持遮蔽，或疏散落点内伤员。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-ALLIANCE-ARRIVAL-01-04",
+              "order": 40,
+              "summary": "尾兽玉按协作是否完整偏离、削弱或命中，抵达者立即分散以免第二发覆盖。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中首发攻击被短暂控制与遮蔽偏转，为主力进入争取时间。"
+          ],
+          "state_changes": [
+            "记录井野精神负荷、各班查克拉、尾兽玉实际落点、救援伤亡和先遣队阵位。"
+          ],
+          "stop_condition": "第一发尾兽玉落点确认，先遣队完成分散并为主力标出安全走廊。",
+          "fallbacks": [
+            {
+              "condition": "先遣阵容或十尾控制方式改变。",
+              "status": "altered",
+              "direction": "改用土墙、空间转移或提前疏散降低损失；没有完整协作时不得复刻精准打偏。",
+              "preserves": "保留先遣抵达为主力争取时间、跨村能力组合需要实际参与者。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第611章",
+              "contribution": "提供井野偏转、日向观察与遮蔽增援"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足抵达走廊、连接条件和失败落点"
+            }
+          ],
+          "design_rationale": "把标志性偏转写成多班协作和玩家取舍，而非井野无条件远程控制强敌。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-COMBINATION-01",
+          "title": "五国联合束缚",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "十尾周边联合封锁圈",
+          "participants": [
+            "达鲁伊",
+            "希",
+            "黄土",
+            "黑土",
+            "猿飞一族忍者",
+            "雾隐水遁班",
+            "砂隐风遁班",
+            "忍者联军主力"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "对应雷、风、土、水、火遁班至少保有一条完整协作链。",
+            "总部或现场指挥能够把分步口令送达各班。"
+          ],
+          "blockers": [
+            "关键施术者未抵达、查克拉耗尽或友军识别失效。",
+            "十尾形态不受坑陷与硬化材料限制。"
+          ],
+          "setup": "主力分批抵达后按鹿久方案依次致盲、掀尘、掘坑、混合石灰与水、火遁硬化；每一步只在上一环完成和施术者尚有查克拉时推进。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-COMBINATION-01-01",
+              "order": 10,
+              "summary": "雷遁、岚遁和风遁班先削弱视野与移动，避免土遁班在十尾正面蓄力。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-COMBINATION-01-02",
+              "order": 20,
+              "summary": "岩隐、雾隐和火遁班按口令完成坑陷与硬化，任一环失败都会留下撤退缺口。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-COMBINATION-01-03",
+              "order": 30,
+              "summary": "体术与医疗班利用短暂束缚重新布置，而非在未制服十尾前直接冲向控制者。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中联合束缚短暂成立，证明联军能跨村协作，但不能永久压制十尾。"
+          ],
+          "state_changes": [
+            "逐班扣除查克拉和材料；记录束缚覆盖、持续时间、撤退缺口和下一轮医疗轮换。"
+          ],
+          "stop_condition": "十尾被限制到足以重排阵线，或任一关键环失败后联军撤回预设防线。",
+          "fallbacks": [
+            {
+              "condition": "跨村术式缺环或十尾能力已改变。",
+              "status": "altered",
+              "direction": "只执行仍成立的减速与撤离步骤，把攻击改为争取医疗、补给和尾兽恢复时间；不得宣称完整束缚成功。",
+              "preserves": "保留联军协作改变战场节奏、组合术依赖具体人员和顺序。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第612章",
+              "contribution": "提供联军五属性联合束缚"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足施术顺序、材料消耗、持续时间和撤退缺口"
+            }
+          ],
+          "design_rationale": "把连续招式压缩为一条有先后依赖的联合战术，并明确材料与持续时间。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "联军按真实行军分批抵达，后方封印和医疗点仍有人看守。",
+        "十尾若被联合束缚，只是暂时受限；各属性班已消耗大量查克拉和材料。",
+        "现场、总部与各战区共享的是射界、形态和战术口令，不包含带土私人历史。"
+      ],
+      "transition": "K068-02-10从十尾对束缚的适应与联军疲劳开始；前线必须安排医疗和补给轮换，总部准备在通信受袭时移交指挥。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-210",
+      "date": "K068-02-10",
+      "title": "总部毁灭与指挥断链",
+      "arc_id": "ARC-P2-ALLIANCE-LAST-STAND",
+      "day_goal": "推进十尾第二形态与远程尾兽玉，先完成总部最后命令和可撤离人员结算，再把指挥权交给现场而不是让联军失去组织。",
+      "start_state": [
+        "联合束缚的持续时间与缺口已有记录，十尾能否挣脱取决于其实际形态和控制强度。",
+        "总部仍保存跨战区通信、补给与指挥人员名单，是敌方可通过通信反推的高价值目标。",
+        "医疗班已经展开但床位、蛞蝓分体、药品和查克拉不足以同时救治所有伤员。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-SECOND-FORM-01",
+          "title": "第二形态与医疗轮换",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "联合封锁圈与后方医疗带",
+          "participants": [
+            "十尾",
+            "宇智波带土",
+            "宇智波斑",
+            "黄土",
+            "医疗班",
+            "感知班",
+            "玩家角色（若在前线或医疗带）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "十尾已复活并拥有突破现有束缚的身体与查克拉。",
+            "联军医疗和感知班仍能维持至少一条后方带。"
+          ],
+          "blockers": [
+            "十尾复活失败或已被更强封印稳定控制。",
+            "联军防线先行崩溃，无法组织轮换。"
+          ],
+          "setup": "十尾若适应束缚则进入更成熟形态，以冲击和远程射击打散封锁。玩家只能在加固一处防线、转运重伤者和保留感知预警之间选择，医疗班按伤情而非姓名优先级分配资源。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-SECOND-FORM-01-01",
+              "order": 10,
+              "summary": "感知班识别体型、尾部和蓄力方式变化，黄土估算现有土遁还能维持的时间。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-SECOND-FORM-01-02",
+              "order": 20,
+              "summary": "冲击造成新的挤压伤、灼伤和查克拉透支，医疗带启动分区转运。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-SECOND-FORM-01-03",
+              "order": 30,
+              "summary": "玩家选择加固防线、搬运红标伤员、保护感知者或护送补给，未选区域承受相应风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-SECOND-FORM-01-04",
+              "order": 40,
+              "summary": "十尾形态、封锁损坏和医疗占用被同步给总部，下一发远程攻击进入预警。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中十尾进入第二形态并挣脱主要束缚，联军退到多层薄防线。"
+          ],
+          "state_changes": [
+            "记录十尾第二形态、联军新伤亡、医疗床位和药品、黄土等施术者查克拉及玩家选择造成的防线差异。"
+          ],
+          "stop_condition": "所有能移动者退出崩塌封锁圈，不能移动者已获掩护或明确列入失联名单。",
+          "fallbacks": [
+            {
+              "condition": "十尾形态或联军防线不满足基准升级。",
+              "status": "altered",
+              "direction": "按实际威胁执行封印维护、追踪或有序撤离；没有第二形态时不得生成对应冲击伤亡。",
+              "preserves": "保留大战升级必须继承防线与医疗容量。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第613章",
+              "contribution": "提供十尾形态变化、挣脱与远程攻击"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足医疗分区、感知预警和防线资源结算"
+            }
+          ],
+          "design_rationale": "用形态变化触发撤退、医疗和资源结算，而非把联军直接重置到下一轮完整阵容。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-HQ-LAST-ORDER-01",
+          "title": "鹿久的最后命令",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "联军总部地下指挥室",
+          "participants": [
+            "奈良鹿久",
+            "山中亥一",
+            "麻布依",
+            "青",
+            "总部通信与分析人员"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "十尾具备远程尾兽玉能力并通过前三发完成落点修正。",
+            "总部坐标已被敌方从通信或感知链定位。"
+          ],
+          "blockers": [
+            "总部提前转移、坐标诱骗成功或尾兽玉被空间术转移。",
+            "十尾失去远程射击或控制者决定更换目标。"
+          ],
+          "setup": "总部通过连续落点确认十尾正在校射，鹿久把最后方案压缩为现场可独立执行的指挥包；亥一在精神负荷允许下向全军或分区中继发送。人员有极短时间进入掩体、分散或维持通信，结果逐人记录。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-HQ-LAST-ORDER-01-01",
+              "order": 10,
+              "summary": "青与分析班根据前三发落点确认第四发指向总部，而不是把敌方意图当作预知。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-HQ-LAST-ORDER-01-02",
+              "order": 20,
+              "summary": "鹿久完成对十尾控制者、现场链路和下一阶段目标的最后指令，亥一选择覆盖范围并承担发送负荷。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-HQ-LAST-ORDER-01-03",
+              "order": 30,
+              "summary": "麻布依启动物资数据备份与应急掩体，总部人员按岗位决定撤离、留守或中断通信。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-HQ-LAST-ORDER-01-04",
+              "order": 40,
+              "summary": "尾兽玉命中后，以生命信号和备用通信逐人确认死亡、重伤、失联或撤离成功。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中鹿久、亥一与麻布依在完成最后职责后死亡；青重伤失联而非由爆炸画面自动判死，其余人员逐名结算。"
+          ],
+          "state_changes": [
+            "记录最后指令的实际接收者；逐名登记鹿久、亥一、麻布依、青及关键总部人员的生死、伤势、位置和遗体可回收性。"
+          ],
+          "stop_condition": "总部主通信终止，最后指令已送达实际接收者，备用节点开始点名。",
+          "fallbacks": [
+            {
+              "condition": "总部未被定位、成功疏散或攻击被拦截。",
+              "status": "altered",
+              "direction": "保留敌方斩首指挥的意图，按实际损害维持原总部或转移节点；未命中者不得补写死亡。",
+              "preserves": "保留最后方案、通信断裂与现场接管指挥的因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第613章",
+              "contribution": "提供十尾校射总部与鹿久、亥一最后通信"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足逐人避险、生死核验、数据备份和替代通信"
+            }
+          ],
+          "design_rationale": "把总部毁灭写成可干预的校射、发送与避险过程，并为后续青的长期状态保留真实救援入口。",
+          "reference_facts": [
+            "青的最终生存与伤残必须由实际搜救或后续确认建立，不能因他曾在总部就自动判死或自动康复。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-C-FIELD-COMMAND-01",
+          "title": "现场接管指挥",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "主战场临时指挥掩体",
+          "participants": [
+            "奈良鹿丸",
+            "山中井野",
+            "达鲁伊",
+            "黄土",
+            "三船",
+            "我爱罗或实际砂隐指挥",
+            "各分区联络忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "总部通信已中断或不稳定，且至少部分现场指挥者收到最后方案。",
+            "井野或替代联络忍者仍能建立局部通信。"
+          ],
+          "blockers": [
+            "总部完整存续且稳定指挥。",
+            "现场指挥者全部失联或互不承认权限。"
+          ],
+          "setup": "总部通信中断后，鹿丸只能依据亲自收到的最后方案组织战术，井野建立短距中继；达鲁伊、黄土、三船与实际砂隐指挥保留本部队权限，不会无条件受一名中忍统辖。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-FIELD-COMMAND-01-01",
+              "order": 10,
+              "summary": "各分区确认谁收到最后方案、哪些频段和心传链仍可用，并交换当前伤亡与弹药。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-FIELD-COMMAND-01-02",
+              "order": 20,
+              "summary": "鹿丸把总体方案拆成各指挥官能独立执行的目标，井野限制中继时长以免精神崩溃。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-FIELD-COMMAND-01-03",
+              "order": 30,
+              "summary": "联军建立“分区自主、短时同步、失联按预案撤退”的临时指挥结构。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "总部毁灭分支中现场指挥闭合；总部幸存分支则建立冗余而不夺权。"
+          ],
+          "state_changes": [
+            "记录现场总协调人、各分区指挥、井野负荷、可用通信范围和失联预案。"
+          ],
+          "stop_condition": "每个仍在战场的分区确认一个合法指挥者、一条通信方式和一个撤退信号。",
+          "fallbacks": [
+            {
+              "condition": "中央指挥未断或现场缺少合法接管者。",
+              "status": "altered",
+              "direction": "总部存续时改为冗余节点；现场无统一者时由各村分区防御并等待确认，不伪造全军同步。",
+              "preserves": "保留指挥连续性取决于实际收到的命令、权限与通信。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第613-614章",
+              "contribution": "提供总部毁灭后的年轻一代执行遗策"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足联盟权限、短距中继与失联预案"
+            }
+          ],
+          "design_rationale": "防止总部毁灭后联军仍像拥有全知中央指挥，也避免鹿丸凭血缘自动获得全部权限。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "十尾第二形态、控制状态和远程射界已更新。",
+        "总部每名关键人员均按实际结果标记；基准为鹿久、亥一、麻布依死亡，青重伤失联等待搜救确认。",
+        "现场建立分区指挥与短距通信，鹿丸只掌握实际收到的最后方案。"
+      ],
+      "transition": "K068-02-11在没有稳定总部支援的条件下执行最后方案；先处理定点攻击与伤员，再决定鸣人是否分发九尾查克拉。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-211",
+      "date": "K068-02-11",
+      "title": "牺牲、查克拉与反击",
+      "arc_id": "ARC-P2-ALLIANCE-LAST-STAND",
+      "day_goal": "让十尾定点攻击造成的每名重大伤亡服从站位与救援，并把鸣人向联军分发九尾查克拉写成有总量、适配和后续负担的战略选择。",
+      "start_state": [
+        "现场指挥只能使用前日收到的最后方案和局部通信。",
+        "鸣人与九喇嘛仍在恢复，分发查克拉会消耗可用于自身战斗和维持外衣的储备。",
+        "日向、医疗、感知和近战班的实际存活及位置来自前日，不存在的角色不能补入牺牲场面。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-PRECISION-STRIKE-01",
+          "title": "定点木遁下的救援选择",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "鸣人周边近卫防区",
+          "participants": [
+            "漩涡鸣人",
+            "日向宁次",
+            "日向雏田",
+            "日向日足",
+            "医疗班",
+            "玩家角色（若在近卫或救援编制）",
+            "宇智波带土"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "带土或替代控制者仍能让十尾实施定点木遁。",
+            "鸣人及实际近卫处于攻击范围。"
+          ],
+          "blockers": [
+            "控制连接已切断或近卫提前撤离射界。",
+            "目标、攻击方式或日向参战状态已被前置改变。"
+          ],
+          "setup": "带土若仍能控制十尾发动定点木遁，目标是鸣人及其近卫。宁次、雏田、日足和玩家可以改变拦截角度、推离目标或呼叫医疗；任何死亡只来自实际命中与救援失败。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-PRECISION-STRIKE-01-01",
+              "order": 10,
+              "summary": "白眼观察者标出木刺轨迹和视野死角，现场指挥给出分散而非围成固定阵型的命令。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-PRECISION-STRIKE-01-02",
+              "order": 20,
+              "summary": "攻击突破第一层回天或空掌防线，近卫必须在自身风险与保护鸣人之间决断。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-PRECISION-STRIKE-01-03",
+              "order": 30,
+              "summary": "玩家选择推离一名目标、补上防线、破坏木刺根部或提前呼叫医疗转运。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-PRECISION-STRIKE-01-04",
+              "order": 40,
+              "summary": "逐人检查贯穿、失血、查克拉和意识；宁次只有在实际受到不可逆致命伤且无救援时死亡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中宁次为保护鸣人与雏田承受致命贯穿并死亡；成功干预可令其重伤、转由他人受伤或无人死亡。"
+          ],
+          "state_changes": [
+            "逐名记录宁次、雏田、日足、玩家与近卫伤情、生死、遗体或转运位置；记录鸣人亲历的损失而非全军伤亡传闻。"
+          ],
+          "stop_condition": "所有命中者完成生命体征判定和转运决定，鸣人周边重新建立分散防线。",
+          "fallbacks": [
+            {
+              "condition": "定点攻击未成立或基准保护者不在场。",
+              "status": "altered",
+              "direction": "按现有目标和防线重算伤亡；攻击被阻断时保留敌方试图打击士气的意图，不制造替代死亡。",
+              "preserves": "保留重大伤亡必须来自具体命中、选择与医疗条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第614-615章",
+              "contribution": "提供十尾定点攻击、宁次保护同伴与基准死亡"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足轨迹观察、玩家救援、逐人伤情和可变结果"
+            }
+          ],
+          "design_rationale": "把宁次之死从强制对白改成可干预的战术后果，同时保留牺牲对鸣人与联军士气的影响。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-CHAKRA-DISTRIBUTION-01",
+          "title": "九尾查克拉分配",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "临时指挥掩体与各分区阵线",
+          "participants": [
+            "漩涡鸣人",
+            "九喇嘛",
+            "日向雏田",
+            "山中井野",
+            "奈良鹿丸",
+            "各分区联络忍者",
+            "玩家角色（若获分配或参与调度）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人与九喇嘛仍保持合作且拥有可分配储备。",
+            "现场指挥能提供可靠友军名单和分区用途。"
+          ],
+          "blockers": [
+            "鸣人失去意识、九喇嘛被抽离或关系破裂。",
+            "通信混乱到无法确认敌我和接收者。"
+          ],
+          "setup": "鸣人在亲历伤亡后决定是否把九喇嘛查克拉按个体适配分给联军。九喇嘛先估算总量，井野与联络忍者提供仍在作战的名单；玩家可主张优先防御、医疗、突击或保留鸣人安全储备。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-CHAKRA-DISTRIBUTION-01-01",
+              "order": 10,
+              "summary": "九喇嘛说明可分配总量、鸣人最低自保线以及不同忍者适配失败的风险。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-CHAKRA-DISTRIBUTION-01-02",
+              "order": 20,
+              "summary": "现场指挥提交各分区人数、伤员和任务，排除昏迷、撤离或敌我未辨者。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-CHAKRA-DISTRIBUTION-01-03",
+              "order": 30,
+              "summary": "玩家决定优先级和是否保留紧急份额；鸣人逐批接触或经影分身分配，并承担每批负荷。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-CHAKRA-DISTRIBUTION-01-04",
+              "order": 40,
+              "summary": "每批接收者确认外衣强度、持续时间和用途，鸣人进入重负荷状态并停止无计划分发。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中主要作战分区获得有限九尾查克拉外衣，防御和力量上升；鸣人自身储备与精神承载显著下降。"
+          ],
+          "state_changes": [
+            "记录分配总量、每分区接收者、强度、预计持续时间、未获分配者及鸣人的查克拉、体力和精神负担。"
+          ],
+          "stop_condition": "最后一批完成适配，鸣人保有最低自保线或因拒绝保留而进入明确保护状态。",
+          "fallbacks": [
+            {
+              "condition": "查克拉来源或名单不可靠。",
+              "status": "altered",
+              "direction": "缩小为近身同伴分配、改用普通防御增益或完全保留储备；未接收者不得出现九尾外衣。",
+              "preserves": "保留联军需要共享资源抵抗十尾、分配必然增加鸣人负担。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第615-616章",
+              "contribution": "提供鸣人向联军分发九尾查克拉"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足总量、适配、优先级、持续时间和施术者负担"
+            }
+          ],
+          "design_rationale": "防止九尾外衣变成全军永久增益，并让玩家决定稀缺资源投向。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-SEVER-CONTROL-01",
+          "title": "切断十尾控制触须",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "十尾控制者近接战区",
+          "participants": [
+            "漩涡鸣人",
+            "李洛克",
+            "山中井野",
+            "奈良一族忍者",
+            "秋道一族忍者",
+            "宇智波带土",
+            "宇智波斑"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一批奈良、秋道、山中和近战人员获得可用增益并进入阵位。",
+            "十尾仍通过可切断的物理或查克拉连接受控。"
+          ],
+          "blockers": [
+            "查克拉外衣未分发或协同班已失能。",
+            "控制方式改变为不可切断的远程手段。"
+          ],
+          "setup": "获得九尾外衣的联军按最后方案束缚控制者和十尾尾部，鸣人与李只在通道打开后切断触须。井野的控制仍是短暂干扰，奈良与秋道各自承担查克拉和身体负担。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-SEVER-CONTROL-01-01",
+              "order": 10,
+              "summary": "奈良、秋道与山中班确认各自目标和解除信号，避免精神控制与物理压制互相伤害。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-SEVER-CONTROL-01-02",
+              "order": 20,
+              "summary": "九尾外衣支撑各班完成一次超出常态的协同，但持续时间快速下降。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-SEVER-CONTROL-01-03",
+              "order": 30,
+              "summary": "鸣人与李切断实际暴露的控制连接，十尾转为自主或降低控制，敌方被迫重新选择手段。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中带土与斑暂时和十尾分离，联军获得重新布防窗口。"
+          ],
+          "state_changes": [
+            "记录被切断的触须数量、各班外衣剩余时间、伤势和十尾自主程度。"
+          ],
+          "stop_condition": "控制连接明确为切断、保留或替换，联军在外衣消失前退出近接区。",
+          "fallbacks": [
+            {
+              "condition": "协同阵容或控制连接不同。",
+              "status": "altered",
+              "direction": "按现存能力只争取局部松脱或撤退窗口；没有触须时改攻击黑棒、施术者或保护节点。",
+              "preserves": "保留联军反击取决于资源分配和实际控制媒介。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第616-617章",
+              "contribution": "提供九尾外衣强化联军与切断十尾控制"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足协作次序、外衣时限和退出条件"
+            }
+          ],
+          "design_rationale": "把反击压缩为跨班协同并结算增益消耗，避免把一连串招式拆成重复事件。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "所有重大伤亡按实际命中记录；基准宁次死亡，改变分支则明确其重伤、转运或存活状态。",
+        "九尾查克拉外衣只存在于列名接收者并有持续时间，鸣人处于高负荷且需要保护。",
+        "十尾控制连接若被切断则暂时降低控制，斑与带土仍保有独立行动能力。"
+      ],
+      "transition": "K068-02-12前线在十尾短暂失控期轮换医疗和感知人员；与此同时，只有已从 H 实际位置完成旅行的佐助一行才能进入木叶地下线程。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-212",
+      "date": "K068-02-12",
+      "title": "木叶地下的复归术",
+      "arc_id": "ARC-P2-HOKAGE-RETURN",
+      "day_goal": "以严格离屏和私密知识推进佐助寻求答案、大蛇丸解除尸鬼封尽与秽土火影复归；明确面具、白绝祭品、施术权限和参与者，不能让战场同步得知。",
+      "start_state": [
+        "佐助是否选择寻找火影、其同伴阵容和大蛇丸生死必须来自 H 的末端；基准仅在佐助、水月、重吾与大蛇丸已组成同行队时成立。",
+        "木叶与主战场相距需要实际旅行时间，本日地下行动与前线是不同地点、不同知识线程。",
+        "历代火影灵魂仍受尸鬼封尽且大蛇丸双手封印未解除时，必须先取得漩涡纳面堂的正确面具。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-MASK-TEMPLE-01",
+          "title": "纳面堂取面具",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "木叶外围漩涡一族纳面堂",
+          "participants": [
+            "宇智波佐助",
+            "大蛇丸",
+            "鬼灯水月",
+            "重吾"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "佐助一行实际决定向历代火影求证并抵达木叶外围。",
+            "大蛇丸仍拥有辨认纳面堂面具的知识和行动能力。"
+          ],
+          "blockers": [
+            "大蛇丸死亡、失能或拒绝合作。",
+            "纳面堂已毁、面具被转移或队伍被木叶控制。"
+          ],
+          "setup": "大蛇丸只依据自己掌握的封印知识辨认死神面具，队伍先核对追踪风险、白绝孢子和撤离路线；佐助不知道战场即时状况，只能感知远方查克拉变化。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-MASK-TEMPLE-01-01",
+              "order": 10,
+              "summary": "一行完成从 H 末端位置到木叶外围的旅行，结算食水、体力和是否被巡逻发现。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-MASK-TEMPLE-01-02",
+              "order": 20,
+              "summary": "大蛇丸辨认面具并说明解除尸鬼封尽会重伤当前身体，水月与重吾决定是否继续协助。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-MASK-TEMPLE-01-03",
+              "order": 30,
+              "summary": "取得正确面具后队伍转往南贺神社，不在纳面堂直接获得火影灵魂或战场知识。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "基准线中队伍取得死神面具并保持隐秘，木叶普通人员不知道他们已经入村。"
+          ],
+          "state_changes": [
+            "记录旅行路线、体力、面具库存、目击者、佐助感知到的有限远方信息和下一地点。"
+          ],
+          "stop_condition": "正确面具被携离并封装，或行动暴露后队伍决定撤退、谈判或另寻合法封印专家。",
+          "fallbacks": [
+            {
+              "condition": "施术者、面具或潜入条件缺失。",
+              "status": "altered",
+              "direction": "改为与木叶封印班谈判、调查其他见证人或暂停复归；没有面具不得跳过尸鬼封尽。",
+              "preserves": "保留佐助寻求一手证词、火影复归依赖具体封印工具。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第618章",
+              "contribution": "提供佐助一行进入木叶与取得死神面具"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足旅行、库存、潜入和目击者"
+            }
+          ],
+          "design_rationale": "给复归术补足物件来源、旅行和潜入后果，避免大蛇丸凭空解除封印。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-REANIMATION-RITE-01",
+          "title": "尸鬼封尽解除与四具祭品",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "南贺神社地下密室",
+          "participants": [
+            "大蛇丸",
+            "宇智波佐助",
+            "鬼灯水月",
+            "重吾",
+            "白绝孢子体"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "正确死神面具、至少一具容器和足够白绝祭品均在密室。",
+            "大蛇丸理解尸鬼封尽与秽土转生且自主继续。"
+          ],
+          "blockers": [
+            "灵魂已被其他方式释放或封印位置改变。",
+            "祭品不足、佐助阻止仪式或大蛇丸未能转生。"
+          ],
+          "setup": "大蛇丸戴面具召出死神、切开其腹部释放灵魂并取回双手；重吾只能在实际存在的白绝孢子上注入自然能量。大蛇丸必须转生新容器并以四具可用祭品施展秽土转生。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-REANIMATION-RITE-01-01",
+              "order": 10,
+              "summary": "大蛇丸列明要释放的灵魂、仪式风险和所需容器，佐助决定是否接受以白绝为祭品的代价。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-REANIMATION-RITE-01-02",
+              "order": 20,
+              "summary": "尸鬼封尽解除重创大蛇丸当前身体；若没有合适白绝容器，仪式在此停止。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-REANIMATION-RITE-01-03",
+              "order": 30,
+              "summary": "重吾激活实际存在的孢子，大蛇丸完成转生后逐具施术，四位火影是否出现按灵魂和祭品状态分别结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中柱间、扉间、日斩与水门以秽土状态复归，大蛇丸恢复双手并控制术式。"
+          ],
+          "state_changes": [
+            "记录面具损耗、大蛇丸旧身体与新容器、白绝祭品数量、每位火影的复归状态和施术控制权限。"
+          ],
+          "stop_condition": "每个目标灵魂均明确为复归、仍被封印或仪式失败，密室完成术后警戒。",
+          "fallbacks": [
+            {
+              "condition": "仪式材料、灵魂或施术者状态与基准不同。",
+              "status": "altered",
+              "direction": "逐个结算可复归对象；缺少的火影保持缺席，改由现存证人回答佐助并调整战场支援阵容。",
+              "preserves": "保留复归人数、能力和控制权限取决于真实仪式条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第618章",
+              "contribution": "提供尸鬼封尽解除、大蛇丸转生与历代火影秽土复归"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足祭品清单、逐人结果、伦理选择和术后状态"
+            }
+          ],
+          "design_rationale": "把力量恢复、身体转移和秽土召唤拆成有材料与伦理代价的仪式链。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-HOKAGE-HEARING-01",
+          "title": "佐助的私密听证",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "南贺神社地下密室",
+          "participants": [
+            "宇智波佐助",
+            "千手柱间",
+            "千手扉间",
+            "猿飞日斩",
+            "波风水门",
+            "大蛇丸",
+            "鬼灯水月",
+            "重吾"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一名能回答核心问题的火影或等价一手证人成功出现。",
+            "佐助仍有自主判断能力并愿意听取证词。"
+          ],
+          "blockers": [
+            "佐助已作出不可逆敌对行动或失去自主意识。",
+            "复归者受大蛇丸完全压制且无法真实作证。"
+          ],
+          "setup": "复归者只回答自己亲历、任内记录或合理推断的木叶、宇智波与忍者制度问题。日斩可确认自己参与的灭族决策，柱间可讲述与斑建村的经历；回忆只进入密室听众知识。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-HEARING-01-01",
+              "order": 10,
+              "summary": "佐助列出从鼬和带土处获得的证词，请日斩区分可确认事实、未知环节和带土可能的操纵。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-HEARING-01-02",
+              "order": 20,
+              "summary": "扉间解释其政策与写轮眼风险，柱间以建村和与斑决裂的亲历纠正“宇智波必然毁灭”的单一结论。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-HEARING-01-03",
+              "order": 30,
+              "summary": "佐助在毁灭木叶、守护鼬重视之物、拘束火影继续求证或拒绝参战之间作出当前决定。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-HEARING-01-04",
+              "order": 40,
+              "summary": "每名听众记录佐助实际选择；外界仍不知道听证内容，四火影是否获准前往战场取决于大蛇丸控制和佐助决定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中佐助决定阻止斑的计划、保护鼬重视的木叶，并与四位火影前往战场；其“成为火影”主张尚未获任何政治授权。"
+          ],
+          "state_changes": [
+            "记录每条证词的来源、密室知情者、佐助阵营选择、大蛇丸控制强度和火影行动许可。"
+          ],
+          "stop_condition": "佐助做出可执行的当前选择，复归者与同行者完成出发或留守编组。",
+          "fallbacks": [
+            {
+              "condition": "证人阵容或佐助立场与基准不同。",
+              "status": "altered",
+              "direction": "只使用实际可得证词形成暂定选择；证据不足时佐助可继续调查、保持中立或提出条件支援，不强制回归原作。",
+              "preserves": "保留佐助以证据决定阵营、证词知识不自动外泄。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第619-627章",
+              "contribution": "提供四火影证词、柱间回忆与佐助参战决定"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "压缩长篇回忆为来源分明的听证、选择和知识边界"
+            }
+          ],
+          "design_rationale": "把长篇回忆压缩为证词审计与阵营选择，不让建村史变成战场公共知识或固定洗白。",
+          "reference_facts": [
+            "柱间与斑的童年、建村和终末之谷经历只由柱间讲给密室听众，不会同步进入忍者联军知识。"
+          ]
+        }
+      ],
+      "end_state": [
+        "基准线中四位火影以秽土状态复归，大蛇丸恢复双手并占用白绝容器；任何缺失材料都会减少实际阵容。",
+        "佐助的阵营决定及其证据只为密室听众所知，尚无火影职位或木叶法律豁免。",
+        "主战场不知道火影是否复归，只可能感知到远方查克拉。"
+      ],
+      "transition": "K068-02-13分别推进前线十尾灾害和木叶出发准备；两个线程继续保持通信与知识隔离，直到实际抵达者建立联络。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-213",
+      "date": "K068-02-13",
+      "title": "天变地异与神威决斗",
+      "arc_id": "ARC-P2-OBITO-TRUTH",
+      "day_goal": "在九尾外衣衰减时让十尾灾害、医疗防线与卡卡西进入神威空间的私人决斗并行，结清位置和能力次数。",
+      "start_state": [
+        "十尾是否暂时脱离控制、外衣覆盖名单和现场分区指挥继承 K068-02-11。",
+        "卡卡西与带土只有在双方仍能使用神威且有交战窗口时才能进入同一空间。",
+        "火影与佐助一行仍在木叶准备移动，尚未抵达主战场。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-CATACLYSM-01",
+          "title": "外衣耗尽前的多层防线",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "十尾灾害覆盖的主战场",
+          "participants": [
+            "十尾",
+            "漩涡鸣人",
+            "春野樱",
+            "奇拉比",
+            "牛鬼",
+            "奈良鹿丸",
+            "黄土",
+            "忍者联军各防区",
+            "玩家角色（若在防御或医疗编制）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "十尾仍能发动大范围自然灾害或尾兽玉。",
+            "联军至少保有土遁、尾兽偏转或疏散中的一种防御手段。"
+          ],
+          "blockers": [
+            "十尾已被稳定封印或移出战区。",
+            "联军已完全撤离攻击范围。"
+          ],
+          "setup": "十尾制造地裂、风暴和蓄力攻击，九尾外衣在保护各防区后逐批消失。鹿丸和黄土组织多层薄土墙，奇拉比承担首层偏转，小樱和医疗班在墙后治疗鸣人。玩家选择加固、转运或保存联络。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-CATACLYSM-01-01",
+              "order": 10,
+              "summary": "各防区上报外衣剩余时间、土遁人数和伤员，现场指挥按射线布置多层薄墙而非一堵不可破的墙。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-CATACLYSM-01-02",
+              "order": 20,
+              "summary": "牛鬼以实际剩余查克拉偏转攻击，外衣依次耗尽，鸣人因分配与维持进入虚弱。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-CATACLYSM-01-03",
+              "order": 30,
+              "summary": "玩家选择守一段土墙、搬运鸣人或重伤员、保护井野通信，或为牛鬼建立撤退角。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-CATACLYSM-01-04",
+              "order": 40,
+              "summary": "攻击穿透层数、实际落点和各防区伤亡被记录，医疗班停止鸣人继续分发查克拉。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中联军以多层土墙和牛鬼降低毁灭性攻击，九尾外衣大部消失，鸣人进入治疗。"
+          ],
+          "state_changes": [
+            "逐分区更新外衣消失时刻、防线损坏、牛鬼查克拉、鸣人伤情、医疗资源和失联人员。"
+          ],
+          "stop_condition": "本轮灾害停止或转向，所有幸存分区重新点名并留出明确的下一次撤退路线。",
+          "fallbacks": [
+            {
+              "condition": "威胁或防御资源与基准不同。",
+              "status": "altered",
+              "direction": "按实际手段执行局部防御或撤离；没有九尾外衣者不得用外衣抵挡，没有牛鬼者改由空间术或分散疏散。",
+              "preserves": "保留外衣耗尽、鸣人负担和多层防线的资源连续性。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第628-630章",
+              "contribution": "提供十尾天变地异、土墙防线与鸣人治疗"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足分区防御、外衣衰减、转运和点名"
+            }
+          ],
+          "design_rationale": "把天变地异变成可结算的防御阶段，保留连续大战中的疲劳、医疗和通信选择。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-KAMUI-DUEL-01",
+          "title": "神威空间的私密决裂",
+          "thread_id": "THR-P2-OBITO-TRUTH",
+          "location": "神威空间",
+          "participants": [
+            "旗木卡卡西",
+            "宇智波带土"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "卡卡西和带土仍存活、有意识并能进入同一神威空间。",
+            "双方关系冲突尚未被前置和解或彻底切断。"
+          ],
+          "blockers": [
+            "任一方失去对应眼睛、空间被封锁或已被他人拘束。",
+            "玩家已建立可信停战并阻止单独决斗。"
+          ],
+          "setup": "卡卡西与带土在神威空间单独决斗。带土承认自己知道琳死亡并非简单背叛，却只表达忍者制度让现实成为地狱；卡卡西尝试阻止或挽回他。两人的对话没有通信媒介，不能被现实战场听见。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-KAMUI-DUEL-01-01",
+              "order": 10,
+              "summary": "双方以共享写轮眼空间和前序伤势进入近身战，卡卡西明确自己剩余雷切与神威负荷。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAMUI-DUEL-01-02",
+              "order": 20,
+              "summary": "带土用幻术和言语攻击卡卡西罪疚，卡卡西依据鸣人的选择反驳“幻觉能填补空洞”。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAMUI-DUEL-01-03",
+              "order": 30,
+              "summary": "双方在是否下杀手、留下说服窗口或脱离空间间做出选择，任何贯穿伤按实际命中结算。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAMUI-DUEL-01-04",
+              "order": 40,
+              "summary": "决斗停在一方重伤、撤离或失去继续战斗能力处；私人陈述只写入两人知识。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中卡卡西以雷切苦无重伤带土，自己被黑棒刺伤并留在神威空间；带土返回现实。"
+          ],
+          "state_changes": [
+            "记录双方伤势、武器、查克拉、神威次数、位置、是否仍有说服意愿和仅两人掌握的陈述。"
+          ],
+          "stop_condition": "带土返回现实或被留在空间，卡卡西因伤停止追击并明确能否自行返回。",
+          "fallbacks": [
+            {
+              "condition": "私人决斗无法成立或已被外部干预。",
+              "status": "altered",
+              "direction": "改为现实空间的受监督对质、远程追击或医疗拘束；只把实际听见的内容写入知情者。",
+              "preserves": "保留卡卡西与带土必须面对共同过去、结果取决于现有伤势和选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第629-636章",
+              "contribution": "提供神威空间对质、近战与双方基准重伤"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足私密知识、伤势继承、停止点和可干预结果"
+            }
+          ],
+          "design_rationale": "让动机对质保持私人且有战斗代价，不用回忆向整个战场解释琳、斑与雾隐事件。",
+          "reference_facts": [
+            "带土知道琳作为三尾容器并主动迎向卡卡西攻击的原因，但他在本场是否完整说出由实际对话决定；斑操纵事件仍非卡卡西自动知识。"
+          ]
+        },
+        {
+          "id": "SCN-P2-WAR-C-HOKAGE-DEPART-01",
+          "title": "复归者的战场移动",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "木叶火影岩至战争前线的分段路线",
+          "participants": [
+            "千手柱间",
+            "千手扉间",
+            "猿飞日斩",
+            "波风水门",
+            "宇智波佐助",
+            "大蛇丸",
+            "重吾",
+            "鬼灯水月",
+            "香燐或实际追上者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "至少一位复归火影获大蛇丸允许行动，且队伍决定支援战场。",
+            "能够通过感知、地图或旧标记确定主战场方向。"
+          ],
+          "blockers": [
+            "大蛇丸重新束缚复归者或佐助决定不参战。",
+            "路线被敌军、结界或失效标记阻断。"
+          ],
+          "setup": "获准行动的火影先感知战场坐标和斑、鸣人的查克拉，再按各自速度分批移动；水门可以利用仍存在且坐标可靠的飞雷神标记先行，但不能无标记携带所有人瞬移。佐助与同行者结算普通高速行军。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-DEPART-01-01",
+              "order": 10,
+              "summary": "队伍确认每位复归者的控制权限、战场坐标、可用飞雷神标记和同行者体力。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-DEPART-01-02",
+              "order": 20,
+              "summary": "水门若有可靠标记则先行侦察和转移一次攻击，其余火影按编组移动；佐助一行不与其共享瞬移能力。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-WAR-C-HOKAGE-DEPART-01-03",
+              "order": 30,
+              "summary": "各批次在前线外缘建立友军识别，未到者的位置和预计抵达时刻被登记。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "基准线中水门获得先行条件，柱间、扉间、日斩随后抵达，佐助与重吾另行接近战场。"
+          ],
+          "state_changes": [
+            "记录每批路线、出发与预计抵达、飞雷神标记来源、体力、查克拉、友军识别和仍留守者。"
+          ],
+          "stop_condition": "先行者到达前线感知边界，其余队伍抵达预设集结点或因阻断停留在明确位置。",
+          "fallbacks": [
+            {
+              "condition": "出发阵容、权限或移动手段改变。",
+              "status": "altered",
+              "direction": "只移动实际自由且知道坐标者；无飞雷神标记者走普通路线，无法抵达者保持缺席并通知不了的角色不得预知支援。",
+              "preserves": "保留火影与佐助到场依赖复归结果、授权和旅行。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第627-630章",
+              "contribution": "提供历代火影与佐助一行奔赴战场"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足路线、飞雷神标记、批次和友军识别"
+            }
+          ],
+          "design_rationale": "为火影和佐助抵达补足施术标记、移动时间与分批顺序。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "九尾外衣按分区衰减，鸣人处于治疗与高负荷状态；联军防线、伤亡和通信再次点名。",
+        "基准卡卡西重伤留在神威空间、带土重伤返回现实；两人的私密对话未向外传播。",
+        "四火影与佐助只有满足复归、授权和移动条件者在前线外缘，尚未统一进入战场。"
+      ],
+      "transition": "K068-02-14先由实际先行者处理十尾蓄力攻击，再完成四赤阳阵、佐助入场和友军权限确认。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-214",
+      "date": "K068-02-14",
+      "title": "火影抵达与战场封锁",
+      "arc_id": "ARC-P2-HOKAGE-RETURN",
+      "day_goal": "让水门的空间转移、四火影结界和佐助参战依次满足标记、施术者与权限条件，并限制新到者获得的战场知识。",
+      "start_state": [
+        "十尾正蓄积或准备下一轮大范围攻击，联军多层防线已接近极限。",
+        "水门是否先到、其飞雷神标记和九喇嘛阴属性查克拉状态来自实际复归与移动记录。",
+        "柱间、扉间、日斩、佐助和重吾仍按前日批次抵达，不能因同一标题同步出现。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-MINATO-TRANSFER-01",
+          "title": "水门转移尾兽玉",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "主战场防线前沿与外海标记点",
+          "participants": [
+            "波风水门",
+            "十尾",
+            "忍者联军防御班",
+            "漩涡鸣人",
+            "春野樱"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "水门以可行动状态先行抵达。",
+            "前线与外海各有可用飞雷神标记，且水门能在命中前锁定尾兽玉。"
+          ],
+          "blockers": [
+            "水门未复归、受控或标记失效。",
+            "攻击形态无法整体转移或安全落点已失效。"
+          ],
+          "setup": "水门只有在先行抵达、识别尾兽玉并仍有外海有效标记时，才能用飞雷神把攻击转移；联军并不因其出现立即知道父子关系、九尾分割或木叶地下听证。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-MINATO-TRANSFER-01-01",
+              "order": 10,
+              "summary": "水门读取防线手势和攻击轨迹，确认转移不会把尾兽玉送入己方舰队或居民区。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-MINATO-TRANSFER-01-02",
+              "order": 20,
+              "summary": "他连接前线与外海标记完成一次大质量转移，秽土身体仍承担术式查克拉和短暂控制延迟。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-MINATO-TRANSFER-01-03",
+              "order": 30,
+              "summary": "外海爆点确认后，水门向现场指挥报出身份、能力和可用次数，不展开私人叙旧。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中毁灭性尾兽玉被转移到外海，联军获得建立结界的短窗口。"
+          ],
+          "state_changes": [
+            "记录标记坐标、转移次数、外海损害、水门查克拉和实际听到其身份通报者。"
+          ],
+          "stop_condition": "攻击在安全落点爆炸且余波评估完成，或转移失败后按既有防线结算。",
+          "fallbacks": [
+            {
+              "condition": "水门、标记或安全落点缺失。",
+              "status": "altered",
+              "direction": "依靠多层土墙、牛鬼偏转和分散撤离结算；不得让其他角色凭空复制飞雷神。",
+              "preserves": "保留大范围攻击必须被实际防御，火影先行支援需要术式条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第630-631章",
+              "contribution": "提供水门抵达并转移十尾尾兽玉"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足标记来源、安全落点、使用次数和身份通报"
+            }
+          ],
+          "design_rationale": "为关键空间术明确标记、落点、次数和传播范围。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-FOUR-BARRIER-01",
+          "title": "四赤阳阵与尾部封印",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "十尾四方结界阵位",
+          "participants": [
+            "千手柱间",
+            "千手扉间",
+            "猿飞日斩",
+            "波风水门",
+            "十尾",
+            "宇智波斑",
+            "忍者联军现场指挥"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "四位火影均成功复归、抵达并拥有自主施术权限。",
+            "十尾仍处于可被四方结界包围的位置。"
+          ],
+          "blockers": [
+            "任一火影缺席、被控制或需要维持其他关键术式。",
+            "十尾已移动出预设阵位。"
+          ],
+          "setup": "四位火影全部抵达且不受大蛇丸阻止时，分别移动到十尾四方建立四赤阳阵，柱间再用明神门压制尾部。若缺一人，必须采用缩小结界或联军替代封锁，不能照常生成完整结界。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-FOUR-BARRIER-01-01",
+              "order": 10,
+              "summary": "现场指挥为四名施术者清空阵位并交换十尾形态、控制者与友军位置的必要情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-FOUR-BARRIER-01-02",
+              "order": 20,
+              "summary": "四火影同步结印维持结界，柱间追加封印；每人被固定在阵位，不能同时自由参加其他战斗。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-FOUR-BARRIER-01-03",
+              "order": 30,
+              "summary": "结界内外通道、维持者状态和失效条件被通报给联军，斑与柱间只完成相互确认。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中四赤阳阵限制十尾，明神门压住尾部，为联军近接作战创造条件。"
+          ],
+          "state_changes": [
+            "记录四名维持者阵位、查克拉、结界范围、通道、失效条件、柱间与斑位置。"
+          ],
+          "stop_condition": "结界稳定并经一次十尾冲击验证，或替代封锁达到其实际极限。",
+          "fallbacks": [
+            {
+              "condition": "四赤阳阵缺员或目标位置改变。",
+              "status": "altered",
+              "direction": "按现存火影与联军封印班建立缩小屏障、牵引或撤离区，明确强度降低；不复制完整四赤阳阵。",
+              "preserves": "保留封锁十尾需要多名顶级施术者固定占位和持续供能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第631-632章",
+              "contribution": "提供四火影四赤阳阵与柱间封印十尾"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足阵位、持续供能、缺员方案和现场通报"
+            }
+          ],
+          "design_rationale": "防止火影建立结界后又无代价出现在其他战区，并让缺员分支可运行。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-SASUKE-ARRIVAL-01",
+          "title": "佐助参战与第七班临时协作",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "四赤阳阵外联军集结线",
+          "participants": [
+            "宇智波佐助",
+            "重吾",
+            "漩涡鸣人",
+            "春野樱",
+            "旗木卡卡西或其缺席记录",
+            "木叶同期忍者",
+            "玩家角色（若有木叶或联军识别权限）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助实际选择支援并完成到场移动。",
+            "现场存在能核验身份并授予有限参战的联军指挥者。"
+          ],
+          "blockers": [
+            "佐助仍敌对、失能或选择旁观。",
+            "其到场行动被前置罪行、冲突或玩家证据判定为不可接受。"
+          ],
+          "setup": "佐助与实际同行者抵达后需通过友军识别并公开当前目标。其保护木叶和“成为火影”的主张只是个人立场，不等于撤销叛忍身份或获得指挥权；卡卡西若仍在神威空间则不能被标题召回。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-SASUKE-ARRIVAL-01-01",
+              "order": 10,
+              "summary": "警戒班核验佐助身份、同行者、武器与到场路线，鸣人和小樱只确认亲眼所见。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-SASUKE-ARRIVAL-01-02",
+              "order": 20,
+              "summary": "佐助说明要阻止十尾和斑，并提出改变木叶的政治目标；现场指挥要求先服从战时敌我识别和交战规则。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-SASUKE-ARRIVAL-01-03",
+              "order": 30,
+              "summary": "玩家选择支持有限参战、要求监视、拒绝其进入核心阵位或安排重吾担保，决定协作边界。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-SASUKE-ARRIVAL-01-04",
+              "order": 40,
+              "summary": "第七班仅以鸣人、佐助、小樱的战术协作重组；法律、信任与卡卡西缺席问题留待战后。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中佐助和重吾获准有限参战，鸣人、佐助、小樱恢复临时三人协作；佐助仍无火影权限。"
+          ],
+          "state_changes": [
+            "记录佐助阵营声明、获准区域、监视者、法律身份、鸣人与小樱的信任状态及卡卡西实际位置。"
+          ],
+          "stop_condition": "现场指挥签发有限参战、拘束观察或拒绝入场决定，佐助进入相应阵位。",
+          "fallbacks": [
+            {
+              "condition": "佐助未到、立场不同或未获准参战。",
+              "status": "altered",
+              "direction": "按实际立场改为谈判、监视、拘束或敌对拦截；鸣人与小樱不得自动宣布第七班重组。",
+              "preserves": "保留佐助选择会改变战力与战后法律问题，临时协作不等于信任修复。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第631-632章",
+              "contribution": "提供佐助抵达、政治声明与第七班临时重组"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足友军识别、参战权限、玩家选择和法律连续性"
+            }
+          ],
+          "design_rationale": "把“第七班重聚”从情怀过场改成战时权限与关系仍有裂痕的临时协作。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "水门的尾兽玉转移只在标记与落点成立时发生，并记录使用次数。",
+        "完整四赤阳阵仅在四火影齐备时成立；维持者固定在各自阵位。",
+        "佐助基准获有限参战但仍是待处置叛忍，无火影或联军指挥权限；卡卡西仍按神威空间伤势记录。"
+      ],
+      "transition": "K068-02-15利用结界窗口推进联军近接攻势、五影救援与神威决斗后果；末段只确认带土成为十尾人柱力及其初始能力。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-WAR-C-215",
+      "date": "K068-02-15",
+      "title": "十尾容器的诞生",
+      "arc_id": "ARC-P2-TEN-TAILS-REVIVAL",
+      "day_goal": "结清联军在结界内的有限攻势、五影救援和带土返回现实后的控制权争夺，最终只推进十尾人柱力形成与首次能力确认，为 J 保留完整攻防。",
+      "start_state": [
+        "四赤阳阵或替代封锁状态、维持者位置和十尾形态继承前日。",
+        "鸣人仍背负查克拉分配后的消耗；佐助只有实际获准时参战，小樱同时承担战斗与医疗取舍。",
+        "带土与卡卡西的伤势和位置继承神威决斗；斑是否存在、是否有黑棒控制权限来自 H 与本分片实际结果。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-WAR-C-CLONE-OFFENSIVE-01",
+          "title": "结界内的有限突击",
+          "thread_id": "THR-P2-ALLIANCE-LAST-STAND",
+          "location": "四赤阳阵内部突击走廊",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "春野樱",
+            "重吾",
+            "木叶同期忍者",
+            "蛞蝓",
+            "蛤蟆吉或实际通灵兽",
+            "青蛇或实际通灵兽",
+            "十尾分裂体",
+            "玩家角色（若获准进入突击队）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "结界或替代封锁提供可进入的短时通道。",
+            "至少一支获授权突击队仍有开路和撤退能力。"
+          ],
+          "blockers": [
+            "结界失效、十尾移位或突击队被拒绝入场。",
+            "鸣佐小樱的实际能力、契约或阵营不支持基准组合。"
+          ],
+          "setup": "十尾制造分裂体阻断接近本体。鸣人、佐助和小樱只能使用各自实际掌握、拥有查克拉且契约可响应的通灵与忍术；小樱必须决定亲自突击还是优先扩大蛞蝓医疗网。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-CLONE-OFFENSIVE-01-01",
+              "order": 10,
+              "summary": "突击队核对结界通道、敌我识别、鸣佐查克拉和三份通灵契约是否可用。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-CLONE-OFFENSIVE-01-02",
+              "order": 20,
+              "summary": "分裂体数量迫使队伍在开路、救援伤员和接近本体之间分配战力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-CLONE-OFFENSIVE-01-03",
+              "order": 30,
+              "summary": "玩家选择协助开路、保护医疗网、监视佐助或撤回过度消耗者。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-CLONE-OFFENSIVE-01-04",
+              "order": 40,
+              "summary": "组合攻击只命中实际暴露部位；十尾可断开受损组织，但由此失去相应质量和控制稳定度。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中临时第七班与同期忍者打开一条接近十尾的走廊，蛞蝓扩大伤员治疗网络。"
+          ],
+          "state_changes": [
+            "扣除各人忍术与通灵消耗；记录分裂体清除、伤员、医疗覆盖、十尾断肢和突击队终点。"
+          ],
+          "stop_condition": "突击队到达预定停止线或因消耗、伤亡撤回，不能连续演出十尾人柱力完整攻防。",
+          "fallbacks": [
+            {
+              "condition": "突击窗口、队伍或能力组合改变。",
+              "status": "altered",
+              "direction": "按现有人员执行侦察、局部开路或医疗撤退；不存在的通灵兽和技能不得补齐。",
+              "preserves": "保留结界窗口被用于削弱十尾、能力来源和资源必须连续。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第632-635章",
+              "contribution": "提供新第七班、通灵兽与十尾分裂体攻势"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足参战权限、技能来源、医疗取舍和停止线"
+            }
+          ],
+          "design_rationale": "保留新生代能力展示但压缩重复招式，并让医疗、监视与进攻形成真实取舍。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-KAGE-RECOVERY-01",
+          "title": "五影救援与动身条件",
+          "thread_id": "THR-P2-HOKAGE-RETURN",
+          "location": "五影旧战场临时救治点",
+          "participants": [
+            "纲手",
+            "我爱罗",
+            "大野木",
+            "照美冥",
+            "第四代雷影",
+            "蛞蝓",
+            "大蛇丸",
+            "香燐",
+            "鬼灯水月"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "至少一名五影在旧战场存活并由蛞蝓或其他医疗者定位。",
+            "救援者实际抵达且拥有相应治疗或转运能力。"
+          ],
+          "blockers": [
+            "对应影已确认死亡且无合法复苏手段。",
+            "救援路线被切断或治疗资源已耗尽。"
+          ],
+          "setup": "五影旧战场只按真实幸存者推进救援。大蛇丸一行若抵达，可用香燐治疗、蛞蝓和水月液化协助稳定纲手；任何影都必须达到医疗转运标准后才能动身，不能一场治疗恢复满状态。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-KAGE-RECOVERY-01-01",
+              "order": 10,
+              "summary": "蛞蝓逐名报告五影意识、失血、骨折、查克拉和是否可移动，拒绝敌方早先“全部死亡”的说法。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAGE-RECOVERY-01-02",
+              "order": 20,
+              "summary": "香燐、水月和大蛇丸只提供各自实际能力允许的救援，治疗代价从香燐体力、蛞蝓查克拉和物资中扣除。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-KAGE-RECOVERY-01-03",
+              "order": 30,
+              "summary": "幸存五影决定留守治疗、分批转运或前往主战场，并指定无法行动时的村级代理权限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中五影脱离立即死亡风险但仍重伤，只有达到转运标准者开始前往主战场。"
+          ],
+          "state_changes": [
+            "逐名记录五影生死、伤势、查克拉、医疗措施、出发能力、位置和各村代理权限。"
+          ],
+          "stop_condition": "每位影均有明确医疗等级、当前位置和是否动身的决定，救治点保留看护。",
+          "fallbacks": [
+            {
+              "condition": "五影幸存名单、救援者或资源不同。",
+              "status": "altered",
+              "direction": "逐名执行遗体回收、稳定治疗或等待增援；死亡者不复活，未获治疗者不前往主战场。",
+              "preserves": "保留领导权限、伤势和旅行时间连续，为后续五影到场建立条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第601、635章",
+              "contribution": "提供五影重伤、蛞蝓救治与大蛇丸一行协助"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足逐名医疗分级、资源代价、代理权限和移动条件"
+            }
+          ],
+          "design_rationale": "清除斑台词造成的生死歧义，并防止五影无治疗、无移动满状态回归。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-OBITO-RETURN-01",
+          "title": "重伤带土返回现实",
+          "thread_id": "THR-P2-OBITO-TRUTH",
+          "location": "十尾头顶控制区",
+          "participants": [
+            "宇智波带土",
+            "宇智波斑",
+            "十尾"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "带土存活并从神威空间返回现实。",
+            "斑仍存在且能通过义体黑棒尝试控制，或带土仍有独立外道权限。"
+          ],
+          "blockers": [
+            "带土被卡卡西杀死、拘束或无法返回。",
+            "斑已封印、策反或控制媒介被移除。"
+          ],
+          "setup": "带土若从神威空间返回，继承贯穿伤、黑棒伤害和空间术消耗。斑利用植入义体的黑棒尝试迫使他施展轮回天生；带土必须在服从、抵抗、逃离或争夺十尾之间作出选择。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-OBITO-RETURN-01-01",
+              "order": 10,
+              "summary": "斑确认带土伤势、轮回眼和义体内黑棒仍能否构成控制链。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-OBITO-RETURN-01-02",
+              "order": 20,
+              "summary": "控制尝试迫使带土结印复活斑，带土以自身意志和仍可调动的外道权限反抗。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-OBITO-RETURN-01-03",
+              "order": 30,
+              "summary": "轮回天生、抵抗和转向十尾的结果分别结算；斑不能同时在秽土与完全复活状态无代价存在。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中带土抵抗斑的强制轮回天生，将目标转为把十尾吸入自己体内。"
+          ],
+          "state_changes": [
+            "记录带土贯穿伤、黑棒控制强度、轮回眼权限、斑的秽土或复活状态以及十尾控制权。"
+          ],
+          "stop_condition": "带土完成一次明确选择，斑的身体状态与十尾归属不再含糊。",
+          "fallbacks": [
+            {
+              "condition": "带土、斑或黑棒控制链与基准不同。",
+              "status": "altered",
+              "direction": "按现存候选者与外道权限重算宿主争夺；无人具备条件时十尾保持独立或受结界限制，不强制带土复归。",
+              "preserves": "保留宿主变化依赖活体、外道权限、控制媒介和个人选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第636-637章",
+              "contribution": "提供带土重伤返回、斑强制轮回天生与带土抵抗"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足身体状态、控制链、互斥结果和主体选择"
+            }
+          ],
+          "design_rationale": "把带土成为容器前的关键转折写成伤势、植入控制和主体选择的结算。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-JINCHURIKI-BIRTH-01",
+          "title": "十尾封入带土",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "四赤阳阵中心十尾控制区",
+          "participants": [
+            "宇智波带土",
+            "十尾",
+            "宇智波斑",
+            "千手柱间",
+            "千手扉间",
+            "波风水门",
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "带土满足活体、轮回眼外道权限、接触十尾和抵抗黑棒控制四项条件。",
+            "十尾仍存在可封入主体，且未被他人先行吸收或完全封印。"
+          ],
+          "blockers": [
+            "带土死亡、失去轮回眼、被拘束或主动拒绝成为容器。",
+            "十尾已被分解、转移或由其他合法宿主封入。"
+          ],
+          "setup": "只有带土存活、持有轮回眼外道权限、压过斑的黑棒控制并接触仍可封入的十尾时，才能把十尾吸入体内。封入对象仅包括十尾当前实际拥有的尾兽主体与碎片；完整九喇嘛和牛鬼若仍在人柱力体内就不会被凭空吞入。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-JINCHURIKI-BIRTH-01-01",
+              "order": 10,
+              "summary": "感知者确认十尾质量向带土收束，柱间、扉间、鸣人和佐助只依据现场现象判断宿主转换。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-JINCHURIKI-BIRTH-01-02",
+              "order": 20,
+              "summary": "封入过程重塑带土受损身体并造成短暂意识与控制不稳，斑失去直接成为宿主的当前机会。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-JINCHURIKI-BIRTH-01-03",
+              "order": 30,
+              "summary": "带土稳定为不完全十尾人柱力后破坏或冲击结界，现场只完成第一轮防御和能力采样。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中带土成为不完全十尾人柱力，身体表面形成防护物质并可破坏四赤阳阵；完整攻防留给 J。"
+          ],
+          "state_changes": [
+            "记录封入的每份尾兽来源、带土身体与意识状态、十尾剩余形态、结界损害、斑失去的控制权和首次观察到的能力。"
+          ],
+          "stop_condition": "联军确认“带土为当前十尾人柱力”并完成一次撤离或防御；不继续演出其完整能力、动摇或尾兽剥离。",
+          "fallbacks": [
+            {
+              "condition": "宿主条件或十尾归属已改变。",
+              "status": "altered",
+              "direction": "把事件标为 altered 或 skipped，记录实际宿主、独立十尾或封印状态；J 从真实威胁开始，不用标题强制带土成为人柱力。",
+              "preserves": "保留十尾宿主是可改变结果、力量来源和尾兽份额必须可追踪。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第637-638章",
+              "contribution": "提供带土抵抗斑并成为十尾人柱力及首次能力表现"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足宿主条件、尾兽份额、结界损害和分片停止点"
+            }
+          ],
+          "design_rationale": "严格停在新宿主首次确认，既交代力量来源与尾兽位置，也为下一分片保留主体战斗。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-WAR-C-FIRST-CONFIRMATION-01",
+          "title": "首次能力确认与全军后撤",
+          "thread_id": "THR-P2-TEN-TAILS-REVIVAL",
+          "location": "破损结界外缘临时指挥线",
+          "participants": [
+            "奈良鹿丸",
+            "山中井野",
+            "千手柱间",
+            "波风水门",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "奇拉比",
+            "牛鬼",
+            "忍者联军感知与医疗班",
+            "玩家角色（若在指挥或撤离编制）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "战场出现新的十尾宿主或等价六道级形态。",
+            "至少一个现场指挥与通信节点仍能组织撤退。"
+          ],
+          "blockers": [
+            "威胁已被立即封印或完全失去行动力。",
+            "联军指挥与通信全部崩溃，只能各自撤离。"
+          ],
+          "setup": "新宿主第一次冲击后，现场只能确认已观察到的速度、防护、求道玉或结界破坏现象，不得直接载入其全部能力。玩家协助选择后撤距离、救援顺序或保留观察哨。",
+          "beats": [
+            {
+              "id": "EV-P2-WAR-C-FIRST-CONFIRMATION-01-01",
+              "order": 10,
+              "summary": "柱间、水门、鸣人、佐助与感知班分别报告亲眼或感知到的现象，鹿丸区分事实、推测和未知。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-WAR-C-FIRST-CONFIRMATION-01-02",
+              "order": 20,
+              "summary": "结界损坏、鸣人高负荷和大批伤员迫使联军停止追击，井野只能向仍在线分区发送简短撤退口令。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-WAR-C-FIRST-CONFIRMATION-01-03",
+              "order": 30,
+              "summary": "玩家选择保护医疗转运、协助火影重建防线、留下观察哨或回收重大伤亡者遗体。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-WAR-C-FIRST-CONFIRMATION-01-04",
+              "order": 40,
+              "summary": "联军在宿主完整攻势开始前完成后撤点名，并把新的敌我位置与资源交接给下一阶段。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "联军首次确认当前宿主、观察到的有限能力和结界损害；J 从下一轮十尾人柱力攻防开始。"
+          ],
+          "state_changes": [
+            "更新各分区位置、通信节点、伤员与遗体、鸣人负荷、佐助查克拉、四火影阵位、卡卡西失联位置和观察哨名单。"
+          ],
+          "stop_condition": "所有存活分区回报撤离点或明确失联，新宿主尚未发动下一轮完整攻势。",
+          "fallbacks": [
+            {
+              "condition": "新宿主未成立或全军无法统一通信。",
+              "status": "altered",
+              "direction": "按实际威胁建立封锁、搜救或分区撤退；只传播各分区真实观察，不伪造全军统一结论。",
+              "preserves": "保留下一分片从实际仍可行动者、资源和已知能力开始。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第638章",
+              "contribution": "提供十尾人柱力首次显现与火影试探"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足情报分级、全军点名、医疗撤退和跨分片交接"
+            }
+          ],
+          "design_rationale": "用一次情报与撤离场景封口，确保 I 不越界完成十尾人柱力大战。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中十尾为不完全形态并已封入带土；带土是当前十尾人柱力，首次确认其高速、防护与破坏结界能力，完整攻防尚未开始。",
+        "宿主转换只包含十尾实际拥有的一至七尾主体及八尾、九尾碎片；完整牛鬼与九喇嘛仍分别与奇拉比、鸣人同在，除非此前分支已经改变。",
+        "联军总部基准已毁，鹿久、亥一、麻布依死亡，青重伤失联待后续搜救；宁次基准死亡，所有改变结果均逐名记录；其余重大伤亡和遗体位置在点名表中。",
+        "现场采用分区指挥与井野短距中继；若总部或其他通信幸存，则作为冗余节点。各分区已回报撤离点、伤员、补给和失联者。",
+        "鸣人因尾兽战、九尾查克拉分发和外衣维持处于高负荷，九喇嘛保留最低自保储备；奇拉比与牛鬼同样未恢复满状态。",
+        "卡卡西基准重伤留在神威空间，精神上仍试图阻止带土但无法立即参战；只有卡卡西与带土掌握神威决斗中的私密陈述。",
+        "四位火影只有实际完成复归、获准和移动者到场；基准四人维持或刚失去四赤阳阵阵位。佐助基准获有限参战但仍是待处置叛忍，无火影权限。",
+        "斑基准仍以秽土例外存在于主战场，与柱间相互锁定且失去立即成为十尾宿主的机会；柱间不能在维持封印或对峙时无移动支援其他分区。",
+        "五影逐名保持实际救治与移动状态，不因斑早先证词死亡或满状态抵达；青及总部幸存者仍是搜救线程。"
+      ],
+      "transition": "J 必须从本日实际宿主、十尾份额、结界损害、联军撤离点、鸣人和奇拉比负荷、卡卡西神威空间位置以及火影和佐助的真实到场状态开始；不得补回未发生的死亡、能力或公开知识。",
+      "reference_facts": [
+        "本分片只采用旧0451-0671的因果顺序；连续对白、童年回忆和重复招式已压缩为身份核验、私密听证与战役阶段。",
+        "带土过去受斑救治、琳成为三尾容器及雾隐事件的幕后因果不是联军公共知识。"
+      ]
+    }
+  ]
+}

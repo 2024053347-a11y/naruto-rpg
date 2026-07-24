@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character creator harness</title>
+  <style>
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+    #app { overflow: auto; }
+  </style>
+</head>
+<body>
+  <div id="app" class="chat-container"></div>
+  <script type="module">
+    localStorage.clear();
+    await import('../../js/ui/character-creator.js');
+
+    const creator = document.createElement('character-creator');
+    document.querySelector('#app').append(creator);
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    window.__CHARACTER_CREATOR_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

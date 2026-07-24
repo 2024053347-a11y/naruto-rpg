@@ -1,0 +1,2604 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P2-KAGUYA-FINAL",
+    "namespace": "P2",
+    "arc_ids": [
+      "ARC-P2-KAGUYA-RETURN",
+      "ARC-P2-DIMENSION-RESCUE",
+      "ARC-P2-TEAM7-SEALING",
+      "ARC-P2-WAR-RELEASE",
+      "ARC-P2-FINAL-VALLEY",
+      "ARC-P2-WAR-SETTLEMENT"
+    ],
+    "date_start": "K068-02-26",
+    "date_end": "K068-03-10"
+  },
+  "days": [
+    {
+      "id": "DAY-P2-K-226",
+      "date": "K068-02-26",
+      "title": "斑背后的最后夺权",
+      "arc_id": "ARC-P2-KAGUYA-RETURN",
+      "day_goal": "只从 J 实际留下的免疫者和仍可行动者开始，裁定黑绝能否借斑复归辉夜；条件不成立时保留斑、神树或黑绝作为替代最终威胁。",
+      "start_state": [
+        "J 已逐区记录无限月读成功、局部成功、延期或失败之一；只有名单中的保护者、秽土者和未被照射者仍可自由行动。",
+        "斑、黑绝、神树、轮回眼与十尾状态完全沿用 J；不存在的第三只眼、神树或斑肉身不能由“辉夜篇”标题补回。",
+        "鸣人、佐助、卡卡西、小樱、带土、玩家和秽土火影只保有 J 结算后的位置、伤势、查克拉、眼睛与亲历知识。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-THREAT-GATE-01",
+          "title": "黑绝的复归条件",
+          "thread_id": "THR-P2-KAGUYA-RETURN",
+          "location": "神树根部与斑所在主战场",
+          "participants": [
+            "宇智波斑",
+            "黑绝",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "旗木卡卡西",
+            "春野樱",
+            "玩家角色（若在 J 的保护圈内）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "斑或替代六道级容器仍在主战场。",
+            "至少一名 J 名单中的免疫者能观察或干预黑绝。"
+          ],
+          "blockers": [
+            "黑绝已被封印或消灭。",
+            "斑肉身、神树连接和可汇聚查克拉三者均不存在。"
+          ],
+          "setup": "保护圈开启前，仍可行动者先核对斑的肉身、黑绝附着位置、神树连接和轮墓变化；玩家只能选择保护同伴、切断树根或拦截黑绝中的一项。",
+          "beats": [
+            {
+              "id": "EV-P2-K-THREAT-GATE-01-01",
+              "order": 10,
+              "summary": "佐助以轮回眼确认轮墓是否消失，鸣人以感知确认斑体内尾兽查克拉是否异常回流。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-THREAT-GATE-01-02",
+              "order": 20,
+              "summary": "黑绝仅在能接触存活的斑与神树查克拉时刺入其身体，并尝试把受术者查克拉集中到同一容器。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-THREAT-GATE-01-03",
+              "order": 30,
+              "summary": "玩家选择封锁黑绝、维持保护圈或切断最近树根，并接受另一条防线暴露的代价。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-THREAT-GATE-01-04",
+              "order": 40,
+              "summary": "现场将结果锁定为辉夜复归、复归被打断、斑继续战斗或黑绝独立逃逸之一。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "辉夜是否复归有可核对的斑肉身、黑绝意志与神树查克拉来源。",
+            "替代路线保留终止无限月读和六道级威胁的同等核心目标。"
+          ],
+          "state_changes": [
+            "斑生命体征、黑绝附着对象、神树输入、轮墓数量、保护圈查克拉和玩家位置被记录。",
+            "目击者只知道亲眼看到的变形与攻击，不自动获得黑绝的千年计划。"
+          ],
+          "stop_condition": "复归或阻断结果不可逆地成立，且仍可行动者完成一次撤离或迎击；不得在本场景直接完成最终封印。",
+          "fallbacks": [
+            {
+              "condition": "辉夜复归条件不成立",
+              "status": "altered",
+              "direction": "继续对付实际存在的斑、神树或黑绝，并把后续“空间封印”场景改为主战场封印与受术者救援。",
+              "preserves": "保留阻止六道级容器吞并世界并解除无限月读的核心冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第678-679话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "核对 J 的条件分支、免疫名单和现场选择。"
+            }
+          ],
+          "design_rationale": "用四项现实条件约束辉夜入口，并为 J 的失败或延期分支提供真正可玩的替代终局。",
+          "reference_facts": [
+            "黑绝自称辉夜意志只在其主动披露或证据验证后进入亲历者知识。"
+          ]
+        },
+        {
+          "id": "SCN-P2-K-METAMORPHOSIS-01",
+          "title": "容器崩解与查克拉洪流",
+          "thread_id": "THR-P2-KAGUYA-RETURN",
+          "location": "神树根部中央",
+          "participants": [
+            "大筒木辉夜或实际六道级威胁",
+            "宇智波斑",
+            "黑绝",
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "上一场景已确定最终威胁路线。",
+            "鸣佐至少一人仍可观察查克拉与空间变化。"
+          ],
+          "blockers": [
+            "实际威胁已在上一场景被完整封印。",
+            "鸣佐均失去行动能力且无人维持保护圈。"
+          ],
+          "setup": "若复归成立，斑的身体因受术者查克拉灌入而膨胀，轮墓先失联再发生容器置换；若不成立，实际威胁以现有能力发动同等级别的压制。",
+          "beats": [
+            {
+              "id": "EV-P2-K-METAMORPHOSIS-01-01",
+              "order": 10,
+              "summary": "鸣人与佐助分别确认日月印、轮回眼和尾兽连接仍可用，不把未取得的六道力量补回。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-METAMORPHOSIS-01-02",
+              "order": 20,
+              "summary": "查克拉洪流压迫保护圈，任何抽取都按 J 的受术区域而非“全世界”笼统结算。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-METAMORPHOSIS-01-03",
+              "order": 30,
+              "summary": "斑的身体被置换、保留、死亡或从容器排出，黑绝的位置随实际结果更新。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-METAMORPHOSIS-01-04",
+              "order": 40,
+              "summary": "当前最终威胁锁定第一组目标和可用能力，战场进入连续追击。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "最终威胁的身体、尾兽查克拉、眼睛与空间能力形成唯一状态。",
+            "斑没有被同时记为辉夜容器、独立战斗者和遗体。"
+          ],
+          "state_changes": [
+            "斑身体与意识状态、辉夜或替代威胁能力、黑绝位置、日月印和保护圈负担被写入。"
+          ],
+          "stop_condition": "容器置换或替代威胁重组完成，并发动第一次可观察攻击。",
+          "fallbacks": [
+            {
+              "condition": "容器置换未完成或斑保持自主",
+              "status": "altered",
+              "direction": "由斑或黑绝继续争夺神树控制，后续仅使用其已确认的空间与查克拉能力。",
+              "preserves": "保留终局威胁需要被封印而非仅以普通攻击击退。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第679话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立容器、眼睛与查克拉的互斥状态。"
+            }
+          ],
+          "design_rationale": "把“斑变成辉夜”拆为查克拉输入、容器变化和能力确认，避免过场式强制复活。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-DIMENSION-SHIFT-01",
+          "title": "第一次空间置换",
+          "thread_id": "THR-P2-DIMENSION-RESCUE",
+          "location": "主战场至熔岩空间或实际封锁空间",
+          "participants": [
+            "大筒木辉夜或实际最终威胁",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "旗木卡卡西",
+            "春野樱",
+            "宇智波带土（若存活）",
+            "玩家角色（若在同一保护圈）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "最终威胁拥有且实际发动空间置换能力。",
+            "参与者在发动瞬间处于已记录覆盖范围。"
+          ],
+          "blockers": [
+            "空间能力被封印或威胁只能留在主战场。",
+            "玩家不在保护圈且无空间追踪能力。"
+          ],
+          "setup": "最终威胁发动一次大范围空间置换；只有置换发动瞬间与其处于同一覆盖层者会被带走，玩家必须依据自身位置决定抓住同伴、维持立足点或留在原战场通报。",
+          "beats": [
+            {
+              "id": "EV-P2-K-DIMENSION-SHIFT-01-01",
+              "order": 10,
+              "summary": "空间边界出现前，卡卡西和佐助报出保护圈内实际成员，圈外人员不自动同行。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-DIMENSION-SHIFT-01-02",
+              "order": 20,
+              "summary": "玩家选择随转移进入、固定一名坠落者或留在原地建立失踪坐标。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-DIMENSION-SHIFT-01-03",
+              "order": 30,
+              "summary": "熔岩、冰雪或替代封锁环境立即消耗飞行、通灵、绳索与查克拉，未获救者进入坠落或失联状态。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-DIMENSION-SHIFT-01-04",
+              "order": 40,
+              "summary": "转移名单、原地名单、可用落脚点与第一项跨空间能力冷却被登记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每名关键人物被明确记在目标空间、原战场、失联或受救援中。",
+            "玩家选择产生一个有限的救援或通信优势。"
+          ],
+          "state_changes": [
+            "空间编号、转移名单、神威/天手力/通灵使用次数、飞行与绳索负担、原战场通信节点被记录。"
+          ],
+          "stop_condition": "所有被转移者获得暂时立足点或明确坠落状态，第一次空间能力进入冷却。",
+          "fallbacks": [
+            {
+              "condition": "未发生空间置换",
+              "status": "altered",
+              "direction": "在主战场以神树裂谷、结界或轮墓形成等价分割，保留同样的名单与救援约束。",
+              "preserves": "保留第七班被分割、必须协作重建封印阵型的压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第679-680话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "记录转移清单、环境危害、能力次数和原战场联络。"
+            }
+          ],
+          "design_rationale": "先结算谁被带走和如何存活，阻止角色跨空间无成本聚齐。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "辉夜复归、复归受阻或替代最终威胁之一已经成立，并有唯一身体、眼睛、尾兽查克拉与黑绝状态。",
+        "空间置换或等价战场分割后的逐人位置、坠落/受伤、能力冷却与原战场通信节点明确。",
+        "无限月读仍按 J 的实际影响持续；尚未获救的受术者不能提供情报或参加战斗。"
+      ],
+      "transition": "K068-02-27紧接空间分割处理生存、佐助隔离条件和可用救援锚点，不插入治疗或长期休息。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-227",
+      "date": "K068-02-27",
+      "title": "空间分离与救援锚点",
+      "arc_id": "ARC-P2-DIMENSION-RESCUE",
+      "day_goal": "在连续威胁下建立环境生存、佐助被分离的实际条件，以及带土、小樱和玩家可承担的有限跨空间搜救。",
+      "start_state": [
+        "所有人沿用02-26的空间、立足点、伤势与能力冷却；没有进入目标空间者只能通过真实空间术或锚点介入。",
+        "鸣人与佐助的日月印必须同时接触目标才可封印；二人之一死亡或未获得印记时改用现有封印资源拖延。",
+        "带土只有在 J 中存活、仍可施展神威且未被黑绝完全控制时才可担任空间锚点。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-HAZARD-LINE-01",
+          "title": "熔岩上方的生存线",
+          "thread_id": "THR-P2-DIMENSION-RESCUE",
+          "location": "熔岩空间或实际封锁战场",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "旗木卡卡西",
+            "春野樱",
+            "玩家角色（若随行）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少两名关键成员处于危险环境。",
+            "存在一项仍可用的移动或固定手段。"
+          ],
+          "blockers": [
+            "队伍已在安全空间集结。",
+            "所有移动能力和装备同时失效。"
+          ],
+          "setup": "队伍先处理坠落、灼伤和立足点，鸣人的飞行、佐助的通灵/天手力、卡卡西的绳索和玩家装备都只能救到实际范围内的人。",
+          "beats": [
+            {
+              "id": "EV-P2-K-HAZARD-LINE-01-01",
+              "order": 10,
+              "summary": "卡卡西按距离和失速速度标出每人的救援优先级。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-HAZARD-LINE-01-02",
+              "order": 20,
+              "summary": "玩家选择固定伤员、保存封印者或牺牲装备建立公共立足点。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-HAZARD-LINE-01-03",
+              "order": 30,
+              "summary": "辉夜或替代威胁趁救援攻击鸣佐，迫使两人分别支出防御查克拉。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-HAZARD-LINE-01-04",
+              "order": 40,
+              "summary": "队伍形成可维持数分钟的立足阵型，并登记未救到者。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "生存来自具体飞行、换位、绳索或装备，而非全员自动免疫环境。",
+            "鸣佐与支援者的剩余资源进入账本。"
+          ],
+          "state_changes": [
+            "灼伤/冻伤、立足点、通灵状态、天手力冷却、鸣人飞行负担、玩家装备损失和失联者被记录。"
+          ],
+          "stop_condition": "所有可接触成员有稳定位置，或未救者超出当前能力范围并进入失联任务。",
+          "fallbacks": [
+            {
+              "condition": "无法建立共同立足点",
+              "status": "altered",
+              "direction": "拆成两个局部小组，各自躲避并留下可追踪查克拉标记；不让失联者瞬移归队。",
+              "preserves": "保留环境压力和后续重组需求。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第680-681话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "压缩重复坠落并结算救援距离和装备。"
+            }
+          ],
+          "design_rationale": "把旧资料多次坠落压成一次有距离、装备和查克拉代价的生存选择。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-SASUKE-SEPARATION-01",
+          "title": "封印者被隔离",
+          "thread_id": "THR-P2-DIMENSION-RESCUE",
+          "location": "冰雪空间边界与沙漠异空间",
+          "participants": [
+            "大筒木辉夜或实际最终威胁",
+            "宇智波佐助",
+            "漩涡鸣人",
+            "黑绝"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "最终威胁仍可发动至少一次定向空间门。",
+            "鸣佐双印或等价封印组合仍构成威胁。"
+          ],
+          "blockers": [
+            "佐助已死亡/未到场/没有封印作用。",
+            "空间能力被玩家提前封锁。"
+          ],
+          "setup": "最终威胁只有在接近佐助且空间能力冷却完成时才能把他单独抛入另一空间；佐助的轮回眼只留下最后可感知坐标，不能无限返回。",
+          "beats": [
+            {
+              "id": "EV-P2-K-SASUKE-SEPARATION-01-01",
+              "order": 10,
+              "summary": "黑绝识别日月印需要鸣佐同时接触，建议优先隔离其中一人。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-SEPARATION-01-02",
+              "order": 20,
+              "summary": "佐助以一次天手力躲避或救人，空间能力随后进入明确冷却。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-SEPARATION-01-03",
+              "order": 30,
+              "summary": "隔离成功时记录佐助落点、伤势、可感知坐标和剩余补给；失败时威胁改为隔离其他封印资源。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-SEPARATION-01-04",
+              "order": 40,
+              "summary": "鸣人获得“佐助失联”事实但不知道目标空间全貌。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助被隔离或保持在场之一明确。",
+            "搜救只获得坐标回声，不获得跨空间全知地图。"
+          ],
+          "state_changes": [
+            "佐助位置、轮回眼冷却、补给、鸣人知情范围和最终威胁下一次空间切换窗口被记录。"
+          ],
+          "stop_condition": "空间门关闭且佐助无法立即自行返回，或隔离尝试被明确阻断。",
+          "fallbacks": [
+            {
+              "condition": "佐助未被隔离",
+              "status": "altered",
+              "direction": "改为隔离玩家持有的封印物或切断鸣佐接近路线；后续救援场景改为夺回该资源。",
+              "preserves": "保留封印阵型被拆散且必须重建的核心因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第682话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立隔离坐标、冷却和信息边界。"
+            }
+          ],
+          "design_rationale": "让空间分离成为可阻止、可追踪且消耗能力的战术，而非固定过场。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-PORTAL-PLAN-01",
+          "title": "神威搜索的预算",
+          "thread_id": "THR-P2-DIMENSION-RESCUE",
+          "location": "核心空间裂口或主战场临时锚点",
+          "participants": [
+            "宇智波带土（若存活）",
+            "春野樱",
+            "漩涡鸣人影分身或实际联络者",
+            "玩家角色（若具封印/感知/医疗职责）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "带土仍存活且神威能够与空间痕迹同步。",
+            "至少一名供能或稳定伤势者实际在场。"
+          ],
+          "blockers": [
+            "带土死亡、被黑绝完全控制或双眼能力均不可用。",
+            "没有观察过任何可追踪空间痕迹。"
+          ],
+          "setup": "带土说明神威只能短暂同步辉夜开启过的空间痕迹；小樱可转移百豪查克拉，玩家可负责稳定伤势、标记坐标或保护入口，但每次错误开门都会消耗一次预算。",
+          "beats": [
+            {
+              "id": "EV-P2-K-PORTAL-PLAN-01-01",
+              "order": 10,
+              "summary": "小队列出已观察的熔岩、冰雪、沙漠、酸海或替代空间痕迹，未知空间不凭模型记忆出现。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-PORTAL-PLAN-01-02",
+              "order": 20,
+              "summary": "玩家选择把有限查克拉用于第一次搜索、保留返程或先稳定带土身体。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-PORTAL-PLAN-01-03",
+              "order": 30,
+              "summary": "带土开启一扇短时门；错误空间的环境会造成灼伤、酸蚀或额外失血。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-PORTAL-PLAN-01-04",
+              "order": 40,
+              "summary": "搜索预算、已排除坐标、返程锚点和下一次可开启时间被登记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "空间搜救拥有明确施术者、供能者、尝试次数和返程储备。",
+            "玩家可改变搜索速度或安全性，但不能无代价遍历全部空间。"
+          ],
+          "state_changes": [
+            "带土生命体征与神威负担、小樱百豪储量、玩家任务、已搜索空间、剩余门次数和返程锚点被记录。"
+          ],
+          "stop_condition": "完成一次搜索尝试并关闭门，或带土达到医疗停止线。",
+          "fallbacks": [
+            {
+              "condition": "神威搜救路线不存在",
+              "status": "altered",
+              "direction": "由佐助自行等待轮回眼冷却、鸣人维持封印目标，或让玩家以已存在的飞雷神/通灵锚点组织替代救援。",
+              "preserves": "保留隔离者必须支付时间与资源才能归队。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第683-684话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "给跨空间搜索设置坐标、次数、供能和返程储备。"
+            }
+          ],
+          "design_rationale": "把旧资料的连续开门重构为受查克拉、身体和坐标约束的救援行动。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "每名成员在具体空间或主战场的位置、环境伤势、立足点与能力冷却明确。",
+        "佐助或替代封印资源是否被隔离已经结算，并留下有限坐标线索。",
+        "带土路线成立时，神威搜索拥有剩余尝试、供能、返程锚点和医疗停止线；不成立时已有替代救援方案。"
+      ],
+      "transition": "K068-02-28先结算救援尝试，再处理高重力攻击和任何牺牲；带土、卡卡西与佐助不得预先恢复。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-228",
+      "date": "K068-02-28",
+      "title": "救援归队与高重力抉择",
+      "arc_id": "ARC-P2-DIMENSION-RESCUE",
+      "day_goal": "完成隔离者救援，随后在高重力或等价杀伤空间中结算带土、卡卡西与玩家的救援选择；死亡和短暂眼力都必须有真实前置。",
+      "start_state": [
+        "02-27的搜索预算、返程锚点和伤势持续生效；每次开门都从剩余次数与供能中扣除。",
+        "最终威胁仍在追击鸣人或封印者；留守者不能同时出现在搜索空间。",
+        "带土牺牲、卡卡西双眼能力与佐助归队均是条件结果，不作为本日开场事实。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-SASUKE-RESCUE-01",
+          "title": "沙漠门的最后一跳",
+          "thread_id": "THR-P2-DIMENSION-RESCUE",
+          "location": "核心空间与佐助所在隔离空间",
+          "participants": [
+            "宇智波带土（若存活）",
+            "春野樱",
+            "宇智波佐助",
+            "玩家角色（若在搜索组）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "隔离目标仍活着且可移动到门的视线范围。",
+            "至少一次空间门或等价锚点仍可使用。"
+          ],
+          "blockers": [
+            "隔离目标已自行返回或死亡。",
+            "返程储备为零且开启会让全部救援者失陷。"
+          ],
+          "setup": "搜索组依据昨日排除结果开启剩余空间门；佐助必须自行移动到可见范围，天手力只能在门关闭前交换一个实际物体或人员。",
+          "beats": [
+            {
+              "id": "EV-P2-K-SASUKE-RESCUE-01-01",
+              "order": 10,
+              "summary": "搜索组核对返程储备和带土生命窗口，决定是否冒险开启最后一扇未知门。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-RESCUE-01-02",
+              "order": 20,
+              "summary": "玩家选择扩大门、为带土止血或向佐助投出可交换锚物。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-RESCUE-01-03",
+              "order": 30,
+              "summary": "佐助奔向门并使用一次天手力；小樱与带土承受空间撕裂和查克拉反噬。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-RESCUE-01-04",
+              "order": 40,
+              "summary": "佐助归队、仍被隔离或改由替代封印资源返回之一被锁定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "归队有明确坐标、门、锚物和查克拉来源。",
+            "失败不会把佐助写死，而是保留隔离和替代封印压力。"
+          ],
+          "state_changes": [
+            "佐助位置与天手力冷却、带土神威负担、小樱百豪余量、玩家伤势/装备和返程门状态被记录。"
+          ],
+          "stop_condition": "空间门关闭且所有穿越者落到已登记一侧。",
+          "fallbacks": [
+            {
+              "condition": "本次救援失败",
+              "status": "postponed",
+              "direction": "保留坐标并等待轮回眼冷却或另一名空间术者；封印行动改为牵制，不虚构即时归队。",
+              "preserves": "保留重建双印封印阵型的任务。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第685话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "结算最后一次搜索、锚物交换和返程位置。"
+            }
+          ],
+          "design_rationale": "保留经典救援但让最后一跳由位置、锚物和资源共同决定。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-GRAVITY-SALVO-01",
+          "title": "高重力中的两枚灰骨",
+          "thread_id": "THR-P2-TEAM7-SEALING",
+          "location": "高重力空间或等价压制区域",
+          "participants": [
+            "大筒木辉夜或实际最终威胁",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "宇智波带土（若存活）",
+            "旗木卡卡西",
+            "玩家角色（若同处该空间）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "最终威胁拥有且发射可致命的定向攻击。",
+            "至少一名封印者仍在高重力范围内。"
+          ],
+          "blockers": [
+            "攻击能力已被封印。",
+            "目标已离开该空间或存在完整防御结界。"
+          ],
+          "setup": "空间重力使所有人移动和结印变慢，最终威胁同时锁定两名封印者；带土、卡卡西或玩家只能依据实际距离干预一条弹道。",
+          "beats": [
+            {
+              "id": "EV-P2-K-GRAVITY-SALVO-01-01",
+              "order": 10,
+              "summary": "每名在场者先登记可移动距离、伤势和仍可用的一次防御术。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-GRAVITY-SALVO-01-02",
+              "order": 20,
+              "summary": "玩家选择推开一名目标、以装备偏转弹道或保护空间术者。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-GRAVITY-SALVO-01-03",
+              "order": 30,
+              "summary": "带土可用神威转移一枚灰骨或以身体承受；卡卡西也可介入，但任何人都不会因原作台词自动牺牲。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-GRAVITY-SALVO-01-04",
+              "order": 40,
+              "summary": "命中者进入死亡、不可逆重伤、可救伤或成功回避之一，遗体与能力归属随结果登记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "带土、卡卡西、鸣佐和玩家的生死伤有唯一因果。",
+            "至少一名封印者若存活则保留终局机会。"
+          ],
+          "state_changes": [
+            "灰骨命中、神威次数、人员位置、不可逆伤势、遗体位置和队伍士气被记录。"
+          ],
+          "stop_condition": "两条弹道均已结算且幸存者脱离下一次齐射范围。",
+          "fallbacks": [
+            {
+              "condition": "带土不牺牲或不在场",
+              "status": "altered",
+              "direction": "由实际最近的支援者、防具或换位术结算弹道；无人可救时按命中伤势推进替代封印。",
+              "preserves": "保留保护封印者需要支付真实代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第686-687话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立重力、弹道、距离、死亡和遗体的互斥结算。"
+            }
+          ],
+          "design_rationale": "把带土牺牲改造成由距离、弹道和玩家选择决定的高风险救援。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-KAKASHI-GIFT-01",
+          "title": "短暂眼力的来源",
+          "thread_id": "THR-P2-TEAM7-SEALING",
+          "location": "卡卡西意识与当前战斗空间",
+          "participants": [
+            "旗木卡卡西",
+            "宇智波带土（若以查克拉残留存在）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "带土与卡卡西存在仍未断开的神威/意识联系。",
+            "卡卡西存活且能承受短时查克拉。"
+          ],
+          "blockers": [
+            "带土仍活着并保有双眼控制。",
+            "带土查克拉被完全封印/消散或卡卡西失去意识。"
+          ],
+          "setup": "只有带土刚刚死亡或失去肉身、其查克拉未被封印且卡卡西仍有意识连接时，才可能将双眼万花筒的短暂投影交给卡卡西；这不是永久移植。",
+          "beats": [
+            {
+              "id": "EV-P2-K-KAKASHI-GIFT-01-01",
+              "order": 10,
+              "summary": "卡卡西确认带土肉身、眼睛或查克拉残留的真实状态。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-KAKASHI-GIFT-01-02",
+              "order": 20,
+              "summary": "带土若能表达意志，只交付一次短时协作能力并说明持续窗口。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-KAKASHI-GIFT-01-03",
+              "order": 30,
+              "summary": "卡卡西承受双眼视觉、精神与须佐能乎负担，能力随带土残留耗尽而消失。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-KAKASHI-GIFT-01-04",
+              "order": 40,
+              "summary": "短暂双眼能力成立、部分成立或完全不成立，持续时间和可用术被列出。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "卡卡西的任何新能力有来源、范围、持续时间和代价。",
+            "带土存活分支不会同时出现死后赠眼。"
+          ],
+          "state_changes": [
+            "带土查克拉残留、卡卡西眼睛表现、精神负担、可用神威次数和失效条件被记录。"
+          ],
+          "stop_condition": "能力窗口被确认并开始倒计时，或确认没有可交付能力。",
+          "fallbacks": [
+            {
+              "condition": "短暂双眼能力不成立",
+              "status": "altered",
+              "direction": "卡卡西以战术指挥、绳索、雷切或单次现有神威协助，队伍不得使用完全体须佐能乎。",
+              "preserves": "保留卡卡西以现有能力支持第七班封印。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第687-688话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "限定死后查克拉、能力清单、精神代价和失效时间。"
+            }
+          ],
+          "design_rationale": "将双眼卡卡西限制为条件化、短时的查克拉现象，避免永久无来源升级。",
+          "reference_facts": [
+            "带土与琳的死后相会若发生，只属于带土主观经历，不进入卡卡西或联军公共知识。"
+          ]
+        }
+      ],
+      "end_state": [
+        "佐助或替代封印资源已归队、仍隔离或待救三者之一明确，所有空间门与换位次数已扣除。",
+        "带土、卡卡西、鸣人、佐助和玩家在高重力攻击后的生死、伤势、位置与遗体状态明确。",
+        "卡卡西仅在条件成立时拥有短暂双眼能力，并有可用次数、精神代价和失效条件。"
+      ],
+      "transition": "K068-03-01仅以实际归队者和剩余能力执行最后封印；无人可用时转为撤离、牵制和替代封印。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-301",
+      "date": "K068-03-01",
+      "title": "第七班的最后封印阵型",
+      "arc_id": "ARC-P2-TEAM7-SEALING",
+      "day_goal": "让鸣佐双印、卡卡西/带土空间能力、小樱力量与玩家支援按实际状态协作，完成或改写对最终威胁的封印。",
+      "start_state": [
+        "02-28的人员、遗体、短暂能力、空间位置和查克拉余量不经休整直接延续。",
+        "六道地爆天星只在鸣佐都存活、各自拥有对应印且能同时接触目标时成立。",
+        "尾兽是否仍在最终威胁体内、神树是否存在以及黑绝附着位置来自实际前序。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-SEALING-APPROACH-01",
+          "title": "四条接近路线",
+          "thread_id": "THR-P2-TEAM7-SEALING",
+          "location": "最终威胁所在核心空间",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "春野樱",
+            "旗木卡卡西",
+            "玩家角色（若仍在核心空间）",
+            "大筒木辉夜或实际最终威胁"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少两项独立封印/压制手段仍可用。",
+            "目标仍处可追踪空间。"
+          ],
+          "blockers": [
+            "鸣佐均失去行动能力。",
+            "空间锚点完全丢失且目标已离开。"
+          ],
+          "setup": "队伍把有限资源分成鸣佐接触、卡卡西切断空间逃路、小樱压回目标与玩家处理黑绝/求道玉中的一项；缺员时必须缩减目标。",
+          "beats": [
+            {
+              "id": "EV-P2-K-SEALING-APPROACH-01-01",
+              "order": 10,
+              "summary": "卡卡西根据实际能力窗口标出目标逃逸方向和每人的可达路线。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-SEALING-APPROACH-01-02",
+              "order": 20,
+              "summary": "玩家选择封锁黑绝、救援失足者或保护小樱蓄力，不能同时承担全部支援。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-SEALING-APPROACH-01-03",
+              "order": 30,
+              "summary": "最终威胁以空间门、灰骨、查克拉手臂或实际剩余能力打断阵型。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-SEALING-APPROACH-01-04",
+              "order": 40,
+              "summary": "鸣佐获得一次同时接触窗口，或阵型破裂并退回最后锚点。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "封印接触窗口来自明确分工与资源支出。",
+            "缺失成员会真实改变阵型而非由替身补齐。"
+          ],
+          "state_changes": [
+            "每人路线、伤势、查克拉、卡卡西能力剩余时间、玩家任务和黑绝位置被记录。"
+          ],
+          "stop_condition": "鸣佐同时进入接触距离，或最后锚点被迫撤离。",
+          "fallbacks": [
+            {
+              "condition": "双印接触阵型无法成立",
+              "status": "altered",
+              "direction": "使用现存封印班、尾兽协力或空间封锁拖延目标，并把威胁标记为未解决而非伪造胜利。",
+              "preserves": "保留联合封印而非单人击杀的核心方法。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第688-689话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立四条路线、缺员替代和最后锚点。"
+            }
+          ],
+          "design_rationale": "把连续招式压成一场位置清楚的团队协作，并保留玩家有限但关键的支援选择。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-SIXPATH-SEAL-01",
+          "title": "六道地爆天星",
+          "thread_id": "THR-P2-TEAM7-SEALING",
+          "location": "核心空间封印中心",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "大筒木辉夜或实际最终威胁",
+            "黑绝",
+            "各尾兽"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "两名封印者同时接触目标且各自印记真实存在。",
+            "目标查克拉可被当前封印术捕捉。"
+          ],
+          "blockers": [
+            "任一印记不存在或封印者不可逆死亡。",
+            "目标已逃出所有空间锚点。"
+          ],
+          "setup": "鸣佐同时接触目标时，日月印回收目标查克拉并形成封印核心；尾兽只从真实持有者体内脱离，黑绝必须被单独定位。",
+          "beats": [
+            {
+              "id": "EV-P2-K-SIXPATH-SEAL-01-01",
+              "order": 10,
+              "summary": "鸣人与佐助核对两枚印记和目标体内的尾兽回声，确认封印对象。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-SIXPATH-SEAL-01-02",
+              "order": 20,
+              "summary": "双印启动后空间地形被吸向核心，鸣佐持续支付查克拉并承受分离冲击。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-SIXPATH-SEAL-01-03",
+              "order": 30,
+              "summary": "尾兽按实际存在逐一脱离；斑肉身若仍在容器内，被排出或一并封印只能择一。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-SIXPATH-SEAL-01-04",
+              "order": 40,
+              "summary": "最终威胁被完整封印、部分封印、驱离或反制，日月印去向随结果锁定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "辉夜/替代威胁、斑、黑绝、尾兽和日月印各有唯一状态。",
+            "封印失败时保留具体裂口和仍可行动对象。"
+          ],
+          "state_changes": [
+            "封印坐标、目标状态、尾兽清单、斑身体、日月印、鸣佐查克拉与空间稳定度被记录。"
+          ],
+          "stop_condition": "封印核心闭合、破裂或被目标脱离，结果不再能在同场景反复重投。",
+          "fallbacks": [
+            {
+              "condition": "六道地爆天星不能完成",
+              "status": "altered",
+              "direction": "记录部分封印、目标逃逸方向和维持阵眼者，战争不宣告结束；L 只处理已控制区域。",
+              "preserves": "保留六道级威胁必须有可审计封印结果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第690话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "逐一结算封印对象、尾兽脱离、斑肉身和印记。"
+            }
+          ],
+          "design_rationale": "逐项结算封印对象和脱离者，避免辉夜、斑、黑绝与尾兽状态互相覆盖。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-BLACKZETSU-CUSTODY-01",
+          "title": "黑绝不能成为漏项",
+          "thread_id": "THR-P2-TEAM7-SEALING",
+          "location": "封印核心外缘",
+          "participants": [
+            "黑绝",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "玩家角色（若负责封印）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "黑绝仍以独立意志或附着物存在。",
+            "至少一名封印者能识别其位置。"
+          ],
+          "blockers": [
+            "黑绝已随主体完整封印或已销毁。",
+            "追击会立即破坏主封印且无人替代维持。"
+          ],
+          "setup": "黑绝若从宿主或断臂上脱离，会趁封印闭合前逃向空间裂口；玩家必须在追击、维持主封印与保存样本证据之间选择。",
+          "beats": [
+            {
+              "id": "EV-P2-K-BLACKZETSU-CUSTODY-01-01",
+              "order": 10,
+              "summary": "感知者指出黑绝与主体封印不是同一个目标，并标记其附着物。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-BLACKZETSU-CUSTODY-01-02",
+              "order": 20,
+              "summary": "玩家选择将黑绝投入主封印、以独立容器拘束或放弃样本优先闭合裂口。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-BLACKZETSU-CUSTODY-01-03",
+              "order": 30,
+              "summary": "黑绝利用阴影与空间残缝挣扎，追击会消耗封印班最后资源。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-BLACKZETSU-CUSTODY-01-04",
+              "order": 40,
+              "summary": "黑绝被封印、被销毁、逃逸或受控取样之一明确。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "黑绝有独立于辉夜/斑的状态和保管责任。",
+            "证据收益与逃逸风险不能同时被最大化。"
+          ],
+          "state_changes": [
+            "黑绝位置、容器、样本、知情者、封印消耗和未闭合裂口被记录。"
+          ],
+          "stop_condition": "黑绝失去本轮行动能力或穿过已关闭的追踪边界。",
+          "fallbacks": [
+            {
+              "condition": "无法拘束黑绝",
+              "status": "altered",
+              "direction": "记录最后坐标、附着物和追踪标记，列为最高级未解决战俘；不得宣布其死亡。",
+              "preserves": "保留黑绝必须被单独交接的安全风险。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第690话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足黑绝独立封印、样本与逃逸追踪。"
+            }
+          ],
+          "design_rationale": "防止主体封印后黑绝在交接中凭空消失或被默认一并处理。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "最终威胁被完整封印、部分封印、驱离或仍在战斗之一明确，封印坐标与维持条件可审计。",
+        "辉夜/替代威胁、黑绝、斑、带土、卡卡西短暂能力、日月印和每只尾兽的状态分别记录。",
+        "异空间中的幸存者与尾兽仍需返回主世界；无限月读尚未因最终封印自动解除。"
+      ],
+      "transition": "K068-03-02执行返还、秽土告别和尾兽去向确认；只有返回主世界且术式条件齐全时才能解除无限月读。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-302",
+      "date": "K068-03-02",
+      "title": "归还忍界与死者告别",
+      "arc_id": "ARC-P2-WAR-RELEASE",
+      "day_goal": "把异空间幸存者、尾兽、斑与遗体带回主世界，明确秽土者离场条件，并建立解除无限月读所需的尾兽查克拉和轮回眼链。",
+      "start_state": [
+        "03-01的封印结果、空间锚点、日月印和幸存者清单持续有效。",
+        "羽衣或替代召回术只能使用已真实汇聚的历代影、通灵媒介与鸣佐查克拉；不能从未知空间无条件拉回所有人。",
+        "无限月读的受术区域、例外与神树根系仍沿用 J，最终威胁被封印不等于幻术自动解除。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-WORLD-RETURN-01",
+          "title": "跨空间联合召回",
+          "thread_id": "THR-P2-WAR-RELEASE",
+          "location": "核心空间与忍界主战场召回阵",
+          "participants": [
+            "大筒木羽衣或实际召回媒介",
+            "秽土四位火影",
+            "历代影的查克拉回声",
+            "第七班实际幸存者",
+            "各尾兽",
+            "宇智波斑或其遗体"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "主世界仍有至少一名可维持召回阵的秽土者或空间术者。",
+            "目标空间存在有效坐标。"
+          ],
+          "blockers": [
+            "封印核心尚未稳定且转移会释放最终威胁。",
+            "所有召回媒介均已消失。"
+          ],
+          "setup": "秽土火影在主世界以斑残骸、鸣佐查克拉和既有空间坐标建立召回阵；每批只能拉回已被定位的活人、尾兽或遗体。",
+          "beats": [
+            {
+              "id": "EV-P2-K-WORLD-RETURN-01-01",
+              "order": 10,
+              "summary": "火影核对核心空间内的逐人名单和返还坐标，失联者不被假定在阵中。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-WORLD-RETURN-01-02",
+              "order": 20,
+              "summary": "召回阵先转移维持封印者，再转移重伤者、尾兽与遗体，每批削弱秽土者查克拉。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-WORLD-RETURN-01-03",
+              "order": 30,
+              "summary": "无法定位者保持失联编号，空间裂口被标记而非宣布清空。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-WORLD-RETURN-01-04",
+              "order": 40,
+              "summary": "主世界接收点完成生者、尾兽、遗体和高危物的分区登记。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "返回主世界的人、尾兽、遗体与仍失联者各有名单。",
+            "召回术有媒介、批次与秽土查克拉代价。"
+          ],
+          "state_changes": [
+            "返还批次、空间坐标、秽土火影消耗、斑/带土遗体、尾兽位置与未闭合裂口被记录。"
+          ],
+          "stop_condition": "召回阵达到承载上限并关闭，所有已定位对象完成一轮转移。",
+          "fallbacks": [
+            {
+              "condition": "联合召回无法覆盖全部对象",
+              "status": "altered",
+              "direction": "先转移封印维持者与重伤者，其余留下标记并由后续空间搜救队处理。",
+              "preserves": "保留生者优先、尾兽主体与遗体可追踪的返还原则。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第690-691话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立召回媒介、批次、接收区和失联名单。"
+            }
+          ],
+          "design_rationale": "以批次和坐标替代全员瞬间回归，保留失联搜救与遗体交接。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-EDO-FAREWELL-01",
+          "title": "秽土解除与最后交接",
+          "thread_id": "THR-P2-WAR-RELEASE",
+          "location": "忍界主战场召回阵",
+          "participants": [
+            "秽土柱间",
+            "秽土扉间",
+            "秽土日斩",
+            "秽土水门",
+            "大筒木羽衣或实际解除者",
+            "漩涡鸣人",
+            "宇智波斑（若仍有意识）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "最终威胁已受控到足以结束召回阵。",
+            "存在可执行的秽土解除或封印手段。"
+          ],
+          "blockers": [
+            "仍需秽土者维持唯一封印且无替代者。",
+            "施术链已毁且解除方法未知。"
+          ],
+          "setup": "只有确认最终威胁受控且召回任务完成后，施术链才能解除秽土；每名秽土者先移交权限、知识、遗体线索和未完成任务。",
+          "beats": [
+            {
+              "id": "EV-P2-K-EDO-FAREWELL-01-01",
+              "order": 10,
+              "summary": "四位火影分别确认木叶当前合法领导和联军代理，避免死者继续占有命令权。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-EDO-FAREWELL-01-02",
+              "order": 20,
+              "summary": "柱间与斑若都仍有意识，只能进行最后一次私人对话，不替五村决定战后政治。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-EDO-FAREWELL-01-03",
+              "order": 30,
+              "summary": "解除术按实际施术者和例外执行；无法解除者进入持续封印而非自由行动。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-EDO-FAREWELL-01-04",
+              "order": 40,
+              "summary": "水门等人离场、保留或继续封印之一明确，遗言只进入在场亲历者知识。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每名秽土者的离场、封印或例外状态明确。",
+            "联军与各村命令权回到活着且合法的领导/代理。"
+          ],
+          "state_changes": [
+            "秽土者状态、解除媒介、遗言知情者、火影权限和斑生死/遗体位置被记录。"
+          ],
+          "stop_condition": "全部已知秽土者完成解除或例外登记，死者不再发出新的战时命令。",
+          "fallbacks": [
+            {
+              "condition": "部分秽土者无法解除",
+              "status": "altered",
+              "direction": "由联合封印班登记例外、限制行动并继续寻找解除方法；不得让其自动消散。",
+              "preserves": "保留死者必须退出或受控、活人恢复指挥的原则。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第691话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足逐人解除、权限归还和例外封印。"
+            }
+          ],
+          "design_rationale": "把告别与权力交接绑定，避免秽土火影在战后仍拥有隐含指挥权。",
+          "reference_facts": [
+            "水门与鸣人的亲子告别只属于实际在场者，不成为各村公共战报。"
+          ]
+        },
+        {
+          "id": "SCN-P2-K-BEAST-TERMS-01",
+          "title": "尾兽不是战利品",
+          "thread_id": "THR-P2-WAR-RELEASE",
+          "location": "主战场尾兽集结区",
+          "participants": [
+            "实际获释尾兽",
+            "漩涡鸣人",
+            "奇拉比（若已解除幻术）",
+            "大筒木羽衣或实际调停者",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一只尾兽本体或可沟通碎片已从封印中获释。",
+            "鸣人或其他连接者能完成最低沟通。"
+          ],
+          "blockers": [
+            "尾兽仍被敌对者完全控制。",
+            "集结区仍遭六道级攻击。"
+          ],
+          "setup": "获释尾兽逐一说明是否自由、受伤、仍被封印或只剩查克拉碎片；解除无限月读需要的连接必须得到实际持有者配合。",
+          "beats": [
+            {
+              "id": "EV-P2-K-BEAST-TERMS-01-01",
+              "order": 10,
+              "summary": "鸣人按名字核对每只尾兽本体、碎片、宿主与当前伤势。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-BEAST-TERMS-01-02",
+              "order": 20,
+              "summary": "尾兽分别选择暂留、返回栖息地、陪伴宿主或拒绝再被封印。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-BEAST-TERMS-01-03",
+              "order": 30,
+              "summary": "解除幻术所需的尾兽查克拉、轮回眼和结印者被写成一次合作而非所有权。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-BEAST-TERMS-01-04",
+              "order": 40,
+              "summary": "佐助是否接受尾兽自主成为其政治立场的第一项现场检验。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每只尾兽的去向意愿、宿主关系和解除幻术贡献明确。",
+            "尾兽不因羽衣或鸣人一句话被分配为武器。"
+          ],
+          "state_changes": [
+            "尾兽本体/碎片、宿主、伤势、暂留位置、联络方式和解除术同意状态被记录。"
+          ],
+          "stop_condition": "所有实际在场尾兽完成一次身份与意愿登记，缺席者保留未知。",
+          "fallbacks": [
+            {
+              "condition": "尾兽无法沟通或未获释",
+              "status": "altered",
+              "direction": "只记录其封印位置和风险，解除术改用已有碎片或延期；不得替尾兽决定去向。",
+              "preserves": "保留尾兽去向与幻术解除必须基于实际状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第692话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立尾兽逐项清单、主体选择和解除术贡献。"
+            }
+          ],
+          "design_rationale": "为无限月读解除和佐助革命冲突建立尾兽主体性与资源事实。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "异空间幸存者、尾兽、遗体和仍失联对象有逐项返还清单与接收位置。",
+        "每名秽土者已解除、受控保留或成为例外，活人领导/代理恢复联军和村级权限。",
+        "尾兽去向意愿与无限月读解除条件已明确；佐助的接受或反对成为下一日政治冲突入口。"
+      ],
+      "transition": "K068-03-03先处理佐助对尾兽、五影和战后权力的实际行动；无限月读受术者在解除前不能参与裁决。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-303",
+      "date": "K068-03-03",
+      "title": "革命宣言与战后权力真空",
+      "arc_id": "ARC-P2-FINAL-VALLEY",
+      "day_goal": "让佐助是否控制尾兽、威胁五影并挑战鸣人取决于其真实立场、轮回眼和资源；以可分支方式确定佐助的即时法律身份。",
+      "start_state": [
+        "03-02尾兽、轮回眼、鸣人查克拉、联军领导和无限月读状态均已明确。",
+        "佐助只知道亲历、羽衣单独告知和战时通报的内容，不能凭模型知识替全忍界设计制度。",
+        "受术五影若尚未醒来不能亲自授权追捕；联军由实际未受术领导或既定代理作出紧急决定。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-REVOLUTION-CHOICE-01",
+          "title": "尾兽上空的革命",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "主战场尾兽集结区",
+          "participants": [
+            "宇智波佐助",
+            "实际获释尾兽",
+            "漩涡鸣人",
+            "春野樱",
+            "旗木卡卡西",
+            "玩家角色（若在集结区）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助存活、能表达立场并有现实行动能力。",
+            "尾兽或战后领导权确有争议。"
+          ],
+          "blockers": [
+            "佐助已明确放弃革命并接受共同解除幻术。",
+            "轮回眼失效且无政治支持或武力。"
+          ],
+          "setup": "佐助若仍坚持以一人承担仇恨，必须公开是否拘束尾兽、处决受术领导或只要求制度让渡；玩家可保护一只尾兽、维护解除术或阻断轮回眼视线。",
+          "beats": [
+            {
+              "id": "EV-P2-K-REVOLUTION-CHOICE-01-01",
+              "order": 10,
+              "summary": "佐助陈述自己从鼬、战争和羽衣处实际得出的革命方案，并区分推断与证据。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-REVOLUTION-CHOICE-01-02",
+              "order": 20,
+              "summary": "玩家选择保护尾兽、保存解除无限月读的阵型或尝试说服佐助接受临时监督。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-REVOLUTION-CHOICE-01-03",
+              "order": 30,
+              "summary": "佐助仅在轮回眼与查克拉足够时用地爆天星拘束实际在场尾兽，每只封印都增加负担。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-REVOLUTION-CHOICE-01-04",
+              "order": 40,
+              "summary": "结果锁定为佐助发动革命、接受谈判、资源不足被阻止或携部分尾兽撤离之一。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助的政治目标和第一项强制行动明确。",
+            "尾兽拘束数量、封印坐标与解除幻术资源不被笼统处理。"
+          ],
+          "state_changes": [
+            "佐助立场、轮回眼负担、尾兽封印清单、玩家位置、解除术可行性和目击证据被记录。"
+          ],
+          "stop_condition": "佐助完成一轮拘束/撤销行动，或被迫退出尾兽集结区。",
+          "fallbacks": [
+            {
+              "condition": "佐助不发动原作式革命",
+              "status": "altered",
+              "direction": "改为围绕解除幻术后的临时政府、尾兽自由和本人问责进行公开谈判或有限对峙。",
+              "preserves": "保留鸣佐必须决定战后秩序和佐助是否接受共同约束。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第692-693话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把革命拆成政治主张、尾兽行动和即时证据。"
+            }
+          ],
+          "design_rationale": "把“突然革命”落到证据、能力与对尾兽的具体强制行为上。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-SASUKE-STATUS-01",
+          "title": "紧急追捕还是授权谈判",
+          "thread_id": "THR-P2-WAR-SETTLEMENT",
+          "location": "联军临时指挥点",
+          "participants": [
+            "旗木卡卡西",
+            "春野樱",
+            "联军实际代理指挥",
+            "尾兽代表",
+            "玩家角色（若具指挥或证人权限）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一名合法代理和一名现场证人可核对佐助行动。",
+            "联军仍有最低通信或书面传令。"
+          ],
+          "blockers": [
+            "指挥链完全失效。",
+            "佐助没有采取任何威胁行为且已接受共同程序。"
+          ],
+          "setup": "指挥点依据佐助刚刚的行动而非旧叛忍标签，决定将其记为盟军争议成员、武装胁迫者、在逃嫌疑人或授权谈判对象。",
+          "beats": [
+            {
+              "id": "EV-P2-K-SASUKE-STATUS-01-01",
+              "order": 10,
+              "summary": "目击者分别提交拘束尾兽、威胁领导、伤害人员与协助封印的事实。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-STATUS-01-02",
+              "order": 20,
+              "summary": "玩家选择支持立即追捕、让鸣人谈判、保护解除术阵地或保留证据等待合法领导苏醒。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-STATUS-01-03",
+              "order": 30,
+              "summary": "代理指挥只能签发与权限相符的临时命令，不能一天内判罪或赦免。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-SASUKE-STATUS-01-04",
+              "order": 40,
+              "summary": "佐助获得一个明确的即时法律与行动状态，并指定抓捕/谈判责任人。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助法律身份来自现场行为和合法临时权限。",
+            "长期审理、赦免和赎罪远行留给 L。"
+          ],
+          "state_changes": [
+            "临时追捕令/谈判授权、证据保全、代理权限、鸣人任务和尾兽保护措施被记录。"
+          ],
+          "stop_condition": "临时命令签发并送达能行动的小队，不作长期判决。",
+          "fallbacks": [
+            {
+              "condition": "无法形成合法临时命令",
+              "status": "altered",
+              "direction": "只保全证据并授权现场自卫；L 在领导恢复后补做司法程序。",
+              "preserves": "保留佐助行为需要法律评估但不由战场私刑决定。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第693话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足代理权限、证据链和临时法律身份。"
+            }
+          ],
+          "design_rationale": "在最终决战前建立法律与指挥后果，避免战败后自动入狱或自动赦免。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-VALLEY-DEPARTURE-01",
+          "title": "前往终结之谷的条件",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "主战场至终结之谷路线",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "春野樱",
+            "旗木卡卡西"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助拒绝当前共同程序并主动离开。",
+            "鸣人仍能移动且理解其实际行动。"
+          ],
+          "blockers": [
+            "佐助接受监管或失去行动能力。",
+            "鸣人重伤到无法离开医疗点且无替代追击者。"
+          ],
+          "setup": "鸣人只有在仍能移动且被授权谈判/阻止佐助时才追击；佐助选择远离受术者与尾兽封印区，双方携带当前伤势和剩余查克拉出发。",
+          "beats": [
+            {
+              "id": "EV-P2-K-VALLEY-DEPARTURE-01-01",
+              "order": 10,
+              "summary": "鸣人确认自己追击目标是阻止强制统治并带回佐助，而非代替法庭赦免。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-DEPARTURE-01-02",
+              "order": 20,
+              "summary": "小樱可表达立场或尝试拦截；佐助是否使用幻术取决于其当前敌意与实际眼力。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-DEPARTURE-01-03",
+              "order": 30,
+              "summary": "两人沿可通行路线移动，空间术、飞行或步行分别支付查克拉与时间。",
+              "causal_role": "transition"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-DEPARTURE-01-04",
+              "order": 40,
+              "summary": "终结之谷成为双方选定的隔离战场，主战场留下明确指挥与医疗责任。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣佐决战具有任务授权、路线、到达时间和战场隔离理由。",
+            "小樱与卡卡西不会无伤瞬移到终结之谷。"
+          ],
+          "state_changes": [
+            "鸣佐位置、旅行耗时、剩余查克拉、追击授权、小樱状态和卡卡西主战场职责被记录。"
+          ],
+          "stop_condition": "鸣人与佐助分别抵达谷内可视范围，或任一方因伤势在途中停止。",
+          "fallbacks": [
+            {
+              "condition": "鸣佐不能抵达终结之谷",
+              "status": "altered",
+              "direction": "在实际停止地点进行谈判、拘捕或短战；不为地标强行恢复体力和空间能力。",
+              "preserves": "保留两人必须正面解决革命与共同秩序冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第693-694话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足追击授权、旅行时间、伤势与主战场留守责任。"
+            }
+          ],
+          "design_rationale": "补上从主战场到终结之谷的移动和职责交接，并允许谈判路线替代决斗。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助的革命、谈判或被阻止路线明确，尾兽拘束与无限月读解除资源逐项记录。",
+        "佐助拥有盟军争议成员、武装胁迫者、在逃嫌疑人或授权谈判对象之一的临时法律身份。",
+        "鸣佐已到终结之谷/实际对峙地点或因伤中止；卡卡西、小樱、玩家与联军留守位置明确。"
+      ],
+      "transition": "K068-03-04只结算鸣佐对战后秩序的第一阶段冲突，所有术沿用到达时资源，不刷新尾兽或六道查克拉。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-304",
+      "date": "K068-03-04",
+      "title": "终结之谷的制度之争",
+      "arc_id": "ARC-P2-FINAL-VALLEY",
+      "day_goal": "让鸣佐先明确各自战后方案，再以剩余六道、尾兽与自然能量进行有限高阶交锋；谈判成立时可跳过毁灭性决斗。",
+      "start_state": [
+        "鸣佐沿用03-03抵达时的伤势、印记、眼睛、尾兽连接、查克拉和任务立场。",
+        "佐助只能调用实际被其封印且仍在感知范围的尾兽，鸣人只能调用其体内真实存在的九喇嘛/尾兽碎片。",
+        "主战场的受术者、尾兽封印和医疗任务不会因两人离开而暂停。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-POLITICAL-DUEL-01",
+          "title": "何谓火影与革命",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷两座雕像之间",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣佐双方有意识且能表达选择。",
+            "战后秩序与尾兽控制仍存在分歧。"
+          ],
+          "blockers": [
+            "一方已不可逆死亡或完全受精神控制。",
+            "双方已接受同一临时制度且无现实争议。"
+          ],
+          "setup": "两人分别陈述共同监督、村际联盟与“一人承担全部仇恨”的方案，并以各自亲历证据检验能否执行，而不是用口号自动说服对方。",
+          "beats": [
+            {
+              "id": "EV-P2-K-POLITICAL-DUEL-01-01",
+              "order": 10,
+              "summary": "佐助说明他要控制哪些领导、尾兽和信息，以及如何维持长期威慑。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-POLITICAL-DUEL-01-02",
+              "order": 20,
+              "summary": "鸣人指出联盟脆弱但可监督，要求佐助说明继承、问责和被误判时的纠错机制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-POLITICAL-DUEL-01-03",
+              "order": 30,
+              "summary": "两人可选择有限决斗、接受第三方审议、约定解除月读后再裁决或立即全面交战。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-POLITICAL-DUEL-01-04",
+              "order": 40,
+              "summary": "冲突模式和不可攻击对象被明确，或谈判破裂进入高阶交锋。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "核心冲突落在强制孤立统治与共同但不完美的制度之间。",
+            "非战斗解决不会被当作佐助无条件无罪。"
+          ],
+          "state_changes": [
+            "鸣佐政治立场、谈判条件、对尾兽与五影的承诺、决斗边界和知情证据被记录。"
+          ],
+          "stop_condition": "双方选择谈判框架或第一阶段战斗规则，尚未结算胜败。",
+          "fallbacks": [
+            {
+              "condition": "无法进行完整对话",
+              "status": "altered",
+              "direction": "通过短句、行动限制和已有书面主张表达立场，医疗或拘捕优先于象征性长战。",
+              "preserves": "保留决定佐助是否接受共同约束的核心选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第694-695话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把政治主张拆成可执行条件、纠错与战斗边界。"
+            }
+          ],
+          "design_rationale": "先完成政治冲突，再让战斗服务选择，而不是让拳头替代制度问题。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-AVATAR-CLASH-01",
+          "title": "尾兽化身与须佐能乎",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷上空",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "九喇嘛或实际尾兽连接",
+            "被佐助拘束的尾兽（若存在）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "双方选择全面交战且至少各有一项大型化身资源。",
+            "终结之谷周边已完成最低平民/伤员隔离。"
+          ],
+          "blockers": [
+            "谈判成立。",
+            "任一方查克拉不足或尾兽连接不存在。"
+          ],
+          "setup": "全面交战只有在谈判破裂后成立；鸣人和佐助分别将现有查克拉投入一次大型化身，任何尾兽借力都对应真实连接或强制抽取。",
+          "beats": [
+            {
+              "id": "EV-P2-K-AVATAR-CLASH-01-01",
+              "order": 10,
+              "summary": "鸣人列出可用尾兽碎片与九喇嘛储量，佐助列出地爆天星内可抽取对象。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-AVATAR-CLASH-01-02",
+              "order": 20,
+              "summary": "须佐能乎和尾兽化身第一次碰撞，地形破坏与远处主战场风险同时记录。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-AVATAR-CLASH-01-03",
+              "order": 30,
+              "summary": "佐助选择继续抽取尾兽，鸣人选择保存解除月读所需查克拉或全力抵消。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-AVATAR-CLASH-01-04",
+              "order": 40,
+              "summary": "双方各自只剩一次高阶攻击窗口，未用资源被保留。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "大型化身的来源、抽取对象、消耗与地形后果明确。",
+            "尾兽遭受的强制抽取成为佐助案件证据。"
+          ],
+          "state_changes": [
+            "九喇嘛储量、其他尾兽被抽取量、轮回眼/须佐能乎负担、谷地损害和主战场感知范围被记录。"
+          ],
+          "stop_condition": "第一次化身碰撞结束，双方分开到无法立即连续释放同级术的距离。",
+          "fallbacks": [
+            {
+              "condition": "高阶化身条件不足",
+              "status": "altered",
+              "direction": "改用小规模忍术、封印与体术对决，并保留未抽取尾兽。",
+              "preserves": "保留双方必须以真实剩余战力承担选择后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第696-697话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "限定尾兽来源、一次化身窗口和地形影响。"
+            }
+          ],
+          "design_rationale": "把视觉高潮压成一次可结算资源交换，不让鸣佐无限刷新化身。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-ULTIMATE-EXCHANGE-01",
+          "title": "最后一次高阶对撞",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷云层与河谷",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "九喇嘛或实际尾兽连接"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "双方仍能维持一次高阶蓄力。",
+            "上一场景未以谈判或完全失能结束。"
+          ],
+          "blockers": [
+            "一方已主动投降。",
+            "自然能量/尾兽查克拉或轮回眼完全不可用。"
+          ],
+          "setup": "双方只以剩余的一次窗口蓄积自然能量、尾兽查克拉或因陀罗之矢；蓄力期间无法同时防守主战场或治疗旧伤。",
+          "beats": [
+            {
+              "id": "EV-P2-K-ULTIMATE-EXCHANGE-01-01",
+              "order": 10,
+              "summary": "鸣人的分身只有在此前部署且未被毁时才能收集自然能量。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-ULTIMATE-EXCHANGE-01-02",
+              "order": 20,
+              "summary": "佐助将已抽取查克拉集中到一击，轮回眼和须佐能乎进入过载。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-ULTIMATE-EXCHANGE-01-03",
+              "order": 30,
+              "summary": "鸣人选择抵消、偏转或承受以保存对方生命；佐助选择杀伤、压制或中止。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-ULTIMATE-EXCHANGE-01-04",
+              "order": 40,
+              "summary": "对撞结果结算爆心、坠落、查克拉枯竭与仍可行动程度。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "双方失去持续六道级远程交锋能力。",
+            "是否留手与伤害程度成为下一日和解或继续战斗的依据。"
+          ],
+          "state_changes": [
+            "自然能量来源、尾兽查克拉、轮回眼过载、坠落位置、爆炸地形和双方伤势被记录。"
+          ],
+          "stop_condition": "两人坠回河谷并失去再次使用同级攻击的资源。",
+          "fallbacks": [
+            {
+              "condition": "只有一方能完成蓄力",
+              "status": "altered",
+              "direction": "能蓄力者必须选择压制、救援或杀伤；结果按实际命中结算，不补造对等爆炸。",
+              "preserves": "保留力量不对称时仍需作出政治与个人选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第697话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立一次性蓄力、留手选择和坠落停止线。"
+            }
+          ],
+          "design_rationale": "为高潮设定一次性资源和身体停止线，为次日近身结算留下连续状态。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣佐是否仍敌对、进入谈判或一方失能明确；双方高阶查克拉、眼力和尾兽资源已大幅消耗。",
+        "终结之谷地形、两人坠落位置、旧伤与新伤连续记录，主战场没有因决斗自动获救。",
+        "下一日只允许近身、低阶术、医疗求援与最终选择，不得刷新完全体化身。"
+      ],
+      "transition": "K068-03-05结算体术耗竭、可能的肢体重伤与和解；任何断臂或败北都由实际攻击决定。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-305",
+      "date": "K068-03-05",
+      "title": "最后一击与共同解除",
+      "arc_id": "ARC-P2-FINAL-VALLEY",
+      "day_goal": "在查克拉枯竭状态下结束鸣佐冲突，允许和解、拘捕、撤退或死亡分支，并为无限月读解除保留必要生命与能力。",
+      "start_state": [
+        "03-04结算的坠落点、失血、查克拉枯竭、眼力过载和尾兽状态直接延续。",
+        "双方都不能使用已耗尽的化身或假定九喇嘛完成无时间来源的满额充能。",
+        "鸣人胜利、佐助败北、双臂重伤与和解均未在开场成立。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-ATTRITION-01",
+          "title": "没有查克拉后的选择",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷河床",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一方仍有意识且冲突未解决。",
+            "双方位于可接触距离。"
+          ],
+          "blockers": [
+            "双方已接受谈判。",
+            "双方均在03-04不可逆死亡或昏迷。"
+          ],
+          "setup": "两人只能以仍可移动的肢体、少量基础术和意志继续；每轮动作都增加失血、骨折和昏迷风险。",
+          "beats": [
+            {
+              "id": "EV-P2-K-ATTRITION-01-01",
+              "order": 10,
+              "summary": "双方确认自己还能站立、结印和使用的肢体，已失效能力不得复用。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-ATTRITION-01-02",
+              "order": 20,
+              "summary": "佐助可吸收残余查克拉或停手，鸣人可反击、格挡或坚持对话。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-ATTRITION-01-03",
+              "order": 30,
+              "summary": "近身交锋把两人推到医疗停止线，任何致命攻击都允许被躲开、偏转或命中。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-ATTRITION-01-04",
+              "order": 40,
+              "summary": "两人进入仍敌对、单方投降、双双昏迷或一方死亡之一。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "最终胜负来自当前资源和选择，不是原作指定赢家。",
+            "死亡发生时有攻击、伤口和遗体位置。"
+          ],
+          "state_changes": [
+            "体力、精神力、骨折/内伤、轮回眼吸收、最后可用查克拉和意识状态被记录。"
+          ],
+          "stop_condition": "至少一方无法继续攻击或明确停手。",
+          "fallbacks": [
+            {
+              "condition": "只有一方还能行动",
+              "status": "altered",
+              "direction": "行动者决定救援、拘捕、离开或致命一击，并承担相应法律与关系后果。",
+              "preserves": "保留最终冲突必须由选择而非自动和解结束。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第698话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "压缩近身消耗并记录生命、伤势和停止线。"
+            }
+          ],
+          "design_rationale": "把长时间重复体术压成资源归零后的唯一结算场景。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-FINAL-BLOW-01",
+          "title": "手臂、鲜血与停止线",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷瀑布下方",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "双方仍敌对且各自能完成一次近身术。",
+            "上一场景未以投降或死亡结束。"
+          ],
+          "blockers": [
+            "一方已无可用手臂/查克拉。",
+            "双方已经停手。"
+          ],
+          "setup": "若双方仍选择最后对撞，只能使用各自尚能聚集的一次近身术；爆点、惯用手和防御姿势决定是否断臂、穿刺、轻伤或被完全阻止。",
+          "beats": [
+            {
+              "id": "EV-P2-K-FINAL-BLOW-01-01",
+              "order": 10,
+              "summary": "鸣人与佐助分别确认最后术的查克拉来源和攻击目标。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-FINAL-BLOW-01-02",
+              "order": 20,
+              "summary": "任一方可在碰撞前收手、偏转或坚持杀伤。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-FINAL-BLOW-01-03",
+              "order": 30,
+              "summary": "碰撞按实际角度造成肢体撕裂、失血、武器损坏或较轻反噬。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-FINAL-BLOW-01-04",
+              "order": 40,
+              "summary": "伤口、失血速度、可用手臂、武器和两人相对位置被固定。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人右臂与佐助左臂只有在对应碰撞成立时才重伤/缺失。",
+            "未断臂分支保留真实较轻或不同伤势。"
+          ],
+          "state_changes": [
+            "肢体状态、失血、经脉损伤、轮回眼状态、武器残骸和医疗窗口被记录。"
+          ],
+          "stop_condition": "最后一次术完成或被中止，两人均不能再发起同级攻击。",
+          "fallbacks": [
+            {
+              "condition": "最后对撞未发生",
+              "status": "altered",
+              "direction": "沿用已有伤势，通过投降、拘捕、撤退或谈判结束；不补写断臂。",
+              "preserves": "保留冲突结束后必须面对身体与政治后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第698话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "按角度和选择结算可变肢体伤，不强制双臂缺失。"
+            }
+          ],
+          "design_rationale": "把双臂重伤设为物理碰撞的可变结果，而非为了复刻和解之印。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-RECONCILIATION-01",
+          "title": "承认、投降或继续逃亡",
+          "thread_id": "THR-P2-FINAL-VALLEY",
+          "location": "终结之谷河岸",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一方仍有意识。",
+            "本轮攻击已经停止。"
+          ],
+          "blockers": [
+            "一方不可逆死亡且无法表达选择。",
+            "仍有即时攻击正在命中。"
+          ],
+          "setup": "停止攻击后，两人依据刚才的选择与伤势决定是否承认羁绊、撤销革命、接受临时拘束、继续逃亡或保持敌对；任何承认都不等于司法赦免。",
+          "beats": [
+            {
+              "id": "EV-P2-K-RECONCILIATION-01-01",
+              "order": 10,
+              "summary": "鸣人说明自己愿意共同承担改革，但不能允许佐助控制尾兽和杀害领导。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-RECONCILIATION-01-02",
+              "order": 20,
+              "summary": "佐助检视自己的方案是否仍可执行，并选择投降、谈判、撤退或继续敌对。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-RECONCILIATION-01-03",
+              "order": 30,
+              "summary": "双方约定解除无限月读、释放尾兽和返回受审的具体次序，或明确拒绝。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-RECONCILIATION-01-04",
+              "order": 40,
+              "summary": "发送医疗/召回信号，或由仍能行动者带着对方离开。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助的个人立场、尾兽处置承诺和是否接受临时拘束明确。",
+            "鸣人的胜败、伤势和政治承诺明确。"
+          ],
+          "state_changes": [
+            "佐助法律配合状态、鸣佐关系、解除月读合作、医疗信号、武器控制和撤离方向被记录。"
+          ],
+          "stop_condition": "两人达成可执行的下一步，或一方离开感知范围并成为追捕目标。",
+          "fallbacks": [
+            {
+              "condition": "佐助拒绝和解或鸣人无法回应",
+              "status": "altered",
+              "direction": "保留在逃/拘捕/重伤状态，由合法联军在救援后处理，不以友情台词覆盖行为。",
+              "preserves": "保留佐助立场和法律身份必须真实交接。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第698话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "分离个人承认、尾兽释放、司法配合和医疗撤离。"
+            }
+          ],
+          "design_rationale": "把和解拆成政治让步、尾兽释放、司法配合和个人关系四项独立结果。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人与佐助的存活、肢体、失血、查克拉、眼睛、武器、立场和相对位置逐项明确。",
+        "佐助已投降/接受谈判/继续敌对/在逃/死亡之一，临时法律身份随实际结果更新。",
+        "解除无限月读与释放尾兽所需人员、能力和同意是否仍存在已经确认，终结之谷发出医疗或追捕信号。"
+      ],
+      "transition": "K068-03-06至03-07只允许救援队按路程抵达；03-07处理终结之谷救治和无限月读解除，不让重伤者自行瞬移回主战场。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-307",
+      "date": "K068-03-07",
+      "title": "救回生者与解除幻术",
+      "arc_id": "ARC-P2-WAR-RELEASE",
+      "day_goal": "让搜救队抵达终结之谷，稳定鸣佐可变伤势，并仅在轮回眼、尾兽查克拉和合作条件成立时解除无限月读。",
+      "start_state": [
+        "03-05的医疗信号、旅行路线、鸣佐伤势和佐助配合状态持续有效；两日间只有止血、自救和救援移动，没有恢复训练。",
+        "卡卡西、小樱、玩家或替代救援者必须从03-03留守位置按实际交通抵达。",
+        "无限月读解除要求实际仍可用的轮回眼/替代术、尾兽查克拉连接、结印者意识与神树根系定位。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-VALLEY-RESCUE-01",
+          "title": "终结之谷分诊",
+          "thread_id": "THR-P2-WAR-SETTLEMENT",
+          "location": "终结之谷河岸临时救护点",
+          "participants": [
+            "春野樱或实际医疗负责人",
+            "旗木卡卡西或实际搜救指挥",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "玩家角色（若加入搜救）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "搜救队找到至少一名鸣佐对象。",
+            "存在最低医疗或封印工具。"
+          ],
+          "blockers": [
+            "谷地仍有持续六道级攻击。",
+            "所有搜救路线被毁且无人可定位。"
+          ],
+          "setup": "搜救队依据信号与谷地破坏抵达，先止血、固定肢体、解除武器并判断转运顺序；佐助仍敌对时必须同时设置封印看守。",
+          "beats": [
+            {
+              "id": "EV-P2-K-VALLEY-RESCUE-01-01",
+              "order": 10,
+              "summary": "医疗负责人分别评估鸣佐的失血、肢体、经脉、眼睛与意识，不套用双断臂模板。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-RESCUE-01-02",
+              "order": 20,
+              "summary": "玩家选择协助止血、封印武器/轮回眼、建立担架路线或搜索另一名失联者。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-RESCUE-01-03",
+              "order": 30,
+              "summary": "医疗查克拉只能稳定生命，不能恢复缺失肢体或刷新战斗查克拉。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-VALLEY-RESCUE-01-04",
+              "order": 40,
+              "summary": "两人获得可转运、留置抢救、死亡确认或受控羁押中的具体状态。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "重大伤势有诊断、治疗上限、转运方式和看守。",
+            "佐助的治疗与安全控制同时存在，不以伤员身份取消法律风险。"
+          ],
+          "state_changes": [
+            "鸣佐生命体征、肢体/眼睛、医疗消耗、封印措施、担架路线、玩家任务和遗体状态被记录。"
+          ],
+          "stop_condition": "两名对象完成初步稳定/死亡确认且可开始下一段转运。",
+          "fallbacks": [
+            {
+              "condition": "救援队未按时抵达",
+              "status": "postponed",
+              "direction": "由仍清醒者继续压迫止血并发送坐标；无限月读解除推迟，伤势按失血时间恶化。",
+              "preserves": "保留旅行时间、生命窗口和解除术不能由濒死者强行完成。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足两日路程、分诊、封印看守和治疗上限。"
+            }
+          ],
+          "design_rationale": "在解除世界级幻术前先做现实分诊，避免濒死者突然站起结印。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-INFINITE-RELEASE-01",
+          "title": "无限月读解除阵",
+          "thread_id": "THR-P2-WAR-RELEASE",
+          "location": "终结之谷与神树根部联动阵地",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助或实际轮回眼使用者",
+            "实际尾兽连接",
+            "联军封印与通信班",
+            "玩家角色（若负责联动阵）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一套解除术条件完整且施术者生命稳定。",
+            "存在可定位的神树根系或幻术锚点。"
+          ],
+          "blockers": [
+            "轮回眼/替代能力与尾兽连接均不存在。",
+            "最终威胁重新夺回神树控制。"
+          ],
+          "setup": "医疗稳定后，解除者通过神树根系和通信节点同步结印；玩家决定先覆盖人口密集战区、医疗区或失联边境，并记录未覆盖区域。",
+          "beats": [
+            {
+              "id": "EV-P2-K-INFINITE-RELEASE-01-01",
+              "order": 10,
+              "summary": "封印班核对轮回眼、尾兽查克拉、月面状态和各区根系是否仍可定位。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-INFINITE-RELEASE-01-02",
+              "order": 20,
+              "summary": "玩家选择第一批解除区域并分配通信确认员。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-INFINITE-RELEASE-01-03",
+              "order": 30,
+              "summary": "鸣人与佐助/替代术者支付剩余查克拉，重伤会限制覆盖批次和速度。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-INFINITE-RELEASE-01-04",
+              "order": 40,
+              "summary": "各区逐批报告苏醒、未醒、死亡、失联或仍被根系束缚，不能用一句“全员解除”覆盖。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "无限月读成功解除、部分解除、延期或无法解除之一明确。",
+            "每个受影响区域和例外名单有状态。"
+          ],
+          "state_changes": [
+            "解除批次、轮回眼与尾兽查克拉消耗、苏醒/未醒/死亡名单、根系状态、通信覆盖和玩家优先级被记录。"
+          ],
+          "stop_condition": "所有可联络区域完成一轮确认，未覆盖区域转为搜救任务。",
+          "fallbacks": [
+            {
+              "condition": "无法一次解除全部区域",
+              "status": "postponed",
+              "direction": "先解除已定位区域并维持其他受术者生命，联合封印班继续寻找替代眼力或尾兽连接。",
+              "preserves": "保留无限月读必须有真实解除结果和未解除名单。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立分区解除、施术消耗、苏醒确认与未覆盖任务。"
+            }
+          ],
+          "design_rationale": "按区域解除和确认，让前置变化、重伤与通信损失真实影响结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-BEAST-RELEASE-01",
+          "title": "解除佐助的尾兽卫星",
+          "thread_id": "THR-P2-WAR-RELEASE",
+          "location": "主战场上空与尾兽接收区",
+          "participants": [
+            "宇智波佐助或实际封印控制者",
+            "漩涡鸣人",
+            "实际被拘束尾兽",
+            "联军封印班"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一只尾兽仍被地爆天星或等价封印拘束。",
+            "封印控制者或替代解除方法可接触。"
+          ],
+          "blockers": [
+            "尾兽从未被拘束。",
+            "卫星失控且立即解除会造成大规模坠落。"
+          ],
+          "setup": "只有实际被佐助或其他人拘束的尾兽需要释放；封印控制者须在医疗监视下解除卫星，封印班逐一确认落点和伤势。",
+          "beats": [
+            {
+              "id": "EV-P2-K-BEAST-RELEASE-01-01",
+              "order": 10,
+              "summary": "封印班核对每颗卫星对应尾兽、稳定度和安全落点。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-BEAST-RELEASE-01-02",
+              "order": 20,
+              "summary": "控制者选择主动解除、授权他人解除或拒绝，拒绝将更新其法律身份。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-BEAST-RELEASE-01-03",
+              "order": 30,
+              "summary": "尾兽分批落地，医疗/感知班防止二次坠落与查克拉暴走。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-BEAST-RELEASE-01-04",
+              "order": 40,
+              "summary": "每只尾兽获得自由、暂留治疗、回归宿主或仍封印之一。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "尾兽释放不因鸣佐和解自动发生，而由封印控制与实际操作完成。",
+            "尾兽对佐助与联军的信任状态更新。"
+          ],
+          "state_changes": [
+            "地爆天星状态、控制权、尾兽落点/伤势/意愿、佐助配合证据和封印班资源被记录。"
+          ],
+          "stop_condition": "所有已知尾兽卫星完成解除或被登记为拒绝/失控状态。",
+          "fallbacks": [
+            {
+              "condition": "控制者拒绝或无法解除",
+              "status": "altered",
+              "direction": "由封印班稳定卫星、记录强制拘束证据并继续技术解除；尾兽保持受害与待救状态。",
+              "preserves": "保留每只尾兽必须有真实去向和自由状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "逐颗处理尾兽封印、落点、伤势和控制证据。"
+            }
+          ],
+          "design_rationale": "单独结算尾兽释放，避免它被无限月读解除一句话吞并。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣佐获救、死亡或仍失联状态明确；其肢体、眼睛、查克拉、医疗转运和安全看守连续。",
+        "无限月读解除结果按区域记录，仍受术、失联、死亡和苏醒者分别列入后续搜救。",
+        "每只尾兽的封印、释放、落点、宿主关系与自由意愿明确；佐助配合程度成为 L 司法证据。"
+      ],
+      "transition": "K068-03-08至03-09用于各战区确认、短途后送和解除残根；03-10只做即时搜救、证物保管与停战确认，不提前审判或任命。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-K-310",
+      "date": "K068-03-10",
+      "title": "战争结束的第一份可执行记录",
+      "arc_id": "ARC-P2-WAR-SETTLEMENT",
+      "day_goal": "在 L 开始长期处置前，完成现场搜救优先级、伤员和遗体后送、高危俘虏/证物控制，以及各村实际领导对停火的最低确认。",
+      "start_state": [
+        "03-07之后各区只进行了解除确认、残根清除和短途转运，所有死亡、失踪与重伤保持实际状态。",
+        "最终威胁、黑绝、斑、带土、秽土者、尾兽、鸣佐与玩家状态来自本分片真实结算。",
+        "长期审判、赦免、义肢、火影任命、赔偿、裁军和重建均尚未发生。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-K-FIELD-SEARCH-01",
+          "title": "最后战区的分区搜救",
+          "thread_id": "THR-P2-WAR-SETTLEMENT",
+          "location": "主战场、终结之谷与已开放战区",
+          "participants": [
+            "联军医疗与搜救队",
+            "各村实际小队长",
+            "感知与封印班",
+            "玩家角色（若参加搜救）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一支医疗或搜救队能行动。",
+            "无限月读与最终威胁已受控到允许局部进入。"
+          ],
+          "blockers": [
+            "六道级攻击仍覆盖全部战区。",
+            "通信与地方指挥完全失效且无人能划区。"
+          ],
+          "setup": "联军按03-07解除名单和最后坐标划分绿、黄、红、黑四类区域；玩家只能选择一个区域负责伤员、失联者、遗体或封印污染。",
+          "beats": [
+            {
+              "id": "EV-P2-K-FIELD-SEARCH-01-01",
+              "order": 10,
+              "summary": "指挥员汇总可通行路线、医疗床位、担架、药品与仍活动的神树根系。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-FIELD-SEARCH-01-02",
+              "order": 20,
+              "summary": "玩家选择一个搜救区和任务优先级，并接受其他区域延后搜索。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-FIELD-SEARCH-01-03",
+              "order": 30,
+              "summary": "搜救队逐人核对生命、身份、伤势、最后位置和目击者，未找到者保持失踪。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-FIELD-SEARCH-01-04",
+              "order": 40,
+              "summary": "形成交给 L 的首轮伤亡、失踪、遗体与转运清单。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "重大伤亡不由原作名单补齐，每一项有地点、状态和责任队。",
+            "未开放危险区保留后续搜索而非推定全灭。"
+          ],
+          "state_changes": [
+            "伤亡/失踪/遗体名单、医疗容量、运输路线、玩家责任区、污染封锁和复查日期被记录。"
+          ],
+          "stop_condition": "所有可进入区域完成首轮扫描，无法进入区域有封锁线和复查责任人。",
+          "fallbacks": [
+            {
+              "condition": "无法进行全战区搜救",
+              "status": "postponed",
+              "direction": "先建立移动救护点和封锁线，只扫描实际控制区；其余人员保持失踪。",
+              "preserves": "保留伤亡必须经现场确认并交给后续持续搜索。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足分区搜救、医疗容量、遗体确认和复查责任。"
+            }
+          ],
+          "design_rationale": "用现场清单衔接 L 的分诊，避免战争一结束就跳到葬礼和全员恢复。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-CUSTODY-LEDGER-01",
+          "title": "俘虏、遗体与六道遗留物",
+          "thread_id": "THR-P2-WAR-SETTLEMENT",
+          "location": "联军临时封印与证物营地",
+          "participants": [
+            "联军封印班",
+            "五村实际监察代表",
+            "实际俘虏与看守",
+            "尾兽代表（若愿意参与）",
+            "玩家角色（若负责押运）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "联军控制至少一个可维持封印的营地。",
+            "至少存在俘虏、遗体或高危遗留物。"
+          ],
+          "blockers": [
+            "对象仍在不可达空间且无稳定封印坐标。",
+            "营地仍受攻击无法维持看守。"
+          ],
+          "setup": "封印班将辉夜/替代威胁封印、黑绝、白绝样本、轮回眼、斑/带土遗体、秽土媒介与普通战俘分开；佐助按其当前法律和医疗状态单独看守。",
+          "beats": [
+            {
+              "id": "EV-P2-K-CUSTODY-LEDGER-01-01",
+              "order": 10,
+              "summary": "监察代表逐项核对来源、危险等级、当前持有人、知情者和封印维持条件。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-CUSTODY-LEDGER-01-02",
+              "order": 20,
+              "summary": "玩家选择押运高危容器、保护遗体、看守佐助或阻止某村私取眼睛/样本。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-K-CUSTODY-LEDGER-01-03",
+              "order": 30,
+              "summary": "任何争议物都使用双村签名与封印，不把尾兽列为可分配战利品。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-CUSTODY-LEDGER-01-04",
+              "order": 40,
+              "summary": "每名俘虏、每具重大遗体和每件六道遗留物获得唯一保管地与访问权限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "辉夜、黑绝、斑、带土、佐助、眼睛、样本和秽土媒介有独立保管状态。",
+            "证据链足以让 L 开始司法，但不提前作出判决。"
+          ],
+          "state_changes": [
+            "俘虏身份、医疗限制、封印容器、遗体位置、眼睛归属、样本访问、玩家押运任务和双村签名被记录。"
+          ],
+          "stop_condition": "所有实际存在的高危对象有责任人、保管地和维持条件；不存在对象明确不生成。",
+          "fallbacks": [
+            {
+              "condition": "部分对象无法移交",
+              "status": "altered",
+              "direction": "保留原地封锁、最后坐标和负责小队；不得凭基准线制造容器或遗体。",
+              "preserves": "保留每个危险对象都必须有可追踪责任链。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立分类保管、证据链、遗体权益和佐助医疗看守。"
+            }
+          ],
+          "design_rationale": "逐项闭合战争遗留物与人的保管链，为 L 的司法和伦理处置提供真实输入。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-K-CEASEFIRE-01",
+          "title": "五村最低停火确认",
+          "thread_id": "THR-P2-WAR-SETTLEMENT",
+          "location": "联军临时指挥与跨村通信网",
+          "participants": [
+            "各村实际领导或合法代理",
+            "联军实际总指挥或代理",
+            "铁之国联络员",
+            "医疗与后勤负责人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少两个主要交战方有合法领导或代理能约束部队。",
+            "最终威胁已受控到允许停止国家级交战。"
+          ],
+          "blockers": [
+            "任一六道级威胁仍在发动全球攻击。",
+            "多数部队拒绝现有指挥且继续交战。"
+          ],
+          "setup": "各村按实际存活、苏醒和授权状态确认停止进攻、维持救援走廊、冻结战俘转移和保留现有防线；任何原作领导都不会自动复职。",
+          "beats": [
+            {
+              "id": "EV-P2-K-CEASEFIRE-01-01",
+              "order": 10,
+              "summary": "通信网逐村核对现任领导、代理顺序、可联络部队和仍在外的危险任务。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-K-CEASEFIRE-01-02",
+              "order": 20,
+              "summary": "各方只确认七日最低停火、救援通行、战俘不私刑与证物不转移。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-K-CEASEFIRE-01-03",
+              "order": 30,
+              "summary": "拒绝、失联或权限争议的村落被单独记录，不用四战胜利自动制造永久和平。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-K-CEASEFIRE-01-04",
+              "order": 40,
+              "summary": "联军发布首份停战状态、战区责任、补给缺口和03-11处置议程。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "各村领导/代理、联军指挥与最低停火关系明确。",
+            "长期裁军、赔偿、重建和任职全部交给 L。"
+          ],
+          "state_changes": [
+            "领导权限、联军指挥、七日停火、救援走廊、战俘冻结、补给缺口、拒绝方和未解六道威胁被记录。"
+          ],
+          "stop_condition": "每个可联络交战方确认、拒绝或失联之一，临时命令能约束实际部队。",
+          "fallbacks": [
+            {
+              "condition": "无法形成五村共同停火",
+              "status": "postponed",
+              "direction": "建立局部救援停火和战区隔离，L 从仍在谈判的现实状态开始。",
+              "preserves": "保留战争收束必须由真实领导、通信和部队服从确认。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第699话",
+              "contribution": "提供终局冲突、人物选择与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足领导授权、局部停火、救援走廊和战后首日议程。"
+            }
+          ],
+          "design_rationale": "把“战争结束”落实为有限、可执行的停火和指挥快照，而不是直接跳到和平时代。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "无限月读的解除、部分解除、延期或失败结果按区域交接；所有仍受术者和失联区域有责任队与复查日期。",
+        "辉夜/替代威胁、黑绝、斑、带土和全部秽土者的封印、生死、遗体、位置与知情范围明确。",
+        "每只尾兽的自由/封印/宿主/位置/伤势与联络意愿明确，不作为五村战利品。",
+        "鸣人与佐助的生命、肢体、眼睛、查克拉、能力、立场和医疗位置明确；佐助处于配合治疗、临时羁押、授权谈判、在逃、敌对或死亡之一，长期法律裁定未作出。",
+        "联军重大伤亡、失踪、遗体、战俘、高危证物和医疗/运输资源形成首轮清单。",
+        "各村实际领导或代理、联军指挥、七日最低停火、救援走廊和补给缺口明确；任何长期任命、赦免、裁军、赔偿与重建均留给 L。",
+        "未闭合空间裂口、未解除区域、逃逸黑绝/最终威胁残片、白绝样本与其他六道级痕迹列为受限调查任务，普通公众只获最低停战信息。"
+      ],
+      "transition": "K068-03-11由 L 从这份逐项台账开始第一轮分诊、保管和现实处置；不得用第699-700话的远期结果覆盖本分片的分支状态。",
+      "reference_facts": [
+        "旧自动资料第194-199条的葬礼、六代任命、义肢、赦免与赎罪远行属于长期战后处置，已明确移交 L，不在 K 重复。"
+      ]
+    }
+  ]
+}

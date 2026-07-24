@@ -1,0 +1,3860 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P1-EXAM-CRUSH",
+    "namespace": "P1",
+    "arc_ids": [
+      "ARC-P1-EXAM",
+      "ARC-P1-CRUSH"
+    ],
+    "date_start": "K064-03-01",
+    "date_end": "K064-04-09"
+  },
+  "days": [
+    {
+      "id": "DAY-P1-EXAM-301",
+      "date": "K064-03-01",
+      "title": "中忍考试第一场",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "让报名资格、外村压力与情报判断在同一天形成考试主题，而不是直接跳入笔试答案。",
+      "start_state": [
+        "基准分支中第七班已完成并归档波之国任务，经过数周恢复与常规训练；延期分支继承实际位置、伤势与未结案状态。",
+        "只有实际编组、任务履历、身体状态和指导上忍推荐均满足规则时，队员才可分别决定是否参试。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-ENTRY-01",
+          "title": "推荐与报名",
+          "thread_id": "THR-P1-EXAM-ENTRY",
+          "location": "忍者学校报名走廊",
+          "participants": [
+            "第七班",
+            "旗木卡卡西",
+            "木叶同期下忍",
+            "各村考生"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "第七班仍是获指导上忍推荐的三人小队，三名成员尚未分别确认参试。"
+          ],
+          "blockers": [
+            "任一成员失去下忍资格、无法到场或明确拒绝参试，原三人报名不成立。"
+          ],
+          "setup": "卡卡西把已提交的推荐交给三名成员分别确认；完成身份核验后，他们在报名走廊面对真假教室与其他队伍试探。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-ENTRY-01-01",
+              "order": 10,
+              "summary": "卡卡西把参加决定交还每名队员。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-ENTRY-01-02",
+              "order": 20,
+              "summary": "同期下忍和外村考生在入口互相评估。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-ENTRY-01-03",
+              "order": 30,
+              "summary": "第七班识破楼层幻术并进入正确考场。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "第七班完成有效报名。",
+            "考生之间形成初步竞争与观察关系。"
+          ],
+          "state_changes": [
+            "第七班状态转为中忍考试参赛队。"
+          ],
+          "stop_condition": "考生进入第一场考试教室并完成身份核验。",
+          "fallbacks": [
+            {
+              "condition": "第七班阵容或参试决定已被玩家改变。",
+              "status": "altered",
+              "direction": "按实际到场与书面推荐决定个人或整队退赛；不得把缺席成员补进考场。",
+              "preserves": "保留自愿报名、资格核验与组队规则的后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·中忍考试报名",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "报名本身是角色选择；即使玩家改变队伍，也必须由实际参赛成员分别承担风险。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-WRITTEN-01",
+          "title": "情报战笔试",
+          "thread_id": "THR-P1-EXAM-WRITTEN",
+          "location": "忍者学校第一考场",
+          "participants": [
+            "森乃伊比喜",
+            "各村考生",
+            "第七班"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "实际报名成员已通过身份核验并进入第一考场，整队仍保有考试分数。"
+          ],
+          "blockers": [
+            "整队已退赛、被监考确认淘汰或第一场考试被安保事件取消。"
+          ],
+          "setup": "伊比喜以严厉扣分和监考布局迫使考生秘密获取情报，第十题用长期风险测试是否坚持。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-WRITTEN-01-01",
+              "order": 10,
+              "summary": "笔试规则把个人作弊失败与全队淘汰绑定。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-WRITTEN-01-02",
+              "order": 20,
+              "summary": "考生用各自忍者手段获取答案并避免暴露。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-WRITTEN-01-03",
+              "order": 30,
+              "summary": "伊比喜提出可能永久失去再考资格的第十题。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-WRITTEN-01-04",
+              "order": 40,
+              "summary": "留下者通过第一场，红豆立即接管下一阶段。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "坚持并保住队伍资格的考生进入第二场。",
+            "考试明确把情报获取、胆量与团队责任视为中忍能力。"
+          ],
+          "state_changes": [
+            "第一场淘汰结果确定。",
+            "第二场死亡森林考试进入准备。"
+          ],
+          "stop_condition": "红豆说明次日集合地点、卷轴规则与死亡风险。",
+          "fallbacks": [
+            {
+              "condition": "玩家公开取得答案、拒绝第十题或使扣分规则失效。",
+              "status": "altered",
+              "direction": "按现场证据结算作弊、退赛或改题结果；只有仍满足规则的队伍进入第二场。",
+              "preserves": "保留情报获取风险和个人决定牵连全队的考试功能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·中忍考试第一场",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "保留考试的决策机制，不把它写成角色背诵原作答案。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第一场考试按实际报名、退赛与监考结果结束。",
+        "只有仍符合规则的队伍保有第二场资格；未报名、被淘汰或尚未归村者保留原状态。"
+      ],
+      "transition": "仅通过第一场且完成风险确认的队伍于K064-03-02清晨进入第四十四演习场；其他分支不得自动领取卷轴或进入死亡森林。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-302",
+      "date": "K064-03-02",
+      "title": "死亡森林首日",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "把卷轴竞争、大蛇丸渗透和其他队伍生态拆成独立线程，并在日末留下真实伤势与追猎压力。",
+      "start_state": [
+        "通过第一场的队伍取得天或地卷轴之一。",
+        "大蛇丸已伪装成草隐考生潜入。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-FOREST-01",
+          "title": "卷轴争夺开始",
+          "thread_id": "THR-P1-EXAM-FOREST",
+          "location": "第四十四演习场三号入口",
+          "participants": [
+            "御手洗红豆",
+            "参赛队伍",
+            "第七班"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "第一场合格队伍已签署风险书，并领取一份密封的天卷轴或地卷轴。"
+          ],
+          "blockers": [
+            "第二场被取消、队伍不足三人或卷轴在入场前已被考官判定无效。"
+          ],
+          "setup": "红豆说明五日内夺取互补卷轴并抵达中央塔的规则，各队从不同入口进入森林。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-FOREST-01-01",
+              "order": 10,
+              "summary": "考生签署风险确认并领取密封卷轴。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-FOREST-01-02",
+              "order": 20,
+              "summary": "各队进入后立即建立路线、诱饵与警戒。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-FOREST-01-03",
+              "order": 30,
+              "summary": "第七班遭遇伪装和分离风险并重新确认暗号。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "死亡森林的资源竞争正式开始。",
+            "第七班建立基本反渗透约定。"
+          ],
+          "state_changes": [
+            "考试状态进入第二场。"
+          ],
+          "stop_condition": "队伍离开入口安全区并进入无法随时退出的深林。",
+          "fallbacks": [
+            {
+              "condition": "玩家拒签、退出或改变队伍领取的卷轴。",
+              "status": "altered",
+              "direction": "记录退赛或实际卷轴类型；继续参赛者从获分配入口进入，不补发理想卷轴。",
+              "preserves": "保留五日期限、互补卷轴目标和退出代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·死亡森林开场",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "先让玩家理解资源、期限和退出代价，再引入远超考试等级的袭击者。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-OROCHIMARU-01",
+          "title": "草忍伪装者",
+          "thread_id": "THR-P1-OROCHIMARU-SASUKE",
+          "location": "死亡森林巨木区",
+          "participants": [
+            "第七班",
+            "大蛇丸"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "大蛇丸仍以草隐考生身份在场内，且已锁定仍在死亡森林行动的佐助。"
+          ],
+          "blockers": [
+            "大蛇丸身份提前暴露并被拦截，佐助退出考试，或双方路线未发生交集。"
+          ],
+          "setup": "大蛇丸隔离并压制第七班，重点测试佐助的写轮眼与恐惧，最终在其颈部留下天之咒印。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-OROCHIMARU-01-01",
+              "order": 10,
+              "summary": "伪装草忍用巨大威压和通灵兽打散队形。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-OROCHIMARU-01-02",
+              "order": 20,
+              "summary": "鸣人与佐助先后克服恐惧并争取反击窗口。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-OROCHIMARU-01-03",
+              "order": 30,
+              "summary": "大蛇丸确认佐助潜力并施加天之咒印。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-OROCHIMARU-01-04",
+              "order": 40,
+              "summary": "袭击者离开，佐助因咒印失去稳定行动能力。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "第七班遭受超出考试范围的袭击。",
+            "佐助被植入会持续影响身心的咒印。"
+          ],
+          "state_changes": [
+            "佐助获得天之咒印异常状态。",
+            "第七班失去原有卷轴或暴露位置。"
+          ],
+          "stop_condition": "大蛇丸脱离现场且第七班进入紧急照护状态。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前识破伪装、击退大蛇丸或阻止其接触佐助颈部。",
+              "status": "altered",
+              "direction": "按交战结果记录伤势、样本或招揽痕迹；施印未成功时不得后台添加天之咒印。",
+              "preserves": "保留大蛇丸对佐助的兴趣以及木叶可追查的入侵证据。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·大蛇丸袭击第七班",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把咒印明确为袭击结果而非即时强化奖励；玩家若阻止施印，后续大蛇丸招揽线必须重写。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-RIVALS-01",
+          "title": "森林中的猎食秩序",
+          "thread_id": "THR-P1-EXAM-RIVALS",
+          "location": "死亡森林其他区域",
+          "participants": [
+            "我爱罗小队",
+            "雨隐考生",
+            "其他参赛队"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐三人组仍在死亡森林内寻找互补卷轴，雨隐队决定伏击他们。"
+          ],
+          "blockers": [
+            "任一队已退赛、改道或被玩家提前解除武装，双方不再相遇。"
+          ],
+          "setup": "我爱罗以压倒性手段夺取卷轴，手鞠与勘九郎观察他的失控风险；死亡森林的伤亡压力迅速上升。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-RIVALS-01-01",
+              "order": 10,
+              "summary": "雨隐队试图伏击砂隐队。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-RIVALS-01-02",
+              "order": 20,
+              "summary": "我爱罗用砂无情反杀并取得所需卷轴。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-RIVALS-01-03",
+              "order": 30,
+              "summary": "砂隐同伴确认我爱罗的杀意正在升高。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂隐队迅速满足通关资源条件。",
+            "其他考生对我爱罗形成恐惧情报。"
+          ],
+          "state_changes": [
+            "砂隐队向中央塔推进。"
+          ],
+          "stop_condition": "砂隐队脱离战斗并继续行军。",
+          "fallbacks": [
+            {
+              "condition": "玩家阻止伏击、警告雨隐队或直接介入我爱罗的攻击。",
+              "status": "altered",
+              "direction": "按实际交涉或战斗结算卷轴与伤亡；没有目击者时不得传播我爱罗的战斗细节。",
+              "preserves": "保留砂隐队的通关资源、我爱罗失控风险和目击者知识边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·我爱罗死亡森林战斗",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "这条离屏线程解释后续我爱罗状态，但不得让未目击角色自动知道细节。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第七班受创并需要守夜。",
+        "佐助咒印成为持续风险。",
+        "森林中的强队已开始接近中央塔。"
+      ],
+      "transition": "K064-03-03第七班在原地恢复，音忍小队循大蛇丸命令接近。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-303",
+      "date": "K064-03-03",
+      "title": "守护与音忍袭击",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "让小樱承担保护队伍的主动选择，并让同期小队援助赢得后续关系依据。",
+      "start_state": [
+        "鸣人与佐助暂时失去战斗能力。",
+        "小樱独自维持警戒。",
+        "音忍三人组收到测试佐助的命令。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-SOUND-01",
+          "title": "树洞防线",
+          "thread_id": "THR-P1-EXAM-FOREST",
+          "location": "死亡森林临时藏身处",
+          "participants": [
+            "春野樱",
+            "漩涡鸣人",
+            "宇智波佐助",
+            "音忍三人组",
+            "李洛克",
+            "第十班"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "第七班仍在藏身处照护失能成员，音忍三人组持有大蛇丸下达的测试佐助命令。"
+          ],
+          "blockers": [
+            "第七班已撤离、音忍失去命令或战力，或佐助未被大蛇丸选中。"
+          ],
+          "setup": "音忍识破陷阱并逼近昏迷同伴，小樱在支援到达前独自拖延，随后多队卷入防线。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SOUND-01-01",
+              "order": 10,
+              "summary": "小樱布置基础陷阱并照护两名队友。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-SOUND-01-02",
+              "order": 20,
+              "summary": "音忍拆穿防线并要求交出佐助。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-SOUND-01-03",
+              "order": 30,
+              "summary": "小樱选择近身抵抗，李与第十班先后介入。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-SOUND-01-04",
+              "order": 40,
+              "summary": "佐助在咒印暴走中苏醒并以过度暴力压制音忍。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-SOUND-01-05",
+              "order": 50,
+              "summary": "小樱阻止佐助继续伤害，音忍留下卷轴撤退。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "第七班得到继续考试所需的资源和喘息。",
+            "同期同伴对小樱与佐助状态形成亲历认知。"
+          ],
+          "state_changes": [
+            "佐助咒印暴走被首次记录。",
+            "第七班与第十班、李建立互助事实。"
+          ],
+          "stop_condition": "音忍脱离接触且佐助恢复基本自控。",
+          "fallbacks": [
+            {
+              "condition": "玩家加固防线、召来考官或在咒印暴走前击退音忍。",
+              "status": "altered",
+              "direction": "按实际援军与资源结算音忍撤退、被捕或继续追踪；不得强制佐助暴走或凭空留下卷轴。",
+              "preserves": "保留小樱的守护选择、音忍任务后果和佐助真实异常状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·音忍袭击与小樱守护",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让咒印力量带来恐惧与关系代价，避免AI把暴走当作无条件升级。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-ANKO-01",
+          "title": "入侵者调查",
+          "thread_id": "THR-P1-EXAM-SECURITY",
+          "location": "死亡森林北侧巡查带",
+          "participants": [
+            "御手洗红豆",
+            "木叶考官",
+            "大蛇丸"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "考务营地已收到草隐考生身份异常报告，红豆仍能沿死亡森林北侧巡查带追踪。"
+          ],
+          "blockers": [
+            "大蛇丸未潜入、证据被玩家提前移交暗部，或红豆因伤无法执行追踪。"
+          ],
+          "setup": "红豆从考务营地收到身份盗用报告后进入北侧巡查带，追上大蛇丸却被旧咒印牵制，只能用信鹰送出有限警报。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-ANKO-01-01",
+              "order": 10,
+              "summary": "考务营地把草隐考生尸体与身份特征送交红豆。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-ANKO-01-02",
+              "order": 20,
+              "summary": "红豆在巡查带追上大蛇丸并确认是本人渗透。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-ANKO-01-03",
+              "order": 30,
+              "summary": "大蛇丸用旧咒印与威胁迫使红豆停止近身追击。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-ANKO-01-04",
+              "order": 40,
+              "summary": "红豆用信鹰向考务安全组上报身份、位置与未知目标。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "木叶知道大蛇丸潜入但不掌握完整计划。",
+            "考试安保进入秘密升级。"
+          ],
+          "state_changes": [
+            "大蛇丸渗透成为村级调查事项。"
+          ],
+          "stop_condition": "红豆撤回并完成上报。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供更完整证据、同行支援或提前封锁大蛇丸退路。",
+              "status": "altered",
+              "direction": "按情报质量改为联合围捕、远距监视或仅上报身份盗用；不得让红豆独自重复已完成的调查。",
+              "preserves": "保留木叶获得有限警报的来源和大蛇丸反侦察压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·红豆追查大蛇丸",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "安全线程持续推进，但考生不应因数据库注入而自动知道大蛇丸的全部计划。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "第七班三人恢复到可以移动。",
+        "木叶考务层确认有S级叛忍渗透。"
+      ],
+      "transition": "K064-03-04第七班重新寻找互补卷轴并规划中央塔路线。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-304",
+      "date": "K064-03-04",
+      "title": "卷轴补全",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "在重大袭击后恢复考试目标，给侦察、交涉或战斗多种取得卷轴的路径。",
+      "start_state": [
+        "第七班仍缺少一份互补卷轴或需要确认现有卷轴有效。",
+        "鸣人只有约半数查克拉，佐助仍有咒印疼痛，小樱连续守夜后体力不足。",
+        "队伍剩余口粮可支撑两日，距五日期限还有两日。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-SCROLL-01",
+          "title": "诱饵与反伏击",
+          "thread_id": "THR-P1-EXAM-FOREST",
+          "location": "死亡森林河谷区",
+          "participants": [
+            "第七班",
+            "竞争考生队"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "第七班仍在五日期限内，已清点伤势、补给和手中卷轴，并确认缺少哪一类。"
+          ],
+          "blockers": [
+            "队伍已集齐有效卷轴、全员退赛、失去移动能力或中央塔期限已过。"
+          ],
+          "setup": "第七班利用变身、陷阱与地形寻找目标队伍，同时必须判断是否接受交易或发动伏击。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SCROLL-01-01",
+              "order": 10,
+              "summary": "小樱整理现有卷轴、伤势、忍具、口粮和剩余期限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-SCROLL-01-02",
+              "order": 20,
+              "summary": "队伍发现一组同样缺少资源的竞争者。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-SCROLL-01-03",
+              "order": 30,
+              "summary": "玩家与队伍选择交涉、诱骗、追踪、撤退或正面战斗。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-SCROLL-01-04",
+              "order": 40,
+              "summary": "基准行动中第七班以诱饵反制取得互补卷轴；其他选择按实际资源结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "第七班满足抵达塔后的卷轴条件。"
+          ],
+          "state_changes": [
+            "两份卷轴均由队伍控制。",
+            "队伍开始向中央塔推进。"
+          ],
+          "stop_condition": "卷轴归属明确且双方脱离战斗。",
+          "fallbacks": [
+            {
+              "condition": "玩家选择交易失败、撤退或输掉现有卷轴。",
+              "status": "altered",
+              "direction": "保留实际资源结果并允许另寻目标或退赛；未集齐时不得在次日自动通过中央塔。",
+              "preserves": "保留卷轴守恒、队员存活和到塔期限。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·死亡森林卷轴规则",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足第七班取得互补卷轴的可玩过程"
+            }
+          ],
+          "design_rationale": "用原创连接场景补足原作快速略过的资源闭环，避免卷轴凭空出现。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中第七班拥有天、地卷轴；分支线保留实际卷轴归属。",
+        "队伍在中央塔西南两小时路程的隐蔽点轮班休息，佐助不得调用咒印，鸣人停止非必要影分身。"
+      ],
+      "transition": "K064-03-05清晨按伤势决定继续进塔、另寻卷轴或正式退赛；抵达者须在期限内接受卷轴核验。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-305",
+      "date": "K064-03-05",
+      "title": "中央塔与预选赛前半",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "完成死亡森林阶段，并把参赛人数过多造成的预选赛拆成独立对局而不超过场景上限。",
+      "start_state": [
+        "基准线中第七班带齐卷轴，经过两小时谨慎行军抵达中央塔；分支线按K064-03-04的实际资源判定能否入塔。",
+        "佐助仍有低热与咒印疼痛，鸣人查克拉恢复到约七成，小樱完成一轮睡眠。",
+        "多支队伍已在塔内完成第二场。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-TOWER-01",
+          "title": "天地卷轴开封",
+          "thread_id": "THR-P1-EXAM-FOREST",
+          "location": "中央塔",
+          "participants": [
+            "第七班",
+            "海野伊鲁卡",
+            "通过第二场的考生",
+            "考官"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "第七班实际持有一份有效天卷轴和一份有效地卷轴，并在五日期限内抵达中央塔开封室。"
+          ],
+          "blockers": [
+            "任一卷轴缺失、伪造或提前开封，队伍超时，或成员不足考试规则要求。"
+          ],
+          "setup": "第七班抵达中央塔，在规定地点开启卷轴并接受关于“天、地、人”协作意义的说明。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-TOWER-01-01",
+              "order": 10,
+              "summary": "队伍确认卷轴未在途中被替换。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-TOWER-01-02",
+              "order": 20,
+              "summary": "召唤出的伊鲁卡确认三人通过并解释卷轴训诫。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-TOWER-01-03",
+              "order": 30,
+              "summary": "通过队伍被带往预选赛会场。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "第七班通过死亡森林。",
+            "佐助的咒印异常进入医疗与考官视野。"
+          ],
+          "state_changes": [
+            "第二场考试完成。"
+          ],
+          "stop_condition": "所有通过队伍在预选赛大厅集合。",
+          "fallbacks": [
+            {
+              "condition": "玩家到塔时资源或队伍状态不符合通关条件。",
+              "status": "altered",
+              "direction": "由考官按现状判定淘汰、调查或给予规则内复核；不得召唤伊鲁卡宣布无条件通过。",
+              "preserves": "保留卷轴闭环、期限和第二场通关标准。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·中央塔卷轴",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "用短场景结算卷轴因果和阶段转换，不与后续任一擂台冲突混写。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-SASUKE-01",
+          "title": "佐助对赤胴铠",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "宇智波佐助",
+            "赤胴铠",
+            "月光疾风",
+            "观战考生"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助通过第二场、仍选择参赛，医疗班确认其可在监护下短时战斗，赤胴铠仍在签表。"
+          ],
+          "blockers": [
+            "佐助退赛、咒印失控需隔离、赤胴铠缺席或预选赛被取消。"
+          ],
+          "setup": "佐助在被禁止依赖咒印的情况下迎战吸收查克拉的赤胴铠，以体术模仿完成反击。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-SASUKE-01-01",
+              "order": 10,
+              "summary": "医疗建议与个人选择决定佐助是否继续参赛。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SASUKE-01-02",
+              "order": 20,
+              "summary": "赤胴铠吸收查克拉并诱发咒印风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SASUKE-01-03",
+              "order": 30,
+              "summary": "佐助以狮子连弹结束对局。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助晋级决赛。",
+            "卡卡西决定赛后立即处理咒印。"
+          ],
+          "state_changes": [
+            "佐助体能进一步下降。"
+          ],
+          "stop_condition": "裁判宣布胜者并将佐助交给卡卡西。",
+          "fallbacks": [
+            {
+              "condition": "玩家让佐助退出、限制咒印风险或改变本场胜负。",
+              "status": "altered",
+              "direction": "按裁判与医疗结论记录胜者和伤势；佐助落败时从决赛名单移除并另行处理咒印。",
+              "preserves": "保留咒印风险、查克拉消耗和胜负对后续对阵的影响。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛佐助对赤胴铠",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让胜利依赖克制咒印与现有技能，而不是突然获得数据库外能力。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-SHINO-01",
+          "title": "志乃对萨克",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "油女志乃",
+            "萨克·镫",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "志乃与萨克均通过第二场并被抽为本轮对手，萨克仍具备至少一侧音压装置。"
+          ],
+          "blockers": [
+            "任一方退赛、被拘押、丧失战斗能力或签表被分支改写。"
+          ],
+          "setup": "志乃识破萨克依赖掌心风孔，以寄坏虫堵塞后反制。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHINO-01-01",
+              "order": 10,
+              "summary": "萨克隐瞒受伤手臂并发动音压攻击。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHINO-01-02",
+              "order": 20,
+              "summary": "志乃用虫群封锁风孔。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHINO-01-03",
+              "order": 30,
+              "summary": "反噬使萨克失去战斗能力。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "志乃晋级决赛。"
+          ],
+          "state_changes": [
+            "志乃的战术情报对观战者部分公开。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家揭露萨克伤势、改变装置状态或介入虫群反制。",
+              "status": "altered",
+              "direction": "按剩余能力与裁判判定结算，不保证志乃晋级。",
+              "preserves": "保留公开战术情报和实际晋级席位。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛志乃对萨克",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "独立保存对局，避免把不同考生的伤势和结果压成无因果名单。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-KANKURO-01",
+          "title": "勘九郎对剑美澄",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "勘九郎",
+            "剑美澄",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "勘九郎与剑美澄均在预选签表且傀儡乌鸦仍以伪装状态入场。"
+          ],
+          "blockers": [
+            "任一方退赛、傀儡被赛前扣押或对阵已被玩家改变。"
+          ],
+          "setup": "勘九郎隐藏傀儡本体位置，引诱剑美澄缠住伪装傀儡后反制。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-KANKURO-01-01",
+              "order": 10,
+              "summary": "剑美澄以柔软身体锁住伪装目标。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-KANKURO-01-02",
+              "order": 20,
+              "summary": "勘九郎揭示傀儡替身并完成绞制。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-KANKURO-01-03",
+              "order": 30,
+              "summary": "剑美澄认输或失去行动能力。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "勘九郎晋级决赛。"
+          ],
+          "state_changes": [
+            "傀儡术的部分机制被观战者识别。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前识破傀儡本体或改变剑美澄的锁技命中。",
+              "status": "altered",
+              "direction": "按已公开情报和现场能力重算胜负；勘九郎败北则失去决赛席位。",
+              "preserves": "保留傀儡情报暴露程度和签表结果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛勘九郎对剑美澄",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "保留傀儡情报战，为决赛弃权与入侵任务提供背景。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-SAKURA-01",
+          "title": "小樱对井野",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "春野樱",
+            "山中井野",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "小樱与井野均通过第二场、仍可战斗且被抽为对手。"
+          ],
+          "blockers": [
+            "任一人退赛、伤势不允许出场或签表发生变化。"
+          ],
+          "setup": "旧友在体术、诱饵和心转身之术间对决，最终同时失去战斗能力。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-SAKURA-01-01",
+              "order": 10,
+              "summary": "两人把长期竞争与当前忍者目标带入对局。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SAKURA-01-02",
+              "order": 20,
+              "summary": "井野以头发陷阱完成心转身命中。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SAKURA-01-03",
+              "order": 30,
+              "summary": "小樱依靠自我意志挣脱控制。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SAKURA-01-04",
+              "order": 40,
+              "summary": "双方最后一击同时命中。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "双方平局且均未晋级。",
+            "小樱与井野的关系从单纯敌对转向重新承认。"
+          ],
+          "state_changes": [
+            "小樱结束本届个人赛。"
+          ],
+          "stop_condition": "裁判确认双方无法继续。",
+          "fallbacks": [
+            {
+              "condition": "玩家化解旧怨、破坏心转身前置或使一方保持战斗能力。",
+              "status": "altered",
+              "direction": "按实际对抗判定胜负、平局或退赛；不得为了原著关系强制双双淘汰。",
+              "preserves": "保留两人的竞争历史和本届晋级后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛小樱对井野",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把关系变化绑定在真实对抗和互相承认上，避免赛后无依据立刻成为亲密好友。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "死亡森林阶段正式结束。",
+        "预选赛依抽签顺序完成前四场；小樱与井野同时送医后，考官因医疗通道拥堵和夜间场馆检查宣布休赛。",
+        "未出场考生的装备由考务封存，人员进入中央塔宿舍层监管休息，已出场者伤势与查克拉不自动恢复。"
+      ],
+      "transition": "K064-03-06清晨复检场馆、人员和封存装备后，从手鞠对天天继续剩余六场，再按实际晋级名单抽取决赛对阵。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-306",
+      "date": "K064-03-06",
+      "title": "预选赛后半",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "逐场结算剩余关键对局，并在当天最后建立一个月训练期的目标与风险。",
+      "start_state": [
+        "场馆通过晨间复检，预选赛按昨日公告从第五场继续。",
+        "尚未出场的考生均已观察前四场并完成一夜受监管休息，装备封条完好。",
+        "佐助已由卡卡西带离赛场接受咒印隔离，小樱与井野仍在医疗观察。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-PRELIM-TEMARI-01",
+          "title": "手鞠对天天",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "手鞠",
+            "天天",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "手鞠与天天仍在次日续赛签表，双方装备已由考官封存后重新核验。"
+          ],
+          "blockers": [
+            "任一方退赛、忍具或铁扇被判违规，或续赛安排被取消。"
+          ],
+          "setup": "手鞠用大范围风遁压制天天的忍具布阵并获胜。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-TEMARI-01-01",
+              "order": 10,
+              "summary": "天天铺开多段忍具攻击。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-TEMARI-01-02",
+              "order": 20,
+              "summary": "手鞠判断风向和攻击间隙后反制。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-TEMARI-01-03",
+              "order": 30,
+              "summary": "天天失去继续战斗能力。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "手鞠晋级决赛。"
+          ],
+          "state_changes": [
+            "砂隐风遁实力公开。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变风遁与忍具的战术相克或促成认输。",
+              "status": "altered",
+              "direction": "按场地、装备和伤势结算胜负；不强制天天承受基准伤害。",
+              "preserves": "保留续赛资源核验和实际决赛席位。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛手鞠对天天",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让实力差距通过战术相克表现，而非用等级标签代替战斗。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-SHIKAMARU-01",
+          "title": "鹿丸对金",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "奈良鹿丸",
+            "金·土",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鹿丸与金均在续赛签表，场馆照明与墙面仍可作为现场地形。"
+          ],
+          "blockers": [
+            "任一方退赛、场地被更换或音忍身份调查使金被扣留。"
+          ],
+          "setup": "鹿丸利用灯光和墙面影子延长影子模仿范围，让金复制动作撞墙失去战斗能力。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHIKAMARU-01-01",
+              "order": 10,
+              "summary": "金用铃与千本制造听觉误导。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHIKAMARU-01-02",
+              "order": 20,
+              "summary": "鹿丸识破误导并计算影子路径。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-SHIKAMARU-01-03",
+              "order": 30,
+              "summary": "影子模仿完成反制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鹿丸晋级决赛。"
+          ],
+          "state_changes": [
+            "鹿丸的战术判断得到考官注意。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家暴露铃声误导、改变光源或影响影子路径。",
+              "status": "altered",
+              "direction": "依据新地形和双方查克拉结算；鹿丸未胜时不得保留其决赛席位。",
+              "preserves": "保留考官对战略判断的评价依据。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛鹿丸对金",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "为后续中忍评价建立实际证据。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-NARUTO-01",
+          "title": "鸣人对牙",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "漩涡鸣人",
+            "犬冢牙",
+            "赤丸",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人与牙、赤丸均通过第二场并完成续赛前医疗复查。"
+          ],
+          "blockers": [
+            "任一方退赛、赤丸无法参战或鸣人的伤势仍不允许上场。"
+          ],
+          "setup": "牙以嗅觉和兽人分身压制鸣人，鸣人通过变化、诱骗与韧性逆转。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-NARUTO-01-01",
+              "order": 10,
+              "summary": "牙与赤丸建立高速夹击。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-NARUTO-01-02",
+              "order": 20,
+              "summary": "鸣人的伪装和气味干扰创造判断错误。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-NARUTO-01-03",
+              "order": 30,
+              "summary": "鸣人以连续体术完成最后反击。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人晋级决赛。",
+            "同期考生重新评价他的实战能力。"
+          ],
+          "state_changes": [
+            "鸣人受到可恢复的体术伤势。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变气味、变身诱骗或体术终局。",
+              "status": "altered",
+              "direction": "按牙与赤丸协同和鸣人剩余体力重算胜负；败者进入医疗而非被强行晋级。",
+              "preserves": "保留协同优势、体术伤势和决赛席位。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛鸣人对牙",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "胜负仍可被玩家介入改变，但不能忽略牙与赤丸的协同优势。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-HINATA-01",
+          "title": "雏田对宁次",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "日向雏田",
+            "日向宁次",
+            "月光疾风",
+            "夕日红"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "雏田与宁次仍在签表，日向家族压力尚未使任一方退赛，医疗班在场。"
+          ],
+          "blockers": [
+            "任一方拒绝宗家冲突、伤势不许可或对阵被改写。"
+          ],
+          "setup": "宁次用宗家与分家的宿命观打击雏田，雏田在鸣人鼓励下坚持作战并遭重创。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-HINATA-01-01",
+              "order": 10,
+              "summary": "宁次公开指出雏田的退缩习惯与宗家身份。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-HINATA-01-02",
+              "order": 20,
+              "summary": "雏田选择继续并尝试柔拳对攻。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-HINATA-01-03",
+              "order": 30,
+              "summary": "宁次封锁穴位并在裁判阻止前造成重伤。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-HINATA-01-04",
+              "order": 40,
+              "summary": "上忍介入终止对局。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "宁次晋级决赛。",
+            "雏田的坚持被鸣人与同期亲历。"
+          ],
+          "state_changes": [
+            "雏田进入医疗观察。",
+            "鸣人与宁次形成决赛矛盾。"
+          ],
+          "stop_condition": "医疗忍者接管雏田且冲突停止。",
+          "fallbacks": [
+            {
+              "condition": "玩家制止心理压迫、提前叫停或改变柔拳命中。",
+              "status": "altered",
+              "direction": "按裁判介入点与穴位伤势结算；雏田未重伤时不得补写住院结果。",
+              "preserves": "保留两人的主体选择、家族矛盾与医疗后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛雏田对宁次",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让雏田的勇气与伤势都具有后果，不把鼓励写成即时胜利。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-GAARA-01",
+          "title": "我爱罗对李",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "我爱罗",
+            "李洛克",
+            "迈特凯",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "我爱罗与李仍被安排对战，李获凯许可出场且我爱罗的砂防御状态未被提前改变。"
+          ],
+          "blockers": [
+            "李退赛、我爱罗被砂隐撤回或赛场因安全警报关闭。"
+          ],
+          "setup": "李解除负重并开启八门突破砂防御，但里莲华未能终结我爱罗，最终手脚重伤。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-GAARA-01-01",
+              "order": 10,
+              "summary": "李的常规体术无法穿透自动砂防御。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-GAARA-01-02",
+              "order": 20,
+              "summary": "解除负重和开启八门使李首次击中我爱罗。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-GAARA-01-03",
+              "order": 30,
+              "summary": "我爱罗以砂替身和砂缚反制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-GAARA-01-04",
+              "order": 40,
+              "summary": "凯介入阻止致命追击。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "我爱罗晋级决赛。",
+            "李遭受可能终结忍者生涯的伤势。"
+          ],
+          "state_changes": [
+            "我爱罗杀意进一步不稳定。",
+            "李进入长期医疗。"
+          ],
+          "stop_condition": "凯与医疗班接管李。",
+          "fallbacks": [
+            {
+              "condition": "玩家限制开门、阻止砂缚或改变凯的介入时机。",
+              "status": "altered",
+              "direction": "按八门代价和砂防御实际状态结算；李未受基准重伤时不得写入长期残疾。",
+              "preserves": "保留高强度招式成本、我爱罗失控风险和晋级席位。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛我爱罗对李",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "完整保存力量代价和医疗后果，禁止下一场景让李无伤复出。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-PRELIM-CHOJI-01",
+          "title": "丁次对托斯",
+          "thread_id": "THR-P1-EXAM-PRELIMS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "秋道丁次",
+            "托斯·砧",
+            "月光疾风"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "丁次与托斯均仍在最后一场预选签表，双方完成续赛体检。"
+          ],
+          "blockers": [
+            "托斯被安保扣留、丁次退赛或前序分支改变最终签表。"
+          ],
+          "setup": "丁次以肉弹战车进攻，托斯利用声波经身体传导令其失衡获胜。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-PRELIM-CHOJI-01-01",
+              "order": 10,
+              "summary": "丁次在同伴激励下出场。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-CHOJI-01-02",
+              "order": 20,
+              "summary": "托斯判断旋转攻击会传导声波。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-PRELIM-CHOJI-01-03",
+              "order": 30,
+              "summary": "丁次失去平衡并败北。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "托斯晋级决赛。"
+          ],
+          "state_changes": [
+            "预选赛全部对局完成。"
+          ],
+          "stop_condition": "裁判宣布胜者。",
+          "fallbacks": [
+            {
+              "condition": "玩家识破声波传导、改变肉弹战车路线或促成认输。",
+              "status": "altered",
+              "direction": "按实际命中与体能结算最后席位；托斯未胜时不得进入后续决赛名单。",
+              "preserves": "保留预选赛闭幕条件和双方伤势。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·预选赛丁次对托斯",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "为音忍队后续行动保留参赛身份与情报。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-DRAW-01",
+          "title": "决赛对阵与训练月",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "中央塔预选赛大厅",
+          "participants": [
+            "通过预选的考生",
+            "考官",
+            "各队指导上忍"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "所有预选对局均已有裁判结果，医疗班已标明暂时无法出场者。"
+          ],
+          "blockers": [
+            "仍有悬而未决的对局、申诉或安全调查足以冻结决赛签表。"
+          ],
+          "setup": "考官抽取决赛对阵并宣布一个月准备期；各导师根据伤势和对手安排训练。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-DRAW-01-01",
+              "order": 10,
+              "summary": "决赛对阵通过抽签确定。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-DRAW-01-02",
+              "order": 20,
+              "summary": "考官说明决赛兼具诸国展示与晋升评估功能。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-DRAW-01-03",
+              "order": 30,
+              "summary": "各参赛者选择训练优先级并接受医疗安排。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "决赛对阵确定。",
+            "训练月正式开始。"
+          ],
+          "state_changes": [
+            "鸣人对宁次、佐助对我爱罗等核心对阵成为公开日程。"
+          ],
+          "stop_condition": "考生离开会场进入恢复和训练。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变晋级者、要求复核或使训练期长度调整。",
+              "status": "altered",
+              "direction": "只用实际晋级名单抽签并公布准确日期；空缺席位通过轮空或重排公开处理。",
+              "preserves": "保留赛程透明、三十日准备期和每个席位来源。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·决赛抽签",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把一个月空档设为多线程准备阶段，不允许AI一笔带过所有能力成长。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "十场预选均有裁判结果，预选赛正式结束。",
+        "决赛名单、空缺席位、对阵和K064-04-06开赛日期按实际结果公开。",
+        "所有当日参赛者的伤势、查克拉与装备已交接给导师或医疗班。"
+      ],
+      "transition": "K064-03-07开始恢复、封印咒印与针对训练；训练期共三十日，不跳过伤势恢复。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-307",
+      "date": "K064-03-07",
+      "title": "训练月分流",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "为每名关键角色分配可信的训练与医疗路线，并让木叶安全调查继续。",
+      "start_state": [
+        "决赛还有三十天。",
+        "佐助带着咒印疼痛与预选消耗，需要先封印和休养；鸣人有体术淤伤，需要在恢复中针对宁次训练。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-SEAL-01",
+          "title": "邪法封印",
+          "thread_id": "THR-P1-OROCHIMARU-SASUKE",
+          "location": "木叶医院封印室",
+          "participants": [
+            "宇智波佐助",
+            "旗木卡卡西"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍带有天之咒印、同意接受封印，卡卡西具备施术状态。"
+          ],
+          "blockers": [
+            "咒印从未施加、佐助拒绝或已有其他治疗使邪法封印不再适用。"
+          ],
+          "setup": "卡卡西施加邪法封印并说明封印强度取决于佐助自己的意志；大蛇丸短暂现身确认兴趣后离开。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SEAL-01-01",
+              "order": 10,
+              "summary": "佐助接受封印术及疼痛风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-SEAL-01-02",
+              "order": 20,
+              "summary": "卡卡西完成封印式。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-SEAL-01-03",
+              "order": 30,
+              "summary": "大蛇丸表明不会停止关注佐助。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "咒印被抑制但未消失。",
+            "卡卡西承担佐助决赛训练。"
+          ],
+          "state_changes": [
+            "佐助获得咒印封印状态。"
+          ],
+          "stop_condition": "佐助进入休养，大蛇丸脱离接触。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变封印方案、佐助意志或大蛇丸现身时的对峙。",
+              "status": "altered",
+              "direction": "记录实际抑制程度和风险；没有咒印时改为检查与防护，不虚构封印。",
+              "preserves": "保留佐助对治疗的同意和大蛇丸持续关注的可见证据。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·邪法封印",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "明确封印只是控制而非删除，为后续诱惑保留因果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-TRAIN-PLAN-01",
+          "title": "鸣人的新导师",
+          "thread_id": "THR-P1-NARUTO-TRAINING",
+          "location": "木叶训练场",
+          "participants": [
+            "漩涡鸣人",
+            "旗木卡卡西",
+            "惠比寿"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人仍在决赛名单、对宁次缺乏应对方案，卡卡西已决定优先处理佐助咒印。"
+          ],
+          "blockers": [
+            "鸣人未晋级、宁次不是其对手或已有玩家导师承担训练。"
+          ],
+          "setup": "卡卡西把基础控制仍不稳定的鸣人交给惠比寿，训练目标是水面行走与稳定调度查克拉。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-TRAIN-PLAN-01-01",
+              "order": 10,
+              "summary": "卡卡西比较鸣人与宁次的优势和短板。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-TRAIN-PLAN-01-02",
+              "order": 20,
+              "summary": "鸣人对分流安排不满但接受训练目标。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-TRAIN-PLAN-01-03",
+              "order": 30,
+              "summary": "惠比寿开始基础诊断。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人的训练路线从泛化努力转为控制与高压突破。"
+          ],
+          "state_changes": [
+            "惠比寿成为临时导师。"
+          ],
+          "stop_condition": "首次诊断完成。",
+          "fallbacks": [
+            {
+              "condition": "玩家拒绝惠比寿、提出替代导师或改变训练目标。",
+              "status": "altered",
+              "direction": "按实际对手和能力短板制定训练，不强制发生惠比寿交接。",
+              "preserves": "保留训练来源、时间预算和导师责任。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·决赛训练分流",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "避免鸣人无铺垫直接遇到自来也并学会通灵。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助咒印暂时受控，至少两日不得进行高强度施术。",
+        "鸣人开始查克拉控制训练，训练量受预选伤势与每日查克拉恢复限制。"
+      ],
+      "transition": "K064-03-08至09进行基础训练；K064-03-10惠比寿与自来也发生交接。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-310",
+      "date": "K064-03-10",
+      "title": "自来也接手训练",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "用封印诊断解释鸣人控制异常，并建立通灵训练的资格和代价。",
+      "start_state": [
+        "鸣人经过两日低强度恢复后，体术伤势不再妨碍训练，但水面行走仍持续出现不正常干扰。",
+        "自来也在木叶调查大蛇丸动向，尚未承诺担任鸣人的导师。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-JIRAIYA-01",
+          "title": "五行封印解除",
+          "thread_id": "THR-P1-NARUTO-TRAINING",
+          "location": "木叶温泉附近训练水域",
+          "participants": [
+            "漩涡鸣人",
+            "惠比寿",
+            "自来也"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人的查克拉控制持续异常，自来也有机会亲自检查大蛇丸留下的额外封印。"
+          ],
+          "blockers": [
+            "五行封印不存在、已被解除，或自来也未在木叶且无人提供同等诊断。"
+          ],
+          "setup": "自来也击倒干涉取材的惠比寿后检查鸣人封印，发现大蛇丸留下的五行封印并将其解除。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-JIRAIYA-01-01",
+              "order": 10,
+              "summary": "鸣人的水面训练暴露查克拉循环异常。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-JIRAIYA-01-02",
+              "order": 20,
+              "summary": "自来也确认额外封印压制了八卦封印的平衡。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-JIRAIYA-01-03",
+              "order": 30,
+              "summary": "五行解印恢复鸣人正常调度。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-EXAM-JIRAIYA-01-04",
+              "order": 40,
+              "summary": "鸣人要求自来也补偿并指导训练。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "鸣人的异常控制障碍解除。",
+            "自来也同意以条件式方式训练鸣人。"
+          ],
+          "state_changes": [
+            "鸣人恢复正常查克拉循环。"
+          ],
+          "stop_condition": "自来也提出下一阶段训练并带鸣人离开水域。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前诊断封印、阻止冲突或拒绝自来也接手。",
+              "status": "altered",
+              "direction": "只处理实际存在的封印；诊断改变时改为继续基础训练或寻找合格封印术师。",
+              "preserves": "保留异常控制的因果和导师交接依据。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·自来也解除五行封印",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把能力提升建立在可诊断问题上，不写成导师随手赠送力量。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-SUMMON-CONTRACT-01",
+          "title": "蛤蟆契约",
+          "thread_id": "THR-P1-NARUTO-TRAINING",
+          "location": "木叶郊外训练地",
+          "participants": [
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已恢复正常查克拉循环，自来也愿意担保并持有蛤蟆契约卷轴。"
+          ],
+          "blockers": [
+            "鸣人拒绝契约、自来也未接手或契约卷轴不可用。"
+          ],
+          "setup": "自来也说明通灵术、契约和查克拉投入，鸣人签下蛤蟆契约并从低等级召唤开始。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SUMMON-CONTRACT-01-01",
+              "order": 10,
+              "summary": "鸣人阅读并签署通灵卷轴。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-SUMMON-CONTRACT-01-02",
+              "order": 20,
+              "summary": "自来也示范结印与查克拉投放。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-SUMMON-CONTRACT-01-03",
+              "order": 30,
+              "summary": "鸣人的首次召唤只能产生小型蛤蟆。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "鸣人取得合法蛤蟆通灵契约。",
+            "训练目标变为在危机中调用九尾查克拉。"
+          ],
+          "state_changes": [
+            "蛤蟆契约加入鸣人能力前置。"
+          ],
+          "stop_condition": "当天查克拉耗尽前停止训练。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变签约决定、训练地点或首次召唤结果。",
+              "status": "altered",
+              "direction": "记录是否签约及实际召唤等级；未签约时不得从忍术资料推定鸣人会通灵术。",
+              "preserves": "保留契约前置、结印训练和当天查克拉消耗。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·蛤蟆通灵契约",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "严格区分签约、掌握和大型通灵成功，避免数据库收录即等于已会。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的查克拉循环恢复，但五行解印本身没有增加查克拉总量。",
+        "基准线中鸣人签订蛤蟆契约，只能不稳定召唤小型蛤蟆，当日查克拉接近安全下限。"
+      ],
+      "transition": "K064-03-11至14进行重复召唤和安全恢复；K064-03-15进入高压突破。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-315",
+      "date": "K064-03-15",
+      "title": "召唤突破与入侵筹备",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "让鸣人的训练突破与砂音联盟的政治准备并行，但严格隔离知识边界。",
+      "start_state": [
+        "鸣人已连续五日进行通灵训练，双手有结印擦伤，常规查克拉只能支持低阶召唤。",
+        "大蛇丸掌握风影身份欺骗的全貌；砂隐前线人员只收到经“风影”渠道签发的联合行动命令。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-GAMABUNTA-01",
+          "title": "悬崖通灵",
+          "thread_id": "THR-P1-NARUTO-TRAINING",
+          "location": "木叶郊外悬崖谷地",
+          "participants": [
+            "漩涡鸣人",
+            "自来也",
+            "蛤蟆文太"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已签订蛤蟆契约并完成数日低阶召唤，自来也判断其身体可承受一次高压训练。"
+          ],
+          "blockers": [
+            "鸣人未签约、仍在伤病恢复、玩家否决致命训练或已有稳定大型通灵。"
+          ],
+          "setup": "自来也把鸣人推入真实坠落危机，鸣人在求生中接触九尾查克拉并通灵出文太，随后必须证明契约者资格。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-GAMABUNTA-01-01",
+              "order": 10,
+              "summary": "自来也判断常规训练无法触发鸣人深层查克拉。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-GAMABUNTA-01-02",
+              "order": 20,
+              "summary": "鸣人在坠落中与九尾查克拉建立短暂通路。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-GAMABUNTA-01-03",
+              "order": 30,
+              "summary": "蛤蟆文太被召唤并拒绝立刻承认鸣人。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-GAMABUNTA-01-04",
+              "order": 40,
+              "summary": "鸣人在文太背上坚持到失去意识。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人完成一次大型通灵。",
+            "文太对鸣人的韧性形成初步认可。"
+          ],
+          "state_changes": [
+            "鸣人进入数日恢复。",
+            "大型通灵仍非稳定常规能力。"
+          ],
+          "stop_condition": "鸣人被安全送医或带回休养。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供更安全的九尾查克拉触发方式或在坠落前终止训练。",
+              "status": "altered",
+              "direction": "按实际压力完成中型召唤、安全救援或延期；不得强制推下悬崖或补写文太认可。",
+              "preserves": "保留大型通灵需要的查克拉、风险和数日恢复期。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人通灵文太",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "突破以高风险和恢复期为代价，禁止当日继续无限训练。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-CONSPIRACY-01",
+          "title": "砂音行动框架",
+          "thread_id": "THR-P1-KONOHA-CRUSH",
+          "location": "火之国东境音隐安全屋",
+          "participants": [
+            "大蛇丸",
+            "药师兜",
+            "砂隐前线联络忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "大蛇丸仍能指挥音忍，砂隐前线联络员持有经伪装风影渠道下达的合作命令。"
+          ],
+          "blockers": [
+            "砂隐已核验命令为伪造、大蛇丸被捕，或双方联络渠道被玩家切断。"
+          ],
+          "setup": "大蛇丸以伪造风影命令为上层授权，在安全屋向砂隐联络忍者下达决赛日协同任务；联络忍者只知道进场、信号与撤离职责，不知道真正风影已死或刺杀三代的全部方案。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-CONSPIRACY-01-01",
+              "order": 10,
+              "summary": "砂隐联络忍者核验其持有的“风影”暗号与行动摘要。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-CONSPIRACY-01-02",
+              "order": 20,
+              "summary": "药师兜只交付竞技场通道、睡眠幻术信号和我爱罗撤离路线。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-CONSPIRACY-01-03",
+              "order": 30,
+              "summary": "大蛇丸把四紫炎阵与亲自刺杀三代的细节限制在音忍核心层。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-CONSPIRACY-01-04",
+              "order": 40,
+              "summary": "双方确定K064-04-06为行动窗口并分开返回各自伪装岗位。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "联合行动拥有分层授权的执行框架。",
+            "砂隐现场人员误以为命令来自真正风影，音忍核心层掌握身份欺骗。"
+          ],
+          "state_changes": [
+            "木叶崩溃计划进入准备阶段。",
+            "安全屋、伪造暗号和联络路线成为可被侦查的痕迹。"
+          ],
+          "stop_condition": "砂隐联络忍者带走有限行动摘要，音忍核心文件仍由兜控制。",
+          "fallbacks": [
+            {
+              "condition": "玩家揭露风影身份、策反砂隐联络员或截获行动框架。",
+              "status": "altered",
+              "direction": "按泄密程度缩小、延期或取消联合行动；普通砂隐考生只收到其撤离任务，不获得刺杀全貌。",
+              "preserves": "保留命令来源、双方不对称知识和可被侦查的联络痕迹。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃计划",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "保存命令欺骗与不对称知识，不把幕后计划泄露给砂隐考生或未获情报的玩家角色。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中鸣人完成一次大型通灵后昏迷，需至少两日停止施术并补水进食；大型通灵仍不可稳定复现。",
+        "入侵方确定决赛日行动窗口，但砂隐考生只知道届时听从巴基撤离。"
+      ],
+      "transition": "K064-03-16至17用于鸣人卧床恢复，03-18至19只恢复低强度控制练习；敌方分别潜伏，双方情报不得自动共享。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-320",
+      "date": "K064-03-20",
+      "title": "决赛针对训练",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "把鸣人与佐助的成长放在不同地点和导师线程中，防止信息与能力互相污染。",
+      "start_state": [
+        "鸣人已恢复日常行动与常规查克拉，但大型通灵后仍不得连续透支。",
+        "佐助的咒印保持封印，卡卡西已将他带到偏远岩壁训练地，外界只知道其获准封闭训练。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-NARUTO-NEJI-01",
+          "title": "对柔拳的应对",
+          "thread_id": "THR-P1-NARUTO-TRAINING",
+          "location": "木叶郊外训练地",
+          "participants": [
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人仍将对阵宁次，已从大型通灵训练恢复到可进行非致命模拟。"
+          ],
+          "blockers": [
+            "对阵改变、鸣人未晋级或仍处于查克拉枯竭恢复期。"
+          ],
+          "setup": "自来也让鸣人练习在穴位受阻、资源有限时继续制造机会，并强调不能把九尾力量当作必然回应。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-NARUTO-NEJI-01-01",
+              "order": 10,
+              "summary": "鸣人复盘宁次白眼与柔拳情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-NARUTO-NEJI-01-02",
+              "order": 20,
+              "summary": "自来也制造查克拉通路受限的模拟。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-NARUTO-NEJI-01-03",
+              "order": 30,
+              "summary": "鸣人用影分身、地下位移和节奏误导构建替代方案。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "鸣人拥有针对宁次的战术框架。"
+          ],
+          "state_changes": [
+            "战术准备完成但胜负仍需现场判断。"
+          ],
+          "stop_condition": "鸣人能在模拟中完成一次可靠反击后停止。",
+          "fallbacks": [
+            {
+              "condition": "玩家提出其他战术、拒绝九尾力量路线或暴露宁次不同情报。",
+              "status": "altered",
+              "direction": "围绕当前对手和已掌握技能重做模拟；不得提前授予现场才会成功的能力。",
+              "preserves": "保留查克拉受阻时的替代方案和训练消耗。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人决赛训练",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "强化战术而不是凭空提高数值，保留决赛不确定性。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-SASUKE-CHIDORI-01",
+          "title": "千鸟基础训练",
+          "thread_id": "THR-P1-OROCHIMARU-SASUKE",
+          "location": "木叶偏远岩壁训练地",
+          "participants": [
+            "宇智波佐助",
+            "旗木卡卡西"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍在决赛、写轮眼状态满足卡卡西评估，咒印受控且雷属性训练尚未完成。"
+          ],
+          "blockers": [
+            "佐助未晋级、写轮眼条件不成立、咒印恶化或卡卡西无法授课。"
+          ],
+          "setup": "卡卡西在确认写轮眼与雷属性条件后教授千鸟，同时用体能训练让佐助模仿李的高速移动。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SASUKE-CHIDORI-01-01",
+              "order": 10,
+              "summary": "卡卡西说明千鸟的突进盲区与写轮眼前置。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-SASUKE-CHIDORI-01-02",
+              "order": 20,
+              "summary": "佐助练习雷属性集中并承受手臂负荷。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-SASUKE-CHIDORI-01-03",
+              "order": 30,
+              "summary": "佐助首次在控制条件下贯穿岩壁目标。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助获得尚受次数和身体条件限制的千鸟。",
+            "高速体术接近决赛可用水平。"
+          ],
+          "state_changes": [
+            "千鸟加入佐助技能表并保留明确消耗与限制。"
+          ],
+          "stop_condition": "当天达到安全施术次数后停止。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变导师、技能路线或在安全次数前终止训练。",
+              "status": "altered",
+              "direction": "按实际前置决定继续千鸟、改练体术或延期；未完成时不得在决赛直接使用。",
+              "preserves": "保留技能来源、突进盲区、手臂负荷和每日次数限制。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助千鸟修行",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "能力来源、前置和次数限制必须可追踪，NPC同样服从忍术数据库成本。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人与佐助分别形成决赛战术，彼此不知道对方训练细节。",
+        "鸣人保留大型通灵的不稳定性；佐助保留千鸟每日安全次数、手臂负荷与咒印禁用线。"
+      ],
+      "transition": "K064-03-21至24继续训练；K064-03-25砂隐队内部风险升级。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-325",
+      "date": "K064-03-25",
+      "title": "砂隐队的裂缝",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "在决赛前展示我爱罗作为人而非单纯兵器的失控风险，并给音砂计划留下可被侦查的痕迹。",
+      "start_state": [
+        "我爱罗连续失眠，等待决赛期间杀意持续累积。",
+        "巴基知道砂隐参与联合行动及撤离信号；手鞠、勘九郎和我爱罗只知道信号发出后护送我爱罗离场。",
+        "疾风所在的考务安全组只掌握大蛇丸渗透、兜通行证异常和外村人员可疑接触三类未闭合线索。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-GAARA-RISK-01",
+          "title": "失控边缘",
+          "thread_id": "THR-P1-GAARA",
+          "location": "木叶砂隐来宾驻地",
+          "participants": [
+            "我爱罗",
+            "手鞠",
+            "勘九郎",
+            "巴基"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐三人仍驻留木叶，我爱罗持续失眠，巴基尚能传达只限小队知悉的撤离指令。"
+          ],
+          "blockers": [
+            "我爱罗已被医疗控制、砂隐队退出考试或玩家改变其监护关系。"
+          ],
+          "setup": "我爱罗因无法睡眠而接近失控，手鞠与勘九郎在驻地内阻止他外出寻找战斗；巴基只重申撤离暗号和集合路线，没有向三人透露风影身份或刺杀三代的核心计划。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-GAARA-RISK-01-01",
+              "order": 10,
+              "summary": "连续失眠使我爱罗把驻地外动静视作挑衅。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-GAARA-RISK-01-02",
+              "order": 20,
+              "summary": "手鞠与勘九郎选择冒险劝阻而非放任他离队。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-GAARA-RISK-01-03",
+              "order": 30,
+              "summary": "砂之防御和杀戮冲动暴露任务失控风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-GAARA-RISK-01-04",
+              "order": 40,
+              "summary": "巴基要求三人听到撤离暗号后前往东南森林集合点。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂隐三人组知道我爱罗可能无法等到计划信号。",
+            "他们只掌握自身撤离路线，不知道木叶屋顶刺杀方案。"
+          ],
+          "state_changes": [
+            "入侵计划的不稳定性上升。",
+            "我爱罗的睡眠、精神力和查克拉恢复均低于正常赛前状态。"
+          ],
+          "stop_condition": "手鞠与勘九郎暂时把我爱罗留在驻地受控房间。",
+          "fallbacks": [
+            {
+              "condition": "玩家缓和挑衅、建立信任或使巴基撤销兵器化任务。",
+              "status": "altered",
+              "direction": "按我爱罗当前精神状态决定隔离、治疗或继续参赛；不得强制触发杀人冲动。",
+              "preserves": "保留兄姐的恐惧与关切、我爱罗失眠以及小队仅知撤离信号的边界。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·我爱罗决赛前状态",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "给决赛失控提供多日积累，同时固定砂隐小队的有限知情范围。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-SECURITY-LEAD-01",
+          "title": "疾风的情报线",
+          "thread_id": "THR-P1-EXAM-SECURITY",
+          "location": "木叶东区停用仓库屋顶",
+          "participants": [
+            "月光疾风",
+            "药师兜",
+            "巴基"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "疾风受命核查兜使用的伪造考务通行证，并跟踪至巴基的秘密会面点。"
+          ],
+          "blockers": [
+            "兜已被拘押、巴基已脱离计划，或木叶已掌握并控制同一会面。"
+          ],
+          "setup": "疾风依据兜使用伪造考务通行证的记录跟踪至仓库屋顶，潜听到巴基与兜核对睡眠幻术、撤离暗号和“火影目标”，随后必须在被发现前选择传讯或继续取证。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-SECURITY-LEAD-01-01",
+              "order": 10,
+              "summary": "考务安全组把伪造通行证编号与兜的行动路线交给疾风。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-SECURITY-LEAD-01-02",
+              "order": 20,
+              "summary": "疾风听到决赛日、睡眠信号、我爱罗东南撤离和火影目标四项片段。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-EXAM-SECURITY-LEAD-01-03",
+              "order": 30,
+              "summary": "疾风选择先放出短讯信鹰、留下刻写暗号或继续潜听。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-SECURITY-LEAD-01-04",
+              "order": 40,
+              "summary": "巴基发现屋顶异响并追击，兜销毁会面携带的纸面摘要。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "疾风本人获得足以判断入侵的片段；木叶只获得他实际送出的部分。"
+          ],
+          "state_changes": [
+            "疾风的生死、信鹰是否起飞及刻写记录是否被找到分别记录。"
+          ],
+          "stop_condition": "疾风逃脱、讯息送达、证据遗留或全部被截断中的结果明确成立。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前上报、为疾风提供支援或截断巴基追击。",
+              "status": "altered",
+              "direction": "按疾风实际送出的口信、书面记录或失联时间更新情报等级；未送达内容不得进入高层会议。",
+              "preserves": "保留情报来源、传递媒介和疾风之外角色的知情限制。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·月光疾风发现阴谋",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把发现与送达拆开，避免疾风知道等于全村自动知道。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-EXAM-DOSU-GAARA-01",
+          "title": "托斯的越权挑战",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "中忍决赛竞技场外圈屋顶",
+          "participants": [
+            "托斯·砧",
+            "我爱罗"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "托斯仍占有决赛席位，并决定在无人授权的情况下于夜间挑战仍在驻地外活动的我爱罗。"
+          ],
+          "blockers": [
+            "托斯未晋级、已被音忍召回，或我爱罗被严密隔离而双方无法接触。"
+          ],
+          "setup": "托斯没有得到大蛇丸许可，试图在夜间先除掉决赛潜在对手我爱罗；基准线中他误判尾兽风险，在短暂交手后被杀。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-DOSU-GAARA-01-01",
+              "order": 10,
+              "summary": "托斯从公开签表判断只要先击败我爱罗就能提高自身价值。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-DOSU-GAARA-01-02",
+              "order": 20,
+              "summary": "他独自拦截外出寻找战斗的我爱罗。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-DOSU-GAARA-01-03",
+              "order": 30,
+              "summary": "我爱罗的砂与尾兽查克拉在失眠状态下迅速升级。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-DOSU-GAARA-01-04",
+              "order": 40,
+              "summary": "基准线中托斯死亡，清晨巡逻只发现遗体和砂痕。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中托斯的决赛席位空缺；分支线按实际生死保留席位。",
+            "考务方无法仅凭砂痕确认完整战斗经过。"
+          ],
+          "state_changes": [
+            "托斯的装备和遗体进入安保证物链。",
+            "我爱罗的精神与查克拉状态进一步恶化。"
+          ],
+          "stop_condition": "双方脱离接触，或一方失去继续战斗能力。",
+          "fallbacks": [
+            {
+              "condition": "玩家阻止私斗、救下托斯或使我爱罗无法使用砂与尾兽查克拉。",
+              "status": "altered",
+              "direction": "按现场结果保留或移除托斯席位；他存活时考务方必须继续安排其决赛轮次。",
+              "preserves": "保留决赛席位守恒、我爱罗失控证据和仅限目击者的战斗知识。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·托斯挑战我爱罗",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "闭合托斯从预选晋级到决赛缺席的赛程，同时限制无人目击战斗的知识传播。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "砂隐队对我爱罗的控制力下降，但三名考生仍只知道撤离任务。",
+        "托斯席位按本夜实际结果保留或空缺。",
+        "木叶的阴谋情报等级只由已送达讯息、遗留证据和玩家报告组成。"
+      ],
+      "transition": "K064-03-26至30由考务安全组核验疾风讯息、兜通行证和托斯证物；未送达信息不得进入K064-04-01安保会议。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-401",
+      "date": "K064-04-01",
+      "title": "决赛前部署",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "让木叶安保和入侵方准备根据已获得情报动态变化，给重大分歧提供预设方向。",
+      "start_state": [
+        "决赛还有五日。",
+        "木叶情报等级由红豆报告、疾风实际送达内容、托斯证物和玩家报告共同决定，可能从仅知大蛇丸潜入到掌握决赛日袭击信号。",
+        "砂隐现场人员仍以为联合命令来自真正风影。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-CRUSH-DEFENSE-01",
+          "title": "木叶安保会议",
+          "thread_id": "THR-P1-EXAM-SECURITY",
+          "location": "火影楼会议室",
+          "participants": [
+            "猿飞日斩",
+            "木叶上忍",
+            "暗部",
+            "考务人员"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "火影楼已收到红豆报告及之后实际送达的补充线索，决赛尚未取消。"
+          ],
+          "blockers": [
+            "三代不再掌权、会议地点失守或阴谋已被彻底瓦解而无需赛日安保。"
+          ],
+          "setup": "木叶高层只汇总已进入证物链的草忍身份盗用、兜通行证、砂音接触和疾风讯息，决定公开维持、限制或取消考试，并按证据调整守备。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-DEFENSE-01-01",
+              "order": 10,
+              "summary": "安全组逐项标注来源、送达时间、可信度和知情范围。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-DEFENSE-01-02",
+              "order": 20,
+              "summary": "取消考试、秘密诱捕与维持外交表面的代价被评估。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-DEFENSE-01-03",
+              "order": 30,
+              "summary": "守备、疏散和火影护卫方案按低、中、高三档情报等级调整。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "木叶形成与实际情报等级一致的决赛日安保方案。"
+          ],
+          "state_changes": [
+            "守备强度、观众入场和暗部位置记录为可追踪部署。",
+            "普通考生只收到出场或疏散指令，不获得阴谋全貌。"
+          ],
+          "stop_condition": "各部门收到不超出其权限的书面命令。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供决定性证据、要求取消决赛或揭露内应名单。",
+              "status": "altered",
+              "direction": "按证据等级选择公开取消、诱捕或分级增援；只向各部门下发完成职责所需的信息。",
+              "preserves": "保留玩家预警成果、情报可信度和木叶政治代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶决赛安保",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "避免无论玩家是否预警，木叶都以同样方式中招。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-ATTACK-PLAN-01",
+          "title": "入侵方最终校时",
+          "thread_id": "THR-P1-KONOHA-CRUSH",
+          "location": "音隐临时据点",
+          "participants": [
+            "大蛇丸",
+            "音忍四人众",
+            "药师兜",
+            "砂隐联络人员"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "大蛇丸仍在自由状态，至少一条音忍潜入线和一名砂隐现场联络员可用。"
+          ],
+          "blockers": [
+            "联合计划取消、砂隐撤回、核心结界人员被捕或会场已公开停办。"
+          ],
+          "setup": "音忍核心层核对结界、幻术和火影隔离方案；砂隐联络人员只核对我爱罗撤离路线、集合点和接收信号，不进入核心刺杀讨论。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-ATTACK-PLAN-01-01",
+              "order": 10,
+              "summary": "药师兜报告他实际观察到的考场和守备变化。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-ATTACK-PLAN-01-02",
+              "order": 20,
+              "summary": "音忍四人众按当前巡逻空档确认四紫炎阵候选位置。",
+              "causal_role": "transition"
+            },
+            {
+              "id": "EV-P1-CRUSH-ATTACK-PLAN-01-03",
+              "order": 30,
+              "summary": "砂隐联络人员带走一次性信号和东南撤离路线。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-ATTACK-PLAN-01-04",
+              "order": 40,
+              "summary": "大蛇丸在音忍核心层保留亲自刺杀三代的目标。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "入侵方拥有与当前暴露程度匹配的执行方案。",
+            "砂隐与音忍仍保持不对称知识。"
+          ],
+          "state_changes": [
+            "结界人员、幻术信号、我爱罗撤离和备用撤退条件分别登记。"
+          ],
+          "stop_condition": "所有人员带着各自权限内的信息回到伪装岗位。",
+          "fallbacks": [
+            {
+              "condition": "玩家迫使入侵方更换时间、信号或刺杀目标。",
+              "status": "altered",
+              "direction": "敌方依据暴露程度撤退、提前行动或改用较小目标；不得无视损失照搬原计划。",
+              "preserves": "保留敌方能动性、现存人员资源和新的可侦查痕迹。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃最终准备",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "重大分歧不抹除敌方能动性，也不让砂隐现场人员凭空知道大蛇丸的全部目标。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "决赛日双方部署成形，木叶安保等级与入侵方暴露程度均可追踪。"
+      ],
+      "transition": "K064-04-02至04用于最后训练、医疗与来宾入村；K064-04-05进行个人准备。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-EXAM-405",
+      "date": "K064-04-05",
+      "title": "决赛前夜",
+      "arc_id": "ARC-P1-EXAM",
+      "day_goal": "确认参赛者身体、忍术和动机状态，把玩家选择留到大事件前最后一个低压窗口。",
+      "start_state": [
+        "决赛次日举行。",
+        "鸣人结束高强度训练后需要整夜恢复；佐助与卡卡西仍在偏远训练地，考务只收到预计抵达时刻。",
+        "托斯席位、其他退赛和伤病状态已按实际分支写入签表。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-EXAM-EVE-01",
+          "title": "参赛者归队",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "中忍决赛选手报到处",
+          "participants": [
+            "决赛考生",
+            "指导上忍",
+            "医疗忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "考务报到处持有实际决赛签表，参赛者或其代理需提交出场、装备和医疗状态。"
+          ],
+          "blockers": [
+            "决赛已取消、场馆封闭或参赛者全部撤回。"
+          ],
+          "setup": "报到处逐人核验参赛条件、装备封条和退出选择；未到场者须由导师提交位置、路线与预计抵达时刻，不能视作已经归队。",
+          "beats": [
+            {
+              "id": "EV-P1-EXAM-EVE-01-01",
+              "order": 10,
+              "summary": "到场参赛者接受伤势、查克拉和装备检查。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-EXAM-EVE-01-02",
+              "order": 20,
+              "summary": "导师明确技能限制、最后训练停止线和赛后医疗安排。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-EXAM-EVE-01-03",
+              "order": 30,
+              "summary": "每名参赛者决定继续、退出或调整目标。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-EXAM-EVE-01-04",
+              "order": 40,
+              "summary": "考务记录佐助从偏远训练地到会场的路线和迟到宽限，不公开其训练内容。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "决赛出场名单、空缺席位与缺席原因均可解释。",
+            "关键角色不会在无恢复的情况下突然满状态。"
+          ],
+          "state_changes": [
+            "到场参赛者进入赛前休息；佐助保持在途计划而非已到场状态。",
+            "装备清单和医疗限制锁定到当前分支。"
+          ],
+          "stop_condition": "所有出场决定、空缺处理和预计到场时刻登记完成。",
+          "fallbacks": [
+            {
+              "condition": "玩家使参赛者退出、更换装备或无法按时归队。",
+              "status": "altered",
+              "direction": "锁定当前分支名单和迟到宽限；缺席者不得次日无解释出现。",
+              "preserves": "保留医疗限制、装备清单和佐助远程训练地点到会场的行程。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·中忍决赛前",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "在大事件前核对状态与移动计划，减少伤势、成本和迟到被叙事遗忘。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "决赛名单、空缺席位、装备与医疗状态锁定到当前分支。",
+        "鸣人进入整夜休息；佐助和卡卡西按登记路线于次日赶往会场。"
+      ],
+      "transition": "K064-04-06清晨观众入场，决赛与木叶崩溃在同日展开。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-CRUSH-406",
+      "date": "K064-04-06",
+      "title": "中忍决赛与木叶崩溃",
+      "arc_id": "ARC-P1-CRUSH",
+      "day_goal": "在一个完整日载荷中并列所有关键线程，但要求叙事按地点和视角分别处理，绝不把并行战场缝成一幕。",
+      "start_state": [
+        "木叶按当前分支的名单与安保等级举办中忍决赛；若高等级预警已取消公开比赛，则各决赛场景按 blocker 跳过。",
+        "鸣人赛前查克拉与体力基本恢复，但每场消耗继续累计；佐助仍需从训练地赶到会场。",
+        "联合入侵是否发动尚未确定，必须经过有效信号；砂隐三人只知道撤离暗号。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-CRUSH-FINAL-NARUTO-01",
+          "title": "鸣人对宁次",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "木叶中忍决赛竞技场",
+          "participants": [
+            "漩涡鸣人",
+            "日向宁次",
+            "不知火玄间",
+            "观众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人与宁次仍在决赛签表，二人通过赛前检查且竞技场尚处比赛状态。"
+          ],
+          "blockers": [
+            "任一人退赛、赛程被取消或入侵在本场前已公开爆发。"
+          ],
+          "setup": "宁次封锁鸣人穴位并宣扬宿命，鸣人利用九尾查克拉恢复流动、影分身与地下突袭反击。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-FINAL-NARUTO-01-01",
+              "order": 10,
+              "summary": "宁次以白眼和回天掌控比赛节奏。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-NARUTO-01-02",
+              "order": 20,
+              "summary": "柔拳封穴令鸣人常规查克拉受阻。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-NARUTO-01-03",
+              "order": 30,
+              "summary": "鸣人选择是否借用九尾查克拉并制造误导。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-NARUTO-01-04",
+              "order": 40,
+              "summary": "地下真身完成决定性反击。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "胜负产生；宁次的宿命观是否动摇取决于实际对抗与赛后交流。"
+          ],
+          "state_changes": [
+            "晋级和关系结果按现场分支记录。",
+            "鸣人的影分身、九尾查克拉调用、穴位伤势和体力消耗带入本日后续。"
+          ],
+          "stop_condition": "裁判宣布结果，双方离场接受检查。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变九尾查克拉调用、地下诱敌或裁判停赛时机。",
+              "status": "altered",
+              "direction": "按穴位封锁、剩余查克拉和现场选择判定胜负；不得强制鸣人晋级。",
+              "preserves": "保留比赛资源消耗、医疗检查和宁次观念变化的真实触发。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·决赛鸣人对宁次",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "决赛结果可以改变，每一步都必须服从既有能力与消耗。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-FINAL-SHINO-01",
+          "title": "志乃对勘九郎的席位",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "木叶中忍决赛竞技场",
+          "participants": [
+            "油女志乃",
+            "勘九郎",
+            "不知火玄间",
+            "观众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "志乃与勘九郎都保有决赛席位，前一场已结束且入侵尚未公开启动。"
+          ],
+          "blockers": [
+            "任一人未晋级、赛程已中断或砂隐撤回全部参赛者。"
+          ],
+          "setup": "轮到志乃与勘九郎时，勘九郎必须在暴露傀儡情报、消耗入侵资源与执行撤离任务之间选择；基准线中他公开退赛。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHINO-01-01",
+              "order": 10,
+              "summary": "裁判核验双方席位与装备封条。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHINO-01-02",
+              "order": 20,
+              "summary": "勘九郎收到巴基只限撤离任务的最后提醒。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHINO-01-03",
+              "order": 30,
+              "summary": "勘九郎选择退赛、继续比赛或暴露任务风险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHINO-01-04",
+              "order": 40,
+              "summary": "基准线中退赛被记录，志乃不战取得本轮赛果。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "志乃与勘九郎的决赛席位得到公开结算。"
+          ],
+          "state_changes": [
+            "基准线中志乃未消耗寄坏虫与查克拉，勘九郎保留乌鸦及撤离体力。"
+          ],
+          "stop_condition": "裁判宣布退赛、胜负或因安保问题中止。",
+          "fallbacks": [
+            {
+              "condition": "玩家让勘九郎继续比赛、揭露其撤离任务或使其被考官拘留。",
+              "status": "altered",
+              "direction": "按退赛、实战或安保处置结算席位；勘九郎退赛时志乃获赛程结果但不消耗战斗资源。",
+              "preserves": "保留志乃的体力、勘九郎隐藏傀儡情报的动机和公开赛果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·决赛勘九郎退赛",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "补齐公开签表中的对局，并让勘九郎保存资源成为可改变的选择。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-FINAL-SHIKAMARU-01",
+          "title": "鹿丸对手鞠",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "木叶中忍决赛竞技场",
+          "participants": [
+            "奈良鹿丸",
+            "手鞠",
+            "不知火玄间",
+            "观众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鹿丸与手鞠仍在决赛签表，竞技场未转入战时状态，双方保有赛前装备。"
+          ],
+          "blockers": [
+            "任一方退赛、入侵已开始或前序赛程改变使本场延期。"
+          ],
+          "setup": "鹿丸用场地、影子和时间差逼近胜局，却因资源与后续判断主动认输。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHIKAMARU-01-01",
+              "order": 10,
+              "summary": "手鞠用风遁维持距离。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHIKAMARU-01-02",
+              "order": 20,
+              "summary": "鹿丸借洞穴和降落伞影子完成束缚。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SHIKAMARU-01-03",
+              "order": 30,
+              "summary": "鹿丸评估查克拉和后续手段后认输。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "手鞠取得基准赛果。",
+            "考官按实际决策评价鹿丸的战略判断。"
+          ],
+          "state_changes": [
+            "鹿丸的查克拉与体力按对局消耗，是否成为中忍候选不只由胜负决定。",
+            "手鞠的风遁消耗带入可能发生的撤离。"
+          ],
+          "stop_condition": "裁判确认认输或实际赛果。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变影子地形、查克拉评估或认输决定。",
+              "status": "altered",
+              "direction": "依据现场资源结算比赛；鹿丸若不认输则继续承担后续消耗和风险。",
+              "preserves": "保留中忍评价依据以及双方赛后可用资源。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·决赛鹿丸对手鞠",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "强调中忍评价不等于单纯胜负，同时保持赛后资源连续。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-FINAL-SASUKE-01",
+          "title": "佐助对我爱罗",
+          "thread_id": "THR-P1-EXAM-FINALS",
+          "location": "木叶中忍决赛竞技场",
+          "participants": [
+            "宇智波佐助",
+            "我爱罗",
+            "旗木卡卡西",
+            "不知火玄间",
+            "观众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助在公告宽限内从训练地抵达，佐助与我爱罗仍有决赛资格，入侵信号尚未发出。"
+          ],
+          "blockers": [
+            "佐助超时失去资格、我爱罗被撤回或会场已因预警疏散。"
+          ],
+          "setup": "若佐助在宽限内抵达，他以高速体术与千鸟尝试穿透我爱罗的砂防御；比赛伤势只改变后续指挥判断，不自动触发入侵。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-FINAL-SASUKE-01-01",
+              "order": 10,
+              "summary": "考官依据登记路线和实际抵达时刻裁定佐助是否仍有资格。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SASUKE-01-02",
+              "order": 20,
+              "summary": "比赛成立时，高速体术迫使我爱罗缩入砂球。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SASUKE-01-03",
+              "order": 30,
+              "summary": "佐助选择是否消耗一次千鸟穿透防御，我爱罗的受伤和失控程度按命中结算。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-FINAL-SASUKE-01-04",
+              "order": 40,
+              "summary": "裁判因伤势、外部警报或一方失能结束或暂停比赛。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助与我爱罗的比赛得到独立赛果或中止记录。"
+          ],
+          "state_changes": [
+            "佐助实际使用的千鸟次数、手臂负荷和咒印压力进入后续状态。",
+            "我爱罗的伤势、精神力与尾兽化风险进入入侵指挥判断。"
+          ],
+          "stop_condition": "裁判宣布赛果或中止，双方仍留在竞技场等待安保指令。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变迟到裁定、千鸟命中或我爱罗受伤程度。",
+              "status": "altered",
+              "direction": "按赛规与现场伤势完成、暂停或取消比赛；不得把佐助命中自动等同于入侵开始。",
+              "preserves": "保留佐助千鸟消耗、我爱罗精神状态和独立的入侵决策节点。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助对我爱罗与入侵开始",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把比赛伤势与入侵命令拆开，玩家改变前者后不会被强制恢复同一信号。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-TRIGGER-01",
+          "title": "撤离暗号与入侵裁决",
+          "thread_id": "THR-P1-KONOHA-CRUSH",
+          "location": "中忍竞技场西侧信号席",
+          "participants": [
+            "药师兜",
+            "巴基",
+            "砂隐联络忍者",
+            "木叶安保忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "联合入侵计划仍有效，兜与巴基至少一人可发送约定信号，场内外攻击组尚未暴露。"
+          ],
+          "blockers": [
+            "木叶已控制信号人员、砂隐撤销合作、攻击组失去战力或计划已被取消。"
+          ],
+          "setup": "兜与巴基根据佐助是否到场、我爱罗状态、木叶警戒和攻击组存续情况决定是否发送约定暗号；玩家或安保可以在信号席识别并阻断。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-TRIGGER-01-01",
+              "order": 10,
+              "summary": "兜核对音忍结界组与场内幻术人员是否仍在位。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIGGER-01-02",
+              "order": 20,
+              "summary": "巴基判断我爱罗能否按东南路线撤离，以及继续等待是否会彻底失控。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIGGER-01-03",
+              "order": 30,
+              "summary": "信号人员选择发动、延期、撤销或改用备用信号。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIGGER-01-04",
+              "order": 40,
+              "summary": "只有有效暗号送达后，砂隐撤离组和音忍攻击组才开始执行。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "入侵是否发生及其开始时刻被明确记录。",
+            "阻断成功时决赛不会为了原著结果自动转为战场。"
+          ],
+          "state_changes": [
+            "有效信号、发送者、接收组和我爱罗撤离方向进入世界状态。"
+          ],
+          "stop_condition": "有效信号送达、被截获、被撤销或攻击组放弃中的一个结果成立。",
+          "fallbacks": [
+            {
+              "condition": "玩家阻断信号、说服砂隐退出或使我爱罗没有按撤离方案行动。",
+              "status": "altered",
+              "direction": "由现存指挥者根据暴露和目标状态选择发动、延期或撤退；未发出有效信号时决赛与疏散按木叶命令继续。",
+              "preserves": "保留入侵是否发生的真实分支、敌方通信链和我爱罗撤离状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃发动",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足入侵通信链和预警分支"
+            }
+          ],
+          "design_rationale": "把大规模入侵设置为可被情报与玩家行动改变的独立触发节点。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-ARENA-DEFENSE-01",
+          "title": "竞技场防御与疏散",
+          "thread_id": "THR-P1-KONOHA-DEFENSE",
+          "location": "木叶中忍决赛竞技场",
+          "participants": [
+            "木叶忍者",
+            "音砂入侵者",
+            "观众",
+            "药师兜"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "有效入侵信号已送达兜和场内攻击组，观众仍在竞技场且木叶按既定警戒等级部署。"
+          ],
+          "blockers": [
+            "信号被阻断、攻击组已被控制或会场已提前清空。"
+          ],
+          "setup": "仅在有效入侵信号送达后，兜才发动涅槃精舍之术，音砂忍者攻击会场；清醒忍者按此前安保等级保护观众并建立反击。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-ARENA-DEFENSE-01-01",
+              "order": 10,
+              "summary": "幻术按木叶预警与反制准备影响实际沉睡人数。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-ARENA-DEFENSE-01-02",
+              "order": 20,
+              "summary": "清醒忍者解除幻术并按通行证、护额与口令区分伪装敌人。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-ARENA-DEFENSE-01-03",
+              "order": 30,
+              "summary": "玩家在疏散、医疗和迎战之间分配有限人手。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-ARENA-DEFENSE-01-04",
+              "order": 40,
+              "summary": "伤员与观众沿已部署路线进入明确掩体或医院接收点。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "入侵分支中竞技场转为防御区；信号被阻断时保持比赛或有序疏散。",
+            "木叶防御体系按真实预警等级运行。"
+          ],
+          "state_changes": [
+            "沉睡人数、平民伤亡、医疗物资和防守效率按实际准备记录。"
+          ],
+          "stop_condition": "主要观众进入明确掩体且场内指挥链稳定，或安保确认袭击未发生。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前解幻术、识别伪装敌人或改变疏散路线。",
+              "status": "altered",
+              "direction": "按安保准备结算沉睡人数、敌我识别和伤亡；袭击未发生时改为警戒解除，不制造敌人。",
+              "preserves": "保留平民安全、医疗容量和预警分支的实际收益。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃会场袭击",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "独立处理大规模防御，并让此前情报产生可见收益。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-HIRUZEN-01",
+          "title": "屋顶师徒决战",
+          "thread_id": "THR-P1-HIRUZEN-OROCHIMARU",
+          "location": "中忍竞技场屋顶结界内",
+          "participants": [
+            "猿飞日斩",
+            "大蛇丸",
+            "音忍四人众",
+            "秽土转生的初代与二代"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "大蛇丸仍能接近三代，音忍四人众成功布下四紫炎阵，三代未被提前撤离。"
+          ],
+          "blockers": [
+            "大蛇丸被捕或撤退、结界部署失败、三代不在屋顶或已有增援进入结界。"
+          ],
+          "setup": "大蛇丸挟持三代进入四紫炎阵，使用秽土转生；三代召唤猿魔并以尸鬼封尽阻止前代火影和大蛇丸。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-HIRUZEN-01-01",
+              "order": 10,
+              "summary": "四紫炎阵隔绝暗部支援。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-HIRUZEN-01-02",
+              "order": 20,
+              "summary": "秽土转生迫使三代同时面对弟子与前代火影。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-HIRUZEN-01-03",
+              "order": 30,
+              "summary": "三代封印两位前代灵魂。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-HIRUZEN-01-04",
+              "order": 40,
+              "summary": "三代以生命为代价封住大蛇丸双臂。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中大蛇丸双臂被封、三代死亡；分支线按玩家介入和实际封印代价结算。"
+          ],
+          "state_changes": [
+            "三代生死、火影权限、大蛇丸双臂状态和音忍四人众撤退人数分别记录。"
+          ],
+          "stop_condition": "结界被解除、攻破或撤销，屋顶所有参战者状态明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家破坏结界、救出三代或阻止秽土转生。",
+              "status": "altered",
+              "direction": "按实际参战者和封印代价重算生死、双臂状态及撤退；三代幸存时不建立火影空缺。",
+              "preserves": "保留师徒冲突、大蛇丸威胁和每项不可逆封印代价。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·三代火影对大蛇丸",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "这是独立政治与个人线程；玩家提前破坏结界或介入时，结果按真实战力重算。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-GAARA-01",
+          "title": "河谷中的守鹤危机",
+          "thread_id": "THR-P1-GAARA",
+          "location": "木叶东南森林河谷空地",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助",
+            "春野樱",
+            "我爱罗",
+            "手鞠",
+            "勘九郎",
+            "帕克",
+            "蛤蟆文太"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "我爱罗已从竞技场撤入东南森林且尾兽化风险仍在，追击者通过帕克或现场痕迹抵达河谷空地。"
+          ],
+          "blockers": [
+            "我爱罗未撤离、已被安全控制，追击队无人可行动或砂隐小队已投降。"
+          ],
+          "setup": "仅当我爱罗按暗号撤离且存在可行动追击者时，追击者沿东南路线行进约四十分钟抵达河谷空地；我爱罗的赛场伤势与失眠推动尾兽化，追击者带着本日既有消耗接战。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-GAARA-01-01",
+              "order": 10,
+              "summary": "先到者按四十分钟追踪、陷阱和赛场消耗结算剩余体力与查克拉。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-GAARA-01-02",
+              "order": 20,
+              "summary": "我爱罗依据实际伤势进入部分尾兽化，并可能压制佐助或控制人质。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-GAARA-01-03",
+              "order": 30,
+              "summary": "鸣人或玩家选择影分身、救人、谈判、撤退或在契约成立且查克拉足够时尝试通灵。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-GAARA-01-04",
+              "order": 40,
+              "summary": "基准线中文太与鸣人阻止完全假寐；分支按实际到场者与资源结算守鹤状态。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-CRUSH-GAARA-01-05",
+              "order": 50,
+              "summary": "我爱罗是否理解鸣人的相似处境取决于双方实际交流，而非战斗结束自动发生。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "守鹤威胁被控制、撤离或继续存在中的一个结果明确成立。",
+            "我爱罗与追击者的关系变化来自现场选择。"
+          ],
+          "state_changes": [
+            "第七班每人的伤势、查克拉、精神力与位置分别记录。",
+            "砂隐队被捕、撤退或停战的路线明确。"
+          ],
+          "stop_condition": "尾兽化状态和双方继续追击能力均已明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变追击人选、保护小樱、阻止假寐或避免大型通灵。",
+              "status": "altered",
+              "direction": "按抵达者、沿途消耗和我爱罗当前形态重算战斗与谈判；不得强制文太出现或复制基准和解。",
+              "preserves": "保留尾兽威胁、第七班伤势、砂隐撤退路线和双方认知变化。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人对我爱罗",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把河谷决战固定为一个地点，并把四十分钟追踪、技能前置和本日资源带入结算。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "若入侵发动，其攻势、火影状态、平民伤亡与敌方撤退按八个场景实际结果记录；若信号被阻断，决赛可继续、延期或有序疏散。",
+        "鸣人、佐助、我爱罗、鹿丸、手鞠与勘九郎的查克拉、伤势、精神力、装备和最终位置均有当日交接。"
+      ],
+      "transition": "K064-04-07只处理实际发生的搜救、医疗、拘押与政治后果；入侵未发生时不得制造葬礼或火影空缺。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-CRUSH-407",
+      "date": "K064-04-07",
+      "title": "崩溃后的清晨",
+      "arc_id": "ARC-P1-CRUSH",
+      "day_goal": "把大战结果转化为救援、治安和政治问题，并按分支确认三代及关键角色状态。",
+      "start_state": [
+        "K064-04-06各战场已经停止或被控制，实际伤亡、失踪、拘押和设施损害沿用当日分支。",
+        "入侵未发生或被完全阻断时，灾区搜救与火影继承场景分别受 blocker 限制。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-CRUSH-RESCUE-01",
+          "title": "西南街区搜救",
+          "thread_id": "THR-P1-KONOHA-DEFENSE",
+          "location": "木叶西南受损街区",
+          "participants": [
+            "木叶忍者",
+            "医疗忍者",
+            "平民",
+            "参赛者"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "入侵或大规模战斗确实发生，西南受损街区仍有未搜索建筑、残敌或待转运伤员。"
+          ],
+          "blockers": [
+            "入侵被完全阻止且该区域无灾情，或搜救已由玩家提前完成。"
+          ],
+          "setup": "搜救队按昨夜留下的区域标记逐栋搜索、排除残余通灵兽和给伤员挂上身份或临时编号，再送往医院接收点。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-RESCUE-01-01",
+              "order": 10,
+              "summary": "守备队按倒塌、火情和最后目击位置划分搜索格。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-RESCUE-01-02",
+              "order": 20,
+              "summary": "玩家在受困平民、危险建筑和残敌线索间分配有限人手。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-RESCUE-01-03",
+              "order": 30,
+              "summary": "每名发现的伤员记录位置、初步伤情、转运时间和接收设施。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-RESCUE-01-04",
+              "order": 40,
+              "summary": "残余敌人被拘押、驱离或确认撤退。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "西南街区即时生命威胁下降。",
+            "伤亡、失踪与转运清单形成。"
+          ],
+          "state_changes": [
+            "木叶进入与实际损害相称的灾后应急状态。",
+            "伤员通过编号进入医院交接，而非直接出现在病床。"
+          ],
+          "stop_condition": "该搜索格完成标记，所有发现者均有转运或留守安排。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变搜救优先级、发现残敌或提供新的失踪者位置。",
+              "status": "altered",
+              "direction": "按区域标记逐栋处理并把伤员送往医院接收点；不得把街区和医院写成同一现场。",
+              "preserves": "保留搜救路线、伤员发现位置和转运时间。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃战后",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把街区搜救与医院分诊分开，保留位置和时间连续。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-TRIAGE-01",
+          "title": "医院伤势交接",
+          "thread_id": "THR-P1-KONOHA-MEDICAL",
+          "location": "木叶医院战时接收区",
+          "participants": [
+            "医疗忍者",
+            "受伤平民",
+            "决赛考生",
+            "搜救转运队"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "医院接收点已收到带身份牌或临时编号的战场伤员，医疗班仍有可分配床位与物资。"
+          ],
+          "blockers": [
+            "没有批量伤员、医院失守或所有伤员已被转往其他设施。"
+          ],
+          "setup": "医院按搜救编号接收伤员，核对赛场、屋顶和河谷转运记录，并在床位、药品和人手有限时执行分诊。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-TRIAGE-01-01",
+              "order": 10,
+              "summary": "转运队逐一交接发现地点、伤势、已用药物和途中变化。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIAGE-01-02",
+              "order": 20,
+              "summary": "医疗班按呼吸、出血、查克拉损伤和精神创伤排序，不按角色重要性插队。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIAGE-01-03",
+              "order": 30,
+              "summary": "鸣人、佐助、宁次、我爱罗相关人员及其他决赛者只按实际到院状态登记。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-TRIAGE-01-04",
+              "order": 40,
+              "summary": "住院、观察、转院、失踪和死亡状态分别写入医疗清单。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "关键人物与普通伤员都获得可追踪预后。",
+            "医院知道自身床位、药品和医疗忍者剩余量。"
+          ],
+          "state_changes": [
+            "后续场景不得无说明恢复满状态。",
+            "家属通知与探视权限进入执行。"
+          ],
+          "stop_condition": "所有已到院伤员都有病床、观察区或转院去向。",
+          "fallbacks": [
+            {
+              "condition": "玩家调配医疗物资、改变优先级或带回未登记伤员。",
+              "status": "altered",
+              "direction": "按伤情而非剧情地位分诊，记录床位、药品和后续观察；未到院者保持失踪或在途状态。",
+              "preserves": "保留伤势交接、医疗资源消耗和每名关键参赛者的恢复状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃伤员救治",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足战时医院交接与资源记录"
+            }
+          ],
+          "design_rationale": "明确伤势交接和医疗资源，防止大战后只记剧情主角。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-SUCCESSION-01",
+          "title": "临时指挥与外交核验",
+          "thread_id": "THR-P1-KONOHA-POLITICS",
+          "location": "火影楼临时会议室",
+          "participants": [
+            "木叶长老",
+            "上忍班代表",
+            "暗部",
+            "砂隐使者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "火影状态已由暗部核实，临时会议能收到战场报告及砂隐现场联络人的停火请求。"
+          ],
+          "blockers": [
+            "三代仍能完整履职、火影楼失守或入侵未发生且不存在外交危机。"
+          ],
+          "setup": "暗部先核实三代的生死与履职能力；砂隐现场联络人提出停火并承认其命令来自无法当场复核的“风影”渠道，双方只交换现有证物，不在一日内宣布完整真相。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-SUCCESSION-01-01",
+              "order": 10,
+              "summary": "暗部与医疗班提交火影生死、伤势和印信状态。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-SUCCESSION-01-02",
+              "order": 20,
+              "summary": "砂隐联络人交出一次性暗号与撤离命令，真正风影状态仍标记为待本国核验。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-SUCCESSION-01-03",
+              "order": 30,
+              "summary": "双方选择临时停火、俘虏待遇、边境警戒和后续使团渠道。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-SUCCESSION-01-04",
+              "order": 40,
+              "summary": "三代死亡或无法履职时才建立有期限的临时指挥授权。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶避免因实际权力状态失序。",
+            "砂隐从战场敌对转入有条件停火与证据核验，尚未恢复盟友关系。"
+          ],
+          "state_changes": [
+            "三代死亡时寻找五代火影成为政治任务；三代幸存时只安排代理与康复。",
+            "真正风影的生死和大蛇丸欺骗保持待核验。"
+          ],
+          "stop_condition": "临时命令、停火条件、俘虏名单和外交口径完成签发。",
+          "fallbacks": [
+            {
+              "condition": "玩家救下三代、捕获巴基或取得风影命令伪造证据。",
+              "status": "altered",
+              "direction": "按三代实际状态决定临时授权；对风影生死只标记待核验，不用未送达的砂隐情报下结论。",
+              "preserves": "保留权力连续性、停火条件和砂隐责任调查的证据链。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·木叶崩溃政治后果",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "给联盟修复提供多阶段证据链，不让砂隐一日内无条件变成朋友。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "实际灾区的搜救与医院分诊进入稳定阶段。",
+        "木叶按三代真实状态形成临时领导或代理安排。",
+        "砂隐命令来源进入跨国核验，未核实内容不成为公共知识。"
+      ],
+      "transition": "K064-04-08继续医疗、家属通知和证据核验；K064-04-09只为已确认死者举行仪式，三代幸存时不得安排其葬礼。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-CRUSH-409",
+      "date": "K064-04-09",
+      "title": "雨中的追悼与砂隐核验",
+      "arc_id": "ARC-P1-CRUSH",
+      "day_goal": "让实际死者获得完整悼念，并把风影身份欺骗从战场疑点推进为可验证的外交事实。",
+      "start_state": [
+        "实际死者遗体和家属通知已基本完成，医院仍保留伤员恢复清单。",
+        "三代在基准线中死亡；分支线必须先读取K064-04-06至07记录的真实状态。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-CRUSH-FUNERAL-01",
+          "title": "战后追悼仪式",
+          "thread_id": "THR-P1-KONOHA-POLITICS",
+          "location": "木叶公墓慰灵广场",
+          "participants": [
+            "木叶忍者",
+            "木叶居民",
+            "猿飞木叶丸",
+            "第七班"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "三代死亡已由医疗与暗部确认，遗体和入侵死者名单完成家属核对。"
+          ],
+          "blockers": [
+            "三代幸存、身份确认未完成或安全形势仍不允许公共集会。"
+          ],
+          "setup": "三代确认死亡时，木叶在公墓慰灵广场同时悼念他与入侵死者；三代幸存时，仪式只列入实际死者并说明其代理安排。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-FUNERAL-01-01",
+              "order": 10,
+              "summary": "死者名单、遗体状态与家属席位完成最后核对。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-FUNERAL-01-02",
+              "order": 20,
+              "summary": "村民和忍者分别告别，伤员缺席原因得到尊重。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-CRUSH-FUNERAL-01-03",
+              "order": 30,
+              "summary": "只有三代死亡分支才把长期继任空缺列为葬礼后的现实。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "实际死者的公共悼念完成。",
+            "木叶从即时灾难转入医疗、重建与相应的领导安排。"
+          ],
+          "state_changes": [
+            "三代死亡只在已确认分支成为最终状态；幸存分支保留伤病与代理权限。"
+          ],
+          "stop_condition": "仪式结束且每个家属获得抚恤、遗物与后续联络安排。",
+          "fallbacks": [
+            {
+              "condition": "玩家救下三代或改变葬礼规模与公开口径。",
+              "status": "altered",
+              "direction": "三代幸存时只追悼实际死者并公布其伤病与代理安排；不得举行三代本人的葬礼。",
+              "preserves": "保留家属悼念、实际死亡名单和重建阶段的政治压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·三代火影葬礼",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "尊重真实死亡与伤病后果，不用固定葬礼覆盖玩家救援结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-SAND-BODY-01",
+          "title": "失踪风影的路线核验",
+          "thread_id": "THR-P1-SAND-TRUTH",
+          "location": "风之国东北边境旧驿道",
+          "participants": [
+            "砂隐搜索队",
+            "砂隐验尸忍者",
+            "风影护卫记录员"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐已收到战场联络人的停火报告，并能从真正风影失联前的护卫路线启动本国搜索。"
+          ],
+          "blockers": [
+            "真正风影仍可通过独立渠道证明存活，或搜索队尚未取得可靠路线与身份核验手段。"
+          ],
+          "setup": "砂隐搜索队依据风影失联前的封存路线和护卫暗号，在旧驿道附近查找真正风影及随行护卫；任何结论都必须经过身份、死亡时间和现场忍术痕迹核验。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-SAND-BODY-01-01",
+              "order": 10,
+              "summary": "搜索队核对风影最后一次有效联络、护卫名单与驿站记录。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-BODY-01-02",
+              "order": 20,
+              "summary": "队伍找到遗体或其他可验证踪迹，并封存伪装、战斗与搬运痕迹。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-BODY-01-03",
+              "order": 30,
+              "summary": "验尸忍者只报告能够证实的死亡时间、身份与可疑术式，不推定未见证的完整计划。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-BODY-01-04",
+              "order": 40,
+              "summary": "加密报告通过砂隐本国线路送往议事层。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂隐获得判断风影在入侵前已失去指挥能力的本国证据。",
+            "大蛇丸身份欺骗从木叶推测转为砂隐可核验案件。"
+          ],
+          "state_changes": [
+            "真正风影的生死、护卫状态、证物编号和知情人范围按调查结果登记。"
+          ],
+          "stop_condition": "现场完成封存，首份经签名的身份与死亡时间报告离开搜索点。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前找到遗体、救下风影或提供改变搜索范围的可信证据。",
+              "status": "altered",
+              "direction": "按实际证据确认存活、死亡、失踪或身份冒用；未取得遗体、护卫记录与验尸结论前不得宣布大蛇丸冒充风影。",
+              "preserves": "保留风影状态必须由砂隐调查确认，以及普通砂忍不会凭木叶推测自动知道真相。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·四代风影遇害真相",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足砂隐搜索、验尸与受限通信流程"
+            }
+          ],
+          "design_rationale": "补齐风影失踪、遗体发现与砂隐知情之间的因果链，避免砂忍凭模型知识突然倒戈。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-CRUSH-SAND-CEASEFIRE-01",
+          "title": "伪令撤销与核验使团",
+          "thread_id": "THR-P1-SAND-DIPLOMACY",
+          "location": "砂隐紧急议事室",
+          "participants": [
+            "砂隐议事代表",
+            "巴基",
+            "砂隐情报忍者",
+            "砂隐传讯忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐议事层已收到经验证的风影状态、战场停火报告与伪造命令样本。"
+          ],
+          "blockers": [
+            "关键证据仍未送达、议事层失去合法性或砂木双方仍在公开交战。"
+          ],
+          "setup": "议事层把搜索报告、巴基的战场口述和伪造命令样本分开核验；只有证据相互印证时才撤销相关命令，并向木叶发送延长停火与派遣核验使团的正式文书。",
+          "beats": [
+            {
+              "id": "EV-P1-CRUSH-SAND-CEASEFIRE-01-01",
+              "order": 10,
+              "summary": "情报忍者验证报告签名、风影印记、死亡时间和伪令传递链。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-CEASEFIRE-01-02",
+              "order": 20,
+              "summary": "巴基说明自己与考生实际收到的有限命令，不替未知主谋补全计划。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-CEASEFIRE-01-03",
+              "order": 30,
+              "summary": "议事层决定撤销伪令、维持边境戒备、调查责任人并派出有限核验使团。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-CRUSH-SAND-CEASEFIRE-01-04",
+              "order": 40,
+              "summary": "传讯忍者分别向前线与木叶送出有时间戳的正式文书。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂木停火获得砂隐本国授权，但同盟尚未自动恢复。",
+            "我爱罗、手鞠与勘九郎只会通过之后的正式任务获知各自所需内容。"
+          ],
+          "state_changes": [
+            "砂隐外交状态转为停火核验，建立后续和解使团与联络驿的合法来源。"
+          ],
+          "stop_condition": "撤令、停火期限、调查负责人和使团授权完成签发。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变风影状态、揭露不同主谋或破坏双方停火渠道。",
+              "status": "altered",
+              "direction": "只按已核实证据撤销伪令、延长停火并派出核验使团；证据不足时维持边境戒备，不得直接恢复同盟。",
+              "preserves": "保留砂隐承担参战责任、调查命令欺骗及两村和解需要时间和可验证步骤。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·砂隐得知大蛇丸欺骗",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足砂隐本国核验与停火授权"
+            }
+          ],
+          "design_rationale": "把砂隐从参战方转为合作方拆成调查、撤令和有限外交三个步骤。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶完成第一轮公共悼念并继续医院恢复与重建。",
+        "三代死亡时寻找长期继任者成为最高优先事项；三代幸存时由代理安排和康复评估决定后续。",
+        "满足核验前置的分支中，砂隐确认风影状态、撤销伪令并进入有限停火调查；证据不足分支继续保留戒备。"
+      ],
+      "transition": "K064-04-10至11继续重建、医疗及砂木文书核验；K064-04-12晓是否潜入必须读取木叶实际守备、火影状态和玩家预警，砂木关系不得越过已签署的停火范围。",
+      "reference_facts": []
+    }
+  ]
+}

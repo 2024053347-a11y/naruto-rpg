@@ -1,0 +1,1556 @@
+{
+  "$schema": "../../schemas/timeline-event.schema.json",
+  "schema_version": "naruto.timeline.v1",
+  "dataset": "naruto-manga-databook",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "TL-PART1-P01",
+    "arc_id": "ARC-PART1-GRADUATION",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 99,
+    "date_start": "K064-01-01",
+    "date_end": "K064-06-30",
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 238
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "EV-PART1-GRADUATION-0001",
+      "title": "鸣人取得毕业资格",
+      "aliases": [
+        "封印之书事件",
+        "鸣人毕业"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-GRADUATION",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-01",
+        "scheduled_end": "K064-01-01",
+        "time_of_day": "night",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-01",
+          "latest": "K064-01-05"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PROLOGUE-KYUUBI-0003"
+        ],
+        "rationale": "世界书冻结K064为第一部开始；具体日为项目分配。"
+      },
+      "summary": "鸣人受水木诱骗盗取封印之书，学会多重影分身并保护伊鲁卡，最终获认可毕业。",
+      "facts": [
+        "鸣人掌握多重影分身之术。",
+        "伊鲁卡将护额交给鸣人。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "student"
+        },
+        {
+          "entity_id": "CH-NAR-IRUKA",
+          "role": "teacher"
+        },
+        {
+          "entity_id": "CH-NAR-MIZUKI",
+          "role": "antagonist"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [],
+      "applicability": {
+        "required": [
+          "鸣人仍是忍校学生。"
+        ],
+        "blockers": [
+          "玩家已改变毕业考核或封印之书安保。"
+        ],
+        "ai_instruction": "按存档裁定。"
+      },
+      "canonical_outcomes": [
+        "鸣人成为下忍。",
+        "水木的阴谋失败。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "鸣人取得毕业资格。"
+        ],
+        "restricted_at_time": [
+          "鸣人接触过封印之书。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "鸣人毕业",
+          "封印之书",
+          "多重影分身"
+        ],
+        "tags": [
+          "graduation"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 1,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "participants",
+            "outcomes"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-GRADUATION-0002",
+      "title": "第七班编成",
+      "aliases": [
+        "第七班成立"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-GRADUATION",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-03",
+        "scheduled_end": "K064-01-03",
+        "time_of_day": "morning",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-02",
+          "latest": "K064-01-10"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-GRADUATION-0001"
+        ],
+        "rationale": "原著只明确毕业后、铃铛测试前；项目固定日期。"
+      },
+      "summary": "鸣人、佐助、小樱被编入卡卡西指导的第七班。",
+      "facts": [
+        "成员为鸣人、佐助、小樱。",
+        "指导上忍为卡卡西。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "team_member"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "team_member"
+        },
+        {
+          "entity_id": "CH-NAR-SAKURA",
+          "role": "team_member"
+        },
+        {
+          "entity_id": "CH-NAR-KAKASHI",
+          "role": "assigned_instructor"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-ACADEMY"
+      ],
+      "depends_on": [
+        "EV-PART1-GRADUATION-0001"
+      ],
+      "applicability": {
+        "required": [
+          "三名成员仍是本届毕业生。"
+        ],
+        "blockers": [
+          "分班制度或成员状态已改变。"
+        ],
+        "ai_instruction": "允许改写、跳过或延期。"
+      },
+      "canonical_outcomes": [
+        "第七班建立。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "小队名单。"
+        ],
+        "restricted_at_time": [
+          "卡卡西计划用生存演习考核。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "第七班",
+          "分班",
+          "卡卡西"
+        ],
+        "tags": [
+          "team-formation"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 3,
+          "pages": null,
+          "supports": [
+            "participants",
+            "sequence"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-GRADUATION-0003",
+      "title": "第七班通过铃铛测试",
+      "aliases": [
+        "生存演习"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-GRADUATION",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-04",
+        "scheduled_end": "K064-01-04",
+        "time_of_day": "noon",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-03",
+          "latest": "K064-01-12"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-GRADUATION-0002"
+        ],
+        "rationale": "紧接分班，具体日由项目分配。"
+      },
+      "summary": "三名下忍最终选择团队合作，卡卡西宣布他们通过生存演习。",
+      "facts": [
+        "测试核心是团队合作。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "candidate"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "candidate"
+        },
+        {
+          "entity_id": "CH-NAR-SAKURA",
+          "role": "candidate"
+        },
+        {
+          "entity_id": "CH-NAR-KAKASHI",
+          "role": "examiner"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-TRAINING03"
+      ],
+      "depends_on": [
+        "EV-PART1-GRADUATION-0002"
+      ],
+      "applicability": {
+        "required": [
+          "第七班仍按原编制参加测试。"
+        ],
+        "blockers": [
+          "小队已解散。"
+        ],
+        "ai_instruction": "根据合作表现裁定。"
+      },
+      "canonical_outcomes": [
+        "第七班获得执行任务资格。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "第七班通过测试。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "铃铛测试",
+          "团队合作"
+        ],
+        "tags": [
+          "teamwork",
+          "test"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 8,
+          "pages": null,
+          "supports": [
+            "outcomes",
+            "sequence"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-WAVES-0001",
+      "title": "第七班接受波之国护送任务",
+      "aliases": [
+        "达兹纳护送"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-WAVES",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-15",
+        "scheduled_end": "K064-01-15",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-05",
+          "latest": "K064-02-01"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-GRADUATION-0003"
+        ],
+        "rationale": "完成若干D级任务后发生，具体日由项目分配。"
+      },
+      "summary": "第七班接受护送造桥专家前往波之国的C级任务。",
+      "facts": [
+        "委托人隐瞒了任务危险。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "escort"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "escort"
+        },
+        {
+          "entity_id": "CH-NAR-SAKURA",
+          "role": "escort"
+        },
+        {
+          "entity_id": "CH-NAR-KAKASHI",
+          "role": "team_leader"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART1-GRADUATION-0003"
+      ],
+      "applicability": {
+        "required": [
+          "第七班可执行任务。"
+        ],
+        "blockers": [
+          "委托被取消或改派。"
+        ],
+        "ai_instruction": "结合任务系统裁定。"
+      },
+      "canonical_outcomes": [
+        "第七班离开木叶前往波之国。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "任务登记为C级护送。"
+        ],
+        "restricted_at_time": [
+          "卡多雇佣忍者追杀达兹纳。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "波之国",
+          "护送",
+          "达兹纳"
+        ],
+        "tags": [
+          "mission",
+          "waves"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 9,
+          "pages": null,
+          "supports": [
+            "mission",
+            "sequence"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-WAVES-0002",
+      "title": "白为再不斩挡下雷切",
+      "aliases": [
+        "白牺牲"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-WAVES",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-28",
+        "scheduled_end": "K064-01-28",
+        "time_of_day": "morning",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-16",
+          "latest": "K064-02-15"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-WAVES-0001"
+        ],
+        "rationale": "任务训练和两次交战后发生；具体日由项目分配。"
+      },
+      "summary": "白为保护再不斩挡下卡卡西的雷切并死亡。",
+      "facts": [
+        "白死亡。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-ZABUZA",
+          "role": "antagonist"
+        },
+        {
+          "entity_id": "CH-NAR-HAKU",
+          "role": "protector"
+        },
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "combatant"
+        },
+        {
+          "entity_id": "CH-NAR-KAKASHI",
+          "role": "combatant"
+        }
+      ],
+      "location_ids": [
+        "LOC-LAND-WAVES"
+      ],
+      "depends_on": [
+        "EV-PART1-WAVES-0001"
+      ],
+      "applicability": {
+        "required": [
+          "双方仍在大桥交战。"
+        ],
+        "blockers": [
+          "再不斩或白此前已改变立场。"
+        ],
+        "ai_instruction": "不得强制死亡结局。"
+      },
+      "canonical_outcomes": [
+        "白为再不斩牺牲。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "卡多势力被击退。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "再不斩",
+          "白",
+          "波之国决战"
+        ],
+        "tags": [
+          "death",
+          "waves"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 33,
+          "pages": null,
+          "supports": [
+            "outcomes",
+            "participants"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0001",
+      "title": "中忍考试第一场开始",
+      "aliases": [
+        "中忍考试笔试"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-03-01",
+        "scheduled_end": "K064-03-01",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-02-01",
+          "latest": "K064-04-01"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART1-WAVES-0002"
+        ],
+        "rationale": "波之国后若干任务后，项目分配到第三月。"
+      },
+      "summary": "来自多村的下忍参加由森乃伊比喜主持的情报收集式笔试。",
+      "facts": [
+        "第十题考验承担风险的决心。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "candidate"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "candidate"
+        },
+        {
+          "entity_id": "CH-NAR-SAKURA",
+          "role": "candidate"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-ACADEMY"
+      ],
+      "depends_on": [
+        "EV-PART1-WAVES-0002"
+      ],
+      "applicability": {
+        "required": [
+          "本届考试仍举行且第七班报名。"
+        ],
+        "blockers": [
+          "村际关系或参赛队已改变。"
+        ],
+        "ai_instruction": "允许改写考试阵容。"
+      },
+      "canonical_outcomes": [
+        "通过者进入死亡森林。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "中忍考试开始。"
+        ],
+        "restricted_at_time": [
+          "考试真正测试情报能力和心理承受。"
+        ],
+        "hidden_truth": [
+          "大蛇丸已渗透考试。"
+        ]
+      },
+      "retrieval": {
+        "keys": [
+          "中忍考试",
+          "笔试",
+          "伊比喜"
+        ],
+        "tags": [
+          "exam"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 40,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "exam_rules"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0002",
+      "title": "大蛇丸给佐助种下咒印",
+      "aliases": [
+        "天之咒印"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-03-01",
+        "scheduled_end": "K064-03-01",
+        "time_of_day": "afternoon",
+        "day_order": 30,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-03-01",
+          "latest": "K064-03-03"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0001"
+        ],
+        "rationale": "第二场考试紧随笔试阶段；同一项目日仅为调度分配，原著出处不支持木叶纪年绝对日。"
+      },
+      "summary": "大蛇丸在死亡森林袭击第七班，并在佐助颈部留下天之咒印。",
+      "facts": [
+        "大蛇丸将佐助视为未来容器候选。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-OROCHIMARU",
+          "role": "attacker"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "target"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-FOREST-DEATH"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0001"
+      ],
+      "applicability": {
+        "required": [
+          "佐助仍参加第二场考试。"
+        ],
+        "blockers": [
+          "大蛇丸身份已暴露或被阻止。"
+        ],
+        "ai_instruction": "按现场状态裁定。"
+      },
+      "canonical_outcomes": [
+        "佐助获得危险咒印。"
+      ],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [
+          "佐助遭未知草忍袭击。"
+        ],
+        "hidden_truth": [
+          "袭击者是大蛇丸。"
+        ]
+      },
+      "retrieval": {
+        "keys": [
+          "大蛇丸",
+          "佐助咒印",
+          "死亡森林"
+        ],
+        "tags": [
+          "curse-mark"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 49,
+          "pages": null,
+          "supports": [
+            "participants",
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0003",
+      "title": "猿飞日斩牺牲",
+      "aliases": [
+        "大蛇丸袭击木叶"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-04-06",
+        "scheduled_end": "K064-04-06",
+        "time_of_day": "afternoon",
+        "day_order": 30,
+        "basis": "allocated",
+        "source_precision": "relative",
+        "canon_window": {
+          "earliest": "K064-04-06",
+          "latest": "K064-04-15"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0005"
+        ],
+        "rationale": "预选后约一月举行正式赛；采用360日历分配。"
+      },
+      "summary": "猿飞日斩以尸鬼封尽封住大蛇丸双手的灵魂后死亡。",
+      "facts": [
+        "三代火影死亡。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-HIRUZEN",
+          "role": "defender"
+        },
+        {
+          "entity_id": "CH-NAR-OROCHIMARU",
+          "role": "attacker"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-EXAM-ARENA"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0005"
+      ],
+      "applicability": {
+        "required": [
+          "正式赛与入侵计划仍按基准推进。"
+        ],
+        "blockers": [
+          "大蛇丸或同盟此前已被瓦解。"
+        ],
+        "ai_instruction": "允许彻底改变伤亡和政治结果。"
+      },
+      "canonical_outcomes": [
+        "猿飞日斩死亡。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "木叶遭到袭击且三代火影牺牲。"
+        ],
+        "restricted_at_time": [
+          "砂隐风影已被大蛇丸杀害冒充。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "木叶崩溃",
+          "三代牺牲",
+          "大蛇丸"
+        ],
+        "tags": [
+          "invasion",
+          "death"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 138,
+          "pages": null,
+          "supports": [
+            "outcomes",
+            "participants"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-TSUNADE-0001",
+      "title": "纲手就任五代火影",
+      "aliases": [
+        "五代火影继任"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-TSUNADE",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-04-20",
+        "scheduled_end": "K064-04-20",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-04-02",
+          "latest": "K064-05-15"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0003"
+        ],
+        "rationale": "三代葬礼与寻找纲手任务后，具体日项目分配。"
+      },
+      "summary": "纲手返回木叶并正式成为第五代火影。",
+      "facts": [
+        "木叶火影空缺结束。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-TSUNADE",
+          "role": "new_hokage"
+        },
+        {
+          "entity_id": "CH-NAR-JIRAIYA",
+          "role": "recruiter"
+        },
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "companion"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0003"
+      ],
+      "applicability": {
+        "required": [
+          "纲手仍接受火影职位。"
+        ],
+        "blockers": [
+          "玩家分支已有其他继任者。"
+        ],
+        "ai_instruction": "按政治现状裁定。"
+      },
+      "canonical_outcomes": [
+        "纲手成为五代火影。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "五代火影就任。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "纲手",
+          "五代火影"
+        ],
+        "tags": [
+          "succession"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 171,
+          "pages": null,
+          "supports": [
+            "outcome",
+            "sequence"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-RETRIEVAL-0001",
+      "title": "佐助离开木叶",
+      "aliases": [
+        "佐助叛逃"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-RETRIEVAL",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-06-01",
+        "scheduled_end": "K064-06-01",
+        "time_of_day": "night",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-05-01",
+          "latest": "K064-07-01"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART1-TSUNADE-0001"
+        ],
+        "rationale": "纲手就任后发生；原著无项目绝对日。"
+      },
+      "summary": "佐助为追求力量接受音忍四人众邀请，离开木叶投奔大蛇丸。",
+      "facts": [
+        "鹿丸随后组织追击小队。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "defector"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART1-TSUNADE-0001"
+      ],
+      "applicability": {
+        "required": [
+          "佐助仍执着于向鼬复仇。"
+        ],
+        "blockers": [
+          "佐助动机或音忍势力已改变。"
+        ],
+        "ai_instruction": "不得强制叛逃。"
+      },
+      "canonical_outcomes": [
+        "佐助成为木叶叛逃者。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "佐助失踪并被追击。"
+        ],
+        "restricted_at_time": [
+          "佐助主动投奔大蛇丸。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "佐助叛逃",
+          "音忍四人众"
+        ],
+        "tags": [
+          "defection"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 181,
+          "pages": null,
+          "supports": [
+            "outcome",
+            "motivation"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-RETRIEVAL-0002",
+      "title": "终结之谷第一次决战",
+      "aliases": [
+        "鸣人佐助初战"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-RETRIEVAL",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-06-03",
+        "scheduled_end": "K064-06-03",
+        "time_of_day": "afternoon",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "relative",
+        "canon_window": {
+          "earliest": "K064-06-01",
+          "latest": "K064-06-10"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-RETRIEVAL-0001"
+        ],
+        "rationale": "追击任务末段，按相对旅程分配。"
+      },
+      "summary": "鸣人在终结之谷未能带回佐助，佐助继续前往大蛇丸处。",
+      "facts": [
+        "佐助没有杀死昏迷的鸣人。",
+        "夺还任务失败。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "retriever"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "defector"
+        }
+      ],
+      "location_ids": [
+        "LOC-VALLEY-END"
+      ],
+      "depends_on": [
+        "EV-PART1-RETRIEVAL-0001"
+      ],
+      "applicability": {
+        "required": [
+          "两人在终结之谷相遇。"
+        ],
+        "blockers": [
+          "追击路线或双方立场已改变。"
+        ],
+        "ai_instruction": "按战斗结果裁定。"
+      },
+      "canonical_outcomes": [
+        "佐助抵达大蛇丸势力。",
+        "鸣人被卡卡西带回。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "佐助夺还任务失败。"
+        ],
+        "restricted_at_time": [
+          "战斗细节。"
+        ],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "终结之谷",
+          "鸣人佐助",
+          "夺还失败"
+        ],
+        "tags": [
+          "duel",
+          "part-one-end"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 233,
+          "pages": null,
+          "supports": [
+            "outcome",
+            "participants"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-WAVES-0003",
+      "title": "再不斩临终反击卡多",
+      "aliases": [
+        "再不斩之死"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-WAVES",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-28",
+        "scheduled_end": "K064-01-28",
+        "time_of_day": "morning",
+        "day_order": 30,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-28",
+          "latest": "K064-02-15"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-WAVES-0002"
+        ],
+        "rationale": "白死亡后紧接发生；具体日期沿用项目分配。"
+      },
+      "summary": "再不斩在重伤状态下反击卡多，随后因伤死亡。",
+      "facts": [
+        "再不斩死亡。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-ZABUZA",
+          "role": "attacker"
+        }
+      ],
+      "location_ids": [
+        "LOC-LAND-WAVES"
+      ],
+      "depends_on": [
+        "EV-PART1-WAVES-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按当前分支裁定。"
+      },
+      "canonical_outcomes": [
+        "再不斩死亡。"
+      ],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "再不斩",
+          "卡多"
+        ],
+        "tags": [
+          "death"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 32,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-WAVES-0004",
+      "title": "卡多势力撤退",
+      "aliases": [
+        "波之国获救"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-WAVES",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-01-28",
+        "scheduled_end": "K064-01-28",
+        "time_of_day": "noon",
+        "day_order": 40,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-01-28",
+          "latest": "K064-02-15"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-WAVES-0003"
+        ],
+        "rationale": "再不斩反击后发生；具体日期沿用项目分配。"
+      },
+      "summary": "卡多死亡，其武装势力被波之国居民与第七班击退。",
+      "facts": [
+        "造桥工程得以继续。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "defender"
+        }
+      ],
+      "location_ids": [
+        "LOC-LAND-WAVES"
+      ],
+      "depends_on": [
+        "EV-PART1-WAVES-0003"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按当前分支裁定。"
+      },
+      "canonical_outcomes": [
+        "波之国摆脱卡多控制。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "卡多势力被击退。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "卡多",
+          "波之国"
+        ],
+        "tags": [
+          "liberation"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 33,
+          "pages": null,
+          "supports": [
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0004",
+      "title": "死亡森林考试结束",
+      "aliases": [
+        "第二场考试结束"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-03-06",
+        "scheduled_end": "K064-03-06",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "relative",
+        "canon_window": {
+          "earliest": "K064-03-04",
+          "latest": "K064-03-06"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0002"
+        ],
+        "rationale": "第二场考试上限为五日；从项目笔试日顺延。"
+      },
+      "summary": "通过天地卷轴考核的队伍抵达中央塔，第二场考试结束。",
+      "facts": [
+        "通过者进入预选赛。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "candidate"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-FOREST-DEATH"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按参赛状态裁定。"
+      },
+      "canonical_outcomes": [
+        "预选赛参赛者确定。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "第二场考试结束。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "死亡森林",
+          "中央塔"
+        ],
+        "tags": [
+          "exam"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 65,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "exam_rules"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0005",
+      "title": "中忍考试正式赛开始",
+      "aliases": [
+        "中忍考试决赛"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-04-06",
+        "scheduled_end": "K064-04-06",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "calculated",
+        "source_precision": "relative",
+        "canon_window": {
+          "earliest": "K064-04-06",
+          "latest": "K064-04-06"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0004"
+        ],
+        "rationale": "漫画明确正式赛在预选结束约一个月后；项目按30日月历计算。"
+      },
+      "summary": "预选赛通过者在一个月准备期后参加中忍考试正式赛。",
+      "facts": [
+        "各国贵宾和观众到场。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "finalist"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "finalist"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-EXAM-ARENA"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0004"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按考试是否继续举行裁定。"
+      },
+      "canonical_outcomes": [
+        "正式赛开始。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "正式赛开始。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": [
+          "入侵计划即将发动。"
+        ]
+      },
+      "retrieval": {
+        "keys": [
+          "中忍考试正式赛",
+          "决赛"
+        ],
+        "tags": [
+          "exam"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 92,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "relative_time"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART1-CHUNIN-0006",
+      "title": "木叶崩溃计划失败",
+      "aliases": [
+        "入侵结束"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART1-CHUNIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K064-04-06",
+        "scheduled_end": "K064-04-06",
+        "time_of_day": "evening",
+        "day_order": 40,
+        "basis": "calculated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K064-04-06",
+          "latest": "K064-04-07"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART1-CHUNIN-0003"
+        ],
+        "rationale": "三代牺牲与各战场结束后，入侵部队撤退。"
+      },
+      "summary": "砂隐与音隐入侵部队撤退，木叶崩溃计划失败。",
+      "facts": [
+        "木叶进入伤亡清点和火影继任阶段。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-OROCHIMARU",
+          "role": "retreating_attacker"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART1-CHUNIN-0003"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据各战场结果裁定。"
+      },
+      "canonical_outcomes": [
+        "入侵结束。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "入侵部队撤退。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "木叶崩溃",
+          "入侵失败"
+        ],
+        "tags": [
+          "invasion"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 138,
+          "pages": null,
+          "supports": [
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-PART1-P01",
+        "reviewed_by": null
+      }
+    }
+  ],
+  "unresolved": []
+}

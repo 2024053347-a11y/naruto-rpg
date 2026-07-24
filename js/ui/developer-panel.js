@@ -1,4 +1,5 @@
 import { eventBus } from '../core/event-bus.js';
+import { clearPromptTraces, readPromptTraceBundle } from '../core/prompt-trace.js';
 import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 
@@ -14,7 +15,9 @@ class DeveloperPanel extends HTMLElement {
     this._unsubs = [
       eventBus.on('debug:prompt-trace', () => this.render()),
       eventBus.on('debug:agent-prompt-trace', () => this.render()),
-      eventBus.on('debug:variable-updater-prompt-trace', () => this.render())
+      eventBus.on('debug:narrative-review-prompt-trace', () => this.render()),
+      eventBus.on('debug:variable-updater-prompt-trace', () => this.render()),
+      eventBus.on('debug:npc-summary-prompt-trace', () => this.render())
     ];
   }
 
@@ -24,10 +27,12 @@ class DeveloperPanel extends HTMLElement {
   }
 
   render() {
-    const main = this._readJson('naruto_prompt_trace', null);
-    const variableUpdater = this._readJson('naruto_variable_updater_prompt_trace', null);
-    const agents = this._readJson('naruto_agent_prompt_traces', []);
+    const { main, agents, narrativeReview, variableUpdater, auxiliary } = readPromptTraceBundle();
     const agentList = Array.isArray(agents) ? agents : [];
+    const auxiliaryList = Array.isArray(auxiliary) ? auxiliary : [];
+    const hasAnyTrace = Boolean(main || narrativeReview || variableUpdater || agentList.length || auxiliaryList.length);
+    const allTraces = [main, ...agentList, narrativeReview, variableUpdater, ...auxiliaryList].filter(Boolean);
+    this._traceMap = new Map(allTraces.map(trace => [this._traceId(trace), trace]));
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -42,6 +47,7 @@ class DeveloperPanel extends HTMLElement {
         .dev-body{flex:1;overflow:auto;padding:14px 14px 24px;}
         .dev-card{border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(0,0,0,.18);padding:12px;margin-bottom:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
         .dev-card-title{font-weight:800;color:var(--c-kin-bright);margin-bottom:6px;font-size:13px;letter-spacing:1px}
+        .dev-group-title{display:flex;align-items:center;gap:6px;margin:16px 2px 8px;color:var(--text-secondary);font-size:12px;font-weight:800;letter-spacing:1px}
         .dev-meta{font-size:11px;color:var(--text-tertiary);line-height:1.7;margin-bottom:8px;word-break:break-word}
         .role-chain{display:grid;gap:6px;margin:8px 0 12px}
         .role-item{border:0;margin:0;padding:0;border-radius:8px;background:rgba(255,255,255,.035);overflow:hidden}
@@ -65,7 +71,7 @@ class DeveloperPanel extends HTMLElement {
         <div class="dev-head">
           <div>
             <div class="dev-title">提示词查看</div>
-            <div class="dev-sub">查看真实 role 链、完整预设内容、世界书/知识库、动态状态、记忆与 Agent 注入。</div>
+            <div class="dev-sub">查看实际发送的 role 链，以及主模型、Agent、叙事审校、变量更新和记忆摘要调用。</div>
           </div>
           <div class="dev-actions">
             <button data-action="copy">复制全部</button>
@@ -73,35 +79,39 @@ class DeveloperPanel extends HTMLElement {
           </div>
         </div>
         <div class="dev-body">
-          ${main ? this._renderTraceCard(main) : '<div class="empty">暂无预设记录</div>'}
+          ${!hasAnyTrace ? '<div class="empty">暂无请求记录。完成一次 AI 调用后，这里会显示实际发送内容。</div>' : ''}
+          ${main ? this._renderTraceCard(main) : ''}
+          ${agentList.length ? `<div class="dev-group-title">Agent 子调用链 <span class="pill">最近 ${agentList.length} 次</span></div>${agentList.map(t => this._renderTraceCard(t)).join('')}` : ''}
+          ${narrativeReview ? this._renderTraceCard(narrativeReview) : ''}
           ${variableUpdater ? this._renderTraceCard(variableUpdater) : ''}
-          ${agentList.length ? `<div class="dev-card"><div class="dev-card-title">Agent 子调用链 <span class="pill">最近 ${agentList.length} 次</span></div>${agentList.map(t => this._renderTraceCard(t)).join('')}</div>` : ''}
+          ${auxiliaryList.length ? `<div class="dev-group-title">辅助模型调用 <span class="pill">最近 ${auxiliaryList.length} 次</span></div>${auxiliaryList.map(t => this._renderTraceCard(t)).join('')}` : ''}
         </div>
       </div>`;
 
     this.shadowRoot.querySelector('[data-action="clear"]')?.addEventListener('click', () => {
-      try {
-        localStorage.removeItem('naruto_prompt_trace');
-        localStorage.removeItem('naruto_variable_updater_prompt_trace');
-        localStorage.removeItem('naruto_agent_prompt_traces');
-      } catch {}
+      clearPromptTraces();
       this.render();
     });
     this.shadowRoot.querySelector('[data-action="copy"]')?.addEventListener('click', () => this._copyAll());
+    this._bindLazyContent();
   }
 
   _renderTraceCard(trace) {
     const messages = this._getTraceMessages(trace);
+    const traceId = this._traceId(trace);
     const totalChars = messages.reduce((sum, m) => sum + Number(m.length || String(m.content || '').length || 0), 0);
-    const roleItems = messages.map((msg, index) => this._renderRoleItem(msg, index)).join('');
-    const fullPrompt = this._formatFullPrompt(messages);
+    const roleItems = messages.map((msg, index) => this._renderRoleItem(msg, index, traceId)).join('');
+    const generationOptions = Object.keys(trace.generationOptions || {}).length
+      ? JSON.stringify(trace.generationOptions)
+      : '';
+    const details = Object.keys(trace.details || {}).length ? JSON.stringify(trace.details) : '';
     const injections = (trace.injections || []).map((item, idx) => {
       const name = this._cleanLabel(item.name || item.source || '注入项');
       const length = Number(item.length || String(item.content || '').length).toLocaleString();
       return `
-        <details class="block">
+        <details class="block" data-trace-id="${this._escAttr(traceId)}" data-lazy-injection="${idx}">
           <summary>${idx + 1}. ${this._esc(name)}（${length}字）</summary>
-          <pre>${this._esc(item.content || '')}</pre>
+          <pre></pre>
         </details>`;
     }).join('');
 
@@ -113,6 +123,10 @@ class DeveloperPanel extends HTMLElement {
           ${trace.agentType ? `<span class="pill">${this._esc(trace.agentType)}</span>` : ''}
           ${trace.updaterEnabled !== undefined ? `<span class="pill">变量：${trace.updaterEnabled ? '二阶段' : '主模型'}</span>` : ''}<br>
           时间：${this._esc(this._formatLocalTime(trace.createdAt))}<br>
+          ${trace.model ? `模型：${this._esc(trace.model)}<br>` : ''}
+          ${trace.presetName ? `预设：${this._esc(trace.presetName)}<br>` : ''}
+          ${generationOptions ? `生成参数：${this._esc(generationOptions)}<br>` : ''}
+          ${details ? `调用信息：${this._esc(details)}<br>` : ''}
           用户输入：${this._esc(trace.userInput || '')}<br>
           消息数：${messages.length}；总字符：${totalChars.toLocaleString()}
         </div>
@@ -120,18 +134,18 @@ class DeveloperPanel extends HTMLElement {
           <summary>真实 Role 链条（${this._esc(this._formatLocalTime(trace.createdAt))}）</summary>
           <div class="role-chain">${roleItems || '<div class="empty">无 role 链记录</div>'}</div>
         </details>
-        <details class="block">
-          <summary>完整预设内容</summary>
-          <pre>${this._esc(fullPrompt || '无预设消息')}</pre>
+        <details class="block" data-trace-id="${this._escAttr(traceId)}" data-lazy-full>
+          <summary>完整请求内容</summary>
+          <pre></pre>
         </details>
-        <details class="block">
+        ${injections ? `<details class="block">
           <summary>注入项拆解</summary>
-          ${injections || '<div class="empty">无注入拆解</div>'}
-        </details>
+          ${injections}
+        </details>` : ''}
       </section>`;
   }
 
-  _renderRoleItem(msg, fallbackIndex) {
+  _renderRoleItem(msg, fallbackIndex, traceId) {
     const index = Number.isFinite(Number(msg.index)) ? Number(msg.index) + 1 : fallbackIndex + 1;
     const role = msg.role || 'system';
     const source = this._cleanLabel(msg.source || '');
@@ -140,15 +154,52 @@ class DeveloperPanel extends HTMLElement {
     const length = Number(msg.length || String(msg.content || '').length || 0).toLocaleString();
 
     return `
-      <details class="role-item">
+      <details class="role-item" data-trace-id="${this._escAttr(traceId)}" data-lazy-message="${fallbackIndex}">
         <summary class="role-summary" title="${this._escAttr(title)}">
           <span class="idx">#${index}</span>
           <span class="role">${this._esc(role)}</span>
           <span class="source">${this._esc(title || '(无来源)')}</span>
           <span class="len">${length}字</span>
         </summary>
-        <pre>${this._esc(msg.content || '')}</pre>
+        <pre></pre>
       </details>`;
+  }
+
+  _traceId(trace) {
+    return String(trace?.id || `${trace?.kind || 'trace'}-${trace?.createdAt || 'legacy'}`);
+  }
+
+  _bindLazyContent() {
+    const detailsList = this.shadowRoot.querySelectorAll('[data-lazy-message],[data-lazy-full],[data-lazy-injection]');
+    detailsList.forEach(details => {
+      const hydrate = () => {
+        if (!details.open) return;
+        const isPending = details.hasAttribute('data-lazy-message')
+          || details.hasAttribute('data-lazy-full')
+          || details.hasAttribute('data-lazy-injection');
+        if (!isPending) return;
+        const trace = this._traceMap?.get(details.dataset.traceId);
+        const pre = details.querySelector('pre');
+        if (!trace || !pre) return;
+
+        if (details.hasAttribute('data-lazy-message')) {
+          const message = this._getTraceMessages(trace)[Number(details.dataset.lazyMessage)];
+          pre.textContent = message?.content || '';
+          details.removeAttribute('data-lazy-message');
+          return;
+        }
+        if (details.hasAttribute('data-lazy-full')) {
+          pre.textContent = this._formatFullPrompt(this._getTraceMessages(trace)) || '无请求消息';
+          details.removeAttribute('data-lazy-full');
+          return;
+        }
+        const injection = trace.injections?.[Number(details.dataset.lazyInjection)];
+        pre.textContent = injection?.content || '';
+        details.removeAttribute('data-lazy-injection');
+      };
+      details.addEventListener('toggle', hydrate);
+      hydrate();
+    });
   }
 
   _getTraceMessages(trace) {
@@ -193,25 +244,16 @@ class DeveloperPanel extends HTMLElement {
     }
   }
 
-  _readJson(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch {
-      return fallback;
-    }
-  }
-
   _formatPromptTraceText() {
-    const main = this._readJson('naruto_prompt_trace', null);
-    const variableUpdater = this._readJson('naruto_variable_updater_prompt_trace', null);
-    const agents = this._readJson('naruto_agent_prompt_traces', []);
+    const { main, agents, narrativeReview, variableUpdater, auxiliary } = readPromptTraceBundle();
     const blocks = [];
     const dump = (trace) => {
       if (!trace) return;
       const messages = this._getTraceMessages(trace);
       blocks.push(`===== ${trace.title || trace.kind || '预设链条'} =====`);
       blocks.push(`time: ${this._formatLocalTime(trace.createdAt)}`);
+      if (trace.model) blocks.push(`model: ${trace.model}`);
+      if (Object.keys(trace.generationOptions || {}).length) blocks.push(`generationOptions: ${JSON.stringify(trace.generationOptions)}`);
       blocks.push(`userInput: ${trace.userInput || ''}`);
       blocks.push('--- role chain ---');
       for (const msg of messages) {
@@ -224,8 +266,10 @@ class DeveloperPanel extends HTMLElement {
       for (const item of trace.injections || []) blocks.push(`\n[${this._cleanLabel(item.name || 'injection')}]\n${item.content || ''}`);
     };
     dump(main);
-    dump(variableUpdater);
     for (const trace of (Array.isArray(agents) ? agents : [])) dump(trace);
+    dump(narrativeReview);
+    dump(variableUpdater);
+    for (const trace of (Array.isArray(auxiliary) ? auxiliary : [])) dump(trace);
     return blocks.join('\n');
   }
 

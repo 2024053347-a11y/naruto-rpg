@@ -75,8 +75,14 @@ export async function saveApiConfigSecure(config) {
       apiKey: await encryptApiKey(secure.variableUpdater.apiKey)
     };
   }
-  // Enable proxy by default
-  secure.useProxy = true;
+  if (secure.narrativeReview?.apiKey) {
+    secure.narrativeReview = {
+      ...secure.narrativeReview,
+      apiKey: await encryptApiKey(secure.narrativeReview.apiKey)
+    };
+  }
+  // HTTP 后端默认走同源代理；酒馆使用 iframe 桥接。
+  secure.useProxy = secure.backend !== 'tavern';
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(secure));
   } catch (e) {
@@ -98,8 +104,16 @@ export async function loadApiConfigSecure() {
         apiKey: await decryptApiKey(config.variableUpdater.apiKey)
       };
     }
-    // Ensure proxy mode is on (migration from old configs)
-    if (config.apiKey && config.useProxy !== false) {
+    if (config.narrativeReview?.apiKey) {
+      config.narrativeReview = {
+        ...config.narrativeReview,
+        apiKey: await decryptApiKey(config.narrativeReview.apiKey)
+      };
+    }
+    // Ensure the saved transport matches the backend (migration from old configs).
+    if (config.backend === 'tavern') {
+      config.useProxy = false;
+    } else if (config.apiKey && config.useProxy !== false) {
       config.useProxy = true;
     }
     return config;

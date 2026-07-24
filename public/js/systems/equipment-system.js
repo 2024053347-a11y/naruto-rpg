@@ -148,11 +148,11 @@ class EquipmentSystem {
 
     const updates = [];
     if (effect.chakra) updates.push({ key: '属性·当前查克拉', op: '+', value: effect.chakra });
+    if (effect.vitality) updates.push({ key: '属性·当前生命力', op: '+', value: effect.vitality });
     if (effect.stamina) updates.push({ key: '属性·当前体力', op: '+', value: effect.stamina });
     if (effect.spirit) updates.push({ key: '属性·当前精神力', op: '+', value: effect.spirit });
-    if (effect.willpower) updates.push({ key: '属性·当前意志力', op: '+', value: effect.willpower });
     if (effect.heal) {
-      updates.push({ key: '属性·当前体力', op: '+', value: effect.heal });
+      updates.push({ key: '属性·当前生命力', op: '+', value: effect.heal });
       updates.push({ key: '属性·当前查克拉', op: '+', value: Math.floor(effect.heal * 0.5) });
     }
 
@@ -174,8 +174,8 @@ class EquipmentSystem {
       updates.push({ key: '属性·速度', op: sign > 0 ? '+' : '-', value: Math.floor(bonus.power * 0.3) });
     }
     if (category === 'armor') {
-      updates.push({ key: '属性·体力', op: sign > 0 ? '+' : '-', value: bonus.defense });
-      updates.push({ key: '属性·当前体力', op: sign > 0 ? '+' : '-', value: bonus.defense });
+      updates.push({ key: '属性·生命力', op: sign > 0 ? '+' : '-', value: bonus.defense });
+      updates.push({ key: '属性·当前生命力', op: sign > 0 ? '+' : '-', value: bonus.defense });
     }
     if (bonus.attr > 0 && category === 'tools') {
       updates.push({ key: '属性·幸运', op: sign > 0 ? '+' : '-', value: bonus.attr });
@@ -192,7 +192,7 @@ class EquipmentSystem {
     if (/^兵粮丸/.test(name)) return { stamina: Math.round(base * tier * 1.5), chakra: Math.round(base * tier * 0.6) };
     if (/^军粮丸/.test(name)) return { chakra: Math.round(base * tier * 2), stamina: Math.round(base * tier * 0.3) };
     if (/止血|绷带|药膏|回复|治疗/.test(name)) return { heal: Math.round(25 * tier) };
-    if (/解毒/.test(name)) return { willpower: Math.round(15 * tier) };
+    if (/解毒/.test(name)) return { stamina: Math.round(15 * tier) };
     if (/醒神|精神|专注/.test(name)) return { spirit: Math.round(20 * tier) };
     return { heal: Math.round(15 * tier) };
   }

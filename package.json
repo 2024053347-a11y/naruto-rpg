@@ -1,38 +1,57 @@
 {
   "name": "naruto-rpg",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "火影忍者 AI 文字跑团 RPG — 网页端版本（Discord 登录 + 云存档）",
   "main": "server/index.js",
   "type": "module",
   "scripts": {
-    "test": "node scripts/smoke-test.mjs && node scripts/memory-regression.mjs && node scripts/inventory-skill-regression.mjs && node scripts/opening-contract-regression.mjs && node scripts/security-regression.mjs && node scripts/architecture-regression.mjs && node scripts/server-regression.mjs && node scripts/public-sync-regression.mjs && node smoke-phase2.mjs && node test-agent-optimization.mjs && node test-p2-optimization.mjs",
+    "generate-project-timeline": "node canon-rebuild-output/scripts/generate-project-timeline-v2.mjs",
+    "pretest": "node scripts/project-timeline-infrastructure-regression.mjs",
+    "test": "npm run validate-project-timeline && npm run validate-canon && node scripts/smoke-test.mjs && node scripts/panel-regression.mjs && node scripts/worldbook-v2-regression.mjs && node scripts/ai-call-policy-regression.mjs && node scripts/full-ai-adaptation-integration-regression.mjs && node scripts/protected-future-handoff-regression.mjs && node scripts/future-guardian-regression.mjs && node scripts/turn-evidence-regression.mjs && node scripts/agent-memory-delta-regression.mjs && node scripts/narrative-artifact-regression.mjs && node scripts/turn-commit-regression.mjs && node scripts/memory-regression.mjs && node scripts/continuity-ledger-regression.mjs && node scripts/continuity-delta-regression.mjs && node scripts/npc-summary-regression.mjs && node scripts/inventory-skill-regression.mjs && node scripts/combat-balance-regression.mjs && node scripts/canon-runtime-regression.mjs && node scripts/timeline-regression.mjs && node scripts/opening-contract-regression.mjs && node scripts/opening-draft-regression.mjs && node scripts/preset-review-regression.mjs && node scripts/prompt-preview-regression.mjs && node scripts/settings-config-gateway-regression.mjs && node scripts/local-api-regression.mjs && node scripts/ai-stream-regression.mjs && node scripts/image-studio-regression.mjs && node scripts/image-studio-ui-regression.mjs && node scripts/image-assets-regression.mjs && node scripts/security-regression.mjs && node scripts/architecture-regression.mjs && node scripts/server-regression.mjs && node scripts/public-sync-regression.mjs && npm run test:deployment && node smoke-phase2.mjs && node test-agent-optimization.mjs && node test-p2-optimization.mjs",
+    "test:panel": "node scripts/panel-regression.mjs",
+    "test:settings-ui": "playwright test",
+    "test:deployment": "node scripts/deployment-script-regression.mjs",
+    "validate-project-timeline": "node canon-rebuild-output/scripts/validate-project-timeline-v2.mjs",
+    "validate-canon": "node canon-rebuild-output/scripts/validate-canon.mjs",
+    "build-canon-runtime": "npm run validate-project-timeline && npm run validate-canon && node scripts/build-canon-runtime.mjs",
+    "build:deploy": "npm run build-canon-runtime && npm run sync-public",
     "sync-public": "node scripts/sync-public.mjs",
     "prestart": "npm run sync-public",
     "start": "node server/index.js",
-    "predev": "npm run sync-public",
+    "predev": "npm run build-canon-runtime && npm run sync-public",
     "dev": "node --watch server/index.js",
     "bundle": "node scripts/bundle.mjs",
     "build-regex": "node scripts/build-regex.mjs",
-    "prebuild": "npm run sync-public",
-    "build": "npm run bundle && npm run build-regex"
+    "prebuild": "npm run build-canon-runtime && npm run sync-public",
+    "build": "npm run bundle && npm run build-regex",
+    "generate-version": "node scripts/generate-version.mjs",
+    "deploy:production": "bash deploy-v3.sh",
+    "deploy:dry-run": "bash deploy-v3.sh --dry-run"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "jsonwebtoken": "^9.0.2",
+    "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
-    "express-rate-limit": "^7.4.0",
     "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
     "helmet": "^8.0.0",
-    "compression": "^1.7.5"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "ajv": "^8.20.0",
     "nodemon": "^3.1.7"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2024053347-a11y/naruto-rpg.git"
   },
-  "keywords": ["naruto", "rpg", "ai", "discord"],
+  "keywords": [
+    "naruto",
+    "rpg",
+    "ai",
+    "discord"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {

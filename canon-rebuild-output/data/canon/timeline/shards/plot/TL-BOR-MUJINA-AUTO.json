@@ -1,0 +1,350 @@
+{
+  "$schema": "../../../schemas/timeline-event.schema.json",
+  "schema_version": "naruto.timeline.v1",
+  "dataset": "boruto-manga",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "TL-BOR-MUJINA-AUTO",
+    "arc_id": "ARC-BOR-MUJINA",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 4,
+    "date_start": "K083-04-01",
+    "date_end": "K083-04-10",
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "BORUTO",
+        "chapter_start": 11,
+        "chapter_end": 15
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "EV-BOR-MUJINA-0001",
+      "title": "貉强盗团篇·剧情节拍001",
+      "aliases": [
+        "Mujina Bandits Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MUJINA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K083-04-01",
+        "scheduled_end": "K083-04-01",
+        "time_of_day": "dawn",
+        "day_order": 2200010,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K083-04-01",
+          "latest": "K083-04-10"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [],
+        "rationale": "依据BORUTO漫画第11-15章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "这是《漩涡慕留人：漩涡鸣人（七代目火影）次世代》的一个篇章。",
+      "facts": [
+        "这是《漩涡慕留人：漩涡鸣人（七代目火影）次世代》的一个篇章。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "貉强盗团篇",
+          "Mujina Bandits Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-mujina",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO",
+          "chapter_start": 11,
+          "chapter_end": 15,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Mujina_Bandits_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MUJINA-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MUJINA-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    },
+    {
+      "id": "EV-BOR-MUJINA-0002",
+      "title": "貉强盗团篇·剧情节拍002",
+      "aliases": [
+        "Mujina Bandits Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MUJINA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K083-04-04",
+        "scheduled_end": "K083-04-04",
+        "time_of_day": "morning",
+        "day_order": 2200020,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K083-04-01",
+          "latest": "K083-04-10"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-BOR-MUJINA-0001"
+        ],
+        "rationale": "依据BORUTO漫画第11-15章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "该篇章涵盖《漩涡慕留人》漫画第3至4卷（第11至15章）以及动画第141至151集。",
+      "facts": [
+        "该篇章涵盖《漩涡慕留人》漫画第3至4卷（第11至15章）以及动画第141至151集。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-BOR-MUJINA-0001"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "貉强盗团篇",
+          "Mujina Bandits Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-mujina",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO",
+          "chapter_start": 11,
+          "chapter_end": 15,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Mujina_Bandits_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MUJINA-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MUJINA-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    },
+    {
+      "id": "EV-BOR-MUJINA-0003",
+      "title": "貉强盗团篇·剧情节拍003",
+      "aliases": [
+        "Mujina Bandits Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MUJINA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K083-04-07",
+        "scheduled_end": "K083-04-07",
+        "time_of_day": "noon",
+        "day_order": 2200030,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K083-04-01",
+          "latest": "K083-04-10"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-BOR-MUJINA-0002"
+        ],
+        "rationale": "依据BORUTO漫画第11-15章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在漫画中，前承对大筒木一式之战篇，后继\"壱\"篇。",
+      "facts": [
+        "在漫画中，前承对大筒木一式之战篇，后继\"壱\"篇。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-BOR-MUJINA-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "貉强盗团篇",
+          "Mujina Bandits Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-mujina",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO",
+          "chapter_start": 11,
+          "chapter_end": 15,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Mujina_Bandits_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MUJINA-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MUJINA-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    },
+    {
+      "id": "EV-BOR-MUJINA-0004",
+      "title": "貉强盗团篇·剧情节拍004",
+      "aliases": [
+        "Mujina Bandits Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MUJINA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K083-04-10",
+        "scheduled_end": "K083-04-10",
+        "time_of_day": "afternoon",
+        "day_order": 2200040,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K083-04-01",
+          "latest": "K083-04-10"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-BOR-MUJINA-0003"
+        ],
+        "rationale": "依据BORUTO漫画第11-15章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "在动画版篇章顺序中，本篇前承时光旅行篇，后继壳始动篇。",
+      "facts": [
+        "在动画版篇章顺序中，本篇前承时光旅行篇，后继壳始动篇。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-BOR-MUJINA-0003"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "貉强盗团篇",
+          "Mujina Bandits Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-mujina",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO",
+          "chapter_start": 11,
+          "chapter_end": 15,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Mujina_Bandits_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MUJINA-AUTO",
+        "reviewed_by": "manual-plot-quality-002",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    }
+  ],
+  "unresolved": []
+}

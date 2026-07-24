@@ -5,6 +5,14 @@ import fs from 'node:fs/promises';
 import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
+import { Readable } from 'node:stream';
+import express from 'express';
+
+import * as aiProxyModule from '../server/api/ai-proxy.js';
+import * as serverConfigModule from '../server/config.js';
+import { createResponseCompression } from '../server/middleware/response-compression.js';
+
+const { forwardStreamingResponse, validateTargetUrl } = aiProxyModule;
 
 async function getFreePort() {
   const server = net.createServer();
@@ -27,6 +35,87 @@ async function waitForServer(url) {
   throw new Error(`Server did not become ready: ${url}`);
 }
 
+async function runStreamingProbe() {
+  const app = express();
+  app.use(createResponseCompression());
+
+  let streamCompleted = false;
+  let legacyStreamCompleted = false;
+  const proxyRouter = express.Router();
+  proxyRouter.get('/', async (_req, res) => {
+    const upstream = Readable.from((async function* delayedSseChunks() {
+      for (let index = 1; index <= 4; index++) {
+        yield Buffer.from(`data: {"index":${index}}\n\n`);
+        await new Promise((resolve) => setTimeout(resolve, 80));
+      }
+    })());
+    await forwardStreamingResponse(upstream, res);
+    streamCompleted = true;
+  });
+  proxyRouter.get('/legacy-stream', async (_req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.flushHeaders?.();
+    for (let index = 1; index <= 4; index++) {
+      res.write(`data: {"index":${index},"padding":"${'x'.repeat(512)}"}\n\n`);
+      await new Promise((resolve) => setTimeout(resolve, 80));
+    }
+    legacyStreamCompleted = true;
+    res.end();
+  });
+  app.use('/api/ai-proxy', proxyRouter);
+  app.get('/compressed-probe', (_req, res) => {
+    res.type('text/plain').send('x'.repeat(4096));
+  });
+
+  const port = await getFreePort();
+  const server = app.listen(port, '127.0.0.1');
+  await once(server, 'listening');
+
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/api/ai-proxy`, {
+      headers: { 'Accept-Encoding': 'gzip' }
+    });
+    assert.equal(response.headers.get('content-encoding'), null);
+    assert.equal(response.headers.get('x-accel-buffering'), 'no');
+    assert.match(response.headers.get('cache-control') || '', /no-transform/);
+
+    const reader = response.body.getReader();
+    const first = await reader.read();
+    assert.equal(first.done, false);
+    assert.equal(streamCompleted, false, 'first SSE chunk arrived only after the stream completed');
+
+    let readCount = 1;
+    while (true) {
+      const { done } = await reader.read();
+      if (done) break;
+      readCount++;
+    }
+    assert.ok(readCount >= 2, `expected incremental body reads, received ${readCount}`);
+    assert.equal(streamCompleted, true);
+
+    const legacyResponse = await fetch(`http://127.0.0.1:${port}/api/ai-proxy/legacy-stream`, {
+      headers: { 'Accept-Encoding': 'gzip' }
+    });
+    assert.equal(legacyResponse.headers.get('content-encoding'), null);
+    const legacyReader = legacyResponse.body.getReader();
+    const legacyFirst = await legacyReader.read();
+    assert.equal(legacyFirst.done, false);
+    assert.equal(legacyStreamCompleted, false, 'mounted legacy SSE was buffered until completion');
+    while (!(await legacyReader.read()).done) {}
+    assert.equal(legacyStreamCompleted, true);
+
+    const compressed = await fetch(`http://127.0.0.1:${port}/compressed-probe`, {
+      headers: { 'Accept-Encoding': 'gzip' }
+    });
+    assert.equal(compressed.headers.get('content-encoding'), 'gzip');
+    await compressed.text();
+  } finally {
+    server.close();
+    await once(server, 'close');
+  }
+}
+
 const port = await getFreePort();
 const dataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'naruto-server-regression-'));
 const syntheticJwt = 'SYNTHETIC_JWT_SHOULD_NOT_BE_LOGGED';
@@ -38,7 +127,9 @@ const child = spawn(process.execPath, ['server/index.js'], {
     NODE_ENV: 'development',
     AUTH_BYPASS: 'true',
     ADMIN_KEY: 'server-regression-admin-key',
-    MAX_SAVE_SLOTS: '999',
+    TRUST_PROXY: '',
+    MAX_SAVE_SLOTS: '1',
+    MAX_SAVE_PREVIEW_SIZE_KB: '64',
     DATA_DIR: dataDir
   },
   windowsHide: true,
@@ -52,6 +143,7 @@ child.stdout.resume();
 
 const failures = [];
 let passed = 0;
+let createdSaveId = null;
 
 async function check(name, fn) {
   try {
@@ -66,6 +158,98 @@ async function check(name, fn) {
 
 try {
   await waitForServer(`http://127.0.0.1:${port}/login.html`);
+
+  await check('AI proxy SSE bypasses compression and arrives incrementally', runStreamingProbe);
+
+  await check('AI proxy fake-IP allowance is DNS-only and preserves validated addresses', async () => {
+    const fakeAddresses = [{ address: '198.18.1.104', family: 4 }];
+    let lookupCalls = 0;
+    const fakeLookup = async (hostname, options) => {
+      lookupCalls++;
+      assert.equal(hostname, 'images.example.test');
+      assert.deepEqual(options, { all: true, verbatim: true });
+      return fakeAddresses;
+    };
+
+    const blocked = await validateTargetUrl('https://images.example.test/v1/models', {
+      lookupImpl: fakeLookup,
+      allowFakeIpDns: false
+    });
+    assert.equal(blocked.errorStatus, 403);
+
+    const allowed = await validateTargetUrl('https://images.example.test/v1/models', {
+      lookupImpl: fakeLookup,
+      allowFakeIpDns: true
+    });
+    assert.equal(allowed.url.href, 'https://images.example.test/v1/models');
+    assert.deepEqual(allowed.addresses, fakeAddresses);
+    assert.equal(lookupCalls, 2);
+
+    let directLookupCalled = false;
+    const direct = await validateTargetUrl('https://198.18.1.104/v1/models', {
+      lookupImpl: async () => {
+        directLookupCalled = true;
+        return fakeAddresses;
+      },
+      allowFakeIpDns: true
+    });
+    assert.equal(direct.errorStatus, 403);
+    assert.equal(directLookupCalled, false);
+
+    const privateDns = await validateTargetUrl('https://images.example.test/v1/models', {
+      lookupImpl: async () => [{ address: '192.168.1.20', family: 4 }],
+      allowFakeIpDns: true
+    });
+    assert.equal(privateDns.errorStatus, 403);
+  });
+
+  await check('AI proxy fake-IP defaults are environment-aware and explicitly overrideable', () => {
+    assert.equal(typeof serverConfigModule.resolveAiProxyAllowFakeIpDns, 'function');
+    const resolve = serverConfigModule.resolveAiProxyAllowFakeIpDns;
+    assert.equal(resolve({ NODE_ENV: 'development' }), true);
+    assert.equal(resolve({ NODE_ENV: 'production' }), false);
+    assert.equal(resolve({ NODE_ENV: 'production', AI_PROXY_ALLOW_FAKE_IP_DNS: 'true' }), true);
+    assert.equal(resolve({ NODE_ENV: 'development', AI_PROXY_ALLOW_FAKE_IP_DNS: 'false' }), false);
+  });
+
+  await check('AI proxy purpose policies isolate image timeout and response limits', () => {
+    assert.equal(typeof aiProxyModule.resolveProxyPurposePolicy, 'function');
+    const proxyConfig = {
+      timeoutMs: 120000,
+      maxResponseMb: 20,
+      imageTimeoutMs: 300000,
+      imageMaxResponseMb: 32
+    };
+    assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy(undefined, proxyConfig), {
+      purpose: 'generic', timeoutMs: 120000, maxResponseMb: 20
+    });
+    assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('models', proxyConfig), {
+      purpose: 'models', timeoutMs: 120000, maxResponseMb: 20
+    });
+    assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('image-generation', proxyConfig), {
+      purpose: 'image-generation', timeoutMs: 300000, maxResponseMb: 32
+    });
+    assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('image-download', proxyConfig), {
+      purpose: 'image-download', timeoutMs: 300000, maxResponseMb: 32
+    });
+    assert.equal(aiProxyModule.resolveProxyPurposePolicy('arbitrary-egress', proxyConfig), null);
+  });
+
+  await check('AI proxy rejects invalid purpose without breaking legacy generic requests', async () => {
+    const invalid = await fetch(`http://127.0.0.1:${port}/api/ai-proxy`, {
+      headers: {
+        'x-target-url': 'https://127.0.0.1/v1/models',
+        'x-proxy-purpose': 'arbitrary-egress'
+      }
+    });
+    assert.equal(invalid.status, 400);
+    assert.match((await invalid.json()).error, /purpose|用途/i);
+
+    const legacy = await fetch(`http://127.0.0.1:${port}/api/ai-proxy`, {
+      headers: { 'x-target-url': 'https://127.0.0.1/v1/models' }
+    });
+    assert.equal(legacy.status, 403);
+  });
 
   await check('legacy music favorites route remains compatible', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/music/favorites`);
@@ -91,6 +275,125 @@ try {
     assert.equal(response.status, 400);
   });
 
+  await check('non-timeline cloud save payload returns 400', async () => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/saves`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slot_name: '畸形存档', save_data: { foo: 'bar' } })
+    });
+    assert.equal(response.status, 400);
+  });
+
+  await check('cloud-save previews must be JSON objects', async () => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/saves`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        slot_name: 'invalid-preview',
+        preview_data: [],
+        save_data: {
+          nodes: [{ id: 'root', parent_id: null, children_ids: [], branch_id: 'main' }],
+          branches: [{ id: 'main', head_node_id: 'root', diverged_from: null }],
+          meta: { root_id: 'root', current_id: 'root', active_branch: 'main' }
+        }
+      })
+    });
+    const body = await response.json();
+    if (response.status === 201) {
+      await fetch(`http://127.0.0.1:${port}/api/saves/${body.id}`, { method: 'DELETE' });
+    }
+
+    assert.equal(response.status, 400);
+    assert.match(body.error, /预览/);
+  });
+
+  await check('cloud-save previews have a bounded serialized size', async () => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/saves`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        slot_name: 'oversized-preview',
+        preview_data: { summary: 'x'.repeat(65 * 1024) },
+        save_data: {
+          nodes: [{ id: 'root', parent_id: null, children_ids: [], branch_id: 'main' }],
+          branches: [{ id: 'main', head_node_id: 'root', diverged_from: null }],
+          meta: { root_id: 'root', current_id: 'root', active_branch: 'main' }
+        }
+      })
+    });
+    const body = await response.json();
+    if (response.status === 201) {
+      await fetch(`http://127.0.0.1:${port}/api/saves/${body.id}`, { method: 'DELETE' });
+    }
+
+    assert.equal(response.status, 400);
+    assert.match(body.error, /预览/);
+  });
+
+  await check('concurrent cloud-save creates cannot exceed the per-user slot limit', async () => {
+    const saveData = {
+      nodes: [{
+        id: 'root',
+        parent_id: null,
+        children_ids: [],
+        branch_id: 'main',
+        state_snapshot: { _version: '5.0', regression_padding: 'x'.repeat(128 * 1024) }
+      }],
+      branches: [{ id: 'main', head_node_id: 'root', diverged_from: null }],
+      meta: { root_id: 'root', current_id: 'root', active_branch: 'main' }
+    };
+
+    const responses = await Promise.all(Array.from({ length: 8 }, (_, index) => fetch(
+      `http://127.0.0.1:${port}/api/saves`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slot_name: `concurrent-${index}`, save_data: saveData })
+      }
+    )));
+
+    const acceptedResponses = responses.filter((response) => response.status === 201);
+    assert.equal(acceptedResponses.length, 1);
+    assert.equal(responses.filter((response) => response.status === 400).length, 7);
+    createdSaveId = (await acceptedResponses[0].json()).id;
+
+    const listResponse = await fetch(`http://127.0.0.1:${port}/api/saves`);
+    assert.equal(listResponse.status, 200);
+    assert.equal((await listResponse.json()).length, 1);
+
+    const saveFiles = await fs.readdir(path.join(dataDir, 'saves'));
+    assert.equal(saveFiles.filter((name) => name.endsWith('.bin')).length, 1);
+  });
+
+  await check('full cloud-save slots are rejected before expensive compression', async () => {
+    const savesApiSource = await fs.readFile(new URL('../server/api/saves.js', import.meta.url), 'utf8');
+    const preflightAt = savesApiSource.indexOf('await db.getUserSaveCount(userId)');
+    const compressionAt = savesApiSource.indexOf('await gzip(jsonString)', preflightAt);
+    const atomicInsertAt = savesApiSource.indexOf('await db.insertSaveWithinUserLimit', compressionAt);
+    assert.ok(preflightAt >= 0, 'missing cheap slot-count preflight');
+    assert.ok(compressionAt > preflightAt, 'slot preflight must run before gzip');
+    assert.ok(atomicInsertAt > compressionAt, 'atomic slot check must remain the final write guard');
+  });
+
+  await check('cloud-save updates enforce the same preview bounds as creates', async () => {
+    assert.ok(createdSaveId);
+    const [wrongType, oversized] = await Promise.all([
+      fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preview_data: [] })
+      }),
+      fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preview_data: { summary: 'x'.repeat(65 * 1024) } })
+      })
+    ]);
+
+    assert.equal(wrongType.status, 400);
+    assert.equal(oversized.status, 400);
+  });
+
   await check('admin stats work without a login log file', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/admin/stats`, {
       headers: { 'x-admin-key': 'server-regression-admin-key' }
@@ -112,6 +415,21 @@ try {
       }
     );
     assert.equal(response.status, 302);
+  });
+
+  await check('direct deployments ignore spoofed X-Forwarded-For addresses for rate limits', async () => {
+    const responses = [];
+    for (let index = 1; index <= 20; index++) {
+      responses.push(await fetch(`http://127.0.0.1:${port}/api/admin/stats`, {
+        headers: {
+          'x-admin-key': 'server-regression-admin-key',
+          'x-forwarded-for': `198.51.100.${index}`
+        }
+      }));
+    }
+
+    assert.equal(responses[0].status, 200);
+    assert.equal(responses.some((response) => response.status === 429), true);
   });
 } finally {
   child.kill();

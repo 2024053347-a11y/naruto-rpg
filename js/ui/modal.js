@@ -13,13 +13,13 @@ class GameModal extends HTMLElement {
     this.attachShadow({ mode: 'open' });
   }
 
-  show({ title, content, buttons = [], onDismiss = null }) {
+  show({ title, content, buttons = [], onDismiss = null, wide = false }) {
     this._onDismiss = onDismiss;
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; color: var(--text-primary, #e8e4d9); font-family: 'Noto Sans SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, sans-serif; }
+        :host { display: block; position: fixed; inset: 0; z-index: 200000; color: var(--text-primary, #e8e4d9); font-family: 'Noto Sans SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, sans-serif; }
         .overlay {
-          position: fixed; inset: 0; z-index: 400;
+          position: fixed; inset: 0; z-index: 200000;
           display: flex; align-items: center; justify-content: center;
           background: rgba(7,10,14,0.72);
           backdrop-filter: blur(10px);
@@ -40,6 +40,7 @@ class GameModal extends HTMLElement {
           animation: si 0.20s cubic-bezier(0.16,1,0.3,1);
           position: relative;
         }
+        .modal.modal-wide { width: min(94vw, 820px); }
         .modal::before {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
           border-radius: 10px 10px 0 0;
@@ -95,10 +96,10 @@ class GameModal extends HTMLElement {
         }
       </style>
       <div class="overlay" id="mo">
-        <div class="modal">
-          <div class="title">${escapeHtml(title)}</div>
+        <div class="modal${wide ? ' modal-wide' : ''}" role="dialog" aria-modal="true" aria-labelledby="game-modal-title">
+          <div class="title" id="game-modal-title">${escapeHtml(title)}</div>
           <div class="body">${content||''}</div>
-          <div class="btns">${buttons.map((b,i)=>`<button class="btn${b.primary?' btn-p':''}" data-idx="${i}">${escapeHtml(b.label)}</button>`).join('')}</div>
+          <div class="btns">${buttons.map((b,i)=>`<button type="button" class="btn${b.primary?' btn-p':''}" data-idx="${i}"${b.disabled ? ' disabled' : ''}>${escapeHtml(b.label)}</button>`).join('')}</div>
         </div>
       </div>
     `;
@@ -112,6 +113,10 @@ class GameModal extends HTMLElement {
         if (buttons[idx]?.close !== false) this.close();
       });
     });
+    const autofocusIndex = buttons.findIndex(button => button.autofocus && !button.disabled);
+    if (autofocusIndex >= 0) {
+      requestAnimationFrame(() => this.shadowRoot.querySelector(`.btn[data-idx="${autofocusIndex}"]`)?.focus());
+    }
   }
 
   close() {
@@ -191,6 +196,66 @@ class GameModal extends HTMLElement {
       requestAnimationFrame(() => {
         const el = m.shadowRoot.getElementById(inputId);
         if (el) { el.focus(); el.select?.(); }
+      });
+    });
+  }
+
+  static choice({ title, message = '', choices = [], dismissValue = null, wide = false }) {
+    return new Promise(resolve => {
+      const modal = new GameModal();
+      let settled = false;
+      const settle = (value) => {
+        if (settled) return;
+        settled = true;
+        resolve(value);
+      };
+      (document.getElementById('app') || document.body).appendChild(modal);
+      modal.show({
+        title,
+        content: `<p>${messageHtml(message)}</p>`,
+        wide,
+        onDismiss: () => settle(dismissValue),
+        buttons: choices.map(choice => ({
+          label: choice.label,
+          primary: choice.primary,
+          autofocus: choice.autofocus,
+          disabled: choice.disabled,
+          onClick: () => settle(choice.value)
+        }))
+      });
+    });
+  }
+
+  static reviewPreview({ displayText = '', error = '', attempt = 1 } = {}) {
+    return new Promise(resolve => {
+      const modal = new GameModal();
+      let settled = false;
+      const settle = result => {
+        if (settled) return;
+        settled = true;
+        resolve(result);
+      };
+      (document.getElementById('app') || document.body).appendChild(modal);
+      const preview = String(displayText || '').trim();
+      const errorText = String(error || '').trim();
+      const body = errorText
+        ? `<div style="padding:12px;border:1px solid rgba(239,83,80,.35);background:rgba(239,83,80,.08);color:#ef9a9a;border-radius:6px;">${messageHtml(errorText)}</div>`
+        : `<div style="max-height:46vh;overflow:auto;padding:14px 16px;border:1px solid rgba(232,228,217,.12);background:rgba(7,10,14,.55);border-radius:6px;color:var(--text-primary,#e8e4d9);white-space:pre-wrap;line-height:1.8;">${messageHtml(preview)}</div>`;
+      const feedback = `<label for="review-feedback" style="display:block;margin:14px 0 6px;color:#c6bda9;">若要重试，可填写修改意见</label><textarea id="review-feedback" rows="4" placeholder="例如：保留原稿第二段，只修正角色年龄与时间越界。" style="box-sizing:border-box;width:100%;resize:vertical;padding:10px 12px;background:rgba(7,10,14,.6);border:1px solid rgba(232,228,217,.18);border-radius:6px;color:var(--text-primary,#e8e4d9);font:12px/1.6 'Noto Sans SC',sans-serif;outline:none;"></textarea>`;
+      const readFeedback = () => modal.shadowRoot.getElementById('review-feedback')?.value?.trim() || '';
+      const buttons = [
+        { label: '保留原稿', onClick: () => settle({ action: 'discard', feedback: '' }) },
+        { label: '按意见重试', onClick: () => settle({ action: 'retry', feedback: readFeedback() }) },
+        ...(!errorText && preview
+          ? [{ label: '应用此预览', primary: true, onClick: () => settle({ action: 'apply', feedback: '' }) }]
+          : [])
+      ];
+      modal.show({
+        title: `正文复检预览 · 第 ${Math.max(1, Number(attempt) || 1)} 次`,
+        content: `<p style="margin:0 0 12px;">此内容尚未写入状态、记忆或时间线。应用、继续修改，或保留原稿。</p>${body}${feedback}`,
+        wide: true,
+        onDismiss: () => settle({ action: 'discard', feedback: '' }),
+        buttons
       });
     });
   }

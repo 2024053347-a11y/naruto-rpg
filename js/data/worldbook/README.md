@@ -19,6 +19,17 @@
 - `world-expansion.js`：火之国地理、木叶日常地点、低阶任务、小国、经济、情报公开等级等跑团常用补充。
 - `systems.js`：查克拉、性质变化、忍术等级、瞳术、封印术、医疗、幻术、傀儡术等系统资料。
 - `index.js`：统一导出入口，供 `knowledge-base.js` 合并检索。
+- `schema-v2.js`：Worldbook V2 规范化、校验、日期/知识边界、角色档案和运行时安全投影。
+- `migration-v2.js`：逐条迁移旧世界书，记录稳定 ID、原始来源、重名处置与片段净化报告。
+- `v2.js`：V2 公共 API 入口。
+
+## Worldbook V2 使用约束
+
+- 写作、变量更新和 NPC 上下文只能使用 `toRuntimeWorldbookEntry()` 或 `WORLD_BOOK_V2_RUNTIME_ENTRIES`，不得直接序列化 `WORLD_BOOK_V2_ENTRIES`；后者含迁移审计需要的旧原文。
+- `validity.until` 为不包含边界。例如木叶 51—63 年迁移为 `from=K051-01-01`、`until=K064-01-01`。
+- 旧角色条目会保留身份、性格、目标、弱点、说话方式、行为边界、安全外貌和年代状态。受污染的具体外貌段单独隔离，不会因此删除整名角色。
+- 旧自定义条目通过 `migrateCustomWorldbookEntriesV1ToV2()` 迁移为 `legacy_trusted_public`，常驻且启用；内容安全净化仍不可绕过。
+- `source_fragments` 保存每个 V1 片段的原文和明确处置，仅供编辑器迁移审计，禁止进入模型提示词。
 
 写作原则：
 

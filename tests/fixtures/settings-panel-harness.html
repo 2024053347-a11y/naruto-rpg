@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings panel behavior harness</title>
+  <style>
+    :root {
+      --ink-deep-rgb: 7, 10, 14;
+      --ink-rgb: 11, 14, 19;
+      --paper-rgb: 232, 228, 217;
+      --text-primary: #e8e4d9;
+      --text-secondary: #a39f98;
+      --text-tertiary: #716f6b;
+      --border-subtle: rgba(232, 228, 217, .12);
+      --border-strong: rgba(232, 228, 217, .28);
+      --c-shuiro: #eb613f;
+      --c-void: #070a0e;
+      --font-body: system-ui, sans-serif;
+      --font-title: system-ui, sans-serif;
+      --font-brush: serif;
+      --blur-xl: blur(16px);
+      --blur-lg: blur(10px);
+      --ease-out: ease-out;
+      --r-sm: 4px;
+      --r-md: 6px;
+      --r-xl: 8px;
+      --shadow-lg: 0 24px 80px rgba(0, 0, 0, .5);
+    }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    const { default: SettingsPanel } = await import('../../js/ui/settings-panel.js');
+    const params = new URLSearchParams(location.search);
+    const panel = new SettingsPanel();
+    if (params.get('mode') === 'creator') panel.setAttribute('mode', 'creator');
+    document.querySelector('#app').append(panel);
+    if (params.get('tool')) panel.open({ tool: params.get('tool'), resourceId: params.get('resourceId') || '' });
+    window.__SETTINGS_PANEL__ = panel;
+    window.__SETTINGS_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

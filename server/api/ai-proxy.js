@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { lookup } from 'node:dns/promises';
 import { BlockList, isIP } from 'node:net';
 import { request as httpsRequest } from 'node:https';
+import { Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 import { requireAuth } from '../middleware/auth.js';
 import { config } from '../config.js';
 
@@ -15,8 +17,47 @@ const FORWARDABLE_REQUEST_HEADERS = ['content-type', 'accept', 'anthropic-versio
 /** 仅回传白名单内的响应头 */
 const FORWARDABLE_RESPONSE_HEADERS = ['content-type', 'cache-control'];
 
+function mediaTypeEntries(value) {
+  const source = Array.isArray(value) ? value.join(',') : String(value || '');
+  return source.split(',').map(entry => {
+    const [type, ...parameters] = entry.split(';');
+    return {
+      type: type.trim().toLowerCase(),
+      parameters: parameters.map(parameter => parameter.trim().toLowerCase())
+    };
+  }).filter(entry => entry.type);
+}
+
+export function hasEventStreamMediaType(value) {
+  return mediaTypeEntries(value).some(entry => entry.type === 'text/event-stream');
+}
+
+export function acceptsEventStream(value) {
+  return mediaTypeEntries(value).some(entry => {
+    if (entry.type !== 'text/event-stream') return false;
+    const quality = entry.parameters.find(parameter => parameter.startsWith('q='));
+    if (!quality) return true;
+    const parsed = Number(quality.slice(2));
+    return Number.isFinite(parsed) && parsed > 0;
+  });
+}
+
+export function shouldStreamResponse({ statusCode, method, contentType, accept, body } = {}) {
+  if (hasEventStreamMediaType(contentType)) return true;
+  const status = Number(statusCode);
+  const canStreamRequestedResponse = method !== 'HEAD'
+    && status >= 200
+    && status < 300
+    && status !== 204
+    && status !== 205;
+  return canStreamRequestedResponse
+    && (body?.stream === true || acceptsEventStream(accept));
+}
+
 const blockedIPv4 = new BlockList();
 const blockedIPv6 = new BlockList();
+const fakeIpIPv4 = new BlockList();
+fakeIpIPv4.addSubnet('198.18.0.0', 15, 'ipv4');
 for (const [address, prefix] of [
   ['0.0.0.0', 8], ['10.0.0.0', 8], ['100.64.0.0', 10], ['127.0.0.0', 8],
   ['169.254.0.0', 16], ['172.16.0.0', 12], ['192.168.0.0', 16],
@@ -37,12 +78,45 @@ function isPrivateAddress(address) {
     : blockedIPv6.check(normalized, 'ipv6');
 }
 
+function isFakeIpAddress(address) {
+  const normalized = String(address || '').replace(/^\[|\]$/g, '').toLowerCase();
+  const mapped = normalized.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+  const candidate = mapped?.[1] || normalized;
+  return isIP(candidate) === 4 && fakeIpIPv4.check(candidate, 'ipv4');
+}
+
 /**
  * 校验目标 URL：必须是合法的 HTTPS 公网地址。
  * @param {string} targetUrl
  * @returns {Promise<{url?: URL, addresses?: Array<{address: string, family: number}>, errorStatus?: number, errorBody?: {error: string}}>}
  */
-async function validateTargetUrl(targetUrl) {
+function createAbortError(reason) {
+  const error = new Error(reason?.message || 'The operation was aborted');
+  error.name = 'AbortError';
+  if (reason instanceof Error) error.cause = reason;
+  return error;
+}
+
+async function awaitWithAbort(promise, signal) {
+  if (!signal) return promise;
+  if (signal.aborted) throw createAbortError(signal.reason);
+  let abort;
+  const aborted = new Promise((_, reject) => {
+    abort = () => reject(createAbortError(signal.reason));
+    signal.addEventListener('abort', abort, { once: true });
+  });
+  try {
+    return await Promise.race([promise, aborted]);
+  } finally {
+    signal.removeEventListener('abort', abort);
+  }
+}
+
+async function validateTargetUrl(targetUrl, {
+  signal,
+  lookupImpl = lookup,
+  allowFakeIpDns = config.proxy.allowFakeIpDns
+} = {}) {
   let parsed;
   try {
     parsed = new URL(targetUrl);
@@ -58,13 +132,18 @@ async function validateTargetUrl(targetUrl) {
     return { errorStatus: 403, errorBody: { error: '禁止代理到内网地址' } };
   }
   try {
-    const addresses = await lookup(hostname, { all: true, verbatim: true });
-    if (!addresses.length || addresses.some(({ address }) => isPrivateAddress(address))) {
+    if (signal?.aborted) throw createAbortError(signal.reason);
+    const addresses = await awaitWithAbort(lookupImpl(hostname, { all: true, verbatim: true }), signal);
+    const resolvesToBlockedAddress = addresses.some(({ address }) => (
+      isPrivateAddress(address) && !(allowFakeIpDns && isFakeIpAddress(address))
+    ));
+    if (!addresses.length || resolvesToBlockedAddress) {
       console.warn(`[AI PROXY] Blocked DNS target: ${targetUrl}`);
       return { errorStatus: 403, errorBody: { error: '目标域名解析到受限地址' } };
     }
     return { url: parsed, addresses };
-  } catch {
+  } catch (error) {
+    if (error.name === 'AbortError') throw error;
     return { errorStatus: 400, errorBody: { error: '目标域名无法解析' } };
   }
 }
@@ -92,6 +171,55 @@ function requestUpstream(url, { method, headers, body, signal }, addresses) {
   });
 }
 
+function createByteLimit(maxBytes) {
+  let received = 0;
+  return new Transform({
+    transform(chunk, _encoding, callback) {
+      received += chunk.length;
+      if (received > maxBytes) {
+        const error = new Error(`AI 上游流式响应超过 ${maxBytes} 字节限制`);
+        error.code = 'ERR_AI_STREAM_TOO_LARGE';
+        callback(error);
+        return;
+      }
+      callback(null, chunk);
+    }
+  });
+}
+
+export async function forwardStreamingResponse(upstreamResponse, res, {
+  setEventStreamContentType = true,
+  signal,
+  maxResponseBytes
+} = {}) {
+  if (setEventStreamContentType) {
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  }
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders?.();
+  const streams = [upstreamResponse];
+  if (Number.isFinite(maxResponseBytes) && maxResponseBytes > 0) {
+    streams.push(createByteLimit(maxResponseBytes));
+  }
+  streams.push(res);
+  await pipeline(...streams, { signal });
+}
+
+const PROXY_PURPOSES = new Set(['generic', 'models', 'image-generation', 'image-download']);
+
+export function resolveProxyPurposePolicy(rawPurpose, proxyConfig = config.proxy) {
+  const purpose = String(rawPurpose || 'generic').trim().toLowerCase();
+  if (!PROXY_PURPOSES.has(purpose)) return null;
+  const imagePurpose = purpose === 'image-generation' || purpose === 'image-download';
+  return {
+    purpose,
+    timeoutMs: imagePurpose ? proxyConfig.imageTimeoutMs : proxyConfig.timeoutMs,
+    maxResponseMb: imagePurpose ? proxyConfig.imageMaxResponseMb : proxyConfig.maxResponseMb
+  };
+}
+
 /**
  * /api/ai-proxy — AI 接口代理（开放模式 + 内网防护）
  *
@@ -106,15 +234,14 @@ router.all('/', async (req, res) => {
   const targetUrl = req.headers['x-target-url'];
   const apiKey = req.headers['x-user-api-key'];
   const apiKeyHeaderName = req.headers['x-api-key-header'] || 'Authorization';
+  const proxyPolicy = resolveProxyPurposePolicy(req.headers['x-proxy-purpose']);
 
   if (!targetUrl) {
     return res.status(400).json({ error: '缺少目标代理地址 x-target-url' });
   }
-  const { url, addresses, errorStatus, errorBody } = await validateTargetUrl(targetUrl);
-  if (errorStatus) {
-    return res.status(errorStatus).json(errorBody);
+  if (!proxyPolicy) {
+    return res.status(400).json({ error: '不支持的代理用途 x-proxy-purpose' });
   }
-
   // 白名单：仅允许标准的 API key 请求头名称
   const ALLOWED_KEY_HEADERS = ['authorization', 'x-api-key', 'api-key'];
   if (!ALLOWED_KEY_HEADERS.includes(apiKeyHeaderName.toLowerCase())) {
@@ -127,12 +254,26 @@ router.all('/', async (req, res) => {
   const upstreamTimeout = setTimeout(() => {
     upstreamTimedOut = true;
     upstreamAbort.abort();
-  }, config.proxy.timeoutMs);
-  res.on('close', () => {
-    if (!res.writableEnded) upstreamAbort.abort();
-  });
+  }, proxyPolicy.timeoutMs);
+  const abortForDisconnectedClient = () => {
+    if (!res.writableEnded && !upstreamAbort.signal.aborted) upstreamAbort.abort();
+  };
+  res.once('close', abortForDisconnectedClient);
+  req.once('aborted', abortForDisconnectedClient);
 
   try {
+    const { url, addresses, errorStatus, errorBody } = await validateTargetUrl(targetUrl, {
+      signal: upstreamAbort.signal,
+      allowFakeIpDns: config.proxy.allowFakeIpDns
+    });
+    if (errorStatus) {
+      return res.status(errorStatus).json(errorBody);
+    }
+    if (req.aborted || res.destroyed || upstreamAbort.signal.aborted) {
+      if (!upstreamAbort.signal.aborted) upstreamAbort.abort();
+      throw createAbortError(upstreamAbort.signal.reason);
+    }
+
     const forwardHeaders = {};
     for (const key of FORWARDABLE_REQUEST_HEADERS) {
       if (req.headers[key]) forwardHeaders[key] = req.headers[key];
@@ -173,34 +314,48 @@ router.all('/', async (req, res) => {
     }
 
     const contentType = upstreamResponse.headers['content-type'] || '';
-    const wantsStream = contentType.includes('text/event-stream')
-      || (req.headers['accept'] || '').includes('text/event-stream');
+    const upstreamIsEventStream = hasEventStreamMediaType(contentType);
+    const wantsStream = shouldStreamResponse({
+      statusCode: upstreamStatus,
+      method: req.method,
+      contentType,
+      accept: req.headers['accept'],
+      body: req.body
+    });
 
     if (wantsStream) {
       // 流式响应（SSE）：逐块透传，不在内存中聚合
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
       try {
-        for await (const chunk of upstreamResponse) {
-          res.write(chunk);
-        }
+        await forwardStreamingResponse(upstreamResponse, res, {
+          // 错标为 JSON 的兼容网关仍应逐块转发，但保留其原始媒体类型，
+          // 让客户端在没有 SSE 事件时安全回退到普通 JSON。
+          setEventStreamContentType: upstreamIsEventStream || !contentType,
+          signal: upstreamAbort.signal,
+          maxResponseBytes: proxyPolicy.maxResponseMb * 1024 * 1024
+        });
       } catch (err) {
         // 客户端主动断开触发的 abort 属正常路径，其余错误记录后照常结束响应
-        if (err.name !== 'AbortError') {
+        const normalDisconnect = !upstreamTimedOut
+          && upstreamAbort.signal.aborted
+          && (err.name === 'AbortError'
+            || err.code === 'ERR_STREAM_PREMATURE_CLOSE'
+            || err.code === 'ERR_STREAM_DESTROYED');
+        if (upstreamTimedOut) {
+          console.warn('[AI PROXY] Stream timed out');
+        } else if (!normalDisconnect) {
           console.error('[AI PROXY] Stream error:', err.message);
         }
+        if (!res.destroyed && !res.writableEnded) res.end();
       }
-      res.end();
     } else {
       const chunks = [];
-      const maxResponseBytes = config.proxy.maxResponseMb * 1024 * 1024;
+      const maxResponseBytes = proxyPolicy.maxResponseMb * 1024 * 1024;
       let responseBytes = 0;
       for await (const chunk of upstreamResponse) {
         responseBytes += chunk.length;
         if (responseBytes > maxResponseBytes) {
           upstreamResponse.destroy();
-          return res.status(502).json({ error: `AI 上游响应超过 ${config.proxy.maxResponseMb}MB 限制` });
+          return res.status(502).json({ error: `AI 上游响应超过 ${proxyPolicy.maxResponseMb}MB 限制` });
         }
         chunks.push(Buffer.from(chunk));
       }
@@ -208,16 +363,23 @@ router.all('/', async (req, res) => {
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      if (upstreamTimedOut && !res.headersSent) {
+      if (upstreamTimedOut && !res.destroyed && !res.headersSent) {
         return res.status(504).json({ error: 'AI 上游请求超时' });
       }
-      if (upstreamTimedOut && !res.writableEnded) res.end();
+      if (upstreamTimedOut && !res.destroyed && !res.writableEnded) res.end();
       return; // 客户端已断开或流式响应已结束，无需再次响应
     }
+    if (res.destroyed) return;
     console.error('[AI PROXY] Upstream failed:', error.message, error.cause || '');
+    if (res.headersSent) {
+      if (!res.writableEnded) res.end();
+      return;
+    }
     res.status(502).json({ error: `AI 代理请求上游失败: ${error.message} ${error.cause ? error.cause.message : ''}`.trim() });
   } finally {
     clearTimeout(upstreamTimeout);
+    res.off('close', abortForDisconnectedClient);
+    req.off('aborted', abortForDisconnectedClient);
   }
 });
 

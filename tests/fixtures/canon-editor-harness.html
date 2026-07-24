@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canon database editor harness</title>
+  <style>
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    localStorage.clear();
+    await import('../../js/ui/canon-database-editor.js');
+
+    const editor = document.createElement('canon-database-editor');
+    editor.setAttribute('database-kind', 'plot');
+    document.querySelector('#app').append(editor);
+    window.__CANON_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

@@ -7,28 +7,59 @@ import { getAgentConfig } from '../data/agent-config.js';
 import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
 import { generateMainVarInstructions } from '../data/var-schema.js';
 import { formatOpeningContractPrompt, resolveOpeningContract } from '../systems/opening-contract.js';
+import { publishPromptTrace } from './prompt-trace.js';
+import { TurnEvidenceCompiler, renderEvidenceView } from './turn-evidence.js';
+
+export function evidenceAudienceForAgent(agentType) {
+  if (agentType === 'character') return 'npc';
+  if (agentType === 'future-guardian') return 'planner';
+  if (agentType.startsWith('critic-')) return 'reviewer';
+  return 'writer';
+}
+
+function formatConstraintItem(value) {
+  if (value == null) return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+  if (Array.isArray(value)) return value.map(formatConstraintItem).filter(Boolean).join('；');
+  if (typeof value === 'object') {
+    const preferred = [
+      'location', 'beatId', 'npc', 'severity', 'rule', 'type', 'description',
+      'suggestion', 'current', 'improved', 'summary', 'text'
+    ];
+    const keys = [...preferred.filter(key => value[key] != null), ...Object.keys(value).filter(key => !preferred.includes(key))];
+    return keys.map(key => `${key}: ${formatConstraintItem(value[key])}`).filter(line => !line.endsWith(': ')).join('；');
+  }
+  return String(value);
+}
 
 class AgentRunner {
-  constructor() {
+  constructor({ pipeline = null } = {}) {
+    this._pipeline = pipeline;
+    this._fallbackEvidenceCompiler = null;
     this._mainClient = null;
     this._criticClient = null;
+    this._models = { main: '', critic: '' };
     this._aborted = false;
   }
 
   configure() {
     const baseConfig = stateManager.getAPIConfig() || {};
     const agentCfg = getAgentConfig();
+    this._models = {
+      main: agentCfg.agentModel || baseConfig.model || '',
+      critic: agentCfg.criticModel || agentCfg.agentModel || baseConfig.model || ''
+    };
 
     this._mainClient = new AIClient();
     this._mainClient.configure({
       ...baseConfig,
-      model: agentCfg.agentModel || baseConfig.model
+      model: this._models.main
     });
 
     this._criticClient = new AIClient();
     this._criticClient.configure({
       ...baseConfig,
-      model: agentCfg.criticModel || agentCfg.agentModel || baseConfig.model
+      model: this._models.critic
     });
 
     this._aborted = false;
@@ -41,7 +72,7 @@ class AgentRunner {
   }
 
   _getClient(agentType) {
-    const critics = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer'];
+    const critics = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer', 'future-guardian'];
     return critics.includes(agentType) ? this._criticClient : this._mainClient;
   }
 
@@ -64,6 +95,21 @@ class AgentRunner {
       timeout,
       ...options
     };
+
+    const isCritic = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer', 'future-guardian'].includes(agentType);
+    publishPromptTrace({
+      kind: 'agent',
+      title: `Agent 模型请求：${agentType}`,
+      agentType,
+      userInput,
+      model: isCritic ? this._models.critic : this._models.main,
+      generationOptions: genOptions,
+      messages,
+      messageSources: messages.map((_, index) => ({
+        source: index === messages.length - 1 ? 'Agent 动态任务' : 'Agent 上下文',
+        label: `${agentType}#${index + 1}`
+      }))
+    });
 
     eventBus.emit('agent:call-start', { agentType });
     try {
@@ -120,11 +166,40 @@ class AgentRunner {
       messages.push({ role: 'system', content: systemPrompt });
     }
 
-    const openingContract = formatOpeningContractPrompt(resolveOpeningContract(state), {
-      compact: true,
-      audience: agentType === 'character' ? 'npc' : 'narrator'
-    });
-    if (openingContract) messages.push({ role: 'system', content: openingContract });
+    const evidenceAudience = evidenceAudienceForAgent(agentType);
+    const npcName = evidenceAudience === 'npc' ? String(extraContext.npcName || '') : '';
+    const relationship = npcName ? state?._relationships?.[npcName] : null;
+    const entityId = relationship?.entity_id || relationship?.npc_id || null;
+    let evidenceView = extraContext.evidenceView || null;
+    if (!evidenceView && this._pipeline?.getTurnEvidenceView) {
+      evidenceView = this._pipeline.getTurnEvidenceView(evidenceAudience, {
+        state,
+        userInput,
+        entityId,
+        npcName
+      });
+    }
+    if (!evidenceView) {
+      this._fallbackEvidenceCompiler ||= new TurnEvidenceCompiler();
+      const packet = this._fallbackEvidenceCompiler.compile({ state, userInput });
+      evidenceView = this._fallbackEvidenceCompiler.project(packet, {
+        audience: evidenceAudience,
+        entityId,
+        npcName
+      });
+    }
+    if (evidenceView) {
+      messages.push({
+        role: 'system',
+        content: renderEvidenceView(evidenceView, { stage: `agent-${agentType}` })
+      });
+    } else {
+      const openingContract = formatOpeningContractPrompt(resolveOpeningContract(state), {
+        compact: true,
+        audience: agentType === 'character' ? 'npc' : 'narrator'
+      });
+      if (openingContract) messages.push({ role: 'system', content: openingContract });
+    }
 
     // 2. Preset Context (Mostly static, highly cacheable)
     if (manifest.includePreset) {
@@ -156,13 +231,19 @@ class AgentRunner {
     // 4. Dynamic Task Content & State (Volatile, appended at the end to maximize cache hit rate)
     let userContent = '';
 
-    const stateSlice = this._extractStateSlice(state, manifest.stateFields);
+    const stateSlice = evidenceView ? {} : this._extractStateSlice(state, manifest.stateFields);
     if (Object.keys(stateSlice).length > 0) {
       const stateText = this._formatStateCompact(stateSlice, manifest.maxContextChars || 8000);
       userContent += `[当前游戏状态]\n${stateText}\n\n`;
     }
 
     if (extraContext.outline) userContent += `[叙事大纲]\n${JSON.stringify(extraContext.outline)}\n\n`;
+    if (extraContext.guardianCandidates?.length) {
+      userContent += `[待判定安全候选 · 本地整数ID]\n${JSON.stringify(extraContext.guardianCandidates)}\n\n`;
+    }
+    if (extraContext.guardianOutline) {
+      userContent += `[待判定安全大纲 · 本地整数ID]\n${JSON.stringify(extraContext.guardianOutline)}\n\n`;
+    }
     if (extraContext.reviews) userContent += `[审查建议]\n${JSON.stringify(extraContext.reviews)}\n\n`;
     if (extraContext.draft) userContent += `[初稿正文]\n${extraContext.draft}\n\n`;
     if (extraContext.characterInputs?.length) userContent += `[角色代理素材]\n${JSON.stringify(extraContext.characterInputs)}\n\n`;
@@ -201,14 +282,17 @@ class AgentRunner {
         constraint += `\n### Beat ${beat.id}: ${beat.summary || ''}\n`;
         if (beat.scene) constraint += `场景: ${beat.scene}\n`;
         if (beat.tension) constraint += `张力: ${beat.tension}\n`;
-        if (beat.actions?.length) {
-          constraint += '行动:\n' + beat.actions.map(a => `- ${a}`).join('\n') + '\n';
+        const beatActions = Array.isArray(beat.actions)
+          ? beat.actions
+          : (beat.action ? [beat.action] : []);
+        if (beatActions.length) {
+          constraint += '行动:\n' + beatActions.map(action => `- ${formatConstraintItem(action)}`).join('\n') + '\n';
         }
         if (beat.dialogue?.length) {
           constraint += '对话:\n' + beat.dialogue.map(d => `- ${d}`).join('\n') + '\n';
         }
         if (beat._reviews?.length) {
-          constraint += '⚠️ 必须修正:\n' + beat._reviews.map(r => `- ${r}`).join('\n') + '\n';
+          constraint += '⚠️ 必须修正:\n' + beat._reviews.map(review => `- ${formatConstraintItem(review)}`).join('\n') + '\n';
         }
       }
       constraint += '\n';
@@ -231,10 +315,10 @@ class AgentRunner {
 
         if (review.score != null) constraint += `评分: ${review.score}/10\n`;
         if (review.suggestions?.length) {
-          constraint += '建议:\n' + review.suggestions.map(s => `- ${s}`).join('\n') + '\n';
+          constraint += '建议:\n' + review.suggestions.map(suggestion => `- ${formatConstraintItem(suggestion)}`).join('\n') + '\n';
         }
         if (review.issues?.length) {
-          constraint += '问题:\n' + review.issues.map(i => `- ${i}`).join('\n') + '\n';
+          constraint += '问题:\n' + review.issues.map(issue => `- ${formatConstraintItem(issue)}`).join('\n') + '\n';
         }
       }
       constraint += '\n';
@@ -248,8 +332,8 @@ class AgentRunner {
         constraint += `\n### ${name}\n`;
         if (char.action) constraint += `- 行为: ${char.action}\n`;
         if (char.dialogue) constraint += `- 对话: "${char.dialogue}"\n`;
-        if (char.innerThought) constraint += `- 内心: ${char.innerThought}（用第三人称揭示，不用第一人称）\n`;
         if (char.moodShift) constraint += `- 情绪变化: ${char.moodShift}\n`;
+        if (char.towardsPlayer) constraint += `- 可观察态度变化: ${char.towardsPlayer}\n`;
       }
       constraint += '\n';
     }
@@ -258,7 +342,7 @@ class AgentRunner {
     if (extraContext.suggestions?.length) {
       constraint += '## 润色建议\n';
       for (const sug of extraContext.suggestions) {
-        constraint += `- ${sug.from || ''}: ${sug.text || sug}\n`;
+        constraint += `- ${sug.from || ''}: ${formatConstraintItem(sug.text || sug)}\n`;
       }
       constraint += '\n保持原有结构和变量标签不变，只改进文字表达。\n\n';
     }
@@ -360,7 +444,7 @@ class AgentRunner {
     if (braceMatch) { try { return JSON.parse(braceMatch[1]); } catch {} }
 
     // Critic Agent 专用：修复常见 JSON 错误
-    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner') {
+    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner' || agentType === 'future-guardian') {
       try {
         let fixed = text;
         // 去掉尾随逗号
@@ -389,6 +473,9 @@ class AgentRunner {
     }
     if (agentType === 'outliner') {
       return { beats: [], estimatedLength: 800, variableSummary: 'JSON解析失败' };
+    }
+    if (agentType === 'future-guardian') {
+      return { scope: 'invalid', decision: 'invalid', candidate_ids: [], beat_ids: [] };
     }
 
     return { _raw: text };

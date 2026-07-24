@@ -42,4 +42,19 @@ export const WORLD_BOOK_META = {
   note: '本世界书为跑团检索用途的原创摘要，不复制百科原文。'
 };
 
+// V2 是安全、带来源和时间/知识边界的兼容层。V1 导出继续保留，避免旧存档和编辑器失效。
+export {
+  WORLD_BOOK_V2_SCHEMA_VERSION,
+  WORLD_BOOK_V2_JSON_SCHEMA,
+  normalizeWorldbookEntryV2,
+  validateWorldbookEntryV2,
+  sanitizeWorldbookContent,
+  migrateWorldbookEntriesV1ToV2,
+  migrateCustomWorldbookEntriesV1ToV2,
+  toRuntimeWorldbookEntry,
+  WORLD_BOOK_V2_ENTRIES,
+  WORLD_BOOK_V2_RUNTIME_ENTRIES,
+  WORLD_BOOK_V2_MIGRATION_REPORT
+} from './v2.js';
+
 export default WORLD_BOOK_ENTRIES;

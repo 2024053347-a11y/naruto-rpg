@@ -35,6 +35,68 @@ export class WorldbookEditor extends HTMLElement {
     eventBus.emit('app:toast', `已保存 ${this._custom.length} 条自定义世界书 (下次加载生效)`);
   }
 
+  _captureCurrentEdit() {
+    if (this._selectedType !== 'custom' || this._selectedIndex < 0 || this._selectedIndex >= this._custom.length) return false;
+    const root = this.shadowRoot;
+    const titleEl = root.querySelector('#entry-title');
+    const keysEl = root.querySelector('#entry-keys');
+    const contentEl = root.querySelector('#entry-content');
+    if (!titleEl || !keysEl || !contentEl) return false;
+
+    this._custom[this._selectedIndex] = {
+      ...this._custom[this._selectedIndex],
+      title: titleEl.value.trim(),
+      keys: keysEl.value.split(',').map(s => s.trim()).filter(Boolean),
+      content: contentEl.value
+    };
+    return true;
+  }
+
+  _captureViewState() {
+    const root = this.shadowRoot;
+    const active = root.activeElement;
+    return {
+      listScrollTop: root.querySelector('#entry-list')?.scrollTop || 0,
+      editorScrollTop: root.querySelector('.wb-editor')?.scrollTop || 0,
+      focusId: active?.id || '',
+      focusAction: active?.dataset?.action || '',
+      focusIndex: active?.dataset?.idx || '',
+      selectionStart: typeof active?.selectionStart === 'number' ? active.selectionStart : null,
+      selectionEnd: typeof active?.selectionEnd === 'number' ? active.selectionEnd : null
+    };
+  }
+
+  _rerenderWithView({
+    snapshot = this._captureViewState(),
+    listScrollTop = snapshot.listScrollTop,
+    editorScrollTop = snapshot.editorScrollTop,
+    focusSelector = '',
+    revealActive = false
+  } = {}) {
+    this._render();
+    this._bindEvents();
+
+    const root = this.shadowRoot;
+    const list = root.querySelector('#entry-list');
+    const editor = root.querySelector('.wb-editor');
+    if (list) list.scrollTop = listScrollTop;
+    if (editor) editor.scrollTop = editorScrollTop;
+    if (revealActive) root.querySelector('.wb-item.active')?.scrollIntoView({ block: 'nearest' });
+
+    let focusTarget = focusSelector ? root.querySelector(focusSelector) : null;
+    if (!focusTarget && snapshot.focusId) focusTarget = root.getElementById(snapshot.focusId);
+    if (!focusTarget && snapshot.focusAction && snapshot.focusIndex !== '') {
+      focusTarget = root.querySelector(`[data-action="${snapshot.focusAction}"][data-idx="${snapshot.focusIndex}"]`);
+    }
+    focusTarget?.focus({ preventScroll: true });
+    if (focusTarget && snapshot.selectionStart !== null && typeof focusTarget.setSelectionRange === 'function') {
+      const end = snapshot.selectionEnd ?? snapshot.selectionStart;
+      focusTarget.setSelectionRange(snapshot.selectionStart, end);
+    }
+    if (!revealActive && list) list.scrollTop = listScrollTop;
+    if (editor) editor.scrollTop = editorScrollTop;
+  }
+
   _export() {
     const data = JSON.stringify({
       builtinCount: this._builtin.length,
@@ -50,6 +112,8 @@ export class WorldbookEditor extends HTMLElement {
   }
 
   _import(file) {
+    this._captureCurrentEdit();
+    const snapshot = this._captureViewState();
     const reader = new FileReader();
     reader.onload = () => {
       try {
@@ -74,8 +138,7 @@ export class WorldbookEditor extends HTMLElement {
         }
         this._custom.forEach((e, i) => e._idx = i);
         this._save();
-        this._render();
-        this._bindEvents();
+        this._rerenderWithView({ snapshot, focusSelector: '#btn-import' });
         GameModal.alert({ title: '导入完成', message: `新增 ${added} 条，更新 ${updated} 条自定义条目。` });
       } catch (e) {
         GameModal.alert({ title: '导入失败', message: e.message });
@@ -105,18 +168,15 @@ export class WorldbookEditor extends HTMLElement {
     return result;
   }
 
-  _toggleCustom(entry) {
-    entry.enabled = !entry.enabled;
-    this._save();
-    this._render();
-    this._bindEvents();
-  }
-
   _toggleAllCustom(enable) {
+    this._captureCurrentEdit();
+    const snapshot = this._captureViewState();
     this._custom.forEach(e => e.enabled = enable);
     this._save();
-    this._render();
-    this._bindEvents();
+    this._rerenderWithView({
+      snapshot,
+      focusSelector: enable ? '#btn-enable-all' : '#btn-disable-all'
+    });
   }
 
   _restoreDefaults() {
@@ -128,8 +188,9 @@ export class WorldbookEditor extends HTMLElement {
       if (confirmed) {
         this._custom = [];
         this._save();
-        this._render();
-        this._bindEvents();
+        this._selectedType = null;
+        this._selectedIndex = -1;
+        this._rerenderWithView({ listScrollTop: 0, editorScrollTop: 0, focusSelector: '#btn-add' });
       }
     });
   }
@@ -169,12 +230,12 @@ export class WorldbookEditor extends HTMLElement {
               <input type="text" class="wb-search-input" id="search-input" placeholder="搜索条目..." value="${escAttr(this._searchQuery)}">
             </div>
             <div class="wb-list" id="entry-list">
-              <div class="wb-section-hdr" id="toggle-builtin">
+              <div class="wb-section-hdr" id="toggle-builtin" role="button" tabindex="0" aria-expanded="${this._builtinExpanded}">
                 内置世界书 <span class="count">${builtinSearch.length} 条 · 只读</span>
                 <span style="font-size:10px;color:rgba(232,228,217,0.3);">${this._builtinExpanded ? '▾' : '▸'}</span>
               </div>
               ${this._builtinExpanded ? builtinSearch.map(e => `
-                <div class="wb-item${this._selectedType === 'builtin' && this._selectedIndex === this._builtin.indexOf(e) ? ' active' : ''}" data-type="builtin" data-title="${escAttr(e.title)}">
+                <div class="wb-item${this._selectedType === 'builtin' && this._selectedIndex === this._builtin.indexOf(e) ? ' active' : ''}" data-type="builtin" data-idx="${this._builtin.indexOf(e)}" role="button" tabindex="0" aria-selected="${this._selectedType === 'builtin' && this._selectedIndex === this._builtin.indexOf(e)}">
                   <span class="wb-builtin-tag">内置</span>
                   <span class="wb-item-title">${escHtml(e.title || '无标题')}</span>
                   <span class="wb-item-meta">${(e.keys||[]).length} 关键词</span>
@@ -183,8 +244,8 @@ export class WorldbookEditor extends HTMLElement {
                 自定义世界书 <span class="count">${customSearch.length} 条${customSearch.length ? ` · 启用 ${customSearch.filter(e=>e.enabled!==false).length}` : ''}</span>
               </div>
               ${customSearch.map(e => `
-                <div class="wb-item${this._selectedType === 'custom' && this._selectedIndex === e._idx ? ' active' : ''}" data-type="custom" data-idx="${e._idx}">
-                  <div class="wb-item-toggle ${e.enabled !== false ? 'on' : ''}" data-action="toggle" data-idx="${e._idx}" title="${e.enabled !== false ? '已启用' : '已禁用'}"></div>
+                <div class="wb-item${this._selectedType === 'custom' && this._selectedIndex === e._idx ? ' active' : ''}" data-type="custom" data-idx="${e._idx}" role="button" tabindex="0" aria-selected="${this._selectedType === 'custom' && this._selectedIndex === e._idx}">
+                  <div class="wb-item-toggle ${e.enabled !== false ? 'on' : ''}" data-action="toggle" data-idx="${e._idx}" role="switch" tabindex="0" aria-checked="${e.enabled !== false}" title="${e.enabled !== false ? '已启用' : '已禁用'}"></div>
                   <span class="wb-item-title">${escHtml(e.title || '无标题')}</span>
                   <span class="wb-item-meta">${(e.keys||[]).length} 关键词</span>
                 </div>`).join('')}
@@ -209,7 +270,7 @@ export class WorldbookEditor extends HTMLElement {
               ${!isBuiltin ? `
               <div class="wb-form-group" style="display:flex;align-items:center;gap:12px;">
                 <label class="wb-form-label" style="margin:0;">挂载状态:</label>
-                <div class="wb-item-toggle ${selectedEntry.enabled !== false ? 'on' : ''}" id="entry-toggle" style="cursor:pointer;" title="${selectedEntry.enabled !== false ? '已启用挂载' : '已禁用挂载'}"></div>
+                <div class="wb-item-toggle ${selectedEntry.enabled !== false ? 'on' : ''}" id="entry-toggle" role="switch" tabindex="0" aria-checked="${selectedEntry.enabled !== false}" style="cursor:pointer;" title="${selectedEntry.enabled !== false ? '已启用挂载' : '已禁用挂载'}"></div>
                 <span style="font-size:12px;color:rgba(232,228,217,0.5);">${selectedEntry.enabled !== false ? '已挂载 · AI 可匹配此条目' : '未挂载 · AI 不会读取此条目'}</span>
               </div>` : ''}
               <div class="wb-form-group">
@@ -239,7 +300,10 @@ export class WorldbookEditor extends HTMLElement {
       this.remove();
     });
 
-    root.querySelector('#btn-export')?.addEventListener('click', () => this._export());
+    root.querySelector('#btn-export')?.addEventListener('click', () => {
+      this._saveCurrentEdit();
+      this._export();
+    });
     root.querySelector('#btn-restore')?.addEventListener('click', () => this._restoreDefaults());
 
     const fileInput = root.querySelector('#file-import');
@@ -250,29 +314,27 @@ export class WorldbookEditor extends HTMLElement {
     });
 
     root.querySelector('#search-input')?.addEventListener('input', (e) => {
-      this._saveCurrentEdit();
+      this._captureCurrentEdit();
+      const snapshot = this._captureViewState();
       this._searchQuery = e.target.value;
-      this._render();
-      this._bindEvents();
-      root.querySelector('#search-input')?.focus();
+      this._rerenderWithView({ snapshot, listScrollTop: 0, focusSelector: '#search-input' });
     });
 
     root.querySelector('#toggle-builtin')?.addEventListener('click', () => {
-      this._saveCurrentEdit();
+      this._captureCurrentEdit();
+      const snapshot = this._captureViewState();
       this._builtinExpanded = !this._builtinExpanded;
-      this._render();
-      this._bindEvents();
+      this._rerenderWithView({ snapshot, focusSelector: '#toggle-builtin' });
     });
 
     root.querySelector('#btn-add')?.addEventListener('click', () => {
-      this._saveCurrentEdit();
+      this._captureCurrentEdit();
       this._custom.push({ title: '新条目', keys: [], content: '', source: 'custom', enabled: true, _idx: this._custom.length });
       this._selectedType = 'custom';
       this._selectedIndex = this._custom.length - 1;
       this._searchQuery = '';
       this._save();
-      this._render();
-      this._bindEvents();
+      this._rerenderWithView({ listScrollTop: 0, editorScrollTop: 0, focusSelector: '#entry-title', revealActive: true });
     });
 
     root.querySelector('#btn-enable-all')?.addEventListener('click', () => this._toggleAllCustom(true));
@@ -287,8 +349,12 @@ export class WorldbookEditor extends HTMLElement {
         this._selectedIndex = Math.min(this._selectedIndex, this._custom.length - 1);
         if (this._custom.length === 0) { this._selectedType = null; this._selectedIndex = -1; }
         this._save();
-        this._render();
-        this._bindEvents();
+        this._rerenderWithView({
+          listScrollTop: 0,
+          editorScrollTop: 0,
+          focusSelector: this._selectedType === 'custom' ? '#entry-title' : '#btn-add',
+          revealActive: this._selectedType === 'custom'
+        });
       }
     });
 
@@ -305,17 +371,18 @@ export class WorldbookEditor extends HTMLElement {
       });
       this._selectedType = 'custom';
       this._selectedIndex = this._custom.length - 1;
+      this._searchQuery = '';
       this._save();
-      this._render();
-      this._bindEvents();
+      this._rerenderWithView({ listScrollTop: 0, editorScrollTop: 0, focusSelector: '#entry-title', revealActive: true });
     });
 
     root.querySelector('#entry-toggle')?.addEventListener('click', () => {
       if (this._selectedType !== 'custom' || this._selectedIndex < 0) return;
+      this._captureCurrentEdit();
+      const snapshot = this._captureViewState();
       this._custom[this._selectedIndex].enabled = !this._custom[this._selectedIndex].enabled;
       this._save();
-      this._render();
-      this._bindEvents();
+      this._rerenderWithView({ snapshot, focusSelector: '#entry-toggle' });
     });
 
     const allItems = root.querySelectorAll('.wb-item');
@@ -323,18 +390,28 @@ export class WorldbookEditor extends HTMLElement {
       item.addEventListener('click', (e) => {
         const toggleEl = e.target.closest('.wb-item-toggle');
         if (toggleEl) return;
-        this._saveCurrentEdit();
+        const captured = this._captureCurrentEdit();
+        const snapshot = this._captureViewState();
+        if (captured) this._save();
         const type = item.dataset.type;
         if (type === 'builtin') {
-          const title = item.dataset.title;
-          const idx = this._builtin.findIndex(b => b.title === title);
+          const idx = parseInt(item.dataset.idx, 10);
           if (idx >= 0) { this._selectedType = 'builtin'; this._selectedIndex = idx; }
         } else if (type === 'custom') {
           const idx = parseInt(item.dataset.idx, 10);
           if (idx >= 0 && idx < this._custom.length) { this._selectedType = 'custom'; this._selectedIndex = idx; }
         }
-        this._render();
-        this._bindEvents();
+        this._rerenderWithView({
+          snapshot,
+          editorScrollTop: 0,
+          focusSelector: this._selectedType === 'custom' ? '#entry-title' : '#btn-copy-to-custom'
+        });
+      });
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
       });
     });
 
@@ -344,33 +421,35 @@ export class WorldbookEditor extends HTMLElement {
         e.stopPropagation();
         const idx = parseInt(t.dataset.idx, 10);
         if (idx >= 0 && idx < this._custom.length) {
+          this._captureCurrentEdit();
+          const snapshot = this._captureViewState();
           this._custom[idx].enabled = !this._custom[idx].enabled;
           if (this._selectedType === 'custom' && this._selectedIndex === idx) {
             this._selectedEntry = this._custom[idx];
           }
           this._save();
-          this._render();
-          this._bindEvents();
+          this._rerenderWithView({ snapshot, focusSelector: `.wb-item-toggle[data-idx="${idx}"]` });
         }
       });
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          t.click();
+        }
+      });
+    });
+
+    root.querySelector('#toggle-builtin')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.currentTarget.click();
+      }
     });
   }
 
   _saveCurrentEdit() {
-    if (this._selectedType !== 'custom' || this._selectedIndex < 0 || this._selectedIndex >= this._custom.length) return;
-    const root = this.shadowRoot;
-    const titleEl = root.querySelector('#entry-title');
-    const keysEl = root.querySelector('#entry-keys');
-    const contentEl = root.querySelector('#entry-content');
-    if (titleEl && keysEl && contentEl) {
-      this._custom[this._selectedIndex] = {
-        ...this._custom[this._selectedIndex],
-        title: titleEl.value.trim(),
-        keys: keysEl.value.split(',').map(s => s.trim()).filter(Boolean),
-        content: contentEl.value
-      };
-      this._save();
-    }
+    if (this._captureCurrentEdit()) this._save();
   }
 }
 

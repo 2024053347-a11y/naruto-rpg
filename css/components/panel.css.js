@@ -181,6 +181,7 @@
 
         /* ── 任务勋章 (Mission Seals) ──── */
         .mission-seal {
+          position: relative;
           padding: 16px; margin-bottom: 0; display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: start;
           box-shadow: var(--shadow-inner); background: var(--surface-bento); border-radius: var(--r-md); transition: all 0.2s;
         }
@@ -203,13 +204,31 @@
         }
         .skill-card.bloodline.normal { background: var(--surface-bento); box-shadow: var(--shadow-inner); }
         .skill-title { font-family: var(--font-title); font-size: 16px; font-weight: 800; letter-spacing: 1px; color: var(--text-primary); }
-        .bloodline .skill-title { font-size: 20px; color: #ef5350; text-shadow: 0 0 10px rgba(239,83,80,0.5); letter-spacing: 4px; }
+        .bloodline .skill-title { font-size: 20px; color: var(--c-quality-legendary); text-shadow: 0 0 10px rgba(239,83,80,0.5); letter-spacing: 4px; }
         .bloodline.normal .skill-title { color: var(--text-secondary); text-shadow: none; letter-spacing: 2px; }
         
         .skill-mastery-tag {
           font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px;
           background: rgba(198,156,109,0.1); color: var(--c-kin-bright); border: 1px solid rgba(198,156,109,0.3);
         }
+
+        .skill-technique-stats {
+          display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px;
+        }
+        .skill-technique-stat {
+          display: inline-flex; align-items: baseline; gap: 6px; min-width: 88px;
+          padding: 6px 9px; border-radius: 6px;
+          background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05);
+          font-family: var(--font-mono);
+        }
+        .skill-technique-stat-label { font-size: 9px; color: var(--text-tertiary); letter-spacing: 0.5px; }
+        .skill-technique-stat strong { font-size: 12px; color: var(--text-primary); }
+        .skill-technique-stat[data-stat="power"] strong { color: #ff8a80; }
+        .skill-technique-stat[data-stat="cost"] strong { color: #80deea; }
+        .skill-technique-stats.compact { flex-wrap: nowrap; gap: 4px; margin: 0; }
+        .skill-technique-stats.compact .skill-technique-stat { min-width: 0; padding: 3px 6px; gap: 4px; }
+        .skill-technique-stats.compact .skill-technique-stat-label { font-size: 8px; }
+        .skill-technique-stats.compact .skill-technique-stat strong { font-size: 10px; }
         
         .skill-empty {
           display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -235,7 +254,7 @@
         .skill-section-body { overflow: visible; }
         .skill-section-body.collapsed { max-height: 0; opacity: 0; overflow: hidden; pointer-events: none; }
 
-        .skill-compact-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s; font-size: 12px; }
+        .skill-compact-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 8px 12px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s; font-size: 12px; }
         .skill-compact-row:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
         .skill-compact-row .skill-name { font-weight: 600; color: var(--text-primary); flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .skill-compact-row .skill-meta { font-size: 10px; color: var(--text-secondary); display: flex; gap: 8px; align-items: center; }
@@ -248,11 +267,11 @@
         .skill-detail-mastery div { height: 100%; border-radius: 2px; background: var(--c-kin-bright); transition: width 0.4s; }
 
         .mission-seal { border-left: 4px solid var(--border-subtle); padding-left: 12px; }
-        .mission-seal.S .rank-badge { color: #ef5350; }
-        .mission-seal.A .rank-badge { color: #eb613f; }
-        .mission-seal.B .rank-badge { color: #c69c6d; }
-        .mission-seal.C .rank-badge { color: #42A5F5; }
-        .mission-seal.D .rank-badge { color: #81c784; }
+        .mission-seal.S .rank-badge { color: var(--c-quality-legendary); }
+        .mission-seal.A .rank-badge { color: var(--c-shuiro); }
+        .mission-seal.B .rank-badge { color: var(--c-quality-epic); }
+        .mission-seal.C .rank-badge { color: var(--c-quality-rare); }
+        .mission-seal.D .rank-badge { color: var(--c-quality-uncommon); }
 
         /* ── 关系印记 (Fate Link) ──── */
         .rel-card-wrap {
@@ -275,7 +294,10 @@
         .rel-actions {
           position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; opacity: 0; transition: opacity 0.2s;
         }
-        .rel-card-wrap:hover .rel-actions { opacity: 1; }
+        .rel-card-wrap:hover .rel-actions,
+        .rel-card-wrap:focus-within .rel-actions,
+        .ema-card:hover .rel-actions,
+        .ema-card:focus-within .rel-actions { opacity: 1; }
         @media (hover: none) { .rel-actions { opacity: 1; } }
         .rel-action-btn {
           width: 26px; height: 26px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.35); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
@@ -344,6 +366,169 @@
         .empty { padding: 40px 20px; text-align: center; color: var(--text-tertiary); font-family: var(--font-body); font-size: 12px; line-height: 1.8; opacity: 0.8; }
         .empty em { font-style: normal; color: var(--text-primary); font-family: var(--font-title); }
 
+        /* ═══════════ 羁绊绘卷 v2 · Bond Scroll ═══════════ */
+        /* 情感温度七级色阶已上移至 tokens.css :root（供星图与 NPC 角色卡共用） */
+
+        /* ── 概览统计条 ──── */
+        .bond-overview {
+          display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+          margin-bottom: 18px; padding: 12px 14px;
+          background: rgba(0,0,0,0.25); border-radius: var(--r-md);
+          border: 1px solid var(--border-hairline);
+        }
+        .bond-ov-title {
+          font-family: var(--font-title); font-size: 11px; font-weight: 800;
+          color: var(--text-secondary); letter-spacing: 3px; margin-right: 4px;
+        }
+        .bond-pill {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 4px 11px; border-radius: var(--r-full);
+          font-size: 10px; font-weight: 700; letter-spacing: 1px;
+          background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+          color: var(--text-secondary); transition: all var(--dur-fast) var(--ease-out);
+        }
+        .bond-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pc, #888); box-shadow: 0 0 6px var(--pc, #888); }
+        .bond-pill b { font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; }
+        .bond-pill:hover { background: rgba(255,255,255,0.06); border-color: var(--border-default); }
+        .bond-pill.on { background: color-mix(in srgb, var(--pc, #888) 14%, transparent); border-color: color-mix(in srgb, var(--pc, #888) 45%, transparent); color: var(--text-primary); }
+
+        /* ── 视图切换 ──── */
+        .bond-view-toggle {
+          display: flex; gap: 4px; margin-left: auto;
+          background: rgba(0,0,0,0.3); border-radius: var(--r-sm); padding: 3px;
+          border: 1px solid var(--border-hairline);
+        }
+        .bond-vt-btn {
+          padding: 5px 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+          color: var(--text-tertiary); background: transparent; border: none;
+          border-radius: 4px; cursor: pointer; transition: all var(--dur-fast);
+          font-family: var(--font-title);
+        }
+        .bond-vt-btn:hover { color: var(--text-secondary); }
+        .bond-vt-btn.on { background: rgba(255,255,255,0.09); color: var(--text-primary); }
+
+        /* ── 绘马卡片网格 ──── */
+        .ema-grid {
+          display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 16px;
+        }
+        @media (max-width: 768px) { .ema-grid { grid-template-columns: 1fr; } }
+
+        /* 绘马卡片本体 */
+        .ema-card {
+          position: relative; cursor: pointer; overflow: hidden;
+          background:
+            radial-gradient(ellipse 120% 55% at 50% -8%, color-mix(in srgb, var(--tc) 16%, transparent), transparent 68%),
+            var(--surface-bento);
+          border-radius: var(--r-md); padding: 22px 18px 14px;
+          box-shadow: var(--shadow-inner);
+          transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), background 0.5s;
+          animation: ema-enter 0.5s var(--ease-out) backwards;
+        }
+        .ema-card:nth-child(2n) { animation-delay: 0.05s; }
+        .ema-card:nth-child(3n) { animation-delay: 0.1s; }
+        @keyframes ema-enter { from { opacity: 0; transform: translateY(14px); } }
+        .ema-card:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-inner-hover), 0 12px 32px -12px color-mix(in srgb, var(--tc) 45%, transparent);
+        }
+        /* 绘马顶部木片 + 系绳 */
+        .ema-card::before {
+          content: ''; position: absolute; top: 0; left: 0; right: 0; height: 12px;
+          background:
+            radial-gradient(circle 3px at 24% 6px, rgba(0,0,0,0.55) 98%, transparent),
+            radial-gradient(circle 3px at 76% 6px, rgba(0,0,0,0.55) 98%, transparent),
+            linear-gradient(to bottom, color-mix(in srgb, var(--tc) 22%, rgba(20,16,12,0.9)), rgba(20,16,12,0.9));
+          border-bottom: 1px solid color-mix(in srgb, var(--tc) 30%, transparent);
+        }
+        .ema-card::after {
+          content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+          background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.12), transparent);
+          pointer-events: none;
+        }
+        /* 置顶卡：绳结换金色 */
+        .ema-card.pinned::before {
+          background:
+            radial-gradient(circle 3px at 24% 6px, rgba(0,0,0,0.55) 98%, transparent),
+            radial-gradient(circle 3px at 76% 6px, rgba(0,0,0,0.55) 98%, transparent),
+            linear-gradient(to bottom, color-mix(in srgb, var(--c-kin) 40%, rgba(20,16,12,0.9)), rgba(20,16,12,0.9));
+          border-bottom-color: color-mix(in srgb, var(--c-kin) 50%, transparent);
+        }
+
+        /* 头部：名 + 温度印记 */
+        .ema-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding-right: 66px; }
+        .ema-head-main { flex: 1; min-width: 0; }
+        .ema-name {
+          font-family: var(--font-brush); font-size: 21px; font-weight: 900;
+          color: var(--text-primary); letter-spacing: 2px; line-height: 1.2;
+          display: flex; align-items: center; gap: 8px;
+        }
+        .ema-pin-mark { font-size: 12px; filter: none; }
+        .ema-meta {
+          display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 5px;
+          font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px;
+        }
+        .ema-faction {
+          padding: 2px 8px; border-radius: 3px;
+          background: rgba(198,156,109,0.1); color: var(--c-kin-bright);
+          border: 1px solid rgba(198,156,109,0.2); font-weight: 600;
+        }
+        /* 温度印章（圆形等级印） */
+        .ema-seal {
+          flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          background: color-mix(in srgb, var(--tc) 12%, rgba(0,0,0,0.4));
+          border: 1.5px solid color-mix(in srgb, var(--tc) 55%, transparent);
+          box-shadow: 0 0 12px -2px color-mix(in srgb, var(--tc) 40%, transparent), inset 0 0 8px color-mix(in srgb, var(--tc) 15%, transparent);
+          transform: rotate(-4deg);
+        }
+        .ema-seal-lv { font-family: var(--font-brush); font-size: 13px; font-weight: 900; color: var(--tc); line-height: 1.15; }
+        .ema-seal-val { font-family: var(--font-mono); font-size: 8px; color: color-mix(in srgb, var(--tc) 75%, transparent); }
+
+        /* 三维温度计 */
+        .ema-thermo { display: flex; flex-direction: column; gap: 9px; margin-bottom: 12px; }
+        .thermo-row { display: flex; align-items: center; gap: 8px; }
+        .thermo-label {
+          width: 30px; font-size: 10px; font-weight: 700; color: var(--text-tertiary);
+          letter-spacing: 2px; flex-shrink: 0;
+        }
+        .thermo-track {
+          flex: 1; height: 5px; border-radius: 3px; position: relative;
+          background: rgba(0,0,0,0.45); box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+        }
+        .thermo-track::before { /* 中线刻度 */
+          content: ''; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1px;
+          background: rgba(255,255,255,0.12);
+        }
+        .thermo-fill {
+          position: absolute; top: 0; bottom: 0; border-radius: 3px;
+          transition: width 0.6s var(--ease-out), left 0.6s var(--ease-out);
+          box-shadow: 0 0 6px color-mix(in srgb, var(--fc) 60%, transparent);
+        }
+        .thermo-fill.pos { left: 50%; background: linear-gradient(90deg, color-mix(in srgb, var(--fc) 55%, transparent), var(--fc)); }
+        .thermo-fill.neg { right: 50%; background: linear-gradient(270deg, color-mix(in srgb, var(--fc) 55%, transparent), var(--fc)); }
+        .thermo-val {
+          width: 30px; text-align: right; font-family: var(--font-mono);
+          font-size: 11px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0;
+        }
+
+        /* 羁绊标签 + 趋势 */
+        .ema-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 20px; }
+        .ema-tag {
+          font-size: 9px; padding: 3px 8px; border-radius: 3px; letter-spacing: 1px;
+          background: rgba(255,255,255,0.04); color: var(--text-secondary);
+          border: 1px solid var(--border-subtle);
+        }
+        .ema-trend {
+          margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+          font-size: 9px; font-family: var(--font-mono); letter-spacing: 0.5px;
+        }
+        .ema-trend.up { color: var(--tmp-warm); }
+        .ema-trend.down { color: var(--tmp-hostile); }
+        .ema-trend.flat { color: var(--text-tertiary); }
+
+        /* 悬停操作钮（沿用旧类，无需改） */
+
         /* ── 装备栏阶梯视觉系统 ──── */
         .eq-svg { width: 1.2em; height: 1.2em; display: inline-block; vertical-align: middle; }
         
@@ -369,19 +554,19 @@
         /* 阶梯化品质特质 */
         /* 普通: --surface-bento 默认无光效 */
         /* 精良 */
-        .eq-card[data-quality="精良"] { border-left: 2px solid #66BB6A; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(102,187,106,0.15); }
+        .eq-card[data-quality="精良"] { border-left: 2px solid var(--c-quality-uncommon); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(102,187,106,0.15); }
         /* 优秀 */
-        .eq-card[data-quality="优秀"] { border-left: 2px solid #42A5F5; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(66,165,245,0.2); }
+        .eq-card[data-quality="优秀"] { border-left: 2px solid var(--c-quality-rare); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(66,165,245,0.2); }
         /* 史诗 */
-        .eq-card[data-quality="史诗"] { 
-          border-left: 2px solid #c69c6d;
+        .eq-card[data-quality="史诗"] {
+          border-left: 2px solid var(--c-quality-epic);
           background: radial-gradient(circle at right bottom, rgba(198,156,109,0.1) 0%, var(--surface-bento) 70%);
           box-shadow: inset 0 0 0 1px rgba(198,156,109,0.2), -4px 0 20px -2px rgba(198,156,109,0.25);
         }
         /* 传说 */
         @keyframes legendaryPulse { 0% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } 50% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.5), 0 0 25px rgba(239,83,80,0.4); } 100% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } }
         .eq-card[data-quality="传说"] {
-          border-left: 2px solid #ef5350;
+          border-left: 2px solid var(--c-quality-legendary);
           background: radial-gradient(circle at right bottom, rgba(239,83,80,0.15) 0%, rgba(14,18,24,0.9) 80%);
           animation: legendaryPulse 3s infinite;
         }
@@ -391,8 +576,8 @@
           font-size: 64px; color: currentColor; opacity: 0.04; pointer-events: none;
           transform: rotate(-15deg); font-weight: 900;
         }
-        .eq-card[data-quality="史诗"] .eq-watermark { opacity: 0.08; color: #c69c6d; }
-        .eq-card[data-quality="传说"] .eq-watermark { opacity: 0.12; color: #ef5350; font-size: 80px; }
+        .eq-card[data-quality="史诗"] .eq-watermark { opacity: 0.08; color: var(--c-quality-epic); }
+        .eq-card[data-quality="传说"] .eq-watermark { opacity: 0.12; color: var(--c-quality-legendary); font-size: 80px; }
         
         .btn-sleek {
           background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
@@ -402,6 +587,28 @@
         }
         .btn-sleek:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
         .btn-sleek.active { background: rgba(255,255,255,0.1); border-color: var(--text-primary); color: var(--c-void); background: var(--text-primary); }
+
+        /* ── Bento 统一顶部高光（微光切割线，提升卡片存在感） ──── */
+        .attr-card::after, .item-card::after, .skill-card::after,
+        .rel-card-wrap::after, .eq-card::after, .mission-seal::after {
+          content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+          background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.12), transparent);
+          pointer-events: none;
+        }
+
+        /* ── 进度条流动光泽（查克拉微光；reduced-motion 与移动端自动关闭） ──── */
+        .attr-bar-fill, .dash-bar-fill, .skill-detail-mastery div { position: relative; overflow: hidden; }
+        .attr-bar-fill::after, .dash-bar-fill::after, .skill-detail-mastery div::after {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+          background-size: 200% 100%; background-repeat: no-repeat;
+          animation: bar-sheen 3.2s linear infinite;
+          pointer-events: none;
+        }
+        @keyframes bar-sheen { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+        @media (prefers-reduced-motion: reduce), (max-width: 768px) {
+          .attr-bar-fill::after, .dash-bar-fill::after, .skill-detail-mastery div::after { animation: none; }
+        }
 
 `;
 

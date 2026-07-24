@@ -1,0 +1,161 @@
+{
+  "schema_version": "naruto.technique.manifest.v1",
+  "balance_version": "project_balance_v2",
+  "scope": "NARUTO manga named jutsu; excludes Boruto and unnamed techniques",
+  "generated_from": "Narutopedia MediaWiki API with debut manga filter",
+  "shards": [
+    {
+      "id": "JT-DOJUTSU-P01",
+      "path": "shards/full/JT-DOJUTSU-P01.json",
+      "id_range": [
+        1,
+        27
+      ]
+    },
+    {
+      "id": "JT-EARTH-P01",
+      "path": "shards/full/JT-EARTH-P01.json",
+      "id_range": [
+        1,
+        41
+      ]
+    },
+    {
+      "id": "JT-FIRE-P01",
+      "path": "shards/full/JT-FIRE-P01.json",
+      "id_range": [
+        1,
+        43
+      ]
+    },
+    {
+      "id": "JT-GEN-P01",
+      "path": "shards/full/JT-GEN-P01.json",
+      "id_range": [
+        1,
+        23
+      ]
+    },
+    {
+      "id": "JT-LIGHTNING-P01",
+      "path": "shards/full/JT-LIGHTNING-P01.json",
+      "id_range": [
+        1,
+        33
+      ]
+    },
+    {
+      "id": "JT-MED-P01",
+      "path": "shards/full/JT-MED-P01.json",
+      "id_range": [
+        1,
+        10
+      ]
+    },
+    {
+      "id": "JT-OTHER-P01",
+      "path": "shards/full/JT-OTHER-P01.json",
+      "id_range": [
+        1,
+        75
+      ]
+    },
+    {
+      "id": "JT-OTHER-P02",
+      "path": "shards/full/JT-OTHER-P02.json",
+      "id_range": [
+        76,
+        150
+      ]
+    },
+    {
+      "id": "JT-OTHER-P03",
+      "path": "shards/full/JT-OTHER-P03.json",
+      "id_range": [
+        151,
+        225
+      ]
+    },
+    {
+      "id": "JT-OTHER-P04",
+      "path": "shards/full/JT-OTHER-P04.json",
+      "id_range": [
+        226,
+        251
+      ]
+    },
+    {
+      "id": "JT-PUPPET-P01",
+      "path": "shards/full/JT-PUPPET-P01.json",
+      "id_range": [
+        1,
+        9
+      ]
+    },
+    {
+      "id": "JT-SEAL-P01",
+      "path": "shards/full/JT-SEAL-P01.json",
+      "id_range": [
+        1,
+        60
+      ]
+    },
+    {
+      "id": "JT-SEN-P01",
+      "path": "shards/full/JT-SEN-P01.json",
+      "id_range": [
+        1,
+        24
+      ]
+    },
+    {
+      "id": "JT-SPACE-P01",
+      "path": "shards/full/JT-SPACE-P01.json",
+      "id_range": [
+        1,
+        29
+      ]
+    },
+    {
+      "id": "JT-SUMMON-P01",
+      "path": "shards/full/JT-SUMMON-P01.json",
+      "id_range": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "JT-TAI-P01",
+      "path": "shards/full/JT-TAI-P01.json",
+      "id_range": [
+        1,
+        75
+      ]
+    },
+    {
+      "id": "JT-TAI-P02",
+      "path": "shards/full/JT-TAI-P02.json",
+      "id_range": [
+        76,
+        106
+      ]
+    },
+    {
+      "id": "JT-WATER-P01",
+      "path": "shards/full/JT-WATER-P01.json",
+      "id_range": [
+        1,
+        43
+      ]
+    },
+    {
+      "id": "JT-WIND-P01",
+      "path": "shards/full/JT-WIND-P01.json",
+      "id_range": [
+        1,
+        40
+      ]
+    }
+  ],
+  "tombstones": []
+}

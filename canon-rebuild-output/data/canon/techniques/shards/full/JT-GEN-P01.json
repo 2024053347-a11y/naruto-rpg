@@ -1,0 +1,2785 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-GEN-P01",
+    "group": "gen",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 23,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-GEN-0001",
+      "canonical_name": "黒暗行之术",
+      "aliases": [
+        "黒暗行之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 78,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "施术者在目标视觉上施加幻觉性的黑暗，使其只能看到一片漆黑。斗之书将其比喻为身处深井底部的感觉。由于目标无法视物，极易受到攻击。这种不利状态即使对第三代火影级别的高手来说也是危险的。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HASHIRAMA-SENJU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "黒暗行之术",
+          "Bringer-of-Darkness Technique",
+          "Kokuangyo no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 122,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Bringer-of-Darkness_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 350,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Bringer-of-Darkness Technique",
+        "Kokuangyo no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0002",
+      "canonical_name": "威圧写轮眼",
+      "aliases": [
+        "威圧写轮眼"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,瞳术,幻术",
+        "阴遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "仅凭写轮眼的一瞥，此术将噩梦般的幻术强加于受害者身上，压制对方使其跪地。即使是平时没有感情的佐井也深受此幻术影响。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "威圧写轮眼",
+          "Coercion Sharingan",
+          "Iatsu Sharingan",
+          "Coercion Copy Wheel Eye"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 301,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Coercion_Sharingan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Coercion Sharingan",
+        "Iatsu Sharingan",
+        "Coercion Copy Wheel Eye"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-dōjutsu,-genjutsu",
+        "yin-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0003",
+      "canonical_name": "魔笛·夢幻音锁",
+      "aliases": [
+        "魔笛·夢幻音锁"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此幻术通过笛子施展。由于通过声音传播，因此对远距离也有效，甚至能影响使用者不知道位置的目标。听到笛声的人会产生四肢被捆绑的幻觉，无法动弹。同时还会看到恐怖的景象，精神上被削弱直至最终失去意识。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TAYUYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔笛·夢幻音锁",
+          "Demonic Flute: Phantom Sound Chains",
+          "Mateki: Mugen Onsa"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 208,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Flute%3A_Phantom_Sound_Chains"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 230,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Flute: Phantom Sound Chains",
+        "Mateki: Mugen Onsa"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0004",
+      "canonical_name": "魔幻·此処非之术",
+      "aliases": [
+        "魔幻·此処非之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术在某个地点上覆盖幻术，使其看起来像是另一个地点。由于幻术可覆盖范围极广，很容易欺骗他人：任何进入该区域的人都会被幻术影响，看到虚假的场景。但在如此大范围内制造幻术并可能欺骗很多人，增加了被熟悉幻术的人识破的可能性。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KOTETSU-HAGANE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·此処非之术",
+          "Demonic Illusion: False Surroundings Technique",
+          "Magen: Kokoni Arazu no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 36,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_False_Surroundings_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 165,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: False Surroundings Technique",
+        "Magen: Kokoni Arazu no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0005",
+      "canonical_name": "魔幻·奈落見之术",
+      "aliases": [
+        "魔幻·奈落見之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "D",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 15,
+      "power": 10,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术使目标看到自己最恐惧的事物，无论他们是否意识到自己害怕它。这种「恐惧」可以是目标实际害怕的东西，也可以是他们最不愿看到的景象。旗木卡卡西对小樱使用此术时，他与她进行眼神接触发动幻术，然后在一阵树叶旋涡中消失，留下小樱所恐惧的景象——濒死的宇智波佐助。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·奈落見之术",
+          "Demonic Illusion: Hell Viewing Technique",
+          "Magen: Narakumi no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 6,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Hell_Viewing_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "D",
+        "pressure": "standard",
+        "reference_pool": 88,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Hell Viewing Technique",
+        "Magen: Narakumi no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0006",
+      "canonical_name": "魔幻·蜃鴉",
+      "aliases": [
+        "魔幻·蜃鴉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,瞳术",
+        "阴遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此幻术将受害者困入强大的幻境中，无需眼神接触即可发动；与泡沫类似，但使用时也可以施加直接眼神接触。发动时，幻术投射出一群乌鸦，让对手任由使用者摆布。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·蜃鴉",
+          "Demonic Illusion: Mirage Crow",
+          "Magen: Shinkarasu",
+          "Demonic Illusion: Clam Crow"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 366,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Mirage_Crow"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Mirage Crow",
+        "Magen: Shinkarasu",
+        "Demonic Illusion: Clam Crow"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0007",
+      "canonical_name": "魔幻·镜天地転",
+      "aliases": [
+        "魔幻·镜天地転"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "当对方对自己使用幻术时，使用者用写轮眼快速解析幻术的运作方式，然后对攻击者施加相同的幻术。由于大多数幻术用于迷惑受害者，这种反转的幻术主要造成精神伤害。反转的幻术效果取决于使用者相对于攻击者的实力以及攻击者是否拥有自身的血继限界。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·镜天地転",
+          "Demonic Illusion: Mirror Heaven and Earth Change",
+          "Magen: Kyō Tenchi-ten"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 141,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Mirror_Heaven_and_Earth_Change"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Mirror Heaven and Earth Change",
+        "Magen: Kyō Tenchi-ten"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0008",
+      "canonical_name": "魔幻·枷杭之术",
+      "aliases": [
+        "魔幻·枷杭之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "首先需要使用幻术·写轮眼。对手被困入使用者创造的幻术世界中，受害者体验被木桩贯穿身体的感觉，失去行动自由。伴随幻术的身体疼痛揭示了此术最大的用途——拷问。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·枷杭之术",
+          "Demonic Illusion: Shackling Stakes Technique",
+          "Magen: Kasegui no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 345,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Shackling_Stakes_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Shackling Stakes Technique",
+        "Magen: Kasegui no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0009",
+      "canonical_name": "魔幻·気蒸の楼閣",
+      "aliases": [
+        "魔幻·気蒸の楼閣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术,协作术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种组合幻术，鬼灯幻月与他的巨蛤协力，通过操纵巨蛤喷出的蒸汽折射光线，制造出逼真的海市蜃楼。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GENGETSU-HO-ZUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·気蒸の楼閣",
+          "Demonic Illusion: Steaming Multistoried Building",
+          "Magen: Kijō no Rōkaku"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 552,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Steaming_Multistoried_Building"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 230,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Steaming Multistoried Building",
+        "Magen: Kijō no Rōkaku"
+      ],
+      "lookup_classes": [
+        "genjutsu,-collaboration-techniques",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0010",
+      "canonical_name": "魔幻·蝦蟇臨唱",
+      "aliases": [
+        "魔幻·蝦蟇臨唱"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "仙术,幻术,协作术",
+        "阴遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种由蟾蜍吟唱的声波型幻术，是蟾蜍最强大的幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·蝦蟇臨唱",
+          "Demonic Illusion: Toad Confrontation Chant",
+          "Magen: Gama Rinshō"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 379,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Toad_Confrontation_Chant"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Toad Confrontation Chant",
+        "Magen: Gama Rinshō"
+      ],
+      "lookup_classes": [
+        "senjutsu,-genjutsu,-collaboration-techniques",
+        "yin-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0011",
+      "canonical_name": "魔幻·树缚杀",
+      "aliases": [
+        "魔幻·树缚杀"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 48,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "目标经历被树木缠绕的幻觉，无法移动。由于目标虽无法移动但仍保持意识，此术是进行审讯的有效手段。使用者也可以直接杀死无法动弹的目标。此术在木叶村的村民中代代相传。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KURENAI-YU-HI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MIRAI-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "魔幻·树缚杀",
+          "Demonic Illusion: Tree Binding Death",
+          "Magen: Jubaku Satsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 141,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Demonic_Illusion%3A_Tree_Binding_Death"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 230,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Demonic Illusion: Tree Binding Death",
+        "Magen: Jubaku Satsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0012",
+      "canonical_name": "泡沫",
+      "aliases": [
+        "泡沫"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 117,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术让鼬以手指为媒介将对手置于幻术中。当对漩涡鸣人使用时，乌鸦从鼬身上涌出，在他结印后变成手里剑攻击鸣人，然后试图让他入睡。当鸣人抵抗睡眠指令时，他体验到自己身体部位变成最亲近的朋友并对进行精神折磨。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "泡沫",
+          "Ephemeral",
+          "Utakata"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 258,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Ephemeral"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Ephemeral",
+        "Utakata"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0013",
+      "canonical_name": "幻术·守护",
+      "aliases": [
+        "幻术·守护"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术用于防御幻术，保护施术者免受幻术影响。当施术者受到幻术攻击时，此术会自动生效并解除幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NAGATO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "幻术プロテクト",
+          "Genjutsu Protect",
+          "Genjutsu Purotekuto",
+          "Illusion Technique Protect"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 418,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Genjutsu_Protect"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Genjutsu Protect",
+        "Genjutsu Purotekuto",
+        "Illusion Technique Protect"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-GEN-0014",
+      "canonical_name": "幻术·写轮眼",
+      "aliases": [
+        "幻术·写轮眼"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,瞳术",
+        "阴遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "幻术·写轮眼泛指通过写轮眼施展的一系列幻术，也可以通过写轮眼的高级进化形态——万花筒写轮眼和轮回眼施展。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAKASHI-HATAKE",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "幻术·写轮眼",
+          "Genjutsu: Sharingan",
+          "Illusion Technique: Copy Wheel Eye"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 15,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Genjutsu%3A_Sharingan"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 1350,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Genjutsu: Sharingan",
+        "Illusion Technique: Copy Wheel Eye"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0015",
+      "canonical_name": "无限月読",
+      "aliases": [
+        "无限月読"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继网罗~轮回写轮眼,幻术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "无限月读是一种极其强大的幻术，将整个世界困入幻境中，使人类和动物群体陷入梦境，以便神树吸取他们的查克拉。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "无限月読",
+          "Infinite Tsukuyomi",
+          "Mugen Tsukuyomi",
+          "Infinite Moon Reader"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 676,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Infinite_Tsukuyomi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 1350,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Infinite Tsukuyomi",
+        "Mugen Tsukuyomi",
+        "Infinite Moon Reader"
+      ],
+      "lookup_classes": [
+        "kekkei-mōra~rinne-sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0016",
+      "canonical_name": "里樱",
+      "aliases": [
+        "里樱"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "体术,幻术,分身术",
+        "阴遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 109,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "虽然里樱在系列初期频繁出现，但在第一部中期以后几乎消失，第二部中很少出现。原因在于她不再需要隐藏在假笑之后，终于能真正说出自己的想法。但由于里樱通常表现出相当暴力的反应，小樱现在容易暴力爆发，加上她的查克拉强化力量，使得这种倾向更加恶化。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SAKURA-HARUNO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "内なるサクラ",
+          "Inner Sakura",
+          "Uchi Naru Sakura"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 3,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Inner_Sakura"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Inner Sakura",
+        "Uchi Naru Sakura"
+      ],
+      "lookup_classes": [
+        "taijutsu,-genjutsu,-clone-techniques",
+        "yin-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0017",
+      "canonical_name": "伊邪那岐",
+      "aliases": [
+        "伊邪那岐"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,禁术,瞳术",
+        "阴遁,阳遁",
+        "防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "伊邪那岐是一种通过写轮眼施展的幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "イザナギ",
+          "Izanagi"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 476,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Izanagi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 1350,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Izanagi"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-kinjutsu,-dōjutsu,",
+        "yin-release,-yang-release",
+        "defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-GEN-0018",
+      "canonical_name": "伊邪那美",
+      "aliases": [
+        "伊邪那美"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~写轮眼,幻术,禁术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 140,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "伊邪那美是宇智波一族终极瞳术之一。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "イザナミ",
+          "Izanami"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 586,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Izanami"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 1350,
+        "expected_uses": [
+          9,
+          10
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Izanami"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~sharingan,-genjutsu,-kinjutsu,-dōjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0019",
+      "canonical_name": "別天神",
+      "aliases": [
+        "別天神",
+        "别天神"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,幻术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "别天神是宇智波止水的万花筒写轮眼的标志性瞳术，对目标施加强大而精妙的精神控制幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-DANZO-SHIMURA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHISUI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "別天神",
+          "Kotoamatsukami",
+          "Distinguished Heavenly Gods"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 459,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Kotoamatsukami"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Kotoamatsukami",
+        "Distinguished Heavenly Gods"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-genjutsu,-dōjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0020",
+      "canonical_name": "霞従者之术",
+      "aliases": [
+        "霞従者之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术,分身术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "D",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 7,
+      "power": 10,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术创造出数个身着黑衣、幽灵般的身影，从周围环境中浮现。当牟比使用此术时，身影的外形与他有些相似，但并非精确的复制。黑色身影缓慢走向目标，引诱目标攻击。每次击中时，攻击都会穿过它们，仅短暂扭曲其形态。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MUBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "霞従者之术",
+          "Mist Servant Technique",
+          "Kasumi Jūsha no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 61,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Mist_Servant_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "D",
+        "pressure": "light",
+        "reference_pool": 88,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Mist Servant Technique",
+        "Kasumi Jūsha no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu,-clone-techniques,",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0021",
+      "canonical_name": "狐狸心中之术",
+      "aliases": [
+        "狐狸心中之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 28,
+      "power": 35,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使目标陷入幻术，在森林等环境中迷失方向，无论怎么走都会回到原点。此术常用于引导目标进入埋伏圈，或拖延时间。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBORO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KAGARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MUBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "狐狸心中之术",
+          "Sly Mind Affect Technique",
+          "Kori Shinchū no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 61,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sly_Mind_Affect_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 165,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sly Mind Affect Technique",
+        "Kori Shinchū no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0022",
+      "canonical_name": "涅槃精舎之术",
+      "aliases": [
+        "涅槃精舎之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "A",
+      "rank_basis": "databook",
+      "elements": [
+        "阴"
+      ],
+      "cost": 90,
+      "power": 120,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "范围内所有人都会看到同样的幻象：无数白色羽毛从天空飘落。如果目标看到足够多的羽毛落下，就会陷入深度睡眠。只有解除幻术，例如使用幻术解除，受害者才能恢复意识。如果目标足够警觉，他们也可以在羽毛催睡前自行解除幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KABUTO-YAKUSHI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "涅槃精舎之术",
+          "Temple of Nirvana Technique",
+          "Nehan Shōja no Jutsu"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 114,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Temple_of_Nirvana_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "A",
+        "pressure": "heavy",
+        "reference_pool": 350,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Temple of Nirvana Technique",
+        "Nehan Shōja no Jutsu"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    },
+    {
+      "id": "JT-GEN-0023",
+      "canonical_name": "月読",
+      "aliases": [
+        "月読",
+        "月读"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,幻术,瞳术",
+        "阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "阴"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "月读是万花筒写轮眼的瞳术，是现存最强大的幻术之一，据说代表精神领域，是天照的对立面。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "月読",
+          "Tsukuyomi",
+          "Moon Reader"
+        ],
+        "tags": [
+          "gen",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 142,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Tsukuyomi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-GEN-AUTO",
+        "reviewed_by": "manual-translation-JT-GEN-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Tsukuyomi",
+        "Moon Reader"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-genjutsu,-dōjutsu,",
+        "yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "yin"
+      ]
+    }
+  ],
+  "unresolved": []
+}

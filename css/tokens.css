@@ -18,46 +18,75 @@
   --c-moegi:       #16a06d;
   --c-ruri:        #2d6cdf;
 
+  /* 主强调色别名（供歌词播放器等通用组件引用） */
+  --color-primary: var(--c-shuiro);
+
+  /* ── 品质/评级阶梯色（语义色，不随主题变化） ── */
+  --c-quality-uncommon:  #66BB6A; /* 精良 · D级 */
+  --c-quality-rare:      #42A5F5; /* 优秀 · C级 */
+  --c-quality-epic:      #c69c6d; /* 史诗 · B级（同金） */
+  --c-quality-legendary: #ef5350; /* 传说 · S级 · 血继限界 */
+  --c-spirit:            #ab47bc; /* 精神力 */
+
+  /* ── 情感温度色阶（七级，羁绊系统语义色） ── */
+  --tmp-hatred:  #8a8f98;  /* 仇恨 · 灰烬 */
+  --tmp-hostile: #5b8dc9;  /* 敌意 · 冰蓝 */
+  --tmp-cold:    #7fa8c9;  /* 冷淡 · 淡蓝 */
+  --tmp-neutral: #a39f98;  /* 中立 · 素灰 */
+  --tmp-warm:    #e0a06e;  /* 友好 · 暖橙 */
+  --tmp-friend:  #eb613f;  /* 好友 · 朱红 */
+  --tmp-soul:    #e8c87a;  /* 挚友 · 炽金 */
+
   /* ── Cinematic Surfaces (Glassmorphism) ──────── */
+  /* 主题基调通道：由主题预设注入 :root，供下方 rgba() 派生；默认值 = 木叶卷轴 */
+  /* 通道用逗号分隔，确保 rgba(var(--x), α) 逗号语法在旧浏览器同样有效 */
+  --ink-deep-rgb:  7, 10, 14;    /* 壳层深墨（顶栏/侧栏/面板/编辑器遮罩） */
+  --ink-rgb:       11, 14, 19;   /* 卡片墨（玻璃卡/输入岛/弹窗） */
+  --paper-rgb:     255, 255, 255; /* 纸光（描边/高光/徽标底） */
+  --washi-rgb:     244, 241, 234; /* 和纸（次级文字基色） */
+
   --surface-base:  hsl(240, 5%, 8%); /* 最底层的阅读区玄色 */
   --surface-0:     var(--c-void);
-  --surface-1:     rgba(11, 14, 19, 0.65); /* 侧边栏/顶栏 */
-  --surface-2:     rgba(17, 21, 26, 0.50); /* 卡片底色 */
-  --surface-3:     rgba(25, 30, 38, 0.40); /* Hover/Active */
-  --surface-4:     rgba(35, 42, 53, 0.30);
-  
-  --surface-bento: rgba(255, 255, 255, 0.015); /* Bento Grid 默认底板 */
-  --surface-bento-hover: rgba(255, 255, 255, 0.04);
+  --surface-1:     rgba(var(--ink-rgb), 0.65); /* 侧边栏/顶栏 */
+  --surface-2:     rgba(var(--ink-rgb), 0.50); /* 卡片底色 */
+  --surface-3:     rgba(var(--ink-rgb), 0.40); /* Hover/Active */
+  --surface-4:     rgba(var(--ink-rgb), 0.30);
+
+  --surface-bento: rgba(var(--paper-rgb), 0.015); /* Bento Grid 默认底板 */
+  --surface-bento-hover: rgba(var(--paper-rgb), 0.04);
   --surface-inset: rgba(0, 0, 0, 0.4); /* 凹陷空槽背景 */
-  --surface-icon-wrapper: rgba(255, 255, 255, 0.03); /* 图标底座 */
-  --surface-icon-wrapper-hover: rgba(255, 255, 255, 0.08);
+  --surface-icon-wrapper: rgba(var(--paper-rgb), 0.03); /* 图标底座 */
+  --surface-icon-wrapper-hover: rgba(var(--paper-rgb), 0.08);
   
+  --blur-sm:       blur(6px) saturate(110%);
   --blur-md:       blur(12px) saturate(120%);
   --blur-lg:       blur(24px) saturate(150%);
   --blur-xl:       blur(40px) saturate(180%);
 
   /* ── Typography (杂志级排版) ──────── */
   --text-primary:    rgba(255, 255, 255, 0.95);
-  --text-secondary:  rgba(244, 241, 234, 0.70);
-  --text-tertiary:   rgba(244, 241, 234, 0.45);
+  --text-secondary:  rgba(var(--washi-rgb), 0.70);
+  --text-tertiary:   rgba(var(--washi-rgb), 0.45);
   --text-accent:     var(--c-shuiro);
   --text-gold:       var(--c-kin-bright);
 
   /* ── Borders (极简空间感，去除实体线) ──────── */
-  --border-hairline: rgba(255, 255, 255, 0.03);
-  --border-subtle:   rgba(255, 255, 255, 0.08);
-  --border-default:  rgba(255, 255, 255, 0.15);
-  --border-strong:   rgba(255, 255, 255, 0.30);
+  --border-hairline: rgba(var(--paper-rgb), 0.03);
+  --border-subtle:   rgba(var(--paper-rgb), 0.08);
+  --border-default:  rgba(var(--paper-rgb), 0.15);
+  --border-strong:   rgba(var(--paper-rgb), 0.30);
   --border-accent:   rgba(235, 97, 63,  0.40);
+  --border-accent:   color-mix(in srgb, var(--c-shuiro) 40%, transparent); /* 跟随主题强调色 */
 
   /* ── Shadows (克制的深度，移除脏感光晕) ──────── */
   --shadow-sm:     0 2px 8px rgba(0,0,0,0.4);
   --shadow-md:     0 8px 24px rgba(0,0,0,0.6);
   --shadow-lg:     0 24px 48px rgba(0,0,0,0.8);
   --shadow-glow:   0 8px 32px rgba(235, 97, 63, 0.2);
+  --shadow-glow:   0 8px 32px color-mix(in srgb, var(--c-shuiro) 20%, transparent);
   --shadow-glow-strong: 0 4px 14px 0 rgba(255, 81, 47, 0.39); /* 结印按钮高亮发光 */
-  --shadow-inner:  inset 0 0 0 1px rgba(255, 255, 255, 0.04); /* Linear-style 内描边切割线 */
-  --shadow-inner-hover: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-inner:  inset 0 0 0 1px rgba(var(--paper-rgb), 0.04); /* Linear-style 内描边切割线 */
+  --shadow-inner-hover: inset 0 0 0 1px rgba(var(--paper-rgb), 0.1);
   --shadow-inset-deep: inset 0 2px 6px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(0,0,0,0.8); /* 凹陷空槽 */
 
   /* ── Fonts ──────── */
@@ -81,11 +110,17 @@
   --chat-line-height: 1.9;     /* 舒适的阅读行高 */
 
   /* ── 对话/心理/正文 美化配色（默认适配深色背景，避免在酒馆 iframe 内被同色背景吃掉）── */
+  /* 默认值与 app.js _applyDisplayConfig 的运行时注入保持一致；注入存在时优先 */
   --chat-text-color:    rgba(255, 255, 255, 0.85);      /* 正文段落 */
   --chat-strong-color:  var(--text-primary);            /* 强调（粗体） */
   --chat-em-color:      var(--text-secondary);          /* 斜体 */
-  --chat-dialogue-color: #FFB74D;                       /* 「对话」中文/英文双引号包裹的台词 */
-  --chat-thought-color:  #81d4fa;                       /* （内心独白）全角括号包裹的心理描写 */
+  --chat-dialogue-color: #bae6fd;                       /* 「对话」台词 */
+  --chat-dialogue-shadow: rgba(186, 230, 253, 0.3);     /* 对话辉光（旧浏览器兜底） */
+  --chat-dialogue-shadow: color-mix(in srgb, var(--chat-dialogue-color) 30%, transparent);
+  --chat-thought-color:  #c4b5fd;                       /* （内心独白）心理描写 */
+  --chat-thought-shadow: rgba(196, 181, 253, 0.2);      /* 心理辉光（旧浏览器兜底） */
+  --chat-thought-shadow: color-mix(in srgb, var(--chat-thought-color) 20%, transparent);
+  --chat-mark-color:    #CE93D8;                        /* 正文 **强调** 标记色 */
 
   --fw-normal:   400;
   --fw-medium:   500;

@@ -8,13 +8,17 @@ import { missionSystem } from './systems/mission-system.js';
 import { relationshipSystem } from './systems/relationship-system.js';
 import { memorySystem } from './systems/memory-system.js';
 import { cloudSave } from './core/cloud-save.js';
+import { authClient } from './core/auth-client.js';
 import { worldStateSystem } from './systems/world-state-system.js';
 import { errorHandler } from './utils/error-handler.js';
 import { loadingIndicator } from './utils/loading-indicator.js';
 import { swNotifier } from './utils/sw-notifier.js';
 import { helpGuide } from './utils/help-guide.js';
-import { formatOpeningContractPrompt, resolveOpeningContract } from './systems/opening-contract.js';
+import { resolveOpeningContract } from './systems/opening-contract.js';
+import { buildOpeningPrompt } from './systems/opening-prompt.js';
 import { migrateStorage } from './core/storage-migrations.js';
+import { imageFeatureIntegration } from './core/image-studio/integration.js';
+import { resolveAICallPolicy } from './core/ai-call-policy.js';
 
 import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
@@ -33,12 +37,14 @@ import './ui/main-preset-editor.js';
 import './ui/variable-updater-preset-editor.js';
 import './ui/agent-progress.js';
 import './ui/map-modal.js';
+import './ui/image-studio.js';
 import SettingsPanel, { applyLocalSettings } from './ui/settings-panel.js';
 
 class NarutoRPGApp {
   constructor() {
     this.pipeline = null;
     this._state = 'init';
+    this._settingsTransition = Promise.resolve();
   }
 
   async init() {
@@ -70,6 +76,12 @@ class NarutoRPGApp {
       await timelineSystem.init();
     } catch (e) {
       console.warn('[NarutoRPG] IndexedDB init failed, running without persistence:', e.message);
+    }
+
+    try {
+      await imageFeatureIntegration.init();
+    } catch (error) {
+      console.warn('[NarutoRPG] Image Studio init failed; narrative remains available:', error.message);
     }
 
     this.pipeline = new MessagePipeline({
@@ -160,53 +172,9 @@ class NarutoRPGApp {
         const state = stateManager.get();
         const contract = state._opening_contract || payload.contract || resolveOpeningContract(state);
         stateManager.update([{ key: '系统·回合数', op: '=', value: 1 }]);
-        const playerNature = Array.isArray(state['玩家·查克拉属性'])
-          ? state['玩家·查克拉属性'].join(', ')
-          : state['玩家·查克拉属性'] || '未知';
-        const customLines = formatOpeningContractPrompt(contract, { compact: true });
-        const timelineLabel = state['世界·时间']?.year || state['世界·年代'] || '木叶48年';
-        const memoryEra = state._memory?.recent_summary || '';
-
-        // Check if secondary variable updater is enabled
         const apiCfg = stateManager.getAPIConfig() || {};
-        const updaterEnabled = apiCfg.variableUpdater?.enabled === true;
-
-        let startPrompt;
-        if (updaterEnabled) {
-          // Secondary updater handles variables — main model focuses on narrative only
-          startPrompt = `[开局请求] 新角色已创建。角色名: ${state['玩家·姓名'] || '忍者'}, 性别: ${state['玩家·性别']}, 忍阶: ${state['玩家·忍阶']}, 出身: ${state['玩家·出身']}, 查克拉属性: ${playerNature}。${customLines ? `\n必须执行的玩家开局契约:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
-
-【对主模型的强制指令】：
-请严格遵循【沉浸叙事铁律】，正文中绝对禁止出现任何数字、数值、符号。
-后台独立的变量更新模型会自动处理所有属性初始化（查克拉/体力/技能/物品等），你**完全不需要**在回复中使用 <var>、<status_query /> 或任何变量相关的XML标签。
-你只需要：
-1. 使用 <relationship> 标签为登场的每个NPC建立完整的人物卡（含战斗属性/忍术/内心想法/互动历史）
-2. 生成一段完整、有极强镜头感的开场剧情，正文不少于 1200 汉字。描绘木叶村此刻的氛围、玩家目前的处境、内心的独白，并抛出一个互动人物或线索引导玩家行动。
-3. 使用 <memory> 标签总结本回合。
-
-【对二次变量更新模型（AI）的特殊指令】：
-由于这是开局，这是**唯一一次全量状态与属性初始化**！你作为二次变量更新器，看到这条消息时，必须突破“只记录本回合变化”的限制，进行**深度的初始构建**：
-1. **合理化初始变量**：根据玩家分配的点数和上述【自定义设定】，如果玩家明确说明自己是高手（如“精英上忍”、“影级”等），**请务必使用 <variable> 标签大幅拔高对应的核心属性（如查克拉、体力上限、各系造诣）**，让其开局实力完美匹配文字设定。
-2. **专属能力与忍术生成**：请仔细阅读玩家的设定，结合其人设，**使用 <variable> 标签为其生成合理的招式库**（利用 path-based format，如 {"path":"skills.jutsu.招式名","op":"set","value":{...}}）。根据其等级自由分配 2~5 个合理的初始招式、天赋或血继限界，让他们在第一回合就有招可用！
-完成初始化后，正常输出变动的标签。`;
-        } else {
-          // No secondary updater — main model must output variables
-          startPrompt = `[开局请求] 新角色已创建。角色名: ${state['玩家·姓名'] || '忍者'}, 性别: ${state['玩家·性别']}, 忍阶: ${state['玩家·忍阶']}, 出身: ${state['玩家·出身']}, 查克拉属性: ${playerNature}。${customLines ? `\n必须执行的玩家开局契约:\n${customLines}` : ''}\n[当前时代: ${timelineLabel}]\n${memoryEra ? `[时代背景: ${memoryEra}]\n` : ''}
-【最高优先级系统任务：角色深度初始化】
-上述属性和选择均为用户选择，请你严格按照上述属性生成变量，另外【绝对不可以】在正文中直接提到这些具体的属性值、选择项或天赋名，应将其化用为具体的行动和剧情细节。
-这是开局的唯一一次全量状态与属性初始化。请你作为专业的 DM，使用对应的 XML 标签为该角色进行**深度的初始构建**。
-**初始化原则与必填项**：
-1. **合理化初始变量**：系统已经根据玩家分配的点数生成了一套”默认基础面板”。如果玩家在【自定义出身】或【玩家核心人设设定】中明确说明了自己是高手（如”精英上忍”、”影级”等），**请务必使用 <var> 标签大幅拔高对应的核心变量**，让其开局实力完美匹配玩家的文字设定。
-2. **专属能力与忍术生成**：请仔细阅读玩家设定的【自定义天赋】和【初始技能】，并结合其人设，**使用 <var> 标签为其生成合理的招式库**。
-    - 格式要求：使用扁平键名 <var> 块格式 '<var>\n键名 操作符 值\n</var>' 写入忍术（如 技能·忍术·火遁豪火球·等级 =C 技能·忍术·火遁豪火球·熟练度 =50）。
-    - 同样，天赋写入 '<variable key=”技能·天赋·天赋名” .../>'，血继限界写入 '技能·血继限界'。
-   - 这不仅是对已有设定的扩写，你可以根据其等级自由分配 2~5 个合理的初始招式，让他们在第一回合就有招可用！
-3. **构建深层人物关系**：如果开局剧情中生成了特定的互动人物（NPC），或玩家自定义人设中提到了重要的羁绊对象，请务必像后续正常回合那样，使用 <relationship> 标签为他们建立完整的关系档案。
-   - 必须在标签的内容中，详细扩写该 NPC 与玩家的【历史渊源】、他此刻对玩家的【真实心理想法】以及【潜在动机】（例如：<relationship name=”某某” affection=”30” trust=”50” respect=”20”>写明该NPC过去的经历，以及他现在内心对玩家的真实看法...</relationship>）。
-   - 在开局和今后的所有回合中，只要涉及人物关系，都必须保持这种深度的历史与心理剖析。
-
-在完成上述所有 \`<var>\` 和 \`<relationship>\` 的底层初始化后，请生成一段完整、有极强镜头感的开场剧情，正文不少于 1200 个汉字。描绘木叶村此刻的氛围、玩家目前的处境、内心的独白，并抛出一个互动人物或线索引导玩家行动。最后务必使用 <status_query /> 标签显示初始化后的面板。`;
-        }
+        const updaterEnabled = resolveAICallPolicy({ apiConfig: apiCfg }).features.variableUpdater;
+        const startPrompt = buildOpeningPrompt({ state, contract, updaterEnabled });
         this._pendingStartPrompt = startPrompt;
         await this.pipeline.process(startPrompt);
         this._pendingStartPrompt = null;
@@ -226,6 +194,16 @@ class NarutoRPGApp {
 
     eventBus.on('pipeline:cancel', () => {
       this.pipeline?.cancel();
+    });
+
+    eventBus.on('image:binding-changed', () => {
+      if (localStorage.getItem('naruto_auto_cloud_sync') !== 'true') return;
+      clearTimeout(this._imageCloudSyncTimer);
+      this._imageCloudSyncTimer = setTimeout(() => {
+        void this._syncCloudSaveAfterImage().catch(error => {
+          console.warn('[CloudSave] 图片绑定后的二次同步失败:', error.message);
+        });
+      }, 800);
     });
 
     eventBus.on('timeline:reroll-request', async ({ nodeId }) => {
@@ -300,7 +278,7 @@ class NarutoRPGApp {
           const history = await timelineSystem._reconstructChatHistory(node);
           this.pipeline?.setHistory(history);
           const pruned = result?.pruned || 0;
-          appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转，后续记录已被清除。');
+          appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转，后续记录已被清除。', { timelineNodeId: node?.id });
           this._sendSystemMessage(pruned > 0
             ? `时间线已逆转。已删除 ${pruned} 个后续回合，当前回合计为终末。`
             : '已回到当前回合。');
@@ -328,7 +306,7 @@ class NarutoRPGApp {
         stateManager.setSub('_meta', meta);
         const history = await timelineSystem._reconstructChatHistory(node);
         this.pipeline?.setHistory(history);
-        appShell.renderSinglePage(node.clean_response || node.ai_response_summary || '此处记忆残缺...');
+        appShell.renderSinglePage(node.clean_response || node.ai_response_summary || '此处记忆残缺...', { timelineNodeId: node.id });
       }
     });
 
@@ -409,18 +387,29 @@ class NarutoRPGApp {
       }
     });
 
-    eventBus.on('app:open-settings', () => {
-      const panel = new SettingsPanel();
-      (document.getElementById('app') || document.body).appendChild(panel);
+    eventBus.on('app:open-settings', (options = {}) => {
+      const route = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+      return this._openSettings({
+        mode: 'player',
+        section: typeof route.section === 'string' && route.section ? route.section : 'appearance',
+        anchor: typeof route.anchor === 'string' ? route.anchor : ''
+      });
+    });
+
+    eventBus.on('app:open-creator-workbench', (options = {}) => {
+      const route = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+      return this._openSettings({
+        mode: 'creator',
+        tool: typeof route.tool === 'string' ? route.tool : '',
+        resourceId: typeof route.resourceId === 'string' ? route.resourceId : ''
+      });
     });
 
     eventBus.on('app:open-profile', () => {
       this._openProfilePanel();
     });
 
-    eventBus.on('app:open-api-settings', () => {
-      this._openApiSettings();
-    });
+    eventBus.on('app:open-api-settings', () => this._openSettings({ mode: 'player', section: 'connection' }));
   }
 
   async _handleUserInput(text, accept = null) {
@@ -445,7 +434,7 @@ class NarutoRPGApp {
           const node = await timelineSystem.getCurrentNode();
           const history = await timelineSystem._reconstructChatHistory(node);
           this.pipeline?.setHistory(history);
-          appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转。');
+          appShell.renderSinglePage(node?.clean_response || node?.ai_response_summary || '时间线已逆转。', { timelineNodeId: node?.id });
         } else {
           return false;
         }
@@ -483,6 +472,16 @@ class NarutoRPGApp {
     return true;
   }
 
+  async _syncCloudSaveAfterImage() {
+    const data = await timelineSystem.getExportData({ includeArchive: false });
+    const preview = {
+      name: stateManager.get().player?.name || stateManager.get('玩家·姓名') || '未知',
+      location: stateManager.get().world_state?.current_location || stateManager.get('世界·地点') || '未知',
+      time: Date.now()
+    };
+    await cloudSave.quickSave('默认云存档', data, preview);
+  }
+
   async _checkSavedGame() {
     const meta = await stateManager.dbGet('timeline_meta', 'root');
     if (meta?.value?.current_id) {
@@ -501,7 +500,7 @@ class NarutoRPGApp {
           stateManager.setSub('_meta', metaObj);
           appShell.showGame();
           if (currentNode.clean_response) {
-            appShell.renderSinglePage(currentNode.clean_response);
+            appShell.renderSinglePage(currentNode.clean_response, { timelineNodeId: currentNode.id });
           }
           this._sendSystemMessage('欢迎回来！已恢复上次冒险。');
           return;
@@ -510,7 +509,7 @@ class NarutoRPGApp {
           // 恢复过程出错，但仍然显示游戏界面，让用户能看到存档内容
           // 而不是悄无声息地回退到角色创建界面
           appShell.showGame();
-          appShell.renderSinglePage(currentNode.clean_response || currentNode.ai_response_summary || '存档数据存在但恢复过程遇到问题。\n\n请尝试：\n1. 刷新页面重试\n2. 从时间线中选择其他节点\n3. 导出存档后重新导入');
+          appShell.renderSinglePage(currentNode.clean_response || currentNode.ai_response_summary || '存档数据存在但恢复过程遇到问题。\n\n请尝试：\n1. 刷新页面重试\n2. 从时间线中选择其他节点\n3. 导出存档后重新导入', { timelineNodeId: currentNode.id });
           this._sendSystemMessage(`存档恢复异常: ${err.message}。部分状态可能未能完全恢复，建议检查角色面板。`);
           const metaObj = stateManager.getSub('_meta');
           metaObj.current_node_id = meta.value.current_id;
@@ -525,9 +524,8 @@ class NarutoRPGApp {
           console.log('[NarutoRPG] Attempting recovery using fallback node...');
           const fallbackNode = allNodes.sort((a, b) => (b.turn_number || 0) - (a.turn_number || 0))[0];
           try {
-            if (fallbackNode.state_snapshot) {
-              stateManager.restore(fallbackNode.state_snapshot);
-            }
+            if (!fallbackNode.state_snapshot) throw new Error('备用节点缺少完整状态快照');
+            stateManager.restore(fallbackNode.state_snapshot);
             const history = await timelineSystem._reconstructChatHistory(fallbackNode);
             this.pipeline?.setHistory(history);
             const mObj = stateManager.getSub('_meta');
@@ -537,7 +535,7 @@ class NarutoRPGApp {
             meta.value.current_id = fallbackNode.id;
             await stateManager.dbPut('timeline_meta', meta);
             appShell.showGame();
-            appShell.renderSinglePage(fallbackNode.clean_response || fallbackNode.ai_response_summary || '已恢复到最近的存档节点。');
+            appShell.renderSinglePage(fallbackNode.clean_response || fallbackNode.ai_response_summary || '已恢复到最近的存档节点。', { timelineNodeId: fallbackNode.id });
             this._sendSystemMessage('元数据丢失，已自动恢复到最近的存档节点。');
             return;
           } catch (e) {
@@ -630,78 +628,233 @@ class NarutoRPGApp {
     const apiConfig = stateManager.getAPIConfig() || {};
     let autoSync = localStorage.getItem('naruto_auto_cloud_sync') === 'true';
 
+    // 四维百分比（纯展示计算）
+    const pctOf = (cur, max) => {
+      const c = Number(cur) || 0;
+      const m = Number(max) || 0;
+      return m > 0 ? Math.min(100, Math.round((c / m) * 100)) : 0;
+    };
+    const chakraPct = pctOf(attrs.chakra_current, attrs.chakra);
+    const vitalityPct = pctOf(attrs.vitality_current, attrs.vitality);
+    const staminaPct = pctOf(attrs.stamina_current, attrs.stamina);
+    const spiritPct = pctOf(attrs.spirit_current, attrs.spirit);
+
     const modal = new Modal();
     (document.getElementById('app') || document.body).appendChild(modal);
     modal.show({
       title: '个人中心 · 忍道卷轴',
       content: `
-        <div style="display:flex;flex-direction:column;gap:20px;padding:8px 0;">
-          <div style="text-align:center;padding:16px;background:rgba(198,156,109,0.06);border:1px solid rgba(198,156,109,0.15);border-radius:12px;">
-            <div style="width:64px;height:64px;border-radius:50%;background:rgba(235,97,63,0.15);border:2px solid rgba(235,97,63,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:var(--c-shuiro);">忍</div>
-            <div style="font-family:var(--font-title);font-size:18px;font-weight:700;color:#e8e4d9;letter-spacing:2px;">${this._escAttr(player.name || '未创建角色')}</div>
-            <div style="font-size:12px;color:#a39f98;margin-top:4px;">${this._escAttr(player.rank || '-')} · ${this._escAttr(player.official_rank || '-')}</div>
-            <div style="font-size:11px;color:rgba(198,156,109,0.7);margin-top:6px;">${this._escAttr(world.current_location || '-')} · ${this._escAttr(world.calendar || '-')}</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
-              <div style="font-size:10px;color:var(--c-kin);letter-spacing:1px;margin-bottom:6px;">查克拉</div>
-              <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#e8e4d9;">${attrs.chakra_current || 0}/${attrs.chakra || 0}</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
-              <div style="font-size:10px;color:#ef5350;letter-spacing:1px;margin-bottom:6px;">体力</div>
-              <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#e8e4d9;">${attrs.stamina_current || 0}/${attrs.stamina || 0}</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
-              <div style="font-size:10px;color:#ab47bc;letter-spacing:1px;margin-bottom:6px;">精神力</div>
-              <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#e8e4d9;">${attrs.spirit_current || 0}/${attrs.spirit || 0}</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
-              <div style="font-size:10px;color:var(--c-kin);letter-spacing:1px;margin-bottom:6px;">金钱</div>
-              <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#e8e4d9;">${prog.ryo || state['进度·金钱'] || 0}両</div>
-            </div>
-          </div>
-          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:14px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-              <div style="font-size:12px;color:#e8e4d9;font-weight:600;letter-spacing:1px;">云存档与同步</div>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-                <input type="checkbox" id="cb-auto-sync" ${autoSync ? 'checked' : ''} style="accent-color:var(--c-shuiro);">
-                <span style="font-size:11px;color:#a39f98;">开启自动云同步</span>
-              </label>
-            </div>
-            
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;color:#a39f98;" id="cloud-size-text">
-                <span>云端容量 (最高 200MB)</span>
-                <span>加载中...</span>
-              </div>
-              <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
-                <div id="cloud-size-bar" style="width:0%;height:100%;background:var(--c-kin);transition:width 0.3s ease;"></div>
-              </div>
-              <div id="cloud-size-warning" style="font-size:10px;color:#ef5350;margin-top:4px;display:none;">容量即将耗尽，请及时清理或精简冗余记忆。</div>
-            </div>
+        <style>
+          /* ── 忍道卷轴 · 作用域样式（Shadow DOM 内生效；全部 token 化，随主题切换） ── */
+          .pf { display: flex; flex-direction: column; gap: 22px; padding: 4px 0 2px; }
+          .pf-sec { animation: pf-rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+          @keyframes pf-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
-              <button class="btn btn-sm btn-primary" id="btn-cloud-upload" type="button" style="font-size:11px;background:rgba(198,156,109,0.15);border-color:rgba(198,156,109,0.3);color:var(--c-kin);">↑ 上传/覆盖</button>
-              <button class="btn btn-sm btn-secondary" id="btn-cloud-download" type="button" style="font-size:11px;">↓ 恢复</button>
-              <button class="btn btn-sm btn-secondary" id="btn-cloud-delete" type="button" style="font-size:11px;color:#ef5350;display:none;">× 删除</button>
+          /* 节标题：金色小字 + 右侧渐隐线（面板 sec-title 语言） */
+          .pf-sec-title {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+            font-size: 10px; font-weight: 700; letter-spacing: 4px;
+            font-family: var(--font-title, serif); color: var(--c-kin);
+          }
+          .pf-sec-title::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(to right, rgba(var(--paper-rgb), 0.08), transparent);
+          }
+
+          /* ── 卷首 · 身份 ── */
+          .pf-hero {
+            text-align: center; padding: 22px 18px 18px; position: relative; overflow: hidden;
+            background: radial-gradient(circle at 50% 0%, rgba(198,156,109,0.09), transparent 60%), rgba(var(--paper-rgb), 0.02);
+            background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--c-kin) 10%, transparent), transparent 60%), rgba(var(--paper-rgb), 0.02);
+            border: 1px solid rgba(var(--paper-rgb), 0.06);
+            border-radius: 14px;
+          }
+          .pf-hero::before {
+            content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.15), transparent);
+          }
+          .pf-avatar-ring { position: relative; width: 72px; height: 72px; margin: 0 auto 14px; }
+          .pf-avatar-ring::before {
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            background: conic-gradient(from 0deg,
+              transparent 0%, var(--c-shuiro) 14%, transparent 30%,
+              transparent 55%, var(--c-kin) 70%, transparent 86%);
+            animation: pf-spin 8s linear infinite;
+          }
+          .pf-avatar-ring::after {
+            content: ''; position: absolute; inset: -1px; border-radius: 50%;
+            border: 1px solid rgba(var(--paper-rgb), 0.1); pointer-events: none;
+          }
+          @keyframes pf-spin { to { transform: rotate(360deg); } }
+          .pf-avatar {
+            position: absolute; inset: 2px; border-radius: 50%; overflow: hidden;
+            background: rgba(var(--ink-deep-rgb), 0.85);
+            display: flex; align-items: center; justify-content: center;
+          }
+          .pf-avatar-char { font-family: var(--font-brush, cursive); font-size: 28px; color: var(--c-shuiro); }
+          .pf-avatar-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+          .pf-name {
+            font-family: var(--font-brush, cursive); font-size: 26px; letter-spacing: 3px; line-height: 1.25;
+            background: linear-gradient(90deg, var(--c-kin-bright) 0%, #fff 50%, var(--c-kin-bright) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent; -webkit-text-fill-color: transparent;
+            animation: pf-shine 5s linear infinite;
+          }
+          @keyframes pf-shine { to { background-position: 200% center; } }
+          .pf-rank { margin-top: 7px; font-size: 12px; color: var(--text-secondary); letter-spacing: 2px; font-family: var(--font-title, serif); }
+          .pf-loc { margin-top: 5px; font-size: 11px; letter-spacing: 1px; color: rgba(198,156,109,0.7); color: color-mix(in srgb, var(--c-kin) 70%, transparent); }
+
+          /* ── 卷身 · 四维 ── */
+          .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+          .pf-stat {
+            position: relative; overflow: hidden; padding: 12px 14px;
+            background: rgba(var(--paper-rgb), 0.02);
+            border: 1px solid rgba(var(--paper-rgb), 0.06);
+            border-radius: 10px;
+            transition: background 0.2s ease;
+          }
+          .pf-stat::before {
+            content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.12), transparent);
+          }
+          .pf-stat:hover { background: rgba(var(--paper-rgb), 0.045); }
+          .pf-stat-label { font-size: 10px; letter-spacing: 2px; margin-bottom: 5px; font-family: var(--font-title, serif); }
+          .pf-stat-val { font-family: var(--font-mono, monospace); font-size: 16px; font-weight: 700; color: var(--text-primary); }
+          .pf-stat-bar { margin-top: 8px; height: 2px; border-radius: 1px; background: rgba(var(--paper-rgb), 0.08); overflow: hidden; }
+          .pf-stat-fill { height: 100%; border-radius: 1px; position: relative; box-shadow: 0 0 6px currentColor; transition: width 0.6s ease; }
+          .pf-stat-fill::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%; background-repeat: no-repeat;
+            animation: pf-sheen 3.2s linear infinite;
+          }
+          @keyframes pf-sheen { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+
+          /* ── 卷尾 · 云存档与本地管理 ── */
+          .pf-cloud {
+            padding: 14px; border-radius: 10px;
+            background: rgba(var(--paper-rgb), 0.02);
+            border: 1px solid rgba(var(--paper-rgb), 0.05);
+          }
+          .pf-cloud-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+          .pf-cloud-title { font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--text-primary); font-family: var(--font-title, serif); }
+          .pf-sync { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 11px; color: var(--text-secondary); }
+          .pf-sync input { accent-color: var(--c-shuiro); }
+          .pf-meter-text { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; color: var(--text-secondary); }
+          .pf-meter { height: 5px; border-radius: 3px; background: rgba(var(--paper-rgb), 0.08); overflow: hidden; }
+          .pf-meter-fill { width: 0%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--c-kin), var(--c-kin-bright)); transition: width 0.4s ease; }
+          .pf-meter-warning { font-size: 10px; color: var(--c-quality-legendary); margin-top: 5px; display: none; }
+          .pf-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+          .pf-btn {
+            padding: 7px 10px; font-size: 11px; border-radius: 6px; cursor: pointer; letter-spacing: 1px;
+            border: 1px solid rgba(var(--paper-rgb), 0.12); background: rgba(var(--paper-rgb), 0.04);
+            color: var(--text-primary); transition: all 0.15s ease; font-family: var(--font-title, serif);
+          }
+          .pf-btn:hover { border-color: rgba(var(--paper-rgb), 0.25); background: rgba(var(--paper-rgb), 0.08); }
+          .pf-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+          .pf-btn-gold { border-color: rgba(198,156,109,0.35); background: rgba(198,156,109,0.12); color: var(--c-kin); }
+          .pf-btn-gold:hover { border-color: rgba(198,156,109,0.6); background: rgba(198,156,109,0.18); }
+          .pf-btn-danger { color: var(--c-quality-legendary); }
+          .pf-btn-danger:hover { border-color: rgba(239,83,80,0.4); background: rgba(239,83,80,0.08); }
+          .pf-divider { height: 1px; margin: 12px 0; background: rgba(var(--paper-rgb), 0.05); }
+          .pf-local { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+          .pf-local-label { font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; }
+          .pf-btn-sm { padding: 4px 10px; font-size: 10px; }
+          .pf-local-right { margin-left: auto; display: flex; gap: 6px; }
+          .pf-api-status { margin-top: 12px; font-size: 10px; color: var(--text-tertiary); display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+          .pf-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(var(--paper-rgb), 0.25); flex-shrink: 0; }
+          .pf-dot.on { background: var(--c-moegi); box-shadow: 0 0 6px var(--c-moegi); }
+
+          @media (prefers-reduced-motion: reduce), (max-width: 768px) {
+            .pf-stat-fill::after, .pf-avatar-ring::before { animation: none; }
+            .pf-name { animation: none; }
+          }
+        </style>
+
+        <div class="pf">
+          <!-- 卷首 · 身份 -->
+          <section class="pf-hero pf-sec" style="animation-delay: 0ms;">
+            <div class="pf-avatar-ring">
+              <div class="pf-avatar" id="pf-avatar"><span class="pf-avatar-char">忍</span></div>
             </div>
+            <div class="pf-name">${this._escAttr(player.name || '未创建角色')}</div>
+            <div class="pf-rank">${this._escAttr(player.rank || '-')} · ${this._escAttr(player.official_rank || '-')}</div>
+            <div class="pf-loc">${this._escAttr(world.current_location || '-')} · ${this._escAttr(world.calendar || '-')}</div>
+          </section>
 
-            <div style="height:1px;background:rgba(255,255,255,0.05);margin:12px 0;"></div>
-
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-              <span style="font-size:10px;color:#a39f98;margin-right:4px;">本地管理:</span>
-              <button class="btn btn-sm btn-secondary" id="btn-export-save" type="button" style="font-size:10px;padding:4px 8px;">导出</button>
-              <button class="btn btn-sm btn-secondary" id="btn-import-cloud" type="button" style="font-size:10px;padding:4px 8px;">导入</button>
-              <div style="margin-left:auto; display:flex; gap:6px;">
-                <button class="btn btn-sm btn-secondary" id="btn-display-config" type="button" style="font-size:10px;padding:4px 8px;">🎨 视觉</button>
-                <button class="btn btn-sm btn-secondary" id="btn-api-config" type="button" style="font-size:10px;padding:4px 8px;">API设置</button>
+          <!-- 卷身 · 核心状态 -->
+          <section class="pf-sec" style="animation-delay: 70ms;">
+            <div class="pf-sec-title"><span>核心状态</span></div>
+            <div class="pf-grid">
+              <div class="pf-stat">
+                <div class="pf-stat-label" style="color: var(--c-ruri);">查克拉</div>
+                <div class="pf-stat-val">${attrs.chakra_current || 0}/${attrs.chakra || 0}</div>
+                <div class="pf-stat-bar"><div class="pf-stat-fill" style="width: ${chakraPct}%; background: var(--c-ruri); color: var(--c-ruri);"></div></div>
+              </div>
+              <div class="pf-stat">
+                <div class="pf-stat-label" style="color: #66BB6A;">生命力</div>
+                <div class="pf-stat-val">${attrs.vitality_current || 0}/${attrs.vitality || 0}</div>
+                <div class="pf-stat-bar"><div class="pf-stat-fill" style="width: ${vitalityPct}%; background: #66BB6A; color: #66BB6A;"></div></div>
+              </div>
+              <div class="pf-stat">
+                <div class="pf-stat-label" style="color: var(--c-quality-legendary);">体力</div>
+                <div class="pf-stat-val">${attrs.stamina_current || 0}/${attrs.stamina || 0}</div>
+                <div class="pf-stat-bar"><div class="pf-stat-fill" style="width: ${staminaPct}%; background: var(--c-quality-legendary); color: var(--c-quality-legendary);"></div></div>
+              </div>
+              <div class="pf-stat">
+                <div class="pf-stat-label" style="color: var(--c-spirit);">精神力</div>
+                <div class="pf-stat-val">${attrs.spirit_current || 0}/${attrs.spirit || 0}</div>
+                <div class="pf-stat-bar"><div class="pf-stat-fill" style="width: ${spiritPct}%; background: var(--c-spirit); color: var(--c-spirit);"></div></div>
+              </div>
+              <div class="pf-stat">
+                <div class="pf-stat-label" style="color: var(--c-kin-bright);">金钱</div>
+                <div class="pf-stat-val">${prog.ryo || state['进度·金钱'] || 0}両</div>
               </div>
             </div>
-            
-            <div style="margin-top:10px;font-size:10px;color:rgba(163,159,152,0.5);">
-              ${apiConfig.model ? '已连接: ' + this._escAttr(apiConfig.model) : '未配置API连接'}
+          </section>
+
+          <!-- 卷尾 · 云存档与本地管理 -->
+          <section class="pf-sec" style="animation-delay: 140ms;">
+            <div class="pf-sec-title"><span>云存档与同步</span></div>
+            <div class="pf-cloud">
+              <div class="pf-cloud-head">
+                <div class="pf-cloud-title">云端存档</div>
+                <label class="pf-sync">
+                  <input type="checkbox" id="cb-auto-sync" ${autoSync ? 'checked' : ''}>
+                  <span>自动云同步</span>
+                </label>
+              </div>
+
+              <div>
+                <div class="pf-meter-text" id="cloud-size-text">
+                  <span>云端容量 (最高 200MB)</span>
+                  <span>加载中...</span>
+                </div>
+                <div class="pf-meter"><div class="pf-meter-fill" id="cloud-size-bar"></div></div>
+                <div class="pf-meter-warning" id="cloud-size-warning">容量即将耗尽，请及时清理或精简冗余记忆。</div>
+              </div>
+
+              <div class="pf-actions">
+                <button class="pf-btn pf-btn-gold" id="btn-cloud-upload" type="button">↑ 上传/覆盖</button>
+                <button class="pf-btn" id="btn-cloud-download" type="button">↓ 恢复</button>
+                <button class="pf-btn pf-btn-danger" id="btn-cloud-delete" type="button" style="display:none;">× 删除</button>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-local">
+                <span class="pf-local-label">游戏存档</span>
+                <button class="pf-btn pf-btn-sm" id="btn-export-save" type="button">导出游戏存档</button>
+                <button class="pf-btn pf-btn-sm" id="btn-import-cloud" type="button">导入游戏存档</button>
+              </div>
+
+              <div class="pf-api-status">
+                <span class="pf-dot${apiConfig.model ? ' on' : ''}"></span>
+                <span>${apiConfig.model ? '已连接 · ' + this._escAttr(apiConfig.model) : '未配置 API 连接'}</span>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       `,
       buttons: [
@@ -710,6 +863,21 @@ class NarutoRPGApp {
     });
 
     setTimeout(() => {
+      // Discord 头像异步填充（加载失败自动回退为「忍」字印）
+      authClient.checkAuth().then(user => {
+        const url = authClient.getAvatarUrl(user, 128);
+        const av = modal.shadowRoot?.querySelector('#pf-avatar');
+        if (url && av) {
+          const img = document.createElement('img');
+          img.className = 'pf-avatar-img';
+          img.alt = '';
+          img.decoding = 'async';
+          img.onerror = () => img.remove();
+          img.src = url;
+          av.appendChild(img);
+        }
+      }).catch(() => {});
+
       // Fetch cloud save size asynchronously
       cloudSave.listSaves().then(saves => {
         let sizeBytes = 0;
@@ -830,61 +998,67 @@ class NarutoRPGApp {
         };
         fileInput.click();
       });
-      modal.shadowRoot?.querySelector('#btn-api-config')?.addEventListener('click', () => {
-        modal.close();
-        setTimeout(() => this._openApiSettings(), 100);
-      });
-      modal.shadowRoot?.querySelector('#btn-display-config')?.addEventListener('click', () => {
-        modal.close();
-        setTimeout(() => this._openDisplaySettings(), 100);
-      });
     }, 150);
   }
 
-  _openDisplaySettings() {
-    const Modal = customElements.get('game-modal');
-    if (!Modal) return;
+  _openSettings(options = {}) {
+    const request = options && typeof options === 'object' && !Array.isArray(options)
+      ? { ...options }
+      : {};
+    request.mode = request.mode === 'creator' ? 'creator' : 'player';
 
-    const config = stateManager.getDisplayConfig();
-    const modal = new Modal();
-    (document.getElementById('app') || document.body).appendChild(modal);
-    modal.show({
-      title: '视觉与外观设置',
-      content: `
-        <display-config-form config='${this._escAttr(JSON.stringify(config))}'></display-config-form>
-      `,
-      buttons: [
-        { label: '取消', close: true },
-        {
-          label: '保存',
-          primary: true,
-          close: false,
-          onClick: async () => {
-            const form = modal.shadowRoot.querySelector('display-config-form');
-            if (form) {
-              const newConfig = form.getConfig();
-              stateManager.saveDisplayConfig(newConfig);
-              this._applyDisplayConfig(newConfig);
-              this._sendSystemMessage('视觉设置已保存。');
-            }
-            modal.close();
-            this._openProfilePanel();
-          }
-        }
-      ]
-    });
+    const transition = this._settingsTransition.then(() => this._performSettingsTransition(request));
+    this._settingsTransition = transition.catch(() => null);
+    return transition;
+  }
+
+  async _performSettingsTransition(options) {
+    const mode = options.mode;
+    const mount = document.getElementById('app') || document.body;
+
+    while (true) {
+      const current = mount.querySelector('settings-panel');
+      if (!current) break;
+
+      const currentMode = current.getAttribute('mode') === 'creator' ? 'creator' : 'player';
+      if (currentMode === mode) {
+        current.open(options);
+        return current;
+      }
+
+      const closed = await current.close();
+      if (!closed) return null;
+      if (current.isConnected) current.remove();
+    }
+
+    const panel = new SettingsPanel();
+    if (mode === 'creator') panel.setAttribute('mode', 'creator');
+    mount.appendChild(panel);
+    panel.open(options);
+    return panel;
+  }
+
+  _openDisplaySettings() {
+    return this._openSettings({ mode: 'player', section: 'appearance' });
   }
 
   _applyDisplayConfig(config) {
-    if (!config) return;
     let style = document.getElementById('dynamic-display-colors');
+    const dHex = config?.dialogueColor;
+    const tHex = config?.thoughtColor;
+    // 用户未自定义时：移除注入，回退到主题预设注入的 --chat-dialogue-color / --chat-thought-color
+    if (!dHex && !tHex) {
+      if (style) style.remove();
+      return;
+    }
+    if (!config) return;
     if (!style) {
       style = document.createElement('style');
       style.id = 'dynamic-display-colors';
       document.head.appendChild(style);
     }
-    const dHex = config.dialogueColor || '#bae6fd';
-    const tHex = config.thoughtColor || '#c4b5fd';
+    const dVal = dHex || '#bae6fd';
+    const tVal = tHex || '#c4b5fd';
     
     const hexToRgba = (hex, alpha) => {
       let c;
@@ -900,65 +1074,15 @@ class NarutoRPGApp {
     };
 
     style.textContent = `:root {
-      --color-dialogue: ${dHex};
-      --color-dialogue-shadow: ${hexToRgba(dHex, 0.3)};
-      --color-thought: ${tHex};
-      --color-thought-shadow: ${hexToRgba(tHex, 0.2)};
+      --color-dialogue: ${dVal};
+      --color-dialogue-shadow: ${hexToRgba(dVal, 0.3)};
+      --color-thought: ${tVal};
+      --color-thought-shadow: ${hexToRgba(tVal, 0.2)};
     }`;
   }
 
   _openApiSettings() {
-    const Modal = customElements.get('game-modal');
-    if (!Modal) return;
-
-    const config = stateManager.getAPIConfig() || {};
-    const modal = new Modal();
-    (document.getElementById('app') || document.body).appendChild(modal);
-    modal.show({
-      title: 'API 设置',
-      content: `
-        <api-config-form config='${this._escAttr(JSON.stringify(config))}' show-advanced></api-config-form>
-        <div style="color: #6e6a65; font-size: 11px; line-height: 1.6; margin-top: 14px; text-align: left;">API Key 仅保存在本机浏览器 localStorage。导出时间线会下载当前 IndexedDB 存档 JSON。</div>
-        <div style="color: #eb613f; font-size: 11px; line-height: 1.6; margin-top: 6px; text-align: left;">重置存档会清空时间线和角色状态，但不会删除 API 配置。</div>
-      `,
-      buttons: [
-        { label: '关闭' },
-        {
-          label: '导出时间线',
-          close: false,
-          onClick: async () => {
-            try {
-              await timelineSystem.exportTimeline();
-              this._sendSystemMessage('时间线已导出。');
-            } catch (error) {
-              this._sendSystemMessage(`导出失败: ${error.message}`);
-            }
-          }
-        },
-        {
-          label: '重置存档',
-          close: false,
-          onClick: async () => this._confirmEmergencyReset(modal)
-        },
-        {
-          label: '保存配置',
-          primary: true,
-          close: false,
-          onClick: async () => {
-            const form = modal.shadowRoot.querySelector('api-config-form');
-            const nextConfig = form ? form.getConfig() : null;
-            if (!nextConfig) {
-              this._sendSystemMessage('保存失败：请填写完整的 API 地址、Key 和模型名称。');
-              return;
-            }
-            await stateManager.saveAPIConfig(nextConfig);
-            aiClient.configure(nextConfig);
-            modal.close();
-            this._sendSystemMessage('API 配置已更新。');
-          }
-        }
-      ]
-    });
+    return this._openSettings({ mode: 'player', section: 'connection' });
   }
 
   _escAttr(value) {

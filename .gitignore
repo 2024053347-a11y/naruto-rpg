@@ -27,11 +27,10 @@ server/db/*.db-journal
 server/db/*.db-wal
 /server/data/
 
-# 本地发布脚本（包含服务器地址和部署路径，仅保留在本机）
+# 包含服务器地址的本地部署配置与旧脚本
 /deploy.sh
+/deploy.local.psd1
 /一键打包.bat
-/部署正式站.bat
-/部署测试站.bat
 
 # 隐私/临时文件
 *.png
@@ -39,3 +38,22 @@ server/db/*.db-wal
 !public/img/*.png
 discord-proxy-worker.js
 app-shell-history.txt
+
+# 根目录一次性数据修复、翻译检查与诊断产物
+/.codex-tmp/
+/*.py
+/*_dump.json
+/remaining_*.json
+/summary_*.txt
+/temp_*.txt
+/unique_english_texts.txt
+/exact_source_output.txt
+
+# 正史数据重建的本地辅助脚本与中间产物（正式 JSON 与 .mjs 构建器保留）
+/canon-rebuild-output/**/*.py
+/canon-rebuild-output/**/*.pyc
+/canon-rebuild-output/**/__pycache__/
+/canon-rebuild-output/**/*.txt
+/canon-rebuild-output/**/*-BATCH-*-output.json
+/canon-rebuild-output/data/canon/timeline/shards/plot/build_batch.ps1
+/canon-rebuild-output/reports/validation-report.json

@@ -1,0 +1,3625 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P1-SASUKE",
+    "namespace": "P1",
+    "arc_ids": [
+      "ARC-P1-SASUKE"
+    ],
+    "date_start": "K064-05-15",
+    "date_end": "K064-06-15"
+  },
+  "days": [
+    {
+      "id": "DAY-P1-SASUKE-515",
+      "date": "K064-05-15",
+      "title": "医院屋顶与停火使团",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "只在真实伤势与关系前置成立时推进屋顶冲突，同时建立砂隐从有限停火走向可授权合作的外交位置。",
+      "start_state": [
+        "佐助是否遭月读、何时苏醒以及能否活动，继承K064-05-01后的实际病历；未受相应伤害时不得补写苏醒过程。",
+        "佐助的成长焦虑只能来自实际发生的兄弟交锋、咒印、任务比较或其他可见经历。",
+        "砂木关系继承风影核验、伪令撤销与停火文书的实际结果。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-ROOFTOP-01",
+          "title": "千鸟与螺旋丸",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶医院屋顶",
+          "participants": [
+            "宇智波佐助",
+            "漩涡鸣人",
+            "春野樱",
+            "旗木卡卡西",
+            "玩家角色（若已通过第七班、医疗或屋顶警戒关系合理在场）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助与鸣人均已获准在医院范围活动，且实际经历已形成尚未解决的实力比较或信任冲突。",
+            "卡卡西或其他有效制止者能够在高风险忍术命中前赶到屋顶。"
+          ],
+          "blockers": [
+            "佐助或鸣人仍因伤无法战斗。",
+            "兄弟交锋、月读与等价挫败均未发生且没有其他可信冲突来源，或玩家已落实有效调停。"
+          ],
+          "setup": "只有佐助与鸣人均获准活动且存在未解决的真实比较冲突时，佐助才主动挑战鸣人；在场玩家可在普通切磋、高风险升级或卡卡西到场前介入。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-ROOFTOP-01-01",
+              "order": 10,
+              "summary": "佐助以确认实力为由向鸣人发起挑战。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOFTOP-01-02",
+              "order": 20,
+              "summary": "体术和忍具交锋无法解决双方情绪，冲突升级。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOFTOP-01-03",
+              "order": 30,
+              "summary": "玩家可要求停止、呼叫卡卡西、限制术式或允许受监督切磋；无人成功降级时二人才可能选择高风险招式。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOFTOP-01-04",
+              "order": 40,
+              "summary": "卡卡西或实际制止者介入，避免两术直接命中。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOFTOP-01-05",
+              "order": 50,
+              "summary": "佐助只依据实际看到的术式、破坏与他人反应更新实力判断。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "屋顶冲突被制止但关系裂缝没有解决。",
+            "小樱和卡卡西确认佐助状态危险。"
+          ],
+          "state_changes": [
+            "第七班内部信任下降。",
+            "佐助的离村风险上升。"
+          ],
+          "stop_condition": "双方离开屋顶且不再继续攻击。",
+          "fallbacks": [
+            {
+              "condition": "佐助或鸣人仍因伤无法战斗。；兄弟交锋、月读与等价挫败均未发生且没有其他可信冲突来源，或玩家已落实有效调停。",
+              "status": "altered",
+              "direction": "按当前伤情和真实冲突来源改为受监督切磋、谈话或取消冲突；不得为了展示水塔破坏强制二人使用千鸟与螺旋丸。",
+              "preserves": "保留佐助实际经历造成的成长焦虑和第七班需要持续干预的事实，不补写未发生的月读创伤。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·医院屋顶冲突",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "离村动机来自实际创伤、比较和未完成复仇，不把冲突简化成嫉妒一个术。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SAND-LIAISON-01",
+          "title": "停火核验使团的离村交接",
+          "thread_id": "THR-P1-SAND-DIPLOMACY",
+          "location": "木叶外交客舍",
+          "participants": [
+            "砂隐核验使团",
+            "我爱罗",
+            "手鞠",
+            "勘九郎",
+            "木叶外交联络忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐已通过本国调查确认风影状态、撤销伪令并与木叶签署有限停火核验安排。",
+            "我爱罗、手鞠、勘九郎与正式联络人员仍能组成使团。"
+          ],
+          "blockers": [
+            "砂隐证据不足、停火破裂或三姐弟无法承担外交任务。",
+            "玩家已建立另一条获双方承认的核验渠道。"
+          ],
+          "setup": "只有砂隐已完成本国核验并与木叶签署有限停火安排时，三姐弟才随核验使团完成证物与责任交接；离村路线登记在火之国西北联络驿，不把停火自动写成完全同盟。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SAND-LIAISON-01-01",
+              "order": 10,
+              "summary": "双方逐项核对风影状态、伪令样本、俘虏与战场损害中允许交换的内容。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-LIAISON-01-02",
+              "order": 20,
+              "summary": "砂隐使团承认本村参战责任，同时保留对大蛇丸网络的共同调查需求。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-LIAISON-01-03",
+              "order": 30,
+              "summary": "三姐弟只接收返程护卫、联络规则和未来紧急求援的权限边界。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-LIAISON-01-04",
+              "order": 40,
+              "summary": "使团登记经西北联络驿返砂路线及每日联络窗口。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂木关系进入可撤回的停火核验与有限协作阶段。",
+            "三姐弟之后只有收到正式求援，才能从联络驿改变返程路线。"
+          ],
+          "state_changes": [
+            "记录使团成员、公开情报、返程路线、联络暗号和支援授权边界。"
+          ],
+          "stop_condition": "使团完成木叶阶段交接并按登记路线前往西北联络驿。",
+          "fallbacks": [
+            {
+              "condition": "砂隐证据不足、停火破裂或三姐弟无法承担外交任务。；玩家已建立另一条获双方承认的核验渠道。",
+              "status": "altered",
+              "direction": "按实际外交状态延期、改派或缩小使团；未完成本国授权时不得把砂隐三姐弟写成木叶盟军。",
+              "preserves": "保留风影真相、参战责任、有限停火和之后每次跨村支援都需要正式授权。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·砂木关系修复",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足核验使团、返程路线与有限支援授权"
+            }
+          ],
+          "design_rationale": "给六月的砂隐援军建立外交身份、实际位置与通信权限，不用原作数据库让他们自动成为盟军。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "屋顶线按实际前置记录冲突、调停或跳过结果；未发生的月读与水塔破坏不会被补写。",
+        "砂隐核验使团只有在停火前置成立时进入西北返程路线。"
+      ],
+      "transition": "K064-05-16仅在屋顶冲突或其他危险征兆成立时安排卡卡西干预；砂隐使团继续按登记路线前往西北联络驿。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-516",
+      "date": "K064-05-16",
+      "title": "卡卡西的劝告",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "给予佐助一次有逻辑但不足以立即治愈创伤的成人干预，并显示木叶任务压力如何中断持续照护。",
+      "start_state": [
+        "屋顶冲突或其他危险征兆只有实际发生并被卡卡西获知时，才形成单独干预前置。",
+        "佐助的复仇、咒印与信任状态继承当前记录，不由本日标题自动加重。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-KAKASHI-01",
+          "title": "被绑在树旁的谈话",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶外围训练林",
+          "participants": [
+            "宇智波佐助",
+            "旗木卡卡西"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "屋顶事件使卡卡西确认佐助有伤害同伴和受咒印诱导的风险。",
+            "佐助仍在木叶且愿意或被要求接受单独谈话。"
+          ],
+          "blockers": [
+            "屋顶冲突未发生且没有其他危险征兆。",
+            "佐助已离村、被拘押或由其他可信导师接管持续照护。"
+          ],
+          "setup": "卡卡西阻止佐助离开谈话，以自己失去重要之人的经历说明复仇无法恢复死者，并要求他珍惜仍在的同伴。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-KAKASHI-01-01",
+              "order": 10,
+              "summary": "卡卡西解除佐助可能立即使用千鸟的风险。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-KAKASHI-01-02",
+              "order": 20,
+              "summary": "佐助质疑卡卡西是否理解失去家族。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-KAKASHI-01-03",
+              "order": 30,
+              "summary": "卡卡西说明自己同样失去所有重要之人。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-KAKASHI-01-04",
+              "order": 40,
+              "summary": "佐助没有承诺放弃复仇，但短暂动摇。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "佐助获得一条不同于大蛇丸的选择依据。",
+            "卡卡西知道一次谈话不足以解决问题。"
+          ],
+          "state_changes": [
+            "佐助状态标记为需要持续观察。"
+          ],
+          "stop_condition": "卡卡西因紧急任务或警报离开，佐助独自消化谈话。",
+          "fallbacks": [
+            {
+              "condition": "屋顶冲突未发生且没有其他危险征兆。；佐助已离村、被拘押或由其他可信导师接管持续照护。",
+              "status": "altered",
+              "direction": "依据已经发生的危险征兆改写谈话内容与地点；若已有长期照护方案，改为交接观察记录而非重复说教。",
+              "preserves": "保留佐助获得木叶替代道路、创伤不会被一次谈话治愈的因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·卡卡西劝告佐助",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "成人劝告应留下影响但不能神奇治愈长期创伤。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "发生谈话的分支记录佐助的回应与后续观察责任；跳过分支保留实际关系和警戒状态。",
+        "任何持续监护缺口都必须由任务、人手或佐助选择造成。"
+      ],
+      "transition": "K064-05-17至19按实际状态恢复、执行短任务或接受监护；K064-05-20音忍四人众只有取得路线且佐助仍可接触时才尝试招揽。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-520",
+      "date": "K064-05-20",
+      "title": "音忍四人众的邀约",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "让大蛇丸阵营用力量展示和心理操控提出可拒绝的邀请，而非后台决定佐助必然叛逃。",
+      "start_state": [
+        "大蛇丸的双臂、容器需求、音忍四人众状态和对佐助的兴趣继承木叶崩溃实际结果。",
+        "佐助是否对木叶成长道路失去信心，只能由此前真实创伤、比较、咒印与干预结果决定。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-SOUND4-01",
+          "title": "力量差距的展示",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "木叶外围森林",
+          "participants": [
+            "宇智波佐助",
+            "音忍四人众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助仍在木叶外围独自活动，天之咒印仍可被大蛇丸阵营利用。",
+            "音忍四人众尚未暴露或失去行动能力，并掌握接触佐助的路线。"
+          ],
+          "blockers": [
+            "佐助已接受严密保护、咒印隔离或可信替代训练。",
+            "音忍四人众被捕、击退，或玩家切断其入境与通信渠道。"
+          ],
+          "setup": "音忍四人众拦截佐助，以咒印二状态和协同战斗压倒他，宣称只有前往大蛇丸处才能获得足以击败鼬的力量。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SOUND4-01-01",
+              "order": 10,
+              "summary": "四人众证明他们掌握佐助咒印相关情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SOUND4-01-02",
+              "order": 20,
+              "summary": "佐助尝试反击却被咒印二力量压制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-SOUND4-01-03",
+              "order": 30,
+              "summary": "多由也把留村描述为力量停滞，把离村描述为唯一捷径。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SOUND4-01-04",
+              "order": 40,
+              "summary": "四人众留下期限后撤离，要求佐助自行选择。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "佐助知道大蛇丸提供咒印二强化。",
+            "离村从抽象念头变成可执行路径。"
+          ],
+          "state_changes": [
+            "音忍招揽进入倒计时。"
+          ],
+          "stop_condition": "四人众离开木叶巡逻范围，佐助未立即跟随。",
+          "fallbacks": [
+            {
+              "condition": "佐助已接受严密保护、咒印隔离或可信替代训练。；音忍四人众被捕、击退，或玩家切断其入境与通信渠道。",
+              "status": "altered",
+              "direction": "按剩余渠道改为密信、代理人或咒印反应诱导；所有渠道都被切断时跳过招揽，不得让佐助凭空得知音隐路线。",
+              "preserves": "保留大蛇丸争夺佐助的意图与佐助对力量捷径的主体选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·音忍四人众招揽佐助",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "必须保留佐助的决策时间；战败和操控提供压力，但不替他作选择。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "发生接触的分支中，佐助持有来自大蛇丸阵营的明确邀请；被阻止或跳过分支不补写邀请内容。",
+        "木叶是否知道接触只由目击、报告与证物决定。"
+      ],
+      "transition": "K064-05-21至22按实际接触结果进行观察、警戒、治疗或正常任务；K064-05-23仅承接已经存在的第七班关系问题。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-523",
+      "date": "K064-05-23",
+      "title": "无法恢复的日常",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "通过一次普通任务显示团队表面恢复、内里失联，为最终决定积累而非强推。",
+      "start_state": [
+        "本日场景只在佐助仍留木叶且第七班具备低风险任务资格时成立。",
+        "第七班只知道成员亲历或被正式告知的屋顶、招揽与咒印信息。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-TEAM7-01",
+          "title": "短任务中的沉默",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶村内护送路线",
+          "participants": [
+            "第七班",
+            "任务委托人"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "第七班仍可执行村内低风险任务，佐助尚未正式离队。",
+            "至少一名队友有机会在任务间隙询问佐助近况。"
+          ],
+          "blockers": [
+            "第七班已停编、成员仍住院或佐助已披露音忍招揽。",
+            "玩家已促成有效沟通并建立具体治疗或训练安排。"
+          ],
+          "setup": "第七班执行低风险护送，佐助能完成分工却回避近况；玩家可在不危及委托人的时机选择直接询问、私下通知卡卡西、提出受监督训练或尊重沉默。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-TEAM7-01-01",
+              "order": 10,
+              "summary": "卡卡西给出清晰而低风险的任务分工。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM7-01-02",
+              "order": 20,
+              "summary": "佐助机械完成职责并在休息点回避非必要交流。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM7-01-03",
+              "order": 30,
+              "summary": "玩家选择公开询问、私下接触、报告危险征兆或不介入。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM7-01-04",
+              "order": 40,
+              "summary": "佐助根据关系和方式选择透露音忍接触、只承认咒印不适或继续隐瞒。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM7-01-05",
+              "order": 50,
+              "summary": "队伍把实际获知的内容交给相应知情人后完成护送。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "第七班仍具任务功能，但情感协作取决于本场交流。",
+            "音忍招揽可能继续保密，也可能提前进入卡卡西或木叶的医疗与安保流程。"
+          ],
+          "state_changes": [
+            "记录谁知道音忍接触或咒印不适、佐助对各成员的信任变化及委托完成状态。"
+          ],
+          "stop_condition": "委托人安全抵达，队伍完成情报交接或明确保持沉默后解散。",
+          "fallbacks": [
+            {
+              "condition": "第七班已停编、成员仍住院或佐助已披露音忍招揽。；玩家已促成有效沟通并建立具体治疗或训练安排。",
+              "status": "altered",
+              "direction": "按当前队伍状态改为复诊、受监督训练或坦白后的任务协作；不得强制佐助继续隐瞒已被公开的招揽。",
+              "preserves": "保留第七班关系需要用行动修复、普通任务会检验沟通质量的作用。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助离村前状态",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "用正常任务检验关系，并让玩家的沟通方式实际改变后续警戒与医疗入口。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "队伍没有发生新战斗，但关键秘密是继续隐藏还是进入木叶处理链已经明确。"
+      ],
+      "transition": "K064-05-24至26按本场结果进行独自训练、受监督训练、复诊或观察；K064-05-27仅在咒印仍不稳定时显化风险。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-527",
+      "date": "K064-05-27",
+      "title": "咒印的代价",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "提醒佐助强化并非无成本，并给木叶医疗或玩家干预一个最后的技术入口。",
+      "start_state": [
+        "只有天之咒印实际存在且仍受邪法封印压制时，才会出现本日强化风险。",
+        "佐助只有亲历音忍接触或其他可靠渠道时才知道更高阶段的说法。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-CURSE-01",
+          "title": "封印松动",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "宇智波族地训练场",
+          "participants": [
+            "宇智波佐助"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助仍持有受邪法封印压制的天之咒印，且近期训练或情绪会刺激它。",
+            "佐助尚未完成咒印治疗，也未被音忍带走。"
+          ],
+          "blockers": [
+            "咒印已被移除、完全隔离或转入医疗监测。",
+            "佐助拒绝独自试探咒印，并向卡卡西、实际医疗或封印负责人、玩家求助。"
+          ],
+          "setup": "佐助在高强度训练中主动触碰咒印力量，邪法封印处出现灼痛、查克拉紊乱和短暂力量提升；玩家若在场可制止透支、取药、求援或协助记录症状。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-CURSE-01-01",
+              "order": 10,
+              "summary": "常规训练无法立即缩小佐助认知中的实力差距。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-CURSE-01-02",
+              "order": 20,
+              "summary": "咒印在情绪和查克拉刺激下回应，佐助的控制与体力开始下降。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-CURSE-01-03",
+              "order": 30,
+              "summary": "佐助体验力量提升、疼痛和动作失控的双重结果。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-CURSE-01-04",
+              "order": 40,
+              "summary": "佐助或在场玩家选择隐瞒、停止训练、求医或向可信角色坦白。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "咒印风险从背景变成当前身体问题。",
+            "木叶能否取得症状、招揽和训练消耗情报由本场选择决定。"
+          ],
+          "state_changes": [
+            "记录当晚封印稳定度、剩余查克拉、疼痛程度及知情人；求医分支立即暂停独自训练。"
+          ],
+          "stop_condition": "佐助停止使用咒印并确定当晚是留在族地观察、前往医院还是联系可信角色。",
+          "fallbacks": [
+            {
+              "condition": "咒印已被移除、完全隔离或转入医疗监测。；佐助拒绝独自试探咒印，并向卡卡西、实际医疗或封印负责人、玩家求助。",
+              "status": "altered",
+              "direction": "若佐助求医，改为检查封印稳定度、限制训练和追查招揽来源；若咒印已失效，跳过力量暴走，不得凭空恢复。",
+              "preserves": "保留佐助必须在危险强化与可信帮助之间作出选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·天之咒印与离村诱惑",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "强化系统必须呈现代价和可被拒绝的治疗路线，同时给玩家可改变后续警戒的技术入口。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助已亲自确认咒印能提供力量也会侵蚀控制。",
+        "咒印状态与招揽情报是否进入木叶医疗链由分支决定。"
+      ],
+      "transition": "K064-05-28用于按本日选择恢复、复诊、受监护训练或继续隐瞒；K064-05-29佐助形成最终决定。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-529",
+      "date": "K064-05-29",
+      "title": "佐助的决定",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "把离村确定为佐助在多条不完美道路中的主动错误选择，并为重大分支预设留村替代线。",
+      "start_state": [
+        "音忍邀请只有实际送达且渠道未被切断时才仍有效。",
+        "卡卡西劝告、同伴关系、木叶医疗与替代训练只有实际发生或被告知时才进入佐助的已知道路。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-DECISION-01",
+          "title": "族地中的取舍",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "宇智波族地旧宅",
+          "participants": [
+            "宇智波佐助"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助已接触至少一条音忍邀请，也知道留村治疗、同伴支持或受监护训练中的一条替代路线。",
+            "佐助仍能自主决定去留。"
+          ],
+          "blockers": [
+            "佐助已被强行带走、死亡或失去自主意识。",
+            "玩家已切断招揽并与佐助落实他认可的长期成长方案。"
+          ],
+          "setup": "佐助整理鼬的压迫、屋顶比较、卡卡西劝告、同伴关系和大蛇丸邀约，决定是否以离村换取危险力量。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-DECISION-01-01",
+              "order": 10,
+              "summary": "佐助回看当前技能、伤势和复仇目标的真实差距。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-DECISION-01-02",
+              "order": 20,
+              "summary": "他权衡留村成长、向同伴求助与接受大蛇丸捷径。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-DECISION-01-03",
+              "order": 30,
+              "summary": "基准线中，佐助决定秘密离村但不把同伴视为无意义。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "佐助形成可执行决定。"
+          ],
+          "state_changes": [
+            "基准分支进入离村准备；替代分支进入留村治疗、监护或公开冲突。"
+          ],
+          "stop_condition": "佐助准备所需物品并确定行动时间，或明确放弃邀请。",
+          "fallbacks": [
+            {
+              "condition": "佐助已被强行带走、死亡或失去自主意识。；玩家已切断招揽并与佐助落实他认可的长期成长方案。",
+              "status": "altered",
+              "direction": "结算佐助当前实际掌握的道路；留村时进入治疗、监护或反情报线，离村时记录他选择的路线与装备，不得预设基准结果。",
+              "preserves": "保留复仇创伤、力量需求和选择后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助决定离村",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足决定前的因果清单"
+            }
+          ],
+          "design_rationale": "把重大决定集中在角色自身视角，不让音忍或叙事者代替他。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "基准线中佐助选择离村。",
+        "选择仍可能在出村前被玩家或同伴改变。"
+      ],
+      "transition": "K064-05-30进行最后准备并留下可被发现的异常。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-530",
+      "date": "K064-05-30",
+      "title": "离村前的最后一天",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "给同伴发现征兆和尝试沟通的最后机会，同时避免提前把次日离村记成既成事实。",
+      "start_state": [
+        "基准线中佐助已经决定离村。",
+        "第七班尚未收到正式退出通知。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-PREDEPART-01",
+          "title": "未领取的任务",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶任务处",
+          "participants": [
+            "春野樱",
+            "漩涡鸣人",
+            "旗木卡卡西",
+            "任务处值勤忍者"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助仍在村内，且其去留决定尚未向第七班完整公开。",
+            "任务缺席、物品整理或训练中断至少留下一个可调查征兆。"
+          ],
+          "blockers": [
+            "佐助已公开留村或正式申请离队。",
+            "玩家已发现计划并启动警戒、谈判或保护措施。"
+          ],
+          "setup": "第七班集合时确认佐助没有领取任务、请假或提交离队申请；成员可先寻找本人、核对医院记录或请求值勤忍者提高村门留意等级。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-PREDEPART-01-01",
+              "order": 10,
+              "summary": "值勤记录确认佐助没有按通常方式回应集合。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-PREDEPART-01-02",
+              "order": 20,
+              "summary": "医院和任务记录无法解释缺席，离村风险上升但仍非定论。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-PREDEPART-01-03",
+              "order": 30,
+              "summary": "队伍决定由谁前往族地、谁通知火影或村门，以及是否继续等待。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "佐助的异常缺席成为有时间戳的任务处记录。",
+            "玩家的警戒选择决定族地调查和村门响应速度。"
+          ],
+          "state_changes": [
+            "任务处记录知情人、搜索分工和当前警戒等级。"
+          ],
+          "stop_condition": "调查分工与通知范围明确，任务处不再承担族地搜索。",
+          "fallbacks": [
+            {
+              "condition": "佐助已公开留村或正式申请离队。；玩家已发现计划并启动警戒、谈判或保护措施。",
+              "status": "altered",
+              "direction": "按已发现线索结算搜索和警戒；若计划已公开，改为正式谈判或保护交接，不能让村方无视有效证据。",
+              "preserves": "保留同伴警觉会改变离村难度和次日响应速度。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助离村前",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "先把行政异常固定为证据，再把不同地点的调查拆出，避免同场景瞬移。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-ROOM-CHECK-01",
+          "title": "旧宅留下的征兆",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "宇智波族地旧宅",
+          "participants": [
+            "春野樱",
+            "漩涡鸣人",
+            "旗木卡卡西",
+            "玩家角色（若参与调查）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "任务处已确认佐助异常缺席，且第七班或玩家决定前往宇智波族地核查。",
+            "佐助的旧宅仍可进入，并保留其实际整理、训练或通信痕迹。"
+          ],
+          "blockers": [
+            "佐助已到任务处说明去留或正式办理离队。",
+            "玩家没有取得进入许可，或佐助已清除全部可验证线索。"
+          ],
+          "setup": "获准进入旧宅的调查者核对随身衣物、忍具、训练痕迹与近期通信，只能从现场实际缺失和留下的物品判断佐助是否准备长期离开。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-ROOM-CHECK-01-01",
+              "order": 10,
+              "summary": "调查者先确认佐助本人不在旧宅。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOM-CHECK-01-02",
+              "order": 20,
+              "summary": "必要忍具和少量旅行物品的缺失与日常杂物仍在形成不完整线索。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-ROOM-CHECK-01-03",
+              "order": 30,
+              "summary": "玩家决定立即封锁已知路线、留下谈判信息、继续隐蔽观察或因证据不足降低警戒。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "木叶获得一组可验证但不等于全知的离村征兆。",
+            "佐助若回到旧宅仍可发现搜索和留言并改变决定。"
+          ],
+          "state_changes": [
+            "记录被带走的装备、最后活动时间、调查者知情范围和村门警戒调整。"
+          ],
+          "stop_condition": "调查者离开旧宅并把结论送到实际获授权的指挥者。",
+          "fallbacks": [
+            {
+              "condition": "佐助已到任务处说明去留或正式办理离队。；玩家没有取得进入许可，或佐助已清除全部可验证线索。",
+              "status": "altered",
+              "direction": "只依据现场存在的物品与痕迹提高或降低警戒；没有证据时保留不确定性，不得让调查者凭空知道音忍计划。",
+              "preserves": "保留调查所得、谁知道结论及其对村门警戒和拦截路线的影响。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助离村前",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足可调查的装备与值勤记录"
+            }
+          ],
+          "design_rationale": "把族地调查变成真实介入点；找到证据必须改变次日拦截条件。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助尚在村内或正等待行动窗口。",
+        "任务处记录、装备缺口和同伴警觉程度均已明确。"
+      ],
+      "transition": "K064-06-01凌晨仅在佐助仍选择离村且未被有效控制时触发出村；否则进入留村保护与反情报分支。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-601",
+      "date": "K064-06-01",
+      "title": "离村、追踪与援军请求",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "按凌晨出村、咒印仪式、任务授权、实际出发和外援传令依次推进，并为佐助留下后的分支提供独立结算。",
+      "start_state": [
+        "音忍四人众只在佐助仍选择离村时于木叶北侧外缘等待。",
+        "前日调查已经确定同伴、任务处与村门分别掌握多少线索。",
+        "佐助也可能在本日拦截中选择留下。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-GATE-01",
+          "title": "樱花树下的告别",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "木叶北门内侧樱花树下",
+          "participants": [
+            "宇智波佐助",
+            "春野樱",
+            "玩家角色（若参与拦截）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助仍决定秘密离村并能抵达北门内侧的出村路。",
+            "小樱已从前日线索判断路线并在佐助越界前赶到。"
+          ],
+          "blockers": [
+            "佐助已选择留村、被保护性控制或改走其他路线。",
+            "小樱不知道计划、无法行动，或玩家已在更早位置拦截佐助。"
+          ],
+          "setup": "凌晨，小樱依据前日线索在北门内侧拦住佐助；她能提出留村、求医、向卡卡西坦白或由自己陪同报告，玩家可协助说服、呼叫守卫或选择不阻拦。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-GATE-01-01",
+              "order": 10,
+              "summary": "小樱说明自己从缺席和旧宅线索判断了离村路线。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-GATE-01-02",
+              "order": 20,
+              "summary": "她提出数条可立即执行的留村方案，佐助回应自己对复仇和力量的判断。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-GATE-01-03",
+              "order": 30,
+              "summary": "玩家的说服、警报或放行改变佐助能否秘密越界。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-GATE-01-04",
+              "order": 40,
+              "summary": "基准线中佐助道谢后使小樱暂时失去追赶能力；替代线中他留下或被控制。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助是否越过木叶边界得到明确结算。",
+            "小樱和任何在场者只掌握亲历的路线、话语与伤势。"
+          ],
+          "state_changes": [
+            "记录佐助位置、离村或留村状态、小樱行动能力、守卫警戒和报告开始时间。"
+          ],
+          "stop_condition": "佐助与音忍会合、留在村内或进入安全控制，三者之一明确成立。",
+          "fallbacks": [
+            {
+              "condition": "佐助已选择留村、被保护性控制或改走其他路线。；小樱不知道计划、无法行动，或玩家已在更早位置拦截佐助。",
+              "status": "altered",
+              "direction": "在实际拦截者和地点结算说服、拘束或放行；佐助被留下时立即关闭音忍会合线，不得后台传送。",
+              "preserves": "保留佐助对关系的真实态度、小樱亲历信息及出村选择的责任。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助与小樱离村告别",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "告别保留关系复杂性，同时让前日调查和玩家拦截真正改变结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-BARREL-01",
+          "title": "醒心丸与四黑雾阵",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "木叶北侧外缘密林仪式地",
+          "participants": [
+            "宇智波佐助",
+            "音忍四人众"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助已越过村界并主动与音忍四人众会合。",
+            "醒心丸、封印桶和四黑雾阵施术者均仍可用。"
+          ],
+          "blockers": [
+            "佐助未离村、拒绝服药或在会合前被追回。",
+            "药物、容器或维持结界所需成员被玩家破坏。"
+          ],
+          "setup": "只有成功会合后，音忍才让佐助查看醒心丸与封印桶，说明假死和咒印失控风险；服药后四人必须原地维持一段四黑雾阵，再抬桶进入北向林道。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-BARREL-01-01",
+              "order": 10,
+              "summary": "四人众展示药物、封印桶和转化所需完整阵式。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-BARREL-01-02",
+              "order": 20,
+              "summary": "佐助在仍清醒时选择服药、拒绝或提出其他条件。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-BARREL-01-03",
+              "order": 30,
+              "summary": "服药分支进入假死，四人维持结界并消耗查克拉。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-BARREL-01-04",
+              "order": 40,
+              "summary": "仪式稳定后才封桶启程，留下药物、足迹和结界残痕。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "服药分支中佐助进入无法自主行动的转化期；拒绝分支保持清醒并改变护送关系。"
+          ],
+          "state_changes": [
+            "记录佐助生命状态、咒印进度、音忍阵式消耗、桶的携带者和北向路线痕迹。"
+          ],
+          "stop_condition": "音忍离开仪式地，或仪式因拒绝、破坏或拦截中止。",
+          "fallbacks": [
+            {
+              "condition": "佐助未离村、拒绝服药或在会合前被追回。；药物、容器或维持结界所需成员被玩家破坏。",
+              "status": "altered",
+              "direction": "依药物和结界的实际状态中止、延迟或改变转化；佐助清醒时保留再次反悔和求救机会，不得直接赋予咒印二。",
+              "preserves": "保留咒印强化的死亡风险、时间成本和护送负担。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助咒印二转化",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把咒印二作为有地点、耗时、药物和护卫成本的过程，并给追踪者留下可验证情报。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-TEAM-FORM-01",
+          "title": "五人追击队",
+          "thread_id": "THR-P1-SASUKE-RETRIEVAL",
+          "location": "火影办公室",
+          "participants": [
+            "现任火影或获授权值勤指挥者",
+            "奈良鹿丸",
+            "漩涡鸣人",
+            "日向宁次",
+            "犬冢牙",
+            "秋道丁次",
+            "春野樱"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "小樱或其他目击者已向现任火影、代理或获授权值勤指挥者提供佐助离村时间、方向和音忍接应信息。",
+            "木叶能从当值人员中抽调鹿丸及至少一支具备追踪能力的小队。"
+          ],
+          "blockers": [
+            "佐助仍在村内或已被安全控制。",
+            "情报不足以确定追击方向，或玩家已组织另一支获授权队伍。"
+          ],
+          "setup": "报告抵达后，实际合法指挥者核对佐助最后位置、北向痕迹、音忍人数和已知咒印风险，在上忍短缺条件下任命鹿丸或替代队长组队；小樱只提供亲历情报，不自动知道密林仪式。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-TEAM-FORM-01-01",
+              "order": 10,
+              "summary": "值勤记录、小樱证词和北门痕迹被分开标注来源与可信度。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-FORM-01-02",
+              "order": 20,
+              "summary": "鹿丸按追踪、侦察、近战和持续力选择队员，并可接受玩家提出的替补。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-FORM-01-03",
+              "order": 30,
+              "summary": "任务签发者明确带回佐助优先、避免无意义追敌、留下伤员位置标记和不得无准备越境。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-FORM-01-04",
+              "order": 40,
+              "summary": "队伍领取路线图、信号弹、两组急救包、食水和短程兵粮。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "追击任务获得正式授权、队长和交战原则。",
+            "成员选择与携行资源有可追踪记录。"
+          ],
+          "state_changes": [
+            "鹿丸成为基准队长；记录五人各自初始体力、查克拉、忍具、急救包和气味样本。"
+          ],
+          "stop_condition": "任务简报签发，成员带着清单前往正门集合。",
+          "fallbacks": [
+            {
+              "condition": "佐助仍在村内或已被安全控制。；情报不足以确定追击方向，或玩家已组织另一支获授权队伍。",
+              "status": "altered",
+              "direction": "无离村事实时改为村内保护和反情报；队伍构成被改变时按现有人手重定队长、追踪者和交战规则。",
+              "preserves": "保留火影授权、明确任务目标和资源不足的制度压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助夺还队成立",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把组队限制在火影办公室，出发另拆场景，以便玩家改变人选、补给和追踪方案。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-TEAM-DEPART-01",
+          "title": "沿北向林道出发",
+          "thread_id": "THR-P1-SASUKE-RETRIEVAL",
+          "location": "木叶北门",
+          "participants": [
+            "奈良鹿丸",
+            "漩涡鸣人",
+            "日向宁次",
+            "犬冢牙",
+            "赤丸",
+            "秋道丁次",
+            "木叶门卫"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "追击命令已经签发，队长、成员、路线情报和最低补给均已确认。",
+            "追踪犬或气味样本能把队伍引向北向林道。"
+          ],
+          "blockers": [
+            "追击任务已取消或佐助位置已在村内确认。",
+            "队伍缺少追踪依据、医疗包或能持续行动的成员。"
+          ],
+          "setup": "追击队在北门复核气味样本、队形、伤员标记规则和负重后出发；牙与赤丸负责气味，宁次定时侦察，鹿丸控制不必要的高速消耗。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-TEAM-DEPART-01-01",
+              "order": 10,
+              "summary": "门卫交接佐助最后越界时刻与北向足迹。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-DEPART-01-02",
+              "order": 20,
+              "summary": "队伍分配两组急救包、食水、信号弹与伤员标记物。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-DEPART-01-03",
+              "order": 30,
+              "summary": "鹿丸确定追踪轮换与短暂停水规则，避免第一程耗尽全队。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-TEAM-DEPART-01-04",
+              "order": 40,
+              "summary": "队伍越过北门进入北向林道，与音忍保持可估算的数小时时差。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "追击队真正离村并拥有可执行路线。",
+            "玩家对队形和装备的调整进入后续战斗。"
+          ],
+          "state_changes": [
+            "当前位置转为火之国北向林道；记录出发时间、负重与音忍领先时间。"
+          ],
+          "stop_condition": "队伍抵达密林仪式残痕并选定继续追踪方向。",
+          "fallbacks": [
+            {
+              "condition": "追击任务已取消或佐助位置已在村内确认。；队伍缺少追踪依据、医疗包或能持续行动的成员。",
+              "status": "altered",
+              "direction": "补足缺失的追踪、补给或替补后再出发；若目标已控制则取消越境追击，改守村界和审讯俘虏。",
+              "preserves": "保留出发时间、携行装备、队形和与音忍的时间差。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助夺还队成立",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足北门交接、队形与追踪轮换"
+            }
+          ],
+          "design_rationale": "旅行与组队分离，保证补给、速度和追踪证据会影响能否赶上。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SOUND4-EXHAUST-01",
+          "title": "驿道上的遭遇战",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "火之国北向旧驿道",
+          "participants": [
+            "音忍四人众",
+            "并足雷同",
+            "不知火玄间",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "音忍四人众正携带封印桶沿火之国北向驿道移动。",
+            "并足雷同与不知火玄间从外勤返村并在驿道与其相遇。"
+          ],
+          "blockers": [
+            "音忍护送线已被切断或四人众没有携带佐助。",
+            "两名木叶忍者因玩家分支不在该驿道，或已获得足够情报选择避战报信。"
+          ],
+          "setup": "携桶音忍在旧驿道撞上外勤返村的雷同与玄间；两名木叶忍者只看到可疑容器和敌对护送，音忍为抢时间动用咒印力量，双方受伤后分离。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SOUND4-EXHAUST-01-01",
+              "order": 10,
+              "summary": "木叶二人要求停下检查可疑武装与容器。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SOUND4-EXHAUST-01-02",
+              "order": 20,
+              "summary": "音忍拒绝并以协同咒印力量强行突破。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-SOUND4-EXHAUST-01-03",
+              "order": 30,
+              "summary": "两名木叶忍者负伤撤向传讯点，音忍也消耗大量查克拉且未能休息。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "边境获得一条来自亲历者的北向目击情报。",
+            "音忍四人众带伤并以较低查克拉继续抬桶。"
+          ],
+          "state_changes": [
+            "记录双方伤势、音忍查克拉消耗、遭遇地点和目击情报尚未传到追击队。"
+          ],
+          "stop_condition": "双方脱离接触；雷同与玄间开始求援，音忍继续北行。",
+          "fallbacks": [
+            {
+              "condition": "音忍护送线已被切断或四人众没有携带佐助。；两名木叶忍者因玩家分支不在该驿道，或已获得足够情报选择避战报信。",
+              "status": "altered",
+              "direction": "按双方实际位置改为侦察、短暂交锋或避战传讯；不得无条件制造音忍查克拉消耗。",
+              "preserves": "保留边境警报来源、双方伤势与资源消耗必须进入后续追逐。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·音忍四人众遭遇木叶特别上忍",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把目击情报接入边境传讯链"
+            }
+          ],
+          "design_rationale": "补上音忍在追击队赶上前的资源消耗，并严格限制该离屏战斗的知情范围。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SAND-REQUEST-01",
+          "title": "向近邻砂隐使团求援",
+          "thread_id": "THR-P1-SASUKE-AFTERMATH",
+          "location": "火影办公室传讯室",
+          "participants": [
+            "现任火影或获授权值勤指挥者",
+            "木叶传讯忍者",
+            "砂隐联络忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "现任火影、代理或获授权值勤指挥者已确认音忍小队向火之国北境移动且木叶追击人手不足。",
+            "砂隐三姐弟所在的停火核验使团已实际抵达火之国西北联络驿，具备就近支援条件。"
+          ],
+          "blockers": [
+            "佐助未离村或追击任务已经结束。",
+            "砂隐使团不在联络驿、同盟关系被玩家破坏或传讯鹰无法送达。"
+          ],
+          "setup": "实际合法指挥者获知追击队已出发且上忍增援来不及后，通过砂隐联络忍者确认三姐弟所在的停火核验使团正在火之国西北联络驿返程，遂发送只含求援授权、北境集合区和友军识别方式的加密任务鹰。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SAND-REQUEST-01-01",
+              "order": 10,
+              "summary": "传讯室汇总北向大致走廊、五人队构成和不得越境的限制。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-REQUEST-01-02",
+              "order": 20,
+              "summary": "砂隐联络忍者确认三姐弟的实际驿站、可用装备与有限支援权限。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-REQUEST-01-03",
+              "order": 30,
+              "summary": "任务签发者请求三人先到北境联络点待命；尚未发生的分兵地点和战场坐标不得写入首封任务鹰。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "砂隐使团获得可信求援来源、集合区与有限授权。",
+            "求援本身不让任何一方提前知道次日会形成的战场。"
+          ],
+          "state_changes": [
+            "任务鹰携带北境集合区、木叶识别信号、通信频率和救援优先级；预计K064-06-02夜间在联络驿送达。"
+          ],
+          "stop_condition": "任务鹰离开木叶，传讯室登记回执等待。",
+          "fallbacks": [
+            {
+              "condition": "佐助未离村或追击任务已经结束。；砂隐使团不在联络驿、同盟关系被玩家破坏或传讯鹰无法送达。",
+              "status": "altered",
+              "direction": "按实际外交状态请求其他边境队伍或不派援军；未收到命令的砂忍不得凭预训练知识自行找到各战场。",
+              "preserves": "保留援军来源、授权链、共享情报范围和抵达所需旅行时间。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·砂隐三姐弟支援夺还队",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设定停火核验使团位置、传讯与分阶段授权"
+            }
+          ],
+          "design_rationale": "先建立合法求援和集合区，具体分路只能由追击过程中实际产生的位置标记决定。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-LEE-DEPART-01",
+          "title": "术后未获准的追赶",
+          "thread_id": "THR-P1-KIMIMARO",
+          "location": "木叶医院康复病区",
+          "participants": [
+            "李洛克",
+            "当值医疗负责人",
+            "医疗忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "李仍在木叶医院进行术后恢复，并从公开任务调动或同期同伴处得知夺还队缺人。",
+            "李能够步行但没有获得高强度战斗许可。"
+          ],
+          "blockers": [
+            "李尚不能下床、手术未发生或医疗人员成功阻止其离院。",
+            "佐助已留村、追击任务取消或玩家安排了更合适的增援。"
+          ],
+          "setup": "李得知同期伙伴被紧急抽调后请求加入，医疗班明确他只能步行康复、禁止开门与高冲击战斗；基准线中他仍带着绷带、处方药和少量食水离院，沿北门公开路线追赶。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-LEE-DEPART-01-01",
+              "order": 10,
+              "summary": "医疗班复查李的手术切口、活动范围和剩余药物。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-LEE-DEPART-01-02",
+              "order": 20,
+              "summary": "纲手若已在岗则由她、否则由实际值勤医忍拒绝高强度任务许可并说明复发风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-LEE-DEPART-01-03",
+              "order": 30,
+              "summary": "李选择遵医嘱留院、请求合法后送任务或未经批准独自追赶。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-LEE-DEPART-01-04",
+              "order": 40,
+              "summary": "离院分支登记最后位置、携行药物和明显低于满状态的体力。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "李是否追赶及其医疗违规状态得到明确记录。",
+            "他不掌握音忍内幕，只能沿追击队公开痕迹和边境信号前进。"
+          ],
+          "state_changes": [
+            "离院分支记录术后限制、绷带、处方药、食水和预计需一日以上才能接近北境。"
+          ],
+          "stop_condition": "李留院，或从北门开始分段追赶并在途中按体力休息。",
+          "fallbacks": [
+            {
+              "condition": "李尚不能下床、手术未发生或医疗人员成功阻止其离院。；佐助已留村、追击任务取消或玩家安排了更合适的增援。",
+              "status": "altered",
+              "direction": "李留院时改由其他获准增援或不派个人追兵；他若离院，必须继承术后限制、药品和未经批准的责任，不能满状态登场。",
+              "preserves": "保留李的主动援助、术后伤势、旅行耗时和医疗知情范围。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·李追上君麻吕战场",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足术后复查、携行物与追赶时间"
+            }
+          ],
+          "design_rationale": "补上李从病房到北境草原的移动和伤势连续性，避免次日满状态瞬移。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-STAY-PROTECTION-01",
+          "title": "留村后的咒印保护",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "木叶医院封印观察室",
+          "participants": [
+            "宇智波佐助",
+            "当前医疗或封印负责人",
+            "旗木卡卡西",
+            "春野樱",
+            "医疗忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助在越过村界前放弃离村、被说服或被木叶安全控制。",
+            "现任火影、代理或获授权值勤指挥者已收到音忍接应与咒印风险报告。"
+          ],
+          "blockers": [
+            "佐助已随音忍离开且位置未知。",
+            "佐助死亡、拒绝医疗接触或当前冲突仍未解除。"
+          ],
+          "setup": "若佐助在北门前后选择留下，木叶先处理小樱和佐助的即时伤情，再由佐助决定自愿观察或在安全限制下接受咒印检查；他可交代音忍人数、会合点和邀请内容。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-STAY-PROTECTION-01-01",
+              "order": 10,
+              "summary": "医疗忍者记录咒印、查克拉和任何拘束造成的伤势。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-PROTECTION-01-02",
+              "order": 20,
+              "summary": "佐助选择披露多少招揽情报以及是否接受短期封印观察。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-PROTECTION-01-03",
+              "order": 30,
+              "summary": "卡卡西与实际医疗、封印及值勤指挥负责人确定探视、训练和防营救措施。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助留村分支获得医疗、安保与反情报后果。",
+            "追击队基准线关闭，音忍四人众是否撤退由边境情报另行裁定。"
+          ],
+          "state_changes": [
+            "佐助位置固定为木叶医院或获批监护地点；记录知情人、咒印状态与大蛇丸阵营尚未知的结果。"
+          ],
+          "stop_condition": "佐助安置方案与次日复查时间明确。",
+          "fallbacks": [
+            {
+              "condition": "佐助已随音忍离开且位置未知。；佐助死亡、拒绝医疗接触或当前冲突仍未解除。",
+              "status": "altered",
+              "direction": "按佐助意愿与风险采取自愿住院、受监护观察或有限羁押；不得把留村等同于无后果释放，也不得继续触发追击基准线。",
+              "preserves": "保留佐助主体性、咒印医疗、音忍情报和大蛇丸可能营救或报复的压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助离村冲突",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "为玩家改变出村结果设计医疗与反情报分支"
+            }
+          ],
+          "design_rationale": "留下不是无代价回归，也不能被后续场景强制改回离村。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "离村分支中，音忍沿北向驿道领先数小时且查克拉受损，追击队持有有限路线情报。",
+        "留村分支中，佐助进入咒印保护与反情报流程，追击任务不会成立。",
+        "砂隐求援是否送达仍受使团位置和通信状态约束。"
+      ],
+      "transition": "K064-06-02离村分支沿北境杉林继续追赶；留村分支执行咒印复查、音忍会合点侦察和防营救部署。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-602",
+      "date": "K064-06-02",
+      "title": "北境追逐与逐次分兵",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "沿一条可回溯的北境路线逐次结算土牢、阻击和护送交接，使每次留下都真实减少主队人手与资源。",
+      "start_state": [
+        "离村分支中，追击队沿仪式残痕和北向驿道追踪，经历整夜赶路后体力下降。",
+        "音忍四人众与木叶特别上忍交战后带伤、查克拉不足，仍携带封印桶。",
+        "留村分支不生成追击战，改由木叶侦察会合点。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-CHASE-01",
+          "title": "土牢与分兵原则",
+          "thread_id": "THR-P1-SASUKE-RETRIEVAL",
+          "location": "火之国北境杉林土牢区",
+          "participants": [
+            "佐助夺还队",
+            "音忍四人众"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "追击队沿北向林道连续追踪并在杉林土牢区赶上携桶音忍。",
+            "队伍仍有破坏土牢并继续追踪的查克拉与工具。"
+          ],
+          "blockers": [
+            "追击路线已改变、音忍未携带佐助或队伍未能追上。",
+            "玩家提前识破土牢、全队被困失能或另有增援足以避免分兵。"
+          ],
+          "setup": "追击队在杉林追上音忍，却被次郎坊的土牢困住并持续吸收查克拉；玩家可寻找薄弱点、保留爆破忍具或呼叫队外支援，鹿丸只在确认时间差后提出逐人留守。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-CHASE-01-01",
+              "order": 10,
+              "summary": "牙确认气味仍指向封印桶，宁次侦察到四名护送者均有伤和查克拉紊乱。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHASE-01-02",
+              "order": 20,
+              "summary": "土牢吸收查克拉，队员必须决定由谁破壁以及是否消耗急救包和爆破物。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHASE-01-03",
+              "order": 30,
+              "summary": "丁次从土壁吸收不均处打开缺口；玩家若已破局则保留相应资源。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHASE-01-04",
+              "order": 40,
+              "summary": "鹿丸依据音忍领先时间提出一人阻击、其余不停追桶，也允许合战或撤回分支。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "基准线中队伍接受高风险分兵；玩家也可选择合战、绕行或等待援军并承担失去目标的风险。"
+          ],
+          "state_changes": [
+            "记录土牢造成的个人查克拉损失、消耗忍具、第一处伤员标记和继续追击的四人名单。"
+          ],
+          "stop_condition": "次郎坊被留下者牵制或追击队以替代方案通过；其余成员沿北境东支线继续。",
+          "fallbacks": [
+            {
+              "condition": "追击路线已改变、音忍未携带佐助或队伍未能追上。；玩家提前识破土牢、全队被困失能或另有增援足以避免分兵。",
+              "status": "altered",
+              "direction": "按实际队伍人数和时间差选择绕行、合战或分兵；玩家破解陷阱后不得强制扣除同等查克拉。",
+              "preserves": "保留保护佐助、追击时限和每次分兵减少主队资源的压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·夺还队遭遇音忍四人众",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把分兵建立在路线、时间差和资源信息上，玩家提前破局不会被强制扣回同等消耗。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-CHOJI-01",
+          "title": "丁次对次郎坊",
+          "thread_id": "THR-P1-CHOJI-JIROBO",
+          "location": "火之国北境杉林空地",
+          "participants": [
+            "秋道丁次",
+            "次郎坊"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "次郎坊确实留下封锁土牢区后路，丁次选择独自阻击。",
+            "丁次仍携带秋道三色药丸并知道其逐级风险。"
+          ],
+          "blockers": [
+            "次郎坊已被合力击败或没有留下。",
+            "丁次未参队、药丸不在库存或玩家留下共同作战。"
+          ],
+          "setup": "丁次选择留下后先以常规体术与部分倍化试探；只有在无法阻止次郎坊追队时，才逐级决定是否服用库存中的菠菜丸、咖喱丸和辣椒丸。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-CHOJI-01-01",
+              "order": 10,
+              "summary": "次郎坊试图越过丁次追赶主队，并用同伴关系动摇他。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHOJI-01-02",
+              "order": 20,
+              "summary": "丁次逐次评估敌人、剩余体力和每颗药丸的已知危险。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHOJI-01-03",
+              "order": 30,
+              "summary": "基准线中红色药丸触发蝶化力量完成决定性攻击。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P1-SASUKE-CHOJI-01-04",
+              "order": 40,
+              "summary": "丁次用队伍标记指出位置与北向路线后倒下。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "次郎坊无法继续追击。",
+            "丁次的伤势严格取决于实际服药数量和战斗命中。"
+          ],
+          "state_changes": [
+            "基准线记录三颗药丸耗尽、脂肪与细胞急剧消耗、查克拉枯竭和急救倒计时；替代线记录实际消耗。"
+          ],
+          "stop_condition": "次郎坊失去追击能力，丁次撤离或留在有标记的位置等待救援。",
+          "fallbacks": [
+            {
+              "condition": "次郎坊已被合力击败或没有留下。；丁次未参队、药丸不在库存或玩家留下共同作战。",
+              "status": "altered",
+              "direction": "按在场援手和药丸库存重算战斗；未服用红色药丸时不得强制进入濒死状态，合力胜利也不复制原伤势。",
+              "preserves": "保留丁次保护同伴的选择、药物代价和可追踪位置标记。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·丁次对次郎坊",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "药物强化必须逐颗扣除库存并继承代价，禁止战后立刻归队。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-NEJI-01",
+          "title": "宁次对鬼童丸",
+          "thread_id": "THR-P1-NEJI-KIDOMARU",
+          "location": "火之国北境巨木岭",
+          "participants": [
+            "日向宁次",
+            "鬼童丸"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鬼童丸在巨木岭以蛛网和远射切断主队，宁次选择留下分析。",
+            "宁次的白眼和查克拉状态仍足以进行侦察与近身反击。"
+          ],
+          "blockers": [
+            "鬼童丸已被击败、没有分离主队或宁次未参队。",
+            "玩家留下增援、提前识破白眼死角攻击或改变战场距离。"
+          ],
+          "setup": "主队越过杉林后在巨木岭被蛛网和远射拖慢；宁次选择留下时把下一段北向山脊和气味方向告诉鹿丸，再以白眼分析敌人。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-NEJI-01-01",
+              "order": 10,
+              "summary": "蛛网消耗队伍切割忍具并暴露远处射手。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-NEJI-01-02",
+              "order": 20,
+              "summary": "宁次决定独留、要求援手或让全队绕行。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-NEJI-01-03",
+              "order": 30,
+              "summary": "基准线中鬼童丸确认白眼死角并以高穿透箭重伤宁次。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-NEJI-01-04",
+              "order": 40,
+              "summary": "宁次让查克拉沿连接箭矢的丝线反击并阻止鬼童丸追队。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鬼童丸无法继续沿山脊追击。",
+            "宁次伤势取决于玩家是否识破远射与是否有人协战。"
+          ],
+          "state_changes": [
+            "基准线记录贯穿伤、失血、查克拉衰竭和巨木岭标记；主队剩余牙、鹿丸、鸣人及一组以上急救物资。"
+          ],
+          "stop_condition": "敌人失去追击能力，宁次撤到遮蔽处或在明确标记旁等待救援。",
+          "fallbacks": [
+            {
+              "condition": "鬼童丸已被击败、没有分离主队或宁次未参队。；玩家留下增援、提前识破白眼死角攻击或改变战场距离。",
+              "status": "altered",
+              "direction": "依据侦察结果和援手重算命中与伤势；箭矢未贯体时不得为了原著预后补写贯穿伤。",
+              "preserves": "保留远程克制、宁次主动留下和主队继续前进的时间收益。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·宁次对鬼童丸",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让白眼情报实际交接给主队，并保持贯穿伤不是无条件固定结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-KIBA-01",
+          "title": "牙与赤丸对左近右近",
+          "thread_id": "THR-P1-KIBA-SAKON",
+          "location": "火之国北境双崖裂谷",
+          "participants": [
+            "犬冢牙",
+            "赤丸",
+            "左近",
+            "右近"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "左近右近在裂谷追上牙与赤丸，牙选择把敌人引离主路线。",
+            "牙、赤丸仍有协同移动和制造脱离窗口的体力。"
+          ],
+          "blockers": [
+            "左近右近未分离、已被其他人拦截或牙未参队。",
+            "玩家阻止寄生、提供解离手段或与牙共同作战。"
+          ],
+          "setup": "三人主队在双崖裂谷夺到封印桶又被左近右近反抢；牙与赤丸把双体敌人引向侧谷，让鹿丸和鸣人沿北向山脊继续。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-KIBA-01-01",
+              "order": 10,
+              "summary": "牙先把最新气味、桶的状态和山脊方向交给鹿丸。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIBA-01-02",
+              "order": 20,
+              "summary": "左近右近以双体能力破坏兽人协同并尝试侵入牙的身体。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIBA-01-03",
+              "order": 30,
+              "summary": "寄生成功的基准线中，牙选择自伤迫使右近脱离；玩家可提供其他解离方法。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIBA-01-04",
+              "order": 40,
+              "summary": "牙与赤丸用剩余烟雾弹跳入侧谷水道，暂时脱离但偏离主路线。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "基准线中牙与赤丸生存撤离但未击败敌人。",
+            "主队只剩鹿丸与鸣人继续追踪。"
+          ],
+          "state_changes": [
+            "记录牙的刀伤、赤丸伤势、烟雾弹消耗、侧谷位置和左近右近仍能追击的状态。"
+          ],
+          "stop_condition": "牙与赤丸进入侧谷遮蔽处，敌人失去即时视线或被替代分支控制。",
+          "fallbacks": [
+            {
+              "condition": "左近右近未分离、已被其他人拦截或牙未参队。；玩家阻止寄生、提供解离手段或与牙共同作战。",
+              "status": "altered",
+              "direction": "按寄生是否成功与援手重算自伤、坠谷和撤离；没有侵入身体时不得强制牙自残。",
+              "preserves": "保留牙与赤丸互相保护、追击路线偏移及需要定位救援的后果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·牙赤丸对左近右近",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "明确位置偏移和装备消耗，为勘九郎如何找到他们提供依据。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SHIKAMARU-01",
+          "title": "鹿丸对多由也",
+          "thread_id": "THR-P1-SHIKAMARU-TAYUYA",
+          "location": "火之国北境石柱林",
+          "participants": [
+            "奈良鹿丸",
+            "多由也"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "多由也在石柱林留下阻断，鹿丸选择掩护鸣人继续追桶。",
+            "鹿丸仍能使用影子术但经历长途追踪后查克拉有限。"
+          ],
+          "blockers": [
+            "多由也没有留下、已被其他人控制或鹿丸未参队。",
+            "玩家留下协战、提前破坏笛子或提供可靠幻术解除手段。"
+          ],
+          "setup": "鹿丸与鸣人追至石柱林时，多由也用笛声和通灵鬼封锁山脊；鹿丸把最后气味方向、信号弹和一组急救物资交给鸣人，自己留下。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SHIKAMARU-01-01",
+              "order": 10,
+              "summary": "多由也用笛声同时操纵通灵体与幻术，遮断通往终结之谷方向的山脊。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SHIKAMARU-01-02",
+              "order": 20,
+              "summary": "鹿丸决定留下并把队长情报与剩余物资交接给鸣人。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-SHIKAMARU-01-03",
+              "order": 30,
+              "summary": "鹿丸以疼痛解除幻术并观察指法，但连续追踪后查克拉接近耗尽。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SHIKAMARU-01-04",
+              "order": 40,
+              "summary": "影子控制暂时逼近多由也，战斗进入资源悬殊的僵持。",
+              "causal_role": "pressure"
+            }
+          ],
+          "outcomes": [
+            "多由也被暂时牵制，鸣人获得独自继续的窗口。",
+            "鹿丸是否需要援军取决于此前分兵和玩家协助。"
+          ],
+          "state_changes": [
+            "记录鹿丸剩余查克拉、解除幻术造成的伤口、石柱林信号和鸣人接收的路线与急救物资。"
+          ],
+          "stop_condition": "鸣人离开石柱林继续北行，鹿丸与多由也留在该地点或按替代结果结束战斗。",
+          "fallbacks": [
+            {
+              "condition": "多由也没有留下、已被其他人控制或鹿丸未参队。；玩家留下协战、提前破坏笛子或提供可靠幻术解除手段。",
+              "status": "altered",
+              "direction": "按笛声、幻术和查克拉实况结算撤退或胜负；获得协助时不得强制耗尽鹿丸。",
+              "preserves": "保留队长承担后卫、情报分析和鸣人继续追击的机会成本。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鹿丸对多由也",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "让队长职责在分离前完成明确情报与装备交接，防止鸣人凭空知道后续路线。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-KIMIMARO-HANDOFF-01",
+          "title": "封印桶换手",
+          "thread_id": "THR-P1-KIMIMARO",
+          "location": "火之国北境石柱林外缘",
+          "participants": [
+            "君麻吕",
+            "多由也",
+            "左近",
+            "右近",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "君麻吕仍效忠大蛇丸并抵达北境石柱林外缘。",
+            "至少一名音忍仍携带封印桶且咒印转化尚未完成。"
+          ],
+          "blockers": [
+            "君麻吕因绝症无法移动、已被拦截或拒绝任务。",
+            "佐助已脱离封印桶、被追回或音忍全员失去行动能力。"
+          ],
+          "setup": "大蛇丸派出的君麻吕沿约定路线找到剩余音忍；他只从同伴处得知追兵数量和桶的转化状态，接过封印桶后向终结之谷方向移动。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-HANDOFF-01-01",
+              "order": 10,
+              "summary": "君麻吕确认音忍伤势、追兵距离与佐助尚未苏醒。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-HANDOFF-01-02",
+              "order": 20,
+              "summary": "剩余音忍把封印桶、药效时间和北向路线交给君麻吕。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-HANDOFF-01-03",
+              "order": 30,
+              "summary": "君麻吕带桶离开，其他人分别留下拖延。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "封印桶的携带者、路线和知情范围完成交接。",
+            "鸣人只能通过气味和现场痕迹发现换手，不能直接知道君麻吕身份。"
+          ],
+          "state_changes": [
+            "君麻吕当前位置转为北境草原方向；记录其绝症恶化、桶的封印完整度和护送音忍的分散位置。"
+          ],
+          "stop_condition": "君麻吕离开石柱林外缘，或因替代分支未能接桶。",
+          "fallbacks": [
+            {
+              "condition": "君麻吕因绝症无法移动、已被拦截或拒绝任务。；佐助已脱离封印桶、被追回或音忍全员失去行动能力。",
+              "status": "altered",
+              "direction": "根据仍能行动者决定继续携带、弃桶、撤退或就地唤醒佐助；君麻吕缺席时不得让容器自行前往终结之谷。",
+              "preserves": "保留护送责任交接、携带者位置和转化进度。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·君麻吕接手佐助容器",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足携带者、药效和路线交接"
+            }
+          ],
+          "design_rationale": "补上容器不会自行移动的关键交接，并限制敌我情报。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SAND-RELAY-01",
+          "title": "北境位置接力",
+          "thread_id": "THR-P1-SAND-REINFORCEMENT",
+          "location": "火之国西北联络驿",
+          "participants": [
+            "砂隐停火核验使团",
+            "我爱罗",
+            "手鞠",
+            "勘九郎",
+            "木叶北境联络忍者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "砂隐停火核验使团已收到木叶合法求援与北境集合区，不包含尚未发生的战场坐标。",
+            "追击队沿途位置标记或边境联络站至少收到一条有时间戳的更新。"
+          ],
+          "blockers": [
+            "求援未送达、停火权限不足或追击线没有任何可验证的位置更新。",
+            "玩家已用另一条可靠通信完成援军分派。"
+          ],
+          "setup": "首封任务鹰只把三姐弟召集到联络驿；驿站随后汇总追击队当日实际留下的路线标记、远处信号、边境目击和时间戳，把它们标为可能已经过时的搜索走廊，而不是确定战场。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SAND-RELAY-01-01",
+              "order": 10,
+              "summary": "砂隐使团核验木叶求援签名、集合区、友军识别方式和不得越境限制。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RELAY-01-02",
+              "order": 20,
+              "summary": "木叶联络忍者按来源分别标注石柱林信号、双崖侧谷痕迹与北境草原方向，未知结果保持未知。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RELAY-01-03",
+              "order": 30,
+              "summary": "三姐弟依据能力、距离和救援优先级选择搜索走廊，并约定失联后的医疗驿集合点。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RELAY-01-04",
+              "order": 40,
+              "summary": "三人携带各自装备与简报连夜离开联络驿。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "砂隐援军只获得当晚已经产生的最后已知位置，不知道次日胜负或目标仍在原处。",
+            "三条路线是可搜索的走廊，不是保证命中的未来坐标。"
+          ],
+          "state_changes": [
+            "记录每份位置情报的来源、时间、精度、接收者、援军装备和预计抵达窗口。"
+          ],
+          "stop_condition": "三姐弟沿各自搜索走廊离开，或因没有可靠更新继续在联络驿待命。",
+          "fallbacks": [
+            {
+              "condition": "求援未送达、停火权限不足或追击线没有任何可验证的位置更新。；玩家已用另一条可靠通信完成援军分派。",
+              "status": "altered",
+              "direction": "只有收到实际位置标记后才分派援军；信息不足时先到北境联络驿集结或搜索，不得预知次日战场。",
+              "preserves": "保留砂隐授权、通信延迟、位置精度与每名援军只知道任务所需信息。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·砂隐三姐弟支援夺还队",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足北境信号汇总、信息时效与分路决策"
+            }
+          ],
+          "design_rationale": "把求援授权与动态位置情报拆开，消除任务鹰预知次日战场的问题。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-STAY-COUNTERINTEL-01",
+          "title": "会合点侦察",
+          "thread_id": "THR-P1-SASUKE-DEFECTION",
+          "location": "木叶北侧外缘密林仪式地",
+          "participants": [
+            "木叶侦察忍者",
+            "旗木卡卡西",
+            "玩家角色（若获授权）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助留在木叶且提供了会合点、邀请方式或音忍特征中的至少一项。",
+            "木叶侦察组获得火影授权，只执行侦察、取证和边界封锁。"
+          ],
+          "blockers": [
+            "佐助没有可用情报或拒绝披露。",
+            "会合点已被玩家清理、音忍已被捕，或侦察会危及佐助安全。"
+          ],
+          "setup": "留村分支中，侦察组根据佐助证词和前日痕迹检查音忍会合点，不追入未知国境；玩家可优先取证、设伏或撤回保护佐助。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-STAY-COUNTERINTEL-01-01",
+              "order": 10,
+              "summary": "侦察组从村门取得最后脚印和佐助提供的方位。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-COUNTERINTEL-01-02",
+              "order": 20,
+              "summary": "现场仅能确认结界准备、人数痕迹或撤退方向中的实际证据。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-COUNTERINTEL-01-03",
+              "order": 30,
+              "summary": "指挥者选择设伏、带回样本、封锁路线或停止追踪。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "木叶获得有限的音忍行动证据，或确认敌方已撤离。",
+            "音忍是否知道佐助留村仍保持不确定。"
+          ],
+          "state_changes": [
+            "证物、足迹方向、参与者知情范围和北门警戒被记录。"
+          ],
+          "stop_condition": "侦察组在不越过授权边界的前提下返回报告。",
+          "fallbacks": [
+            {
+              "condition": "佐助没有可用情报或拒绝披露。；会合点已被玩家清理、音忍已被捕，或侦察会危及佐助安全。",
+              "status": "altered",
+              "direction": "按实际情报缩小侦察范围或取消行动；没有证据时不得自动定位音忍，更不得把原阻击战搬回村内。",
+              "preserves": "保留情报来源、音忍是否确认佐助留村和大蛇丸后续反应的不确定性。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·音忍招揽佐助",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "留村分支的会合点取证"
+            }
+          ],
+          "design_rationale": "给留村结果持续可玩的反情报后果，而不是让后续日期继续假定夺还战发生。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "离村分支中，鸣人持最后路线和一组急救物资独自追向北境草原；丁次、宁次、牙与鹿丸位置均有不同精度的标记。",
+        "君麻吕已接管封印桶，音忍四人众伤势和查克拉消耗分别记录。",
+        "留村分支中，咒印保护与会合点侦察取代全部阻击战。",
+        "求援任务鹰与当日位置接力只有实际送达时，三姐弟才按带时间戳的搜索走廊分路赶往北境。"
+      ],
+      "transition": "K064-06-03离村分支由砂隐援军沿最后已知搜索走廊寻找分散人员，目标可能已移动；留村分支继续医疗与反营救部署。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-603",
+      "date": "K064-06-03",
+      "title": "援军与终结之谷",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "让砂隐援军沿有来源且可能过时的搜索走廊分别寻找目标，结算两处救援、草原阻击和终结之谷选择，并继承每人的旅行与资源状态。",
+      "start_state": [
+        "离村分支中，任务鹰先交付合法求援，联络驿再按当日实际信号提供最后已知搜索走廊；手鞠、勘九郎和我爱罗连夜分路进入北境。",
+        "鸣人持鹿丸交接的路线和急救物资追踪君麻吕，李以术后受限状态从后方接近。",
+        "佐助咒印转化、君麻吕绝症、音忍伤势和分散队员位置均承接前日记录。",
+        "留村分支不会触发以下救援与决战基准。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-SAND-RESCUE-01",
+          "title": "手鞠救援鹿丸",
+          "thread_id": "THR-P1-SHIKAMARU-TAYUYA",
+          "location": "火之国北境石柱林",
+          "participants": [
+            "奈良鹿丸",
+            "多由也",
+            "手鞠"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "手鞠已收到有来源和时间戳的石柱林搜索走廊、友军识别方式，并通过新痕迹确认目标仍在附近。",
+            "鹿丸与多由也仍在该战场且鹿丸需要增援。"
+          ],
+          "blockers": [
+            "砂隐求援未送达、手鞠被改派或同盟已破裂。",
+            "鹿丸已撤离、多由也已被击败或玩家正在安全协战。"
+          ],
+          "setup": "手鞠按联络驿转交的石柱林最后信号搜索鹿丸；她必须先确认信号时效、风向、友军影子位置与笛声来源，再决定攻击或掩护撤离。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-01-01",
+              "order": 10,
+              "summary": "手鞠沿带时间戳的搜索走廊追查，只有鹿丸仍在附近时才能找到双方。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-01-02",
+              "order": 20,
+              "summary": "她核对友军识别信号并让鹿丸指出幻术与通灵体范围。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-01-03",
+              "order": 30,
+              "summary": "基准线中手鞠以大范围风遁摧毁掩体和笛声战术。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-01-04",
+              "order": 40,
+              "summary": "多由也失去继续追击能力，手鞠检查鹿丸伤势和装备。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鹿丸获得脱离或继续战斗的机会。",
+            "手鞠只知道任务简报和现场由鹿丸告知的事实。"
+          ],
+          "state_changes": [
+            "记录手鞠风遁查克拉消耗、鹿丸剩余查克拉与伤口、多由也状态及返回医疗驿路线。"
+          ],
+          "stop_condition": "敌人不再追击且鹿丸能在协助下向北境医疗驿移动。",
+          "fallbacks": [
+            {
+              "condition": "砂隐求援未送达、手鞠被改派或同盟已破裂。；鹿丸已撤离、多由也已被击败或玩家正在安全协战。",
+              "status": "altered",
+              "direction": "手鞠只介入她实际抵达的战场；若冲突已结束则改为护送伤员和传递位置，不补演风遁终结。",
+              "preserves": "保留砂木合作、鹿丸的资源状态和手鞠所知仅来自任务简报及现场观察。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·手鞠救援鹿丸",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "援军必须沿有来源的搜索走廊重新确认战场和友军后介入，不能同时出现在其他地点。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SAND-RESCUE-02",
+          "title": "勘九郎救援牙",
+          "thread_id": "THR-P1-KIBA-SAKON",
+          "location": "火之国北境双崖裂谷",
+          "participants": [
+            "犬冢牙",
+            "赤丸",
+            "左近",
+            "右近",
+            "勘九郎"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "勘九郎已沿双崖搜索走廊，通过气味、烟雾或新痕迹找到牙、赤丸与左近右近。",
+            "傀儡、机关和毒仍在勘九郎当前装备中可用。"
+          ],
+          "blockers": [
+            "砂隐求援未送达、勘九郎被改派或傀儡装备遗失。",
+            "牙已脱离、敌人已败或玩家已控制双体敌人。"
+          ],
+          "setup": "勘九郎按双崖侧谷的最后痕迹搜索烟雾与赤丸气味，在确认牙、赤丸和双体敌人的实际位置后，才展开乌鸦、黑蚁及当前携带的毒。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-02-01",
+              "order": 10,
+              "summary": "勘九郎从带时间戳的搜索走廊转入侧谷，并以木叶信号确认牙身份。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-02-02",
+              "order": 20,
+              "summary": "左近右近重新锁定牙与赤丸，迫使勘九郎在救人和封路间选择。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-02-03",
+              "order": 30,
+              "summary": "基准线中傀儡机关分隔双体并利用毒与机关终止追击。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-SAND-RESCUE-02-04",
+              "order": 40,
+              "summary": "勘九郎回收仍可用傀儡并为牙和赤丸止血。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "牙与赤丸获得救治和撤离窗口。",
+            "敌人是否死亡取决于傀儡命中、毒和玩家介入。"
+          ],
+          "state_changes": [
+            "记录傀儡损伤、毒与机关消耗、牙和赤丸伤势以及侧谷到医疗驿的移动需求。"
+          ],
+          "stop_condition": "敌人不再即时追击，牙与赤丸在勘九郎协助下前往北境医疗驿。",
+          "fallbacks": [
+            {
+              "condition": "砂隐求援未送达、勘九郎被改派或傀儡装备遗失。；牙已脱离、敌人已败或玩家已控制双体敌人。",
+              "status": "altered",
+              "direction": "依据现场敌我和装备决定救治、牵制或撤离；敌人已失能时不得重复傀儡处决。",
+              "preserves": "保留牙与赤丸伤势、勘九郎装备消耗和砂隐支援记录。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·勘九郎救援牙",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "独立地点独立救援，并把傀儡装备、毒和后送路线纳入状态。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-KIMIMARO-01",
+          "title": "李与我爱罗对君麻吕",
+          "thread_id": "THR-P1-KIMIMARO",
+          "location": "火之国北境草原",
+          "participants": [
+            "漩涡鸣人",
+            "李洛克",
+            "君麻吕",
+            "我爱罗"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "君麻吕携桶抵达北境草原并仍能执行最后护送。",
+            "李已离开医院追上鸣人，我爱罗按砂隐任务路线接近该战场。"
+          ],
+          "blockers": [
+            "君麻吕未接管封印桶、佐助已被追回或鸣人不在该路线。",
+            "李未获行动能力或被医疗人员留院，我爱罗未收到支援命令。"
+          ],
+          "setup": "君麻吕在草原放下封印桶拦截鸣人；鸣人先确认气味仍指向桶。术后受限的李从追踪标记赶到并可接替；我爱罗只有沿北境草原搜索走廊找到新的战斗痕迹后才能抵达。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-01-01",
+              "order": 10,
+              "summary": "君麻吕用尸骨脉挡住鸣人并保护封印桶继续北移的时间。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-01-02",
+              "order": 20,
+              "summary": "李抵达后说明自己未获战斗许可和现有体力，由鸣人决定交接路线还是共同作战。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-01-03",
+              "order": 30,
+              "summary": "鸣人离开分支中把佐助气味方向与一组急救物资留给李；我爱罗随后依据新痕迹确认现场。",
+              "causal_role": "transition"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-01-04",
+              "order": 40,
+              "summary": "我爱罗以砂改变战场，李必须受术后限制避免高冲击动作。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-KIMIMARO-01-05",
+              "order": 50,
+              "summary": "基准线中君麻吕发动早蕨之舞后因既有绝症在最后攻击前衰竭死亡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人是否获得继续追击时间由接替选择决定。",
+            "君麻吕失败源于对手拖延与既有绝症，不是无条件剧情死亡。"
+          ],
+          "state_changes": [
+            "记录李切口与体力、处方药和绷带消耗、我爱罗查克拉与砂量、君麻吕病情及鸣人离开方向。"
+          ],
+          "stop_condition": "君麻吕失去继续护送能力，或替代分支中成功撤离；李与我爱罗进入可后送状态。",
+          "fallbacks": [
+            {
+              "condition": "君麻吕未接管封印桶、佐助已被追回或鸣人不在该路线。；李未获行动能力或被医疗人员留院，我爱罗未收到支援命令。",
+              "status": "altered",
+              "direction": "按实际拦截者和伤情重选拖延方式；缺席者不得瞬移登场，君麻吕未参战时鸣人直接继续追踪。",
+              "preserves": "保留鸣人是否获得追击时间、李的术后限制和君麻吕绝症造成的持续衰竭。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·李与我爱罗对君麻吕",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把李和我爱罗的移动、知情与资源来源接上前日，缺席者不会瞬移补位。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-VALLEY-01",
+          "title": "终结之谷第一次决战",
+          "thread_id": "THR-P1-NARUTO-SASUKE",
+          "location": "终结之谷",
+          "participants": [
+            "漩涡鸣人",
+            "宇智波佐助"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助已在终结之谷附近完成或中止咒印转化，并仍选择拒绝回村。",
+            "鸣人沿有效痕迹追到同一地点且仍有战斗与谈判能力。"
+          ],
+          "blockers": [
+            "佐助已被说服、控制或改走其他路线。",
+            "鸣人无法到达、主动退出，或玩家已在谷前完成拦截。"
+          ],
+          "setup": "鸣人依据气味和石柱林交接追到终结之谷；佐助从转化中醒来时必须继承假死药、咒印和旅途状态。玩家可谈判、协战、阻止升级或改变任一方撤退路线。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-VALLEY-01-01",
+              "order": 10,
+              "summary": "鸣人追上佐助，先核对其意识、咒印状态并要求回村。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-VALLEY-01-02",
+              "order": 20,
+              "summary": "佐助说明离村选择与复仇目标，双方可重新谈判留村条件。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-VALLEY-01-03",
+              "order": 30,
+              "summary": "谈判失败才从体术逐级升级；每次写轮眼、影分身、咒印或九尾查克拉都会更新消耗与伤势。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-VALLEY-01-04",
+              "order": 40,
+              "summary": "只有双方仍能施术时，千鸟与螺旋丸才在瀑布上方碰撞。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-VALLEY-01-05",
+              "order": 50,
+              "summary": "基准线中佐助获胜但拒绝按鼬方式杀死鸣人；玩家改变前置时按实际胜负结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "基准线中鸣人未能带回佐助；替代线可说服、控制、救回或由其他拦截者接手。",
+            "佐助如何对待鸣人仍是他的选择，不由原著结局强制。"
+          ],
+          "state_changes": [
+            "逐项记录双方查克拉、体力、精神状态、咒印或九尾使用、忍具和最终位置；仅基准线令鸣人重伤昏迷、佐助向音隐移动。"
+          ],
+          "stop_condition": "谈判达成，或一方失去继续追击能力且另一方的去向明确。",
+          "fallbacks": [
+            {
+              "condition": "佐助已被说服、控制或改走其他路线。；鸣人无法到达、主动退出，或玩家已在谷前完成拦截。",
+              "status": "altered",
+              "direction": "依据当前能力、伤势、查克拉和玩家介入重算谈判与战斗；佐助留下或被击败时进入羁押治疗，大蛇丸改走营救或替代容器线。",
+              "preserves": "保留鸣佐关系、咒印后果、大蛇丸威胁和胜负造成的真实位置与伤势。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·终结之谷第一次决战",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "终局依据当前能力、资源、伤势和玩家介入重算，不为第一部结局强制佐助胜利。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "每处战场的幸存者、伤势、查克拉、装备和最近位置独立记录。",
+        "基准线中佐助离开火之国，鸣人倒在终结之谷；替代线保留实际控制或留村结果。",
+        "砂隐三人只知道任务简报、各自路线和亲历战场，不共享其他地点的即时信息。"
+      ],
+      "transition": "K064-06-04按终结之谷、杉林、巨木岭和北境医疗驿分别完成搜救与交接；任何分支都禁止无补给越境追杀。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-604",
+      "date": "K064-06-04",
+      "title": "分路搜救与医疗交接",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "按终结之谷、杉林、巨木岭和北境医疗驿分别完成搜救，使每名伤员的发现时间、现场处置和后送路线可追踪。",
+      "start_state": [
+        "离村分支中，卡卡西、帕克和两支医疗搜索组已根据昨夜未归报告进入北境。",
+        "砂隐援军正护送鹿丸、牙、赤丸、李和我爱罗向北境医疗驿汇合。",
+        "各战场位置精度来自队伍标记、气味、信号和砂隐口头报告，不是全图共享。",
+        "留村分支没有夺还队伤员，只需继续咒印保护与边境警戒。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-RESCUE-01",
+          "title": "终结之谷回收鸣人",
+          "thread_id": "THR-P1-SASUKE-AFTERMATH",
+          "location": "终结之谷",
+          "participants": [
+            "旗木卡卡西",
+            "帕克",
+            "漩涡鸣人",
+            "玩家角色（若参与搜救）"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人在终结之谷失去追击能力并留下可供帕克追踪的气味。",
+            "卡卡西与帕克已获准越过北境搜救且携有基础急救物资。"
+          ],
+          "blockers": [
+            "鸣人未到终结之谷、已自行返程或由玩家先行救走。",
+            "卡卡西被改派、帕克无法追踪或谷内仍有必须先处理的敌对力量。"
+          ],
+          "setup": "卡卡西与帕克沿鸣人气味抵达终结之谷，先排除仍在场的敌对威胁，再检查呼吸、循环、查克拉紊乱和咒印残留痕迹；佐助方向只能从现场和足迹判断。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-RESCUE-01-01",
+              "order": 10,
+              "summary": "帕克确认鸣人位置并区分鸣人与佐助离谷的气味方向。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-01-02",
+              "order": 20,
+              "summary": "卡卡西或玩家先稳定危及生命的外伤和低温，禁止立即继续追击。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-01-03",
+              "order": 30,
+              "summary": "现场痕迹只支持佐助离开、被控制或仍在附近中的实际结论。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-01-04",
+              "order": 40,
+              "summary": "卡卡西因伤员、补给和国境权限下令停止无准备越境。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人进入明确的现场急救与担架后送状态。",
+            "佐助任务结果按终结之谷实际结算，不自动判定失败。"
+          ],
+          "state_changes": [
+            "记录鸣人意识、伤口、查克拉与九尾使用后状态，佐助最后方向、卡卡西补给和停止追击命令。"
+          ],
+          "stop_condition": "鸣人被固定在担架上并启程前往北境医疗驿，或已由替代救援者妥善接手。",
+          "fallbacks": [
+            {
+              "condition": "鸣人未到终结之谷、已自行返程或由玩家先行救走。；卡卡西被改派、帕克无法追踪或谷内仍有必须先处理的敌对力量。",
+              "status": "altered",
+              "direction": "按鸣人实际位置和伤情重新分配搜救；目标已获救时改为确认佐助踪迹和封锁边境，不制造昏迷伤势。",
+              "preserves": "保留鸣人的医疗交接、佐助最后可确认方向和停止无补给越境追击的决定。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·卡卡西找到鸣人",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足现场急救与停止越境依据"
+            }
+          ],
+          "design_rationale": "终结之谷只承担鸣人回收和是否越境的指挥冲突，不把其他战场压进同一场景。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-RESCUE-CHOJI-01",
+          "title": "杉林寻找丁次",
+          "thread_id": "THR-P1-SASUKE-AFTERMATH",
+          "location": "火之国北境杉林空地",
+          "participants": [
+            "木叶第一医疗搜索组",
+            "秋道丁次",
+            "帕克的追踪犬"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "丁次仍在杉林土牢区附近失去行动能力，且队伍标记未被破坏。",
+            "木叶医疗搜索组携带秋道药丸解毒与生命支持物资。"
+          ],
+          "blockers": [
+            "丁次未服高风险药丸、已自行撤离或由玩家先行救治。",
+            "标记丢失且没有气味或传讯能定位丁次。"
+          ],
+          "setup": "第一搜索组按土牢区标记找到丁次，立即清点三色药丸实际消耗，处理循环衰竭和细胞损伤，再决定原地稳定还是担架转运。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-RESCUE-CHOJI-01-01",
+              "order": 10,
+              "summary": "追踪犬从队伍标记定位杉林空地。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-CHOJI-01-02",
+              "order": 20,
+              "summary": "医忍检查药丸盒、瞳孔、脉搏和查克拉，确认实际用药。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-CHOJI-01-03",
+              "order": 30,
+              "summary": "基准线中三丸全用触发最高优先级生命支持。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-CHOJI-01-04",
+              "order": 40,
+              "summary": "现场处置和发现时间写入转运卡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "丁次的药物损伤与发现时间进入医疗链。"
+          ],
+          "state_changes": [
+            "记录已用药丸、现场药剂、生命体征、担架编号和前往北境医疗驿的路线。"
+          ],
+          "stop_condition": "丁次达到可转运标准，或搜索组留人继续原地支持并请求增援。",
+          "fallbacks": [
+            {
+              "condition": "丁次未服高风险药丸、已自行撤离或由玩家先行救治。；标记丢失且没有气味或传讯能定位丁次。",
+              "status": "altered",
+              "direction": "按实际药物摄入与发现时间实施急救或扩大搜索；未服红丸时不得套用濒死抢救。",
+              "preserves": "保留丁次药物损伤、发现时间和送往北境医疗驿的路线。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·丁次获救",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足搜救分组、用药核对和转运卡"
+            }
+          ],
+          "design_rationale": "药物伤必须在现场按库存证据交接，不能到医院才凭原著结果补写。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-RESCUE-NEJI-01",
+          "title": "巨木岭寻找宁次",
+          "thread_id": "THR-P1-SASUKE-AFTERMATH",
+          "location": "火之国北境巨木岭",
+          "participants": [
+            "木叶第二医疗搜索组",
+            "日向宁次",
+            "帕克的追踪犬"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "宁次仍在巨木岭失去追击能力，现场留有白眼战斗和队伍标记。",
+            "第二医疗搜索组能沿主路线逆向定位巨木岭。"
+          ],
+          "blockers": [
+            "宁次未受贯穿伤、已撤离或由玩家先行救治。",
+            "路线被破坏且搜索组没有可靠定位信息。"
+          ],
+          "setup": "第二搜索组沿山脊标记找到宁次，先确认贯穿伤是否真实发生、止血情况和白眼过度使用，再固定胸腹和查克拉经络后转运。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-RESCUE-NEJI-01-01",
+              "order": 10,
+              "summary": "搜索组从蛛网、箭矢和队伍标记确认巨木岭战场。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-NEJI-01-02",
+              "order": 20,
+              "summary": "医忍按实际伤口检查出血、呼吸和查克拉衰竭。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-NEJI-01-03",
+              "order": 30,
+              "summary": "基准线中的贯穿伤要求固定、补液与最短路线后送。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-NEJI-01-04",
+              "order": 40,
+              "summary": "发现时间、伤口与现场处置写入独立转运卡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "宁次的具体伤势与后送优先级进入医疗链。"
+          ],
+          "state_changes": [
+            "记录贯穿与否、失血、白眼和柔拳查克拉消耗、现场物资及担架编号。"
+          ],
+          "stop_condition": "宁次达到可转运标准，或搜索组建立原地观察并请求更多医疗资源。",
+          "fallbacks": [
+            {
+              "condition": "宁次未受贯穿伤、已撤离或由玩家先行救治。；路线被破坏且搜索组没有可靠定位信息。",
+              "status": "altered",
+              "direction": "按伤口、失血和发现时间决定止血、固定与转运；没有贯穿伤时不得套用原预后。",
+              "preserves": "保留宁次具体伤势、查克拉衰竭和送往北境医疗驿的交接。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·宁次获救",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足巨木岭定位、固定与转运卡"
+            }
+          ],
+          "design_rationale": "把宁次与丁次的搜救拆开，避免同时出现在相距不同的战场。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-RESCUE-RELAY-01",
+          "title": "北境医疗驿分诊",
+          "thread_id": "THR-P1-KONOHA-MEDICAL",
+          "location": "火之国北境医疗驿",
+          "participants": [
+            "木叶医疗班",
+            "旗木卡卡西",
+            "砂隐援军",
+            "佐助夺还队伤员"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一名追击队员或砂隐援军抵达北境医疗驿。",
+            "医疗班已收到各搜索组的姓名、位置、伤势和已用药物清单。"
+          ],
+          "blockers": [
+            "所有伤员均未受伤或已在其他设施完成治疗。",
+            "医疗驿失守、路线中断或交接记录缺失。"
+          ],
+          "setup": "各路担架和砂隐护送者分批抵达医疗驿；值勤医忍按呼吸循环、药物损伤、贯穿伤、术后复发和动物伤情分诊，并逐项签收忍具与转运卡。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-RESCUE-RELAY-01-01",
+              "order": 10,
+              "summary": "砂隐三人只报告各自亲历的战场、现场用药与移动情况。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-RELAY-01-02",
+              "order": 20,
+              "summary": "医忍按到达顺序和危急程度分配治疗位，不把“全员”视为同一伤势。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-RELAY-01-03",
+              "order": 30,
+              "summary": "卡卡西提交终结之谷结果和停止越境命令，边境守备接管警戒。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-RESCUE-RELAY-01-04",
+              "order": 40,
+              "summary": "可移动者编入护送队，危重者稳定后再于K064-06-05转往木叶医院。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "所有已找到伤员有明确的医疗接收人、当前地点和下一段后送计划。",
+            "砂隐支援事实进入正式但有限的同盟记录。"
+          ],
+          "state_changes": [
+            "逐人记录伤势、查克拉、精神状态、药物、装备、到达时刻、治疗位和K064-06-05转运优先级。"
+          ],
+          "stop_condition": "每名到达者完成签收，未找到者保留搜索状态，驿站不再混用模糊“全员获救”。",
+          "fallbacks": [
+            {
+              "condition": "所有伤员均未受伤或已在其他设施完成治疗。；医疗驿失守、路线中断或交接记录缺失。",
+              "status": "altered",
+              "direction": "按实际到达顺序分诊并补齐缺失记录；无法转运者留驿观察，不能一句话把全员送回木叶。",
+              "preserves": "保留个体伤势、查克拉、药物、装备和后送优先级。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·夺还队搜救",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设置北境医疗驿完成伤势、装备和情报交接"
+            }
+          ],
+          "design_rationale": "在一个固定医疗节点汇总分散路线，但不把此前搜救写成同一物理场景。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "离村分支中，每名已找到伤员进入明确医疗链；K064-06-05按分诊结果完成稳定治疗和返村。",
+        "佐助或已越过可安全追击范围，或在玩家分支中被带回、控制或留村；结果不得统一改写为任务失败。",
+        "边境守备接管音忍方向，追击成员不再无补给越境。",
+        "留村分支继续医院观察与防营救，不生成不存在的战伤。"
+      ],
+      "transition": "K064-06-05用于医疗驿稳定、分批转运和路途休息；K064-06-06仅在报告人与伤员状态允许时进行任务、保护或反情报复盘。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-606",
+      "date": "K064-06-06",
+      "title": "任务复盘与同盟后果",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "把实际发生的追击、留村保护或成功带回结果写入正式复盘，并决定下一阶段对大蛇丸、佐助和砂隐协作的政策。",
+      "start_state": [
+        "K064-06-05已按北境医疗驿分诊完成首轮稳定和分批返村。",
+        "报告人只提交亲历、正式交接或可验证记录，不共享其他战场的隐藏事实。",
+        "佐助可能仍在逃、已带回、主动留村或处于保护性控制。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-DEBRIEF-01",
+          "title": "行动与保护复盘",
+          "thread_id": "THR-P1-SASUKE-AFTERMATH",
+          "location": "火影办公室",
+          "participants": [
+            "现任火影或获授权值勤指挥者",
+            "奈良鹿丸",
+            "旗木卡卡西",
+            "砂隐联络忍者",
+            "玩家角色（若参与指挥）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "追击任务已有明确结束状态，鹿丸或替代队长能够提交行动记录。",
+            "砂隐联络方能确认援军收到的命令和实际介入地点。"
+          ],
+          "blockers": [
+            "没有发生追击任务或报告人仍未脱离生命危险。",
+            "任务记录被玩家分支替代且需要其他负责人说明。"
+          ],
+          "setup": "鹿丸或实际队长按北门出发、每次分兵、伤员标记和终结之谷结果复原时间线；若佐助未离村，则改由卡卡西报告拦截、咒印保护和会合点侦察。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-DEBRIEF-01-01",
+              "order": 10,
+              "summary": "报告先确认佐助最终位置、任务目标是否成立及各条情报来源。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEBRIEF-01-02",
+              "order": 20,
+              "summary": "实际队长说明每次分兵、合战、撤退或留村保护的依据和资源。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEBRIEF-01-03",
+              "order": 30,
+              "summary": "实际合法指挥者区分个人决策、上忍短缺、通信延迟和任务设计责任。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEBRIEF-01-04",
+              "order": 40,
+              "summary": "砂隐联络忍者只核对求援授权、搜索走廊来源和三人各自提交的战场报告。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "行动结果及其原因形成可追踪记录。",
+            "鹿丸或替代队长获得与实际决策相符的评价，不因基准线强制背负不存在的伤亡。"
+          ],
+          "state_changes": [
+            "木叶按佐助状态调整边境、大蛇丸、咒印保护和叛忍政策；砂木支援进入后续外交程序。"
+          ],
+          "stop_condition": "报告签署，未决情报、责任人与复查日期明确。",
+          "fallbacks": [
+            {
+              "condition": "没有发生追击任务或报告人仍未脱离生命危险。；任务记录被玩家分支替代且需要其他负责人说明。",
+              "status": "altered",
+              "direction": "佐助留村时改为保护与反情报复盘；队长缺席时由实际指挥者报告，不得预设任务失败或鹿丸责任。",
+              "preserves": "保留资源不足、指挥决策、同盟贡献和后续政策必须有记录。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助夺还任务复盘",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "复盘覆盖失败、成功和留村三类结果，不把制度缺口全推给少年队长。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-HOSPITAL-STATUS-01",
+          "title": "伤员预后",
+          "thread_id": "THR-P1-KONOHA-MEDICAL",
+          "location": "木叶医院",
+          "participants": [
+            "当值医疗负责人",
+            "医疗忍者",
+            "追击队伤员",
+            "家属与同伴"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一名追击参与者已进入木叶医院或北境医疗链。",
+            "医疗班已收到现场处置、药物与转运记录。"
+          ],
+          "blockers": [
+            "没有人员受伤或相关伤员仍未被找到。",
+            "玩家改变伤势后原诊断不再适用。"
+          ],
+          "setup": "纲手若已返村并在岗则可主持，否则由实际当值医疗负责人依据转运卡分别说明丁次药物损伤、宁次伤口、牙与赤丸伤势、李术后风险、鸣人恢复和佐助咒印观察；没有发生的伤势不进入病历。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-HOSPITAL-STATUS-01-01",
+              "order": 10,
+              "summary": "医疗班逐人核对现场处置、转运时间、已用药物和当前生命体征。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-HOSPITAL-STATUS-01-02",
+              "order": 20,
+              "summary": "伤员本人决定允许哪些预后信息向家属、队友或砂隐联络方披露。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-HOSPITAL-STATUS-01-03",
+              "order": 30,
+              "summary": "实际医疗负责人按伤情设定活动、查克拉使用、复健和探视限制。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P1-SASUKE-HOSPITAL-STATUS-01-04",
+              "order": 40,
+              "summary": "每人获得下一次复查日期和不得擅自恢复任务的标准。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "所有实际伤员和咒印观察者有连续医疗状态。"
+          ],
+          "state_changes": [
+            "逐人记录身体、精神、查克拉、药物、装备归还和知情范围；不得在后续无说明恢复满状态。"
+          ],
+          "stop_condition": "每名患者进入稳定康复、转科、出院或继续隔离观察中的一种明确方案。",
+          "fallbacks": [
+            {
+              "condition": "没有人员受伤或相关伤员仍未被找到。；玩家改变伤势后原诊断不再适用。",
+              "status": "altered",
+              "direction": "逐人按实际伤势给出预后、复健和探视限制；未受相应伤害者不得继承基准医疗状态。",
+              "preserves": "保留伤势、查克拉、精神状态和医疗资源的连续记录。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·夺还队医疗后果",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "防止群体任务后只关注鸣人，也防止留村分支凭空生成原著伤势。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "实际行动结果被制度化复盘，木叶知道哪些情报仍未知。",
+        "所有实际伤员或咒印观察者进入个体化康复与安保方案。"
+      ],
+      "transition": "K064-06-07至09用于按医嘱恢复、有限探视和政策执行；K064-06-10第七班成员面对佐助实际去留造成的关系后果。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-610",
+      "date": "K064-06-10",
+      "title": "第七班的去留后果",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "让鸣人、小樱与可参与的佐助按实际结果承担承诺、信任、咒印和长期成长责任。",
+      "start_state": [
+        "鸣人若参加终结之谷战斗，已恢复到可短时谈话但仍受医疗限制。",
+        "小樱知道正式复盘允许披露的任务结果。",
+        "佐助可能仍在逃，也可能留村或被带回并处于观察。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-PROMISE-01",
+          "title": "病房里的道歉",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶医院病房",
+          "participants": [
+            "漩涡鸣人",
+            "春野樱"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已恢复到可谈话状态，小樱知道夺还任务的实际结果。",
+            "基准分支中佐助仍未回村且鸣人曾承诺追赶。"
+          ],
+          "blockers": [
+            "佐助已经留村或被成功带回。",
+            "鸣人仍昏迷、拒绝探视或承诺从未发生。"
+          ],
+          "setup": "仅在佐助仍未回村时，鸣人才说明终结之谷的实际结果并为未兑现承诺道歉；小樱可以承认自己把责任压给鸣人、拒绝继续单向承诺或提出共同的长期方案。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-PROMISE-01-01",
+              "order": 10,
+              "summary": "鸣人只讲述自己亲历和获准披露的终结之谷结果。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-PROMISE-01-02",
+              "order": 20,
+              "summary": "小樱面对请求带来的压力和自己未参与追击的事实。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-PROMISE-01-03",
+              "order": 30,
+              "summary": "二人选择继续寻找、暂缓承诺、优先恢复或把任务交回正式制度。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-PROMISE-01-04",
+              "order": 40,
+              "summary": "小樱可申请医疗修行，鸣人可在康复后选择长期训练，但两者都不是强制结果。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人与小樱的关系从单向保证转为共同承担或明确边界。",
+            "佐助问题成为有制度约束的长期任务，而非下一日即可兑现的口号。"
+          ],
+          "state_changes": [
+            "记录二人的承诺范围、小樱训练申请、鸣人训练意向和当前探视消耗。"
+          ],
+          "stop_condition": "探视在鸣人医疗时限内结束，二人各自下一步明确。",
+          "fallbacks": [
+            {
+              "condition": "佐助已经留村或被成功带回。；鸣人仍昏迷、拒绝探视或承诺从未发生。",
+              "status": "altered",
+              "direction": "若佐助已回村，改为三人分别承担治疗、信任修复与咒印防护；若鸣人不能谈话则延期，不让小樱独自补完其立场。",
+              "preserves": "保留鸣人与小樱共同承担佐助问题、失败或成功都会改变关系。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人向小樱道歉",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "失败应改变角色计划，不能被新的无条件保证抹除。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-STAY-TEAM7-01",
+          "title": "留下之后的三方会谈",
+          "thread_id": "THR-P1-TEAM7-RIFT",
+          "location": "木叶医院封印观察室",
+          "participants": [
+            "宇智波佐助",
+            "漩涡鸣人",
+            "春野樱",
+            "旗木卡卡西",
+            "医疗忍者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助在出村前被说服、主动留村或被安全带回。",
+            "佐助、鸣人与小樱均达到可进行短时会谈的医疗标准。"
+          ],
+          "blockers": [
+            "佐助仍在逃、拒绝任何会谈或被判定需要隔离审讯。",
+            "任一成员伤势或精神状态不允许接触。"
+          ],
+          "setup": "仅在佐助留村或被带回且医疗安保允许时，卡卡西主持一次限时会谈；玩家可要求佐助解释去留、让同伴说明边界、讨论咒印治疗或拒绝立即恢复第七班任务。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-STAY-TEAM7-01-01",
+              "order": 10,
+              "summary": "医疗忍者先说明佐助咒印、鸣人伤情和会谈停止标准。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-TEAM7-01-02",
+              "order": 20,
+              "summary": "佐助决定披露多少离村动机、音忍情报和复仇计划。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-TEAM7-01-03",
+              "order": 30,
+              "summary": "鸣人与小樱分别说明信任受损和愿意承担的帮助，不以原谅为前提。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-TEAM7-01-04",
+              "order": 40,
+              "summary": "卡卡西把训练、探视、任务停编和反营救责任写成可执行安排。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助留下不会自动恢复第七班关系。",
+            "三人获得一套可继续、暂停或拒绝的信任修复步骤。"
+          ],
+          "state_changes": [
+            "记录佐助咒印治疗、队伍停编状态、同伴探视边界、训练监督人和仍保密的情报。"
+          ],
+          "stop_condition": "会谈在医疗或情绪停止线结束，下一次接触条件明确。",
+          "fallbacks": [
+            {
+              "condition": "佐助仍在逃、拒绝任何会谈或被判定需要隔离审讯。；任一成员伤势或精神状态不允许接触。",
+              "status": "altered",
+              "direction": "按医疗与安全建议延期、缩短或由可信导师主持；不得把佐助留下直接写成第七班关系完全修复。",
+              "preserves": "保留咒印治疗、信任重建、复仇目标和大蛇丸反情报责任。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·佐助与第七班关系",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设计佐助留村后的医疗安保与信任修复"
+            }
+          ],
+          "design_rationale": "为玩家改变离村结果提供长期后果，而不是在后续日期悄悄恢复原著失败线。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助在逃分支中，第七班人员破裂且鸣人与小樱形成可撤回的长期方向。",
+        "佐助留村或带回分支中，第七班仍停编观察，咒印、信任和反营救责任均有负责人。"
+      ],
+      "transition": "K064-06-11至13按分支进行康复、咒印治疗、训练申请或边境政策执行；K064-06-14由鸣人自主决定是否接受自来也的长期远行方案。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-614",
+      "date": "K064-06-14",
+      "title": "远行选择与准备",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "让鸣人在医疗、佐助实际状态和晓的当前威胁信息下自主选择远行、延期或留村，并只为已选路线结清许可、补给和有限告别。",
+      "start_state": [
+        "自来也准备离村继续调查晓与大蛇丸，但不掌握未来袭击的确定日期。",
+        "鸣人的长途医疗标准、佐助实际去留和第七班状态均已有记录。",
+        "远行不是夺还任务失败后的强制结尾；鸣人可以延期或采用获批的村内训练。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-JOURNEY-PLAN-01",
+          "title": "长期训练与情报契约",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "火影办公室",
+          "participants": [
+            "现任火影或获授权值勤指挥者",
+            "当值医疗负责人",
+            "自来也",
+            "漩涡鸣人",
+            "玩家角色（若具备监护、任务或见证身份）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人达到可长途步行和低强度训练的医疗标准。",
+            "自来也仍愿承担导师、护卫与情报联络责任，现任火影、代理或获授权指挥者有权批准外出。"
+          ],
+          "blockers": [
+            "鸣人选择留村、伤势未达标或当前安全危机禁止远行。",
+            "自来也无法同行，或玩家已建立另一套获批训练方案。"
+          ],
+          "setup": "自来也提出带鸣人边旅行训练边维持情报网；他只说明晓此前已接触鸣人并可能继续追索，不声称知道具体年份或未来事件。实际合法指挥者核对医疗、村籍、保密和紧急返村条件，在场玩家只能依据其真实身份参与建议或见证。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-JOURNEY-PLAN-01-01",
+              "order": 10,
+              "summary": "当值医疗负责人提交鸣人当前伤势、查克拉使用限制和可长途步行标准。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-JOURNEY-PLAN-01-02",
+              "order": 20,
+              "summary": "自来也说明现有晓情报的来源与不确定性，并提出基础控制、战斗判断和九尾安全边界目标。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-JOURNEY-PLAN-01-03",
+              "order": 30,
+              "summary": "鸣人选择K064-06-15出发、延期恢复、留村训练或要求修改路线与联络条件；具备资格的玩家可提出担保、路线或安全条件。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-JOURNEY-PLAN-01-04",
+              "order": 40,
+              "summary": "实际合法指挥者只批准鸣人接受且资源可执行的方案，并明确任务身份、保密范围、定期联络和紧急返村触发。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "出发分支中鸣人获得合法长期旅行身份，自来也承担导师与保护责任。",
+            "延期或留村分支获得同样具体的医疗复查和训练负责人。"
+          ],
+          "state_changes": [
+            "记录鸣人选择、第一段西向路线、当天宿营上限、联络方式、九尾训练限制和K064-06-15是否为实际出发日。"
+          ],
+          "stop_condition": "许可、路线、医疗停止线、联络和紧急返村条件签署，或延期/留村方案签署。",
+          "fallbacks": [
+            {
+              "condition": "鸣人选择留村、伤势未达标或当前安全危机禁止远行。；自来也无法同行，或玩家已建立另一套获批训练方案。",
+              "status": "altered",
+              "direction": "由鸣人决定远行、延期或留村训练；佐助留村时调整目标为晓风险、基础控制和协助咒印防护，不得强制以夺回佐助为出发动机。",
+              "preserves": "保留合法任务身份、导师责任、定期联络和紧急返村条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人随自来也修行",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足长期外出行政、医疗、联络与安全安排"
+            }
+          ],
+          "design_rationale": "未来风险只能作为知情高层的当前评估，不能提前演出疾风传事件或用佐助失败强迫远行。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-SUPPLY-01",
+          "title": "长期行装核对",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "木叶商业街忍具与旅行用品店",
+          "participants": [
+            "漩涡鸣人",
+            "自来也",
+            "商店经营者"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人与自来也已初步选择远行，且能在出发前核对现有库存。",
+            "长期步行、露营和训练需要的缺口已经列出。"
+          ],
+          "blockers": [
+            "远行被取消或延期。",
+            "玩家已有足够装备，或采购渠道因任务与资金状态不可用。"
+          ],
+          "setup": "仅在鸣人选择次日出发后，二人先盘点现有钱款和物品，再购买实际缺少的食水容器、露营布、换洗衣物、基础药品和常用忍具；玩家可以减轻负重或保留资金。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-SUPPLY-01-01",
+              "order": 10,
+              "summary": "鸣人与自来也列出现有背包、忍具、药品、食水和现金。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-SUPPLY-01-02",
+              "order": 20,
+              "summary": "店主按长期步行与露营需求提出物品，鸣人决定购买、替换或放弃。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-SUPPLY-01-03",
+              "order": 30,
+              "summary": "自来也检查负重不会超过鸣人当前医疗与体力限制。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-SUPPLY-01-04",
+              "order": 40,
+              "summary": "付款后将数量、负重和分配写入两人库存。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "远行分支拥有有来源且可负担的第一阶段装备。"
+          ],
+          "state_changes": [
+            "扣除实际资金；记录食水容器、露营布、衣物、药品、忍具和由谁携带。"
+          ],
+          "stop_condition": "账款结清、背包达到可步行负重并离开商店。",
+          "fallbacks": [
+            {
+              "condition": "远行被取消或延期。；玩家已有足够装备，或采购渠道因任务与资金状态不可用。",
+              "status": "altered",
+              "direction": "只采购实际缺口并记录资金与负重；延期时封存或退还专用物资，不得凭空获得完整旅行装备。",
+              "preserves": "保留资金、食水、药品、忍具、衣物和负重的可追踪状态。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人远行准备",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足库存、采购、付款和负重"
+            }
+          ],
+          "design_rationale": "把采购从多地点告别中拆出，使资金、负重和装备不会凭空出现。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-FAREWELLS-01",
+          "title": "医院里的有限告别",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "木叶医院探视走廊",
+          "participants": [
+            "漩涡鸣人",
+            "春野樱",
+            "伊鲁卡",
+            "木叶同期伙伴"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已确定次日是否出发，并能在医院探视时段进入同伴病区。",
+            "伊鲁卡、小樱或同期伙伴中至少一人实际在场并已获知当前计划。"
+          ],
+          "blockers": [
+            "远行计划仍未决定。",
+            "相关同伴不在医院、拒绝见面或探视限制禁止集中告别。"
+          ],
+          "setup": "鸣人按探视安排与实际在医院或前来探望的人告别；每人只知道任务批准者许可公开的出发日和训练计划，不知道自来也的隐秘情报路线，也不预知旅途结果。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-FAREWELLS-01-01",
+              "order": 10,
+              "summary": "医疗班确认哪些伤员能见面以及探视时限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-FAREWELLS-01-02",
+              "order": 20,
+              "summary": "鸣人与实际在场的小樱、伊鲁卡或同期伙伴分别说明当前选择。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-FAREWELLS-01-03",
+              "order": 30,
+              "summary": "佐助在逃时只保留长期目标；佐助留村时尊重其观察与保密边界。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-FAREWELLS-01-04",
+              "order": 40,
+              "summary": "鸣人在探视时限结束后返回住所休息，不追加夜间训练。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "实际在场的重要关系知道鸣人是否将离村。",
+            "缺席者、普通村民和受保密限制者不会自动获知完整计划。"
+          ],
+          "state_changes": [
+            "记录每名知情者、公开信息范围、鸣人精神与体力消耗以及当晚休息状态。"
+          ],
+          "stop_condition": "探视结束，鸣人返回住所并达到次日出发或村内训练所需休息。",
+          "fallbacks": [
+            {
+              "condition": "远行计划仍未决定。；相关同伴不在医院、拒绝见面或探视限制禁止集中告别。",
+              "status": "altered",
+              "direction": "只与实际在场且有知情渠道的人告别；缺席者改用获准留言或暂不知情，不得让全村自动知道计划。",
+              "preserves": "保留关系知情范围、未解决的佐助目标和出发前休息需求。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·第一部结尾告别",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足探视、知情范围和当晚休息"
+            }
+          ],
+          "design_rationale": "把关系告别限制在一个地点和真实知情范围，装备已由独立场景处理。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "远行分支中许可、行装、知情范围和当晚休息完成。",
+        "延期或留村分支中不存在虚假采购与告别，医疗复查和训练负责人已经明确。"
+      ],
+      "transition": "K064-06-15按鸣人选择触发正门出发与第一程，或在木叶执行已批准的恢复和训练安排。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P1-SASUKE-615",
+      "date": "K064-06-15",
+      "title": "第一部收束：出发或留村",
+      "arc_id": "ARC-P1-SASUKE",
+      "day_goal": "只推进本日实际选择：在正门完成出发并走完可追踪的第一程，或在木叶执行替代训练；不跳播未来成果。",
+      "start_state": [
+        "K064-06-14已签署远行、延期或留村训练中的一种方案。",
+        "鸣人、佐助、伤员、木叶政治和边境警戒状态均继承实际分支。",
+        "任何未来归来日期和训练成果都尚未发生。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P1-SASUKE-DEPART-JIRAIYA-01",
+          "title": "走出木叶正门",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "木叶正门",
+          "participants": [
+            "漩涡鸣人",
+            "自来也",
+            "木叶门卫"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人、自来也、长期外出许可和登记用身份证明均在木叶正门。",
+            "鸣人仍选择按批准计划离村。"
+          ],
+          "blockers": [
+            "鸣人撤回选择、医疗许可被取消或自来也无法同行。",
+            "村门因安全事件关闭，或玩家改变出发路线。"
+          ],
+          "setup": "远行分支中，鸣人与自来也在正门逐项核对许可、身份、背包、第一段西向路线和联络暗记；玩家仍可选择延期、调整携行分配或在登记后返回。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-DEPART-JIRAIYA-01-01",
+              "order": 10,
+              "summary": "门卫核验长期外出许可、同行导师和出发时刻。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEPART-JIRAIYA-01-02",
+              "order": 20,
+              "summary": "鸣人与自来也清点各自背包、当日食水和紧急药品。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEPART-JIRAIYA-01-03",
+              "order": 30,
+              "summary": "门卫登记计划路线与紧急联络方式，但不获得隐秘调查目标。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-DEPART-JIRAIYA-01-04",
+              "order": 40,
+              "summary": "鸣人自主越过村界，出发状态才正式成立。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "出发分支完成制度与库存交接。",
+            "延期分支保持鸣人在村内，不会因标题被强制传送。"
+          ],
+          "state_changes": [
+            "登记实际出发时刻、当前位置、双方负重、食水、药品和门卫知情范围。"
+          ],
+          "stop_condition": "鸣人与自来也越过正门进入西向道路，或取消本日出发并通知火影办公室。",
+          "fallbacks": [
+            {
+              "condition": "鸣人撤回选择、医疗许可被取消或自来也无法同行。；村门因安全事件关闭，或玩家改变出发路线。",
+              "status": "altered",
+              "direction": "取消、延期或按获批替代路线出发；不得为了第一部结尾强制鸣人越过村门。",
+              "preserves": "保留许可、门卫登记、同行责任和实际出发时间。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人随自来也离村",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足项目日期、旅行时间、恢复期与可交互转场"
+            }
+          ],
+          "design_rationale": "把正门登记和道路旅行拆开，玩家到最后仍能改变出发。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-FIRST-LEG-01",
+          "title": "西向道路第一程",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "木叶西侧火之国驿道",
+          "participants": [
+            "漩涡鸣人",
+            "自来也"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人与自来也已完成村门登记并进入火之国西向道路。",
+            "二人携带当日食水、露营物资和可执行的第一落脚点计划。"
+          ],
+          "blockers": [
+            "二人未离村、改走其他路线或出发后因伤病返回。",
+            "补给不足、道路封锁或玩家选择在近郊停留。"
+          ],
+          "setup": "二人只走当天第一程；自来也根据鸣人近期伤势控制步速，沿路安排饮水、短休和一次低强度控制练习，由玩家决定在近郊宿营、继续到驿站或因不适折返。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-FIRST-LEG-01-01",
+              "order": 10,
+              "summary": "二人按负重和医疗标准确定第一段步速与休息间隔。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-FIRST-LEG-01-02",
+              "order": 20,
+              "summary": "行进消耗食水和体力，鸣人只进行不会透支的基础控制练习。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-FIRST-LEG-01-03",
+              "order": 30,
+              "summary": "玩家根据天气、体力和剩余日照选择近郊宿营、驿站或折返。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-FIRST-LEG-01-04",
+              "order": 40,
+              "summary": "到达实际落脚点后搭建露营或登记住宿，并更新下一段距离。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "长期修行与情报旅行从一段真实移动开始，而非直接获得数年成果。"
+          ],
+          "state_changes": [
+            "更新具体落脚类型、行进距离、体力、查克拉、食水、药品与装备状况；日期仍为K064-06-15。"
+          ],
+          "stop_condition": "二人完成当日落脚和警戒，等待下一日行动。",
+          "fallbacks": [
+            {
+              "condition": "二人未离村、改走其他路线或出发后因伤病返回。；补给不足、道路封锁或玩家选择在近郊停留。",
+              "status": "altered",
+              "direction": "按实际路线和体力选择近郊扎营、返回补给或继续第一程；不跳到未来归来日，也不预写旅途成果。",
+              "preserves": "保留位置、体力、查克拉、食水消耗和下一段旅行距离。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人随自来也离村",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足第一日步行、休息、消耗与落脚"
+            }
+          ],
+          "design_rationale": "用可追踪第一程承接未来数据集，禁止十几年或两年半跳跃。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P1-SASUKE-STAY-DEPARTURE-DAY-01",
+          "title": "留村训练的第一日",
+          "thread_id": "THR-P1-NARUTO-JOURNEY",
+          "location": "木叶第三训练场",
+          "participants": [
+            "漩涡鸣人",
+            "自来也",
+            "旗木卡卡西"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人明确选择暂不随自来也离村，或远行许可被合理延期。",
+            "现任火影、代理、自来也或卡卡西已确认一项可执行的村内训练与安全安排。"
+          ],
+          "blockers": [
+            "鸣人已从木叶正门出发。",
+            "留村决定尚未获得监护与训练资源支持。"
+          ],
+          "setup": "延期或留村分支中，鸣人按批准方案在第三训练场接受恢复评估与低强度训练；自来也在离村前交接现有晓情报的保密等级，卡卡西或指定导师接管日常监督。",
+          "beats": [
+            {
+              "id": "EV-P1-SASUKE-STAY-DEPARTURE-DAY-01-01",
+              "order": 10,
+              "summary": "导师核对鸣人的伤势、查克拉和当日训练上限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-DEPARTURE-DAY-01-02",
+              "order": 20,
+              "summary": "鸣人选择基础控制、战斗复盘、体能恢复或协助佐助咒印防护中的当前目标。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-DEPARTURE-DAY-01-03",
+              "order": 30,
+              "summary": "自来也只交接当前已知风险、联络方式和未来可重新申请远行的条件。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P1-SASUKE-STAY-DEPARTURE-DAY-01-04",
+              "order": 40,
+              "summary": "训练在医疗停止线结束并记录下一次复查。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人留村分支拥有可执行的成长路线，不被视为缺失结局。"
+          ],
+          "state_changes": [
+            "记录导师、训练内容、体力与查克拉消耗、晓情报知情范围和下一次远行评估日期。"
+          ],
+          "stop_condition": "当日训练与恢复结束，鸣人仍在木叶且下一步明确。",
+          "fallbacks": [
+            {
+              "condition": "鸣人已从木叶正门出发。；留村决定尚未获得监护与训练资源支持。",
+              "status": "altered",
+              "direction": "若条件不足则继续协商或安排恢复日；不得暗中补写鸣人已经远行，也不得无计划跳过训练资源。",
+              "preserves": "保留鸣人的选择、晓威胁、训练需求和之后重新申请远行的可能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 第一部·鸣人长期训练动机",
+              "contribution": "提供主要冲突、人物动机与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "设计延期或留村训练分支"
+            }
+          ],
+          "design_rationale": "让不远行成为完整玩家选择，同时保留未来重新申请的空间。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "远行分支中，鸣人与自来也停在K064-06-15当日的实际落脚点。",
+        "留村分支中，鸣人完成第一日训练并仍在木叶。",
+        "佐助、大蛇丸、晓、第七班和伤员恢复均保留实际分支，不自动恢复原著结果。"
+      ],
+      "transition": "Part I 项目正史到此结束。后续数据必须从本日实际位置、资源与分支状态承接，禁止依靠预训练知识跳到归来日或任何未来事件。",
+      "reference_facts": [
+        "“约两年半后归来”只是可选远行计划的预估边界，不是K064-06-15已经发生的事实，也不适用于留村分支。"
+      ]
+    }
+  ]
+}

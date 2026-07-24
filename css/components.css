@@ -5,7 +5,7 @@
 
 /* ── Glass Card (沉浸式毛玻璃卡片) ──── */
 .card, .glass-card {
-  background: rgba(11, 14, 19, 0.4);
+  background: rgba(var(--ink-rgb), 0.4);
   backdrop-filter: var(--blur-lg);
   -webkit-backdrop-filter: var(--blur-lg);
   border: 1px solid var(--border-subtle);
@@ -18,7 +18,7 @@
 
 .card:hover, .glass-card:hover {
   border-color: var(--border-strong);
-  background: rgba(11, 14, 19, 0.6);
+  background: rgba(var(--ink-rgb), 0.6);
 }
 
 /* ── Buttons (纯粹几何与微光) ──── */
@@ -113,8 +113,9 @@
   z-index: var(--z-modal); animation: fadeIn 0.3s var(--ease-out); padding: var(--sp-4);
 }
 .modal {
-  width: 100%; max-width: 440px; background: rgba(11, 14, 19, 0.9); border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg); padding: var(--sp-8); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 440px; background: rgba(var(--ink-rgb), 0.9); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl); padding: var(--sp-8);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05); /* 对齐卦象盒的深空玻璃语言 */
   animation: modalScale 0.4s var(--ease-spring);
 }
 .modal-title {
@@ -285,7 +286,7 @@
 /* ── Toast ──── */
 .toast {
   position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-  padding: 12px 24px; background: rgba(11, 14, 19, 0.95); backdrop-filter: var(--blur-md);
+  padding: 12px 24px; background: rgba(var(--ink-rgb), 0.95); backdrop-filter: var(--blur-md);
   border: 1px solid var(--border-subtle); border-radius: var(--r-full);
   color: var(--text-primary); font-family: var(--font-body); font-size: var(--text-sm);
   box-shadow: var(--shadow-md); z-index: var(--z-toast); pointer-events: none;
@@ -325,7 +326,7 @@
 
 .desktop-lyrics {
   position: fixed; bottom: 12vh; left: 50%; transform: translateX(-50%); z-index: 99999;
-  padding: 24px 48px; background: rgba(7, 10, 14, 0.75); backdrop-filter: var(--blur-xl); -webkit-backdrop-filter: var(--blur-xl);
+  padding: 24px 48px; background: rgba(var(--ink-deep-rgb), 0.75); backdrop-filter: var(--blur-xl); -webkit-backdrop-filter: var(--blur-xl);
   border: 1px solid var(--border-subtle); border-radius: var(--r-xl);
   box-shadow: var(--shadow-lg); text-align: center; min-width: 480px;
   transition: all 0.3s var(--ease-out);
@@ -337,7 +338,7 @@
   will-change: transform;
 }
 .desktop-lyrics:hover {
-  background: rgba(7, 10, 14, 0.9);
+  background: rgba(var(--ink-deep-rgb), 0.9);
   border-color: var(--border-strong);
 }
 .desktop-lyrics .lyric-text {
@@ -374,7 +375,7 @@
 .desktop-lyrics.minimized .lyric-time,
 .desktop-lyrics.minimized .lyric-controls { display: none; }
 .desktop-lyrics.minimized { padding: 8px 16px; min-width: 0; background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-.desktop-lyrics.minimized:hover { background: rgba(7, 10, 14, 0.4); border-color: var(--border-subtle); backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm); }
+.desktop-lyrics.minimized:hover { background: rgba(var(--ink-deep-rgb), 0.4); border-color: var(--border-subtle); backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm); }
 .desktop-lyrics.minimized .lyric-text { font-size: 20px; text-shadow: 0 1px 8px rgba(0,0,0,1); }
 .desktop-lyrics.minimized .lyric-header { display: none; margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
 .desktop-lyrics.minimized:hover .lyric-header { display: flex; }
@@ -414,11 +415,18 @@
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .npc-avatar-ring {
-  width: 56px; height: 56px; flex-shrink: 0;
+  width: 56px; height: 56px; flex-shrink: 0; position: relative;
   background: linear-gradient(135deg, rgba(235,97,63,0.25), rgba(198,156,109,0.15));
   border: 1px solid rgba(235,97,63,0.4); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 20px rgba(235,97,63,0.15);
+}
+/* 旋转封印微光（复用全局 spin，与关系卡六芒环呼应） */
+.npc-avatar-ring::before {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%; z-index: -1;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(235,97,63,0.55) 12%, transparent 26%);
+  filter: blur(3px); opacity: 0.8;
+  animation: spin 6s linear infinite;
 }
 .npc-avatar {
   color: #eb613f; font-size: 24px; font-weight: 700;
@@ -701,33 +709,19 @@
 }
 
 /* ── 文本颜色区分 (Text Color Distinctions) ──── */
+/* 默认值取自 tokens 的 --chat-* 系列；app.js 运行时注入 --color-* 时优先 */
 .text-dialogue {
-  color: var(--color-dialogue, #bae6fd);
-  text-shadow: 0 0 10px var(--color-dialogue-shadow, rgba(186, 230, 253, 0.3));
+  color: var(--color-dialogue, var(--chat-dialogue-color));
+  text-shadow: 0 0 10px var(--color-dialogue-shadow, var(--chat-dialogue-shadow));
   font-weight: 500;
 }
 .text-thought {
-  color: var(--color-thought, #c4b5fd);
-  text-shadow: 0 0 10px var(--color-thought-shadow, rgba(196, 181, 253, 0.2));
+  color: var(--color-thought, var(--chat-thought-color));
+  text-shadow: 0 0 10px var(--color-thought-shadow, var(--chat-thought-shadow));
   font-style: italic;
 }
 
 /* ── 全局优化 (Global Polish) ──── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
 ::selection {
   background: rgba(235, 97, 63, 0.3);
   color: #fff;

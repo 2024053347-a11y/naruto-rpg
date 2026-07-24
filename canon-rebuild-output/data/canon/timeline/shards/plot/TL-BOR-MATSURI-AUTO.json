@@ -1,0 +1,269 @@
+{
+  "$schema": "../../../schemas/timeline-event.schema.json",
+  "schema_version": "naruto.timeline.v1",
+  "dataset": "boruto-manga",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "TL-BOR-MATSURI-AUTO",
+    "arc_id": "ARC-BOR-MATSURI",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 3,
+    "date_start": "K086-05-01",
+    "date_end": "K086-07-30",
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "BORUTO TWO BLUE VORTEX",
+        "chapter_start": 16,
+        "chapter_end": 25
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "EV-BOR-MATSURI-0001",
+      "title": "祭与龙篇·剧情节拍001",
+      "aliases": [
+        "Matsuri and Ryū Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MATSURI",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K086-05-01",
+        "scheduled_end": "K086-05-01",
+        "time_of_day": "dawn",
+        "day_order": 2800010,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K086-05-01",
+          "latest": "K086-07-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [],
+        "rationale": "依据《博人传：双蓝漩涡》漫画第16-25章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "这是《漩涡慕留人：蓝色漩涡》的一个篇章。",
+      "facts": [
+        "这是《漩涡慕留人：蓝色漩涡》的一个篇章。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "祭与龙篇",
+          "Matsuri and Ryū Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-matsuri",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO TWO BLUE VORTEX",
+          "chapter_start": 16,
+          "chapter_end": 25,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Matsuri_and_Ry%C5%AB_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MATSURI-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MATSURI-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    },
+    {
+      "id": "EV-BOR-MATSURI-0002",
+      "title": "祭与龙篇·剧情节拍002",
+      "aliases": [
+        "Matsuri and Ryū Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MATSURI",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K086-06-15",
+        "scheduled_end": "K086-06-15",
+        "time_of_day": "morning",
+        "day_order": 2800020,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K086-05-01",
+          "latest": "K086-07-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-BOR-MATSURI-0001"
+        ],
+        "rationale": "依据《博人传：双蓝漩涡》漫画第16-25章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "该篇章涵盖第16至25章。",
+      "facts": [
+        "该篇章涵盖第16至25章。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-BOR-MATSURI-0001"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "祭与龙篇",
+          "Matsuri and Ryū Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-matsuri",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO TWO BLUE VORTEX",
+          "chapter_start": 16,
+          "chapter_end": 25,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Matsuri_and_Ry%C5%AB_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MATSURI-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MATSURI-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    },
+    {
+      "id": "EV-BOR-MATSURI-0003",
+      "title": "祭与龙篇·剧情节拍003",
+      "aliases": [
+        "Matsuri and Ryū Arc"
+      ],
+      "continuity": "boruto_manga",
+      "arc_id": "ARC-BOR-MATSURI",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K086-07-30",
+        "scheduled_end": "K086-07-30",
+        "time_of_day": "noon",
+        "day_order": 2800030,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K086-05-01",
+          "latest": "K086-07-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-BOR-MATSURI-0002"
+        ],
+        "rationale": "依据《博人传：双蓝漩涡》漫画第16-25章篇章顺序，在项目窗口内均匀分配；具体日不是原著明示。"
+      },
+      "summary": "这是《漩涡慕留人》漫画第二部的第二个篇章，前承漩涡慕留人归来篇，后继蝮蛇篇。",
+      "facts": [
+        "这是《漩涡慕留人》漫画第二部的第二个篇章，前承漩涡慕留人归来篇，后继蝮蛇篇。"
+      ],
+      "participants": [],
+      "location_ids": [],
+      "depends_on": [
+        "EV-BOR-MATSURI-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据当前存档裁定发生、改写、跳过或延期。"
+      },
+      "canonical_outcomes": [],
+      "knowledge": {
+        "public_at_time": [],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "祭与龙篇",
+          "Matsuri and Ryū Arc"
+        ],
+        "tags": [
+          "boruto_manga",
+          "bor-matsuri",
+          "zh-reviewed"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "BORUTO TWO BLUE VORTEX",
+          "chapter_start": 16,
+          "chapter_end": 25,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "summary"
+          ],
+          "note": "资料定位页：https://naruto.fandom.com/wiki/Matsuri_and_Ry%C5%AB_Arc"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-BOR-MATSURI-AUTO",
+        "reviewed_by": "manual-translation-NAR-BOR-MATSURI-BATCH-ALL",
+        "runtime_role": "metadata",
+        "structure_reviewed_by": "manual-plot-structure-001",
+        "structure_note": "记录只有篇章目录或前后继说明，不是可发生的剧情。"
+      }
+    }
+  ],
+  "unresolved": []
+}

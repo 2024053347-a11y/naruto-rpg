@@ -1,5 +1,7 @@
 ﻿export const worldbookStyles = `
-        :host { display:flex; position:fixed; inset:0; background:rgba(7,10,14,0.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:100002; font-family:'Noto Sans SC',system-ui,sans-serif; color:#e8e4d9; justify-content:center; align-items:center; padding:20px; }
+        :host { display:flex; position:fixed; inset:0; background:rgba(var(--ink-deep-rgb),0.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:100002; font-family:'Noto Sans SC',system-ui,sans-serif; color:#e8e4d9; justify-content:center; align-items:center; padding:20px; }
+        :host([embedded]) { position:relative; inset:auto; z-index:auto; width:100%; height:100%; padding:0; background:transparent; backdrop-filter:none; -webkit-backdrop-filter:none; }
+        :host([embedded]) .wb-container { max-width:none; max-height:none; border-radius:0; border:0; }
         .wb-container { width:100%; max-width:1200px; height:100%; max-height:800px; background:#111418; border:1px solid rgba(198,156,109,0.2); border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow:hidden; }
         .wb-header { padding:14px 20px; border-bottom:1px solid rgba(198,156,109,0.15); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(180deg, rgba(20,25,30,0.8), rgba(17,20,24,0.8)); }
         .wb-title { margin:0; font-size:16px; font-weight:700; color:#f4efe4; font-family:'Noto Serif SC',serif; letter-spacing:1px; }
@@ -47,6 +49,13 @@
         .wb-editor-empty { display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; color:#6e6a65; font-size:14px; }
         .wb-sidebar-foot { padding:8px; border-top:1px solid rgba(232,228,217,0.04); display:flex; gap:6px; flex-wrap:wrap; }
         @media (max-width:768px) { .wb-body { flex-direction:column; } .wb-sidebar { width:100%; height:220px; border-right:none; border-bottom:1px solid rgba(198,156,109,0.15); } .wb-editor { padding:14px; } }
+        @media (max-width:600px) {
+          .wb-header { flex-direction:column; align-items:stretch; gap:10px; padding:12px; }
+          .wb-title { min-width:0; font-size:15px; line-height:1.35; overflow-wrap:anywhere; }
+          .wb-title span { display:block; margin-top:3px; font-size:11px; line-height:1.4; letter-spacing:0; overflow-wrap:anywhere; }
+          .wb-actions { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+          .wb-actions .btn { width:100%; min-width:0; min-height:44px; padding:9px 10px; }
+        }
       </style>
 
 `;

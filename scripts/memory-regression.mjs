@@ -43,6 +43,33 @@ await test('failed AI compression keeps pending source text for retry', async ()
   assert.equal(stateManager.getSub('_memory')._pendingCompressionText, pending);
 });
 
+await test('async compression cannot write into a different timeline branch', async () => {
+  const pending = '分支专属记忆'.repeat(300);
+  stateManager.setSub('_meta', { current_node_id: 'node-main-7', active_branch: 'branch_main' });
+  stateManager.setSub('_memory', {
+    _pendingCompressionText: pending,
+    meta: { updated_at: null, sources: {} }
+  });
+  let resolveChat;
+  let markStarted;
+  const started = new Promise(resolve => { markStarted = resolve; });
+  const client = {
+    chat: async () => {
+      markStarted();
+      return new Promise(resolve => { resolveChat = resolve; });
+    }
+  };
+
+  const task = memorySystem.aiCompress(client);
+  await started;
+  stateManager.setSub('_meta', { current_node_id: 'node-if-3', active_branch: 'branch_if' });
+  resolveChat('这份摘要属于旧分支，不能落到新分支。'.repeat(6));
+
+  assert.equal(await task, false);
+  assert.equal(stateManager.getSub('_memory')._pendingCompressionText, pending);
+  assert.equal(stateManager.getSub('_memory').compressed_summary, undefined);
+});
+
 await test('deep consolidation sends bounded valid JSON', async () => {
   setTurn(50);
   stateManager.setSub('_memory', {
@@ -127,6 +154,22 @@ await test('facts metadata survives an empty long-term update', () => {
   const memory = stateManager.getSub('_memory');
   assert.equal(JSON.parse(memory._facts_meta).length, 1);
   assert.equal(JSON.parse(memory._long_term_meta).length, 0);
+});
+
+await test('a full archive retains the newest overflow fact', () => {
+  saveMemoryConfig({ factsLimit: 30, archivedLimit: 100 });
+  stateManager.setSub('_memory', {
+    facts: Array.from({ length: 30 }, (_, i) => `事实${i}`).join('\n'),
+    archived: Array.from({ length: 100 }, (_, i) => `旧归档${i}`).join('\n'),
+    _facts_meta: '[]',
+    _long_term_meta: '[]',
+    meta: { updated_at: null, sources: {} }
+  });
+  memorySystem.apply({ facts: ['最新事实'] });
+  const memory = stateManager.getSub('_memory');
+  assert.match(memory.facts, /最新事实/);
+  assert.match(memory.archived, /事实0/);
+  assert.doesNotMatch(memory.archived, /^旧归档0(?:\n|$)/);
 });
 
 await test('chapters only tag entities present in their source turns', () => {

@@ -58,14 +58,19 @@ if (pipeline) {
   assertIncludes(pipeline, "['辅助', skills.support]", 'prompt summary includes support skills');
   assertIncludes(pipeline, 'worldStateSystem?.triggerEvent', 'pipeline applies event tags to world state');
   assertIncludes(pipeline, '_mergeMemoryUpdates', 'pipeline merges multiple memory tags');
-  assertIncludes(pipeline, '_formatFewShot', 'pipeline formats few-shot examples');
+  assertIncludes(pipeline, 'runNarrativeReview', 'pipeline supports final narrative review');
   assertIncludes(pipeline, '_buildTimelineContext', 'pipeline injects current timeline context');
 }
 
 const prompts = readText('js/data/prompts.js');
 if (prompts) {
-  assertIncludes(prompts, 'export const FEW_SHOT_EXAMPLES', 'few-shot prompt examples exist');
-  assertIncludes(prompts, '<think>', 'few-shot prompts include reasoning examples');
+  assertIncludes(prompts, 'export const FEW_SHOT_EXAMPLES = []', 'conflicting legacy few-shot examples are disabled');
+}
+
+const mainPreset = readText('js/data/default-preset.js');
+if (mainPreset) {
+  assertIncludes(mainPreset, '事实来源优先级', 'main preset defines source authority');
+  assertIncludes(mainPreset, '世界书是本项目世界的事实', 'main preset makes worldbook authoritative');
 }
 
 const worldbookIndex = readText('js/data/worldbook/index.js');
@@ -124,6 +129,77 @@ stateManager.getSub('_missions')?.active?.smoke_mission?.id === 'smoke_mission' 
 stateManager.getSub('_relationships')?.旗木卡卡西?.affection === 100 ? pass('state relationship affection is bounded') : fail('state relationship affection should be bounded');
 stateManager.getSub('_relationships')?.旗木卡卡西?.trust === -100 ? pass('state relationship trust is bounded') : fail('state relationship trust should be bounded');
 stateManager.getSub('_relationships')?.旗木卡卡西?.respect === 100 ? pass('state relationship respect is bounded') : fail('state relationship respect should be bounded');
+
+const { missionSystem } = await import('../js/systems/mission-system.js');
+stateManager.setSub('_missions', { active: {}, completed: {} });
+const missionTitleAliases = [
+  ['title', '标题任务'],
+  ['name', '名称任务'],
+  ['mission_name', '下划线任务'],
+  ['missionName', '驼峰任务'],
+  ['task_name', '任务字段任务'],
+  ['任务名', '中文短名任务'],
+  ['任务名称', '中文全名任务']
+];
+for (const [field, expected] of missionTitleAliases) {
+  const id = `smoke_title_${field}`;
+  missionSystem.processInstruction({ id, status: 'active', [field]: expected });
+  stateManager.getSub('_missions')?.active?.[id]?.title === expected
+    ? pass(`mission accepts ${field} as title`)
+    : fail(`mission should accept ${field} as title`);
+}
+missionSystem.processInstruction({
+  id: 'placeholder_title_alias', status: 'active', title: '未知任务', name: '追回失窃卷轴'
+});
+stateManager.getSub('_missions')?.active?.placeholder_title_alias?.title === '追回失窃卷轴'
+  ? pass('mission ignores placeholder title when a real name alias exists')
+  : fail('mission should prefer a real name alias over placeholder title');
+
+const fallbackMissions = [
+  { id: 'objective_fallback', status: 'active', objective: '护送商队安全抵达波之国。' },
+  { id: 'description_fallback', status: 'active', description: '调查边境连续失踪事件。' },
+  { id: 'id_only_fallback', status: 'active' }
+];
+for (const instruction of fallbackMissions) missionSystem.processInstruction(instruction);
+const fallbackActive = stateManager.getSub('_missions')?.active || {};
+for (const instruction of fallbackMissions) {
+  const title = fallbackActive[instruction.id]?.title;
+  title && title !== '未知任务'
+    ? pass(`mission derives a stable title for ${instruction.id}`)
+    : fail(`mission should derive a stable non-unknown title for ${instruction.id}`);
+}
+
+const originalProgress = { current_step: 2, total_steps: 4, steps: ['潜入', '侦察', '撤离', '汇报'] };
+stateManager.setSub('_missions', {
+  active: {
+    partial_update: {
+      id: 'partial_update',
+      title: '边境侦察',
+      rank: 'B',
+      location: '火之国边境',
+      client: '木叶任务处',
+      reward_ryo: 4200,
+      reward_exp: 180,
+      progress: originalProgress,
+      clues: ['旧线索'],
+      status: 'active',
+      created_at: 100
+    }
+  },
+  completed: {}
+});
+missionSystem.processInstruction({ id: 'partial_update', status: 'active', title: '未知任务', clues: ['新线索'] });
+const partialMission = stateManager.getSub('_missions')?.active?.partial_update;
+const partialPreserved = partialMission?.title === '边境侦察'
+  && partialMission?.rank === 'B'
+  && partialMission?.location === '火之国边境'
+  && partialMission?.client === '木叶任务处'
+  && partialMission?.reward_ryo === 4200
+  && partialMission?.reward_exp === 180
+  && JSON.stringify(partialMission?.progress) === JSON.stringify(originalProgress);
+partialPreserved
+  ? pass('active mission partial update preserves unspecified fields')
+  : fail('active mission partial update should preserve title/rank/location/client/rewards/progress');
 
 const snapshot = stateManager.snapshot();
 stateManager.batchUpdate([{ path: 'world_state.current_location', op: 'set', value: '死亡森林' }]);

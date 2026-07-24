@@ -17,6 +17,7 @@ import { UserRepository } from './user-repository.js';
 import { SaveRepository } from './save-repository.js';
 import { FavoritesRepository } from './favorites-repository.js';
 import { LoginLogRepository } from './login-log-repository.js';
+import { ImageAssetRepository } from './image-asset-repository.js';
 
 const legacyDbDir = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = config.storage.dataDir;
@@ -25,6 +26,7 @@ const users = new UserRepository(path.join(dataDir, 'users.json'));
 const saves = new SaveRepository(path.join(dataDir, 'saves_index.json'), path.join(dataDir, 'saves'));
 const favorites = new FavoritesRepository(path.join(dataDir, 'favorites.json'));
 const loginLog = new LoginLogRepository(path.join(dataDir, 'login_log.json'));
+const imageAssets = new ImageAssetRepository(path.join(dataDir, 'image-assets'), config.imageAssets);
 
 async function migrateLegacyData() {
   if (path.resolve(dataDir) === path.resolve(legacyDbDir)) return;
@@ -60,7 +62,7 @@ async function migrateLegacyData() {
 export async function initDb() {
   await migrateLegacyData();
   console.log(`[DB] File-based Database initialized at ${dataDir}`);
-  await Promise.all([users.init(), saves.init(), favorites.init(), loginLog.init()]);
+  await Promise.all([users.init(), saves.init(), favorites.init(), loginLog.init(), imageAssets.init()]);
   return true;
 }
 
@@ -112,6 +114,9 @@ export const getSaveMetaById = (id) => saves.findMetaById(id);
 /** @type {SaveRepository['insert']} */
 export const insertSave = (save) => saves.insert(save);
 
+/** @type {SaveRepository['insertWithinUserLimit']} */
+export const insertSaveWithinUserLimit = (save, maxSlots) => saves.insertWithinUserLimit(save, maxSlots);
+
 /** @type {SaveRepository['update']} */
 export const updateSave = (id, changes) => saves.update(id, changes);
 
@@ -137,3 +142,27 @@ export const recordLogin = (user) => loginLog.record(user);
 export const getLoginLog = () => loginLog.list();
 
 export const getDataDir = () => dataDir;
+
+// --- 私有图片图库操作 ---
+
+export const createImageAssetStaging = (userId) => imageAssets.createStagingArea(userId);
+
+export const cleanupImageAssetStaging = (userId, token) => imageAssets.cleanupStagingArea(userId, token);
+
+export const commitImageAssetUpload = (userId, input) => imageAssets.commitUpload(userId, input);
+
+export const listImageAssets = (userId, filters) => imageAssets.list(userId, filters);
+
+export const getImageAssetQuota = (userId) => imageAssets.quota(userId);
+
+export const resolveImageAssets = (userId, ids) => imageAssets.resolve(userId, ids);
+
+export const getImageAssetBinary = (userId, id, variant) => imageAssets.getBinary(userId, id, variant);
+
+export const setImageAssetSelection = (userId, input) => imageAssets.setSelection(userId, input);
+
+export const reconcileImageAssetSelections = (userId, items) => imageAssets.reconcileSelections(userId, items);
+
+export const patchImageAsset = (userId, id, changes) => imageAssets.patch(userId, id, changes);
+
+export const deleteImageAsset = (userId, id) => imageAssets.remove(userId, id);

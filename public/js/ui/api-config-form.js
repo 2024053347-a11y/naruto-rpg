@@ -1,4 +1,4 @@
-import { aiClient, isTavernEnv } from '../core/ai-client.js';
+import { aiClient, isTavernEnv, normalizeApiBaseUrl } from '../core/ai-client.js';
 import { eventBus } from '../core/event-bus.js';
 import { escAttr } from '../utils/format.js';
 import { bindCustomSelects } from './custom-select.js';
@@ -136,7 +136,10 @@ export class ApiConfigForm extends HTMLElement {
       // Click handler on list
       listEl.querySelectorAll('.model-item').forEach(item => {
         item.addEventListener('click', () => {
-          if (inputEl) inputEl.value = item.dataset.model;
+          if (inputEl) {
+            inputEl.value = item.dataset.model;
+            inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+          }
           // Highlight selected
           listEl.querySelectorAll('.model-item').forEach(i => i.classList.remove('selected'));
           item.classList.add('selected');
@@ -145,6 +148,7 @@ export class ApiConfigForm extends HTMLElement {
       if (statusEl) statusEl.textContent = `已读取 ${models.length} 个模型，点击下方列表选择`;
       if (models.length > 0 && inputEl && !inputEl.value) {
         inputEl.value = models[0];
+        inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         const firstItem = listEl.querySelector('.model-item');
         if (firstItem) firstItem.classList.add('selected');
       }
@@ -199,23 +203,30 @@ export class ApiConfigForm extends HTMLElement {
     const apiKey = root.querySelector('#settings-api-key')?.value.trim();
     const model = root.querySelector('#settings-api-model')?.value.trim();
     const backend = root.querySelector('#settings-api-backend')?.value;
+    const preservedOptionalConfig = {
+      variableUpdater: this._config.variableUpdater,
+      narrativeReview: this._config.narrativeReview,
+      aiCallPolicy: this._config.aiCallPolicy,
+      futurePlanner: this._config.futurePlanner
+    };
 
     // 酒馆模型不需要 API 地址和密钥
     if (backend === 'tavern') {
       if (!allowEmptyModel && !model) return null;
-      return { backend: 'tavern', model: model || 'tavern-default', apiUrl: '', apiKey: '', disableStreaming: false };
+      return {
+        backend: 'tavern', model: model || 'tavern-default', apiUrl: '', apiKey: '', disableStreaming: false,
+        ...preservedOptionalConfig
+      };
     }
 
     if (!apiUrl || (!allowEmptyModel && !model)) return null;
 
-    let finalApiUrl = apiUrl;
+    let finalApiUrl = normalizeApiBaseUrl(apiUrl, backend);
     if (backend === 'deepseek' && !apiUrl) finalApiUrl = 'https://api.deepseek.com/v1';
     if (backend === 'claude' && !apiUrl) finalApiUrl = 'https://api.anthropic.com/v1';
 
     const disableStreaming = root.querySelector('#settings-disable-streaming')?.checked || false;
-    const config = { apiUrl: finalApiUrl, apiKey, model, backend, disableStreaming };
-
-    config.variableUpdater = this._config.variableUpdater;
+    const config = { apiUrl: finalApiUrl, apiKey, model, backend, disableStreaming, ...preservedOptionalConfig };
     
     return config;
   }

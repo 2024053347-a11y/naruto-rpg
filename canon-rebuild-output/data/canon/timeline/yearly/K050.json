@@ -1,0 +1,960 @@
+{
+  "schema_version": "naruto.yearly-almanac.v1",
+  "calendar": "konoha-360-v1",
+  "year": "K050",
+  "era": "第三次忍界大战",
+  "continuity": "manga_canon",
+  "date_basis": "project_allocation",
+  "annual_events": [
+    "神无毗桥任务、带土被判定阵亡、琳死亡；三战结束，水门继任第四代火影。",
+    "K050-02-15：多由也出生。",
+    "K050-03-09：天天出生。",
+    "K050-06-20：左近右近出生。",
+    "K050-06-26：次郎坊出生。",
+    "K050-07-03：日向宁次出生。",
+    "K050-09-06：黑土出生。",
+    "K050-11-25：佐井出生。",
+    "K050-11-27：李洛克出生。",
+    "K050-12-16：鬼童丸出生。"
+  ],
+  "birthdays": [
+    {
+      "entity_id": null,
+      "name": "多由也",
+      "date": "K050-02-15",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "天天",
+      "date": "K050-03-09",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "左近右近",
+      "date": "K050-06-20",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "次郎坊",
+      "date": "K050-06-26",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "日向宁次",
+      "date": "K050-07-03",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "黑土",
+      "date": "K050-09-06",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "佐井",
+      "date": "K050-11-25",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "李洛克",
+      "date": "K050-11-27",
+      "type": "birth"
+    },
+    {
+      "entity_id": null,
+      "name": "鬼童丸",
+      "date": "K050-12-16",
+      "type": "birth"
+    }
+  ],
+  "character_ages": [
+    {
+      "entity_id": "CH-NAR-MADARA-UCHIHA",
+      "name": "宇智波斑",
+      "birth_year": -32,
+      "birthday": "12-24",
+      "age_at_year_start": 81,
+      "age_after_birthday": 82,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KAKUZU",
+      "name": "角都",
+      "birth_year": -24,
+      "birthday": "08-15",
+      "age_at_year_start": 73,
+      "age_after_birthday": 74,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-O-NOKI",
+      "name": "大野木",
+      "birth_year": -11,
+      "birthday": "10-08",
+      "age_at_year_start": 60,
+      "age_after_birthday": 61,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-CHIYO",
+      "name": "千代",
+      "birth_year": -6,
+      "birthday": "10-15",
+      "age_at_year_start": 55,
+      "age_after_birthday": 56,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-DANZO-SHIMURA",
+      "name": "志村团藏",
+      "birth_year": -5,
+      "birthday": "01-06",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HIRUZEN",
+      "name": "猿飞日斩",
+      "birth_year": -5,
+      "birthday": "02-08",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HOMURA-MITOKADO",
+      "name": "水户门炎",
+      "birth_year": -5,
+      "birthday": "05-08",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KOHARU-UTATANE",
+      "name": "转寝小春",
+      "birth_year": -5,
+      "birthday": "09-01",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-TORIFU-AKIMICHI",
+      "name": "秋道取风",
+      "birth_year": -5,
+      "birthday": "09-15",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "猿飞琵琶湖",
+      "birth_year": -5,
+      "birthday": "09-15",
+      "age_at_year_start": 54,
+      "age_after_birthday": 55,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-EBIZO",
+      "name": "海老藏",
+      "birth_year": -4,
+      "birthday": "01-26",
+      "age_at_year_start": 53,
+      "age_after_birthday": 54,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "三船",
+      "birth_year": 3,
+      "birthday": "04-01",
+      "age_at_year_start": 46,
+      "age_after_birthday": 47,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "达兹纳",
+      "birth_year": 4,
+      "birthday": "04-05",
+      "age_at_year_start": 45,
+      "age_after_birthday": 46,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-TSUNADE",
+      "name": "纲手",
+      "birth_year": 13,
+      "birthday": "08-02",
+      "age_at_year_start": 36,
+      "age_after_birthday": 37,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "土台",
+      "birth_year": 13,
+      "birthday": "10-23",
+      "age_at_year_start": 36,
+      "age_after_birthday": 37,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-OROCHIMARU",
+      "name": "大蛇丸",
+      "birth_year": 13,
+      "birthday": "10-27",
+      "age_at_year_start": 36,
+      "age_after_birthday": 37,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-JIRAIYA",
+      "name": "自来也",
+      "birth_year": 13,
+      "birthday": "11-11",
+      "age_at_year_start": 36,
+      "age_after_birthday": 37,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-FUGAKU-UCHIHA",
+      "name": "宇智波富岳",
+      "birth_year": 19,
+      "birthday": "08-16",
+      "age_at_year_start": 30,
+      "age_after_birthday": 31,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-A-FOURTH-RAIKAGE",
+      "name": "四代雷影艾",
+      "birth_year": 21,
+      "birthday": "06-01",
+      "age_at_year_start": 28,
+      "age_after_birthday": 29,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "手打",
+      "birth_year": 21,
+      "birthday": "08-10",
+      "age_at_year_start": 28,
+      "age_after_birthday": 29,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HIASHI-HYU-GA",
+      "name": "日向日足",
+      "birth_year": 22,
+      "birthday": "01-08",
+      "age_at_year_start": 27,
+      "age_after_birthday": 28,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HIZASHI-HYU-GA",
+      "name": "日向日差",
+      "birth_year": 22,
+      "birthday": "01-08",
+      "age_at_year_start": 27,
+      "age_after_birthday": 28,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "青",
+      "birth_year": 22,
+      "birthday": "08-01",
+      "age_at_year_start": 27,
+      "age_after_birthday": 28,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "黄土",
+      "birth_year": 24,
+      "birthday": "03-22",
+      "age_at_year_start": 25,
+      "age_after_birthday": 26,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-RASA",
+      "name": "罗砂",
+      "birth_year": 24,
+      "birthday": "03-29",
+      "age_at_year_start": 25,
+      "age_after_birthday": 26,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-MIKOTO-UCHIHA",
+      "name": "宇智波美琴",
+      "birth_year": 24,
+      "birthday": "06-01",
+      "age_at_year_start": 25,
+      "age_after_birthday": 26,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KARURA",
+      "name": "加瑠罗",
+      "birth_year": 24,
+      "birthday": "11-11",
+      "age_at_year_start": 25,
+      "age_after_birthday": 26,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "油女志微",
+      "birth_year": 25,
+      "birthday": "09-07",
+      "age_at_year_start": 24,
+      "age_after_birthday": 25,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-INOICHI-YAMANAKA",
+      "name": "山中亥一",
+      "birth_year": 26,
+      "birthday": "01-24",
+      "age_at_year_start": 23,
+      "age_after_birthday": 24,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-CHO-ZA-AKIMICHI",
+      "name": "秋道丁座",
+      "birth_year": 26,
+      "birthday": "04-22",
+      "age_at_year_start": 23,
+      "age_after_birthday": 24,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-SHIKAKU-NARA",
+      "name": "奈良鹿久",
+      "birth_year": 26,
+      "birthday": "07-15",
+      "age_at_year_start": 23,
+      "age_after_birthday": 24,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-MINATO",
+      "name": "波风水门",
+      "birth_year": 27,
+      "birthday": "01-25",
+      "age_at_year_start": 22,
+      "age_after_birthday": 23,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KUSHINA",
+      "name": "漩涡玖辛奈",
+      "birth_year": 27,
+      "birthday": "07-10",
+      "age_at_year_start": 22,
+      "age_after_birthday": 23,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "奈良吉野",
+      "birth_year": 28,
+      "birthday": "02-24",
+      "age_at_year_start": 21,
+      "age_after_birthday": 22,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "犬冢爪",
+      "birth_year": 29,
+      "birthday": "08-12",
+      "age_at_year_start": 20,
+      "age_after_birthday": 21,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-NONO-YAKUSHI",
+      "name": "药师野乃宇",
+      "birth_year": 30,
+      "birthday": "03-05",
+      "age_at_year_start": 19,
+      "age_after_birthday": 20,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "夜叉丸",
+      "birth_year": 30,
+      "birthday": "05-23",
+      "age_at_year_start": 19,
+      "age_after_birthday": 20,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KILLER-B",
+      "name": "奇拉比",
+      "birth_year": 32,
+      "birthday": "05-15",
+      "age_at_year_start": 17,
+      "age_after_birthday": 18,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-NAGATO",
+      "name": "长门",
+      "birth_year": 32,
+      "birthday": "09-19",
+      "age_at_year_start": 17,
+      "age_after_birthday": 18,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-SASORI",
+      "name": "蝎",
+      "birth_year": 32,
+      "birthday": "11-08",
+      "age_at_year_start": 17,
+      "age_after_birthday": 18,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KONAN",
+      "name": "小南",
+      "birth_year": 33,
+      "birthday": "02-20",
+      "age_at_year_start": 16,
+      "age_after_birthday": 17,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "马基",
+      "birth_year": 33,
+      "birthday": "07-04",
+      "age_at_year_start": 16,
+      "age_after_birthday": 17,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "并足雷同",
+      "birth_year": 33,
+      "birthday": "08-28",
+      "age_at_year_start": 16,
+      "age_after_birthday": 17,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "山城青叶",
+      "birth_year": 34,
+      "birthday": "09-03",
+      "age_at_year_start": 15,
+      "age_after_birthday": 16,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "惠比寿",
+      "birth_year": 35,
+      "birthday": "03-08",
+      "age_at_year_start": 14,
+      "age_after_birthday": 15,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "干柿鬼鲛",
+      "birth_year": 35,
+      "birthday": "03-18",
+      "age_at_year_start": 14,
+      "age_after_birthday": 15,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "不知火玄间",
+      "birth_year": 35,
+      "birthday": "07-17",
+      "age_at_year_start": 14,
+      "age_after_birthday": 15,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "森乃伊比喜",
+      "birth_year": 36,
+      "birthday": "03-20",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KURENAI-YU-HI",
+      "name": "夕日红",
+      "birth_year": 36,
+      "birthday": "06-11",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "地陆",
+      "birth_year": 36,
+      "birthday": "07-01",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-ASUMA-SARUTOBI",
+      "name": "猿飞阿斯玛",
+      "birth_year": 36,
+      "birthday": "10-18",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-SHIZUNE",
+      "name": "静音",
+      "birth_year": 36,
+      "birthday": "11-18",
+      "age_at_year_start": 13,
+      "age_after_birthday": 14,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-MIGHT-GUY",
+      "name": "迈特凯",
+      "birth_year": 37,
+      "birthday": "01-01",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-OBITO",
+      "name": "宇智波带土",
+      "birth_year": 37,
+      "birthday": "02-10",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "飞竹蜻蜓",
+      "birth_year": 37,
+      "birthday": "04-04",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-MEI-TERUMI",
+      "name": "照美冥",
+      "birth_year": 37,
+      "birthday": "05-21",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-ZABUZA",
+      "name": "桃地再不斩",
+      "birth_year": 37,
+      "birthday": "08-15",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KAKASHI",
+      "name": "旗木卡卡西",
+      "birth_year": 37,
+      "birthday": "09-15",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-RIN-NOHARA",
+      "name": "野原琳",
+      "birth_year": 37,
+      "birthday": "11-15",
+      "age_at_year_start": 12,
+      "age_after_birthday": 13,
+      "status": "dies_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "二位柚木人",
+      "birth_year": 38,
+      "birthday": "07-24",
+      "age_at_year_start": 11,
+      "age_after_birthday": 12,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "萨姆伊",
+      "birth_year": 39,
+      "birthday": "01-07",
+      "age_at_year_start": 10,
+      "age_after_birthday": 11,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "麻布依",
+      "birth_year": 39,
+      "birthday": "02-01",
+      "age_at_year_start": 10,
+      "age_after_birthday": 11,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "御手洗红豆",
+      "birth_year": 39,
+      "birthday": "10-24",
+      "age_at_year_start": 10,
+      "age_after_birthday": 11,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "神月出云",
+      "birth_year": 39,
+      "birthday": "11-25",
+      "age_at_year_start": 10,
+      "age_after_birthday": 11,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "钢子铁",
+      "birth_year": 40,
+      "birthday": "07-21",
+      "age_at_year_start": 9,
+      "age_after_birthday": 10,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "月光疾风",
+      "birth_year": 40,
+      "birthday": "11-02",
+      "age_at_year_start": 9,
+      "age_after_birthday": 10,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "海野伊鲁卡",
+      "birth_year": 41,
+      "birthday": "05-26",
+      "age_at_year_start": 8,
+      "age_after_birthday": 9,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "泡沫",
+      "birth_year": 41,
+      "birthday": "06-16",
+      "age_at_year_start": 8,
+      "age_after_birthday": 9,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-YAMATO",
+      "name": "大和",
+      "birth_year": 41,
+      "birthday": "08-10",
+      "age_at_year_start": 8,
+      "age_after_birthday": 9,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "达鲁伊",
+      "birth_year": 42,
+      "birthday": "01-06",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "希",
+      "birth_year": 42,
+      "birthday": "04-03",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "卯月夕颜",
+      "birth_year": 42,
+      "birthday": "11-03",
+      "age_at_year_start": 7,
+      "age_after_birthday": 8,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-SHISUI-UCHIHA",
+      "name": "宇智波止水",
+      "birth_year": 43,
+      "birthday": "10-19",
+      "age_at_year_start": 6,
+      "age_after_birthday": 7,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KABUTO-YAKUSHI",
+      "name": "药师兜",
+      "birth_year": 44,
+      "birthday": "02-29",
+      "age_at_year_start": 5,
+      "age_after_birthday": 6,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "飞段",
+      "birth_year": 46,
+      "birthday": "04-02",
+      "age_at_year_start": 3,
+      "age_after_birthday": 4,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "犬冢花",
+      "birth_year": 46,
+      "birthday": "04-13",
+      "age_at_year_start": 3,
+      "age_after_birthday": 4,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-ITACHI",
+      "name": "宇智波鼬",
+      "birth_year": 46,
+      "birthday": "06-09",
+      "age_at_year_start": 3,
+      "age_after_birthday": 4,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "菖蒲",
+      "birth_year": 47,
+      "birthday": "02-14",
+      "age_at_year_start": 2,
+      "age_after_birthday": 3,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-TEMARI",
+      "name": "手鞠",
+      "birth_year": 47,
+      "birthday": "08-23",
+      "age_at_year_start": 2,
+      "age_after_birthday": 3,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "赤土",
+      "birth_year": 48,
+      "birthday": "01-11",
+      "age_at_year_start": 1,
+      "age_after_birthday": 2,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-DEIDARA",
+      "name": "迪达拉",
+      "birth_year": 48,
+      "birthday": "05-05",
+      "age_at_year_start": 1,
+      "age_after_birthday": 2,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "山中风",
+      "birth_year": 48,
+      "birthday": "08-20",
+      "age_at_year_start": 1,
+      "age_after_birthday": 2,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "油女取根",
+      "birth_year": 48,
+      "birthday": "10-24",
+      "age_at_year_start": 1,
+      "age_after_birthday": 2,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-CHO-JU-RO",
+      "name": "长十郎",
+      "birth_year": 48,
+      "birthday": "11-01",
+      "age_at_year_start": 1,
+      "age_after_birthday": 2,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-HAKU",
+      "name": "白",
+      "birth_year": 49,
+      "birthday": "01-09",
+      "age_at_year_start": 0,
+      "age_after_birthday": 1,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KANKURO",
+      "name": "堪九郎",
+      "birth_year": 49,
+      "birthday": "05-15",
+      "age_at_year_start": 0,
+      "age_after_birthday": 1,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-KIMIMARO",
+      "name": "君麻吕",
+      "birth_year": 49,
+      "birthday": "06-15",
+      "age_at_year_start": 0,
+      "age_after_birthday": 1,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "阿茨伊",
+      "birth_year": 49,
+      "birthday": "08-02",
+      "age_at_year_start": 0,
+      "age_after_birthday": 1,
+      "status": "alive"
+    },
+    {
+      "entity_id": "CH-NAR-JU-GO",
+      "name": "重吾",
+      "birth_year": 49,
+      "birthday": "10-01",
+      "age_at_year_start": 0,
+      "age_after_birthday": 1,
+      "status": "alive"
+    },
+    {
+      "entity_id": null,
+      "name": "多由也",
+      "birth_year": 50,
+      "birthday": "02-15",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "天天",
+      "birth_year": 50,
+      "birthday": "03-09",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "左近右近",
+      "birth_year": 50,
+      "birthday": "06-20",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "次郎坊",
+      "birth_year": 50,
+      "birthday": "06-26",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "日向宁次",
+      "birth_year": 50,
+      "birthday": "07-03",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "黑土",
+      "birth_year": 50,
+      "birthday": "09-06",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "佐井",
+      "birth_year": 50,
+      "birthday": "11-25",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "李洛克",
+      "birth_year": 50,
+      "birthday": "11-27",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    },
+    {
+      "entity_id": null,
+      "name": "鬼童丸",
+      "birth_year": 50,
+      "birthday": "12-16",
+      "age_at_year_start": null,
+      "age_after_birthday": 0,
+      "status": "born_this_year"
+    }
+  ]
+}

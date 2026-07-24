@@ -1,6 +1,5 @@
 import express from 'express';
 import helmet from 'helmet';
-import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
@@ -12,7 +11,9 @@ import savesRouter from './api/saves.js';
 import aiProxyRouter from './api/ai-proxy.js';
 import musicFavoritesRouter from './api/music-favorites.js';
 import adminRouter from './api/admin.js';
+import imageAssetsRouter from './api/image-assets.js';
 import { requireHtmlAuth } from './middleware/auth.js';
+import { createResponseCompression } from './middleware/response-compression.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,7 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 await initDb();
 
 const app = express();
-app.set('trust proxy', 1); // 允许 Nginx 反向代理正确识别客户端 IP 和 HTTPS 协议
+app.set('trust proxy', config.http.trustProxy);
 
 // 2. 安全与性能中间件配置
 app.use(helmet({
@@ -30,6 +31,7 @@ app.use(helmet({
       imgSrc: [
         "'self'",
         "data:",
+        "blob:",
         "https://cdn.discordapp.com",
         "https://i.postimg.cc",
         "https://api.vkeys.cn"
@@ -37,7 +39,12 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      connectSrc: ["'self'", "https:", "wss:"],
+      connectSrc: [
+        "'self'", "https:", "wss:",
+        "http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*",
+        "ws://127.0.0.1:*", "ws://localhost:*", "ws://[::1]:*",
+        ...config.imageAssets.connectSources
+      ],
       mediaSrc: ["'self'", "https:", "http:"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -52,7 +59,7 @@ app.use(helmet({
   xFrameOptions: false
 }));
 
-app.use(compression());
+app.use(createResponseCompression());
 app.use(cookieParser());
 
 // 3. 速率限制中间件 (防暴破/恶意请求)
@@ -82,6 +89,8 @@ app.use('/api/saves', apiLimiter, savesRouter);
 app.use('/api/ai-proxy', apiLimiter, defaultJsonParser, aiProxyRouter);
 app.use('/api/music', apiLimiter, defaultJsonParser, musicFavoritesRouter);
 app.use('/api/admin', authLimiter, defaultJsonParser, adminRouter);
+// This router owns its bounded JSON/multipart parsers so authentication runs first.
+app.use('/api/image-assets', apiLimiter, imageAssetsRouter);
 
 // 5. 网页认证入口拦截
 // 玩家在请求根路径 / 或 index.html 时，必须通过身份验证，否则重定向到登录页面

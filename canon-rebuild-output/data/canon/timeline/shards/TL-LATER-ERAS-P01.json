@@ -1,0 +1,592 @@
+{
+  "$schema": "../../schemas/timeline-event.schema.json",
+  "schema_version": "naruto.timeline.v1",
+  "dataset": "naruto-manga-databook",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "TL-LATER-ERAS-P01",
+    "arc_id": null,
+    "part": 1,
+    "id_start": 1,
+    "id_end": 99,
+    "date_start": "K059-01-01",
+    "date_end": "K068-12-30",
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 224,
+        "chapter_end": 700
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "EV-KONOHA-UCHIHA-0001",
+      "title": "宇智波鼬实施灭族",
+      "aliases": [
+        "宇智波灭族"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-KONOHA-UCHIHA",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K059-06-15",
+        "scheduled_end": "K059-06-15",
+        "time_of_day": "night",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "year_only",
+        "canon_window": {
+          "earliest": "K059-01-01",
+          "latest": "K059-12-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PROLOGUE-KYUUBI-0005"
+        ],
+        "rationale": "世界书只确定木叶59年前后；月日为项目分配，不是原著明示。"
+      },
+      "summary": "鼬在带土协助下杀死宇智波族人，仅留下佐助。",
+      "facts": [
+        "宇智波一族作为木叶完整家族组织不复存在。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-ITACHI",
+          "role": "attacker"
+        },
+        {
+          "entity_id": "CH-NAR-OBITO",
+          "role": "accomplice"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "survivor"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-UCHIHA-COMPOUND"
+      ],
+      "depends_on": [],
+      "applicability": {
+        "required": [
+          "政变危机仍未和平解决。"
+        ],
+        "blockers": [
+          "玩家已改变高层与宇智波冲突。"
+        ],
+        "ai_instruction": "不得强制灭族发生。"
+      },
+      "canonical_outcomes": [
+        "佐助成为公开幸存者。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "鼬被认定为灭族叛忍。"
+        ],
+        "restricted_at_time": [
+          "木叶高层参与决策。"
+        ],
+        "hidden_truth": [
+          "带土参与灭族。"
+        ]
+      },
+      "retrieval": {
+        "keys": [
+          "宇智波灭族",
+          "鼬",
+          "佐助"
+        ],
+        "tags": [
+          "uchiha",
+          "massacre"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 400,
+          "pages": null,
+          "supports": [
+            "participants",
+            "hidden_truth",
+            "outcome"
+          ]
+        },
+        {
+          "type": "project_worldbook",
+          "work": "timeline-detailed.js",
+          "entry": "木叶59年前后: 宇智波灭族详细纪年",
+          "page": null,
+          "supports": [
+            "project_year"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART2-RETURN-0001",
+      "title": "鸣人修行归来",
+      "aliases": [
+        "疾风传开始"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART2-RETURN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-01-01",
+        "scheduled_end": "K067-01-01",
+        "time_of_day": "afternoon",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "year_only",
+        "canon_window": {
+          "earliest": "K067-01-01",
+          "latest": "K067-12-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART1-RETRIEVAL-0002"
+        ],
+        "rationale": "世界书确定木叶67年后进入疾风传；具体日为项目分配。"
+      },
+      "summary": "鸣人结束与自来也约两年半的修行，返回木叶。",
+      "facts": [
+        "疾风传阶段开始。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "returning_shinobi"
+        },
+        {
+          "entity_id": "CH-NAR-JIRAIYA",
+          "role": "mentor"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART1-RETRIEVAL-0002"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按修行与存档状态裁定。"
+      },
+      "canonical_outcomes": [
+        "鸣人重新在木叶活动。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "鸣人返回木叶。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "鸣人归来",
+          "疾风传"
+        ],
+        "tags": [
+          "part-two"
+        ],
+        "spoiler_level": 1
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 245,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "participants"
+          ]
+        },
+        {
+          "type": "project_worldbook",
+          "work": "timeline-detailed.js",
+          "entry": "木叶67年后: 疾风传至第四次忍界大战",
+          "page": null,
+          "supports": [
+            "project_year"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART2-RETURN-0002",
+      "title": "我爱罗被晓抽离一尾",
+      "aliases": [
+        "风影被夺走一尾"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART2-RETURN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-01-12",
+        "scheduled_end": "K067-01-12",
+        "time_of_day": "noon",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-01-02",
+          "latest": "K067-03-01"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART2-RETURN-0001"
+        ],
+        "rationale": "鸣人归来后不久发生，具体日为项目分配。"
+      },
+      "summary": "晓完成一尾抽离，我爱罗因尾兽被抽离而死亡。",
+      "facts": [
+        "一尾落入晓手中。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-GAARA",
+          "role": "victim"
+        }
+      ],
+      "location_ids": [
+        "LOC-SUNA-VILLAGE"
+      ],
+      "depends_on": [
+        "EV-PART2-RETURN-0001"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按晓行动与救援结果裁定。"
+      },
+      "canonical_outcomes": [
+        "晓取得一尾。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "风影遭晓袭击。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "我爱罗",
+          "一尾",
+          "晓"
+        ],
+        "tags": [
+          "akatsuki",
+          "jinchuriki"
+        ],
+        "spoiler_level": 2
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 261,
+          "pages": null,
+          "supports": [
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART2-PAIN-0001",
+      "title": "佩恩摧毁木叶",
+      "aliases": [
+        "佩恩袭击木叶"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART2-PAIN",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K067-08-15",
+        "scheduled_end": "K067-08-15",
+        "time_of_day": "noon",
+        "day_order": 20,
+        "basis": "allocated",
+        "source_precision": "sequence_only",
+        "canon_window": {
+          "earliest": "K067-01-01",
+          "latest": "K067-12-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART2-RETURN-0002"
+        ],
+        "rationale": "世界书只将事件置于木叶67年后；具体月日为项目分配。"
+      },
+      "summary": "天道佩恩以神罗天征摧毁木叶大部分区域。",
+      "facts": [
+        "木叶遭受大规模破坏。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-PAIN",
+          "role": "attacker"
+        }
+      ],
+      "location_ids": [
+        "LOC-KONOHA-VILLAGE"
+      ],
+      "depends_on": [],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "若晓或木叶状态已改变则改写。"
+      },
+      "canonical_outcomes": [
+        "木叶大范围被摧毁。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "佩恩袭击木叶。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": [
+          "佩恩六道由长门远程控制。"
+        ]
+      },
+      "retrieval": {
+        "keys": [
+          "佩恩",
+          "神罗天征",
+          "木叶毁灭"
+        ],
+        "tags": [
+          "pain",
+          "invasion"
+        ],
+        "spoiler_level": 3
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 429,
+          "pages": null,
+          "supports": [
+            "outcome",
+            "effect"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART2-WAR-0001",
+      "title": "第四次忍界大战开战",
+      "aliases": [
+        "忍界联军开战"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART2-WAR",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K068-01-01",
+        "scheduled_end": "K068-01-01",
+        "time_of_day": "morning",
+        "day_order": 10,
+        "basis": "allocated",
+        "source_precision": "year_only",
+        "canon_window": {
+          "earliest": "K068-01-01",
+          "latest": "K068-12-30"
+        },
+        "confidence": "low",
+        "anchor_event_ids": [
+          "EV-PART2-PAIN-0001"
+        ],
+        "rationale": "世界书人物时间线将四战核心事件置于木叶68年；具体日为项目分配。"
+      },
+      "summary": "忍者联军与带土控制的势力进入全面战争。",
+      "facts": [
+        "五大忍村组成忍者联军。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-OBITO",
+          "role": "enemy_commander"
+        }
+      ],
+      "location_ids": [
+        "LOC-WAR-BATTLEFIELD"
+      ],
+      "depends_on": [],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "按五影会谈后局势裁定。"
+      },
+      "canonical_outcomes": [
+        "第四次忍界大战进入战斗阶段。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "忍者联军开始作战。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "第四次忍界大战",
+          "忍者联军"
+        ],
+        "tags": [
+          "war"
+        ],
+        "spoiler_level": 3
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 516,
+          "pages": null,
+          "supports": [
+            "sequence",
+            "outcome"
+          ]
+        },
+        {
+          "type": "project_worldbook",
+          "work": "characters.js",
+          "entry": "木叶68年第四次忍界大战",
+          "page": null,
+          "supports": [
+            "project_year"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    },
+    {
+      "id": "EV-PART2-WAR-0002",
+      "title": "第四次忍界大战结束",
+      "aliases": [
+        "辉夜被封印"
+      ],
+      "continuity": "manga_canon",
+      "arc_id": "ARC-PART2-WAR",
+      "parent_event_id": null,
+      "when": {
+        "scheduled_start": "K068-01-03",
+        "scheduled_end": "K068-01-03",
+        "time_of_day": "night",
+        "day_order": 30,
+        "basis": "calculated",
+        "source_precision": "relative",
+        "canon_window": {
+          "earliest": "K068-01-03",
+          "latest": "K068-01-05"
+        },
+        "confidence": "medium",
+        "anchor_event_ids": [
+          "EV-PART2-WAR-0001"
+        ],
+        "rationale": "漫画将大战主要战斗压缩在连续数日；项目从开战日顺排。"
+      },
+      "summary": "辉夜被重新封印，秽土转生解除，忍者联军的全面战争结束。",
+      "facts": [
+        "忍界进入战后阶段。"
+      ],
+      "participants": [
+        {
+          "entity_id": "CH-NAR-NARUTO",
+          "role": "allied_combatant"
+        },
+        {
+          "entity_id": "CH-NAR-SASUKE",
+          "role": "allied_combatant"
+        }
+      ],
+      "location_ids": [
+        "LOC-WAR-BATTLEFIELD"
+      ],
+      "depends_on": [
+        "EV-PART2-WAR-0001"
+      ],
+      "applicability": {
+        "required": [],
+        "blockers": [],
+        "ai_instruction": "根据战争分支裁定结局。"
+      },
+      "canonical_outcomes": [
+        "第四次忍界大战结束。"
+      ],
+      "knowledge": {
+        "public_at_time": [
+          "战争结束。"
+        ],
+        "restricted_at_time": [],
+        "hidden_truth": []
+      },
+      "retrieval": {
+        "keys": [
+          "四战结束",
+          "辉夜封印"
+        ],
+        "tags": [
+          "war-end"
+        ],
+        "spoiler_level": 4
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 690,
+          "pages": null,
+          "supports": [
+            "outcome"
+          ]
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "TL-LATER-ERAS-P01",
+        "reviewed_by": null
+      }
+    }
+  ],
+  "unresolved": []
+}

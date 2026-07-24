@@ -1,4 +1,25 @@
 import { isKnownKey, coerceValue, resolveAlias } from '../data/var-schema.js';
+import {
+  sanitizeNarrativeDisplayText,
+  sanitizeNarrativePartialText
+} from './narrative-artifact.js';
+import {
+  extractImageContract as extractVisualImageContract,
+  stripImageContracts as stripVisualImageContracts
+} from './image-studio/contracts.js';
+
+function sanitizeInstructionData(value, depth = 0) {
+  if (depth > 24) return null;
+  if (typeof value === 'string') return sanitizeNarrativeDisplayText(value);
+  if (Array.isArray(value)) return value.map(item => sanitizeInstructionData(item, depth + 1));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [
+      key,
+      sanitizeInstructionData(item, depth + 1)
+    ]));
+  }
+  return value;
+}
 
 export class InstructionParser {
   parse(text) {
@@ -17,14 +38,14 @@ export class InstructionParser {
     const relationships = this.extractRelationshipChanges(text);
     const events = this.extractEventTriggers(text);
     const memories = this.extractMemoryUpdates(text);
-    return {
+    return sanitizeInstructionData({
       variables: this.extractVarUpdates(text),
       combat: combats[0] || null, combats,
       mission: missions[0] || null, missions,
       relationship: relationships[0] || null, relationships,
       event: events[0] || null, events,
       memory: memories[0] || null, memories
-    };
+    });
   }
 
   extractVarUpdates(text) {
@@ -158,6 +179,20 @@ export class InstructionParser {
 
   extractMemoryUpdates(text) { return this.extractJsonTags(text, 'memory', '记忆'); }
 
+  /**
+   * 提取最终叙事模型附带的隐藏绘图契约。契约的完整校验由
+   * image-studio 域负责；解析器只负责确保它不会进入正文或存档文本。
+   */
+  extractImageContract(text) {
+    if (!text) return { contract: null, raw: null, error: null };
+    const result = extractVisualImageContract(text);
+    return { contract: result.contract, raw: result.rawContract, error: result.error };
+  }
+
+  stripImageContracts(text, { streaming = false } = {}) {
+    return stripVisualImageContracts(text, { streaming });
+  }
+
   extractJsonTags(text, tagName, label) {
     const values = [];
     const regex = new RegExp(`<${tagName}>[\\s\\S]*?<\\/${tagName}>`, 'g');
@@ -192,33 +227,8 @@ export class InstructionParser {
 
   cleanupResponse(text) {
     if (!text) return '';
-    if (!/<think(?:ing|)?\s*>/i.test(text) && text.includes('[回映结束]')) {
-      const parts = text.split('[回映结束]');
-      text = parts.slice(1).join('[回映结束]');
-    }
-    return text
+    return sanitizeNarrativeDisplayText(this.stripImageContracts(text))
       .replace(/极其|共犯/g, '')
-      .replace(/<var>[\s\S]*?<\/var>/g, '')
-      .replace(/<variable>[\s\S]*?<\/variable>/g, '')
-      .replace(/<combat[^>]*>[\s\S]*?<\/combat>/g, '')
-      .replace(/<mission>[\s\S]*?<\/mission>/g, '')
-      .replace(/<relationship>[\s\S]*?<\/relationship>/g, '')
-      .replace(/<event>[\s\S]*?<\/event>/g, '')
-      .replace(/<memory>[\s\S]*?<\/memory>/g, '')
-      .replace(/<status_query\s*\/>/g, '')
-      .replace(/<recall\s+[^>]*\/>/g, '')
-      .replace(/<system_info>[\s\S]*?<\/system_info>/g, '')
-      .replace(/<think>[\s\S]*?<\/think>/gi, '')
-      .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
-      .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
-      .replace(/<思维链>[\s\S]*?<\/思维链>/gi, '')
-      // Modern model thinking tags (DeepSeek R1, Claude extended thinking, etc.)
-      .replace(/<anthropic_thinking>[\s\S]*?<\/anthropic_thinking>/gi, '')
-      .replace(/<anthropic_think>[\s\S]*?<\/anthropic_think>/gi, '')
-      .replace(/<deepseek_thinking>[\s\S]*?<\/deepseek_thinking>/gi, '')
-      .replace(/<analysis>[\s\S]*?<\/analysis>/gi, '')
-      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>([\s\S]*?)<\/\1>/g, '$2')
-      .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }
 
@@ -244,28 +254,8 @@ export class InstructionParser {
 
   cleanupPartialResponse(text) {
     if (!text) return '';
-    return text
+    return sanitizeNarrativePartialText(this.stripImageContracts(text, { streaming: true }))
       .replace(/极其|共犯/g, '')
-      .replace(/<var>[\s\S]*?(?:<\/var>|$)/g, '')
-      .replace(/<variable>[\s\S]*?(?:<\/variable>|$)/g, '')
-      .replace(/<combat[^>]*>[\s\S]*?(?:<\/combat>|$)/g, '')
-      .replace(/<mission>[\s\S]*?(?:<\/mission>|$)/g, '')
-      .replace(/<relationship>[\s\S]*?(?:<\/relationship>|$)/g, '')
-      .replace(/<event>[\s\S]*?(?:<\/event>|$)/g, '')
-      .replace(/<memory>[\s\S]*?(?:<\/memory>|$)/g, '')
-      .replace(/<status_query\s*\/?\s*>?/g, '')
-      .replace(/<recall\s+[^>]*\/?\s*>?/g, '')
-      .replace(/<system_info>[\s\S]*?(?:<\/system_info>|$)/g, '')
-      .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
-      .replace(/<thinking>[\s\S]*?(?:<\/thinking>|$)/gi, '')
-      .replace(/<reasoning>[\s\S]*?(?:<\/reasoning>|$)/gi, '')
-      .replace(/<思维链>[\s\S]*?(?:<\/思维链>|$)/gi, '')
-      .replace(/<anthropic_thinking>[\s\S]*?(?:<\/anthropic_thinking>|$)/gi, '')
-      .replace(/<anthropic_think>[\s\S]*?(?:<\/anthropic_think>|$)/gi, '')
-      .replace(/<deepseek_thinking>[\s\S]*?(?:<\/deepseek_thinking>|$)/gi, '')
-      .replace(/<analysis>[\s\S]*?(?:<\/analysis>|$)/gi, '')
-      .replace(/<([a-zA-Z][\w.\-~]*)(?:\s+[^>]*)?>[\s\S]*?<\/\1>/g, '')
-      .replace(/<\/?[a-zA-Z][\w.\-~]*(?:\s+[^>]*)?>/g, '')
       .trim();
   }
 

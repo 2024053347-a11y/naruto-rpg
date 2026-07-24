@@ -1,0 +1,706 @@
+{
+  "schema_version": "naruto.yearly-almanac.manifest.v1",
+  "year_start": "K001",
+  "year_end": "K086",
+  "age_rule": "出生当年年初尚未出生，age_at_year_start=null；其余年份age_at_year_start=year-birth_year-1；age_after_birthday=year-birth_year",
+  "source_priority": [
+    "project_worldbook",
+    "NARUTO manga",
+    "official databooks",
+    "user_supplied_project_chronology"
+  ],
+  "notes": [
+    "宇智波佐良娜官方生日3月31日映射到项目30日制日历的3月30日。",
+    "新时代人物出生年份为配合K083约12岁及K086三年时间跳跃的项目分配。"
+  ],
+  "years": [
+    {
+      "year": "K001",
+      "path": "K001.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 16,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K002",
+      "path": "K002.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 16,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K003",
+      "path": "K003.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 17,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K004",
+      "path": "K004.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K005",
+      "path": "K005.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K006",
+      "path": "K006.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K007",
+      "path": "K007.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K008",
+      "path": "K008.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K009",
+      "path": "K009.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K010",
+      "path": "K010.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K011",
+      "path": "K011.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 18,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K012",
+      "path": "K012.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 19,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K013",
+      "path": "K013.json",
+      "event_count": 7,
+      "birth_count": 6,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K014",
+      "path": "K014.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K015",
+      "path": "K015.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K016",
+      "path": "K016.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K017",
+      "path": "K017.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K018",
+      "path": "K018.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 24,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K019",
+      "path": "K019.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K020",
+      "path": "K020.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 25,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K021",
+      "path": "K021.json",
+      "event_count": 3,
+      "birth_count": 2,
+      "age_count": 23,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K022",
+      "path": "K022.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 26,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K023",
+      "path": "K023.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 27,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K024",
+      "path": "K024.json",
+      "event_count": 5,
+      "birth_count": 4,
+      "age_count": 31,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K025",
+      "path": "K025.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 32,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K026",
+      "path": "K026.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 35,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K027",
+      "path": "K027.json",
+      "event_count": 3,
+      "birth_count": 2,
+      "age_count": 37,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K028",
+      "path": "K028.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 38,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K029",
+      "path": "K029.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 39,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K030",
+      "path": "K030.json",
+      "event_count": 3,
+      "birth_count": 2,
+      "age_count": 41,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K031",
+      "path": "K031.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 41,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K032",
+      "path": "K032.json",
+      "event_count": 5,
+      "birth_count": 4,
+      "age_count": 45,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K033",
+      "path": "K033.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 48,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K034",
+      "path": "K034.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 49,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K035",
+      "path": "K035.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 52,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K036",
+      "path": "K036.json",
+      "event_count": 6,
+      "birth_count": 5,
+      "age_count": 57,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K037",
+      "path": "K037.json",
+      "event_count": 8,
+      "birth_count": 7,
+      "age_count": 63,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K038",
+      "path": "K038.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 64,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K039",
+      "path": "K039.json",
+      "event_count": 5,
+      "birth_count": 4,
+      "age_count": 68,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K040",
+      "path": "K040.json",
+      "event_count": 3,
+      "birth_count": 2,
+      "age_count": 70,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K041",
+      "path": "K041.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 72,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K042",
+      "path": "K042.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 75,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K043",
+      "path": "K043.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 76,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K044",
+      "path": "K044.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 77,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K045",
+      "path": "K045.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 77,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K046",
+      "path": "K046.json",
+      "event_count": 4,
+      "birth_count": 3,
+      "age_count": 79,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K047",
+      "path": "K047.json",
+      "event_count": 3,
+      "birth_count": 2,
+      "age_count": 81,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K048",
+      "path": "K048.json",
+      "event_count": 6,
+      "birth_count": 5,
+      "age_count": 86,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K049",
+      "path": "K049.json",
+      "event_count": 6,
+      "birth_count": 5,
+      "age_count": 90,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K050",
+      "path": "K050.json",
+      "event_count": 10,
+      "birth_count": 9,
+      "age_count": 98,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K051",
+      "path": "K051.json",
+      "event_count": 16,
+      "birth_count": 15,
+      "age_count": 112,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K052",
+      "path": "K052.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K053",
+      "path": "K053.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K054",
+      "path": "K054.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K055",
+      "path": "K055.json",
+      "event_count": 5,
+      "birth_count": 4,
+      "age_count": 111,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K056",
+      "path": "K056.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 111,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K057",
+      "path": "K057.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 112,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K058",
+      "path": "K058.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 111,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K059",
+      "path": "K059.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 110,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K060",
+      "path": "K060.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 109,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K061",
+      "path": "K061.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K062",
+      "path": "K062.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K063",
+      "path": "K063.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K064",
+      "path": "K064.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 108,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K065",
+      "path": "K065.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 99,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K066",
+      "path": "K066.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 99,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K067",
+      "path": "K067.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 99,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K068",
+      "path": "K068.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 81,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K069",
+      "path": "K069.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 75,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K070",
+      "path": "K070.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 75,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K071",
+      "path": "K071.json",
+      "event_count": 9,
+      "birth_count": 8,
+      "age_count": 83,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K072",
+      "path": "K072.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 83,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K073",
+      "path": "K073.json",
+      "event_count": 2,
+      "birth_count": 1,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K074",
+      "path": "K074.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K075",
+      "path": "K075.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K076",
+      "path": "K076.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K077",
+      "path": "K077.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K078",
+      "path": "K078.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K079",
+      "path": "K079.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K080",
+      "path": "K080.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K081",
+      "path": "K081.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K082",
+      "path": "K082.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "manga_canon"
+    },
+    {
+      "year": "K083",
+      "path": "K083.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "boruto_manga"
+    },
+    {
+      "year": "K084",
+      "path": "K084.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "boruto_manga"
+    },
+    {
+      "year": "K085",
+      "path": "K085.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "boruto_manga"
+    },
+    {
+      "year": "K086",
+      "path": "K086.json",
+      "event_count": 1,
+      "birth_count": 0,
+      "age_count": 84,
+      "continuity": "boruto_manga"
+    }
+  ]
+}

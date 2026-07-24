@@ -1,0 +1,207 @@
+[
+  {
+    "id": "LOC-KONOHA-VILLAGE",
+    "name": "木叶隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-FIRE",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KONOHA-ACADEMY",
+    "name": "木叶忍者学校",
+    "kind": "institution_site",
+    "parent_location_id": "LOC-KONOHA-VILLAGE",
+    "visibility": "public",
+    "periods": [
+      {"from": "K011-01-01", "until": "K012-01-01", "state": "forming", "label": "木叶学堂校址（筹建中）"},
+      {"from": "K012-01-01", "until": "K016-01-01", "state": "active", "label": "木叶学堂"},
+      {"from": "K016-01-01", "until": null, "state": "active", "label": "木叶忍者学校"}
+    ]
+  },
+  {
+    "id": "LOC-KONOHA-TRAINING03",
+    "name": "第三演习场",
+    "kind": "training_ground",
+    "parent_location_id": "LOC-KONOHA-VILLAGE",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-WAVES",
+    "name": "波之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KONOHA-FOREST-DEATH",
+    "name": "死亡森林",
+    "kind": "training_ground",
+    "parent_location_id": "LOC-KONOHA-VILLAGE",
+    "visibility": "restricted"
+  },
+  {
+    "id": "LOC-KONOHA-EXAM-ARENA",
+    "name": "中忍考试会场",
+    "kind": "arena",
+    "parent_location_id": "LOC-KONOHA-VILLAGE",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-VALLEY-END",
+    "name": "终结之谷",
+    "kind": "landmark",
+    "parent_location_id": "LOC-LAND-FIRE",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KONOHA-UCHIHA-COMPOUND",
+    "name": "木叶宇智波族地",
+    "kind": "clan_district",
+    "parent_location_id": "LOC-KONOHA-VILLAGE",
+    "visibility": "restricted"
+  },
+  {
+    "id": "LOC-SUNA-VILLAGE",
+    "name": "砂隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-WIND",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-WAR-BATTLEFIELD",
+    "name": "第四次忍界大战战场",
+    "kind": "battlefield",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-FIRE",
+    "name": "火之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-WIND",
+    "name": "风之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-WATER",
+    "name": "水之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-EARTH",
+    "name": "土之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-LIGHTNING",
+    "name": "雷之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-IRON",
+    "name": "铁之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-WHIRLPOOLS",
+    "name": "涡之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-WATERFALLS",
+    "name": "泷之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-RAIN",
+    "name": "雨之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-LAND-GRASS",
+    "name": "草之国",
+    "kind": "country",
+    "parent_location_id": null,
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KIRI-VILLAGE",
+    "name": "雾隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-WATER",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-IWA-VILLAGE",
+    "name": "岩隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-EARTH",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KUMO-VILLAGE",
+    "name": "云隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-LIGHTNING",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-UZUSHIO-VILLAGE",
+    "name": "涡潮隐村遗址",
+    "kind": "settlement_site",
+    "parent_location_id": "LOC-LAND-WHIRLPOOLS",
+    "visibility": "public",
+    "periods": [
+      {"from": "K001-01-01", "until": "K039-01-01", "state": "active", "label": "涡潮隐村"},
+      {"from": "K039-01-01", "until": null, "state": "ruins", "label": "涡潮遗址"}
+    ]
+  },
+  {
+    "id": "LOC-TAKI-VILLAGE",
+    "name": "泷隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-WATERFALLS",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-AME-VILLAGE",
+    "name": "雨隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-RAIN",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-KUSA-VILLAGE",
+    "name": "草隐村",
+    "kind": "village",
+    "parent_location_id": "LOC-LAND-GRASS",
+    "visibility": "public"
+  },
+  {
+    "id": "LOC-MOUNTAINS-GRAVEYARD",
+    "name": "山岳墓场",
+    "kind": "hidden_site",
+    "parent_location_id": null,
+    "visibility": "secret"
+  }
+]

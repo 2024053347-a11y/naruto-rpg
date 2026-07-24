@@ -1,0 +1,3394 @@
+{
+  "$schema": "../../schemas/project-timeline.schema.json",
+  "schema_version": "project.timeline.v2",
+  "dataset": "naruto-rpg-project-canon",
+  "continuity": "curated_game_canon",
+  "calendar": {
+    "id": "konoha-360-v1",
+    "months_per_year": 12,
+    "days_per_month": 30
+  },
+  "shard": {
+    "id": "P2-BROTHERS-PAIN",
+    "namespace": "P2",
+    "arc_ids": [
+      "ARC-P2-BROTHERS",
+      "ARC-P2-UCHIHA-TRUTH",
+      "ARC-P2-PAIN-ASSAULT",
+      "ARC-P2-KONOHA-RECOVERY"
+    ],
+    "date_start": "K067-06-01",
+    "date_end": "K067-08-18"
+  },
+  "days": [
+    {
+      "id": "DAY-P2-BROTHERS-601",
+      "date": "K067-06-01",
+      "title": "宇智波据点的决战",
+      "arc_id": "ARC-P2-BROTHERS",
+      "day_goal": "在同一场连续战斗中结算兄弟双方的情报、查克拉、旧伤与第三方干预，不把鼬之死或佐助赢取真相写成不可改变的过场。",
+      "start_state": [
+        "鼬、佐助及双方追踪者的位置、伤势、查克拉与任务只能继承C分片末端；任一人未抵达据点时不得凭标题召集。",
+        "佐助只掌握自己亲历、调查或被告知的灭族信息；鼬的任务背景与面具人身份仍非公共知识。",
+        "木叶追踪队和佐助小队的实际成员、补给与通信互不共享，跨越火之国边境必须已有行程记录。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-BROTHERS-DUEL-HALL-01",
+          "title": "幻术下的最后质问",
+          "thread_id": "THR-P2-BROTHERS-DUEL",
+          "location": "宇智波一族废弃据点主厅",
+          "participants": [
+            "宇智波佐助",
+            "宇智波鼬",
+            "玩家角色（若实际随任一方抵达）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鼬和佐助均在据点主厅且能沟通或战斗。",
+            "佐助仍以查明灭族与解决兄弟冲突为当前目标。"
+          ],
+          "blockers": [
+            "任一人已死亡、被拘束或从未抵达据点。",
+            "第三方已公开足以终止对决的可靠证据或强制停战。"
+          ],
+          "setup": "佐助进入主厅后先用幻术、体术与问答试探鼬；鼬以“斑”、万花筒失明和夺眼说法施压，但这些陈述在被独立验证前只属于兄弟之间的战时证词。",
+          "beats": [
+            {
+              "id": "EV-P2-BROTHERS-DUEL-HALL-01-01",
+              "order": 10,
+              "summary": "双方确认退路、伤势与剩余查克拉，幻术试探暴露彼此的观察重点。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-HALL-01-02",
+              "order": 20,
+              "summary": "鼬抛出面具协力者、九尾与永恒万花筒的混合信息，迫使佐助判断哪些是诱导。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-HALL-01-03",
+              "order": 30,
+              "summary": "佐助与在场玩家可选择继续逼问、寻找可验证证据、撤离或转入实战。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-HALL-01-04",
+              "order": 40,
+              "summary": "月读或替代幻术被破解、规避或生效后，双方进入明确的身体状态。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "佐助只记录自己实际听到的陈述及亲历的瞳术表现。",
+            "兄弟决战是否转入致命实战由本场结算，而非预设。"
+          ],
+          "state_changes": [
+            "鼬与佐助各自扣除实际使用幻术和体术的精神力与查克拉。",
+            "任何眼伤、失明进度或幻术创伤进入后续战斗状态。"
+          ],
+          "stop_condition": "双方脱离幻术循环并作出继续战斗、谈判或撤离的可执行选择。",
+          "fallbacks": [
+            {
+              "condition": "玩家截断会面、佐助拒绝继续或鼬失去战斗能力。",
+              "status": "altered",
+              "direction": "改为现场取证、救治、追捕或远距离交接；未实际说出的秘密不进入任何角色知识。",
+              "preserves": "保留佐助必须面对鼬本人及分辨证词真伪的核心冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第384-388话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把幻术层次、知识来源与玩家介入压缩为同一连续场景"
+            }
+          ],
+          "design_rationale": "把旧资料中多次“整场都是幻术”的重复揭示压成一次可审计试探，并保持鼬陈述与幕后事实分离。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-BROTHERS-DUEL-COURT-01",
+          "title": "火雨与麒麟",
+          "thread_id": "THR-P2-BROTHERS-DUEL",
+          "location": "宇智波据点外庭与坍塌屋顶",
+          "participants": [
+            "宇智波佐助",
+            "宇智波鼬",
+            "玩家角色（若仍留在战场）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "主厅冲突已转为实战且双方尚有行动能力。",
+            "据点外庭可进入，攻击不会被已成立的停战直接阻止。"
+          ],
+          "blockers": [
+            "决斗已通过谈判、拘捕或一方失能结束。",
+            "天气准备被打断且无替代终结手段。"
+          ],
+          "setup": "实战分支中双方从主厅打到外庭；天照、火遁与天气准备共同决定麒麟能否形成，任何招式都按当前眼力、旧伤、查克拉和可用掩体结算。",
+          "beats": [
+            {
+              "id": "EV-P2-BROTHERS-DUEL-COURT-01-01",
+              "order": 10,
+              "summary": "豪火球、替身与天照迫使双方离开主厅并消耗瞳力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-COURT-01-02",
+              "order": 20,
+              "summary": "佐助若已向上空输送足够热量且雷雨形成，才获得引导自然雷电的条件。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-COURT-01-03",
+              "order": 30,
+              "summary": "玩家可选择破坏天气准备、救援任一方、封锁退路或让决斗继续。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-BROTHERS-DUEL-COURT-01-04",
+              "order": 40,
+              "summary": "麒麟或替代终结技命中后，鼬只能用仍可发动的防御承受，不能无代价恢复。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "每项高阶忍术留下可追踪的查克拉、火灾、建筑损害与身体代价。",
+            "须佐能乎、麒麟和天照只在实际条件满足时成为亲历者情报。"
+          ],
+          "state_changes": [
+            "据点由完整转为局部坍塌并持续燃烧。",
+            "双方查克拉、瞳力、烧伤和移动能力按实际命中更新。"
+          ],
+          "stop_condition": "终结技完成结算，战场进入救治、压制大蛇丸残留或撤离阶段。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前撤走伤员、扑灭火源或阻止麒麟/须佐能乎。",
+              "status": "altered",
+              "direction": "按已发生招式结算伤势和证据，未发动的能力不得补演；决斗可转为追捕或停战。",
+              "preserves": "保留兄弟实力与意志的最终碰撞，同时服从资源和环境。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第389-391话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足天气形成、建筑转移和招式资源结算"
+            }
+          ],
+          "design_rationale": "纠正旧记录把一场连续决斗均匀分配数日的问题，并让天气、蓄力和防御有明确条件。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-BROTHERS-END-01",
+          "title": "十拳剑与额触",
+          "thread_id": "THR-P2-BROTHERS-DUEL",
+          "location": "宇智波据点废墟",
+          "participants": [
+            "宇智波佐助",
+            "宇智波鼬",
+            "大蛇丸残留意识",
+            "绝"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "佐助体内确有尚未清除的大蛇丸残留。",
+            "鼬仍在废墟且保有维持封印手段的查克拉。"
+          ],
+          "blockers": [
+            "大蛇丸残留此前已被完全移除或佐助仍能压制。",
+            "鼬已失能、撤离或决定不使用十拳剑。"
+          ],
+          "setup": "只有佐助因耗竭失去对体内残留力量的压制时，大蛇丸才可能显现；鼬若仍能维持须佐能乎，可选择封印该威胁，随后其疾病、眼伤和战斗消耗共同决定能否存活。",
+          "beats": [
+            {
+              "id": "EV-P2-BROTHERS-END-01-01",
+              "order": 10,
+              "summary": "佐助的查克拉跌破压制阈值时，大蛇丸残留通过八岐形态争夺身体。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-BROTHERS-END-01-02",
+              "order": 20,
+              "summary": "鼬以十拳剑或现有替代封印手段处理显现威胁，并承担最后一轮消耗。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-BROTHERS-END-01-03",
+              "order": 30,
+              "summary": "鼬接近佐助时选择攻击、交付只言片语、额触告别或停止战斗。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-BROTHERS-END-01-04",
+              "order": 40,
+              "summary": "绝仅观察实际结果并向自己的阵营传讯，不替现场人物解释真相。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "大蛇丸残留、鼬和佐助分别获得明确的存活、封印、失能或撤离状态。",
+            "鼬的意图只能由其行为和后续证据推断。"
+          ],
+          "state_changes": [
+            "若鼬死亡，遗体、眼睛与随身物位置留在废墟且尚未自动归任何组织。",
+            "佐助在基准线耗尽查克拉并失去意识；分支按实际伤势处理。"
+          ],
+          "stop_condition": "所有战斗参与者停止主动攻击，且遗体、伤员和未熄火场有可追踪位置。",
+          "fallbacks": [
+            {
+              "condition": "玩家稳定佐助、替代封印大蛇丸或救治鼬。",
+              "status": "altered",
+              "direction": "分别结算大蛇丸残留与兄弟命运；鼬存活时进入拘押、救治或撤离，不得为了“真相篇”补写死亡。",
+              "preserves": "保留决斗后必须处理体内威胁、鼬真实状态与遗留证据。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第392-394话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "把大蛇丸显现绑定佐助的压制能力，并把鼬死亡从强制桥段改为疾病与消耗的可变结算。",
+          "reference_facts": [
+            "鼬在漫画基准线中死于疾病与战斗耗竭，不是佐助明确完成的处决。"
+          ]
+        }
+      ],
+      "end_state": [
+        "兄弟决战的结果、伤势、查克拉、眼睛状态和大蛇丸残留均已逐项登记。",
+        "木叶追踪队尚未自动知道战斗结果；绝的观察只进入其实际传讯对象知识。",
+        "任何死亡均保留遗体与现场证据位置，任何幸存者均保留救治或拘押需求。"
+      ],
+      "transition": "K067-06-02用于扑灭天照残火、追踪移动与伤员转运；只有实际抵达废墟者才能在K067-06-03处置佐助、鼬或证据。",
+      "reference_facts": [
+        "旧资料把连续决斗拆成五日；本项目将其压回一个不可长休的战斗日。"
+      ]
+    },
+    {
+      "id": "DAY-P2-TRUTH-603",
+      "date": "K067-06-03",
+      "title": "迟到的追踪与受限证词",
+      "arc_id": "ARC-P2-UCHIHA-TRUTH",
+      "day_goal": "结算废墟争夺和佐助听闻真相的范围，使遗体、证词、物证与幕后事实保持分层。",
+      "start_state": [
+        "废墟、火势、鼬与佐助状态来自06-01结算。",
+        "面具人、绝、木叶追踪队及佐助同伴必须依各自行程抵达，不允许共享对方坐标。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-TRUTH-EXTRACTION-01",
+          "title": "废墟的先到者",
+          "thread_id": "THR-P2-EVIDENCE-RACE",
+          "location": "宇智波据点废墟与外围林地",
+          "participants": [
+            "面具人",
+            "绝",
+            "木叶追踪队",
+            "佐助的实际同伴"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一方掌握据点坐标并具备抵达能力。",
+            "06-01留下可转运对象或可勘验证据。"
+          ],
+          "blockers": [
+            "据点已被完全封锁且没有进入能力。",
+            "所有对象此前已由玩家转移并抹除可追踪路线。"
+          ],
+          "setup": "各方根据侦察速度、面具人的时空间能力和火场通路争夺伤员、遗体与可携证据；卡卡西看到写轮眼只证明面具人具有该眼，不证明其身份。",
+          "beats": [
+            {
+              "id": "EV-P2-TRUTH-EXTRACTION-01-01",
+              "order": 10,
+              "summary": "绝向面具人发送其实际观察到的结算与坐标。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-TRUTH-EXTRACTION-01-02",
+              "order": 20,
+              "summary": "先到者选择优先转运活人、遗体、眼睛、忍具或现场记录。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-TRUTH-EXTRACTION-01-03",
+              "order": 30,
+              "summary": "后到者只能根据足迹、火痕、血迹和缺失物推断发生经过。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助、鼬遗体或幸存者及关键物证分别归入明确保管者。",
+            "木叶追踪队获得的只是现场勘验结论，不自动获得灭族真相。"
+          ],
+          "state_changes": [
+            "废墟建立物证清单与缺失清单。",
+            "各队位置、伤员转运路线和追踪余量更新。"
+          ],
+          "stop_condition": "所有抵达方撤离燃烧核心区，且带走对象与留存证据可逐项核对。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变到达顺序、控制遗体或切断绝的传讯。",
+              "status": "altered",
+              "direction": "按真实先后分配救治、保管和证据；未接触对象的一方只能形成有限推断。",
+              "preserves": "保留决战后果必须被某方发现并进入后续追踪的因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第395-397话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立废墟竞速、遗体保管与物证清单"
+            }
+          ],
+          "design_rationale": "旧资料让带土、绝和木叶队连续抵达却未处理旅行与证据所有权；此场明确竞速与知识边界。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-TRUTH-TESTIMONY-01",
+          "title": "面具人的版本",
+          "thread_id": "THR-P2-UCHIHA-TRUTH",
+          "location": "晓的受限治疗藏身处",
+          "participants": [
+            "宇智波佐助",
+            "面具人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "面具人已把存活的佐助带到可治疗藏身处。",
+            "佐助恢复到能够听闻并作决定的程度。"
+          ],
+          "blockers": [
+            "佐助由其他阵营控制、拒绝会面或仍昏迷。",
+            "鼬存活且亲自提供可核验的替代证词。"
+          ],
+          "setup": "若面具人控制并稳定了佐助，他展示自己的写轮眼并讲述木叶建村、宇智波隔离、政变与鼬受命灭族的版本；鼬预植的天照若被实际触发，只能证明鼬防备此人。",
+          "beats": [
+            {
+              "id": "EV-P2-TRUTH-TESTIMONY-01-01",
+              "order": 10,
+              "summary": "佐助苏醒后先确认伤势、同伴和鼬去向，拒绝无条件相信俘获者。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-TRUTH-TESTIMONY-01-02",
+              "order": 20,
+              "summary": "面具人展示身份线索，触发或避开鼬留下的天照保险。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-TRUTH-TESTIMONY-01-03",
+              "order": 30,
+              "summary": "面具人把历史事实、亲历片段和有利于自己的解释混合成一套证词。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-TRUTH-TESTIMONY-01-04",
+              "order": 40,
+              "summary": "佐助选择暂信、要求证据、拒绝、隐瞒反应或设法离开。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "只有佐助和实际旁听者获得面具人的完整说法。",
+            "佐助把天照触发、鼬临终行为与面具人证词记录为不同证据来源。"
+          ],
+          "state_changes": [
+            "佐助的阵营与木叶态度进入“待选择”，不会因听闻自动固定为毁村。",
+            "面具人的身份仍以其自称和所示能力记录，不能直接等同公开确认。"
+          ],
+          "stop_condition": "佐助明确下一步取证或阵营选择，面具人停止继续灌输且不得把证词广播给木叶。",
+          "fallbacks": [
+            {
+              "condition": "玩家救走佐助、旁听取证或让佐助识破关键矛盾。",
+              "status": "altered",
+              "direction": "按实际证人和物证形成新的调查路线；无人听闻的内容仍是受限幕后事实。",
+              "preserves": "保留佐助必须重新解释鼬行为并选择如何回应木叶制度责任。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第397-402话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "将旧资料八日回忆压为一次受限证词；历史回顾放入背景而非当日发生事件，并保留叙述者不可靠性。",
+          "reference_facts": [
+            "木叶建立、宇智波政变与灭族命令是历史背景；本日新发生的是面具人的讲述及佐助的接收。",
+            "面具人自称宇智波斑不等于其真实身份已被佐助证实。"
+          ]
+        }
+      ],
+      "end_state": [
+        "佐助获得的证据范围按实际听闻、目击和物证分列，其阵营选择尚可改变。",
+        "鼬的生死、遗体与眼睛保管者明确；木叶只掌握追踪队实际带回的现场报告。"
+      ],
+      "transition": "K067-06-04用于双方治疗、联络同伴和整理证据；K067-06-05只在佐助具备行动与自主决定能力时进入阵营选择。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-TRUTH-605",
+      "date": "K067-06-05",
+      "title": "鹰的选择",
+      "arc_id": "ARC-P2-UCHIHA-TRUTH",
+      "day_goal": "让佐助和同伴分别决定是否继续结盟、复仇对象与证据路线，并建立晓合作的条件与代价。",
+      "start_state": [
+        "佐助的身体、瞳力和知识来自06-03；面具人证词尚未获木叶档案或独立证人验证。",
+        "水月、香燐、重吾的位置与忠诚来自C及废墟竞速，未到场者不得自动归队。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-TRUTH-TEAM-DECISION-01",
+          "title": "蛇是否成为鹰",
+          "thread_id": "THR-P2-SASUKE-ALIGNMENT",
+          "location": "佐助同伴的临时藏身处",
+          "participants": [
+            "宇智波佐助",
+            "鬼灯水月",
+            "香燐",
+            "重吾",
+            "玩家角色（若为实际同伴或俘虏）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助已恢复自主沟通能力。",
+            "至少一名原同伴实际抵达并愿意参加会议。"
+          ],
+          "blockers": [
+            "佐助死亡、昏迷或被敌对势力严密拘押。",
+            "全部同伴已退出、死亡或无法联系。"
+          ],
+          "setup": "佐助向实际到场同伴披露最小必要信息，提出调查木叶高层、报复责任人、袭击全村或暂缓行动等路线；每名成员可质疑、退出或附加条件。",
+          "beats": [
+            {
+              "id": "EV-P2-TRUTH-TEAM-DECISION-01-01",
+              "order": 10,
+              "summary": "佐助区分亲历证据、面具人说法与尚未验证的历史结论。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-TRUTH-TEAM-DECISION-01-02",
+              "order": 20,
+              "summary": "同伴根据各自动机评估继续跟随的风险，而非被队名强制绑定。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-TRUTH-TEAM-DECISION-01-03",
+              "order": 30,
+              "summary": "玩家可推动取证、救治、退出、有限目标或全面敌对中的一项。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-TRUTH-TEAM-DECISION-01-04",
+              "order": 40,
+              "summary": "队伍登记实际名称、成员、目标、补给和联络方式。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助阵营获得可持久化目标，但后续仍能因新证据改变。",
+            "没有听到完整证词的同伴只知道佐助选择披露的部分。"
+          ],
+          "state_changes": [
+            "实际队伍成员、忠诚条件与任务更新。",
+            "佐助万花筒使用限制和治疗需求继续生效。"
+          ],
+          "stop_condition": "每名在场者确认加入、退出、被拘束或保持中立，队伍下一站和补给承担者明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家提出可验证证据、拆散队伍或改变复仇目标。",
+              "status": "altered",
+              "direction": "建立符合现状的新队伍或个人路线；名称与目标只对实际同意者生效。",
+              "preserves": "保留佐助必须把私人真相转化为可执行选择并承担同伴反应。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第402-404话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足队伍成员逐一同意与任务资源"
+            }
+          ],
+          "design_rationale": "把“改名为鹰并毁灭木叶”从自动台词改为团队决策，避免证词直接锁死长期阵营。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-TRUTH-AKATSUKI-DEAL-01",
+          "title": "面具人的交换条件",
+          "thread_id": "THR-P2-AKATSUKI-DEAL",
+          "location": "晓的隐蔽会面点",
+          "participants": [
+            "面具人",
+            "宇智波佐助",
+            "佐助队伍代表"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "面具人与佐助均可行动且愿意接触。",
+            "八尾仍是晓尚未取得的目标。"
+          ],
+          "blockers": [
+            "双方已公开敌对或佐助被其他势力控制。",
+            "奇拉比已死亡、失去人柱力状态或位置完全未知。"
+          ],
+          "setup": "面具人以情报、治疗与行动通道换取捕获八尾；佐助可接受、拒绝、佯从或要求先验证木叶资料，双方只共享协议所需信息。",
+          "beats": [
+            {
+              "id": "EV-P2-TRUTH-AKATSUKI-DEAL-01-01",
+              "order": 10,
+              "summary": "面具人说明八尾目标、云隐风险和可提供的路线情报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-TRUTH-AKATSUKI-DEAL-01-02",
+              "order": 20,
+              "summary": "佐助评估伤势、同伴能力与被利用风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-TRUTH-AKATSUKI-DEAL-01-03",
+              "order": 30,
+              "summary": "双方确认接受、拒绝或有限合作，并记录失败与退出条件。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "只有实际达成协议时，佐助队伍才获得八尾任务和云隐方向情报。",
+            "面具人获得对佐助阵营的有限判断，不自动控制其意志。"
+          ],
+          "state_changes": [
+            "合作分支建立补给、路线、交付点与联络暗号。",
+            "拒绝分支保留双方互相监视或敌对状态。"
+          ],
+          "stop_condition": "协议条款与下一步行动完成确认，双方离开会面点且未共享不必要秘密。",
+          "fallbacks": [
+            {
+              "condition": "佐助拒绝任务、玩家泄露会面或提出替代交换。",
+              "status": "altered",
+              "direction": "保留晓需要处理八尾与评估佐助的压力，改由其他捕获方案或追查路线推进。",
+              "preserves": "保留八尾威胁最终促成云隐与木叶交涉的现实条件。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第404-405话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立晓合作条款、路线与失败责任"
+            }
+          ],
+          "design_rationale": "把旧资料中突兀的八尾任务变成有交易条件的外交与资源触发，为后续云隐问责提供因果。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "佐助及同伴的阵营、目标、知识和合作条件明确。",
+        "八尾任务只在协议成立时启动；木叶仍不知道佐助听闻的完整证词。"
+      ],
+      "transition": "佐助队伍若接受八尾任务，须经过补给、侦察和跨境旅行，最早在K067-07-16接触奇拉比；其他分支沿取证、躲避或回返路线推进。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-PAIN-INTEL-608",
+      "date": "K067-06-08",
+      "title": "密报复核与防务启用",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "读取C分片已经签收的载荷账本，继续复核、解密与防务转化；不得把缺失密码、样本或口述重新生成成已收材料。",
+      "start_state": [
+        "自来也在雨隐的生死、深作状态，以及密码、遗体样本和口述的已收、受损、可疑、未到状态完全继承C末端。",
+        "纲手或当前合法火影、情报部门和鸣人的位置与履职状态不得按原作自动重置。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-PAIN-INTEL-AUDIT-01",
+          "title": "既收密报的复核",
+          "thread_id": "THR-P2-PAIN-INTELLIGENCE",
+          "location": "木叶火影楼密报室",
+          "participants": [
+            "C分片实际接收人或档案保管者",
+            "当前合法火影",
+            "暗号班",
+            "情报班",
+            "玩家角色（若具备密报权限）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "C分片末端存在已签署的雨隐载荷账本。",
+            "当前合法领导或授权代理能复核S级密报。"
+          ],
+          "blockers": [
+            "既有档案和所有备份均损毁且无人能提供认证记录。",
+            "木叶指挥体系无法维持密报权限。"
+          ],
+          "setup": "密报室按C末端签收清单逐项复核既有材料、保管链与调查进度；只有C标记未到的项目确有新信使完成真实行程和认证时，才可作为迟到载荷追加。",
+          "beats": [
+            {
+              "id": "EV-P2-PAIN-INTEL-AUDIT-01-01",
+              "order": 10,
+              "summary": "档案保管者核对已收、受损、可疑与未到四类载荷及其封存编号。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-PAIN-INTEL-AUDIT-01-02",
+              "order": 20,
+              "summary": "与会者检查既有证据的来源、污染风险、破解进度和可供防务使用的置信度。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-PAIN-INTEL-AUDIT-01-03",
+              "order": 30,
+              "summary": "玩家可选择密码、尸体、黑棒、鸣人通知或边防预警的优先顺序。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-PAIN-INTEL-AUDIT-01-04",
+              "order": 40,
+              "summary": "授权者签发验证、解密、样本测试和防务转化任务，并登记读取权限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶知识不会超过C已认证材料与本日真实追加的迟到载荷。",
+            "自来也状态继续按证据登记为死亡、失踪、获救或待确认。"
+          ],
+          "state_changes": [
+            "既收材料沿用原封存编号和保管者，不重复生成密码、尸体样本或口述。",
+            "暗号班、尸检班与守备只取得完成任务所需的最小资料。"
+          ],
+          "stop_condition": "签收账本与调查账本完成比对，每项材料的可用性、负责人和下一次汇报时间明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家补充新证据、发现保管链异常或改变密报权限。",
+              "status": "altered",
+              "direction": "只处理账本中可验证的现有材料；若没有材料成功送达，则维持逾期失联与谨慎防御，不得直接写出“本体不在其中”。",
+              "preserves": "保留木叶因自来也行动获得预警并必须验证佩恩机制的因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第405-407话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "承接既收载荷账本并启动验证、解密与防务转化"
+            }
+          ],
+          "design_rationale": "把D开局改为承接C的既有接收结果，避免同一信使与载荷再次抵达。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-PAIN-GRIEF-01",
+          "title": "被告知的死亡",
+          "thread_id": "THR-P2-NARUTO-GRIEF",
+          "location": "木叶任务归还室与街区",
+          "participants": [
+            "漩涡鸣人",
+            "伊鲁卡",
+            "奈良鹿丸",
+            "当前通知代表",
+            "玩家角色（若为鸣人的可信同伴）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人在木叶或能安全收到认证密报。",
+            "领导层已确定可以向他披露的内容。"
+          ],
+          "blockers": [
+            "鸣人失联、被拘押或当前通知会立即暴露其位置给敌人。",
+            "自来也已安全归来且无需死亡通报。"
+          ],
+          "setup": "只有领导层确认可通知内容后，鸣人才被告知自来也的实际状态；悲痛会影响训练与决策，但不会被一段劝说立即清除。",
+          "beats": [
+            {
+              "id": "EV-P2-PAIN-GRIEF-01-01",
+              "order": 10,
+              "summary": "通知代表说明已确认事实、仍不确定部分和遗物去向。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-PAIN-GRIEF-01-02",
+              "order": 20,
+              "summary": "鸣人离开任务室，以愤怒、否认或沉默处理消息。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-PAIN-GRIEF-01-03",
+              "order": 30,
+              "summary": "伊鲁卡、鹿丸与玩家可选择陪伴、提供具体任务或允许其独处。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-PAIN-GRIEF-01-04",
+              "order": 40,
+              "summary": "鸣人决定何时参与解码、追击或训练，并记录当前精神负担。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人只知道通知中明确披露的内容。",
+            "自来也生死若未确认，鸣人的目标可改为救援或查证。"
+          ],
+          "state_changes": [
+            "鸣人的精神力、任务可用性与对佩恩的动机更新。",
+            "支持者关系按实际互动变化。"
+          ],
+          "stop_condition": "鸣人作出一个不超过当前权限与情报的近期行动决定，且悲痛状态保留后续影响。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变通知时机、提供救援线索或陪鸣人调查。",
+              "status": "altered",
+              "direction": "按真实状态改为失踪说明、团聚、救援准备或延迟通知；不得制造不存在的死亡。",
+              "preserves": "保留师徒关系变化迫使鸣人承担新责任的核心因果。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第405-407话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把悲痛处理为持续精神与任务状态"
+            }
+          ],
+          "design_rationale": "让哀悼成为持续状态和可玩选择，不用怀孕探病等旧桥段机械治愈。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-PAIN-CODE-01",
+          "title": "不在其中",
+          "thread_id": "THR-P2-PAIN-INTELLIGENCE",
+          "location": "木叶暗号班与尸检室",
+          "participants": [
+            "暗号班",
+            "山中亥一",
+            "静音或实际医疗负责人",
+            "深作",
+            "漩涡鸣人"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "C账本确认自来也密码或等价线索已送达。",
+            "C账本确认尸检组拥有实际回收的佩恩身体、黑棒或可靠观测记录之一。"
+          ],
+          "blockers": [
+            "材料被毁、样本并非佩恩载体或解码密钥错误。",
+            "调查人员失能且无合格替代。"
+          ],
+          "setup": "暗号班只用C账本中已收且可验证的书稿、密码与笔迹样本继续解读，尸检组只分析已收的佩恩身体、黑棒或观测记录；只有两条证据链都成立时，才推断六道是受远端控制的尸体。",
+          "beats": [
+            {
+              "id": "EV-P2-PAIN-CODE-01-01",
+              "order": 10,
+              "summary": "鸣人或其他熟悉者在现有材料足够时识别自来也特有书写规则，提供可复核密钥。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-PAIN-CODE-01-02",
+              "order": 20,
+              "summary": "医疗与山中人员用现有样本确认尸体改造、记忆缺口和黑棒传导性质。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-PAIN-CODE-01-03",
+              "order": 30,
+              "summary": "两组报告合并为“操控者不在六具身体之中”的工作假设，而非已知坐标。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶获得佩恩六道可能共享视野、由黑棒传导查克拉且本体另处的受限假设。",
+            "没有实际样本时只能保留密码文本，不能补出尸检结论。"
+          ],
+          "state_changes": [
+            "守备手册加入破坏视野联动、回收黑棒和搜索高处信号源的临时条目。",
+            "情报置信度与知情名单登记。"
+          ],
+          "stop_condition": "暗号与尸检报告分别归档，合并假设注明证据、反例和未知项。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供新样本、发现伪证或改变调查优先级。",
+              "status": "altered",
+              "direction": "按现有证据形成较弱或不同假设，守备使用可验证对策而非完整机制；C标记未到的项目继续保持缺失。",
+              "preserves": "保留木叶必须通过分析获得对抗佩恩的有限优势。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第406-407话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "整合密码、尸检与黑棒实验的数日工作"
+            }
+          ],
+          "design_rationale": "把旧资料的一句答案拆回两条可验证证据链，并限制本体位置知识。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶对自来也状态、佩恩机制与鸣人知情范围形成分级记录。",
+        "解码结论是工作假设，长门、小南和弥彦身份仍不属于普通守军知识。"
+      ],
+      "transition": "K067-06-09至11用于复核密码、检验黑棒和安排守备；若深作提出仙术训练且鸣人同意，K067-06-12才可通过反向通灵离开。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-SAGE-612",
+      "date": "K067-06-12",
+      "title": "妙木山的训练契约",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "把鸣人离村修行建立在守备授权、传讯方案和仙术风险告知上。",
+      "start_state": [
+        "鸣人已收到实际密报并拥有参与选择的精神与身体能力。",
+        "木叶是否允许人柱力离村由当前合法火影及守备风险决定。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-SAGE-AUTHORIZATION-01",
+          "title": "人柱力离村决策",
+          "thread_id": "THR-P2-KONOHA-DEFENSE",
+          "location": "木叶火影楼作战室",
+          "participants": [
+            "当前合法火影",
+            "深作",
+            "漩涡鸣人",
+            "情报班",
+            "玩家角色（若具备任务权限）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "深作可提供妙木山训练与通灵通道。",
+            "鸣人未被重伤、拘押或安排在冲突任务中。"
+          ],
+          "blockers": [
+            "妙木山拒绝接纳、通灵契约失效或敌人已掌握通道。",
+            "合法指挥者基于当前威胁禁止离村且能提供替代训练。"
+          ],
+          "setup": "作战室比较让鸣人留村、转移或赴妙木山训练的风险，并为每条路线配置召回、诱饵、护卫和情报隔离方案。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-AUTHORIZATION-01-01",
+              "order": 10,
+              "summary": "情报班说明佩恩目标、木叶现有防御与训练预计时长。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-AUTHORIZATION-01-02",
+              "order": 20,
+              "summary": "深作说明仙术收益、石化风险与反向通灵条件。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-SAGE-AUTHORIZATION-01-03",
+              "order": 30,
+              "summary": "鸣人与玩家选择留村、赴训或其他保护方案，并接受对应限制。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-SAGE-AUTHORIZATION-01-04",
+              "order": 40,
+              "summary": "合法授权者签发路线、通信频率与紧急召回程序。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人的位置策略由实际授权产生。",
+            "木叶不会因为他赴训就公开妙木山坐标。"
+          ],
+          "state_changes": [
+            "出发分支登记蛤蟆联络名单、补给与召回口令。",
+            "留村分支登记训练场和疏散方案。"
+          ],
+          "stop_condition": "鸣人位置、保护责任、训练目标和紧急通信方案均签字确认。",
+          "fallbacks": [
+            {
+              "condition": "玩家提出多重信使、留村训练或诱饵方案。",
+              "status": "altered",
+              "direction": "采用批准的替代保护与训练路线，仍建立可验证的召回链和仙术目标。",
+              "preserves": "保留鸣人为应对佩恩获得新能力并承担人柱力风险的选择。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第409-410话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足离村授权、通信冗余和风险告知"
+            }
+          ],
+          "design_rationale": "为原作的反向通灵补上人柱力保护决策，避免团藏杀一只蛤蟆就成为唯一通信点。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-SAGE-ARRIVAL-01",
+          "title": "蛤蟆油与静止",
+          "thread_id": "THR-P2-SAGE-TRAINING",
+          "location": "妙木山修炼场",
+          "participants": [
+            "漩涡鸣人",
+            "深作",
+            "志麻",
+            "妙木山训练蛤蟆"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人实际抵达妙木山并同意接受训练。",
+            "深作或合格导师在场且有阻止完全石化的工具。"
+          ],
+          "blockers": [
+            "鸣人留在木叶、通灵失败或训练监护者失能。",
+            "九尾或既有伤势使自然能量试验立即危及生命。"
+          ],
+          "setup": "抵达者先学习感知自然能量、保持静止和用棍击排出失控能量；蛤蟆油只在监护与救援工具齐备时使用。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-ARRIVAL-01-01",
+              "order": 10,
+              "summary": "深作建立体能、查克拉控制与九尾干扰的基线记录。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-ARRIVAL-01-02",
+              "order": 20,
+              "summary": "鸣人在油池边尝试吸收自然能量并承受石化风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-SAGE-ARRIVAL-01-03",
+              "order": 30,
+              "summary": "训练在达到当日安全阈值或出现石化征兆时停止。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人开始仙术训练但尚未掌握仙人模式。",
+            "训练方掌握其自然能量容错和九尾干扰基线。"
+          ],
+          "state_changes": [
+            "每日训练消耗食物、药物和精神力，失败会产生可治疗或持久伤势。",
+            "木叶联络按授权频率保持。"
+          ],
+          "stop_condition": "当日训练在安全阈值结束，鸣人恢复、进食并记录下一次目标。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变训练节奏或提出不用蛤蟆油的方案。",
+              "status": "altered",
+              "direction": "改用影分身观测、感知练习或留村模拟训练；未通过静止阶段不得宣称掌握仙人模式。",
+              "preserves": "保留仙术需要自然能量平衡、静止和真实风险的核心规则。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第410-412话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "展开训练基线、监护和恢复周期"
+            }
+          ],
+          "design_rationale": "拒绝旧资料“一天经过数周并掌握全部仙术”的蒙太奇，建立分阶段成本。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的训练地点、保护方案、召回链和第一阶段能力明确。",
+        "木叶只知道授权所需的妙木山联络，不向普通守军公开坐标。"
+      ],
+      "transition": "K067-06-13至19按训练、进食、恢复和联络循环推进；K067-06-20检查能否稳定进入仙人模式。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-SAGE-620",
+      "date": "K067-06-20",
+      "title": "仙人模式的代价",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "在一周训练后结算静止聚能与九尾拒绝融合的问题，形成可用但次数有限的战斗方案。",
+      "start_state": [
+        "鸣人至少完成多轮受监护训练并保有可行动身体。",
+        "木叶没有发出已送达的紧急召回；若已召回，本日改为途中或实战准备。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-SAGE-BALANCE-01",
+          "title": "自然能量平衡",
+          "thread_id": "THR-P2-SAGE-TRAINING",
+          "location": "妙木山蛤蟆石林",
+          "participants": [
+            "漩涡鸣人",
+            "深作"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已能在监护下感知自然能量。",
+            "当日精神力和身体状态允许进行稳定性测试。"
+          ],
+          "blockers": [
+            "石化风险未受控、导师不在或鸣人被紧急召回。",
+            "九尾暴动或伤势使平衡训练不可继续。"
+          ],
+          "setup": "鸣人在不使用蛤蟆油的情况下保持静止并平衡三种能量，通过感知与力量测试确认仙人模式持续时间，而不是只凭外观认定成功。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-BALANCE-01-01",
+              "order": 10,
+              "summary": "鸣人在多次失败记录上调整呼吸、姿势与查克拉比例。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-BALANCE-01-02",
+              "order": 20,
+              "summary": "稳定进入仙人模式后完成感知、力量和解除状态测试。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-SAGE-BALANCE-01-03",
+              "order": 30,
+              "summary": "深作记录持续时长、恢复时间和石化边缘指标。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "通过测试时，鸣人获得有限时长的仙人模式与自然感知。",
+            "未通过时保留具体失败项和后续训练目标。"
+          ],
+          "state_changes": [
+            "仙人模式次数、持续时间与恢复需求加入战斗资源。",
+            "训练造成的疲劳在休息前持续。"
+          ],
+          "stop_condition": "测试在达到稳定阈值或出现危险指标时结束，结果有书面记录。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变测试方法或召回中断。",
+              "status": "postponed",
+              "direction": "保留已完成训练数据，待安全地点续测；未通过前只能使用已验证部分。",
+              "preserves": "保留仙人模式必须通过稳定、持续和恢复测试。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第414-418话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "用一周训练循环替代无状态时间跳跃"
+            }
+          ],
+          "design_rationale": "把能力获取落到可量化限制，防止佩恩战中无限续航。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-SAGE-FUSION-01",
+          "title": "九尾拒绝融合",
+          "thread_id": "THR-P2-SAGE-TRAINING",
+          "location": "妙木山对练台",
+          "participants": [
+            "漩涡鸣人",
+            "深作",
+            "志麻",
+            "九尾"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人已能短暂进入仙人模式。",
+            "深作、志麻与九尾封印状态允许测试融合。"
+          ],
+          "blockers": [
+            "鸣人尚未掌握能量平衡。",
+            "封印极不稳定或九尾已与鸣人达成不同合作方式。"
+          ],
+          "setup": "深作尝试建立肩部融合以在战斗中代为聚能；九尾若仍排斥外来查克拉会中断融合，训练组必须改用预先聚能的影分身并计算解除距离与次数。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-FUSION-01-01",
+              "order": 10,
+              "summary": "深作说明融合术的接触、信任和查克拉通道条件。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-FUSION-01-02",
+              "order": 20,
+              "summary": "九尾按当前关系选择排斥、容许或借机冲击封印。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-SAGE-FUSION-01-03",
+              "order": 30,
+              "summary": "融合失败时，鸣人提出让影分身在安全处静止聚能的替代方案。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-SAGE-FUSION-01-04",
+              "order": 40,
+              "summary": "训练组验证一次解除影分身补充自然能量的安全上限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人获得融合或影分身补能中的一种已验证方案。",
+            "九尾与鸣人的关系状态决定未来封印风险。"
+          ],
+          "state_changes": [
+            "影分身方案占用可同时维持的分身数，并需要受保护的静止位置。",
+            "失败的融合不会被战斗时自动视为成功。"
+          ],
+          "stop_condition": "补能方法完成一次安全验证，次数、距离、保护责任和失败条件明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家改善九尾关系、保护聚能分身或拒绝融合风险。",
+              "status": "altered",
+              "direction": "选择当前关系允许的补能方法并记录资源上限；不得强制九尾按原作拒绝。",
+              "preserves": "保留实战中无法静止聚能必须得到解决的功能。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第418-420话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "验证影分身补能的次数、距离与保护责任"
+            }
+          ],
+          "design_rationale": "保留九尾阻断融合的原作因果，同时允许关系改变后的融合分支。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人的仙术能力、持续时间、补能次数、九尾干扰和训练疲劳均有明确记录。",
+        "木叶仍需通过既定信使实际送达召回。"
+      ],
+      "transition": "K067-06-21至K067-07-03进行蛙组手、螺旋手里剑投掷与召唤协同训练，中间安排恢复，不把新术写成无代价掌握。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-SAGE-703",
+      "date": "K067-07-03",
+      "title": "战斗化与召回演练",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "把仙术转化为有限的战斗方案，并验证木叶到妙木山的双重召回链。",
+      "start_state": [
+        "鸣人的仙术与补能方法来自06-20测试。",
+        "木叶守备与妙木山至少保有两名独立联络者才可宣称召回冗余成立。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-SAGE-COMBAT-01",
+          "title": "蛙组手与投掷术",
+          "thread_id": "THR-P2-SAGE-TRAINING",
+          "location": "妙木山对练峡谷",
+          "participants": [
+            "漩涡鸣人",
+            "深作",
+            "蛤蟆文太或实际召唤伙伴"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人达到仙术稳定阈值且手臂医疗评估允许投掷测试。",
+            "训练峡谷和召唤伙伴可用。"
+          ],
+          "blockers": [
+            "鸣人伤势复发、仙术未稳定或召唤契约中断。",
+            "木叶紧急召回已送达。"
+          ],
+          "setup": "鸣人用受控对练验证自然能量体术、可投掷螺旋手里剑和大型召唤协作，每轮后结算仙术时长、手臂负担与环境损害。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-COMBAT-01-01",
+              "order": 10,
+              "summary": "训练方设置不会伤及聚居地的靶区和撤离线。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-COMBAT-01-02",
+              "order": 20,
+              "summary": "鸣人依次测试蛙组手感知差、投掷距离与召唤落点。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-SAGE-COMBAT-01-03",
+              "order": 30,
+              "summary": "达到手臂、查克拉或仙术时限后立即停止。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "只有通过测试的招式形态进入可用能力清单。",
+            "召唤伙伴获得鸣人的战术口令与撤退条件。"
+          ],
+          "state_changes": [
+            "鸣人需要完整恢复后才能参加高强度实战。",
+            "螺旋手里剑仍保留误伤和查克拉成本。"
+          ],
+          "stop_condition": "三项测试各有通过或未通过结论，鸣人退出仙人模式并进入恢复。",
+          "fallbacks": [
+            {
+              "condition": "玩家调整招式、替代召唤或提前停止。",
+              "status": "altered",
+              "direction": "只登记实际验证的技能，其余保持训练中；紧急召回时携现有能力出发。",
+              "preserves": "保留鸣人归来时能力强但次数有限的战斗定位。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第420-421话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足术式测试、医疗复核与召唤协同"
+            }
+          ],
+          "design_rationale": "让训练成果可审计，同时保留新术医疗与资源限制。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-SAGE-COMMS-01",
+          "title": "两条召回链",
+          "thread_id": "THR-P2-KONOHA-DEFENSE",
+          "location": "妙木山通灵台与木叶联络站",
+          "participants": [
+            "深作",
+            "志麻",
+            "木叶联络蛤蟆",
+            "木叶守备联络员"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "木叶与妙木山均有至少一名可用联络者。",
+            "双方未因敌情主动切断全部通信。"
+          ],
+          "blockers": [
+            "通灵契约整体失效、两端均被封锁或认证口令泄露。",
+            "当前分支决定完全无线电静默。"
+          ],
+          "setup": "妙木山与木叶用两组信使和带认证的短报文演练警报、定位与反向通灵，避免单个信使死亡就让双方完全失联。",
+          "beats": [
+            {
+              "id": "EV-P2-SAGE-COMMS-01-01",
+              "order": 10,
+              "summary": "双方交换当日口令、替补信使与失联后的等待时限。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SAGE-COMMS-01-02",
+              "order": 20,
+              "summary": "木叶发送模拟袭击报文，妙木山核验后回执。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-SAGE-COMMS-01-03",
+              "order": 30,
+              "summary": "演练记录暴露延迟与单点故障并更新值守表。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "紧急召回需要认证报文或多源确认。",
+            "敌人若截杀一名信使，只会降低冗余而非自动阻断全部联系。"
+          ],
+          "state_changes": [
+            "木叶与妙木山各保有一份当期联络表。",
+            "召回所需通灵查克拉和准备时间登记。"
+          ],
+          "stop_condition": "模拟报文完成往返，失败链路有替补方案和复测日期。",
+          "fallbacks": [
+            {
+              "condition": "玩家加强、削弱或暴露联络链。",
+              "status": "altered",
+              "direction": "按剩余通道设置更长确认与替代侦察；完全失联时鸣人不能凭远方剧情自动得知袭击。",
+              "preserves": "保留木叶在遭袭后有机会召回鸣人，同时让破坏通信仍具影响。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立冗余通灵信使、认证报文与失联规则"
+            }
+          ],
+          "design_rationale": "削弱旧资料中团藏杀死单只蛤蟆即可决定鸣人不归的脆弱因果。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人进入可召回但需恢复的战备状态。",
+        "双重联络链、通灵成本和失败规则已测试。"
+      ],
+      "transition": "K067-07-04起鸣人进行低强度维持训练；同时佐助队伍若接受八尾任务，继续跨境侦察并在K067-07-16进入云雷峡。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-CLOUD-716",
+      "date": "K067-07-16",
+      "title": "云雷峡的错误俘虏",
+      "arc_id": "ARC-P2-UCHIHA-TRUTH",
+      "day_goal": "结算佐助队伍与奇拉比的遭遇，明确万花筒代价、团队救治和八尾替身，不把任务成功写成既定事实。",
+      "start_state": [
+        "只有06-05实际接受八尾任务且完成跨境侦察的队伍才能进入云雷峡。",
+        "佐助及同伴的伤势、查克拉、忠诚与装备沿旅行消耗继承；奇拉比及八尾状态来自当前世界。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-CLOUD-BATTLE-01",
+          "title": "八刀与团队救治",
+          "thread_id": "THR-P2-EIGHT-TAILS",
+          "location": "雷之国云雷峡湖岸",
+          "participants": [
+            "宇智波佐助",
+            "奇拉比",
+            "八尾",
+            "佐助队伍实际成员",
+            "玩家角色（若随队或承担云隐守备）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "佐助队伍实际找到奇拉比并选择发动捕获。",
+            "奇拉比仍是八尾人柱力且位于可接触区域。"
+          ],
+          "blockers": [
+            "队伍未接受任务、找错目标或在抵达前被云隐拦截。",
+            "奇拉比已离开、失去人柱力状态或主动进入谈判。"
+          ],
+          "setup": "队伍尝试确认八尾身份并实施捕获，奇拉比以八刀流、雷遁与尾兽衣反击；佐助遭受的每次重伤必须由现有医疗、香燐查克拉或重吾肉体转化实际支付。",
+          "beats": [
+            {
+              "id": "EV-P2-CLOUD-BATTLE-01-01",
+              "order": 10,
+              "summary": "双方确认身份与退路后，奇拉比先用刀术拆散队形。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-CLOUD-BATTLE-01-02",
+              "order": 20,
+              "summary": "佐助使用写轮眼应对高速攻击并承担视力、查克拉和身体伤势。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-CLOUD-BATTLE-01-03",
+              "order": 30,
+              "summary": "同伴与玩家选择救治、撤退、继续捕获或向云隐求援。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-CLOUD-BATTLE-01-04",
+              "order": 40,
+              "summary": "奇拉比是否完全尾兽化由威胁程度和八尾意见决定。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "每名参战者获得明确伤势、查克拉、位置与继续战斗能力。",
+            "队伍只有维持协作和救治链才可能继续捕获。"
+          ],
+          "state_changes": [
+            "佐助的万花筒失明进度按实际使用增加。",
+            "重吾、香燐和水月若救治或掩护，分别支付肉体、查克拉或水化恢复代价。"
+          ],
+          "stop_condition": "双方完成一轮重伤结算并选择撤退、升级尾兽战或停止敌对。",
+          "fallbacks": [
+            {
+              "condition": "玩家促成谈判、警报、撤离或改变救治对象。",
+              "status": "altered",
+              "direction": "按实际接触结算追捕、外交或短战；没有重伤命中就不得强制消耗救治资源。",
+              "preserves": "保留晓对八尾的行动会暴露佐助并触发云隐应对。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第411-413话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足跨境侦察、伤势支付和撤退选择"
+            }
+          ],
+          "design_rationale": "旧资料连续两次让佐助濒死后立即作战；此场将救治资源和同伴代价写入持久状态。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-CLOUD-DECOY-01",
+          "title": "触手替身",
+          "thread_id": "THR-P2-EIGHT-TAILS",
+          "location": "云雷峡湖面与水下",
+          "participants": [
+            "奇拉比",
+            "八尾",
+            "宇智波佐助",
+            "佐助队伍实际成员"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "奇拉比能完全尾兽化并保有可分离触手。",
+            "佐助队伍仍有能力造成捕获压力。"
+          ],
+          "blockers": [
+            "八尾拒绝配合、触手能力受损或奇拉比已被真实拘束。",
+            "感知者已可靠识破替身。"
+          ],
+          "setup": "若奇拉比完全尾兽化且仍有触手分离能力，他可用断尾替身脱离；佐助只有实际维持天照并扑灭队友火焰后，才可能把外形似俘虏的触手带走。",
+          "beats": [
+            {
+              "id": "EV-P2-CLOUD-DECOY-01-01",
+              "order": 10,
+              "summary": "尾兽玉、天照与水化防御按射线和范围结算，湖岸遭到破坏。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-CLOUD-DECOY-01-02",
+              "order": 20,
+              "summary": "奇拉比与八尾选择正面取胜、撤离或用触手替身制造被捕假象。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-CLOUD-DECOY-01-03",
+              "order": 30,
+              "summary": "佐助队伍检查生命与查克拉信号，但疲劳和撤离压力可能导致误判。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-CLOUD-DECOY-01-04",
+              "order": 40,
+              "summary": "真实奇拉比、替身与捕获队分别沿明确路线离场。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "八尾捕获结果登记为真实俘虏、替身误判、逃脱或未接触。",
+            "奇拉比若脱离，其位置只对本人、八尾及实际目击者成立。"
+          ],
+          "state_changes": [
+            "所有天照火焰在带离战场前必须扑灭、封存或留下持续灾害。",
+            "捕获队携带对象和伤员降低返程速度。"
+          ],
+          "stop_condition": "湖面战斗停止，真实奇拉比与交付对象的位置不再混写。",
+          "fallbacks": [
+            {
+              "condition": "玩家识破替身、阻止天照或协助奇拉比撤离。",
+              "status": "altered",
+              "direction": "依据识破时点改为追击、谈判或撤退；未取得真实人柱力不得把任务标记成功。",
+              "preserves": "保留云隐误认绑架与晓封印失败可以并行成立的后续触发。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第414-415话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "把旧资料重复的完全变身压成一次选择，并让断尾替身成为需要条件且可被识破的计谋。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "奇拉比、八尾、佐助队伍与交付对象分别有明确位置和状态。",
+        "云雷峡损害与目击证据可被云隐巡查发现，佐助的身份只在实际辨认时成立。"
+      ],
+      "transition": "K067-07-17用于双方撤离、伤员稳定与云隐勘验；K067-07-18分别处理晓交付核验和云隐外交问责。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-CLOUD-718",
+      "date": "K067-07-18",
+      "title": "封印失败与云隐问责",
+      "arc_id": "ARC-P2-UCHIHA-TRUTH",
+      "day_goal": "让替身核验、奇拉比存亡不确定性与云隐向木叶交涉形成五影会谈的现实前置。",
+      "start_state": [
+        "交付对象、佐助队伍伤势和奇拉比真实状态来自07-16。",
+        "云隐只能根据现场勘验、目击和任务记录判断袭击者，不能知道晓内部协议。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-CLOUD-SEAL-CHECK-01",
+          "title": "封印台上的空壳",
+          "thread_id": "THR-P2-AKATSUKI-DEAL",
+          "location": "晓的尾兽封印据点",
+          "participants": [
+            "面具人",
+            "绝",
+            "佐助队伍代表",
+            "晓现存封印参与者"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "佐助队伍把一个声称为奇拉比的对象交到晓据点。",
+            "封印组仍有能力进行最低限度核验。"
+          ],
+          "blockers": [
+            "队伍未取得对象、拒绝交付或据点已暴露撤空。",
+            "晓已通过可靠手段提前识破替身并取消仪式。"
+          ],
+          "setup": "晓在支付封印准备与人员不足的时间后检查俘虏查克拉；若对象是断尾替身，封印在完成前或完成时暴露能量与本体不符。",
+          "beats": [
+            {
+              "id": "EV-P2-CLOUD-SEAL-CHECK-01-01",
+              "order": 10,
+              "summary": "封印组核对对象生命、尾兽查克拉与束缚完整性。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-CLOUD-SEAL-CHECK-01-02",
+              "order": 20,
+              "summary": "人员不足延长仪式并增加佐助队伍暴露与恢复压力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-CLOUD-SEAL-CHECK-01-03",
+              "order": 30,
+              "summary": "替身崩解或真实封印完成后，面具人重新评估佐助队伍。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "八尾封印只在真实人柱力及完整仪式成立时记为成功。",
+            "替身分支使面具人知道任务失败，但不等于知道奇拉比当前位置。"
+          ],
+          "state_changes": [
+            "佐助队伍与晓的合作信用更新。",
+            "封印参与者按实际仪式消耗查克拉并需要恢复。"
+          ],
+          "stop_condition": "对象身份和封印结果完成核验，各方获得有限且可追溯的失败报告。",
+          "fallbacks": [
+            {
+              "condition": "玩家夺走交付对象、破坏封印或提供真实鉴定。",
+              "status": "altered",
+              "direction": "记录对象最终保管和八尾未解决状态；失败后由晓决定重追或转移目标。",
+              "preserves": "保留八尾仍自由时晓计划受挫且佐助价值遭重新评估。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第417-419话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足封印准备、身份核验和失败报告"
+            }
+          ],
+          "design_rationale": "纠正旧资料把触手交付先称任务完成、后又自动揭示的状态混乱。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-CLOUD-RESPONSE-01",
+          "title": "云雷峡勘验令",
+          "thread_id": "THR-P2-KAGE-TRIGGER",
+          "location": "云隐雷影办公室",
+          "participants": [
+            "四代雷影",
+            "云隐情报忍者",
+            "萨姆伊小队",
+            "奇拉比护卫"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "云隐巡查发现战斗现场或奇拉比未按期报到。",
+            "至少有一项证据指向佐助或晓相关行动。"
+          ],
+          "blockers": [
+            "奇拉比及时安全归来并证明没有敌对捕获，且云隐决定不追责。",
+            "现任雷影失去权限且无人接管外交。"
+          ],
+          "setup": "云隐核对断裂触手、战斗痕迹、失踪报告和袭击者外貌后，按奇拉比未知、失踪或安全归来分别决定追查佐助、联络木叶及推动多国会谈。",
+          "beats": [
+            {
+              "id": "EV-P2-CLOUD-RESPONSE-01-01",
+              "order": 10,
+              "summary": "勘验组提交现场物证和目击置信度，不把失踪直接等同死亡。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-CLOUD-RESPONSE-01-02",
+              "order": 20,
+              "summary": "雷影决定先行搜救、外交照会和跨境追捕的权限边界。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-CLOUD-RESPONSE-01-03",
+              "order": 30,
+              "summary": "萨姆伊小队携正式文书与可披露证据启程前往木叶。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "云隐获得佐助可能参与袭击的证据，但对木叶责任尚待交涉。",
+            "五影会谈获得尾兽安全与晓威胁这一现实触发条件。"
+          ],
+          "state_changes": [
+            "萨姆伊小队携带文书、路线、补给与预计到达日。",
+            "奇拉比状态继续按真实分支保密或公开。"
+          ],
+          "stop_condition": "搜救、追捕和外交任务分别签发，跨境行动具有明确授权。",
+          "fallbacks": [
+            {
+              "condition": "玩家带回奇拉比、伪造证据或改变云隐追责对象。",
+              "status": "altered",
+              "direction": "按可验证证据调整照会内容；即使绑架不成立，晓袭击尾兽的企图仍可推动安全磋商。",
+              "preserves": "保留云隐、木叶和晓威胁进入正式外交议程。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第416-417话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足勘验、授权、跨境外交和旅行时间"
+            }
+          ],
+          "design_rationale": "让五影会谈源于真实外交证据和领导决策，而不是篇章标题自动启动。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "晓明确八尾封印成败和佐助合作价值。",
+        "云隐已启动有证据边界的搜救、追捕与木叶照会。"
+      ],
+      "transition": "萨姆伊小队按跨境行程预计在K067-08-18抵达木叶；木叶在此期间继续依据佩恩情报完善守备。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-DEFENSE-728",
+      "date": "K067-07-28",
+      "title": "佩恩防御案",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "在袭击前完成多点入侵、共享视野、情报保全、疏散和鸣人召回的可执行方案，但不赋予木叶全知预警。",
+      "start_state": [
+        "木叶只使用06-08后实际验证的密码、尸检与黑棒结论。",
+        "鸣人的位置和训练成果只对获授权人员开放；守备兵力受此前伤亡与任务调动限制。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-DEFENSE-COUNCIL-01",
+          "title": "六道应对表",
+          "thread_id": "THR-P2-KONOHA-DEFENSE",
+          "location": "木叶火影楼作战室",
+          "participants": [
+            "当前合法火影",
+            "情报班",
+            "感知班",
+            "医疗班",
+            "结界班",
+            "玩家角色（若承担防务）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "当前领导层能召开防务会议。",
+            "至少一份佩恩机制报告已经验证。"
+          ],
+          "blockers": [
+            "木叶处于内乱、领导真空或资料被敌方全部破坏。",
+            "佩恩已在会议前发动袭击。"
+          ],
+          "setup": "各班把有限情报转成多点报警、遮断共享视野、回收黑棒、分散医疗与搜索外部操控者的职责表，并决定何时召回鸣人。",
+          "beats": [
+            {
+              "id": "EV-P2-DEFENSE-COUNCIL-01-01",
+              "order": 10,
+              "summary": "情报班标注已证实能力、推测能力和完全未知项。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-DEFENSE-COUNCIL-01-02",
+              "order": 20,
+              "summary": "各班核对现有人员、医疗床位、结界盲区与通信资源。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-DEFENSE-COUNCIL-01-03",
+              "order": 30,
+              "summary": "玩家可调整鸣人召回阈值、平民疏散、情报保全和外部搜索优先级。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-DEFENSE-COUNCIL-01-04",
+              "order": 40,
+              "summary": "合法指挥者签发分区命令和失联后的接替顺序。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶获得一份不会假定只有单个入侵者的防御案。",
+            "召回鸣人的条件与发令权限明确。"
+          ],
+          "state_changes": [
+            "守备队、医疗点和联络蛤蟆完成分散配置。",
+            "敏感档案设置转移或销毁责任人。"
+          ],
+          "stop_condition": "每个分区知道警报、撤离、增援和失联接替规则，未证实情报保持标注。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变防区、泄露方案或主张提前召回鸣人。",
+              "status": "altered",
+              "direction": "按实际资源形成较小防御案；即使无完整情报也保留疏散、通信和指挥接替。",
+              "preserves": "保留木叶对已知威胁作出理性准备并允许玩家影响重点。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把数周情报分析转为分区守备、疏散与召回案"
+            }
+          ],
+          "design_rationale": "让木叶有足够准备时间，同时保留佩恩能力和入侵时点的不确定性。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-DEFENSE-RAIN-01",
+          "title": "雨隐的出发命令",
+          "thread_id": "THR-P2-PAIN-APPROACH",
+          "location": "雨隐高塔",
+          "participants": [
+            "长门",
+            "小南",
+            "佩恩六道"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "长门仍控制至少一个可用佩恩载体。",
+            "晓仍把捕获九尾列为可执行目标。"
+          ],
+          "blockers": [
+            "长门死亡、脱离晓或失去远程操控能力。",
+            "前置外交或玩家行动已改变其目标。"
+          ],
+          "setup": "长门依据晓现有九尾情报、身体负担和雨隐控制状况决定是否亲自远程操控六道前往木叶；小南准备纸分身、药物与撤退载具。",
+          "beats": [
+            {
+              "id": "EV-P2-DEFENSE-RAIN-01-01",
+              "order": 10,
+              "summary": "二人核对鸣人可能位置、木叶情报和六道载体完整性。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-DEFENSE-RAIN-01-02",
+              "order": 20,
+              "summary": "长门选择袭击、延期、谈判或改派侦察，并接受远距离操控负担。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-DEFENSE-RAIN-01-03",
+              "order": 30,
+              "summary": "出发分支按陆路和隐蔽速度前往火之国边界。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "只有袭击决定成立时，佩恩六道与小南进入木叶方向。",
+            "长门本体位置和身体状态仍只对小南及实际接触者可知。"
+          ],
+          "state_changes": [
+            "雨隐留下的防务、补给和长门维生条件更新。",
+            "佩恩各载体损坏或缺失会改变入侵阵容。"
+          ],
+          "stop_condition": "袭击队进入明确路线，雨隐留守和撤退条件完成安排。",
+          "fallbacks": [
+            {
+              "condition": "玩家在雨隐改变长门决定、破坏载体或暴露路线。",
+              "status": "altered",
+              "direction": "按现存载体和目标改为侦察、有限袭击、谈判或取消；不得强行凑齐六道。",
+              "preserves": "保留长门必须回应九尾与自来也遗留和平问题的核心压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第418-419话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足雨隐到木叶的行军、维生和载体检修"
+            }
+          ],
+          "design_rationale": "把佩恩袭击建立在长门当前状态与可用载体上，避免缺失的六道自动补齐。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶形成基于有限情报的防御案；鸣人召回仍需实际警报。",
+        "佩恩是否出发、阵容、路线和长门负担按分支明确。"
+      ],
+      "transition": "若佩恩按基准出发，约十一日隐蔽行军后于K067-08-08接近木叶；木叶无可靠目击前维持警戒而不提前进入全村战斗。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-ASSAULT-808",
+      "date": "K067-08-08",
+      "title": "多点入侵",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "以结界突破、分区指挥、情报争夺和独立战场启动佩恩袭击，严格隔离各处知识与通信。",
+      "start_state": [
+        "佩恩实际可用载体、小南与长门状态来自07-28后的行军；缺失载体不会恢复。",
+        "木叶守军、领导、情报、医疗和鸣人位置来自防御案及当前存档。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-ASSAULT-BREACH-01",
+          "title": "结界内的六个落点",
+          "thread_id": "THR-P2-PAIN-INVASION",
+          "location": "木叶结界边缘与多处分区落点",
+          "participants": [
+            "佩恩实际可用载体",
+            "小南",
+            "木叶结界班",
+            "外围守备"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "至少一个佩恩载体能穿越或突破木叶结界。",
+            "长门仍能从隐蔽点传输查克拉。"
+          ],
+          "blockers": [
+            "路线已暴露且结界升级到足以隔绝全部载体。",
+            "入侵决定被取消或长门在抵达前失能。"
+          ],
+          "setup": "畜生道或替代投送者越过结界后召集其他载体，多点落地迫使结界班判断敌人数；每个落点的警报分别传递，不能瞬间合成全貌。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-BREACH-01-01",
+              "order": 10,
+              "summary": "结界班记录首个异常穿越并向相邻分区发警报。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-BREACH-01-02",
+              "order": 20,
+              "summary": "佩恩按可用阵容分为破坏、审问和支援组。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-ASSAULT-BREACH-01-03",
+              "order": 30,
+              "summary": "守备根据落点报告封锁道路、引导平民并请求增援。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "木叶确认多点入侵，但初期不知所有载体共享视野。",
+            "每具载体和小南进入明确分区。"
+          ],
+          "state_changes": [
+            "结界局部受损，警报时间与通信延迟登记。",
+            "外围守军伤亡只按实际交战结算。"
+          ],
+          "stop_condition": "所有入侵者完成落地或被结界拦截，各分区取得第一份敌情报告。",
+          "fallbacks": [
+            {
+              "condition": "玩家提前发现投送、切断召唤或改变落点。",
+              "status": "altered",
+              "direction": "按实际突破口形成较少战区或城外拦截；未进入者不得在村内审问。",
+              "preserves": "保留佩恩以多载体同时施压木叶并搜寻鸣人的战术。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第419-421话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "应用木叶既有防区与独立警报延迟"
+            }
+          ],
+          "design_rationale": "修正旧资料因预期单人而毫无准备的设定，同时保留多点袭击造成的信息压力。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-COMMAND-01",
+          "title": "火影楼的第一轮命令",
+          "thread_id": "THR-P2-KONOHA-COMMAND",
+          "location": "木叶火影楼指挥室",
+          "participants": [
+            "当前合法火影",
+            "静音或实际医疗负责人",
+            "感知班",
+            "传令忍者",
+            "玩家角色（若参与指挥）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "指挥室仍可运作且至少收到一份可信入侵报告。",
+            "合法指挥者或预定接替者能签发命令。"
+          ],
+          "blockers": [
+            "火影楼已被摧毁、通信全断或指挥人员全部失能。",
+            "木叶已提前疏散并转入城外指挥。"
+          ],
+          "setup": "指挥室收到不完整报告后决定疏散、医疗、档案保护、召回鸣人和搜索外部操控者的优先级；召回报文必须经现存通道发出。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-COMMAND-01-01",
+              "order": 10,
+              "summary": "各分区报告按时间戳进入态势图，未知落点保留为空白。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-COMMAND-01-02",
+              "order": 20,
+              "summary": "指挥者分配蛞蝓医疗、增援和情报保护资源。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-ASSAULT-COMMAND-01-03",
+              "order": 30,
+              "summary": "玩家选择是否立即召回鸣人、保留人柱力位置秘密或先核验敌人规模。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-ASSAULT-COMMAND-01-04",
+              "order": 40,
+              "summary": "认证报文由一条或多条仍可用通灵链送出。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "木叶的命令只覆盖成功收到传令的分区。",
+            "鸣人只有在报文送达妙木山后才知道袭击。"
+          ],
+          "state_changes": [
+            "指挥查克拉、医疗资源与信使数量开始消耗。",
+            "火影权限和接替者继续按当前合法链生效。"
+          ],
+          "stop_condition": "首轮命令与召回状态登记为已送达、途中、失败或未签发。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变召回、资源分配或拘束破坏通信者。",
+              "status": "altered",
+              "direction": "由分区预案和实际接替者独立行动；召回失败时鸣人保持未知，直到其他证据到达。",
+              "preserves": "保留木叶必须在保护人柱力与取得战力之间作出决定。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第421-423话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "落实防务案中的指挥接替与冗余通信"
+            }
+          ],
+          "design_rationale": "使召回与防御成为真实指挥选择，不把团藏行为写成必然单点。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-KAKASHI-01",
+          "title": "天道的五秒",
+          "thread_id": "THR-P2-KAKASHI-FRONT",
+          "location": "木叶西北街区",
+          "participants": [
+            "旗木卡卡西",
+            "天道",
+            "修罗道或实际支援载体",
+            "秋道丁座",
+            "秋道丁次"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "天道实际进入西北街区。",
+            "卡卡西与至少一名协力者仍能作战。"
+          ],
+          "blockers": [
+            "天道被其他战区拘束、卡卡西不在村或支援者无法抵达。",
+            "已有可靠情报让守军无需重复试探。"
+          ],
+          "setup": "卡卡西与实际增援通过重复试探发现引力术间隔；击毁支援载体、保护情报员和自身撤离不能同时无代价完成。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-KAKASHI-01-01",
+              "order": 10,
+              "summary": "卡卡西用土遁与雷切试探天道，记录吸斥反应。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-KAKASHI-01-02",
+              "order": 20,
+              "summary": "支援载体到场后，秋道队伍协助制造第二次间隔样本。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-ASSAULT-KAKASHI-01-03",
+              "order": 30,
+              "summary": "卡卡西选择把剩余查克拉用于攻击、保护丁次送信或自身撤离。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-ASSAULT-KAKASHI-01-04",
+              "order": 40,
+              "summary": "五秒间隔作为亲历战术情报交给能离场的信使。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "只有成功离场的信使能把五秒间隔送到指挥部。",
+            "卡卡西、丁座、丁次和载体的生死伤势按实际选择结算。"
+          ],
+          "state_changes": [
+            "卡卡西神威或雷切使用消耗最后储备时可能失能或死亡。",
+            "街区结构损害影响救援路线。"
+          ],
+          "stop_condition": "战场停止追击或转移，情报是否送出、伤员位置和敌方载体状态明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家增援、替卡卡西送信或迫使天道撤离。",
+              "status": "altered",
+              "direction": "按现有人员获取较少或更多能力数据；未耗尽查克拉者不得强制死亡。",
+              "preserves": "保留木叶通过代价发现天道引力间隔并传回情报。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第422-425话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "保留经典战术发现，同时取消卡卡西和丁座的强制死亡/复活循环。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-INTEL-01",
+          "title": "尸检室争夺",
+          "thread_id": "THR-P2-PAIN-INTELLIGENCE",
+          "location": "木叶情报部地下尸检室",
+          "participants": [
+            "静音或实际尸检负责人",
+            "山中亥一",
+            "山中井野",
+            "人间道",
+            "木叶护卫"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "人间道实际抵达尸检室并找到知情者。",
+            "至少一名目标确实知道鸣人当前或授权位置。"
+          ],
+          "blockers": [
+            "尸检室已撤空、路线被封死或知情者并不掌握位置。",
+            "人间道在接触前被击毁。"
+          ],
+          "setup": "情报组保护尸体、黑棒和鸣人位置资料；人间道只有实际控制知情者并读取记忆，才能获得妙木山或其他藏身地。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-INTEL-01-01",
+              "order": 10,
+              "summary": "情报组按预案转移核心样本并封锁鸣人位置档案。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-INTEL-01-02",
+              "order": 20,
+              "summary": "人间道突破时优先抓取掌握位置或解码结论者。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-ASSAULT-INTEL-01-03",
+              "order": 30,
+              "summary": "护卫选择救人、毁掉敏感记录或保全样本。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-ASSAULT-INTEL-01-04",
+              "order": 40,
+              "summary": "记忆读取、抵抗、救援或撤离按接触结果结算。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佩恩获得的信息严格等于实际读取或夺取内容。",
+            "静音等人员的死亡、昏迷或获救依战斗结算，不能为后续复活预置死亡。"
+          ],
+          "state_changes": [
+            "样本、档案和人员分别标记安全、遗失、摧毁或被夺。",
+            "知情名单与泄露范围更新。"
+          ],
+          "stop_condition": "人间道离开、被击毁或失去目标，敏感资料的最终状态完成清点。",
+          "fallbacks": [
+            {
+              "condition": "玩家转移人员、提供假档案或阻止记忆读取。",
+              "status": "altered",
+              "direction": "佩恩只获得接触到的部分信息；未知鸣人位置时继续审问或改变战术。",
+              "preserves": "保留袭击者需要通过实际情报行动定位九尾。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第425-428话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "应用分级档案、撤离与记忆读取条件"
+            }
+          ],
+          "design_rationale": "修正旧资料让人间道自动读到鸣人位置的结果，给情报保全和玩家救援真实作用。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶进入多战场状态，各分区伤亡、敌方载体、通信和情报泄露分别记录。",
+        "鸣人召回报文与佩恩获知其位置均处于可审计状态。"
+      ],
+      "transition": "战斗连续进入K067-08-09；夜间不存在全员恢复，只有脱离接触者可接受有限急救与补给。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-ASSAULT-809",
+      "date": "K067-08-09",
+      "title": "村落毁灭的选择",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "推进平民救援、佩恩机制分析、卡卡西战场后果与天道大范围攻击，伤亡和设施损害服从实际防御。",
+      "start_state": [
+        "所有战区状态来自08-08，连续作战者保留疲劳、伤势和查克拉消耗。",
+        "佩恩是否知道鸣人位置、召回是否送达及长门本体负担均不得预设。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-ASSAULT-CIVILIANS-01",
+          "title": "学校与医院的疏散线",
+          "thread_id": "THR-P2-CIVILIAN-DEFENSE",
+          "location": "木叶忍者学校至东部避难壕",
+          "participants": [
+            "春野樱",
+            "医疗忍者",
+            "木叶丸",
+            "平民疏散队",
+            "地狱道或实际入侵载体",
+            "玩家角色（若参与救援）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "东部疏散线仍有人需要转移。",
+            "至少一个入侵载体威胁该路线。"
+          ],
+          "blockers": [
+            "平民已提前撤离或路线未受攻击。",
+            "医疗队全员失能且无人接替。"
+          ],
+          "setup": "医疗与疏散队沿预案转移伤员和儿童，遭遇载体时必须在交战、隐蔽和继续搬运之间分配人手。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-CIVILIANS-01-01",
+              "order": 10,
+              "summary": "疏散队核对医院伤员、学校人数和避难壕容量。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-CIVILIANS-01-02",
+              "order": 20,
+              "summary": "入侵载体切断路线并以审问制造压力。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-ASSAULT-CIVILIANS-01-03",
+              "order": 30,
+              "summary": "木叶丸与玩家选择牵制、救援、改道或等待增援。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-ASSAULT-CIVILIANS-01-04",
+              "order": 40,
+              "summary": "队伍把实际救出者和失联者送到下一医疗点。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "平民与伤员按名单进入安全、失联、受伤或死亡状态。",
+            "木叶丸只有实际成功施术时才击毁或拖延载体。"
+          ],
+          "state_changes": [
+            "医疗物资、担架与避难壕容量减少。",
+            "敌方载体位置通报给能收到消息的分区。"
+          ],
+          "stop_condition": "疏散队抵达避难壕或被迫在可防守地点停下，名单完成一次核对。",
+          "fallbacks": [
+            {
+              "condition": "玩家改变路线、击毁载体或优先救治对象。",
+              "status": "altered",
+              "direction": "按真实容量与人员改道或就地防守；无人遇敌时专注救援并保留资源消耗。",
+              "preserves": "保留袭击对普通居民的真实代价和年轻忍者的参与入口。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第428-430话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "整合学校、医院和避难壕的疏散名单"
+            }
+          ],
+          "design_rationale": "把零散旧战斗合并为平民救援冲突，避免一条招式等于一个事件。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-SIGNAL-01",
+          "title": "黑棒与高处信号",
+          "thread_id": "THR-P2-PAIN-INTELLIGENCE",
+          "location": "木叶感知班临时阵地",
+          "participants": [
+            "奈良鹿丸",
+            "山中亥一或实际情报负责人",
+            "感知忍者",
+            "伤员信使"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "至少一根黑棒或可信传输观测被送到感知班。",
+            "感知与战术人员仍能分析。"
+          ],
+          "blockers": [
+            "所有样本丢失或通信完全中断。",
+            "当前证据显示操控者不在木叶周边。"
+          ],
+          "setup": "情报人员汇总尸检与战场黑棒数据，推断操控者需位于覆盖木叶的高处；这只给出搜索扇区，不直接揭示长门树洞。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-SIGNAL-01-01",
+              "order": 10,
+              "summary": "伤员信使带回五秒间隔、黑棒或载体共享视野中的实际一项。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-SIGNAL-01-02",
+              "order": 20,
+              "summary": "感知班比较信号方向、地形遮挡和传输距离。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-ASSAULT-SIGNAL-01-03",
+              "order": 30,
+              "summary": "鹿丸安排小队搜索最可能扇区，同时保留村内防卫人手。",
+              "causal_role": "choice"
+            }
+          ],
+          "outcomes": [
+            "木叶获得有限的外部搜索扇区。",
+            "只有收到对应报告的人知道该推断。"
+          ],
+          "state_changes": [
+            "搜索小队、医疗护卫和感知资源从村内战场抽调。",
+            "长门藏身点仍未被确认。"
+          ],
+          "stop_condition": "搜索任务带着地图、信号依据和回报时限离开阵地。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供更准信号、发现诱饵或阻止抽调。",
+              "status": "altered",
+              "direction": "缩小、扩大或取消搜索扇区；无证据时不凭原作坐标派人。",
+              "preserves": "保留木叶通过调查找到远程操控者的可能性。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第429-431话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把远端操控假设转成地形搜索扇区"
+            }
+          ],
+          "design_rationale": "把旧资料“本体就在附近高处”变成由样本和地形推导的可失败搜索。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-DEVA-ULTIMATUM-01",
+          "title": "天道与火影",
+          "thread_id": "THR-P2-KONOHA-COMMAND",
+          "location": "木叶火影楼屋顶",
+          "participants": [
+            "天道",
+            "当前合法火影",
+            "护卫与蛞蝓分身"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "天道仍可行动并抵达火影楼。",
+            "当前合法火影或接替者仍能回应。"
+          ],
+          "blockers": [
+            "天道已被击毁、长门停止袭击或火影楼已撤空。",
+            "鸣人已被交出、转移或双方达成停战。"
+          ],
+          "setup": "天道要求交出鸣人并陈述以痛苦维持和平的逻辑；火影依据实际权限、鸣人位置和守备状态回应，同时把蛞蝓用于保护尽可能多的人。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-DEVA-ULTIMATUM-01-01",
+              "order": 10,
+              "summary": "天道以已获得或仍未知的九尾情报提出最后通牒。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-DEVA-ULTIMATUM-01-02",
+              "order": 20,
+              "summary": "火影选择拒绝、谈判、诱导、撤离或争取疏散时间。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-ASSAULT-DEVA-ULTIMATUM-01-03",
+              "order": 30,
+              "summary": "长门根据载体损失、情报目标和身体负担决定是否召回其余六道。",
+              "causal_role": "turn"
+            }
+          ],
+          "outcomes": [
+            "双方的和平立场与九尾目标被实际对话者知晓。",
+            "大范围攻击仍需天道回收力量并由长门支付。"
+          ],
+          "state_changes": [
+            "蛞蝓保护范围由火影查克拉和此前医疗消耗决定。",
+            "其余载体若被召回，原战区压力暂时下降。"
+          ],
+          "stop_condition": "谈判结束，天道撤离到施术距离、停战或被阻止，火影完成最后一轮保护分配。",
+          "fallbacks": [
+            {
+              "condition": "玩家促成谈判、攻击天道或扩大疏散时间。",
+              "status": "altered",
+              "direction": "按对话和战力转为有限打击、追击或撤退；长门不必发动最大规模神罗天征。",
+              "preserves": "保留长门用痛苦论逼迫木叶选择以及领导者保护村民的冲突。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第429-431话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "把摧村前的对话与资源准备写成条件，领导者也不固定必须是纲手。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-ASSAULT-DEVASTATION-01",
+          "title": "神罗天征后的地图",
+          "thread_id": "THR-P2-KONOHA-DEVASTATION",
+          "location": "木叶全村与外围避难区",
+          "participants": [
+            "天道",
+            "长门",
+            "小南",
+            "木叶守军与居民"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "天道仍连接长门且具备大范围神罗天征。",
+            "长门决定以摧村迫使九尾现身，并能集中足够查克拉。"
+          ],
+          "blockers": [
+            "长门失能、连接被切断或天道在施术前被拘束。",
+            "谈判、撤退或鸣人位置变化使摧村不再符合目标。"
+          ],
+          "setup": "只有天道撤至安全高度、长门收回其他载体查克拉并决定承担巨大负荷时，才发动覆盖村落的神罗天征；结算依据疏散、掩体、蛞蝓覆盖和设施耐久逐区进行。",
+          "beats": [
+            {
+              "id": "EV-P2-ASSAULT-DEVASTATION-01-01",
+              "order": 10,
+              "summary": "其余载体停摆或撤回，把查克拉集中给天道。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-ASSAULT-DEVASTATION-01-02",
+              "order": 20,
+              "summary": "大范围斥力摧毁建筑、道路与通信节点，保护措施分别承受冲击。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-ASSAULT-DEVASTATION-01-03",
+              "order": 30,
+              "summary": "长门身体进一步衰竭，天道进入较长能力空窗。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-ASSAULT-DEVASTATION-01-04",
+              "order": 40,
+              "summary": "幸存指挥者依据新地图重建医疗、通信和救援优先级。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "人员伤亡和设施损害按分区清单记录，不使用“全村死亡后复活”概括。",
+            "长门、天道与小南的查克拉和身体负担显著增加。"
+          ],
+          "state_changes": [
+            "火影楼、医院、档案、结界和住宅分别登记完好、受损或摧毁。",
+            "木叶通信降级，幸存接替链开始运行。"
+          ],
+          "stop_condition": "冲击波停止，各分区完成第一轮幸存者点名，天道尚未恢复常规施术频率。",
+          "fallbacks": [
+            {
+              "condition": "玩家破坏聚能、加强保护或迫使攻击缩小范围。",
+              "status": "altered",
+              "direction": "按实际规模结算局部损害和长门负担；未覆盖区域不得为贴合原作自动化为废墟。",
+              "preserves": "保留佩恩以巨大痛苦升级冲突并为鸣人归来创造决战压力。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第429-430话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "按防区、掩体和蛞蝓覆盖逐区结算损害"
+            }
+          ],
+          "design_rationale": "使村落损害服从之前防务和玩家选择，并让大招具有聚能、空窗和身体代价。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "木叶伤亡、设施、医疗、通信、领导链和各佩恩载体状态逐项可追踪。",
+        "天道在基准大范围施术后处于恢复空窗，长门身体严重透支。",
+        "鸣人是否收到召回及抵达时机只由通灵链决定。"
+      ],
+      "transition": "若召回已送达且通灵端仍可工作，妙木山在确认落点后于K067-08-10送回鸣人与实际召唤伙伴；否则木叶由幸存者继续作战。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-RETURN-810",
+      "date": "K067-08-10",
+      "title": "仙人归来",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "在废墟态势中结算鸣人抵达、六道战术和和平质问，严格执行仙术次数、召唤状态和敌方载体存量。",
+      "start_state": [
+        "鸣人只有收到认证召回且通灵成功才抵达，携带的仙术储备和聚能分身来自07-03以后实训。",
+        "木叶幸存者、领导、佩恩载体、长门负担和地形来自08-09。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-RETURN-SUMMON-01",
+          "title": "落点确认",
+          "thread_id": "THR-P2-NARUTO-RETURN",
+          "location": "木叶废墟中央或实际通灵落点",
+          "participants": [
+            "漩涡鸣人",
+            "深作",
+            "志麻",
+            "实际召唤蛤蟆",
+            "当前木叶指挥者",
+            "玩家角色（若在落点）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一条召回链成功且鸣人同意返回。",
+            "通灵落点有可验证标记。"
+          ],
+          "blockers": [
+            "通信全断、鸣人重伤或通灵空间被封锁。",
+            "木叶已经撤离且原落点会造成严重误伤。"
+          ],
+          "setup": "通灵组在未知废墟地形中选择落点，鸣人先从幸存指挥者获得敌方载体、平民区与禁止误伤区域，不能凭未来资料知道全部伤亡。",
+          "beats": [
+            {
+              "id": "EV-P2-RETURN-SUMMON-01-01",
+              "order": 10,
+              "summary": "联络端核验召回口令、落点安全和可承受的召唤规模。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RETURN-SUMMON-01-02",
+              "order": 20,
+              "summary": "鸣人抵达后确认村落损害、自来也关联敌人与现存六道数量。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-RETURN-SUMMON-01-03",
+              "order": 30,
+              "summary": "玩家可分配召唤伙伴保护伤员、牵制载体或保卫聚能分身。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RETURN-SUMMON-01-04",
+              "order": 40,
+              "summary": "鸣人进入已预存的一次仙人模式并选定首要目标。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人只获得现场简报与亲眼所见。",
+            "召唤伙伴分别承担救援、战斗或补能保护任务。"
+          ],
+          "state_changes": [
+            "使用反向通灵和大型召唤消耗妙木山与召唤者查克拉。",
+            "第一段仙人模式开始计时。"
+          ],
+          "stop_condition": "落点稳定，误伤区与任务分工明确，鸣人尚未无缝击败任何载体。",
+          "fallbacks": [
+            {
+              "condition": "玩家调整落点、分工或要求鸣人先救援。",
+              "status": "altered",
+              "direction": "在安全地点分批通灵或让鸣人沿替代路线返回；未抵达时本日其他战斗按木叶现有力量结算。",
+              "preserves": "保留鸣人作为新战力回应袭击，但到场条件可被前置改变。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第430-431话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足认证、落点、现场简报和召唤分工"
+            }
+          ],
+          "design_rationale": "把标志性登场落到通信、落点和现场简报，避免读到未来剧情即全知。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-RETURN-SIX-PATHS-01",
+          "title": "共享视野的拆解",
+          "thread_id": "THR-P2-NARUTO-VS-PAIN",
+          "location": "木叶废墟中央战区",
+          "participants": [
+            "漩涡鸣人",
+            "佩恩现存载体",
+            "深作",
+            "志麻",
+            "实际召唤伙伴"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人实际抵达并至少有一段可用仙人模式。",
+            "至少一个佩恩载体仍在中央战区。"
+          ],
+          "blockers": [
+            "鸣人未抵达、仙术完全不可用或载体已由守军处理。",
+            "长门撤回所有载体并停止袭击。"
+          ],
+          "setup": "鸣人与召唤伙伴利用烟尘、地形和蛙组手拆开共享视野，按现存载体逐个处理复活、吸收、召唤与火力职责；每次仙术耗尽必须使用已验证补能方式。",
+          "beats": [
+            {
+              "id": "EV-P2-RETURN-SIX-PATHS-01-01",
+              "order": 10,
+              "summary": "鸣人根据现场能力报告优先切断修复与召唤链。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RETURN-SIX-PATHS-01-02",
+              "order": 20,
+              "summary": "螺旋手里剑、蛙组手与召唤对抗按误伤区和查克拉成本使用。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-RETURN-SIX-PATHS-01-03",
+              "order": 30,
+              "summary": "饿鬼道若吸收自然能量，只有超过其平衡能力才会石化。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-RETURN-SIX-PATHS-01-04",
+              "order": 40,
+              "summary": "每个载体被击毁、拘束、撤离或仍可战斗后，结算一次仙术时限。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佩恩载体逐具获得明确状态，未参战载体不自动出现。",
+            "鸣人的自然能量、分身储备、身体伤势和召唤伙伴状态更新。"
+          ],
+          "state_changes": [
+            "已用聚能分身从储备移除。",
+            "黑棒和载体残骸由实际控制战场者回收。"
+          ],
+          "stop_condition": "除天道或实际幸存主战载体外，其余敌我单位完成一轮结算，鸣人进入最后储备或普通状态。",
+          "fallbacks": [
+            {
+              "condition": "玩家协助拆视野、保护补能分身或改变击破顺序。",
+              "status": "altered",
+              "direction": "按剩余战力进行联合围剿、救援或撤退；未支付仙术储备不得连续使用高阶术。",
+              "preserves": "保留鸣人通过训练成果破解六道协同并逼近天道。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第432-435话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "按载体职责与仙术储备重构连续战斗"
+            }
+          ],
+          "design_rationale": "把旧资料“轻松击败四道”改为职责链拆解和资源结算，也允许前置阵容不同。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-RETURN-PEACE-QUESTION-01",
+          "title": "被钉住的人与答案",
+          "thread_id": "THR-P2-PEACE-DEBATE",
+          "location": "木叶废墟中央战区",
+          "participants": [
+            "漩涡鸣人",
+            "天道",
+            "深作或实际支援者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "天道仍能战斗并与长门保持连接。",
+            "鸣人在中央战区且尚未击败天道。"
+          ],
+          "blockers": [
+            "天道已失能、长门断开连接或双方进入停战。",
+            "鸣人未到场或有足够战力避免近距离对话。"
+          ],
+          "setup": "天道恢复引力后压制疲惫的鸣人并陈述雨隐受战争伤害、以尾兽恐惧维持和平的计划；鸣人可以回答、拖延、反击或接受救援，不能因基准台词强制失能。",
+          "beats": [
+            {
+              "id": "EV-P2-RETURN-PEACE-QUESTION-01-01",
+              "order": 10,
+              "summary": "天道利用恢复后的引力与黑棒争取控制鸣人。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-RETURN-PEACE-QUESTION-01-02",
+              "order": 20,
+              "summary": "长门通过弥彦载体质问木叶暴力循环与鸣人的和平方案。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-RETURN-PEACE-QUESTION-01-03",
+              "order": 30,
+              "summary": "鸣人选择回答、承认尚无答案、反驳、佯降或寻找五秒空窗。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RETURN-PEACE-QUESTION-01-04",
+              "order": 40,
+              "summary": "对话把敌对目标从单纯捕获推进到是否复制仇恨。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "鸣人只知道天道亲口披露的雨隐经历和计划，不知道长门全部童年。",
+            "鸣人是否被黑棒固定与深作是否伤亡按实际战斗结算。"
+          ],
+          "state_changes": [
+            "鸣人封印受情绪与黑棒干扰的风险上升。",
+            "天道和长门继续消耗控制查克拉。"
+          ],
+          "stop_condition": "对话形成明确立场，且鸣人被固定、脱困或得到救援之一成立。",
+          "fallbacks": [
+            {
+              "condition": "玩家介入辩论、救援或利用五秒空窗。",
+              "status": "altered",
+              "direction": "让相同和平问题通过谈判、俘虏审问或远距喊话出现；不强制复制黑棒压制。",
+              "preserves": "保留鸣人必须面对受害者施暴逻辑并决定自己的回应。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第436-437话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "保留佩恩篇的政治核心，同时取消深作死亡和鸣人被捕的强制性。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鸣人、召唤伙伴与每具佩恩载体的战斗资源明确。",
+        "和平质问已进入鸣人亲历知识，但长门本体位置与完整过去仍未知。"
+      ],
+      "transition": "若鸣人被压制且有人实际发现机会，K067-08-11可发生救援；任何救援失败、成功或未发生都会改变九尾封印危机。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-SEAL-811",
+      "date": "K067-08-11",
+      "title": "救援与封印边缘",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "让雏田等人的救援、九尾失控与水门封印后手服从关系、伤势和实际触发，不强制牺牲或第九尾出现。",
+      "start_state": [
+        "鸣人、天道、深作和现场支援状态来自08-10。",
+        "雏田或其他救援者必须收到位置并具有抵达路线；其情感与任务选择来自当前关系。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-SEAL-RESCUE-01",
+          "title": "不是必死的告白",
+          "thread_id": "THR-P2-NARUTO-RESCUE",
+          "location": "木叶废墟中央战区",
+          "participants": [
+            "日向雏田或实际救援者",
+            "漩涡鸣人",
+            "天道",
+            "玩家角色（若参与救援）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人确实被天道压制。",
+            "雏田或其他救援者能定位战场并自主决定介入。"
+          ],
+          "blockers": [
+            "鸣人已脱困、天道已失能或救援者无法行动。",
+            "现场已有更安全且被接受的联合救援方案。"
+          ],
+          "setup": "救援者在确认鸣人被压制后选择独自介入、组织小队、制造撤离机会或继续救助平民；表达感情不会自动要求正面送死。",
+          "beats": [
+            {
+              "id": "EV-P2-SEAL-RESCUE-01-01",
+              "order": 10,
+              "summary": "救援者评估天道能力空窗、鸣人束缚与己方增援距离。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-SEAL-RESCUE-01-02",
+              "order": 20,
+              "summary": "救援者向鸣人说明选择与情感，建立真实沟通而非遗言过场。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-SEAL-RESCUE-01-03",
+              "order": 30,
+              "summary": "玩家可协助拆除黑棒、牵制天道或要求共同撤退。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-SEAL-RESCUE-01-04",
+              "order": 40,
+              "summary": "天道反击按队形和情报结算，救援者可能受伤、撤出、成功或死亡。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "鸣人与救援者关系根据真实表达和行动改变。",
+            "救援者伤亡只由命中与救治决定。"
+          ],
+          "state_changes": [
+            "鸣人束缚状态和情绪冲击更新。",
+            "附近医疗队获得或失去一条救援窗口。"
+          ],
+          "stop_condition": "救援者离开天道直接攻击范围，或其伤势与位置被可救援者确认。",
+          "fallbacks": [
+            {
+              "condition": "玩家组织小队、说服撤离或代替救援。",
+              "status": "altered",
+              "direction": "按实际救援方式改变束缚与关系；无人重伤时不得触发“目睹死亡”式暴走。",
+              "preserves": "保留他人愿为鸣人冒险以及鸣人如何回应这份关系。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第437-438话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "提供团队救援和撤退选项"
+            }
+          ],
+          "design_rationale": "保留雏田主动选择的情感意义，同时不把重伤和误认死亡设为必须。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-SEAL-CRISIS-01",
+          "title": "第八尾之前",
+          "thread_id": "THR-P2-NINE-TAILS-SEAL",
+          "location": "鸣人封印空间与木叶外围战区",
+          "participants": [
+            "漩涡鸣人",
+            "九尾",
+            "天道",
+            "波风水门的封印残留"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "鸣人遭遇足以触发失控的真实精神冲击。",
+            "九尾仍被现有封印约束且能向鸣人施压。"
+          ],
+          "blockers": [
+            "鸣人保持自控、已与九尾合作或封印结构已被改写。",
+            "天道失能且没有继续升级冲突。"
+          ],
+          "setup": "只有鸣人把救援者误认为死亡或承受等量精神崩溃时，九尾才借机突破；尾数随封印损害升级，天道若仍可行动可用地爆天星，但每一步都消耗长门。",
+          "beats": [
+            {
+              "id": "EV-P2-SEAL-CRISIS-01-01",
+              "order": 10,
+              "summary": "剧烈悲痛与黑棒干扰冲击鸣人的自我控制。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-SEAL-CRISIS-01-02",
+              "order": 20,
+              "summary": "九尾提出解除封印并逐层释放查克拉，鸣人可抵抗、协商或失守。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-SEAL-CRISIS-01-03",
+              "order": 30,
+              "summary": "天道撤向长门覆盖范围内的空旷区并选择地爆天星或替代压制。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-SEAL-CRISIS-01-04",
+              "order": 40,
+              "summary": "封印接近预设阈值时，水门留下的查克拉残影才被触发。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "九尾尾数、封印完整度、鸣人意识和天道封印手段逐阶段记录。",
+            "水门身份只在封印残影实际出现并向鸣人说明后进入鸣人知识。"
+          ],
+          "state_changes": [
+            "初代项链仅在当前仍由鸣人持有且未损毁时发挥一次压制作用。",
+            "地爆天星增加长门身体负担并改变外围地形。"
+          ],
+          "stop_condition": "鸣人恢复自控、封印完全破裂、被成功封禁或水门残影介入之一成立。",
+          "fallbacks": [
+            {
+              "condition": "玩家稳定鸣人、救活伤员、改变封印或让九尾合作。",
+              "status": "altered",
+              "direction": "按当前关系进入较低尾数、协作模式或无暴走分支；水门残影未达阈值不得出现。",
+              "preserves": "保留鸣人面对仇恨时自身最危险力量的考验。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第438-440话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "把尾数、项链、地爆天星和水门后手绑定动态状态"
+            }
+          ],
+          "design_rationale": "旧资料把六尾、八尾、项链破坏与水门出现当固定序列；这里全部绑定物品、关系与封印阈值。",
+          "reference_facts": [
+            "水门是封印中预留的查克拉残影，不是从死亡状态物理复活。"
+          ]
+        }
+      ],
+      "end_state": [
+        "救援者生死、鸣人封印、九尾关系、天道状态与长门负担明确。",
+        "水门与面具人情报只在残影实际出现时由鸣人获得。"
+      ],
+      "transition": "K067-08-12用于封印修复、从地爆天星脱离及天道最后战斗；没有封印危机的分支直接按现有战力推进。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-RESOLUTION-813",
+      "date": "K067-08-13",
+      "title": "本体与裁定",
+      "arc_id": "ARC-P2-PAIN-ASSAULT",
+      "day_goal": "完成天道战、追踪长门和对雨隐仇恨链的最终裁定；死亡、复活与小南离开晓均由选择和能力条件产生。",
+      "start_state": [
+        "鸣人、天道、封印、救援者与木叶搜索队状态来自08-11至12连续结算。",
+        "长门位置只有通过黑棒、感知搜索或实际追踪获得，完整过去尚未进入鸣人知识。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-RESOLUTION-DEVA-01",
+          "title": "最后五秒",
+          "thread_id": "THR-P2-NARUTO-VS-PAIN",
+          "location": "木叶外围地爆天星残骸区",
+          "participants": [
+            "漩涡鸣人",
+            "天道",
+            "木叶实际支援者"
+          ],
+          "resolution_mode": "conditional",
+          "requirements": [
+            "天道仍是敌对且鸣人恢复到可行动。",
+            "双方仍处于可接触范围。"
+          ],
+          "blockers": [
+            "天道已被其他人处理、长门断开连接或双方停战。",
+            "鸣人重伤且没有支援。"
+          ],
+          "setup": "恢复自控的鸣人利用已送达的五秒情报、影分身和剩余查克拉攻击天道；没有情报或资源时必须采用替代战术、撤退或等待支援。",
+          "beats": [
+            {
+              "id": "EV-P2-RESOLUTION-DEVA-01-01",
+              "order": 10,
+              "summary": "鸣人核对封印、伤势和可用分身，拒绝把暴走力量当作免费储备。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-DEVA-01-02",
+              "order": 20,
+              "summary": "天道使用引力术后，鸣人或支援者制造并利用真实空窗。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-DEVA-01-03",
+              "order": 30,
+              "summary": "鸣人选择击毁载体、拘束、谈判或追踪黑棒信号。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-DEVA-01-04",
+              "order": 40,
+              "summary": "天道停止战斗后，黑棒成为通往操控者的有限线索。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "天道获得击毁、拘束、停战或撤离状态。",
+            "鸣人只有实际接触黑棒并感知信号才获得追踪方向。"
+          ],
+          "state_changes": [
+            "鸣人剩余查克拉、伤势和封印稳定度更新。",
+            "地爆天星残骸与天道身体进入明确保管状态。"
+          ],
+          "stop_condition": "天道不再直接威胁村落，追踪长门的方向与同行者选择明确。",
+          "fallbacks": [
+            {
+              "condition": "玩家提供五秒情报、拘束天道或劝双方停战。",
+              "status": "altered",
+              "direction": "按现有资源完成围困、撤退或交涉；无法击败时保留长门威胁而不伪造胜利。",
+              "preserves": "保留鸣人战胜佩恩载体并取得面对本体的机会。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第441-443话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            }
+          ],
+          "design_rationale": "让最终胜利依赖前面送达的情报和剩余资源，而非固定影分身桥段。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-RESOLUTION-NAGATO-01",
+          "title": "两个弟子的答案",
+          "thread_id": "THR-P2-PEACE-DEBATE",
+          "location": "木叶外高地的纸树藏身处或实际长门据点",
+          "participants": [
+            "漩涡鸣人",
+            "长门",
+            "小南",
+            "玩家角色（若被允许同行）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "鸣人或实际代表通过证据找到长门据点。",
+            "长门与小南仍在且具备沟通能力。"
+          ],
+          "blockers": [
+            "据点未找到、长门已死亡/撤离或小南成功阻止接触。",
+            "来者在对话前直接处决长门。"
+          ],
+          "setup": "鸣人沿实际信号找到长门与小南后，双方决定袭击者、受害者和雨隐未来的处置；长门的父母、弥彦之死和团藏/半藏陷阱只通过他本人陈述或现有证据进入听闻者知识。",
+          "beats": [
+            {
+              "id": "EV-P2-RESOLUTION-NAGATO-01-01",
+              "order": 10,
+              "summary": "小南设置最后防线，要求来者说明是否处决失能的长门。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-NAGATO-01-02",
+              "order": 20,
+              "summary": "长门讲述两次创伤与弥彦理想，明确哪些是亲历、哪些是自己的解释。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-NAGATO-01-03",
+              "order": 30,
+              "summary": "鸣人与玩家选择复仇、拘押、救治、承诺和平或要求可验证交接。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-NAGATO-01-04",
+              "order": 40,
+              "summary": "长门依据身体、信念和轮回眼能力选择救治伤者、复活实际死者、停手、抵抗或保留力量。",
+              "causal_role": "resolution"
+            },
+            {
+              "id": "EV-P2-RESOLUTION-NAGATO-01-05",
+              "order": 50,
+              "summary": "小南根据裁定选择带走长门/弥彦、留守雨隐、接受拘押或继续敌对。",
+              "causal_role": "transition"
+            }
+          ],
+          "outcomes": [
+            "长门、弥彦遗体、小南及六道载体分别获得明确状态。",
+            "只有在袭击中实际死亡且灵魂条件满足者，才可能被轮回天生复活。",
+            "鸣人与实际同行者获得长门陈述；木叶其他人不会自动知道。"
+          ],
+          "state_changes": [
+            "长门若使用轮回天生，按复活人数、距离与剩余生命力支付代价，可能死亡但非必然。",
+            "复活者保留死亡前伤势以外的合理虚弱与亲历记忆，不抹除设施损害。",
+            "雨隐与木叶关系、遗体保管和后续调查任务更新。"
+          ],
+          "stop_condition": "长门停止远程攻击，所有复活/救治对象清单完成，双方离开或控制藏身处。",
+          "fallbacks": [
+            {
+              "condition": "玩家选择拘押、救治、取证或改变和平承诺。",
+              "status": "altered",
+              "direction": "按实际接触处理停战、追捕或雨隐外交；无人施术时死者保持死亡，不得因基准线复活。",
+              "preserves": "保留自来也两名弟子就痛苦循环作出决定，并让决定改变真实伤亡。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第444-449话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "区分历史陈述、现场裁定、复活清单和遗体保管"
+            }
+          ],
+          "design_rationale": "把旧资料十余日回忆压成一次受限对话，并把全员复活改为针对实际死者、有能力成本的选择。",
+          "reference_facts": [
+            "弥彦早已死亡，其身体是否仍作为天道载体由本分片实际状态决定。",
+            "团藏参与半藏陷阱属于长门/小南的证词，未自动成为木叶公共档案。"
+          ]
+        }
+      ],
+      "end_state": [
+        "佩恩袭击停止或转入明确未决追捕；长门、小南、弥彦遗体和所有载体状态可追踪。",
+        "木叶实际死者、复活者、伤员与永久设施损害分列记录。",
+        "鸣人获得的雨隐历史仍是受限听闻，需要选择是否、如何向木叶报告。"
+      ],
+      "transition": "K067-08-14至17用于搜救、尸体身份复核、复活者观察、遗体交接和临时治理；不得把复活当作建筑与政治状态复原。",
+      "reference_facts": []
+    },
+    {
+      "id": "DAY-P2-RECOVERY-818",
+      "date": "K067-08-18",
+      "title": "废墟上的权限",
+      "arc_id": "ARC-P2-KONOHA-RECOVERY",
+      "day_goal": "完成伤亡清点、火影权限、鸣人公众关系、佐助问责和五影会谈触发条件，向E分片交付可执行状态。",
+      "start_state": [
+        "所有人员生死、复活、伤势与设施损害来自08-13后实际清点。",
+        "现任火影及接替者权限来自袭击前合法状态；纲手、团藏和长老不得自动获得原作职位。",
+        "萨姆伊小队只有完成07-18后的跨境行程才在本日抵达。"
+      ],
+      "scenes": [
+        {
+          "id": "SCN-P2-CASUALTY-AUDIT-01",
+          "title": "伤亡与遗体清单",
+          "thread_id": "THR-P2-KONOHA-RECOVERY",
+          "location": "木叶临时医疗与登记营地",
+          "participants": [
+            "当前医疗负责人",
+            "暗部登记员",
+            "各分区救援队",
+            "玩家角色（若参与搜救）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "至少一个救援或登记单位仍能工作。",
+            "袭击已停止到允许分区搜救。"
+          ],
+          "blockers": [
+            "战斗仍在持续或营地再次遭袭。",
+            "木叶完全撤离且清点需在外地进行。"
+          ],
+          "setup": "救援队按分区核对幸存、失联、死亡、复活、伤势、俘虏、遗体和黑棒，不因轮回天生发生就删除死亡记录或默认所有人复活。",
+          "beats": [
+            {
+              "id": "EV-P2-CASUALTY-AUDIT-01-01",
+              "order": 10,
+              "summary": "各分区提交人员和设施清单，重复姓名与未确认报告单列。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-CASUALTY-AUDIT-01-02",
+              "order": 20,
+              "summary": "医疗人员复查复活者、重伤者和查克拉耗竭者的后续风险。",
+              "causal_role": "pressure"
+            },
+            {
+              "id": "EV-P2-CASUALTY-AUDIT-01-03",
+              "order": 30,
+              "summary": "玩家可选择优先搜索失联者、保护敌方遗体或公开某项损失。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-CASUALTY-AUDIT-01-04",
+              "order": 40,
+              "summary": "登记员冻结第一版官方清单并保留待核项。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶获得逐人伤亡、复活、伤势、俘虏与遗体清单。",
+            "卡卡西、静音、深作、雏田等人的状态完全服从各自战场结果。"
+          ],
+          "state_changes": [
+            "医疗床位、药物、食品、住所和可执勤忍者数量更新。",
+            "敌方载体、黑棒和敏感遗体设定保管权限。"
+          ],
+          "stop_condition": "第一版清单由合法负责人签署，所有未确认对象具备最后位置和搜救任务。",
+          "fallbacks": [
+            {
+              "condition": "玩家找到失联者、发现误报或改变遗体保管。",
+              "status": "altered",
+              "direction": "在安全地点滚动更新清单；未核实者保持失联，不以原作结局替代。",
+              "preserves": "保留人员、资源和证据必须在战后现实结算。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第449-450话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "建立逐人伤亡、复活、设施和资源审计"
+            }
+          ],
+          "design_rationale": "防止复活术抹除袭击成本，也为下一分片的领导与外交提供真实损失依据。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-RECOVERY-SUCCESSION-01",
+          "title": "火影印信与临时议程",
+          "thread_id": "THR-P2-KONOHA-GOVERNANCE",
+          "location": "木叶临时议事帐",
+          "participants": [
+            "现任火影或合法代理",
+            "火之国大名代表",
+            "木叶长老",
+            "上忍班代表"
+          ],
+          "resolution_mode": "offscreen",
+          "requirements": [
+            "木叶仍有可识别的任命制度和至少一名合法代表。",
+            "袭击损害需要临时治理决定。"
+          ],
+          "blockers": [
+            "火之国中央权力崩溃或所有候选人失联。",
+            "玩家分支已建立并被承认的其他紧急政府。"
+          ],
+          "setup": "议事帐按现任火影的生死和履职能力决定继续任职、医疗休假或临时代理；团藏只有经过当前制度程序并获得印信，才取得相应权限。",
+          "beats": [
+            {
+              "id": "EV-P2-RECOVERY-SUCCESSION-01-01",
+              "order": 10,
+              "summary": "与会者核验火影生命、意识、医疗预后和印信保管。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RECOVERY-SUCCESSION-01-02",
+              "order": 20,
+              "summary": "根据重建、外交与防务需求选择继续履职、限权代理或启动正式继任。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RECOVERY-SUCCESSION-01-03",
+              "order": 30,
+              "summary": "决定写明期限、权限边界、复议条件和对外通报。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "木叶现任火影、代理、任务签发权和五影会谈代表明确。",
+            "纲手未昏迷时不会被强制剥夺权限；团藏不能靠原作结果自动上位。"
+          ],
+          "state_changes": [
+            "印信、暗部指挥、财政和外交文书进入明确保管。",
+            "领导者身体状态继续限制其工作量。"
+          ],
+          "stop_condition": "合法领导链和五影会谈代表完成登记，争议事项列入复议而非暗中重置。",
+          "fallbacks": [
+            {
+              "condition": "玩家揭露团藏行为、保护现任火影或提出限权方案。",
+              "status": "altered",
+              "direction": "沿现有合法链设立最小临时权限并尽快复议；不得伪造死亡或昏迷制造职位空缺。",
+              "preserves": "保留木叶必须在废墟中维持合法指挥和外交代表。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第450-451话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足印信、限权代理、复议与外交代表程序"
+            }
+          ],
+          "design_rationale": "直接履行D末端的火影权限交接，并允许三代、纲手、团藏等前置变化改变结果。",
+          "reference_facts": []
+        },
+        {
+          "id": "SCN-P2-RECOVERY-DIPLOMACY-01",
+          "title": "云隐照会与会谈门槛",
+          "thread_id": "THR-P2-KAGE-TRIGGER",
+          "location": "木叶临时外交站",
+          "participants": [
+            "萨姆伊小队或实际云隐使者",
+            "木叶外交负责人",
+            "漩涡鸣人（若在木叶、清醒且获准参与）",
+            "佐助相关知情者",
+            "玩家角色（若获准旁听）"
+          ],
+          "resolution_mode": "interactive",
+          "requirements": [
+            "云隐使者完成行程并携认证照会。",
+            "木叶存在能对外答复的合法负责人。"
+          ],
+          "blockers": [
+            "使者被截获、奇拉比已公开安全且撤回照会。",
+            "木叶外交体系暂时无法工作且已正式请求延期。"
+          ],
+          "setup": "云隐使者提交奇拉比失踪与佐助袭击证据，木叶依据佐助实际法律身份、现有证据和灾后能力决定协查、拒绝、制裁或推动五影会谈；鸣人只有实际在场并获许可时才能请求接触雷影，且无权单方面撤销通缉。",
+          "beats": [
+            {
+              "id": "EV-P2-RECOVERY-DIPLOMACY-01-01",
+              "order": 10,
+              "summary": "使者核验文书、物证、目击置信度和奇拉比当前公开状态。",
+              "causal_role": "setup"
+            },
+            {
+              "id": "EV-P2-RECOVERY-DIPLOMACY-01-02",
+              "order": 20,
+              "summary": "木叶说明佐助的法律身份、已知位置与能披露的追踪记录。",
+              "causal_role": "turn"
+            },
+            {
+              "id": "EV-P2-RECOVERY-DIPLOMACY-01-03",
+              "order": 30,
+              "summary": "实际在场的鸣人可主张留出救援或拘捕机会；鸣人缺席时，玩家只能按自身权限提出调查、谈判或限制公开方案。",
+              "causal_role": "choice"
+            },
+            {
+              "id": "EV-P2-RECOVERY-DIPLOMACY-01-04",
+              "order": 40,
+              "summary": "双方确认是否存在五影会谈所需的领导授权、晓共同威胁和安全议程。",
+              "causal_role": "resolution"
+            }
+          ],
+          "outcomes": [
+            "佐助的通缉、协查或谈判状态由合法决定产生。",
+            "五影会谈只有在至少相关村领导同意且存在共同议程时进入筹备。"
+          ],
+          "state_changes": [
+            "云隐证据与木叶追踪报告分别归档。",
+            "鸣人若参与则记录其公众声望、九尾封印风险和任务许可；缺席时保留本日以前的实际状态。"
+          ],
+          "stop_condition": "照会获得正式答复，佐助案件、奇拉比搜救与会谈筹备各有负责人和下一步。",
+          "fallbacks": [
+            {
+              "condition": "鸣人未在场或无出勤许可，或玩家提供佐助新证据、促成联合搜救或改变会谈议程。",
+              "status": "altered",
+              "direction": "外交负责人仍按可验证事实答复；鸣人缺席时不生成其发言、伤势或声望变化，证据不足时先联合调查。",
+              "preserves": "保留佐助行为、晓威胁和木叶损失共同推动五影政治。"
+            }
+          ],
+          "source_material": [
+            {
+              "kind": "manga",
+              "reference": "NARUTO 漫画第451-453话",
+              "contribution": "提供人物动机、冲突顺序与基准结果"
+            },
+            {
+              "kind": "original",
+              "reference": "Naruto RPG 项目正史连接段",
+              "contribution": "补足跨境照会、证据审查、角色到场条件和五影会谈授权"
+            }
+          ],
+          "design_rationale": "把旧资料的云隐来访、佐助列叛忍和会谈触发整合成一场有证据与权限的外交行动，同时不为完成外交强制召集鸣人。",
+          "reference_facts": []
+        }
+      ],
+      "end_state": [
+        "鼬、自来也、长门、弥彦遗体及小南的真实状态和保管位置明确；幕后身份不会自动公开。",
+        "佐助掌握的证词与物证、阵营目标、当前位置和法律身份明确。",
+        "木叶逐人伤亡、复活、伤势、设施损害、医疗与补给状态完成第一轮审计。",
+        "现任火影、代理权限、印信、五影会谈代表和复议条件明确。",
+        "鸣人的身体、仙术储备、精神状态、公众关系、九尾封印完整度和可执行任务明确。",
+        "五影会谈与晓后续行动仅在真实外交授权、共同威胁、八尾状态和各村领导条件成立时触发。"
+      ],
+      "transition": "E分片从本日的领导链、云隐照会、佐助阵营、晓情报和灾后资源开始；不得把团藏上位、五影与会、佐助袭会或战争宣言视为已经发生。",
+      "reference_facts": []
+    }
+  ]
+}

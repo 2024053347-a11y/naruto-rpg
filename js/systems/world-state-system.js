@@ -1,6 +1,7 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { formatGameTime } from '../utils/format.js';
+import { CANON_DATABASE } from '../data/canon-database.js';
 
 class WorldStateSystem {
   getWorldState() {
@@ -167,6 +168,17 @@ class WorldStateSystem {
     const now = Date.now();
     const id = eventData.id || eventData.title || eventData.name || `event_${now}`;
     const status = String(eventData.status || 'triggered').toLowerCase();
+    const timelineCheck = CANON_DATABASE.validateTimelineEventUpdate(eventData, {
+      state: {
+        '世界·时间': stateManager.get('世界·时间'),
+        '世界·年代': stateManager.get('世界·年代')
+      }
+    });
+    if (!timelineCheck.allowed) {
+      console.warn('[WorldState] Rejected project timeline event update:', timelineCheck);
+      eventBus.emit('state:invalid-write', { type: 'project-timeline', ...timelineCheck });
+      return null;
+    }
     const finalStatuses = new Set(['completed', 'resolved', 'ended', 'failed', 'cancelled']);
 
     const eventsStr = stateManager.get('世界·活跃事件') || '';
@@ -182,7 +194,7 @@ class WorldStateSystem {
       ...eventData,
       id,
       status,
-      description: eventData.description || eventData.detail || '',
+      description: eventData.description || eventData.desc || eventData.detail || '',
       updated_at: now,
       triggered_at: eventData.triggered_at || now
     };

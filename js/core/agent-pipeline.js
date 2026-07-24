@@ -1,16 +1,176 @@
-import { stateManager } from './state-manager.js';
 import { eventBus } from './event-bus.js';
 import { AgentRunner, AgentAbortError } from './agent-runner.js';
 import { AGENT_TIMEOUTS } from './agent-manifests.js';
 import { getAgentConfig } from '../data/agent-config.js';
+import { assertNoProtectedFutureLeak } from './protected-future-guard.js';
+
+export const CHARACTER_MEMORY_DELTA_SCHEMA = 'naruto.character-memory-delta/v1';
+export const FUTURE_GUARDIAN_CONTROL_SCHEMA = 'naruto.future-guardian-control/v1';
+
+const FUTURE_GUARDIAN_DECISIONS = new Set(['approve', 'filter', 'reject']);
+
+function cloneJson(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function localNumericId(value) {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0
+    ? value
+    : null;
+}
+
+function normalizeCandidateResult(result) {
+  const source = Array.isArray(result?.candidates)
+    ? result.candidates.filter(candidate => (
+        candidate
+        && typeof candidate === 'object'
+        && String(candidate.direction || '').trim()
+      ))
+    : [];
+  const recommendedIndex = source.findIndex(candidate => (
+    String(candidate?.id) === String(result?.recommended)
+  ));
+  const candidates = source.map((candidate, index) => ({
+    id: index + 1,
+    direction: String(candidate.direction || '').trim(),
+    reason: String(candidate.reason || '').trim(),
+    risk: ['low', 'medium', 'high'].includes(candidate.risk) ? candidate.risk : 'medium'
+  }));
+  return {
+    candidates,
+    recommended: candidates.length ? Math.min(recommendedIndex >= 0 ? recommendedIndex + 1 : 1, candidates.length) : null
+  };
+}
+
+function normalizeOutlineResult(result) {
+  const source = Array.isArray(result?.beats)
+    ? result.beats.filter(beat => beat && typeof beat === 'object')
+    : [];
+  return {
+    ...cloneJson(result),
+    beats: source.map((beat, index) => ({ ...cloneJson(beat), id: index + 1 }))
+  };
+}
+
+/**
+ * The only application boundary for future-guardian output. Unknown keys and
+ * free text are deliberately discarded; only local integer IDs and enums can
+ * survive. Invalid output returns null so callers can keep their safe input.
+ */
+export function parseFutureGuardianControl(value, { scope, validIds = [] } = {}) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  if (scope !== 'candidates' && scope !== 'outline') return null;
+  if (value.scope != null && value.scope !== scope) return null;
+  const decision = String(value.decision || '').trim().toLowerCase();
+  if (!FUTURE_GUARDIAN_DECISIONS.has(decision)) return null;
+  const valid = new Set(validIds.map(localNumericId).filter(Boolean));
+  const sourceIds = scope === 'candidates' ? value.candidate_ids : value.beat_ids;
+  const ids = [...new Set((Array.isArray(sourceIds) ? sourceIds : [])
+    .map(localNumericId)
+    .filter(id => id && valid.has(id)))].sort((left, right) => left - right);
+  return Object.freeze({
+    schema: FUTURE_GUARDIAN_CONTROL_SCHEMA,
+    scope,
+    decision,
+    candidate_ids: Object.freeze(scope === 'candidates' ? ids : []),
+    beat_ids: Object.freeze(scope === 'outline' ? ids : [])
+  });
+}
+
+function futureGuardianRejectError(stage) {
+  const error = new Error(`未来护栏拒绝了${stage}，本回合降级为安全直写`);
+  error.code = 'FUTURE_GUARDIAN_REJECTED';
+  error.stage = stage;
+  return error;
+}
+
+function cleanMemoryText(value, max = 600) {
+  return String(value || '').trim().slice(0, max);
+}
+
+export function buildCharacterMemoryDelta(characterInputs = [], { turn = 0 } = {}) {
+  const changes = {};
+  for (const input of Array.isArray(characterInputs) ? characterInputs : []) {
+    const npcName = cleanMemoryText(input?.npcName || input?.npc, 80);
+    if (!npcName) continue;
+    const action = cleanMemoryText(input.action);
+    const dialogue = cleanMemoryText(input.dialogue);
+    const innerThought = cleanMemoryText(input.innerThought);
+    const moodShift = cleanMemoryText(input.moodShift, 160);
+    const towardsPlayer = cleanMemoryText(input.towardsPlayer, 240);
+    const change = changes[npcName] || {
+      npcName,
+      currentMood: null,
+      knownFactsAppend: [],
+      recentActionsAppend: [],
+      privateIntentAppend: [],
+      relationShift: null
+    };
+    if (moodShift) change.currentMood = moodShift;
+    if (action) change.knownFactsAppend.push(action);
+    if (action || dialogue) change.recentActionsAppend.push({
+      turn: Math.max(0, Number(turn) || 0),
+      action,
+      dialogue
+    });
+    if (innerThought) change.privateIntentAppend.push({
+      turn: Math.max(0, Number(turn) || 0),
+      thought: innerThought
+    });
+    if (towardsPlayer) change.relationShift = towardsPlayer;
+    changes[npcName] = change;
+  }
+  return {
+    schema: CHARACTER_MEMORY_DELTA_SCHEMA,
+    turn: Math.max(0, Number(turn) || 0),
+    changes
+  };
+}
+
+export function mergeCharacterMemoryDelta(baseMemories = {}, delta = null) {
+  const merged = cloneJson(baseMemories && typeof baseMemories === 'object' ? baseMemories : {}) || {};
+  if (!delta || delta.schema !== CHARACTER_MEMORY_DELTA_SCHEMA) return merged;
+  for (const [npcName, change] of Object.entries(delta.changes || {})) {
+    const existing = merged[npcName] && typeof merged[npcName] === 'object'
+      ? cloneJson(merged[npcName])
+      : {
+          npcName,
+          personality: '',
+          currentMood: '平静',
+          privateGoals: [],
+          knownFacts: [],
+          relationToPlayer: {},
+          recentActions: [],
+          privateIntentHistory: []
+        };
+    existing.npcName = existing.npcName || npcName;
+    existing.knownFacts = Array.isArray(existing.knownFacts) ? existing.knownFacts : [];
+    existing.recentActions = Array.isArray(existing.recentActions) ? existing.recentActions : [];
+    existing.privateIntentHistory = Array.isArray(existing.privateIntentHistory) ? existing.privateIntentHistory : [];
+    existing.relationToPlayer = existing.relationToPlayer && typeof existing.relationToPlayer === 'object'
+      ? existing.relationToPlayer
+      : {};
+    if (change.currentMood) existing.currentMood = change.currentMood;
+    existing.knownFacts.push(...(change.knownFactsAppend || []));
+    existing.recentActions.push(...(change.recentActionsAppend || []));
+    existing.privateIntentHistory.push(...(change.privateIntentAppend || []));
+    if (change.relationShift) existing.relationToPlayer.lastShift = change.relationShift;
+    existing.knownFacts = existing.knownFacts.slice(-15);
+    existing.recentActions = existing.recentActions.slice(-8);
+    existing.privateIntentHistory = existing.privateIntentHistory.slice(-8);
+    merged[npcName] = existing;
+  }
+  return merged;
+}
 
 class AgentPipeline {
   constructor({ pipeline, memorySystem }) {
     this.pipeline = pipeline;
     this.memorySystem = memorySystem;
-    this.runner = new AgentRunner();
+    this.runner = new AgentRunner({ pipeline });
     this._aborted = false;
     this._totalTimer = null;
+    this._pendingCharacterMemoryDelta = null;
   }
 
   static isEnabled() {
@@ -156,8 +316,12 @@ class AgentPipeline {
     // ── Stage 9: 归档 ──
     const t8 = Date.now();
     onProgress('archive', '归档记忆...');
+    // 这里只建立待提交增量。主 Pipeline 必须等 NarrativeArtifact 最终 apply 后，
+    // 在 TurnCommitGuard 内原子合并；失败、取消或 discard 时丢弃。
     if (characterInputs.length > 0) {
-      this._archiveCharacterMemories(state, characterInputs);
+      this._pendingCharacterMemoryDelta = buildCharacterMemoryDelta(characterInputs, {
+        turn: state['系统·回合数'] || 0
+      });
     }
     timings.archive = Date.now() - t8;
 
@@ -172,7 +336,7 @@ class AgentPipeline {
   // ── Stage Implementations ──
 
   async _brainstorm(state, userInput) {
-    const result = await this.runner.run('brainstormer', {
+    const rawResult = await this.runner.run('brainstormer', {
       state,
       userInput,
       taskPrompt: '请根据当前状态和玩家输入，提出 3-5 条剧情走向候选。',
@@ -180,11 +344,27 @@ class AgentPipeline {
       onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'brainstormer', chunk })
     });
 
+    this._assertPlannerOutputSafe(rawResult, 'brainstormer');
+    const result = normalizeCandidateResult(rawResult);
+
     if (!result?.candidates?.length) return null;
 
+    const guardianControl = await this._requestFutureGuardianControl(state, userInput, {
+      scope: 'candidates',
+      candidates: result.candidates
+    });
+    if (this._futureGuardianEnabled() && !guardianControl) return null;
+    let candidates = result.candidates;
+    if (guardianControl?.decision === 'reject') return null;
+    if (guardianControl?.decision === 'filter') {
+      const allowed = new Set(guardianControl.candidate_ids);
+      candidates = candidates.filter(candidate => allowed.has(candidate.id));
+      if (!candidates.length) return null;
+    }
+
     const rec = result.recommended || 1;
-    const selected = result.candidates.find(c => c.id === rec) || result.candidates[0];
-    eventBus.emit('agent:brainstorm', { candidates: result.candidates, selected });
+    const selected = candidates.find(c => c.id === rec) || candidates[0];
+    eventBus.emit('agent:brainstorm', { candidates, selected, guardianControl });
     return selected;
   }
 
@@ -193,7 +373,7 @@ class AgentPipeline {
       ? `\n\n[选定的剧情走向] ${direction.direction}\n理由: ${direction.reason}`
       : '';
 
-    const result = await this.runner.run('outliner', {
+    const rawResult = await this.runner.run('outliner', {
       state,
       userInput,
       taskPrompt: `请根据当前状态为本回合生成叙事大纲。${hint}`,
@@ -202,8 +382,71 @@ class AgentPipeline {
       onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'outliner', chunk })
     });
 
+    this._assertPlannerOutputSafe(rawResult, 'outliner');
+    const result = normalizeOutlineResult(rawResult);
+
     if (!result?.beats?.length) throw new Error('Outliner 未能生成有效大纲');
+    const guardianControl = await this._requestFutureGuardianControl(state, userInput, {
+      scope: 'outline',
+      outline: result
+    });
+    if (this._futureGuardianEnabled() && !guardianControl) {
+      throw futureGuardianRejectError('未通过因果护栏的大纲');
+    }
+    if (guardianControl?.decision === 'reject') throw futureGuardianRejectError('安全大纲');
+    if (guardianControl?.decision === 'filter') {
+      const allowed = new Set(guardianControl.beat_ids);
+      result.beats = result.beats.filter(beat => allowed.has(beat.id));
+      if (!result.beats.length) throw futureGuardianRejectError('安全大纲');
+    }
     return result;
+  }
+
+  _futureGuardianEnabled() {
+    const policy = this.pipeline?._activeCallPolicy;
+    return Boolean(
+      policy
+      && policy.strictSingleCall !== true
+      && policy.features?.agents === true
+      && this.pipeline?._lastTurnEvidencePacket?.protected_future
+    );
+  }
+
+  async _requestFutureGuardianControl(state, userInput, {
+    scope, candidates = [], outline = null
+  } = {}) {
+    if (!this._futureGuardianEnabled()) return null;
+    const validIds = scope === 'candidates'
+      ? candidates.map(candidate => candidate.id)
+      : (outline?.beats || []).map(beat => beat.id);
+    if (!validIds.length) return null;
+    try {
+      const rawControl = await this.runner.run('future-guardian', {
+        state,
+        userInput,
+        taskPrompt: scope === 'candidates'
+          ? '审查候选与受保护未来是否冲突。只返回 scope=candidates 的无语义控制码。'
+          : '审查大纲与受保护未来是否冲突。只返回 scope=outline 的无语义控制码。',
+        extraContext: scope === 'candidates'
+          ? { guardianCandidates: cloneJson(candidates) }
+          : { guardianOutline: cloneJson(outline) },
+        options: { temperature: 0, max_tokens: 256 },
+        onChunk: chunk => eventBus.emit('agent:stream', { agent: 'future-guardian', chunk })
+      });
+      const control = parseFutureGuardianControl(rawControl, { scope, validIds });
+      if (!control) {
+        console.warn(`[AgentPipeline] Future guardian returned invalid ${scope} control; discarding unverified handoff`);
+        eventBus.emit('agent:stage-skip', { stage: `future-guardian:${scope}`, reason: 'invalid-control' });
+        return null;
+      }
+      eventBus.emit('agent:future-guardian', { control });
+      return control;
+    } catch (error) {
+      if (error instanceof AgentAbortError || this._aborted) throw error;
+      console.warn(`[AgentPipeline] Future guardian unavailable for ${scope}; discarding unverified handoff:`, error.message);
+      eventBus.emit('agent:stage-skip', { stage: `future-guardian:${scope}`, reason: error.message });
+      return null;
+    }
   }
 
   async _reviewOutline(state, outline) {
@@ -240,6 +483,12 @@ class AgentPipeline {
 
     for (const [, result] of reviews) {
       if (!result.success || !result.data?.issues) continue;
+      try {
+        this._assertProtectedFutureOutputSafe(result.data, 'outline-critic');
+      } catch (error) {
+        console.warn('[AgentPipeline] Dropped future-contaminated outline review:', error.message);
+        continue;
+      }
       for (const issue of result.data.issues) {
         if (issue.severity === 'error' && issue.beatId) {
           const beat = merged.beats.find(b => b.id === issue.beatId);
@@ -259,7 +508,14 @@ class AgentPipeline {
   async _writeDraft(state, userInput, outline, reviews, characterInputs, mainMessages) {
     const reviewSummary = [];
     for (const [type, result] of reviews) {
-      if (result.success && result.data) reviewSummary.push({ agent: type, ...result.data });
+      if (!result.success || !result.data) continue;
+      try {
+        this._assertProtectedFutureOutputSafe(result.data, `writer-review:${type}`);
+      } catch (error) {
+        console.warn('[AgentPipeline] Dropped future-contaminated writer review:', error.message);
+        continue;
+      }
+      reviewSummary.push({ agent: type, ...result.data });
     }
     if (outline._hardConstraints?.length) {
       reviewSummary.push({ agent: 'hard-constraints', constraints: outline._hardConstraints });
@@ -342,6 +598,14 @@ class AgentPipeline {
   async _polishDraft(state, userInput, draft, draftReviews, mainMessages) {
     const suggestions = [];
     for (const [type, result] of draftReviews) {
+      if (result.success && result.data) {
+        try {
+          this._assertProtectedFutureOutputSafe(result.data, `draft-critic:${type}`);
+        } catch (error) {
+          console.warn('[AgentPipeline] Dropped future-contaminated draft review:', error.message);
+          continue;
+        }
+      }
       if (result.success && result.data?.suggestions) {
         suggestions.push(...result.data.suggestions.map(s => ({ ...s, from: type })));
       }
@@ -396,6 +660,7 @@ class AgentPipeline {
         state,
         userInput,
         taskPrompt: this._buildCharacterTaskPrompt(npcName, state, outline),
+        extraContext: { npcName },
         options: { temperature: 0.8, max_tokens: 1024 },
         onChunk: (chunk) => eventBus.emit('agent:stream', { agent: `char-${npcName}`, chunk })
       }
@@ -407,6 +672,13 @@ class AgentPipeline {
     for (const [key, result] of results) {
       const npcName = key.replace(/^char-\d+-/, '');
       if (!result.success) {
+        failed.push(npcName);
+        continue;
+      }
+      try {
+        this._assertProtectedFutureOutputSafe(result.data, `character:${npcName}`);
+      } catch (error) {
+        console.warn(`[AgentPipeline] Dropped future-contaminated character output for ${npcName}:`, error.message);
         failed.push(npcName);
         continue;
       }
@@ -445,6 +717,9 @@ class AgentPipeline {
       if (charMemory.currentMood) prompt += `- 当前情绪: ${charMemory.currentMood}\n`;
       if (charMemory.privateGoals?.length) prompt += `- 目标: ${charMemory.privateGoals.join(', ')}\n`;
       if (charMemory.knownFacts?.length) prompt += `- 近期记忆: ${charMemory.knownFacts.slice(-5).join('; ')}\n`;
+      if (charMemory.privateIntentHistory?.length) {
+        prompt += `- 仅你本人知道的近期意图: ${charMemory.privateIntentHistory.slice(-3).map(item => item.thought).filter(Boolean).join('; ')}\n`;
+      }
     }
     const scenes = (outline.beats || []).map(b => b.scene).filter(Boolean);
     const sceneSummary = [
@@ -458,42 +733,52 @@ class AgentPipeline {
     return prompt;
   }
 
-  _archiveCharacterMemories(state, characterInputs) {
-    if (!state._agent_memories) state._agent_memories = {};
-    const agentMemories = state._agent_memories;
-    const turn = stateManager.get('系统·回合数') || 0;
+  peekPendingCharacterMemoryDelta() {
+    return cloneJson(this._pendingCharacterMemoryDelta);
+  }
 
-    for (const input of characterInputs) {
-      const npcName = input.npc;
-      if (!npcName) continue;
+  consumePendingCharacterMemoryDelta() {
+    const delta = this.peekPendingCharacterMemoryDelta();
+    this._pendingCharacterMemoryDelta = null;
+    return delta;
+  }
 
-      const existing = agentMemories[npcName] ? JSON.parse(JSON.stringify(agentMemories[npcName])) : {
-        npcName,
-        personality: '',
-        currentMood: '平静',
-        privateGoals: [],
-        knownFacts: [],
-        relationToPlayer: {},
-        recentActions: []
-      };
-
-      if (input.moodShift) existing.currentMood = input.moodShift;
-      if (input.action) {
-        existing.knownFacts.push(input.action);
-        if (existing.knownFacts.length > 20) existing.knownFacts = existing.knownFacts.slice(-15);
-      }
-      existing.recentActions.push({
-        turn,
-        action: input.action || '',
-        dialogue: input.dialogue || ''
-      });
-      if (existing.recentActions.length > 10) existing.recentActions = existing.recentActions.slice(-8);
-
-      agentMemories[npcName] = existing;
-    }
+  discardPendingCharacterMemoryDelta() {
+    this._pendingCharacterMemoryDelta = null;
   }
 
   // ── Utility ──
+
+  _assertProtectedFutureOutputSafe(value, stage) {
+    return assertNoProtectedFutureLeak(
+      value,
+      this.pipeline?._lastTurnEvidencePacket?.protected_future,
+      {
+        stage,
+        allowedEvidence: this.pipeline?._lastTurnEvidenceViews?.writer || null
+      }
+    );
+  }
+
+  _assertPlannerOutputSafe(value, stage) {
+    const packet = this.pipeline?._lastTurnEvidencePacket;
+    this._assertProtectedFutureOutputSafe(value, stage);
+    const restrictedWorldbook = (packet?.worldbook_entries || []).filter(entry => (
+      entry?.knowledge?.visibility === 'secret' || entry?.knowledge?.visibility === 'backstage'
+    ));
+    if (!restrictedWorldbook.length || value == null) return;
+    const serialized = JSON.stringify(value);
+    const markers = new Set();
+    for (const entry of restrictedWorldbook) {
+      if (entry.id) markers.add(entry.id);
+      if (String(entry.title || '').trim().length >= 4) markers.add(String(entry.title).trim());
+      for (const fragment of String(entry.content || '').split(/[\n。！？；]+/)) {
+        if (fragment.trim().length >= 10) markers.add(fragment.trim());
+      }
+    }
+    const hit = [...markers].find(marker => serialized.includes(marker));
+    if (hit) throw new Error(`${stage} 输出泄露受保护的未来或私密内容: ${hit}`);
+  }
 
   _checkAbort() {
     if (this._aborted) throw new AgentAbortError();

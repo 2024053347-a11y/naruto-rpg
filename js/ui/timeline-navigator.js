@@ -1,8 +1,11 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
-import { truncate, escHtml } from '../utils/format.js';
+import { truncate, escHtml, escAttr } from '../utils/format.js';
 import { icon } from '../utils/icons.js';
 import { timelineStyles } from '../../css/components/timeline-navigator.css.js';
+
+const DEFAULT_BRANCH_COLOR = '#eb613f';
+const SAFE_BRANCH_COLOR = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
 class TimelineNavigator extends HTMLElement {
   constructor() {
@@ -71,15 +74,15 @@ class TimelineNavigator extends HTMLElement {
         ${branchMain.length>0?`
           <div class="branch">主线编年</div>
           <div class="list">${branchMain.slice(-80).map(n=>`
-            <div class="node${n.id===branchHeadId?' cur':''}${n.id===this._selectedId?' sel':''}" data-id="${n.id}">
-              <div class="node-chapter">第 ${n.turn_number} 回</div>
+            <div class="node${n.id===branchHeadId?' cur':''}${n.id===this._selectedId?' sel':''}" data-id="${escAttr(n.id)}">
+              <div class="node-chapter">第 ${this._esc(n.turn_number)} 回</div>
               <div class="node-summary">${this._esc(n.summary||n.player_input||'尚无记载')}</div>
               ${this._selectedId === n.id ? `
                 <div class="node-details">
                   <div class="node-full-summary">${this._esc(n.summary || n.player_input || '这段记忆已经模糊不清...')}</div>
                   <div class="node-actions">
-                    ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${n.id}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
-                    <button class="reroll-btn" data-id="${n.id}">快速重Roll</button>
+                    ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${escAttr(n.id)}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
+                    <button class="reroll-btn" data-id="${escAttr(n.id)}">快速重Roll</button>
                   </div>
                 </div>
               ` : ''}
@@ -88,17 +91,17 @@ class TimelineNavigator extends HTMLElement {
         ${altBranches.map(b=>{
           const bn = altNodes.filter(n=>n.branch_id===b.id);
           return `
-            <div class="branch" style="color:${b.color}; border-left-color:${b.color}">异世分支·${this._esc(b.name)}</div>
+            <div class="branch" style="color:${this._safeColor(b.color)}; border-left-color:${this._safeColor(b.color)}">异世分支·${this._esc(b.name)}</div>
             <div class="list">${bn.slice(-30).map(n=>`
-              <div class="node${n.id===branchHeadId?' cur':''}${n.id===this._selectedId?' sel':''}" data-id="${n.id}">
-                <div class="node-chapter" style="color:${b.color}">第 ${n.turn_number} 回</div>
+              <div class="node${n.id===branchHeadId?' cur':''}${n.id===this._selectedId?' sel':''}" data-id="${escAttr(n.id)}">
+                <div class="node-chapter" style="color:${this._safeColor(b.color)}">第 ${this._esc(n.turn_number)} 回</div>
                 <div class="node-summary">${this._esc(n.summary||n.player_input||'尚无记载')}</div>
                 ${this._selectedId === n.id ? `
                   <div class="node-details">
                   <div class="node-full-summary">${this._esc(n.clean_response || n.ai_response_summary || n.summary || '这段记忆已经模糊不清...')}</div>
                   <div class="node-actions">
-                    ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${n.id}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
-                    <button class="reroll-btn" data-id="${n.id}">快速重Roll</button>
+                    ${n.id !== branchHeadId ? `<button class="jump-btn" data-id="${escAttr(n.id)}">逆转时间至此</button>` : `<div class="cur-text">此乃当下此时</div>`}
+                    <button class="reroll-btn" data-id="${escAttr(n.id)}">快速重Roll</button>
                   </div>
                   </div>
                 ` : ''}
@@ -124,10 +127,10 @@ class TimelineNavigator extends HTMLElement {
           <div class="modal-title">时间线管理</div>
           ${altBranches.length > 0 ? altBranches.map(b => `
             <div class="branch-item">
-              <span class="branch-name" style="color:${b.color}">${this._esc(b.name)}</span>
+              <span class="branch-name" style="color:${this._safeColor(b.color)}">${this._esc(b.name)}</span>
               <div class="branch-actions">
-                <button class="promote-branch-btn" data-id="${b.id}">升格为主线</button>
-                <button class="del-branch-btn" data-id="${b.id}">剪除</button>
+                <button class="promote-branch-btn" data-id="${escAttr(b.id)}">升格为主线</button>
+                <button class="del-branch-btn" data-id="${escAttr(b.id)}">剪除</button>
               </div>
             </div>
           `).join('') : '<div style="text-align:center;font-size:11px;color:var(--text-tertiary);padding:10px;">暂无分支IF线</div>'}
@@ -257,6 +260,12 @@ class TimelineNavigator extends HTMLElement {
 
   _esc(str) {
     return escHtml(str);
+  }
+
+  _safeColor(value) {
+    return typeof value === 'string' && SAFE_BRANCH_COLOR.test(value)
+      ? value
+      : DEFAULT_BRANCH_COLOR;
   }
 }
 

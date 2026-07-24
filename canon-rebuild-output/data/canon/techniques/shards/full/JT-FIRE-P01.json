@@ -1,0 +1,5150 @@
+{
+  "$schema": "../../../schemas/technique.schema.json",
+  "schema_version": "naruto.technique.v1",
+  "dataset": "naruto-manga-databook",
+  "balance_version": "project_balance_v2",
+  "shard": {
+    "id": "JT-FIRE-P01",
+    "group": "fire",
+    "part": 1,
+    "id_start": 1,
+    "id_end": 43,
+    "source_coverage": [
+      {
+        "type": "manga",
+        "work": "NARUTO",
+        "chapter_start": 1,
+        "chapter_end": 700
+      },
+      {
+        "type": "web_locator",
+        "work": "Narutopedia MediaWiki API",
+        "retrieved_at": "2026-07-18"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "JT-FIRE-0001",
+      "canonical_name": "一切皆苦",
+      "aliases": [
+        "一切皆苦"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~木遁,忍术",
+        "木遁,火遁,土遁,水遁,雷遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "以巨大雕像为媒介，环绕雕像主头的五个较小的头同时各释放一种不同属性的查克拉攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-TOBI-ZETSU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "一切皆苦",
+          "All is Suffering",
+          "Issai Kaiku"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 662,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/All_is_Suffering"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "All is Suffering",
+        "Issai Kaiku"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~wood-release,-ninjutsu,",
+        "wood-release,-fire-release,-earth-release,-water-release,-lightning-release,-wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0002",
+      "canonical_name": "忍连合軍之术",
+      "aliases": [
+        "忍连合軍之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "taijutsu",
+      "classes": [
+        "血继限界~岚遁~熔遁,秘传~油女一族~猿飞一族,忍术,幻术,体术,合作忍术",
+        "岚遁,熔遁,雷遁,风遁,土遁,水遁,火遁,阴遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "忍联合军之术是由奈良鹿久设计的多种术的组合，利用忍联合军的独特能力来对抗十尾。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ALLIED-SHINOBI-FORCES",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "忍连合軍之术",
+          "Allied Shinobi Forces Technique",
+          "Shinobi Rengōgun no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 612,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Allied_Shinobi_Forces_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "stamina",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "standard",
+        "reference_pool": 900,
+        "expected_uses": [
+          8,
+          9
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Allied Shinobi Forces Technique",
+        "Shinobi Rengōgun no Jutsu"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~storm-release~lava-release,-hiden~aburame-clan~sarutobi-clan,-ninjutsu,-genjutsu,-taijutsu,-cooperation-ninjutsu,",
+        "storm-release,-lava-release,-lightning-release,-wind-release,-earth-release,-water-release,-fire-release,-yin-release,",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0003",
+      "canonical_name": "天照",
+      "aliases": [
+        "天照"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,瞳术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "天照是万花筒写轮眼的瞳术，也是火遁的最高级别。据说是\"太阳之神\"的化身，天照是与月读相对的存在。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天照",
+          "Amaterasu",
+          "Heavenly Illumination"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 148,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Amaterasu"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Amaterasu",
+        "Heavenly Illumination"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-dōjutsu,",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0004",
+      "canonical_name": "天照·炎纏火",
+      "aliases": [
+        "天照·炎纏火"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,瞳术",
+        "火遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "天照之火被塑形覆盖在须佐能乎的肋骨上，用黑色火焰的护盾包围使用者。除了能造成伤害外，此术还具有让近战敌人在攻击使用者时产生犹豫的心理效果。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "天照·炎纏火",
+          "Amaterasu: Flame Wrapping Fire",
+          "Amaterasu: Entenka",
+          "Heavenly Illumination: Flame Wrapping Fire"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 463,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Amaterasu%3A_Flame_Wrapping_Fire"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Amaterasu: Flame Wrapping Fire",
+        "Amaterasu: Entenka",
+        "Heavenly Illumination: Flame Wrapping Fire"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-dōjutsu",
+        "fire-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0005",
+      "canonical_name": "芭蕉扇·火之卷",
+      "aliases": [
+        "芭蕉扇·火之卷"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,武器术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用芭蕉扇，使用者挥动扇子释放出巨大的强烈火焰流，如洪流般涌向预定目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KINKAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "芭蕉扇·火の巻",
+          "Bashōsen: Coil of Fire",
+          "Bashōsen: Hi no Maki",
+          "Banana Palm Fan: Coil of Fire"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 527,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Bash%C5%8Dsen%3A_Coil_of_Fire"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Bashōsen: Coil of Fire",
+        "Bashōsen: Hi no Maki",
+        "Banana Palm Fan: Coil of Fire"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-bukijutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0006",
+      "canonical_name": "炎遁·加具土命",
+      "aliases": [
+        "炎遁·加具土命"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~万花筒写轮眼,忍术,瞳术",
+        "火遁",
+        "攻击,防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "炎遁·加具土命是一种对天照的黑色火焰施加形态变化的术，允许使用者随意操纵它们。在宇智波佐助的情况下，天照从他的左眼释放，而他使用右眼来操纵火焰。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "炎遁·加具土命カグツチ",
+          "Blaze Release: Kagutsuchi",
+          "Enton: Kagutsuchi",
+          "Blaze Release: Added Tool Earth Lord"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 464,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Blaze_Release%3A_Kagutsuchi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Blaze Release: Kagutsuchi",
+        "Enton: Kagutsuchi",
+        "Blaze Release: Added Tool Earth Lord"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~mangekyō-sharingan,-ninjutsu,-dōjutsu",
+        "fire-release",
+        "offensive,-defensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0007",
+      "canonical_name": "炎遁·須佐能乎加具土命",
+      "aliases": [
+        "炎遁·須佐能乎加具土命"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~永恒万花筒写轮眼,忍术,瞳术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "加具土命通过须佐能乎的应用，佐助用须佐能乎副右手持有的黑色火焰球制造武器。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "炎遁·須佐能乎加具土命",
+          "Blaze Release: Susanoo Kagutsuchi",
+          "Enton: Susanoo Kagutsuchi",
+          "Blaze Release: He with the ability to help by all means with Added Tool Earth Lord"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 553,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Blaze_Release%3A_Susanoo_Kagutsuchi"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Blaze Release: Susanoo Kagutsuchi",
+        "Enton: Susanoo Kagutsuchi",
+        "Blaze Release: He with the ability to help by all means with Added Tool Earth Lord"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~eternal-mangekyō-sharingan,-ninjutsu,-dōjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0008",
+      "canonical_name": "炎遁·八坂ノ勾玉",
+      "aliases": [
+        "炎遁·八坂ノ勾玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~永恒万花筒写轮眼,忍术,瞳术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "利用须佐能乎第三只手中的黑色火焰球，使用者能够快速制造出多个勾玉投射物，完全由火焰组成。击中时，受害者被猛烈击飞并迅速烧成灰烬。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "炎遁·八坂ノ勾玉",
+          "Blaze Release: Yasaka Magatama",
+          "Enton: Yasaka no Magatama",
+          "Blaze Release: Eight Slopes Curved Jewel"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 574,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Blaze_Release%3A_Yasaka_Magatama"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Blaze Release: Yasaka Magatama",
+        "Enton: Yasaka no Magatama",
+        "Blaze Release: Eight Slopes Curved Jewel"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~eternal-mangekyō-sharingan,-ninjutsu,-dōjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0009",
+      "canonical_name": "猫炎咆火",
+      "aliases": [
+        "猫炎咆火"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "由木人变身为又旅形态时，从口中形成一个巨大的火球射向目标。其威力足以一击将大型建筑变成瓦砾并熔化混凝土。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YUGITO-NII",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MATATABI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "猫炎咆火",
+          "Cat Flame Roaring Fire",
+          "Byōen Hōka"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 313,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cat_Flame_Roaring_Fire"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cat Flame Roaring Fire",
+        "Byōen Hōka"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0010",
+      "canonical_name": "雲流火炎斩り",
+      "aliases": [
+        "雲流火炎斩り"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,剑术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者首先将火焰注入刀刃，然后朝目标方向挥砍，产生巨大的弧形烈焰，沿挥砍轨迹前进。此术的熟练使用者，如阿茨伊，能够用环形火墙包围其周围区域，即使多个角度同时接近也能烧毁多个目标。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ATSUI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "雲流火炎斩り",
+          "Cloud-Style Flame Beheading",
+          "Kumo-Ryū Kaengiri"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 527,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Cloud-Style_Flame_Beheading"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Cloud-Style Flame Beheading",
+        "Kumo-Ryū Kaengiri"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-kenjutsu",
+        "fire-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0011",
+      "canonical_name": "膨張求道玉",
+      "aliases": [
+        "膨張求道玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继网罗,忍术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "膨胀求道玉是大筒木辉夜使用的血继网罗忍术。它由全部五种基本属性以及阴阳遁组成。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAGUYA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "膨張求道玉",
+          "Expansive Truth-Seeking Ball",
+          "Bōchō Gudōdama"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 689,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Expansive_Truth-Seeking_Ball"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Expansive Truth-Seeking Ball",
+        "Bōchō Gudōdama"
+      ],
+      "lookup_classes": [
+        "kekkei-mōra,-ninjutsu,",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0012",
+      "canonical_name": "火遁·灰積焼",
+      "aliases": [
+        "火遁·灰積焼"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中吐出蕴含查克拉的火药流，包围周围区域。由于火药完全由灰烬组成，它像云一样停留在受害者周围的空气中，可用作烟幕。用灰烬包围敌人后，使用者可以用预先放在牙齿上的火石点火产生火花，引发剧烈爆炸烧死敌人。然而，此术需要敏锐的感知来读取气流。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ASUMA-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·灰積焼",
+          "Fire Release: Ash Pile Burning",
+          "Katon: Haisekishō"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 323,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Ash_Pile_Burning"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Ash Pile Burning",
+        "Katon: Haisekishō"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0013",
+      "canonical_name": "火遁·大炎弾",
+      "aliases": [
+        "火遁·大炎弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术是火遁·炎弹的仙术强化版本。使用者用仙术查克拉在体内制造油，填满口腔。油被排出同时点燃，产生巨大的火焰，威力相当于多个炎弹。火焰可以用作单个投射物或连续火焰流。仅需一发，自来也就能够瞬间烧毁长门的巨钻喙鸟。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·大炎弾",
+          "Fire Release: Big Flame Bullet",
+          "Katon: Dai Endan"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 378,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Big_Flame_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Big Flame Bullet",
+        "Katon: Dai Endan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0014",
+      "canonical_name": "火遁·爆风乱舞",
+      "aliases": [
+        "火遁·爆风乱舞"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 83,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中喷火，同时利用神威制造旋风。旋转的风赋予火焰动量，使其在向目标移动时螺旋向外扩散。火焰和热量的漩涡吞噬受害者，使他们无法呼吸的同时身体燃烧。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·爆风乱舞",
+          "Fire Release: Blast Wave Wild Dance",
+          "Katon: Bakufū Ranbu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 600,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Blast_Wave_Wild_Dance"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          3,
+          4
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Blast Wave Wild Dance",
+        "Katon: Bakufū Ranbu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0015",
+      "canonical_name": "火遁·龙火之术",
+      "aliases": [
+        "火遁·龙火之术",
+        "火 遁: 龙 火 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者从口中喷出火焰，像龙一样笔直快速向前移动。接触目标时，受影响区域被火焰吞没。大火球术会烧尽附近的一切，而龙火术则更集中地瞄准初始目标，类似于投射物。动画中后来显示它能烧穿一排敌人，火焰从一个敌人蔓延到下一个。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·龙火之术",
+          "Fire Release: Dragon Fire Technique",
+          "Katon: Ryūka no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 49,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Dragon_Fire_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Dragon Fire Technique",
+        "Katon: Ryūka no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0016",
+      "canonical_name": "火遁·龙炎放歌之术",
+      "aliases": [
+        "火遁·龙炎放歌之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是其原版术的进阶版本。此术允许使用者从口中吐出多个龙头火球，覆盖对手的正面、左侧和右侧。由于龙头以不规则的方式移动，使得此术更难躲避。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·龙炎放歌之术",
+          "Fire Release: Dragon Flame Release Song Technique",
+          "Katon: Ryūen Hōka no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 591,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Dragon_Flame_Release_Song_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Dragon Flame Release Song Technique",
+        "Katon: Ryūen Hōka no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0017",
+      "canonical_name": "火遁·起爆炎阵",
+      "aliases": [
+        "火遁·起爆炎阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,武器术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "火遁·起爆炎阵是半藏擅长的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HANZO",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·起爆炎阵",
+          "Fire Release: Exploding Flame Formation",
+          "Katon: Kibaku Enjin"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 447,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Exploding_Flame_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Exploding Flame Formation",
+        "Katon: Kibaku Enjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-bukijutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0018",
+      "canonical_name": "火遁·火龙炎弾",
+      "aliases": [
+        "火遁·火龙炎弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "揉合查克拉后，使用者从口中喷出火焰。火焰被塑造成龙的形状并分为三路，分别从左、右和前方同时攻击目标。与覆盖广泛区域的大火球不同，火龙炎弹进行集中打击，接触后迅速将目标化为灰烬。此术被认为是最强大的火遁术之一，比大火球强烈数倍。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KONOHAMARU-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·火龙炎弾",
+          "Fire Release: Fire Dragon Flame Bullet",
+          "Katon: Karyū Endan"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 120,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Fire_Dragon_Flame_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Fire Dragon Flame Bullet",
+        "Katon: Karyū Endan"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0019",
+      "canonical_name": "火遁·炎弾",
+      "aliases": [
+        "火遁·炎弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术通过使用者在口中聚集由查克拉产生的油，吐出后点燃。此术简单地向敌人发射火焰弹。如果减少准备的油量，发动术的时间就会缩短，使敌人措手不及，让含油的火焰弹将他们完全烧毁。也可以通过分割油来发射一系列火焰弹。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-KOJI-KASHIN",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·炎弾",
+          "Fire Release: Flame Bullet",
+          "Katon: Endan"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 170,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Flame_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Flame Bullet",
+        "Katon: Endan"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0020",
+      "canonical_name": "火遁·火打ち矢倉之术",
+      "aliases": [
+        "火遁·火打ち矢倉之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将打火机扔在对手面前的地上，将火焰扩展成一面火墙。据说这是一种\"让小火星爆发出火焰之柱\"的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIRAI-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·火打ち矢倉之术",
+          "Fire Release: Flint Yagura Technique",
+          "Katon: Hiuchi Yagura no Jutsu",
+          "Fire Release: Flint Yagura"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 5,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Flint_Yagura_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Flint Yagura Technique",
+        "Katon: Hiuchi Yagura no Jutsu",
+        "Fire Release: Flint Yagura"
+      ],
+      "lookup_classes": [
+        "ninjutsu,",
+        "fire-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0021",
+      "canonical_name": "火遁·豪龙火之术",
+      "aliases": [
+        "火遁·豪龙火之术",
+        "火 遁: 豪 龙 火 之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者压缩体内积聚的大量查克拉，将其变为龙头形状的火球。然后使用者巧妙地操纵这巨大的火焰攻击对手。即使在攻击范围之外，其威力和可靠性也被强调。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·豪龙火之术",
+          "Fire Release: Great Dragon Fire Technique",
+          "Katon: Gōryūka no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 390,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Great_Dragon_Fire_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Great Dragon Fire Technique",
+        "Katon: Gōryūka no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0022",
+      "canonical_name": "火遁·豪火滅却",
+      "aliases": [
+        "火遁·豪火滅却"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "宇智波火遁术的巅峰之作，覆盖范围也极广。这使得此术极难躲避或遏制，需要多名水遁使用者合力才能熄灭火焰。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·豪火滅却",
+          "Fire Release: Great Fire Annihilation",
+          "Katon: Gōka Mekkyaku"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 560,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Great_Fire_Annihilation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Great Fire Annihilation",
+        "Katon: Gōka Mekkyaku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0023",
+      "canonical_name": "火遁·豪火滅失",
+      "aliases": [
+        "火遁·豪火滅失"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "一种将体内揉合的查克拉转化为火焰，然后从口中以巨大的强烈火焰流喷出的术，可以点燃广阔区域，将目标吞没在名副其实的火海之中。如果在密集的可燃地形（如森林）上使用，封闭的空间可以大大增加目标被烧死的可能性。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·豪火滅失",
+          "Fire Release: Great Fire Destruction",
+          "Katon: Gōka Messhitsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 575,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Great_Fire_Destruction"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Great Fire Destruction",
+        "Katon: Gōka Messhitsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0024",
+      "canonical_name": "火遁·豪火球之术",
+      "aliases": [
+        "火遁·豪火球之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 28,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者在体内揉合查克拉并将其转化为火焰，然后从口中喷出；使用的查克拉越多，产生的火焰就越多。有时火焰缺乏明确的形状，只是一股流，但更多时候它以巨大火球的形式出现，保持形状直到击中目标。撞击时，火球的威力足以在地面上炸出坑洞并蒸发周围的一切。对于活体目标，火球可以将其完全烧毁。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUGAKU-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HIDARI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·豪火球之术",
+          "Fire Release: Great Fireball Technique",
+          "Katon: Gōkakyū no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 7,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Great_Fireball_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "standard",
+        "reference_pool": 190,
+        "expected_uses": [
+          6,
+          7
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Great Fireball Technique",
+        "Katon: Gōkakyū no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0025",
+      "canonical_name": "火遁·豪炎之术",
+      "aliases": [
+        "火遁·豪炎之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传~猿飞一族,忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "火遁·豪炎之术是猿飞一族使用的秘传火遁术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KONOHAMARU-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·豪炎之术",
+          "Fire Release: Great Flame Technique",
+          "Katon: Gōen no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 612,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Great_Flame_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Great Flame Technique",
+        "Katon: Gōen no Jutsu"
+      ],
+      "lookup_classes": [
+        "hiden~sarutobi-clan,-ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0026",
+      "canonical_name": "火遁·灰尘隠れ之术",
+      "aliases": [
+        "火遁·灰尘隠れ之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "火"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者吐出蕴含查克拉的灰烬，覆盖广阔区域，灼烧任何接触者。此术也可用作强大的攻击威慑和高效的烟幕。此术是烟雾弹的远为有效的替代品，因为使用者不需要空手，也不需要结印。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·灰尘隠れ之术",
+          "Fire Release: Hiding in Ash and Dust Technique",
+          "Katon: Haijingakure no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 657,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Hiding_in_Ash_and_Dust_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Hiding in Ash and Dust Technique",
+        "Katon: Haijingakure no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0027",
+      "canonical_name": "火遁·頭刻苦",
+      "aliases": [
+        "火遁·頭刻苦"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 60,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "角度的火属性面具发射一个小火球，接触表面后爆发成巨大的火焰风暴，对区域造成大规模破坏。由于火焰沿地面传播且覆盖范围极广，这是一种难以躲避的术。与风遁·压害结合时，此术会被增强到瞬间蒸发大量水的地步。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKUZU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·頭刻苦",
+          "Fire Release: Intelligent Hard Work",
+          "Katon: Zukokku"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 335,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Intelligent_Hard_Work"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Intelligent Hard Work",
+        "Katon: Zukokku"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0028",
+      "canonical_name": "火遁·凤仙火之术",
+      "aliases": [
+        "火遁·凤仙火之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "C",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 40,
+      "power": 70,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者向空中喷出一连串小火球；乍看之下似乎只有一个火球然后爆裂成多个。许多小火焰在区域内狂野移动，可能迷惑被包围的目标。使用者用查克拉控制每个火焰，引导每个火焰攻击目标，因此此术很难躲避。手里剑可以隐藏在火焰中，不仅使其在命中时更加致命。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SARADA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·凤仙火之术",
+          "Fire Release: Phoenix Sage Fire Technique",
+          "Katon: Hōsenka no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 46,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Phoenix_Sage_Fire_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "C",
+        "pressure": "heavy",
+        "reference_pool": 190,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Phoenix Sage Fire Technique",
+        "Katon: Hōsenka no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0029",
+      "canonical_name": "火遁·凤仙花爪紅",
+      "aliases": [
+        "火遁·凤仙花爪紅"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,查克拉流动,手里剑术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者一只手释放出一连串手里剑，同时向其吐出蕴含火焰的查克拉，以增加武器的破坏潜力，使其在直接接触预定受害者或任何在其轨迹上的物体时能够造成严重烧伤。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ITACHI-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·凤仙花爪紅",
+          "Fire Release: Phoenix Sage Flower Nail Crimson",
+          "Katon: Hōsenka Tsumabeni"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 549,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Phoenix_Sage_Flower_Nail_Crimson"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Phoenix Sage Flower Nail Crimson",
+        "Katon: Hōsenka Tsumabeni"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-chakra-flow,-shurikenjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0030",
+      "canonical_name": "火遁·蝦蟇油炎弾",
+      "aliases": [
+        "火遁·蝦蟇油炎弾"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,合作忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 48,
+      "power": 120,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是一种由蛤蟆和火遁使用者配合施展的合作忍术，双方需达成精神和身体的和谐。蛤蟆（特别是像文太这样的大蛤蟆）利用其巨大的肺活量从口中向目标喷出蛤蟆油。火遁使用者随后点燃油，增加攻击的范围和威力；自来也为此目的使用火遁·炎弹。由此产生的火云巨大到迫使万蛇蜕皮逃生。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-GAMABUNTA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "火遁·蝦蟇油炎弾",
+          "Fire Release: Toad Oil Flame Bullet",
+          "Katon: Gamayu Endan"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 170,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Fire_Release%3A_Toad_Oil_Flame_Bullet"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "standard",
+        "reference_pool": 270,
+        "expected_uses": [
+          5,
+          6
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Fire Release: Toad Oil Flame Bullet",
+        "Katon: Gamayu Endan"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-cooperation-ninjutsu",
+        "fire-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0031",
+      "canonical_name": "五遁大连弾之术",
+      "aliases": [
+        "五遁大连弾之术"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,分身术",
+        "火遁,风遁,雷遁,土遁,水遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 109,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者制造四个影分身，与本体同时向目标发动五种不同基础属性的攻击。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-HIRUZEN-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "五遁大连弾之术",
+          "Five Release Great Combo Technique",
+          "Goton Dairendan no Jutsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 662,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Five_Release_Great_Combo_Technique"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Five Release Great Combo Technique",
+        "Goton Dairendan no Jutsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-clone-techniques,",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0032",
+      "canonical_name": "幻术·燐火",
+      "aliases": [
+        "幻术·燐火"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "genjutsu",
+      "classes": [
+        "幻术",
+        "火遁,阴遁",
+        "辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 70,
+      "power_mode": "utility",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者利用火焰，将其操纵成一种狗猫杂交形态的幻术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "unknown",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-MIRAI-SARUTOBI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "幻术·燐火",
+          "Genjutsu: Ghost Fire",
+          "Genjutsu: Rinka",
+          "Illusion Technique: Ghost Fire"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 5,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Genjutsu%3A_Ghost_Fire"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "spirit",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1350,
+        "expected_uses": [
+          12,
+          13
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Genjutsu: Ghost Fire",
+        "Genjutsu: Rinka",
+        "Illusion Technique: Ghost Fire"
+      ],
+      "lookup_classes": [
+        "genjutsu",
+        "fire-release,-yin-release",
+        "supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0033",
+      "canonical_name": "残月",
+      "aliases": [
+        "残月"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土攻击对手，同时在其身上安放一个求道玉，求道玉膨胀并在目标周围产生巨大的爆炸。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "残月",
+          "Morning Moon",
+          "Zangetsu"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 640,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Morning_Moon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Morning Moon",
+        "Zangetsu"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0034",
+      "canonical_name": "鼠毛玉",
+      "aliases": [
+        "鼠毛玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术",
+        "火遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "使用者将唾液转化为燃烧的毛球，呈火焰包裹的老鼠形状，然后不断分裂成同样燃烧的单个毛球。这些火焰投射物追击预定目标，接触物体后爆炸。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-YUGITO-NII",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "ねずみ毛玉",
+          "Mouse Hairball",
+          "Nezumi Kedama"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 565,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Mouse_Hairball"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Mouse Hairball",
+        "Nezumi Kedama"
+      ],
+      "lookup_classes": [
+        "ninjutsu",
+        "fire-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0035",
+      "canonical_name": "仙法·五右衛门",
+      "aliases": [
+        "仙法·五右衛门"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "仙术,忍术,合作忍术",
+        "火遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 140,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "仙法·五右卫门是自来也与志麻和深作合作使用的术。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-FUKASAKU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-JIRAIYA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SHIMA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·五右衛门",
+          "Sage Art: Goemon",
+          "Senpō: Goemon",
+          "Sage Art: Five Right Defence Gate"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 377,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Goemon"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Goemon",
+        "Senpō: Goemon",
+        "Sage Art: Five Right Defence Gate"
+      ],
+      "lookup_classes": [
+        "senjutsu,-ninjutsu,-cooperation-ninjutsu",
+        "fire-release,-wind-release,",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0036",
+      "canonical_name": "仙法·超尾獣螺旋手裏剣",
+      "aliases": [
+        "仙法·超尾獣螺旋手裏剣"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~磁遁~熔遁~沸遁,仙术,忍术,分身术",
+        "磁遁,火遁,水遁,熔遁,沸遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 132,
+      "power": 300,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "这是漩涡鸣人利用六道仙人赋予的力量创造的\"终极术\"。鸣人和他的八个影分身各形成一个注入了不同尾兽独特查克拉的螺旋手里剑；鸣人使用如此多样化攻击的原因是他不知道大筒木辉夜对哪种查克拉较弱。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "仙法·超尾獣螺旋手裏剣",
+          "Sage Art: Super Tailed Beast Rasenshuriken",
+          "Senpō: Chō Bijū Rasenshuriken",
+          "Sage Art: Super Tailed Beast Spiralling Hidden Hand Blade"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 688,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Sage_Art%3A_Super_Tailed_Beast_Rasenshuriken"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          11,
+          12
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Sage Art: Super Tailed Beast Rasenshuriken",
+        "Senpō: Chō Bijū Rasenshuriken",
+        "Sage Art: Super Tailed Beast Spiralling Hidden Hand Blade"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~magnet-release~lava-release~boil-release,-senjutsu,-ninjutsu,-clone-techniques,",
+        "magnet-release,-fire-release,-water-release,-lava-release,-boil-release,-wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0037",
+      "canonical_name": "灼遁·光轮疾风漆黒矢零式",
+      "aliases": [
+        "灼遁·光轮疾风漆黒矢零式"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "血继限界~永恒万花筒写轮眼,忍术,瞳术,合作忍术,禁术",
+        "火遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 117,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "此术结合了漩涡鸣人的风遁·螺旋手里剑和宇智波佐助的炎遁·加具土命及其变体。由于风与火焰的比例完美平衡，火焰被极大增强，被此术击中的任何物体都会被卷入旋转的黑焰团中。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-SASUKE-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "灼遁·光轮疾风漆黒矢零式",
+          "Scorch Release: Halo Hurricane Jet Black Arrow Style Zero",
+          "Shakuton: Kōrin Shippū Shikkoku no Ya Zeroshiki"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 634,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Scorch_Release%3A_Halo_Hurricane_Jet_Black_Arrow_Style_Zero"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          13,
+          14
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Scorch Release: Halo Hurricane Jet Black Arrow Style Zero",
+        "Shakuton: Kōrin Shippū Shikkoku no Ya Zeroshiki"
+      ],
+      "lookup_classes": [
+        "kekkei-genkai~eternal-mangekyō-sharingan,-ninjutsu,-dōjutsu,-cooperation-ninjutsu,-kinjutsu",
+        "fire-release,-wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0038",
+      "canonical_name": "奇面ノ爆炎",
+      "aliases": [
+        "奇面ノ爆炎"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "秘传,忍术,禁术",
+        "火遁,风遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "通过让他的火属性面具和风属性面具融合，角都将其火和风的攻击结合起来，产生强大的猛烈火焰爆炸。卡卡西评论说仅用水是不够扑灭的。需要风助水势的术才能完全抵消它。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-KAKUZU",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "奇面ノ爆炎",
+          "Strange Mask Exploding Flame",
+          "Kimen no Bakuen"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 336,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Strange_Mask_Exploding_Flame"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Strange Mask Exploding Flame",
+        "Kimen no Bakuen"
+      ],
+      "lookup_classes": [
+        "hiden,-ninjutsu,-kinjutsu,",
+        "fire-release,-wind-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0039",
+      "canonical_name": "求道玉",
+      "aliases": [
+        "求道玉"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击,防御,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "求道玉是可塑的黑色查克拉球，能够以各种方式改变其形态和特性。虽然只有拳头大小，但每个球内部都隐藏着毁灭整片森林的力量。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short, mid, long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-ASURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAGOROMO-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-HAMURA-O-TSUTSUKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-MADARA-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-NARUTO-UZUMAKI",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        },
+        {
+          "character_id": "CH-NAR-TEN-TAILS",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "求道玉",
+          "Truth-Seeking Ball",
+          "Gudōdama"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 638,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Truth-Seeking_Ball"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL",
+        "user_reviewed_by": "repair-technique-users-v1"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Truth-Seeking Ball",
+        "Gudōdama"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu,",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive,-defensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0040",
+      "canonical_name": "求道瞬身",
+      "aliases": [
+        "求道瞬身"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击,辅助"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土从求道玉中形成一把或两把刀片连接在手上，瞬间穿过对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "求道瞬身",
+          "Truth-Seeking Body Flicker",
+          "Gudōshunshin"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 638,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Truth-Seeking_Body_Flicker"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Truth-Seeking Body Flicker",
+        "Gudōshunshin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive,-supplementary"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0041",
+      "canonical_name": "求道傘",
+      "aliases": [
+        "求道傘"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土使用求道玉将其塑造成矛状武器，刺穿远处的对手。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "求道傘",
+          "Truth-Seeking Umbrella",
+          "Gudōkasa"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 639,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Truth-Seeking_Umbrella"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Truth-Seeking Umbrella",
+        "Gudōkasa"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0042",
+      "canonical_name": "求道·救光",
+      "aliases": [
+        "求道·救光"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,仙术",
+        "火遁,风遁,雷遁,土遁,水遁,阴阳遁",
+        "攻击"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "特",
+      "rank_basis": "project_assigned",
+      "elements": [
+        "无"
+      ],
+      "cost": 105,
+      "power": 200,
+      "power_mode": "damage",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "带土向对手发射求道玉，球发光并膨胀，释放出巨大的爆炸。释放后，球会返回他身边。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "long",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "求道­­­­·救光",
+          "Truth-Seeking: Saving Light",
+          "Gudō jiù Hikari"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 640,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Truth-Seeking%3A_Saving_Light"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "影级",
+        "pressure": "light",
+        "reference_pool": 1550,
+        "expected_uses": [
+          14,
+          15
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Truth-Seeking: Saving Light",
+        "Gudō jiù Hikari"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-senjutsu",
+        "fire-release,-wind-release,-lightning-release,-earth-release,-water-release,-yin–yang-release",
+        "offensive"
+      ],
+      "lookup_elements": [
+        "none"
+      ]
+    },
+    {
+      "id": "JT-FIRE-0043",
+      "canonical_name": "宇智波火炎阵",
+      "aliases": [
+        "宇智波火炎阵"
+      ],
+      "continuity": "manga_canon",
+      "state_type": "jutsu",
+      "classes": [
+        "忍术,结界忍术",
+        "火遁",
+        "防御"
+      ],
+      "variant_of": null,
+      "derived_from": [],
+      "homonym_group": null,
+      "rank": "B",
+      "rank_basis": "databook",
+      "elements": [
+        "火"
+      ],
+      "cost": 60,
+      "power": 70,
+      "power_mode": "defense",
+      "value_basis": "project_balance_v2",
+      "effect": {
+        "summary": "在单手每根手指上显现出小火焰查克拉后，使用者将手掌拍在地上，从而在所选位置产生一个圆柱形的火焰屏障。如果敌人接触屏障外部，会很快被点燃。",
+        "functions": [],
+        "targeting": "unknown",
+        "range": "short",
+        "duration": "unknown"
+      },
+      "activation": {
+        "hand_seals": null,
+        "tools": [],
+        "requirements": [],
+        "preparation": ""
+      },
+      "limitations": [],
+      "counters": [],
+      "access": {
+        "learnability": "unknown",
+        "restriction": "unknown",
+        "required_bloodlines": [],
+        "required_techniques": [],
+        "required_contracts": [],
+        "associated_groups": []
+      },
+      "known_users": [
+        {
+          "character_id": "CH-NAR-OBITO-UCHIHA",
+          "confirmed_from_event_id": null,
+          "confidence": "high",
+          "source_ref_index": 0
+        }
+      ],
+      "availability": {
+        "exists_before_first_confirmed_use": null,
+        "earliest_confirmed_date": null,
+        "first_confirmed_event_id": null
+      },
+      "retrieval": {
+        "keys": [
+          "うちは火炎阵",
+          "Uchiha Flame Formation",
+          "Uchiha Kaenjin"
+        ],
+        "tags": [
+          "fire",
+          "zh-reviewed"
+        ]
+      },
+      "source_refs": [
+        {
+          "type": "manga",
+          "work": "NARUTO",
+          "chapter": 596,
+          "pages": null,
+          "supports": [
+            "existence",
+            "name",
+            "first_manga_appearance"
+          ],
+          "note": "在线目录定位页：https://naruto.fandom.com/wiki/Uchiha_Flame_Formation"
+        }
+      ],
+      "qa": {
+        "status": "draft",
+        "generated_batch": "JT-FIRE-AUTO",
+        "reviewed_by": "manual-translation-JT-FIRE-P01-BATCH-ALL"
+      },
+      "resource_type": "chakra",
+      "cost_design": {
+        "reference_rank": "B",
+        "pressure": "heavy",
+        "reference_pool": 270,
+        "expected_uses": [
+          4,
+          5
+        ],
+        "rationale": "依据术式类型、覆盖范围、持续性、控制难度及禁术/召唤/封印特征逐术评估；不由忍术等级单独决定。"
+      },
+      "lookup_aliases": [
+        "Uchiha Flame Formation",
+        "Uchiha Kaenjin"
+      ],
+      "lookup_classes": [
+        "ninjutsu,-barrier-ninjutsu",
+        "fire-release",
+        "defensive"
+      ],
+      "lookup_elements": [
+        "fire"
+      ]
+    }
+  ],
+  "unresolved": []
+}
