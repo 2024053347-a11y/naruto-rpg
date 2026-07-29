@@ -116,12 +116,21 @@ assert.match(deployScript, /127\.0\.0\.1:3000\/health\/ready/i, 'production depl
 assert.match(bashDeployScript, /PROJECT_DIR="\$SCRIPT_DIR"/, 'root-level Bash deployer must use the repository root');
 for (const requiredPath of [
   'js/core/timeline-save-schema.js',
+  'js/core/shinobi-daily.js',
+  'js/core/narrative-artifact.js',
+  'js/core/image-studio/contracts.js',
   'js/core/continuity-ledger.js',
   'js/utils/format.js',
   'deploy/systemd/naruto-rpg.service.d/limits.conf',
   'deploy/sysctl/90-naruto-rpg-memory.conf'
 ]) {
   assert.ok(bashDeployScript.includes(requiredPath), `Bash deployment must package ${requiredPath}`);
+  if (requiredPath.startsWith('js/')) {
+    assert.ok(
+      bashDeployScript.split(requiredPath).length - 1 >= 3,
+      `Bash deployment must copy, package-check and remotely verify ${requiredPath}`
+    );
+  }
 }
 assert.match(bashDeployScript, /127\.0\.0\.1:3000\/health\/ready/i, 'Bash deployment must wait for backend readiness');
 assert.match(bashDeployScript, /function?\s*retry_remote|retry_remote\s*\(\)/i, 'Bash deployment must define remote retries');
@@ -157,6 +166,9 @@ assert.match(
 );
 for (const sharedModule of [
   'js/core/timeline-save-schema.js',
+  'js/core/shinobi-daily.js',
+  'js/core/narrative-artifact.js',
+  'js/core/image-studio/contracts.js',
   'js/core/continuity-ledger.js',
   'js/utils/format.js'
 ]) {
@@ -165,6 +177,10 @@ for (const sharedModule of [
     deployScript,
     new RegExp(escaped, 'i'),
     `production package must include backend shared module ${sharedModule}`
+  );
+  assert.ok(
+    deployScript.split(sharedModule).length - 1 >= 3,
+    `PowerShell deployment must copy, package-check and remotely verify ${sharedModule}`
   );
 }
 assert.match(deployScript, /https:\/\/www\.qiwu\.asia:8080\/login\.html/i, 'staging verification must use the real TLS port');

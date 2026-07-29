@@ -241,6 +241,9 @@ function Copy-ProductionBackendSources {
   # relative import chain at the same paths expected from server/api/saves.js.
   foreach ($SharedModule in @(
     'js/core/timeline-save-schema.js',
+    'js/core/shinobi-daily.js',
+    'js/core/narrative-artifact.js',
+    'js/core/image-studio/contracts.js',
     'js/core/continuity-ledger.js',
     'js/utils/format.js'
   )) {
@@ -297,6 +300,9 @@ function Assert-PackageContents {
       'backend/package.json',
       'backend/package-lock.json',
       'backend/js/core/timeline-save-schema.js',
+      'backend/js/core/shinobi-daily.js',
+      'backend/js/core/narrative-artifact.js',
+      'backend/js/core/image-studio/contracts.js',
       'backend/js/core/continuity-ledger.js',
       'backend/js/utils/format.js',
       'ops/systemd/naruto-rpg.service.d/limits.conf',
@@ -447,6 +453,11 @@ try {
     $RemoteSteps += @(
       "test -s '$RemoteRelease/backend/server/index.js'",
       "test -s '$RemoteRelease/backend/js/core/timeline-save-schema.js'",
+      "test -s '$RemoteRelease/backend/js/core/shinobi-daily.js'",
+      "test -s '$RemoteRelease/backend/js/core/narrative-artifact.js'",
+      "test -s '$RemoteRelease/backend/js/core/image-studio/contracts.js'",
+      "test -s '$RemoteRelease/backend/js/core/continuity-ledger.js'",
+      "test -s '$RemoteRelease/backend/js/utils/format.js'",
       "test -s '$RemoteRelease/ops/systemd/naruto-rpg.service.d/limits.conf'",
       "test -s '$RemoteRelease/ops/sysctl/90-naruto-rpg-memory.conf'",
       "mkdir -p '/opt/naruto-rpg/server' '/opt/naruto-rpg/js'",

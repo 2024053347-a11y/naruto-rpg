@@ -199,8 +199,11 @@ cp "$PROJECT_DIR/package.json" "$BACKEND_PAYLOAD/"
 cp "$PROJECT_DIR/package-lock.json" "$BACKEND_PAYLOAD/"
 
 # 云存档 API 复用浏览器侧的时间线校验器，保持与服务端相同的相对导入路径。
-mkdir -p "$BACKEND_PAYLOAD/js/core" "$BACKEND_PAYLOAD/js/utils"
+mkdir -p "$BACKEND_PAYLOAD/js/core/image-studio" "$BACKEND_PAYLOAD/js/utils"
 cp "$PROJECT_DIR/js/core/timeline-save-schema.js" "$BACKEND_PAYLOAD/js/core/"
+cp "$PROJECT_DIR/js/core/shinobi-daily.js" "$BACKEND_PAYLOAD/js/core/"
+cp "$PROJECT_DIR/js/core/narrative-artifact.js" "$BACKEND_PAYLOAD/js/core/"
+cp "$PROJECT_DIR/js/core/image-studio/contracts.js" "$BACKEND_PAYLOAD/js/core/image-studio/"
 cp "$PROJECT_DIR/js/core/continuity-ledger.js" "$BACKEND_PAYLOAD/js/core/"
 cp "$PROJECT_DIR/js/utils/format.js" "$BACKEND_PAYLOAD/js/utils/"
 
@@ -228,6 +231,9 @@ REQUIRED_FILES=(
   "backend/package.json"
   "backend/package-lock.json"
   "backend/js/core/timeline-save-schema.js"
+  "backend/js/core/shinobi-daily.js"
+  "backend/js/core/narrative-artifact.js"
+  "backend/js/core/image-studio/contracts.js"
   "backend/js/core/continuity-ledger.js"
   "backend/js/utils/format.js"
   "ops/systemd/naruto-rpg.service.d/limits.conf"
@@ -313,6 +319,12 @@ REMOTE_SCRIPTS=(
   "mkdir -p '$REMOTE_WORK' '$TARGET_DIR'"
   "tar xzf '$REMOTE_ARCHIVE' -C '$REMOTE_WORK'"
   "test -s '$REMOTE_WORK/static/index.html'"
+  "test -s '$REMOTE_WORK/backend/js/core/timeline-save-schema.js'"
+  "test -s '$REMOTE_WORK/backend/js/core/shinobi-daily.js'"
+  "test -s '$REMOTE_WORK/backend/js/core/narrative-artifact.js'"
+  "test -s '$REMOTE_WORK/backend/js/core/image-studio/contracts.js'"
+  "test -s '$REMOTE_WORK/backend/js/core/continuity-ledger.js'"
+  "test -s '$REMOTE_WORK/backend/js/utils/format.js'"
 
   # 备份旧版本
   "BACKUP_DIR='${TARGET_DIR}.bak.${DEPLOYMENT_ID}'"
