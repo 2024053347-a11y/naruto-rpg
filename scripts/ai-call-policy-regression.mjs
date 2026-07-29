@@ -50,7 +50,7 @@ test('legacy optional feature remains enabled unless strict mode was explicitly 
   assert.equal(policy.estimate.minimum, 2);
 });
 
-test('explicit strict mode pauses every executable auxiliary call and preserves legacy config', () => {
+test('explicit strict mode pauses every executable auxiliary call and ignores removed planner config', () => {
   const input = {
     apiConfig: {
       aiCallPolicy: { strictSingleCall: true },
@@ -64,11 +64,8 @@ test('explicit strict mode pauses every executable auxiliary call and preserves 
   };
   const policy = resolveAICallPolicy(input);
   assert.equal(policy.strictSingleCall, true);
-  assert.equal(input.apiConfig.futurePlanner.enabled, true, 'legacy setting must remain untouched');
-  assert.equal(policy.requestedFeatures.futurePlanner, false, 'legacy standalone planner has no executor');
-  assert.ok(Object.entries(policy.requestedFeatures)
-    .filter(([name]) => name !== 'futurePlanner')
-    .every(([, value]) => value === true));
+  assert.equal('futurePlanner' in policy.requestedFeatures, false);
+  assert.ok(Object.values(policy.requestedFeatures).every(value => value === true));
   assert.ok(Object.values(policy.features).every(value => value === false));
   assert.equal(policy.blockedFeatures.length, 8);
   assert.equal(policy.allowBackgroundMemoryAI, false);
@@ -119,6 +116,7 @@ test('pipeline, transport and image integration enforce the strict boundary', ()
   assert.match(client, /options\.strictSingleRequest/);
   assert.match(client, /maxRetries\s*=\s*options\.maxRetries\s*\?\?\s*2/);
   assert.match(imageIntegration, /if \(!allowAuxiliaryAI\) return/);
+  assert.doesNotMatch(imageIntegration, /禁止加入[^\n]*未来事件/);
 });
 
 test('settings persist and explain strict mode while API form preserves it', () => {
@@ -129,8 +127,10 @@ test('settings persist and explain strict mode while API form preserves it', () 
   assert.match(settings, /id="ai-call-estimate"/);
   assert.match(settings, /_saveAICallPolicyConfig/);
   assert.match(settings, /自动图片规划\/生成/);
+  assert.doesNotMatch(settings, /未来规划/);
   assert.match(apiForm, /aiCallPolicy:\s*this\._config\.aiCallPolicy/);
-  assert.match(stateManager, /aiCallPolicy:\s*config\.aiCallPolicy/);
+  assert.match(stateManager, /aiCallPolicy:\s*persistedConfig\.aiCallPolicy/);
+  assert.match(stateManager, /delete persistedConfig\.futurePlanner/);
 });
 
 {

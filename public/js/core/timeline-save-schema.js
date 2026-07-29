@@ -1,4 +1,5 @@
 import { inspectContinuityLedger, inspectMemoryEvent } from './continuity-ledger.js';
+import { validateShinobiDaily } from './shinobi-daily.js';
 
 function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -22,6 +23,7 @@ function hasOwn(record, key) {
 }
 
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
+const SUPPORTED_SNAPSHOT_VERSIONS = new Set(['3.0', '4.0', '5.0']);
 const OMIT_PERSISTED_VALUE = Symbol('omit-persisted-value');
 const FORBIDDEN_IMAGE_REFERENCE = /(?:data:image\/[^,\s;]+(?:;[^,\s]*)*;base64,|blob:)/i;
 
@@ -122,7 +124,7 @@ function findUnsafeSnapshotKey(snapshot) {
   return null;
 }
 
-export function inspectTimelineSave(data) {
+function inspectTimelineSaveInternal(data) {
   const errors = [];
   if (!isRecord(data)) return { valid: false, errors: ['存档根节点必须是 JSON 对象'] };
 
@@ -133,13 +135,21 @@ export function inspectTimelineSave(data) {
   if (!nodes?.length || !branches?.length) return { valid: false, errors };
 
   const nodeIds = new Set();
+  const nodeById = new Map();
+  const childIdsByNode = new Map();
+  const branchNodeCounts = new Map();
   for (const node of nodes) {
+    if (isRecord(node) && typeof node.branch_id === 'string') {
+      branchNodeCounts.set(node.branch_id, (branchNodeCounts.get(node.branch_id) || 0) + 1);
+    }
     if (!isRecord(node) || !validId(node.id)) {
       errors.push('时间线节点包含无效 ID');
       continue;
     }
     if (nodeIds.has(node.id)) errors.push(`时间线节点 ID 重复: ${node.id}`);
     nodeIds.add(node.id);
+    nodeById.set(node.id, node);
+    childIdsByNode.set(node.id, new Set(Array.isArray(node.children_ids) ? node.children_ids : []));
   }
 
   const branchIds = new Set();
@@ -178,6 +188,12 @@ export function inspectTimelineSave(data) {
     if (hasOwn(node, 'depth') && !isNonNegativeInteger(node.depth)) {
       errors.push(`${node.id}: depth 必须是非负整数`);
     }
+    if (node.shinobi_daily != null) {
+      const dailyResult = validateShinobiDaily(node.shinobi_daily);
+      if (!dailyResult.valid) {
+        errors.push(`${node.id}: shinobi_daily 忍界日报无效 (${dailyResult.errors.slice(0, 3).join('; ')})`);
+      }
+    }
     if (node.state_snapshot != null && !isRecord(node.state_snapshot)) {
       errors.push(`${node.id}: state_snapshot 状态快照必须是 JSON 对象或 null`);
     } else if (isRecord(node.state_snapshot) && findUnsafeSnapshotKey(node.state_snapshot)) {
@@ -190,7 +206,7 @@ export function inspectTimelineSave(data) {
         && !isRecord(node.state_snapshot._meta)) {
       errors.push(`${node.id}: state_snapshot._meta 必须是 JSON 对象或 null`);
     } else if (isRecord(node.state_snapshot)
-        && !['3.0', '4.0', '5.0'].includes(node.state_snapshot._version)) {
+        && !SUPPORTED_SNAPSHOT_VERSIONS.has(node.state_snapshot._version)) {
       errors.push(`${node.id}: state_snapshot 状态快照版本不受支持`);
     }
     const snapshotLedger = node.state_snapshot?._continuity;
@@ -211,7 +227,11 @@ export function inspectTimelineSave(data) {
       errors.push(`${node.id}: continuity_delta 必须是数组`);
     } else if (Array.isArray(node.continuity_delta)) {
       let previousSequence = -1;
-      const snapshotEvents = new Map((snapshotLedger?.events || []).map(event => [event.event_id, event]));
+      const snapshotEvents = new Map(
+        (Array.isArray(snapshotLedger?.events) ? snapshotLedger.events : [])
+          .filter(event => isRecord(event) && validId(event.event_id))
+          .map(event => [event.event_id, event])
+      );
       for (let index = 0; index < node.continuity_delta.length; index++) {
         const event = node.continuity_delta[index];
         const eventResult = inspectMemoryEvent(event);
@@ -234,12 +254,10 @@ export function inspectTimelineSave(data) {
     }
   }
 
-  const nodeById = new Map(
-    nodes
-      .filter(node => isRecord(node) && validId(node.id))
-      .map(node => [node.id, node])
-  );
-  const rootNodes = [...nodeById.values()].filter(node => node.parent_id == null);
+  const rootNodes = [];
+  for (const node of nodeById.values()) {
+    if (node.parent_id == null) rootNodes.push(node);
+  }
   if (rootNodes.length !== 1) {
     errors.push(`时间线必须恰好一个根节点，实际为 ${rootNodes.length} 个`);
   }
@@ -247,7 +265,7 @@ export function inspectTimelineSave(data) {
   for (const node of nodeById.values()) {
     if (node.parent_id != null && nodeById.has(node.parent_id)) {
       const parent = nodeById.get(node.parent_id);
-      if (!Array.isArray(parent.children_ids) || !parent.children_ids.includes(node.id)) {
+      if (!Array.isArray(parent.children_ids) || !childIdsByNode.get(parent.id)?.has(node.id)) {
         errors.push(`${node.id}: 父子关系不一致，父节点未引用该子节点`);
       }
     }
@@ -311,7 +329,7 @@ export function inspectTimelineSave(data) {
       if (!isNonNegativeInteger(branch.node_count)) {
         errors.push(`${branch.id}: node_count 必须是非负整数`);
       } else {
-        const actualCount = nodes.filter(node => isRecord(node) && node.branch_id === branch.id).length;
+        const actualCount = branchNodeCounts.get(branch.id) || 0;
         if (branch.node_count !== actualCount) {
           errors.push(`${branch.id}: node_count 与分支节点数不一致`);
         }
@@ -342,10 +360,13 @@ export function inspectTimelineSave(data) {
     errors.push('当前节点不属于活动分支');
   }
 
-  const explicitActiveBranches = branches.filter(
-    branch => isRecord(branch) && branch.is_active === true
-  );
-  const hasAnyActiveFlag = branches.some(branch => isRecord(branch) && hasOwn(branch, 'is_active'));
+  const explicitActiveBranches = [];
+  let hasAnyActiveFlag = false;
+  for (const branch of branches) {
+    if (!isRecord(branch)) continue;
+    if (branch.is_active === true) explicitActiveBranches.push(branch);
+    if (hasOwn(branch, 'is_active')) hasAnyActiveFlag = true;
+  }
   if (hasAnyActiveFlag) {
     if (explicitActiveBranches.length !== 1) {
       errors.push(`分支 is_active 活动标记必须唯一，实际为 ${explicitActiveBranches.length} 个`);
@@ -363,6 +384,17 @@ export function inspectTimelineSave(data) {
   }
 
   return { valid: errors.length === 0, errors };
+}
+
+export function inspectTimelineSave(data) {
+  try {
+    return inspectTimelineSaveInternal(data);
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [`存档包含无法校验的结构: ${error?.message || '未知错误'}`]
+    };
+  }
 }
 
 export function assertTimelineSave(data) {

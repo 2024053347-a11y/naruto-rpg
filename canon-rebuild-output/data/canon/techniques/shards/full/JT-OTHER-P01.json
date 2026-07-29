@@ -2634,7 +2634,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "",
+        "summary": "卡路里控制能把秋道一族体内储存的热量转化为查克拉，并配合倍化之术强化身体。熟练者可自行控制转化比例，经验不足者则需要三色药丸辅助。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2719,7 +2719,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2739,7 +2740,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -8342,7 +8343,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "",
+        "summary": "犬冢一族成员与忍犬共同施展组合变身，化作双头巨狼。变身后体型、爪牙和力量都会大幅提升，并可施展破坏力更强的牙通牙系招式。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -8391,7 +8392,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -8411,7 +8413,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",

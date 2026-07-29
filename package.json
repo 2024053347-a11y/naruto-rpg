@@ -7,13 +7,18 @@
   "scripts": {
     "generate-project-timeline": "node canon-rebuild-output/scripts/generate-project-timeline-v2.mjs",
     "pretest": "node scripts/project-timeline-infrastructure-regression.mjs",
-    "test": "npm run validate-project-timeline && npm run validate-canon && node scripts/smoke-test.mjs && node scripts/panel-regression.mjs && node scripts/worldbook-v2-regression.mjs && node scripts/ai-call-policy-regression.mjs && node scripts/full-ai-adaptation-integration-regression.mjs && node scripts/protected-future-handoff-regression.mjs && node scripts/future-guardian-regression.mjs && node scripts/turn-evidence-regression.mjs && node scripts/agent-memory-delta-regression.mjs && node scripts/narrative-artifact-regression.mjs && node scripts/turn-commit-regression.mjs && node scripts/memory-regression.mjs && node scripts/continuity-ledger-regression.mjs && node scripts/continuity-delta-regression.mjs && node scripts/npc-summary-regression.mjs && node scripts/inventory-skill-regression.mjs && node scripts/combat-balance-regression.mjs && node scripts/canon-runtime-regression.mjs && node scripts/timeline-regression.mjs && node scripts/opening-contract-regression.mjs && node scripts/opening-draft-regression.mjs && node scripts/preset-review-regression.mjs && node scripts/prompt-preview-regression.mjs && node scripts/settings-config-gateway-regression.mjs && node scripts/local-api-regression.mjs && node scripts/ai-stream-regression.mjs && node scripts/image-studio-regression.mjs && node scripts/image-studio-ui-regression.mjs && node scripts/image-assets-regression.mjs && node scripts/security-regression.mjs && node scripts/architecture-regression.mjs && node scripts/server-regression.mjs && node scripts/public-sync-regression.mjs && npm run test:deployment && node smoke-phase2.mjs && node test-agent-optimization.mjs && node test-p2-optimization.mjs",
+    "test": "npm run validate-project-timeline && npm run validate-canon && node scripts/smoke-test.mjs && node scripts/panel-regression.mjs && node scripts/worldbook-v2-regression.mjs && node scripts/ai-call-policy-regression.mjs && node scripts/full-ai-adaptation-integration-regression.mjs && node scripts/variable-updater-recovery-regression.mjs && node scripts/pipeline-updater-evidence-regression.mjs && node scripts/agent-runtime-regression.mjs && node scripts/turn-evidence-regression.mjs && node scripts/agent-memory-delta-regression.mjs && node scripts/narrative-artifact-regression.mjs && node scripts/shinobi-daily-regression.mjs && node scripts/turn-commit-regression.mjs && node scripts/memory-regression.mjs && node scripts/continuity-ledger-regression.mjs && node scripts/continuity-delta-regression.mjs && node scripts/npc-summary-regression.mjs && node scripts/inventory-skill-regression.mjs && node scripts/combat-state-corruption-regression.mjs && node scripts/combat-balance-regression.mjs && node scripts/canon-runtime-regression.mjs && node scripts/canon-technique-description-regression.mjs && node scripts/timeline-regression.mjs && node scripts/timeline-file-codec-regression.mjs && node scripts/timeline-save-validator-regression.mjs && node scripts/opening-contract-regression.mjs && node scripts/opening-draft-regression.mjs && node scripts/preset-review-regression.mjs && node scripts/prompt-preview-regression.mjs && node scripts/settings-config-gateway-regression.mjs && node scripts/local-api-regression.mjs && node scripts/cloud-save-regression.mjs && node scripts/cloud-save-stream-regression.mjs && node scripts/ai-stream-regression.mjs && node scripts/server-reliability-regression.mjs && node scripts/image-studio-regression.mjs && node scripts/image-studio-ui-regression.mjs && node scripts/image-assets-regression.mjs && node scripts/security-regression.mjs && node scripts/architecture-regression.mjs && node scripts/server-regression.mjs && node scripts/public-sync-regression.mjs && npm run test:deployment && node smoke-phase2.mjs && node test-agent-optimization.mjs && node test-p2-optimization.mjs",
     "test:panel": "node scripts/panel-regression.mjs",
+    "test:timeline-file": "node scripts/timeline-file-codec-regression.mjs",
+    "test:shinobi-daily": "node scripts/shinobi-daily-regression.mjs",
+    "test:cloud-save": "node scripts/cloud-save-regression.mjs && node scripts/cloud-save-stream-regression.mjs",
+    "test:server-reliability": "node scripts/server-reliability-regression.mjs",
     "test:settings-ui": "playwright test",
     "test:deployment": "node scripts/deployment-script-regression.mjs",
     "validate-project-timeline": "node canon-rebuild-output/scripts/validate-project-timeline-v2.mjs",
     "validate-canon": "node canon-rebuild-output/scripts/validate-canon.mjs",
-    "build-canon-runtime": "npm run validate-project-timeline && npm run validate-canon && node scripts/build-canon-runtime.mjs",
+    "validate-technique-descriptions": "node scripts/canon-technique-description-regression.mjs",
+    "build-canon-runtime": "npm run validate-project-timeline && npm run validate-canon && node scripts/build-canon-runtime.mjs && npm run validate-technique-descriptions",
     "build:deploy": "npm run build-canon-runtime && npm run sync-public",
     "sync-public": "node scripts/sync-public.mjs",
     "prestart": "npm run sync-public",
@@ -29,13 +34,15 @@
     "deploy:dry-run": "bash deploy-v3.sh --dry-run"
   },
   "dependencies": {
+    "busboy": "^1.6.0",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "stream-json": "^1.9.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

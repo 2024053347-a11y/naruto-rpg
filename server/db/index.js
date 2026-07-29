@@ -104,6 +104,9 @@ export const getTotalSaveCount = () => saves.countAll();
 /** @type {SaveRepository['findById']} */
 export const getSaveById = (id) => saves.findById(id);
 
+/** @type {SaveRepository['findContentById']} */
+export const getSaveContentById = (id) => saves.findContentById(id);
+
 /**
  * 仅读取存档元数据（不加载可达数百 MB 的二进制正文），
  * 供权限校验等轻量场景使用。
@@ -117,8 +120,14 @@ export const insertSave = (save) => saves.insert(save);
 /** @type {SaveRepository['insertWithinUserLimit']} */
 export const insertSaveWithinUserLimit = (save, maxSlots) => saves.insertWithinUserLimit(save, maxSlots);
 
+/** @type {SaveRepository['insertFileWithinUserLimit']} */
+export const insertSaveFileWithinUserLimit = (save, maxSlots) => saves.insertFileWithinUserLimit(save, maxSlots);
+
 /** @type {SaveRepository['update']} */
 export const updateSave = (id, changes) => saves.update(id, changes);
+
+/** @type {SaveRepository['updateFile']} */
+export const updateSaveFile = (id, changes) => saves.updateFile(id, changes);
 
 /** @type {SaveRepository['remove']} */
 export const deleteSave = (id) => saves.remove(id);

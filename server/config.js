@@ -79,7 +79,11 @@ export const config = deepFreeze({
   saves: {
     maxSlots: toPositiveInt(process.env.MAX_SAVE_SLOTS, 1),
     maxSizeMb: toPositiveInt(process.env.MAX_SAVE_SIZE_MB, 200),
-    maxPreviewSizeKb: toPositiveInt(process.env.MAX_SAVE_PREVIEW_SIZE_KB, 64)
+    maxPreviewSizeKb: toPositiveInt(process.env.MAX_SAVE_PREVIEW_SIZE_KB, 64),
+    maxCompressedSizeMb: toPositiveInt(process.env.MAX_SAVE_COMPRESSED_SIZE_MB, 64),
+    legacyMaxSizeMb: toPositiveInt(process.env.MAX_LEGACY_SAVE_SIZE_MB, 16),
+    maxJsonDepth: toPositiveInt(process.env.MAX_SAVE_JSON_DEPTH, 256),
+    uploadGlobalConcurrency: toPositiveInt(process.env.SAVE_UPLOAD_GLOBAL_CONCURRENCY, 2)
   },
   imageAssets: {
     maxBytes: toPositiveInt(process.env.IMAGE_ASSET_QUOTA_MB, 1024) * 1024 * 1024,
@@ -90,6 +94,7 @@ export const config = deepFreeze({
     maxPixels: toPositiveInt(process.env.IMAGE_ASSET_MAX_PIXELS, 16000000),
     maxSide: toPositiveInt(process.env.IMAGE_ASSET_MAX_SIDE, 8192),
     maxSelections: toPositiveInt(process.env.IMAGE_ASSET_MAX_SELECTIONS, 5000),
+    uploadGlobalConcurrency: toPositiveInt(process.env.IMAGE_ASSET_UPLOAD_GLOBAL_CONCURRENCY, 4),
     activeReferenceTtlMs: toPositiveInt(process.env.IMAGE_ASSET_ACTIVE_REFERENCE_TTL_MINUTES, 60) * 60 * 1000,
     connectSources: parseOriginList(process.env.IMAGE_LOCAL_CONNECT_SOURCES)
   },

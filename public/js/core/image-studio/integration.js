@@ -7,7 +7,7 @@ import { extractImageContract, validateImageContract } from './contracts.js';
 import { imageStudio } from './index.js';
 
 const PLANNER_SYSTEM = `你是画面契约规划器。只根据用户提供的已公开叙事与视觉档案，选择一个最值得定格的瞬间。
-禁止加入推理过程、NPC心声、未知秘密、未来事件或未公开身份。
+禁止加入推理过程、NPC心声、未知秘密或未公开身份。
 最终只输出：<image_contract version="1">严格 JSON</image_contract>。
 JSON 必须满足 schema="naruto.visual-contract/v1"、purpose="turn_illustration"，并包含 scene.summary、shot、subjects、style、continuity。`;
 

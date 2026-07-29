@@ -2,6 +2,7 @@ import { imageStudioStyles } from '../../css/components/image-studio.css.js';
 import {
   DEFAULT_IMAGE_SETTINGS,
   IMAGE_PROVIDER_IDS,
+  NOVELAI_IMAGE_MODELS,
   applyMainApiConfigToImageProvider,
   createImageStudioUIController,
   eventTouchesImageTarget,
@@ -357,6 +358,23 @@ export class ImageStudioSettings extends ImageStudioElement {
           ${['1024x1024', '1024x1536', '1536x1024', 'auto'].map(size => `<option value="${size}" ${provider.size === size ? 'selected' : ''}>${size}</option>`).join('')}
         </select>
       </div>`;
+    if (providerId === 'novelai') return `
+      <div class="is-grid is-provider-fields" data-provider-fields="${providerId}">
+        <label>API 地址</label><input type="url" name="novelai.apiUrl" value="${attr(provider.apiUrl)}" placeholder="https://image.novelai.net">
+        <label>API Token</label><div class="is-field-stack"><input type="password" name="novelai.apiKey" value="${attr(provider.apiKey)}" autocomplete="off" placeholder="NovelAI Persistent API Token"><span class="is-field-hint">使用 NovelAI 账户生成的 Persistent API Token；仅保存在当前浏览器/存档配置中。</span></div>
+        <label>模型</label><div class="is-field-stack"><input type="text" name="novelai.model" list="novelai-model-options" value="${attr(provider.model)}" placeholder="nai-diffusion-4-5-full"><datalist id="novelai-model-options">${NOVELAI_IMAGE_MODELS.map(item => `<option value="${attr(item.id)}">${esc(item.label)}</option>`).join('')}</datalist><span class="is-field-hint">可从目录选择，也可手动填写以后新增的模型 ID。</span></div>
+        <label>采样器</label><select name="novelai.sampler">
+          ${['k_euler_ancestral', 'k_euler', 'k_dpmpp_2m', 'k_dpmpp_2s_ancestral', 'k_dpmpp_sde', 'ddim_v3'].map(sampler => `<option value="${sampler}" ${provider.sampler === sampler ? 'selected' : ''}>${sampler}</option>`).join('')}
+        </select>
+        <label>噪声计划</label><select name="novelai.noiseSchedule">
+          ${['karras', 'native', 'exponential', 'polyexponential'].map(schedule => `<option value="${schedule}" ${provider.noiseSchedule === schedule ? 'selected' : ''}>${schedule}</option>`).join('')}
+        </select>
+        <label>步数</label><input type="number" name="novelai.steps" min="1" max="50" value="${attr(provider.steps)}">
+        <label>默认尺寸</label><div class="is-inline"><input type="number" name="novelai.width" min="64" max="2048" step="64" value="${attr(provider.width)}"><span>×</span><input type="number" name="novelai.height" min="64" max="2048" step="64" value="${attr(provider.height)}"></div>
+        <label>Prompt Guidance</label><input type="number" name="novelai.scale" min="0" max="20" step="0.1" value="${attr(provider.scale)}">
+        <label>CFG Rescale</label><input type="number" name="novelai.cfgRescale" min="0" max="1" step="0.05" value="${attr(provider.cfgRescale)}">
+        <label>质量标签增强</label><div class="is-field-stack"><input type="checkbox" name="novelai.qualityToggle" ${provider.qualityToggle !== false ? 'checked' : ''}><span class="is-field-hint">由 NovelAI 自动追加当前模型的质量标签。</span></div>
+      </div>`;
     if (providerId === 'comfyui') {
       const mapping = provider.mapping || {};
       return `<div class="is-grid is-provider-fields" data-provider-fields="${providerId}">
@@ -415,7 +433,8 @@ export class ImageStudioSettings extends ImageStudioElement {
     if (!this.shadowRoot) return;
     const s = this._settings;
     const providerNames = {
-      'openai-compatible': 'OpenAI 兼容 Images API', comfyui: '本地 ComfyUI', a1111: '本地 A1111 / Forge'
+      'openai-compatible': 'OpenAI 兼容 Images API', novelai: 'NovelAI Diffusion',
+      comfyui: '本地 ComfyUI', a1111: '本地 A1111 / Forge'
     };
     this.shadowRoot.innerHTML = `<style>${imageStudioStyles}</style>
       <div class="is-card" aria-busy="${this._loading ? 'true' : 'false'}">
@@ -437,12 +456,12 @@ export class ImageStudioSettings extends ImageStudioElement {
           </div>
         </section>
         <section class="is-section">
-          <div class="is-section-head"><div><h4>绘图后端</h4><p class="is-note">公网接口使用你自己的凭据；本地模型通过已启动的 ComfyUI、A1111 或 Forge 接入。</p></div></div>
+          <div class="is-section-head"><div><h4>绘图后端</h4><p class="is-note">公网接口使用你自己的凭据；支持 OpenAI 兼容站点、NovelAI，以及本地 ComfyUI、A1111 或 Forge。</p></div></div>
           <div class="is-provider">
             <div class="is-inline"><select name="activeProviderId" aria-label="绘图后端">${IMAGE_PROVIDER_IDS.map(providerId => `<option value="${providerId}" ${s.activeProviderId === providerId ? 'selected' : ''}>${providerNames[providerId]}</option>`).join('')}</select><button class="is-btn" type="button" data-action="probe" ${!this._controller.available ? 'disabled' : ''}>测试连接</button></div>
             ${IMAGE_PROVIDER_IDS.map(providerId => this._providerHtml(providerId)).join('')}
           </div>
-          <div class="is-warning" style="margin-top:12px;">浏览器不会接收或上传模型权重。请选择本机服务地址；ComfyUI 仅接受 API 格式工作流 JSON。局域网地址首次连接可能需要浏览器授权。</div>
+          <div class="is-warning" style="margin-top:12px;">浏览器不会接收或上传模型权重。NovelAI 的测试连接只校验配置，Token 会在首次生成时验证；ComfyUI 仅接受 API 格式工作流 JSON。局域网地址首次连接可能需要浏览器授权。</div>
           <div class="is-grid" style="margin-top:12px;"><label>局域网直连白名单</label><input type="text" name="allowedPrivateOrigins" value="${attr((s.allowedPrivateOrigins || []).join(', '))}" placeholder="例如 http://192.168.1.20:8188（逗号分隔）"></div>
         </section>
         <section class="is-section">
@@ -490,6 +509,7 @@ export class ImageStudioSettings extends ImageStudioElement {
       providers: {
         ...previous.providers,
         'openai-compatible': { ...previous.providers['openai-compatible'], apiUrl: value('openai.apiUrl').trim(), apiKey: value('openai.apiKey'), apiKeyHeader: value('openai.apiKeyHeader'), model: value('openai.model').trim(), size: value('openai.size') },
+        novelai: { ...previous.providers.novelai, apiUrl: value('novelai.apiUrl').trim(), apiKey: value('novelai.apiKey'), apiKeyHeader: 'Authorization', model: value('novelai.model').trim(), sampler: value('novelai.sampler'), noiseSchedule: value('novelai.noiseSchedule'), steps: clamp(value('novelai.steps'), 1, 50, 28), width: clamp(value('novelai.width'), 64, 2048, 832), height: clamp(value('novelai.height'), 64, 2048, 1216), scale: clamp(value('novelai.scale'), 0, 20, 5), cfgRescale: clamp(value('novelai.cfgRescale'), 0, 1, 0), qualityToggle: checked('novelai.qualityToggle') },
         comfyui: { ...previous.providers.comfyui, apiUrl: value('comfy.apiUrl').trim(), workflow: value('comfy.workflow'), mapping: { positive: value('comfy.map.positive').trim(), negative: value('comfy.map.negative').trim(), seed: value('comfy.map.seed').trim(), width: value('comfy.map.width').trim(), height: value('comfy.map.height').trim(), output: value('comfy.map.output').trim(), reference: value('comfy.map.reference').trim() } },
         a1111: { ...previous.providers.a1111, apiUrl: value('a1111.apiUrl').trim(), model: value('a1111.model').trim(), sampler: value('a1111.sampler').trim(), steps: clamp(value('a1111.steps'), 1, 150, 28), width: clamp(value('a1111.width'), 64, 8192, 768), height: clamp(value('a1111.height'), 64, 8192, 1024) }
       }
@@ -537,7 +557,8 @@ export class ImageStudioSettings extends ImageStudioElement {
     try {
       const result = await this._controller.probeProvider(providerId, this._settings.providers[providerId]);
       const detail = result?.message || result?.model || result?.status || '连接成功';
-      this._setMessage(`绘图后端可用：${detail}`, 'success');
+      const prefix = result?.verified === false ? '绘图配置已识别' : '绘图后端可用';
+      this._setMessage(`${prefix}：${detail}`, 'success');
     } catch (error) { this._setMessage(error?.message || '连接失败。请检查服务地址、CORS 与凭据。', 'error'); }
   }
 

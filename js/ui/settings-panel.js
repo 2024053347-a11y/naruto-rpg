@@ -7,6 +7,7 @@ import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
 import { getVariableUpdaterPreset } from '../data/variable-updater-preset.js';
+import { VARIABLE_UPDATER_DEFAULT_TEMPERATURE } from '../core/variable-updater.js';
 import './memory-panel.js';
 import { CANON_DATABASE } from '../data/canon-database.js';
 import './canon-database-editor.js';
@@ -20,8 +21,13 @@ import { resolveAICallPolicy } from '../core/ai-call-policy.js';
 import { openImageGallery } from './image-studio.js';
 import './api-config-form.js';
 import { settingsConfigGateway } from './settings-config-gateway.js';
+import { icon } from '../utils/icons.js';
 
 const callPolicyImageSettingsStore = new ImageSettingsStore();
+const SUPPORT_AFDIAN_URL = 'https://www.ifdian.net/a/2608_1?utm_source=copylink&utm_medium=link';
+const SUPPORT_WECHAT_QR_URL = new URL('../../img/wechat-reward.png', import.meta.url).href;
+const SUPPORT_GITHUB_URL = 'https://github.com/2024053347-a11y/naruto-rpg';
+const SUPPORT_ISSUES_URL = `${SUPPORT_GITHUB_URL}/issues`;
 
 const THEME_PRESETS = {
   konoha: { label: '木叶卷轴', textColor: '#e8e4d9', accentColor: '#eb613f', goldColor: '#c69c6d', backgroundColor: '#070a0e',
@@ -58,7 +64,7 @@ const localAudio = { bgm: null, ambient: null };
 const PLAYER_SECTION_ORDER = Object.freeze(['appearance', 'gameplay', 'connection', 'media']);
 const PLAYER_SECTION_FIELDS = Object.freeze({
   appearance: Object.freeze(['themePreset', 'fontPreset', 'fontFamily', 'fontSize', 'lineHeight', 'chatMaxWidth', 'paragraphIndent', 'aiCardStyle', 'textColor', 'accentColor', 'goldColor', 'backgroundColor', 'backgroundImage', 'backgroundOpacity']),
-  gameplay: Object.freeze(['showVariableSummary', 'reasoningOpen', 'tacticalCombat']),
+  gameplay: Object.freeze(['showVariableSummary', 'reasoningOpen', 'tacticalCombat', 'autoArchive']),
   media: Object.freeze(['musicEnabled', 'musicVolume', 'musicLoop', 'musicShuffle'])
 });
 
@@ -100,6 +106,7 @@ class SettingsPanel extends HTMLElement {
   disconnectedCallback() {
     document.removeEventListener('keydown', this._onKeyDown);
     this._editorObserver?.disconnect();
+    clearTimeout(this._toastTimer);
   }
 
   connectedCallback() {
@@ -180,6 +187,7 @@ class SettingsPanel extends HTMLElement {
                 <button class="tab-btn" data-section="gameplay" data-target="tab-system">游玩与输出</button>
                 <button class="tab-btn" data-section="connection" data-target="tab-connection">AI 连接</button>
                 <button class="tab-btn" data-section="media" data-target="tab-audio">声音与画面</button>
+                <button class="tab-btn support-tab" data-section="support" data-target="tab-support">支持项目</button>
               `}
             </aside>
             <main class="content">
@@ -254,43 +262,43 @@ class SettingsPanel extends HTMLElement {
               <div class="tab-pane" id="tab-agent">
                 <section>
                   <h3>AI 调用策略</h3>
-                  <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
-                    <label style="display:flex;align-items:center;gap:10px;color:#e8e4d9;">
+                  <div class="config-card">
+                    <label class="config-card-toggle">
                       <input type="checkbox" name="strictSingleCall" ${callPolicy.strictSingleCall ? 'checked' : ''}>
                       <strong>严格单模型 · 单调用</strong>
                     </label>
-                    <p class="setting-note" style="margin:10px 0 8px;">开启后每个游戏回合固定只发送一次主文本请求：暂停 Agent、二次变量、正文复检、未来规划、AI 记忆整理、NPC AI 总结以及自动图片规划/生成。失败后只显示手动重试，不会透明重发。主动勾选 Agent、二次变量或正文复检时会退出严格模式；设置页手动整理记忆或手动生成图片仍可单独调用。</p>
-                    <div id="ai-call-estimate" role="status" style="font-size:12px;color:var(--c-accent,#c69c6d);">${escHtml(callPolicy.estimateText)}</div>
-                    <div id="ai-call-blocked" style="margin-top:6px;font-size:11px;color:#a39f98;">${callPolicy.blockedFeatures.length ? `当前暂停：${escHtml(callPolicy.blockedFeatures.map(item => item.label).join('、'))}` : ''}</div>
+                    <p class="setting-note" style="margin:10px 0 8px;">开启后每个游戏回合固定只发送一次主文本请求：暂停 Agent、二次变量、正文复检、AI 记忆整理、NPC AI 总结以及自动图片规划/生成。失败后只显示手动重试，不会透明重发。主动勾选 Agent、二次变量或正文复检时会退出严格模式；设置页手动整理记忆或手动生成图片仍可单独调用。</p>
+                    <div id="ai-call-estimate" role="status" class="config-card-estimate">${escHtml(callPolicy.estimateText)}</div>
+                    <div id="ai-call-blocked" class="config-card-blocked">${callPolicy.blockedFeatures.length ? `当前暂停：${escHtml(callPolicy.blockedFeatures.map(item => item.label).join('、'))}` : ''}</div>
                   </div>
                 </section>
                 <section>
                    <h3>Agent 高质量正文模式</h3>
-                   <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
-                     <p style="margin-top:0; margin-bottom:14px; font-size:12px; color:#a39f98; line-height:1.6;">
+                   <div class="config-card">
+                     <p class="config-card-note">
                        开启后每回合由多个AI Agent协作生成：大纲→审查→写作→审查→润色。<br>
                        完整模式增加头脑风暴和角色代理。建议战斗/重要场景开启，日常关闭。
                      </p>
-                     <div class="grid" style="grid-template-columns:auto 1fr; gap:10px 16px; align-items:center;">
-                       <label style="color:#e8e4d9;">启用 Agent 模式</label>
+                     <div class="grid config-card-grid">
+                       <label>启用 Agent 模式</label>
                        <input type="checkbox" name="agentEnabled" ${getAgentConfig().enabled ? 'checked' : ''}>
-                       <label style="color:#e8e4d9;">生成模式</label>
-                       <select name="agentMode" style="background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.2); border-radius:4px; padding:4px 8px; font-size:12px;">
+                       <label>生成模式</label>
+                       <select name="agentMode">
                          <option value="standard" ${getAgentConfig().mode === 'standard' ? 'selected' : ''}>标准模式 (+3-5次调用, 约30-75s)</option>
                          <option value="full" ${getAgentConfig().mode === 'full' ? 'selected' : ''}>完整模式 (+8-13次调用, 约90-210s)</option>
                        </select>
-                       <label style="color:#e8e4d9;">战斗自动升级完整模式</label>
+                       <label>战斗自动升级完整模式</label>
                        <input type="checkbox" name="agentAutoUpgrade" ${getAgentConfig().autoUpgrade !== false ? 'checked' : ''}>
-                       <label style="color:#a39f98; font-size:11px;">Agent 模型 (留空=主模型)</label>
-                       <div style="display:flex;gap:8px;">
-                         <input type="text" name="agentModel" value="${getAgentConfig().agentModel || ''}" placeholder="留空使用主模型" style="flex:1;background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.15); border-radius:4px; padding:4px 8px; font-size:12px;" list="settings-agent-datalist">
-                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="agentModel" style="white-space:nowrap;font-size:10px;">读取</button>
+                       <label class="config-label-sub">Agent 模型 (留空=主模型)</label>
+                       <div class="inline-field">
+                         <input type="text" name="agentModel" value="${getAgentConfig().agentModel || ''}" placeholder="留空使用主模型" list="settings-agent-datalist">
+                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="agentModel">读取</button>
                        </div>
                        <datalist id="settings-agent-datalist"></datalist>
-                       <label style="color:#a39f98; font-size:11px;">Critic 模型 (建议廉价模型)</label>
-                       <div style="display:flex;gap:8px;">
-                         <input type="text" name="criticModel" value="${getAgentConfig().criticModel || ''}" placeholder="留空使用主模型" style="flex:1;background:#111; color:#e8e4d9; border:1px solid rgba(198,156,109,0.15); border-radius:4px; padding:4px 8px; font-size:12px;" list="settings-critic-datalist">
-                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="criticModel" style="white-space:nowrap;font-size:10px;">读取</button>
+                       <label class="config-label-sub">Critic 模型 (建议廉价模型)</label>
+                       <div class="inline-field">
+                         <input type="text" name="criticModel" value="${getAgentConfig().criticModel || ''}" placeholder="留空使用主模型" list="settings-critic-datalist">
+                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="criticModel">读取</button>
                        </div>
                        <datalist id="settings-critic-datalist"></datalist>
                      </div>
@@ -359,7 +367,7 @@ class SettingsPanel extends HTMLElement {
                         <button type="button" class="btn ghost btn-xs" data-action="fetch-models" data-target="varUpdaterModel">读取</button>
                       </div>
                       <label>Temperature</label>
-                      <input type="number" name="varUpdaterTemperature" min="0" max="2" step="0.05" value="${apiConfig.variableUpdater?.temperature ?? 0.9}">
+                      <input type="number" name="varUpdaterTemperature" min="0" max="2" step="0.05" value="${apiConfig.variableUpdater?.temperature ?? VARIABLE_UPDATER_DEFAULT_TEMPERATURE}">
                       <label>Max Tokens</label>
                       <input type="number" name="varUpdaterMaxTokens" min="256" max="32768" step="256" value="${apiConfig.variableUpdater?.maxTokens ?? 8192}">
                       <label>超时（毫秒）</label>
@@ -384,19 +392,17 @@ class SettingsPanel extends HTMLElement {
               <div class="tab-pane" id="tab-lore">
                 <section style="margin-bottom: 32px;">
                    <h3>世界书管理 · 知识库</h3>
-                   <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px; text-align:center; color:#e8e4d9;">
-                     <p style="margin-top:0; margin-bottom:16px; font-size:13px; color:#a39f98;">使用可视化的编辑器管理、导入和导出游戏内的世界书条目。</p>
+                   <div class="config-card config-card-center">
+                     <p class="config-card-note">使用可视化的编辑器管理、导入和导出游戏内的世界书条目。</p>
                      <button class="btn primary" type="button" data-action="open-worldbook-editor">打开世界书编辑器</button>
                    </div>
                 </section>
                 <section>
                    <h3>预设管理</h3>
-                   <div style="display:flex;flex-direction:column;gap:12px;">
-                     <div style="background:#070a0e; border:1px solid rgba(198,156,109,0.3); border-radius:8px; padding:20px;">
-                       <p style="margin-top:0; margin-bottom:12px; font-size:13px; color:#e8e4d9; font-weight:700;">主预设 · Narutomech</p>
-                       <p style="margin-top:0; margin-bottom:16px; font-size:12px; color:#a39f98; line-height:1.6;">管理文风破限、角色扮演、CoT回映等高级预设条目。支持开关、增删、修改、拖拽排序。</p>
-                       <button class="btn primary" type="button" data-action="open-main-preset-editor">打开主预设编辑器</button>
-                     </div>
+                   <div class="config-card">
+                     <p class="config-card-title">主预设 · Narutomech</p>
+                     <p class="config-card-note">管理文风破限、角色扮演、CoT回映等高级预设条目。支持开关、增删、修改、拖拽排序。</p>
+                     <button class="btn primary" type="button" data-action="open-main-preset-editor">打开主预设编辑器</button>
                    </div>
                 </section>
               </div>
@@ -483,19 +489,129 @@ class SettingsPanel extends HTMLElement {
 
               <!-- Tab 5: 游玩与输出 -->
               <div class="tab-pane" id="tab-system">
-                <div class="pane-grid">
-                  <section data-anchor="output" tabindex="-1">
-                     <h3>输出显示</h3>
-                     <div class="grid">
-                       <label>变量摘要</label>
-                       <input type="checkbox" name="showVariableSummary">
-                       <label>思维链展开</label>
-                       <input type="checkbox" name="reasoningOpen">
-                       <label>战术战斗面板</label>
-                       <input type="checkbox" name="tacticalCombat">
-                     </div>
-                  </section>
-                </div>
+                <section data-anchor="output" tabindex="-1">
+                  <h3>输出显示</h3>
+                  <div class="setting-cards">
+                    <label class="setting-card">
+                      <span class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 14h8"/><path d="M8 17h5"/></svg></span>
+                      <span class="sc-main">
+                        <span class="sc-title">变量摘要</span>
+                        <span class="sc-desc">回合结束后展示属性、物品与羁绊的变化清单，便于追踪成长轨迹</span>
+                      </span>
+                      <input type="checkbox" name="showVariableSummary">
+                    </label>
+                    <label class="setting-card">
+                      <span class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 3"/><path d="M17 3l4 4-4 4"/></svg></span>
+                      <span class="sc-main">
+                        <span class="sc-title">思维链展开</span>
+                        <span class="sc-desc">默认展开 AI 的推理过程折叠块，关闭后需手动点开查看</span>
+                      </span>
+                      <input type="checkbox" name="reasoningOpen">
+                    </label>
+                    <label class="setting-card">
+                      <span class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg></span>
+                      <span class="sc-main">
+                        <span class="sc-title">战术战斗面板</span>
+                        <span class="sc-desc">战斗触发时展开专属战术界面，显示敌我状态与行动选项</span>
+                      </span>
+                      <input type="checkbox" name="tacticalCombat">
+                    </label>
+                  </div>
+                </section>
+                <section class="storage-section" data-anchor="storage" tabindex="-1">
+                  <div class="section-heading">
+                    <div><span class="eyebrow">LOCAL TIMELINE</span><h3>存档与空间</h3></div>
+                    <span class="owner-badge">本地时间线</span>
+                  </div>
+                  <p class="setting-note">自动归档会清理旧节点的重复聊天记录，同时保留完整状态快照以支持回溯。压缩导出不删减任何存档数据。</p>
+                  <div class="storage-tool">
+                    <label class="archive-toggle-row">
+                      <span class="storage-tool-icon">${icon('database', 18)}</span>
+                      <span class="storage-toggle-copy">
+                        <strong>自动归档老节点</strong>
+                        <span>单个分支超过 100 个节点时，保留最近 20 个祖先和检查点</span>
+                      </span>
+                      <input type="checkbox" name="autoArchive">
+                    </label>
+                    <div class="storage-status" id="storage-info" role="status" aria-live="polite">等待统计...</div>
+                    <div class="storage-actions">
+                      <button class="btn ghost" type="button" data-action="check-storage" title="刷新存档空间统计">${icon('database', 15)}<span>刷新统计</span></button>
+                      <button class="btn ghost" type="button" data-action="manual-archive" title="立即归档旧时间线节点">${icon('timeline', 15)}<span>立即归档</span></button>
+                      <button class="btn primary" type="button" data-action="export-save" title="导出无损 gzip 压缩存档">${icon('export', 15)}<span>压缩导出</span></button>
+                      <button class="btn ghost" type="button" data-action="export-save-json" title="导出未压缩的普通 JSON 存档">${icon('file-text', 15)}<span>普通 JSON</span></button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <div class="tab-pane" id="tab-support">
+                <section class="support-section" data-anchor="support" tabindex="-1">
+                  <div class="section-heading">
+                    <div><span class="eyebrow">KEEP THE STORY GOING</span><h3>支持忍者手记持续开发</h3></div>
+                    <span class="owner-badge support-badge">开源 · 独立维护</span>
+                  </div>
+                  <div class="support-story">
+                    <div class="support-meta" aria-label="项目概况">
+                      <span>${icon('developer', 14)}个人独立开发</span>
+                      <span>${icon('book-open', 14)}开源 RPG</span>
+                      <span>${icon('timeline', 14)}持续维护</span>
+                    </div>
+                    <p class="support-lead">忍者手记是一款由个人独立开发并持续维护的开源 RPG 项目。</p>
+                    <p>项目从最初的创意开始，经历了玩法设计、系统开发、测试优化以及持续迭代。目前已经拥有近1000 注册用户，每天都有新玩家进入游戏体验。</p>
+                    <p>作为一个个人开发项目，忍者手记的运行和成长离不开持续投入。服务器维护、开发工具、测试环境以及新内容制作，都需要投入时间与资源。</p>
+                  </div>
+                  <div class="support-impact">
+                    <div class="support-block-heading"><span>FUNDING USE</span><h4>你的支持将用于</h4></div>
+                    <ul class="support-use-list">
+                      <li><span class="support-use-icon" aria-hidden="true">${icon('cloud', 17)}</span><span>项目服务器及运行环境维护</span></li>
+                      <li><span class="support-use-icon" aria-hidden="true">${icon('developer', 17)}</span><span>新玩法与功能开发</span></li>
+                      <li><span class="support-use-icon" aria-hidden="true">${icon('settings', 17)}</span><span>游戏体验优化</span></li>
+                      <li><span class="support-use-icon" aria-hidden="true">${icon('timeline', 17)}</span><span>项目长期维护与更新</span></li>
+                    </ul>
+                  </div>
+                  <p class="support-recognition">每一份支持，都是对独立开发创作的认可，也会帮助忍者手记继续成长。</p>
+                  <div class="support-block-heading support-options-heading"><span>SUPPORT OPTIONS</span><h4>选择支持方式</h4></div>
+                  <div class="support-methods">
+                    <article class="support-method support-method-afdian">
+                      <span class="support-method-icon" aria-hidden="true">${icon('heart', 20)}</span>
+                      <div class="support-method-copy">
+                        <span class="support-method-kicker">爱发电</span>
+                        <strong>持续支持开发</strong>
+                        <p>通过爱发电选择适合你的支持方式。</p>
+                      </div>
+                      <a class="btn primary support-primary-link" href="${escAttr(SUPPORT_AFDIAN_URL)}" target="_blank" rel="noopener noreferrer">
+                        <span>前往爱发电</span>${icon('external-link', 15)}
+                      </a>
+                    </article>
+                    <article class="support-method support-method-wechat">
+                      <div class="support-method-overview">
+                        <span class="support-method-icon" aria-hidden="true">${icon('mobile', 20)}</span>
+                        <div class="support-method-copy">
+                          <span class="support-method-kicker">微信赞赏</span>
+                          <strong>扫码支持</strong>
+                          <p>使用微信赞赏码直接支持项目维护。</p>
+                        </div>
+                      </div>
+                      <div class="support-qr">
+                        <a class="support-qr-frame" href="${escAttr(SUPPORT_WECHAT_QR_URL)}" target="_blank" rel="noopener noreferrer" aria-label="在新窗口查看微信赞赏码原图">
+                          <img src="${escAttr(SUPPORT_WECHAT_QR_URL)}" alt="微信赞赏码" width="1210" height="1210" loading="lazy" decoding="async">
+                        </a>
+                        <div class="support-image-actions">
+                          <a href="${escAttr(SUPPORT_WECHAT_QR_URL)}" target="_blank" rel="noopener noreferrer">${icon('external-link', 14)}<span>查看原图</span></a>
+                          <a href="${escAttr(SUPPORT_WECHAT_QR_URL)}" download="naruto-rpg-wechat-reward.png">${icon('download', 14)}<span>保存图片</span></a>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                  <div class="support-community">
+                    <p>即使不进行赞助，你也可以通过体验游戏、提出建议、反馈问题或关注项目进展来帮助忍者手记发展。</p>
+                    <div class="support-community-actions">
+                      <a class="btn ghost support-community-link" href="${escAttr(SUPPORT_GITHUB_URL)}" target="_blank" rel="noopener noreferrer">${icon('book-open', 15)}<span>查看开源项目</span>${icon('external-link', 13)}</a>
+                      <a class="btn ghost support-community-link" href="${escAttr(SUPPORT_ISSUES_URL)}" target="_blank" rel="noopener noreferrer">${icon('developer', 15)}<span>提交建议或问题</span>${icon('external-link', 13)}</a>
+                    </div>
+                  </div>
+                  <p class="support-gratitude">感谢每一位参与忍者手记成长过程的玩家。</p>
+                </section>
               </div>
 
             </main>
@@ -606,6 +722,12 @@ class SettingsPanel extends HTMLElement {
       target.focus?.({ preventScroll: true });
     }
     else if (focus) button.focus({ preventScroll: true });
+    if (this._activeSection === 'gameplay') this._checkStorage();
+    const informational = this._activeSection === 'support';
+    const saveButton = this.shadowRoot.querySelector('.actions > [data-action="save"]');
+    const closeButton = this.shadowRoot.querySelector('.actions > [data-action="close"]');
+    if (saveButton) saveButton.hidden = informational;
+    if (closeButton) closeButton.textContent = informational ? '关闭' : '放弃';
     this._updateSaveState();
   }
 
@@ -656,9 +778,30 @@ class SettingsPanel extends HTMLElement {
     const status = this.shadowRoot.querySelector('.save-state');
     if (!status) return;
     const activeKey = this._mode === 'creator' ? this._activeTool : this._activeSection;
+    if (this._mode === 'player' && activeKey === 'support' && !message) {
+      status.textContent = this._dirtySections.size
+        ? `${this._dirtySections.size} 个设置页有未应用的修改`
+        : '赞助完全自愿，不影响游戏功能';
+      return;
+    }
     status.textContent = message || (this._dirtySections.has(activeKey)
       ? '当前页面有未应用的修改'
       : '当前页面没有未应用的修改');
+  }
+
+  _showToast(message) {
+    let toast = this.shadowRoot.querySelector('.settings-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'settings-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      this.shadowRoot.querySelector('.panel')?.appendChild(toast);
+    }
+    toast.textContent = String(message || '');
+    toast.classList.add('visible');
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => toast?.classList.remove('visible'), 2400);
   }
 
   async _handle(action, event) {
@@ -722,8 +865,10 @@ class SettingsPanel extends HTMLElement {
     }
 
 
-    if (action === 'check-storage') return this._checkStorage();
-    if (action === 'manual-archive') return this._manualArchive();
+    if (action === 'check-storage') return this._checkStorage(event?.currentTarget);
+    if (action === 'manual-archive') return this._manualArchive(event?.currentTarget);
+    if (action === 'export-save') return eventBus.emit('timeline:export-request', { compression: 'auto' });
+    if (action === 'export-save-json') return eventBus.emit('timeline:export-request', { compression: 'json' });
     if (action === 'fetch-models') return this._fetchModelsFor(event.target);
   }
 
@@ -756,9 +901,10 @@ class SettingsPanel extends HTMLElement {
     return editor;
   }
 
-  async _checkStorage() {
+  async _checkStorage(button = null) {
     const info = this.shadowRoot.querySelector('#storage-info');
     if (info) info.textContent = '统计中...';
+    if (button) button.disabled = true;
     try {
       const { timelineSystem } = await import('../systems/timeline-system.js');
       const stats = await timelineSystem.getStorageStats();
@@ -768,10 +914,12 @@ class SettingsPanel extends HTMLElement {
       if (info) info.textContent = text;
     } catch (e) {
       if (info) info.textContent = '查询失败: ' + e.message;
+    } finally {
+      if (button?.isConnected) button.disabled = false;
     }
   }
 
-  async _manualArchive() {
+  async _manualArchive(button = null) {
     const confirmed = await customElements.get('game-modal').confirm({
       title: '立即归档',
       message: '将归档所有分支中 20 个最近祖先之外的旧节点，并保留状态快照以支持旧回合跳转。继续?',
@@ -779,14 +927,22 @@ class SettingsPanel extends HTMLElement {
       cancelLabel: '取消'
     });
     if (!confirmed) return;
-    const { timelineSystem } = await import('../systems/timeline-system.js');
-    const result = await timelineSystem.manualArchive();
-    if (result.running) {
-      this._checkStorage();
-      return;
+    if (button) button.disabled = true;
+    try {
+      const { timelineSystem } = await import('../systems/timeline-system.js');
+      const result = await timelineSystem.manualArchive();
+      if (result.running) {
+        await this._checkStorage();
+        return;
+      }
+      this._showToast(`已归档 ${result.archived || 0} 个节点`);
+      await this._checkStorage();
+    } catch (error) {
+      this._showToast(`归档失败：${error?.message || '未知错误'}`);
+      await this._checkStorage();
+    } finally {
+      if (button?.isConnected) button.disabled = false;
     }
-    this._showToast(`已归档 ${result.archived || 0} 个节点`);
-    this._checkStorage();
   }
 
   async _fetchModelsFor(btn) {
@@ -1007,7 +1163,7 @@ class SettingsPanel extends HTMLElement {
       apiUrl,
       apiKey,
       model,
-      temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : 0.9,
+      temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : VARIABLE_UPDATER_DEFAULT_TEMPERATURE,
       maxTokens: Math.max(256, Number(root.querySelector('[name="varUpdaterMaxTokens"]')?.value) || 8192),
       timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0),
       streaming: root.querySelector('[name="varUpdaterStreaming"]')?.checked ?? true

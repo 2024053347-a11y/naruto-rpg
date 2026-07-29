@@ -20,7 +20,8 @@ export const NARRATIVE_INSTRUCTION_TAGS = Object.freeze([
   'memory',
   'status_query',
   'recall',
-  'image_contract'
+  'image_contract',
+  'shinobi_daily'
 ]);
 
 export const NARRATIVE_INTERNAL_TAGS = Object.freeze([
@@ -151,6 +152,41 @@ function collectSensitiveBlocks(text) {
       raw: match[0],
       start: match.index,
       end: GENERIC_PAIRED_TAG_PATTERN.lastIndex,
+      selfClosing: false
+    });
+  }
+
+  // A truncated sensitive wrapper hides the remainder of the response. Track
+  // unmatched openings here as well as in the display sanitizer so nested
+  // machine instructions cannot escape through a malformed private tail.
+  const sensitiveStack = [];
+  const tagToken = /<(\/)?([A-Za-z_][\w.\-:]*)([^>]*)>/g;
+  while ((match = tagToken.exec(text)) !== null) {
+    const closing = Boolean(match[1]);
+    const tag = match[2].toLowerCase();
+    const attributes = String(match[3] || '').trim();
+    if (closing) {
+      const openIndex = sensitiveStack.map(item => item.tag).lastIndexOf(tag);
+      if (openIndex >= 0) sensitiveStack.splice(openIndex, 1);
+      continue;
+    }
+    if (/\/\s*$/.test(attributes)) continue;
+    if (!SENSITIVE_NAME_PATTERN.test(tag) && !PRIVATE_ATTRIBUTE_PATTERN.test(attributes)) continue;
+    sensitiveStack.push({
+      tag,
+      attributes,
+      contentStart: tagToken.lastIndex,
+      start: match.index
+    });
+  }
+  for (const block of sensitiveStack) {
+    blocks.push({
+      tag: block.tag,
+      attributes: block.attributes,
+      content: text.slice(block.contentStart).trim(),
+      raw: text.slice(block.start),
+      start: block.start,
+      end: text.length,
       selfClosing: false
     });
   }

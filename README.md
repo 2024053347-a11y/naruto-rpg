@@ -10,7 +10,7 @@
 
 - **完整项目正史**：K001-K086，覆盖 HIST、P1、P2、BOR 四个时代，包含 385 个剧情日、786 个场景和 2894 个原子事件
 - **规范忍术数据库**：741 条忍术记录，统一名称、等级、属性、资源、消耗、威力、条件和来源
-- **证据链 AI 管道**：严格单次调用或增强模式、可见推演、二次变量自检、可选正文复检、提示词追踪和未来剧情隔离
+- **证据链 AI 管道**：严格单次调用或增强模式、可见推演、二次变量自检、可选正文复检、提示词追踪和可提前改写的最近剧情日上下文
 - **可靠状态提交**：连续性账本、原子回合提交、分支隔离、开局契约和旧存档迁移
 - **私人图片工作室**：支持 OpenAI 兼容生图、A1111/Forge、ComfyUI、人物肖像、回合插图、版本图库和云同步
 
@@ -92,7 +92,7 @@ npm test
 npm run build
 ```
 
-`npm test` 会验证项目时间线、忍术数据库、AI 调用策略、未来剧情隔离、连续性、变量更新、开局、战斗、图片资产、服务端安全、部署脚本和 `public/` 同步状态。
+`npm test` 会验证项目时间线、忍术数据库、AI 调用策略、证据链上下文、连续性、变量更新、开局、战斗、图片资产、服务端安全、部署脚本和 `public/` 同步状态。
 
 根目录的 `js/`、`css/`、`img/` 和 `assets/` 是应用源码；`public/` 中的同名内容是服务端部署镜像，会在 `npm start`、`npm run dev` 和 `npm run build` 前由 `npm run sync-public` 自动生成。登录页、管理页和法律文档仍由 `public/` 单独维护。
 
@@ -177,6 +177,12 @@ node scripts/generate-version.mjs --out public/version.json
 - Service Worker (PWA)
 - Web Components (Custom Elements)
 - JSON 文件持久化服务端、Discord OAuth、云存档与私人图片资产
+
+## 支持项目
+
+忍者手记由个人独立开发并持续维护。你可以通过 [爱发电支持忍者手记](https://www.ifdian.net/a/2608_1?utm_source=copylink&utm_medium=link)，赞助完全自愿，不影响任何游戏功能。
+
+即使不进行赞助，也欢迎体验游戏、[提出建议或反馈问题](https://github.com/2024053347-a11y/naruto-rpg/issues)，共同帮助项目持续成长。
 
 ## License
 

@@ -197,15 +197,100 @@
           position: relative; overflow: hidden; border-left: 2px solid var(--border-subtle);
         }
         .skill-card:hover { transform: translateY(-2px); background: var(--surface-bento-hover); border-left-color: var(--text-primary); }
+        .bloodline-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .skill-card.bloodline {
-          text-align: center; border-left: none; padding: 24px;
-          background: radial-gradient(circle at center, rgba(239,83,80,0.1) 0%, var(--surface-bento) 100%);
-          box-shadow: inset 0 0 0 1px rgba(239,83,80,0.2), var(--shadow-inner);
+          /* 每张卡由 --bl / --bl-rgb 决定主题色（写轮眼绯红、冰遁冰蓝、木遁翠绿…），默认绯红 */
+          --bl: var(--c-quality-legendary);
+          --bl-rgb: 239,83,80;
+          text-align: center; border-left: none; padding: 26px 24px 24px;
+          background:
+            radial-gradient(ellipse at 50% 0%, rgba(var(--bl-rgb),0.14) 0%, transparent 60%),
+            var(--surface-bento);
+          box-shadow: inset 0 0 0 1px rgba(var(--bl-rgb),0.22), inset 0 0 40px rgba(var(--bl-rgb),0.05), var(--shadow-inner);
+        }
+        .skill-card.bloodline:hover {
+          transform: translateY(-2px); border-left-color: transparent;
+          box-shadow: inset 0 0 0 1px rgba(var(--bl-rgb),0.4), inset 0 0 48px rgba(var(--bl-rgb),0.09), var(--shadow-inner-hover);
+        }
+        /* 血脉苏醒环：呼吸的封印光晕 */
+        .bloodline-aura {
+          position: absolute; top: 50%; left: 50%; width: 190px; height: 190px;
+          transform: translate(-50%, -50%);
+          border: 1px solid rgba(var(--bl-rgb),0.18); border-radius: 50%;
+          pointer-events: none;
+          animation: bloodline-breath 4.5s ease-in-out infinite alternate;
+        }
+        .bloodline-aura::before {
+          content: ''; position: absolute; inset: 14px;
+          border: 1px dashed rgba(var(--bl-rgb),0.14); border-radius: 50%;
+          animation: bloodline-spin 36s linear infinite;
+        }
+        @keyframes bloodline-breath {
+          from { opacity: 0.45; transform: translate(-50%, -50%) scale(0.96); }
+          to { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+        }
+        @keyframes bloodline-spin { to { transform: rotate(360deg); } }
+        /* 印记水印：写轮眼「瞳」、冰遁「冰」、木遁「木」… */
+        .bloodline-glyph {
+          position: absolute; right: -4%; bottom: -22%; font-family: var(--font-brush);
+          font-size: 96px; font-weight: 900; color: var(--bl);
+          opacity: 0.08; transform: rotate(-12deg); pointer-events: none; line-height: 1;
+        }
+        .bloodline-rank {
+          position: absolute; top: 12px; left: 12px;
+          font-size: 9px; font-weight: 800; letter-spacing: 2px; padding: 3px 9px;
+          color: var(--bl); border: 1px solid rgba(var(--bl-rgb),0.35);
+          border-radius: 4px; background: rgba(var(--bl-rgb),0.08);
+          font-family: var(--font-title);
+        }
+        .bloodline .skill-title {
+          position: relative; font-size: 22px; letter-spacing: 6px; line-height: 1.3;
+          color: var(--bl);
+          background: linear-gradient(100deg, var(--bl) 20%, #fff 50%, var(--bl) 80%);
+          background-size: 200% auto;
+          -webkit-background-clip: text; background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 0 12px rgba(var(--bl-rgb),0.45));
+          animation: bloodline-shine 5s linear infinite;
+        }
+        @keyframes bloodline-shine { to { background-position: 200% center; } }
+        .bloodline-divider {
+          margin: 10px auto 0; font-size: 7px; color: rgba(var(--bl-rgb),0.55);
+          display: flex; align-items: center; gap: 10px; justify-content: center; width: 70%;
+        }
+        .bloodline-divider::before, .bloodline-divider::after {
+          content: ''; flex: 1; height: 1px;
+          background: linear-gradient(to right, transparent, rgba(var(--bl-rgb),0.35), transparent);
+        }
+        .bloodline-sync { position: relative; margin: 14px auto 0; max-width: 240px; }
+        .bloodline-sync-label {
+          display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 2px;
+          color: var(--text-tertiary); margin-bottom: 6px; font-family: var(--font-title);
+        }
+        .bloodline-sync-label span:last-child { color: var(--bl); font-family: var(--font-mono); letter-spacing: 0; }
+        .bloodline-sync-track { height: 3px; border-radius: 2px; background: rgba(var(--bl-rgb),0.12); overflow: hidden; }
+        .bloodline-sync-fill {
+          height: 100%; border-radius: 2px;
+          background: linear-gradient(90deg, rgba(var(--bl-rgb),0.55), var(--bl));
+          box-shadow: 0 0 10px rgba(var(--bl-rgb),0.6); transition: width 1s var(--ease-out);
+        }
+        .bloodline-desc {
+          position: relative; margin: 12px auto 0; max-width: 300px;
+          font-size: 11px; line-height: 1.7; color: var(--text-secondary);
         }
         .skill-card.bloodline.normal { background: var(--surface-bento); box-shadow: var(--shadow-inner); }
+        .skill-card.bloodline.normal:hover { box-shadow: var(--shadow-inner-hover); }
+        .bloodline.normal .skill-title {
+          color: var(--text-secondary); background: none;
+          -webkit-text-fill-color: currentColor; filter: none; animation: none;
+          letter-spacing: 3px; font-size: 18px;
+        }
+        .bloodline.normal .bloodline-glyph { color: var(--text-primary); opacity: 0.04; }
+        .bloodline.normal .bloodline-desc { color: var(--text-tertiary); }
+        @media (prefers-reduced-motion: reduce) {
+          .bloodline-aura, .bloodline-aura::before, .bloodline .skill-title { animation: none; }
+        }
         .skill-title { font-family: var(--font-title); font-size: 16px; font-weight: 800; letter-spacing: 1px; color: var(--text-primary); }
-        .bloodline .skill-title { font-size: 20px; color: var(--c-quality-legendary); text-shadow: 0 0 10px rgba(239,83,80,0.5); letter-spacing: 4px; }
-        .bloodline.normal .skill-title { color: var(--text-secondary); text-shadow: none; letter-spacing: 2px; }
         
         .skill-mastery-tag {
           font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px;
@@ -455,34 +540,48 @@
           border-bottom-color: color-mix(in srgb, var(--c-kin) 50%, transparent);
         }
 
-        /* 头部：名 + 温度印记 */
-        .ema-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding-right: 66px; }
+        /* 头部：六边形头像 + 名 + 温度印记（右留白容纳悬停操作钮） */
+        .ema-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-right: 66px; }
+        .ema-avatar {
+          flex-shrink: 0; width: 36px; height: 36px;
+          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+          display: flex; align-items: center; justify-content: center;
+          font-family: var(--font-brush); font-size: 17px; font-weight: 900;
+          color: var(--tc); background: color-mix(in srgb, var(--tc) 10%, rgba(0,0,0,0.45));
+          box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--tc) 40%, transparent);
+          text-shadow: 0 0 10px color-mix(in srgb, var(--tc) 60%, transparent);
+        }
         .ema-head-main { flex: 1; min-width: 0; }
         .ema-name {
-          font-family: var(--font-brush); font-size: 21px; font-weight: 900;
-          color: var(--text-primary); letter-spacing: 2px; line-height: 1.2;
-          display: flex; align-items: center; gap: 8px;
+          font-family: var(--font-brush); font-size: 18px; font-weight: 900;
+          color: var(--text-primary); letter-spacing: 1.5px; line-height: 1.25;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .ema-pin-mark { font-size: 12px; filter: none; }
+        .ema-pin-mark { font-size: 11px; filter: none; margin-left: 6px; }
         .ema-meta {
-          display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 5px;
+          display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 5px;
           font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px;
         }
+        .ema-meta > span:not(.ema-faction) {
+          padding: 2px 8px; border-radius: var(--r-full);
+          background: rgba(var(--paper-rgb), 0.03); border: 1px solid var(--border-hairline);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+        }
         .ema-faction {
-          padding: 2px 8px; border-radius: 3px;
+          padding: 2px 8px; border-radius: var(--r-full);
           background: rgba(198,156,109,0.1); color: var(--c-kin-bright);
-          border: 1px solid rgba(198,156,109,0.2); font-weight: 600;
+          border: 1px solid rgba(198,156,109,0.2); font-weight: 600; white-space: nowrap;
         }
         /* 温度印章（圆形等级印） */
         .ema-seal {
-          flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+          flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
           background: color-mix(in srgb, var(--tc) 12%, rgba(0,0,0,0.4));
           border: 1.5px solid color-mix(in srgb, var(--tc) 55%, transparent);
           box-shadow: 0 0 12px -2px color-mix(in srgb, var(--tc) 40%, transparent), inset 0 0 8px color-mix(in srgb, var(--tc) 15%, transparent);
           transform: rotate(-4deg);
         }
-        .ema-seal-lv { font-family: var(--font-brush); font-size: 13px; font-weight: 900; color: var(--tc); line-height: 1.15; }
+        .ema-seal-lv { font-family: var(--font-brush); font-size: 12px; font-weight: 900; color: var(--tc); line-height: 1.15; }
         .ema-seal-val { font-family: var(--font-mono); font-size: 8px; color: color-mix(in srgb, var(--tc) 75%, transparent); }
 
         /* 三维温度计 */
@@ -515,7 +614,7 @@
         /* 羁绊标签 + 趋势 */
         .ema-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 20px; }
         .ema-tag {
-          font-size: 9px; padding: 3px 8px; border-radius: 3px; letter-spacing: 1px;
+          font-size: 9px; padding: 3px 9px; border-radius: var(--r-full); letter-spacing: 1px;
           background: rgba(255,255,255,0.04); color: var(--text-secondary);
           border: 1px solid var(--border-subtle);
         }
@@ -529,55 +628,199 @@
 
         /* 悬停操作钮（沿用旧类，无需改） */
 
-        /* ── 装备栏阶梯视觉系统 ──── */
+        /* ── 装备栏 · 忍具行囊 v2 ──── */
         .eq-svg { width: 1.2em; height: 1.2em; display: inline-block; vertical-align: middle; }
-        
-        .eq-empty-slot {
-          background: rgba(0, 0, 0, 0.4);
-          box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.02);
-          border-radius: var(--r-md); padding: 12px;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 8px; min-height: 80px; transition: all 0.2s;
+
+        /* 顶部:标题 + 资金印 */
+        .eq-topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .eq-ryo {
+          display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+          padding: 5px 13px; border-radius: var(--r-full);
+          font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 1px;
+          color: var(--c-kin-bright);
+          background: linear-gradient(135deg, rgba(198,156,109,0.16), rgba(198,156,109,0.04));
+          border: 1px solid rgba(198,156,109,0.3);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 16px -6px rgba(198,156,109,0.5);
         }
-        .eq-empty-slot svg {
-          width: 28px; height: 28px; opacity: 0.15; color: var(--text-primary);
+
+        /* 战斗武装区(loadout) */
+        .eq-loadout {
+          position: relative; overflow: hidden;
+          padding: 16px; border-radius: var(--r-lg);
+          background:
+            radial-gradient(ellipse 90% 60% at 50% -10%, rgba(198,156,109,0.07), transparent 60%),
+            rgba(var(--paper-rgb), 0.015);
+          box-shadow: var(--shadow-inner);
         }
-        .eq-empty-slot span { font-size: 10px; color: var(--text-tertiary); letter-spacing: 2px; opacity: 0.5; }
-        
-        .eq-card {
-          padding: 12px; border-radius: var(--r-md); position: relative; overflow: hidden;
-          background: var(--surface-bento); box-shadow: var(--shadow-inner);
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .eq-loadout::after {
+          content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+          background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.14), transparent);
+          pointer-events: none;
         }
-        .eq-card:hover { transform: translateY(-2px); }
-        
-        /* 阶梯化品质特质 */
-        /* 普通: --surface-bento 默认无光效 */
-        /* 精良 */
-        .eq-card[data-quality="精良"] { border-left: 2px solid var(--c-quality-uncommon); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(102,187,106,0.15); }
-        /* 优秀 */
-        .eq-card[data-quality="优秀"] { border-left: 2px solid var(--c-quality-rare); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), -4px 0 15px -2px rgba(66,165,245,0.2); }
-        /* 史诗 */
-        .eq-card[data-quality="史诗"] {
-          border-left: 2px solid var(--c-quality-epic);
-          background: radial-gradient(circle at right bottom, rgba(198,156,109,0.1) 0%, var(--surface-bento) 70%);
-          box-shadow: inset 0 0 0 1px rgba(198,156,109,0.2), -4px 0 20px -2px rgba(198,156,109,0.25);
+        .eq-loadout-head {
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+          margin-bottom: 14px; padding-bottom: 12px;
+          border-bottom: 1px solid var(--border-hairline);
         }
-        /* 传说 */
+        .eq-loadout-title {
+          font-family: var(--font-title); font-size: 11px; font-weight: 800;
+          letter-spacing: 3px; color: var(--text-secondary); margin-right: 2px;
+        }
+        .eq-bonus-pill {
+          font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+          padding: 3px 9px; border-radius: var(--r-full);
+          color: #f0a58f; background: rgba(235,97,63,0.1);
+          border: 1px solid rgba(235,97,63,0.28);
+        }
+        .eq-slot-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+
+        /* 槽位卡:空槽 / 已装备 */
+        .eq-slot {
+          position: relative; min-height: 96px; border-radius: 12px; padding: 11px 12px;
+          display: flex; flex-direction: column; overflow: hidden;
+          transition: all 0.3s var(--ease-out);
+        }
+        .eq-slot-tag {
+          display: inline-flex; align-items: center; gap: 5px;
+          font-size: 9px; letter-spacing: 1.5px; color: var(--text-tertiary);
+        }
+        .eq-slot-tag .eq-svg { width: 12px; height: 12px; opacity: 0.7; }
+
+        .eq-slot.empty {
+          background: rgba(0,0,0,0.25);
+          border: 1px dashed rgba(var(--paper-rgb), 0.09);
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.35);
+        }
+        .eq-slot.empty:hover { border-color: rgba(var(--paper-rgb), 0.18); background: rgba(0,0,0,0.32); }
+        .eq-slot-void {
+          flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          gap: 5px; margin-top: 2px; color: var(--text-tertiary);
+        }
+        .eq-slot-void .eq-svg { width: 22px; height: 22px; opacity: 0.16; }
+        .eq-slot-void span { font-size: 9px; letter-spacing: 2px; opacity: 0.5; }
+
+        .eq-slot.filled {
+          background:
+            radial-gradient(ellipse 120% 80% at 100% 0%, color-mix(in srgb, var(--qc, #e8e4d9) 13%, transparent), transparent 60%),
+            var(--surface-bento);
+          box-shadow: var(--shadow-inner), inset 3px 0 0 -1px color-mix(in srgb, var(--qc, #e8e4d9) 55%, transparent);
+        }
+        .eq-slot.filled:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-inner-hover), inset 3px 0 0 -1px var(--qc, #e8e4d9),
+            0 10px 24px -10px color-mix(in srgb, var(--qc, #e8e4d9) 40%, transparent);
+        }
+        .eq-slot-name {
+          margin: auto 0 2px; font-family: var(--font-title); font-size: 15px; font-weight: 800;
+          letter-spacing: 1px; color: var(--text-primary); line-height: 1.3;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .eq-slot-quality { font-size: 10px; letter-spacing: 1px; color: var(--qc, var(--text-tertiary)); }
+        .eq-slot-unequip {
+          position: absolute; top: 8px; right: 8px; z-index: 3;
+          width: 24px; height: 24px; border-radius: 8px; padding: 0;
+          font-size: 11px; line-height: 1;
+          opacity: 0; transform: scale(0.9);
+        }
+        .eq-slot:hover .eq-slot-unequip, .eq-slot:focus-within .eq-slot-unequip { opacity: 1; transform: none; }
+        @media (hover: none) { .eq-slot-unequip { opacity: 1; transform: none; } }
+        .eq-slot-unequip:hover { border-color: rgba(239,83,80,0.45); color: #ef5350; background: rgba(239,83,80,0.12); }
+
+        /* 传说品质呼吸辉光(槽位与物品卡共用) */
         @keyframes legendaryPulse { 0% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } 50% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.5), 0 0 25px rgba(239,83,80,0.4); } 100% { box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3), 0 0 15px rgba(239,83,80,0.2); } }
-        .eq-card[data-quality="传说"] {
-          border-left: 2px solid var(--c-quality-legendary);
-          background: radial-gradient(circle at right bottom, rgba(239,83,80,0.15) 0%, rgba(14,18,24,0.9) 80%);
-          animation: legendaryPulse 3s infinite;
+        .eq-slot.filled[data-quality="传说"], .eq-item[data-quality="传说"] { animation: legendaryPulse 3s infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .eq-slot.filled[data-quality="传说"], .eq-item[data-quality="传说"] { animation: none; }
         }
-        
+
+        /* 分类标题:图标 + 名 + 计数 + 引线 */
+        .eq-cat-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .eq-cat-head > .eq-svg { width: 13px; height: 13px; color: var(--text-tertiary); flex-shrink: 0; }
+        .eq-cat-title {
+          font-family: var(--font-title); font-size: 10px; font-weight: 800;
+          letter-spacing: 3px; color: var(--text-tertiary); text-transform: uppercase;
+        }
+        .eq-cat-count {
+          font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary);
+          padding: 1px 7px; border-radius: var(--r-full);
+          background: rgba(var(--paper-rgb), 0.04); border: 1px solid var(--border-subtle);
+        }
+        .eq-cat-head::after { content: ''; flex: 1; height: 1px; background: var(--border-hairline); }
+
+        /* 物品卡:徽章 + 信息 + 操作 */
+        .eq-item-list { display: flex; flex-direction: column; gap: 10px; }
+        .eq-item {
+          position: relative; overflow: hidden;
+          display: flex; gap: 12px; align-items: flex-start;
+          padding: 13px 14px; border-radius: 12px;
+          background:
+            linear-gradient(120deg, color-mix(in srgb, var(--qc, transparent) 5%, transparent), transparent 45%),
+            var(--surface-bento);
+          box-shadow: var(--shadow-inner), inset 2.5px 0 0 -0.5px color-mix(in srgb, var(--qc, #6a6a6a) 45%, transparent);
+          transition: all 0.3s var(--ease-out);
+        }
+        .eq-item:hover {
+          transform: translateY(-1px);
+          background:
+            linear-gradient(120deg, color-mix(in srgb, var(--qc, transparent) 8%, transparent), transparent 50%),
+            var(--surface-bento-hover);
+          box-shadow: var(--shadow-inner-hover), inset 2.5px 0 0 -0.5px var(--qc, #6a6a6a);
+        }
+        .eq-item-badge {
+          flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          color: color-mix(in srgb, var(--qc, #a39f98) 85%, #fff);
+          background: color-mix(in srgb, var(--qc, #808080) 10%, rgba(0,0,0,0.3));
+          border: 1px solid color-mix(in srgb, var(--qc, #808080) 25%, transparent);
+          box-shadow: inset 0 0 10px color-mix(in srgb, var(--qc, #808080) 12%, transparent);
+        }
+        .eq-item-badge .eq-svg { width: 17px; height: 17px; }
+        .eq-item-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 2; }
+        .eq-item-name {
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+          font-family: var(--font-title); font-size: 14px; font-weight: 800;
+          letter-spacing: 1px; color: var(--text-primary);
+        }
+        .eq-item-on {
+          font-size: 8px; font-weight: 800; letter-spacing: 1px; padding: 2px 6px; border-radius: 3px;
+          background: var(--text-primary); color: var(--c-void);
+        }
+        .eq-item-meta { display: flex; gap: 10px; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; }
+        .eq-item-meta .q { color: var(--qc, var(--text-secondary)); font-weight: 700; }
+        .eq-item-desc {
+          font-size: 11px; color: var(--text-secondary); line-height: 1.6;
+          margin-top: 4px; padding-top: 7px; border-top: 1px dashed rgba(var(--paper-rgb), 0.06);
+        }
+        .eq-item-ops { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 2; }
+        .eq-op {
+          min-width: 56px; padding: 5px 12px; border-radius: 8px;
+          font-size: 10px; font-weight: 700; letter-spacing: 1px; font-family: var(--font-body);
+          background: rgba(var(--paper-rgb), 0.04); border: 1px solid var(--border-subtle);
+          color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+        }
+        .eq-op:hover { background: rgba(var(--paper-rgb), 0.1); color: var(--text-primary); border-color: var(--border-default); }
+        .eq-op.primary { background: var(--text-primary); color: var(--c-void); border-color: transparent; }
+        .eq-op.primary:hover { background: #fff; color: var(--c-void); }
+        .eq-op.danger { color: #b96a66; border-color: rgba(239,83,80,0.22); background: transparent; }
+        .eq-op.danger:hover { color: #ef5350; background: rgba(239,83,80,0.1); border-color: rgba(239,83,80,0.4); }
+
+        /* 空分类占位 */
+        .eq-cat-empty {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          padding: 18px 16px; border-radius: 10px;
+          border: 1px dashed rgba(var(--paper-rgb), 0.06);
+          background: rgba(0,0,0,0.16);
+          color: var(--text-tertiary); font-size: 11px; letter-spacing: 1px;
+        }
+        .eq-cat-empty .eq-svg { width: 15px; height: 15px; opacity: 0.25; }
+
         .eq-watermark {
           position: absolute; right: -10%; bottom: -20%; font-family: var(--font-brush);
           font-size: 64px; color: currentColor; opacity: 0.04; pointer-events: none;
-          transform: rotate(-15deg); font-weight: 900;
+          transform: rotate(-15deg); font-weight: 900; z-index: 1;
         }
-        .eq-card[data-quality="史诗"] .eq-watermark { opacity: 0.08; color: var(--c-quality-epic); }
-        .eq-card[data-quality="传说"] .eq-watermark { opacity: 0.12; color: var(--c-quality-legendary); font-size: 80px; }
+        .eq-slot.filled[data-quality="史诗"] .eq-watermark, .eq-item[data-quality="史诗"] .eq-watermark { opacity: 0.08; color: var(--c-quality-epic); }
+        .eq-slot.filled[data-quality="传说"] .eq-watermark, .eq-item[data-quality="传说"] .eq-watermark { opacity: 0.12; color: var(--c-quality-legendary); font-size: 80px; }
         
         .btn-sleek {
           background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);

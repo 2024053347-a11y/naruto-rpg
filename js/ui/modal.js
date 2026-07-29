@@ -226,6 +226,36 @@ class GameModal extends HTMLElement {
     });
   }
 
+  static variableRecovery({
+    error = '', attempt = 1, canRepair = false, canApplySafe = false,
+    safeAppliedCount = 0, safeDroppedCount = 0, unmetObligations = []
+  } = {}) {
+    const choices = [
+      { label: '跳过变量并继续', value: { action: 'skip' } },
+      ...(canApplySafe ? [{
+        label: `安全保留 ${Math.max(0, Number(safeAppliedCount) || 0)} 项`,
+        value: { action: 'apply-safe' }
+      }] : []),
+      { label: '重新生成变量', value: { action: 'regenerate' } },
+      ...(canRepair ? [{ label: '调用 AI 修复', value: { action: 'repair' }, primary: true }] : [])
+    ];
+    const safeDetail = canApplySafe
+      ? `本地校验器可安全保留 ${Math.max(0, Number(safeAppliedCount) || 0)} 项，并丢弃 ${Math.max(0, Number(safeDroppedCount) || 0)} 项无效标签。`
+      : '本次没有可安全保留的变量标签。';
+    const obligationDetail = Array.isArray(unmetObligations) && unmetObligations.length
+      ? `\n仍未完成的更新义务：${unmetObligations.map(item => String(item || '').trim()).filter(Boolean).join('；')}`
+      : '';
+    return GameModal.choice({
+      title: `二次变量演算异常 · 第 ${Math.max(1, Number(attempt) || 1)} 次`,
+      message: `${String(error || '变量输出未通过校验')}\n\n${safeDetail}${obligationDetail}\n“重新生成”会从本回合原始上下文重新演算；“调用 AI 修复”会把被拒绝输出和校验错误交给变量模型定向修正。所有操作都在回合提交前完成；直接关闭本窗口等同于“跳过变量并继续”。`,
+      choices,
+      // Esc/backdrop is the universal "do nothing" gesture — it must never
+      // write partial state; applying the safe subset requires a real click.
+      dismissValue: { action: 'skip' },
+      wide: true
+    });
+  }
+
   static reviewPreview({ displayText = '', error = '', attempt = 1 } = {}) {
     return new Promise(resolve => {
       const modal = new GameModal();

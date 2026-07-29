@@ -12,6 +12,7 @@ import {
   remapContinuityDelta,
   remapContinuityLedger
 } from '../core/continuity-ledger.js';
+import { encodeTimelineSave } from '../core/timeline-file-codec.js';
 import { formatGameTime, generateId, generateNodeId, truncate, getNextBranchColor, deepClone } from '../utils/format.js';
 
 const ARCHIVE_THRESHOLD = 100;
@@ -125,7 +126,7 @@ class TimelineSystem {
     return node;
   }
 
-  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null, imageContract = null, continuityDelta = [] }) {
+  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null, imageContract = null, shinobiDaily = null, continuityDelta = [] }) {
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     const activeBranch = meta.active_branch;
@@ -154,6 +155,9 @@ class TimelineSystem {
         player_input: truncate(cleanPlayerInput, 200),
         ai_response_summary: truncate(cleanAiResponse, 200),
         clean_response: cleanResponse || aiResponse || '',
+        shinobi_daily: shinobiDaily
+          ? sanitizeTimelinePersistenceValue(shinobiDaily, `timeline_node.${nodeId}.shinobi_daily`)
+          : null,
         media: buildIllustrationMedia(nodeId, imageContract),
         state_snapshot: snapshot,
         continuity_delta: committedContinuityDelta,
@@ -229,6 +233,9 @@ class TimelineSystem {
         player_input: truncate(cleanPlayerInput, 200),
         ai_response_summary: truncate(cleanAiResponse, 200),
         clean_response: cleanResponse || aiResponse || '',
+        shinobi_daily: shinobiDaily
+          ? sanitizeTimelinePersistenceValue(shinobiDaily, `timeline_node.${nodeId}.shinobi_daily`)
+          : null,
         media: buildIllustrationMedia(nodeId, imageContract),
         state_snapshot: snapshot,
         continuity_delta: committedContinuityDelta,
@@ -904,16 +911,27 @@ class TimelineSystem {
     }, 'timeline_export');
   }
 
-  async exportTimeline({ includeArchive = false } = {}) {
+  async exportTimeline({ includeArchive = false, compression = 'auto' } = {}) {
     const data = await this.getExportData({ includeArchive });
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const encoded = await encodeTimelineSave(data, { compression });
+    const fileName = `naruto-timeline-${Date.now()}${includeArchive ? '-full' : ''}${encoded.extension}`;
+    const url = URL.createObjectURL(encoded.blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `naruto-timeline-${Date.now()}${includeArchive ? '-full' : ''}.json`;
+    a.download = fileName;
+    a.hidden = true;
+    document.body?.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    a.remove?.();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    const result = { ...encoded, fileName, includeArchive };
+    eventBus.emit('timeline:exported', {
+      fileName,
+      format: encoded.format,
+      fallbackReason: encoded.fallbackReason,
+      includeArchive
+    });
+    return result;
   }
 
   _migrateNodeV1ToV2(node) {

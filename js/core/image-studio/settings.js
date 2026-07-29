@@ -1,5 +1,30 @@
 export const IMAGE_SETTINGS_STORAGE_KEY = 'naruto_rpg_image_settings_v1';
 
+export const NOVELAI_IMAGE_MODELS = Object.freeze([
+  Object.freeze({ id: 'nai-diffusion-4-5-full', label: 'NAI Diffusion Anime V4.5 (Full)' }),
+  Object.freeze({ id: 'nai-diffusion-4-5-curated', label: 'NAI Diffusion Anime V4.5 (Curated)' }),
+  Object.freeze({ id: 'nai-diffusion-4-full', label: 'NAI Diffusion Anime V4 (Full)' }),
+  Object.freeze({ id: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion Anime V4 (Curated)' }),
+  Object.freeze({ id: 'nai-diffusion-3', label: 'NAI Diffusion Anime V3' }),
+  Object.freeze({ id: 'nai-diffusion-furry-3', label: 'NAI Diffusion Furry V3' })
+]);
+
+// NovelAI 生成参数默认值的唯一事实来源；核心 settings 与 UI controller 共用，避免两份漂移。
+export const NOVELAI_PROVIDER_DEFAULTS = Object.freeze({
+  apiUrl: 'https://image.novelai.net',
+  apiKey: '',
+  apiKeyHeader: 'Authorization',
+  model: NOVELAI_IMAGE_MODELS[0].id,
+  sampler: 'k_euler_ancestral',
+  noiseSchedule: 'karras',
+  steps: 28,
+  width: 832,
+  height: 1216,
+  scale: 5,
+  qualityToggle: true,
+  cfgRescale: 0
+});
+
 export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
   version: 1,
   enabled: false,
@@ -18,6 +43,10 @@ export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
       model: 'gpt-image-1',
       size: '1024x1024',
       quality: 'auto'
+    },
+    novelai: {
+      type: 'novelai',
+      ...NOVELAI_PROVIDER_DEFAULTS
     },
     comfyui: {
       type: 'comfyui',
@@ -48,6 +77,9 @@ const PROVIDER_ALIASES = Object.freeze({
   openai: 'openai-compatible',
   openai_compatible: 'openai-compatible',
   'openai-compatible': 'openai-compatible',
+  novelai: 'novelai',
+  'novel-ai': 'novelai',
+  nai: 'novelai',
   comfy: 'comfyui',
   comfyui: 'comfyui',
   automatic1111: 'a1111',
@@ -111,6 +143,10 @@ export function normalizeImageSettings(input = {}) {
     };
   }
   for (const provider of Object.values(normalized.providers)) {
+    if (provider.type === 'novelai') {
+      provider.apiKeyHeader = 'Authorization';
+      continue;
+    }
     if (!['openai', 'openai-compatible'].includes(provider.type)) continue;
     const header = String(provider.apiKeyHeader || 'Authorization').trim();
     provider.apiKeyHeader = API_KEY_HEADERS.has(header.toLowerCase())
@@ -131,7 +167,7 @@ export function validateImageSettings(input) {
   }
   for (const [id, provider] of Object.entries(settings.providers)) {
     if (!provider.apiUrl) errors.push(`Provider ${id} requires apiUrl`);
-    if (!['openai', 'openai-compatible', 'comfyui', 'a1111', 'forge'].includes(provider.type)) {
+    if (!['openai', 'openai-compatible', 'novelai', 'comfyui', 'a1111', 'forge'].includes(provider.type)) {
       errors.push(`Provider ${id} has unsupported type: ${provider.type}`);
     }
   }

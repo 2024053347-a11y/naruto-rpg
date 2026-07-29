@@ -334,6 +334,7 @@ test('every Chinese technique display name uniquely resolves to its JT record', 
 test('current date returns the complete day with every same-day scene', () => {
   const context = CANON_DATABASE.getPlotDayContext({ state: at('木叶64年4月6日·清晨') });
   assert.equal(context.is_future, false);
+  assert.equal(context.date_relation, 'current');
   assert.equal(context.day.id, 'DAY-P1-CRUSH-406');
   assert.equal(context.day.scenes.length, 8);
   assert.deepEqual(context.day.scenes.map(scene => scene.id), [
@@ -351,6 +352,7 @@ test('current date returns the complete day with every same-day scene', () => {
 test('blank dates return the complete nearest future day with exact distance', () => {
   const context = CANON_DATABASE.getPlotDayContext({ state: at('木叶64年2月30日·深夜') });
   assert.equal(context.is_future, true);
+  assert.equal(context.date_relation, 'future');
   assert.equal(context.current_date, 'K064-02-30');
   assert.equal(context.target_date, 'K064-03-01');
   assert.equal(context.days_until, 1);
@@ -373,20 +375,21 @@ test('full-day serialization never truncates scene boundaries or database rules'
   assert.equal((text.match(/=== SCENE_START/g) || []).length, 8);
   assert.equal((text.match(/=== SCENE_END/g) || []).length, 8);
   assert.match(text, /SCN-P1-CRUSH-GAARA-01/);
-  assert.match(text, /<<< CURRENT_DAY_END >>>/);
+  assert.match(text, /<<< CURRENT_PLOT_END >>>/);
   assert.match(text, /reference_facts/);
   assert.doesNotMatch(text, /连续场景窗口|第 \d+-\d+ 条/);
 });
 
-test('future serialization is fully wrapped and explicitly forbidden from prose or state', () => {
+test('nearest future day is serialized as ordinary current plot context', () => {
   const text = CANON_DATABASE.buildContext({
     state: at('木叶64年2月30日·深夜'), query: '', maxTechniques: 0, budget: 1
   });
-  assert.match(text, /<<< FUTURE_ONLY_START current=K064-02-30 target=K064-03-01 days_until=1 >>>/);
+  assert.match(text, /<<< CURRENT_PLOT_START current=K064-02-30 target=K064-03-01 days_until=1 date_relation=future >>>/);
   assert.match(text, /DAY-P1-EXAM-301/);
   assert.match(text, /SCN-P1-EXAM-WRITTEN-01/);
-  assert.match(text, /任何场景、节拍、台词、结果和ID都不得出现在当前沉浸式正文或状态写入中/);
-  assert.match(text, /<<< FUTURE_ONLY_END >>>/);
+  assert.match(text, /可作为当前分支的普通剧情上下文引用、推进和改写/);
+  assert.match(text, /<<< CURRENT_PLOT_END >>>/);
+  assert.doesNotMatch(text, /FUTURE_ONLY|不得出现在当前沉浸式正文|到达目标日期前/);
 });
 
 test('reference facts remain a separate non-executable channel', () => {
@@ -406,13 +409,13 @@ test('settled days advance retrieval without replaying the original date', () =>
   assert.equal(context.days_until, 2);
 });
 
-test('future and malformed project timeline writes are rejected locally', () => {
+test('future project nodes can be settled while malformed writes remain rejected', () => {
   const state = at('木叶64年4月6日');
   const future = CANON_DATABASE.validateTimelineEventUpdate({
     id: 'EV-P1-SASUKE-VALLEY-01-01', status: 'occurred'
   }, { state });
-  assert.equal(future.allowed, false);
-  assert.match(future.reason, /尚未到达/);
+  assert.equal(future.allowed, true);
+  assert.ok(future.nodeDate.localeCompare('K064-04-06') > 0);
 
   const current = CANON_DATABASE.validateTimelineEventUpdate({
     id: 'SCN-P1-CRUSH-GAARA-01', status: 'altered', description: '玩家改变追击战'
@@ -526,28 +529,32 @@ test('knowledge cache invalidates when branch timeline decisions change', () => 
 test('secondary updater receives the complete day instead of a 1000/2000 character fragment', () => {
   const state = at('木叶64年4月6日·清晨');
   const pipeline = new MessagePipeline({ knowledgeBase: KNOWLEDGE_BASE });
-  const context = pipeline._buildUpdaterKbContext(state, '千鸟');
-  assert.match(context, /project game-canon timeline/);
-  assert.match(context, /DAY-P1-CRUSH-406/);
+  const evidence = pipeline._compileUpdaterEvidence({
+    state,
+    userInput: '千鸟',
+    narrativeResponse: '玩家在木叶隐村继续调查。'
+  });
+  const context = JSON.stringify(evidence.current_plot);
+  assert.equal(evidence.current_plot.day_id, 'DAY-P1-CRUSH-406');
+  assert.equal(evidence.current_plot.scenes.length, evidence.current_plot.total_scene_count);
   assert.match(context, /SCN-P1-CRUSH-GAARA-01/);
-  assert.match(context, /<<< CURRENT_DAY_END >>>/);
   assert.ok(context.length > 2000);
 });
 
-test('editable presets expose V2 lifecycle, future isolation and unchanged JT authority', () => {
+test('editable presets expose V2 lifecycle and unchanged JT authority', () => {
   const main = DEFAULT_MAIN_PRESET.entries.map(entry => entry.content).join('\n');
   const updater = DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content).join('\n');
-  assert.match(DEFAULT_MAIN_PRESET_VERSION, /evidence-single-call-v9/);
-  assert.equal(DEFAULT_VARIABLE_UPDATER_PRESET_VERSION, 11);
+  assert.match(DEFAULT_MAIN_PRESET_VERSION, /open-future-context-v12/);
+  assert.equal(DEFAULT_VARIABLE_UPDATER_PRESET_VERSION, 14);
   for (const text of [main, updater]) {
     assert.match(text, /DAY-\{HIST\|P1\|P2\|BOR\}-\*/);
     assert.match(text, /SCN-\{HIST\|P1\|P2\|BOR\}-\*/);
     assert.match(text, /EV-\{HIST\|P1\|P2\|BOR\}-\*/);
-    assert.match(text, /NEXT_ANCHOR/);
-    assert.match(text, /(?:不得|禁止)[^\n]*(?:猜测|补写|提前)[^\n]*(?:DAY|SCN|EV|未来事件)/);
     assert.match(text, /reference_facts/);
     assert.match(text, /occurred.*altered.*skipped.*postponed/s);
   }
+  assert.doesNotMatch(main, /NEXT_ANCHOR|FUTURE_ONLY|受保护未来|未来事件隔离/);
+  assert.match(main, /最近一个项目剧情日[\s\S]*普通分支素材[\s\S]*引用、推进、改写和结算/);
   assert.match(main, /当天全部独立场景/);
   assert.match(main, /不等于本回合必须演完一天/);
   assert.match(main, /每回合.*<memory>/s);

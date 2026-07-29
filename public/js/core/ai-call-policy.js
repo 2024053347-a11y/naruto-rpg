@@ -12,7 +12,6 @@ const FEATURE_LABELS = Object.freeze({
   aiCompression: 'AI 记忆压缩',
   deepConsolidation: '记忆深度整理',
   npcSummary: 'NPC AI 总结',
-  futurePlanner: '未来规划器',
   imagePromptPlanner: '独立图像提示词规划',
   automaticImage: '自动回合插图'
 });
@@ -32,9 +31,6 @@ function requestedFeatures({ apiConfig, agentConfig, memoryConfig, imageSettings
     aiCompression: enabled(memoryConfig?.aiCompressionEnabled),
     deepConsolidation: enabled(memoryConfig?.deepEnabled),
     npcSummary: enabled(memoryConfig?.npcSummaryEnabled),
-    // 旧 futurePlanner 配置只保留存档兼容；未来护栏现为手动 Agent 模式的内部阶段，
-    // 不再被错误计算成一个可独立开启但实际上没有执行器的请求。
-    futurePlanner: false,
     imagePromptPlanner: imageEnabled && imageSettings?.promptMode === 'separate-model',
     automaticImage
   };
@@ -49,7 +45,6 @@ function estimateCalls(features, agentConfig = {}) {
       maximum: null,
       conditional: [
         'Agent 数量随登场角色和审查结果变化',
-        '存在受保护未来时，因果护栏额外调用 1-2 次',
         '请求失败时可能透明重试',
         ...(features.aiCompression ? ['AI 记忆压缩'] : []),
         ...(features.deepConsolidation ? ['记忆深度整理'] : []),

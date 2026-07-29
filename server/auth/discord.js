@@ -4,14 +4,118 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 import { getUser, recordLogin, upsertUser } from '../db/index.js';
 import { requireAuth } from '../middleware/auth.js';
+import { asyncRoute } from '../middleware/async-route.js';
 
-// Discord API 代理：将 discord.com 请求转发到 Cloudflare Worker
-const discordFetch = async (url, options = {}) => {
+export const DISCORD_FETCH_TIMEOUT_MS = 15_000;
+export const DISCORD_STANDARD_MAX_BYTES = 256 * 1024;
+export const DISCORD_GUILDS_MAX_BYTES = 2 * 1024 * 1024;
+
+function resolveDiscordUrl(url) {
   if (config.proxy?.enabled && config.proxy.url) {
-    url = url.replace('https://discord.com', config.proxy.url);
+    return url.replace('https://discord.com', config.proxy.url);
   }
-  return fetch(url, options);
-};
+  return url;
+}
+
+function createAbortError(message, code = 'DISCORD_REQUEST_ABORTED') {
+  const error = new Error(message);
+  error.name = 'AbortError';
+  error.code = code;
+  return error;
+}
+
+async function discardResponseBody(response) {
+  if (!response?.body || response.bodyUsed) return;
+  await response.body.cancel().catch(() => {});
+}
+
+export async function readDiscordJsonLimited(response, maxBytes) {
+  const declaredLength = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+    await discardResponseBody(response);
+    const error = new Error(`Discord response exceeds ${maxBytes} bytes`);
+    error.code = 'DISCORD_RESPONSE_TOO_LARGE';
+    throw error;
+  }
+  if (!response.body) {
+    const error = new Error('Discord response body is empty');
+    error.code = 'DISCORD_RESPONSE_INVALID';
+    throw error;
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  let received = 0;
+  let text = '';
+  let completed = false;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        completed = true;
+        break;
+      }
+      received += value.byteLength;
+      if (received > maxBytes) {
+        const error = new Error(`Discord response exceeds ${maxBytes} bytes`);
+        error.code = 'DISCORD_RESPONSE_TOO_LARGE';
+        throw error;
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+    return JSON.parse(text);
+  } catch (error) {
+    if (error instanceof SyntaxError || error instanceof TypeError) {
+      error.code ||= 'DISCORD_RESPONSE_INVALID';
+    }
+    throw error;
+  } finally {
+    if (!completed) await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
+
+/**
+ * Fetches and parses one bounded Discord API response. The timeout remains
+ * active until the complete response body has been consumed.
+ */
+export async function fetchDiscordJson(url, options = {}, {
+  signal = options.signal,
+  timeoutMs = DISCORD_FETCH_TIMEOUT_MS,
+  maxBytes = DISCORD_STANDARD_MAX_BYTES,
+  fetchImpl = globalThis.fetch
+} = {}) {
+  const controller = new AbortController();
+  const abortFromCaller = () => controller.abort(
+    signal?.reason || createAbortError('Discord request cancelled by caller')
+  );
+  if (signal?.aborted) abortFromCaller();
+  else signal?.addEventListener('abort', abortFromCaller, { once: true });
+
+  const timeout = setTimeout(() => {
+    controller.abort(createAbortError('Discord request timed out', 'DISCORD_REQUEST_TIMEOUT'));
+  }, timeoutMs);
+
+  let response;
+  try {
+    response = await fetchImpl(resolveDiscordUrl(url), {
+      ...options,
+      redirect: 'error',
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      await discardResponseBody(response);
+      return { ok: false, status: response.status, data: null };
+    }
+    const data = await readDiscordJsonLimited(response, maxBytes);
+    return { ok: true, status: response.status, data };
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener('abort', abortFromCaller);
+    await discardResponseBody(response);
+  }
+}
 
 const router = Router();
 
@@ -44,7 +148,7 @@ router.get('/discord', (req, res) => {
 /**
  * GET /auth/discord/callback - 处理 Discord 回调
  */
-router.get('/discord/callback', async (req, res) => {
+router.get('/discord/callback', asyncRoute(async (req, res) => {
   const { code, state, error, error_description } = req.query;
 
   if (error) {
@@ -66,9 +170,19 @@ router.get('/discord/callback', async (req, res) => {
     return res.redirect('/login.html?error=missing_code');
   }
 
+  const clientAbort = new AbortController();
+  let clientDisconnected = false;
+  const abortForDisconnectedClient = () => {
+    if (res.writableEnded) return;
+    clientDisconnected = true;
+    clientAbort.abort(createAbortError('OAuth client disconnected'));
+  };
+  req.once('aborted', abortForDisconnectedClient);
+  res.once('close', abortForDisconnectedClient);
+
   try {
     // 2. 用 code 换取 access_token
-    const tokenResponse = await discordFetch('https://discord.com/api/v10/oauth2/token', {
+    const tokenResult = await fetchDiscordJson('https://discord.com/api/v10/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -80,51 +194,61 @@ router.get('/discord/callback', async (req, res) => {
         code: code,
         redirect_uri: config.discord.redirectUri
       }).toString()
+    }, {
+      signal: clientAbort.signal,
+      maxBytes: DISCORD_STANDARD_MAX_BYTES
     });
 
-    if (!tokenResponse.ok) {
-      const errBody = await tokenResponse.text();
-      console.error('[DISCORD CALLBACK] Failed to exchange code for token:', errBody);
+    if (!tokenResult.ok) {
+      console.error('[DISCORD CALLBACK] Failed to exchange code for token:', tokenResult.status);
       return res.redirect('/login.html?error=auth_failed');
     }
 
-    const tokens = await tokenResponse.json();
+    const tokens = tokenResult.data;
     const accessToken = tokens.access_token;
+    if (typeof accessToken !== 'string' || !accessToken) {
+      throw new Error('Discord token response did not include an access token');
+    }
 
     // 3. 获取 Discord 用户个人资料
-    const userResponse = await discordFetch('https://discord.com/api/v10/users/@me', {
+    const userResult = await fetchDiscordJson('https://discord.com/api/v10/users/@me', {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
+    }, {
+      signal: clientAbort.signal,
+      maxBytes: DISCORD_STANDARD_MAX_BYTES
     });
 
-    if (!userResponse.ok) {
-      console.error('[DISCORD CALLBACK] Failed to fetch user profile');
+    if (!userResult.ok) {
+      console.error('[DISCORD CALLBACK] Failed to fetch user profile:', userResult.status);
       return res.redirect('/login.html?error=fetch_profile_failed');
     }
 
-    const discordUser = await userResponse.json();
-
-    // 4. 获取 Discord 用户的服务器（Guilds）列表
-    const guildsResponse = await discordFetch('https://discord.com/api/v10/users/@me/guilds', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!guildsResponse.ok) {
-      console.error('[DISCORD CALLBACK] Failed to fetch user guilds');
-      return res.redirect('/login.html?error=fetch_guilds_failed');
+    const discordUser = userResult.data;
+    if (!discordUser || typeof discordUser !== 'object' || typeof discordUser.id !== 'string') {
+      throw new Error('Discord user response is invalid');
     }
 
-    const guilds = await guildsResponse.json();
-
-    // 5. 校验用户是否属于指定的服务器群组之一 (逗号分隔，满足其一即可；未配置或为占位符时跳过校验)
+    // 4. 校验用户是否属于指定的服务器群组之一。
     const rawGuildId = config.discord.requiredGuildId;
     const isBypass = !rawGuildId || rawGuildId === 'your_discord_server_id_here' || rawGuildId === 'your-discord-server-id';
-    
     let isMember = isBypass;
     if (!isBypass) {
+      const guildsResult = await fetchDiscordJson('https://discord.com/api/v10/users/@me/guilds', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }, {
+        signal: clientAbort.signal,
+        maxBytes: DISCORD_GUILDS_MAX_BYTES
+      });
+      if (!guildsResult.ok) {
+        console.error('[DISCORD CALLBACK] Failed to fetch user guilds:', guildsResult.status);
+        return res.redirect('/login.html?error=fetch_guilds_failed');
+      }
+      const guilds = guildsResult.data;
+      if (!Array.isArray(guilds)) throw new Error('Discord guilds response is invalid');
       const targetGuildIds = rawGuildId.split(',').map(id => id.trim()).filter(Boolean);
       isMember = guilds.some(guild => targetGuildIds.includes(guild.id));
     }
@@ -175,10 +299,18 @@ router.get('/discord/callback', async (req, res) => {
     console.log(`[DISCORD CALLBACK] User ${discordUser.username} logged in successfully.`);
     return res.redirect('/');
   } catch (err) {
-    console.error('[DISCORD CALLBACK] Internal error during login callback:', err);
+    if (clientDisconnected || res.destroyed || res.writableEnded) return;
+    console.error('[DISCORD CALLBACK] Internal error during login callback:', {
+      name: err?.name,
+      code: err?.code,
+      message: err?.message
+    });
     return res.redirect('/login.html?error=server_error');
+  } finally {
+    req.off('aborted', abortForDisconnectedClient);
+    res.off('close', abortForDisconnectedClient);
   }
-});
+}));
 
 /**
  * GET /auth/me - 获取当前登录用户信息

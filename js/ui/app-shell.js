@@ -6,7 +6,9 @@ import { getAgentConfig } from '../data/agent-config.js';
 import { instructionParser } from '../core/instruction-parser.js';
 import { isNarrativeReviewEnabled } from '../core/narrative-review.js';
 import { imageStudio } from '../core/image-studio/index.js';
+import { TIMELINE_FILE_ACCEPT } from '../core/timeline-file-codec.js';
 import { mountTurnIllustration } from './image-studio.js';
+import { createShinobiDailyTrigger } from './shinobi-daily-modal.js';
 import { atmosphereManager } from './atmosphere-manager.js';
 
 class AppShell {
@@ -200,6 +202,12 @@ class AppShell {
       if (!Modal?.reviewPreview) throw new Error('正文复检预览界面尚未加载');
       return Modal.reviewPreview(request || {});
     });
+    this._variableRecoveryDecisionOff?.();
+    this._variableRecoveryDecisionOff = eventBus.on('pipeline:variable-recovery-decision', request => {
+      const Modal = customElements.get('game-modal');
+      if (!Modal?.variableRecovery) throw new Error('二次变量恢复界面尚未加载');
+      return Modal.variableRecovery(request || {});
+    });
     eventBus.on('state:batch-changed', (e) => {
       if (this._captureUpdates && e.updates && e.updates.length) this._turnUpdates.push(...e.updates);
     });
@@ -297,8 +305,8 @@ class AppShell {
       }
     });
 
-    eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError, timelineNodeId }) => {
-      this._finalizeMessage(cleanResponse, rawResponse, thinkContent, isPartial, hasHUD, this._lastDice);
+    eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError, timelineNodeId, shinobiDaily }) => {
+      this._finalizeMessage(cleanResponse, rawResponse, thinkContent, isPartial, hasHUD, this._lastDice, shinobiDaily);
       if (!isPartial && timelineNodeId) void this._mountTurnIllustration(timelineNodeId, cleanResponse);
       // Update turn display inline (method was removed)
       const turnEl = this.element.querySelector('#status-turn');
@@ -749,13 +757,16 @@ class AppShell {
       wrap.appendChild(arena);
       msgs.appendChild(wrap);
     }
-    if (timelineNodeId) void this._mountTurnIllustration(timelineNodeId, text);
+    if (timelineNodeId) {
+      void this._mountTurnIllustration(timelineNodeId, text);
+      void this._mountStoredShinobiDaily(timelineNodeId);
+    }
     this._scroll();
   }
 
-  restoreChatHistory(history = [], fallbackMessage = '') {
+  restoreChatHistory(history = [], fallbackMessage = '', { timelineNodeId = null } = {}) {
     // Single page paradigm: we ignore the array of history and just use the fallbackMessage (which is node.clean_response)
-    this.renderSinglePage(fallbackMessage || '本回没有记录任何回忆...');
+    this.renderSinglePage(fallbackMessage || '本回没有记录任何回忆...', { timelineNodeId });
   }
 
   _showToast(text) {
@@ -810,14 +821,14 @@ class AppShell {
       if (!settings.enabled) return;
       const node = await stateManager.dbGet('timeline_nodes', nodeId);
       if (!node) return;
-      const message = this.element?.querySelector('#chat-messages .chat-message--ai:last-of-type');
+      const message = [...(this.element?.querySelectorAll('#chat-messages .chat-message--ai') || [])].at(-1);
       const content = message?.querySelector('.chat-content');
       if (!content) return;
       content.querySelector('[data-image-turn-host]')?.remove();
       const host = document.createElement('div');
       host.dataset.imageTurnHost = String(nodeId);
       host.style.marginTop = '14px';
-      content.appendChild(host);
+      content.insertBefore(host, content.querySelector('[data-shinobi-daily-host]'));
       const element = mountTurnIllustration(host, {
         imageStudio, nodeId,
         contract: node.media?.illustration?.contract || null,
@@ -830,7 +841,28 @@ class AppShell {
     }
   }
 
-  _finalizeMessage(text, _rawText, thinkContent, isPartial = false, hasHUD = false, dice = null) {
+  _mountShinobiDaily(daily) {
+    const message = [...(this.element?.querySelectorAll('#chat-messages .chat-message--ai') || [])].at(-1);
+    const content = message?.querySelector('.chat-content');
+    if (!content) return;
+    content.querySelector('[data-shinobi-daily-host]')?.remove();
+    const trigger = createShinobiDailyTrigger(daily);
+    if (trigger) content.appendChild(trigger);
+  }
+
+  async _mountStoredShinobiDaily(nodeId) {
+    try {
+      const node = await stateManager.dbGet('timeline_nodes', nodeId);
+      if (!node?.shinobi_daily) return;
+      const currentNodeId = stateManager.getSub('_meta')?.current_node_id;
+      if (currentNodeId && String(currentNodeId) !== String(nodeId)) return;
+      this._mountShinobiDaily(node.shinobi_daily);
+    } catch (error) {
+      console.warn('[AppShell] Unable to mount shinobi daily:', error.message);
+    }
+  }
+
+  _finalizeMessage(text, _rawText, thinkContent, isPartial = false, hasHUD = false, dice = null, shinobiDaily = null) {
     if (!this._streamingEl) {
       this._updateStreaming(text);
     }
@@ -896,6 +928,7 @@ class AppShell {
         note.textContent = '⚠ 此回复被截断，变量可能未完全更新。可继续游戏。';
         contentEl.appendChild(note);
       }
+      if (shinobiDaily) this._mountShinobiDaily(shinobiDaily);
       this._streamingEl = null;
     }
     const combat = stateManager.getSub('_combat');
@@ -1225,6 +1258,7 @@ class AppShell {
     if (isEditing) return;
 
     const originalHtml = contentEl.innerHTML;
+    const shinobiDaily = contentEl.querySelector('[data-shinobi-daily-host]')?.shinobiDaily || null;
     const textarea = document.createElement('textarea');
     textarea.className = 'edit-textarea';
     textarea.value = currentText;
@@ -1250,11 +1284,20 @@ class AppShell {
         this._editAIResponse(contentEl, newText, newBar);
       });
       contentEl.appendChild(newBar);
+      if (shinobiDaily) {
+        const trigger = createShinobiDailyTrigger(shinobiDaily);
+        if (trigger) contentEl.appendChild(trigger);
+      }
       this._updateNodeResponse(newText);
     });
 
     btnRow.querySelector('.btn-cancel-edit').addEventListener('click', () => {
       contentEl.innerHTML = originalHtml;
+      if (shinobiDaily) {
+        contentEl.querySelector('[data-shinobi-daily-host]')?.remove();
+        const trigger = createShinobiDailyTrigger(shinobiDaily);
+        if (trigger) contentEl.appendChild(trigger);
+      }
       editBar.style.display = '';
     });
   }
@@ -1315,25 +1358,45 @@ class AppShell {
     if (!text) return '';
 
     // AI 正文不是受信任的样式来源；完整丢弃样式块，不把 CSS 带入页面或 document.head。
-    let processed = text.replace(/<style(?:\s[^>]*)?>[\s\S]*?<\/style\s*>/gi, '');
+    let processed = text.replace(/\r\n?/g, '\n').replace(/<style(?:\s[^>]*)?>[\s\S]*?<\/style\s*>/gi, '');
 
     const guaxiangBlocks = [];
-    processed = processed.replace(/≈卦象判定≈\n?([\s\S]*?)卦象：([^\n]+)\n?([\s\S]*?)(?:≈卦终≈|$)/g, (match, action, resultLine, narrative) => {
+    const divinationPattern = /(?:\*\*)?(?:≈\s*卦象判定\s*≈|【\s*卦象判定\s*】)(?:\*\*)?[ \t]*\n*([\s\S]*?)(?:(?:\*\*)?(?:≈\s*卦终\s*≈|【\s*卦终\s*】)(?:\*\*)?|(?=\n[ \t]*(?:(?:[-*•]|\d+[.、])\s*)?(?:\[\s*行动(?:\s*\d+)?\s*\]|【\s*行动(?:选项)?\s*】))|$)/gi;
+    processed = processed.replace(divinationPattern, (match, body) => {
+      const lines = String(body || '').split('\n');
+      const resultIndex = lines.findIndex(line => /^\s*(?:卦象(?:结果)?|判定结果)\s*[:：]/.test(line));
+      let action = '';
+      let resultLine = '';
+      let narrative = '';
+      if (resultIndex >= 0) {
+        action = lines.slice(0, resultIndex).join('\n').trim();
+        resultLine = lines[resultIndex].replace(/^\s*(?:卦象(?:结果)?|判定结果)\s*[:：]\s*/, '').trim();
+        narrative = lines.slice(resultIndex + 1).join('\n').trim();
+      } else {
+        // 兼容旧存档：单行卦象块或“卦象：”出现在行中而非行首。
+        const legacy = String(body || '').match(/^([\s\S]*?)(?:卦象(?:结果)?|判定结果)\s*[:：]([^\n]*)\n?([\s\S]*)$/);
+        if (!legacy) return match;
+        action = legacy[1].trim();
+        resultLine = legacy[2].trim();
+        narrative = legacy[3].trim();
+      }
       let dice = '卦象';
       let result = resultLine.trim();
-      const parts = resultLine.split(/→|->|＞|>/);
+      const parts = resultLine.split(/\s*(?:→|->|＞|>)\s*/);
       if (parts.length > 1) {
-        dice = parts[0].trim();
-        result = parts[1].trim();
+        dice = parts.shift().trim();
+        result = parts.join(' → ').trim();
       }
 
-      let resClass = 'default';
-      if (result.includes('天命')) resClass = 'epic';
-      else if (result.includes('瞬身')) resClass = 'success';
-      else if (result.includes('及第')) resClass = 'normal';
-      else if (result.includes('代偿')) resClass = 'warning';
-      else if (result.includes('转机')) resClass = 'info';
-      else if (result.includes('大凶') || result.includes('失败')) resClass = 'danger';
+      // \b 对 CJK 无效（只识别 ASCII 词字符），单字结果需用邻字排除法判断。
+      const lone = char => new RegExp(`(?:^|[^\\u4e00-\\u9fff])${char}(?:[^\\u4e00-\\u9fff]|$)`).test(result);
+      let resClass = 'normal';
+      if (/天命|大吉/.test(result)) resClass = 'epic';
+      else if (/瞬身|成功/.test(result) || lone('吉')) resClass = 'success';
+      else if (/及第|部分达成/.test(result) || lone('平')) resClass = 'normal';
+      else if (/大凶|失败/.test(result)) resClass = 'danger';
+      else if (/代偿|警示/.test(result) || lone('凶')) resClass = 'warning';
+      else if (/转机|新局势|引出/.test(result)) resClass = 'info';
 
       const esc = this._esc ? this._esc.bind(this) : (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const actionHtml = action.trim() ? `<div class="d-action">${esc(action.trim()).replace(/\n/g, '<br>')}</div>` : '';
@@ -1375,28 +1438,39 @@ class AppShell {
     html = '<p>' + html + '</p>';
     html = this._unescapeSafeHtml(html);
 
-    html = html.replace(/(?![^<]*>)【(.+?)】/g, (match, content) => '<span style="color:var(--c-kin);font-size:12px;font-family:var(--font-title);">【' + content + '】</span>');
-
     html = html.replace(/<p>\s*%%%GUAXIANG_(\d+)%%%\s*<\/p>/g, '%%%GUAXIANG_$1%%%');
     html = html.replace(/<br>\s*%%%GUAXIANG_(\d+)%%%\s*(?:<br>)?/g, '%%%GUAXIANG_$1%%%');
     html = html.replace(/%%%GUAXIANG_(\d+)%%%/g, (match, id) => guaxiangBlocks[id]);
 
-    html = html.replace(/\[行动\]\s*(.*?)(?=<br>|<\/p>|$)/g, (match, option) => {
-      const plain = option.replace(/<[^>]+>/g, '');
-      return `<button class="action-option" data-action="${this._escAttr(plain.trim())}">
+    const actionButton = (prefix, option) => {
+      const cleaned = option.replace(/<\/?(?:strong|em)>/g, '');
+      const plain = cleaned.replace(/<[^>]+>/g, '').trim();
+      // 裸的「【行动选项】」表头没有正文，保持原文（由下方金色【】规则渲染），
+      // 不能生成点击后填入空白的无字按钮。
+      if (!plain) return null;
+      return `${prefix}<button class="action-option" data-action="${this._escAttr(plain)}">
                 <span class="action-option__icon">忍</span>
-                <span class="action-option__text">${option.trim()}</span>
+                <span class="action-option__text">${cleaned.trim()}</span>
               </button>`;
-    });
+    };
+
+    html = html.replace(/(^|<br>|<p>)\s*(?:(?:[-*•]|\d+[.、])\s*)?(?:<strong>|<em>)?\s*(?:\[\s*行动(?:\s*\d+)?\s*\]|【\s*行动(?:选项)?\s*】)\s*(.*?)(?=<br>|<\/p>|$)/g,
+      (match, prefix, option) => actionButton(prefix, option) ?? match);
+
+    // 兼容旧存档：老正则不要求行首锚定，行中出现的 [行动] 也曾渲染为按钮。
+    html = html.replace(/\[\s*行动(?:\s*\d+)?\s*\]\s*(.*?)(?=<br>|<\/p>|$)/g,
+      (match, option) => actionButton('', option) ?? match);
 
     // 兼容旧存档的选项格式，允许末尾句号但防止跨越多重引号匹配，忽略被前面正则添加的对话span
-    html = html.replace(/(<br>|<p>)\s*(?:<span class="text-dialogue">)?「([^「」]+)」(?:<\/span>)?\s*(?=<br>|<\/p>|$)/g, (match, prefix, option) => {
+    html = html.replace(/(^|<br>|<p>)\s*(?:(?:[-*•]|\d+[.、])\s*)?(?:<span class="text-dialogue">)?「([^「」]+)」(?:<\/span>)?\s*[。.．]?\s*(?=<br>|<\/p>|$)/g, (match, prefix, option) => {
       const plain = option.replace(/<[^>]+>/g, '');
       return `${prefix}<button class="action-option" data-action="${this._escAttr(plain.trim())}">
                 <span class="action-option__icon">忍</span>
                 <span class="action-option__text">${option.trim()}</span>
               </button>`;
     });
+
+    html = html.replace(/(?![^<]*>)【(.+?)】/g, (match, content) => '<span style="color:var(--c-kin);font-size:12px;font-family:var(--font-title);">【' + content + '】</span>');
 
     return html;
   }
@@ -1695,7 +1769,7 @@ class AppShell {
                 <span>导入时间线 JSON，直接恢复角色、分支和聊天记录</span>
               </div>
               <button type="button" class="btn btn-secondary btn-sm" id="btn-import-save">导入存档</button>
-              <input type="file" id="timeline-import-file" accept="application/json,.json" hidden />
+              <input type="file" id="timeline-import-file" accept="${TIMELINE_FILE_ACCEPT}" hidden />
             </div>
           </section>
 

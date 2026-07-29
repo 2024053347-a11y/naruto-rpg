@@ -398,18 +398,21 @@ test('insufficient NPC resource follows the same failure rule', () => {
 
 test('secondary updater context includes the existing NPC combat card', () => {
   const pipeline = new MessagePipeline({});
-  const summary = pipeline._summarizeRelationshipsForUpdater({
-    卡卡西: {
+  const evidence = pipeline._compileUpdaterEvidence({
+    state: { _relationships: { 卡卡西: {
       affection: 5,
       role: '指导上忍',
       combat_stats: normalizeNpcCombatStats({
         忍阶: '上忍', 查克拉: 200, 查克拉上限: 400,
         忍术: [{ 名称: '雷切', 等级: 'A', 熟练度: 90, 类型: '忍术' }]
       })
-    }
+    } } },
+    userInput: '查看卡卡西',
+    narrativeResponse: '卡卡西仍在场。'
   });
+  const summary = evidence.current_state.relationships;
 
-  assert.equal(summary.卡卡西.rank, '上忍');
+  assert.equal(summary.卡卡西.combat_stats.忍阶, '上忍');
   assert.equal(summary.卡卡西.combat_stats.查克拉, 200);
   assert.equal(summary.卡卡西.combat_stats.忍术[0].名称, '雷切');
 });

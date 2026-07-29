@@ -1,13 +1,16 @@
 import assert from 'node:assert/strict';
+import { deflateRawSync } from 'node:zlib';
 
 import {
   A1111ImageAdapter,
   ComfyUIImageAdapter,
+  ImageAdapterRegistry,
   ImageContractStreamFilter,
   ImageSettingsStore,
   ImageTransport,
   ImageWorldbookStore,
   MemoryImageStore,
+  NovelAIImageAdapter,
   OpenAIImageAdapter,
   contractToPrompt,
   createImageStudio,
@@ -17,8 +20,10 @@ import {
   matchImageWorldbook,
   mergeImageWorldbooks,
   normalizeImageSettings,
+  normalizeImageApiBaseUrl,
   renderImageWorldbook,
   renderImageWorldbookPrompts,
+  extractFirstImageFromZip,
   stripImageContracts,
   validateImageContract
 } from '../js/core/image-studio/index.js';
@@ -87,6 +92,61 @@ function pngBlob(width = 2, height = 3) {
 
 async function blobBase64(blob) {
   return Buffer.from(await blob.arrayBuffer()).toString('base64');
+}
+
+function crc32(value) {
+  const bytes = Buffer.from(value);
+  let crc = 0xffffffff;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit++) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function zipBlob(entries) {
+  const localParts = [];
+  const centralParts = [];
+  let localOffset = 0;
+  for (const entry of entries) {
+    const name = Buffer.from(entry.name, 'utf8');
+    const source = Buffer.from(entry.data);
+    const method = entry.method ?? 0;
+    const compressed = method === 8 ? deflateRawSync(source) : source;
+    const checksum = entry.crc ?? crc32(source);
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0x0800, 6);
+    local.writeUInt16LE(method, 8);
+    local.writeUInt32LE(checksum, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(source.length, 22);
+    local.writeUInt16LE(name.length, 26);
+    localParts.push(local, name, compressed);
+
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(method, 10);
+    central.writeUInt32LE(checksum, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(source.length, 24);
+    central.writeUInt16LE(name.length, 28);
+    central.writeUInt32LE(localOffset, 42);
+    centralParts.push(central, name);
+    localOffset += local.length + name.length + compressed.length;
+  }
+  const centralDirectory = Buffer.concat(centralParts);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(entries.length, 8);
+  end.writeUInt16LE(entries.length, 10);
+  end.writeUInt32LE(centralDirectory.length, 12);
+  end.writeUInt32LE(localOffset, 16);
+  return new Blob([...localParts, centralDirectory, end], { type: 'application/zip' });
 }
 
 function clone(value) {
@@ -285,6 +345,24 @@ await test('truncated bare visual contract stays hidden while ordinary JSON stre
   for (const char of ordinaryJson) ordinaryVisible += ordinaryFilter.push(char);
   ordinaryVisible += ordinaryFilter.finish().delta;
   assert.equal(ordinaryVisible, ordinaryJson);
+});
+
+await test('streaming JSON that opens at index 0 terminates and stays visible', () => {
+  // Outliner/critic agents stream bare JSON ("{\"beats\":..."). The brace-hold
+  // scan must terminate when the candidate brace sits at index 0; a regression
+  // here freezes the page inside eventBus agent:stream handlers.
+  const outlineJson = '{"beats": [{"id": 1, "summary": "旅程开始"}], "estimatedLength": 800}';
+  assert.equal(stripImageContracts(outlineJson, { streaming: true }), outlineJson);
+
+  const filter = new ImageContractStreamFilter();
+  let visible = '';
+  for (const char of outlineJson) visible += filter.push(char);
+  visible += filter.finish().delta;
+  assert.equal(visible, outlineJson);
+
+  // A bare schema-first prefix at index 0 must still be withheld, not shown.
+  const contractPrefix = '{"schema":"naruto.visual-contract/v1","purpose":"turn_illustration"';
+  assert.equal(stripImageContracts(contractPrefix, { streaming: true }), '');
 });
 
 await test('invalid and truncated contracts stay hidden without failing narrative cleanup', () => {
@@ -507,6 +585,31 @@ await test('settings normalize UI aliases and reject unknown provider types', ()
     providers: { broken: { type: 'unknown', apiUrl: 'https://example.test' } },
     providerId: 'broken'
   }), /unsupported type/);
+});
+
+await test('NovelAI settings preserve generation controls and normalize provider aliases', () => {
+  const normalized = normalizeImageSettings({
+    activeProviderId: 'nai',
+    providers: {
+      'novel-ai': {
+        type: 'nai', apiUrl: 'https://image.novelai.net/ai/generate-image', apiKey: 'fixture-token',
+        model: 'nai-diffusion-4-5-curated', sampler: 'k_dpmpp_2m', noiseSchedule: 'exponential',
+        steps: 32, width: 1024, height: 1024, scale: 6, qualityToggle: false, cfgRescale: 0.25
+      }
+    }
+  });
+
+  assert.equal(normalized.providerId, 'novelai');
+  assert.equal(normalized.providers.novelai.type, 'novelai');
+  assert.equal(normalized.providers.novelai.model, 'nai-diffusion-4-5-curated');
+  assert.equal(normalized.providers.novelai.noiseSchedule, 'exponential');
+  assert.equal(normalized.providers.novelai.qualityToggle, false);
+  assert.equal(normalized.providers.novelai.cfgRescale, 0.25);
+  assert.equal(normalized.providers.novelai.apiKeyHeader, 'Authorization');
+  assert.equal(
+    normalizeImageApiBaseUrl(normalized.providers.novelai.apiUrl, 'novelai'),
+    'https://image.novelai.net'
+  );
 });
 
 await test('public probe and generate commands normalize legacy provider aliases', async () => {
@@ -781,6 +884,136 @@ await test('OpenAI-compatible probe normalizes mixed model catalog shapes withou
   ]);
   assert.equal(bounded.models.length, 5000);
   assert.equal(bounded.models.some(model => model.length > 512), false);
+});
+
+await test('NovelAI registry aliases expose a fixed model catalog without spending generation credits', async () => {
+  const transport = new RecordingTransport();
+  const registry = new ImageAdapterRegistry({ transport });
+  const adapter = registry.get('nai');
+  assert.ok(adapter instanceof NovelAIImageAdapter);
+  assert.equal(registry.get('novel-ai'), adapter);
+
+  await assert.rejects(
+    () => adapter.probe({ apiUrl: 'https://image.novelai.net', apiKey: '' }),
+    /Token/
+  );
+  const probe = await adapter.probe({
+    apiUrl: 'https://image.novelai.net', apiKey: 'fixture-token', model: 'nai-diffusion-4-5-full'
+  });
+  assert.equal(probe.status, 'configured');
+  assert.equal(probe.verified, false);
+  assert.ok(probe.models.includes('nai-diffusion-4-5-full'));
+  assert.ok(probe.models.includes('nai-diffusion-furry-3'));
+  assert.equal(transport.calls.length, 0, 'probing must not spend NovelAI credits');
+});
+
+await test('NovelAI adapter sends V4-compatible parameters and extracts a deflated ZIP image', async () => {
+  const archive = zipBlob([{
+    name: 'image_0.png', method: 8,
+    data: Buffer.from(await pngBlob(832, 1216).arrayBuffer())
+  }]);
+  const transport = new RecordingTransport(async call => {
+    assert.equal(call.kind, 'blob');
+    assert.equal(call.path, '/ai/generate-image');
+    assert.equal(call.options.accept, 'application/zip');
+    return archive;
+  });
+  const adapter = new NovelAIImageAdapter(transport);
+  const result = await adapter.generate({
+    provider: {
+      type: 'novelai', apiUrl: 'https://image.novelai.net', apiKey: 'fixture-token',
+      model: 'nai-diffusion-4-5-full', sampler: 'k_euler_ancestral', noiseSchedule: 'karras',
+      steps: 28, width: 832, height: 1216, scale: 5, qualityToggle: true, cfgRescale: 0
+    },
+    prompt: '1girl, pink hair, punching', negativePrompt: 'text, watermark',
+    parameters: { seed: 123456, width: 832, height: 1216, steps: 30, scale: 6, cfgRescale: 0.2 }
+  });
+
+  const body = transport.calls[0].options.body;
+  assert.equal(body.action, 'generate');
+  assert.equal(body.input, '1girl, pink hair, punching');
+  assert.equal(body.model, 'nai-diffusion-4-5-full');
+  assert.equal(body.parameters.params_version, 3);
+  assert.equal(body.parameters.negative_prompt, 'text, watermark');
+  assert.equal(body.parameters.seed, 123456);
+  assert.equal(body.parameters.width, 832);
+  assert.equal(body.parameters.height, 1216);
+  assert.equal(body.parameters.steps, 30);
+  assert.equal(body.parameters.scale, 6);
+  assert.equal(body.parameters.cfg_rescale, 0.2);
+  assert.equal(body.parameters.qualityToggle, true);
+  assert.equal(body.parameters.noise_schedule, 'karras');
+  assert.equal(body.parameters.n_samples, 1);
+  assert.equal(body.parameters.v4_prompt.caption.base_caption, body.input);
+  assert.equal(body.parameters.v4_negative_prompt.caption.base_caption, 'text, watermark');
+  assert.equal(result.images[0].width, 832);
+  assert.equal(result.images[0].height, 1216);
+  assert.equal(result.images[0].mimeType, 'image/png');
+  assert.equal(result.metadata.seed, 123456);
+});
+
+await test('NovelAI public transport preserves ZIP accept headers and avoids duplicating a pasted endpoint', async () => {
+  const archive = zipBlob([{
+    name: 'image.png', method: 8,
+    data: Buffer.from(await pngBlob(1024, 1024).arrayBuffer())
+  }]);
+  const calls = [];
+  const transport = new ImageTransport({
+    async fetchImpl(url, options) {
+      calls.push({ url: String(url), options: clone(options) });
+      return new Response(archive, { status: 200, headers: { 'Content-Type': 'application/zip' } });
+    }
+  });
+  const adapter = new NovelAIImageAdapter(transport);
+  const result = await adapter.generate({
+    provider: {
+      type: 'novelai', apiUrl: 'https://image.novelai.net/ai/generate-image',
+      apiKey: 'fixture-token', apiKeyHeader: 'Authorization', model: 'nai-diffusion-4-5-full'
+    },
+    prompt: '1girl', parameters: { seed: 7, width: 1024, height: 1024 }
+  });
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, '/api/ai-proxy');
+  assert.equal(calls[0].options.headers.Accept, 'application/zip');
+  assert.equal(calls[0].options.headers['x-target-url'], 'https://image.novelai.net/ai/generate-image');
+  assert.equal(calls[0].options.headers['x-proxy-purpose'], 'image-generation');
+  assert.equal(calls[0].options.headers['x-user-api-key'], 'fixture-token');
+  assert.equal(JSON.parse(calls[0].options.body).parameters.seed, 7);
+  assert.equal(result.images[0].width, 1024);
+  assert.equal(result.images[0].height, 1024);
+});
+
+await test('NovelAI ZIP extraction accepts stored images and rejects unsafe or invalid archives', async () => {
+  const source = Buffer.from(await pngBlob(512, 768).arrayBuffer());
+  const extracted = await extractFirstImageFromZip(zipBlob([
+    { name: 'metadata.json', data: Buffer.from('{}') },
+    { name: 'nested/', data: Buffer.alloc(0) },
+    { name: 'nested/image.png', data: source }
+  ]));
+  assert.equal(extracted.type, 'image/png');
+  assert.deepEqual(Buffer.from(await extracted.arrayBuffer()), source);
+
+  await assert.rejects(
+    () => extractFirstImageFromZip(zipBlob([{ name: '../image.png', data: source }])),
+    /路径|不安全/
+  );
+  await assert.rejects(
+    () => extractFirstImageFromZip(zipBlob([{ name: 'metadata.json', data: Buffer.from('{}') }])),
+    /图片/
+  );
+  await assert.rejects(
+    () => extractFirstImageFromZip(zipBlob([{ name: 'image.png', data: source, crc: 0 }])),
+    /校验|损坏/
+  );
+  await assert.rejects(
+    () => extractFirstImageFromZip(zipBlob([{ name: 'image.png', data: source }]), { maxImageBytes: 16 }),
+    /过大|限制/
+  );
+  await assert.rejects(
+    () => extractFirstImageFromZip(new Blob([Buffer.from('not a zip')], { type: 'application/zip' })),
+    /ZIP|压缩包/
+  );
 });
 
 await test('OpenAI-compatible adapter retries a 400 without response_format and decodes image dimensions', async () => {

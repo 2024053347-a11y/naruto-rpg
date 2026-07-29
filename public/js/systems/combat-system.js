@@ -2,6 +2,7 @@ import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { getElementMultiplier } from '../utils/format.js';
 import { GAME_DATA, getMasteryTier } from '../data/game-data.js';
+import { COMBAT_STATES, normalizeCombatState } from '../data/instruction-contract.js';
 import {
   normalizeNpcCombatStats,
   resolveTechniqueUsage
@@ -27,6 +28,14 @@ class CombatSystem {
   processInstruction(combatData) {
     if (!combatData || typeof combatData !== 'object') {
       console.warn('[CombatSystem] Invalid combat instruction:', typeof combatData);
+      return;
+    }
+    const normalizedState = normalizeCombatState(combatData.state);
+    if (normalizedState !== combatData.state) {
+      combatData = { ...combatData, state: normalizedState };
+    }
+    if (!COMBAT_STATES.includes(combatData.state)) {
+      console.warn('[CombatSystem] Unsupported combat state:', combatData.state);
       return;
     }
 
@@ -103,8 +112,8 @@ class CombatSystem {
 
   _playerTurn(data) {
     const combat = stateManager.getSub('_combat');
-    if (!combat || typeof combat !== 'object') {
-      console.warn('[CombatSystem] _playerTurn called but no combat state exists');
+    if (!combat || typeof combat !== 'object' || Array.isArray(combat)) {
+      console.warn('[CombatSystem] _playerTurn called but _combat is not a valid object', typeof combat);
       return;
     }
     const turn = (combat.turn || 0) + 1;
@@ -155,8 +164,8 @@ class CombatSystem {
 
   _enemyTurn(data) {
     const combat = stateManager.getSub('_combat');
-    if (!combat || typeof combat !== 'object' || !combat.is_active) {
-      console.warn('[CombatSystem] _enemyTurn called but no active combat state exists');
+    if (!combat || typeof combat !== 'object' || Array.isArray(combat) || !combat.is_active) {
+      console.warn('[CombatSystem] _enemyTurn called but no valid active combat state exists', typeof combat);
       return;
     }
     combat.state = 'enemy_turn';
@@ -204,7 +213,7 @@ class CombatSystem {
 
   _updateCombatState(data) {
     const combat = stateManager.getSub('_combat');
-    if (!combat || typeof combat !== 'object') return;
+    if (!combat || typeof combat !== 'object' || Array.isArray(combat)) return;
     if (data.enemy_vitality !== undefined || data.enemy_hp !== undefined) {
       const reported = Math.max(0, Number(data.enemy_vitality ?? data.enemy_hp) || 0);
       combat.enemy_vitality = Math.min(Number(combat.enemy_vitality) || 0, reported);
@@ -314,7 +323,10 @@ class CombatSystem {
 
   _endCombat(data) {
     const result = data.state;
-    const combat = stateManager.getSub('_combat') || {};
+    // 防御坏存档/劣质写入：_combat 可能被污染成 true 等非对象值，直接在其上写属性会抛
+    // "Cannot create property 'state' on boolean 'true'"，导致战斗永远无法结算。
+    const existing = stateManager.getSub('_combat');
+    const combat = (existing && typeof existing === 'object' && !Array.isArray(existing)) ? existing : {};
 
     combat.state = 'peace';
     combat.is_active = false;

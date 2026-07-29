@@ -950,6 +950,54 @@ await test('Tavern routing ignores stale proxy intent, streams incrementally, an
   }
 });
 
+await test('Tavern token-only streams fall back to the accumulated content when generateRaw resolves void', async () => {
+  const originals = {
+    location: globalThis.location,
+    generate: globalThis.generate,
+    generateRaw: globalThis.generateRaw,
+    iframeEvents: globalThis.iframe_events,
+    eventOn: globalThis.eventOn,
+    eventRemoveListener: globalThis.eventRemoveListener
+  };
+  globalThis.location = { hostname: 'tavern.example' };
+  globalThis.generate = () => {};
+  globalThis.iframe_events = { STREAM_TOKEN_RECEIVED_INCREMENTALLY: 'js_stream_token_received_incrementally' };
+  let listener = null;
+  let disposeCount = 0;
+  globalThis.eventOn = (_event, handler) => {
+    listener = handler;
+    return () => { disposeCount++; };
+  };
+  globalThis.generateRaw = async options => {
+    listener?.('甲', options.generation_id);
+    listener?.('乙', options.generation_id);
+    return undefined;
+  };
+
+  try {
+    const runtime = await import(`../js/core/ai-client.js?tavern-token-only-${Date.now()}-${Math.random()}`);
+    const client = new runtime.AIClient();
+    client.configure({ backend: 'tavern', apiUrl: '', apiKey: '', model: 'tavern-default' });
+    const chunks = [];
+    const result = await client.chatStream(
+      [{ role: 'user', content: 'probe' }],
+      { timeout: 2000 },
+      chunk => chunks.push(chunk)
+    );
+
+    assert.deepEqual(chunks, ['甲', '乙']);
+    assert.equal(result, '甲乙');
+    assert.equal(disposeCount, 1);
+  } finally {
+    if (originals.location === undefined) delete globalThis.location; else globalThis.location = originals.location;
+    if (originals.generate === undefined) delete globalThis.generate; else globalThis.generate = originals.generate;
+    if (originals.generateRaw === undefined) delete globalThis.generateRaw; else globalThis.generateRaw = originals.generateRaw;
+    if (originals.iframeEvents === undefined) delete globalThis.iframe_events; else globalThis.iframe_events = originals.iframeEvents;
+    if (originals.eventOn === undefined) delete globalThis.eventOn; else globalThis.eventOn = originals.eventOn;
+    if (originals.eventRemoveListener === undefined) delete globalThis.eventRemoveListener; else globalThis.eventRemoveListener = originals.eventRemoveListener;
+  }
+});
+
 await test('Tavern cancellation stops the matching generation and cleans up listeners', async () => {
   const originals = {
     location: globalThis.location,

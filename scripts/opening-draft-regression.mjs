@@ -459,7 +459,7 @@ test('secondary updater receives the same v2 boundary after custom preset entrie
   const presetIndex = messages.findIndex(message => message.content?.includes('你是“忍者手记”的二次变量更新器'));
   assert.ok(contractIndex > presetIndex, 'opening contract must be re-asserted after custom updater preset rules');
   assert.match(messages[contractIndex].content, /不得重复初始化或重新估值/);
-  assert.match(messages.at(-1).content, /系统强制删除协议/);
+  assert.match(messages[0].content, /系统强制删除协议/);
 });
 
 test('prototype variants are URL-stable, keyboard-switchable and never persist real state', () => {

@@ -205,7 +205,7 @@ await test('secondary updater recompiles evidence with names introduced by the f
   pipeline._turnEvidenceCompiler = {
     compile: ({ state, userInput }) => {
       compiledQuery = userInput;
-      return { current_state: state, protected_future: null };
+      return { current_state: state };
     },
     project: (packet, { audience }) => ({
       audience,
@@ -243,8 +243,7 @@ await test('strict mode stays at one API request at compression, deep-cycle, NPC
     disableStreaming: false,
     aiCallPolicy: { strictSingleCall: true },
     variableUpdater: { enabled: true, backend: 'inherit', model: 'updater-model' },
-    narrativeReview: { enabled: true, backend: 'inherit', model: 'review-model' },
-    futurePlanner: { enabled: true, backend: 'inherit', model: 'planner-model' }
+    narrativeReview: { enabled: true, backend: 'inherit', model: 'review-model' }
   }));
   localStorage.setItem('naruto_agent_config', JSON.stringify({
     enabled: true,
@@ -388,48 +387,52 @@ await test('strict mode stays at one API request at compression, deep-cycle, NPC
   }
 });
 
-await test('K001, K052 and K086 keep protected future details out of every non-planner prompt', async () => {
+await test('K001, K052 and K086 expose the nearest future day as ordinary current plot', async () => {
   const { TurnEvidenceCompiler, renderEvidenceView } = await import('../js/core/turn-evidence.js');
   const compiler = new TurnEvidenceCompiler();
   const cases = [
-    { date: 'K001-01-01', query: '千手柱间', expectedAnchor: 'K050-06-01' },
-    { date: 'K052-01-01', query: '旗木卡卡西', expectedAnchor: 'K064-01-01' },
-    { date: 'K086-01-02', query: '漩涡博人', expectedAnchor: 'K086-01-03' }
+    { date: 'K001-01-01', query: '千手柱间', expectedDate: 'K050-06-01', expectedDayId: 'DAY-HIST-KAKASHI-001' },
+    { date: 'K052-01-01', query: '旗木卡卡西', expectedDate: 'K064-01-01', expectedDayId: 'DAY-P1-START-001' },
+    { date: 'K086-01-02', query: '漩涡博人', expectedDate: 'K086-01-03', expectedDayId: 'DAY-BOR-RETURN-103' }
   ];
   for (const fixture of cases) {
     const packet = compiler.compile({
       state: gameStateAt(fixture.date, fixture.query),
       userInput: `观察${fixture.query}与当前局势`
     });
-    assert.equal(packet.next_anchor?.date, fixture.expectedAnchor, fixture.date);
-    assert.ok(packet.protected_future?.id, `${fixture.date} must exercise a real protected future day`);
-    const forbidden = [
-      packet.protected_future.id,
-      packet.protected_future.title,
-      ...(packet.protected_future.scenes || []).flatMap(scene => [
-        scene.id,
-        scene.title,
-        ...(scene.beats || []).flatMap(beat => [beat.id, beat.summary])
-      ])
-    ].filter(value => String(value || '').length >= 4);
+    assert.equal(packet.current_plot?.target_date, fixture.expectedDate, fixture.date);
+    assert.equal(packet.current_plot?.date_relation, 'nearest_future', fixture.date);
+    assert.equal(packet.current_plot?.day_id, fixture.expectedDayId, fixture.date);
+    assert.ok(packet.current_plot?.title, `${fixture.date} must expose the plot title`);
+    assert.ok(packet.current_plot?.scenes?.length, `${fixture.date} must expose plot scenes`);
 
-    for (const audience of ['writer', 'updater', 'reviewer', 'npc']) {
-      const view = compiler.project(packet, {
-        audience,
-        entityId: audience === 'npc' ? 'NPC-INTEGRATION' : null,
-        npcName: audience === 'npc' ? '测试上忍' : ''
-      });
-      assert.equal(view.protected_future, null, `${fixture.date}/${audience}`);
+    for (const audience of ['writer', 'updater', 'reviewer', 'planner']) {
+      const view = compiler.project(packet, { audience });
+      assert.equal(view.current_plot?.target_date, fixture.expectedDate, `${fixture.date}/${audience}`);
+      assert.equal(view.current_plot?.date_relation, 'nearest_future', `${fixture.date}/${audience}`);
+      assert.equal(view.current_plot?.title, packet.current_plot.title, `${fixture.date}/${audience}`);
+      assert.ok(view.current_plot?.scenes?.length, `${fixture.date}/${audience} must receive plot scenes`);
+
+      const keepsOperationalIds = audience === 'updater' || audience === 'planner';
+      assert.equal(view.current_plot?.day_id, keepsOperationalIds ? fixture.expectedDayId : undefined,
+        `${fixture.date}/${audience} operational day ID projection`);
+      if (keepsOperationalIds) {
+        assert.ok(view.current_plot.scenes.every(scene => scene.id),
+          `${fixture.date}/${audience} must retain scene IDs`);
+        assert.ok(view.current_plot.scenes.flatMap(scene => scene.beats || []).every(beat => beat.id),
+          `${fixture.date}/${audience} must retain beat IDs`);
+      }
+
       const rendered = renderEvidenceView(view, { stage: audience });
-      assert.match(rendered, new RegExp(fixture.expectedAnchor));
-      for (const value of forbidden) {
-        assert.equal(rendered.includes(String(value)), false,
-          `${fixture.date}/${audience} leaked protected future fragment: ${value}`);
+      const firstScene = view.current_plot.scenes[0];
+      const firstBeat = firstScene.beats?.[0];
+      assert.ok(rendered.includes(fixture.expectedDate), `${fixture.date}/${audience} missing target date`);
+      assert.ok(rendered.includes(packet.current_plot.title), `${fixture.date}/${audience} missing plot title`);
+      assert.ok(rendered.includes(firstScene.title), `${fixture.date}/${audience} missing scene content`);
+      if (firstBeat?.summary) {
+        assert.ok(rendered.includes(firstBeat.summary), `${fixture.date}/${audience} missing beat content`);
       }
     }
-
-    const planner = compiler.project(packet, { audience: 'planner' });
-    assert.equal(planner.protected_future?.id, packet.protected_future.id);
   }
 });
 

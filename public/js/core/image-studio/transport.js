@@ -20,6 +20,11 @@ function isOpenAICompatibleProvider(type) {
     || normalized === 'openai_compatible';
 }
 
+function isNovelAIProvider(type) {
+  const normalized = String(type || '').trim().toLowerCase();
+  return normalized === 'novelai' || normalized === 'novel-ai' || normalized === 'nai';
+}
+
 export function normalizeImageApiBaseUrl(value, providerType = 'openai-compatible') {
   const raw = withLocalProtocol(value);
   if (!raw) return '';
@@ -37,6 +42,8 @@ export function normalizeImageApiBaseUrl(value, providerType = 'openai-compatibl
       }
     }
     if (!pathname || pathname === '/') pathname = '/v1';
+  } else if (isNovelAIProvider(providerType) && pathname.toLowerCase().endsWith('/ai/generate-image')) {
+    pathname = pathname.slice(0, -'/ai/generate-image'.length).replace(/\/+$/, '');
   }
   parsed.pathname = pathname || '/';
   return parsed.toString().replace(/\/$/, '');
@@ -193,7 +200,7 @@ export class ImageTransport {
   }
 
   async blob(provider, path, options = {}) {
-    return (await this.request(provider, path, { ...options, accept: 'image/*' })).blob();
+    return (await this.request(provider, path, { ...options, accept: options.accept || 'image/*' })).blob();
   }
 
   async downloadPublicUrl(url, { signal, provider } = {}) {

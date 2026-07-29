@@ -21,6 +21,7 @@ import {
 } from '../systems/opening-draft.js';
 import { icon } from '../utils/icons.js';
 import { escAttr, escHtml } from '../utils/format.js';
+import { TIMELINE_FILE_ACCEPT } from '../core/timeline-file-codec.js';
 
 const STAGES = [
   { id: 'campaign', label: '开局舞台', short: '舞台', mark: '壹' },
@@ -142,7 +143,7 @@ class CharacterCreator extends HTMLElement {
         <div class="creator-header-actions">
           ${this._prototype ? '<span class="prototype-badge">仅原型 · 不写入存档</span>' : ''}
           <button class="ghost-btn" type="button" data-action="import-timeline">${icon('export', 15)} 导入时间线</button>
-          <input id="timeline-import-file" type="file" accept="application/json,.json" hidden />
+          <input id="timeline-import-file" type="file" accept="${TIMELINE_FILE_ACCEPT}" hidden />
         </div>
       </header>
     `;

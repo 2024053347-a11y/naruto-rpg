@@ -1,4 +1,10 @@
-import { isKnownKey, coerceValue, resolveAlias } from '../data/var-schema.js';
+import {
+  isKnownKey,
+  coerceValue,
+  resolveAlias,
+  normalizeStructuredVariableUpdate,
+  normalizeRelationshipInstruction
+} from '../data/var-schema.js';
 import {
   sanitizeNarrativeDisplayText,
   sanitizeNarrativePartialText
@@ -7,6 +13,7 @@ import {
   extractImageContract as extractVisualImageContract,
   stripImageContracts as stripVisualImageContracts
 } from './image-studio/contracts.js';
+import { normalizeCombatState } from '../data/instruction-contract.js';
 
 function sanitizeInstructionData(value, depth = 0) {
   if (depth > 24) return null;
@@ -118,8 +125,11 @@ export class InstructionParser {
                     continue;
                   }
                   updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
-                } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
-                  updates.push(u);
+                } else {
+                  const normalized = normalizeStructuredVariableUpdate(u);
+                  if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
+                    updates.push(normalized);
+                  }
                 }
               }
             } 
@@ -132,8 +142,11 @@ export class InstructionParser {
                   continue;
                 }
                 updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
-              } else if (u.path && u.op && ['set','add','sub','assign','push','remove'].includes(u.op)) {
-                updates.push(u);
+              } else {
+                const normalized = normalizeStructuredVariableUpdate(u);
+                if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
+                  updates.push(normalized);
+                }
               }
             }
           } catch (innerE) {
@@ -157,7 +170,7 @@ export class InstructionParser {
     const regex = /<combat\s+state="(\w+)">([\s\S]*?)<\/combat>/g;
     let match;
     while ((match = regex.exec(text)) !== null) {
-      try { states.push({ state: match[1], ...JSON.parse(match[2].trim()) }); }
+      try { states.push({ state: normalizeCombatState(match[1]), ...JSON.parse(match[2].trim()) }); }
       catch (e) { console.warn('[InstructionParser] 战斗解析错误:', e); }
     }
     return states;
@@ -169,7 +182,11 @@ export class InstructionParser {
 
   extractRelationshipChange(text) { return this.extractRelationshipChanges(text)[0] || null; }
 
-  extractRelationshipChanges(text) { return this.extractJsonTags(text, 'relationship', '关系'); }
+  extractRelationshipChanges(text) {
+    return this.extractJsonTags(text, 'relationship', '关系')
+      .map(value => normalizeRelationshipInstruction(value))
+      .filter(Boolean);
+  }
 
   extractEventTrigger(text) { return this.extractEventTriggers(text)[0] || null; }
 

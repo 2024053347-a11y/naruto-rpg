@@ -429,7 +429,10 @@ class TavernAdapter extends AIAdapter {
       if (abortScope.signal.aborted) abortGeneration();
       const result = await Promise.race([generation, aborted]);
       if (abortScope.signal.aborted) throw createCancelledError(abortScope.signal.reason);
-      return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
+      const resolvedContent = typeof result === 'string'
+        ? result
+        : (result?.content || result?.text || (result == null ? '' : JSON.stringify(result)));
+      return resolvedContent || fullContent;
     } catch (e) {
       if (abortScope.signal.aborted) {
         const cancelled = createCancelledError(abortScope.signal.reason || e);

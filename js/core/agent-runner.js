@@ -12,7 +12,6 @@ import { TurnEvidenceCompiler, renderEvidenceView } from './turn-evidence.js';
 
 export function evidenceAudienceForAgent(agentType) {
   if (agentType === 'character') return 'npc';
-  if (agentType === 'future-guardian') return 'planner';
   if (agentType.startsWith('critic-')) return 'reviewer';
   return 'writer';
 }
@@ -40,6 +39,7 @@ class AgentRunner {
     this._criticClient = null;
     this._models = { main: '', critic: '' };
     this._aborted = false;
+    this._activeCalls = new Set();
   }
 
   configure() {
@@ -65,15 +65,25 @@ class AgentRunner {
     this._aborted = false;
   }
 
-  abort() {
+  abort(reason = new AgentAbortError()) {
+    if (this._aborted) return;
     this._aborted = true;
+    const abortError = reason instanceof Error ? reason : new AgentAbortError();
+    for (const call of this._activeCalls) call.controller.abort(abortError);
     this._mainClient?.cancel();
     this._criticClient?.cancel();
   }
 
   _getClient(agentType) {
-    const critics = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer', 'future-guardian'];
+    const critics = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer'];
     return critics.includes(agentType) ? this._criticClient : this._mainClient;
+  }
+
+  _clientHasSiblingCalls(client, currentCall) {
+    for (const call of this._activeCalls) {
+      if (call !== currentCall && call.client === client && !call.controller.signal.aborted) return true;
+    }
+    return false;
   }
 
   async run(agentType, { state, userInput, taskPrompt, extraContext = {}, options = {}, onChunk }) {
@@ -88,15 +98,50 @@ class AgentRunner {
     const messages = this._buildMessages(agentType, manifest, { state, userInput, taskPrompt, extraContext });
     const timeout = AGENT_TIMEOUTS[agentType] || 30000;
 
+    // The orchestrator owns the stage deadline. Adapters also implement timeouts,
+    // but a custom bridge or stalled Promise may ignore them; without this hard
+    // boundary the UI can remain on one Agent stage indefinitely.
+    const controller = new AbortController();
+    const parentSignal = options.signal;
+    const abortFromParent = () => controller.abort(parentSignal?.reason || new AgentAbortError());
+    if (parentSignal?.aborted) abortFromParent();
+    else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
+    let timer = null;
+    const timeoutError = new Error(`${manifest.label || agentType} 超时（${timeout}ms）`);
+    timeoutError.code = 'AGENT_STAGE_TIMEOUT';
+    timeoutError.isTimeout = true;
+    const activeCall = { controller, agentType, client };
+    this._activeCalls.add(activeCall);
+    const aborted = new Promise((_, reject) => {
+      const rejectOnAbort = () => {
+        // A stage deadline (or an external parent signal) must also stop the
+        // transport. genOptions.signal already aborts this call's own request;
+        // only cancel the shared client when no parallel sibling still uses it,
+        // otherwise one stage timeout would kill healthy in-flight calls.
+        if (!this._aborted && !this._clientHasSiblingCalls(client, activeCall)) client.cancel?.();
+        const reason = controller.signal.reason;
+        reject(reason instanceof Error ? reason : new AgentAbortError());
+      };
+      if (controller.signal.aborted) rejectOnAbort();
+      else controller.signal.addEventListener('abort', rejectOnAbort, { once: true });
+    });
+    if (!controller.signal.aborted) {
+      timer = setTimeout(() => controller.abort(timeoutError), timeout);
+    }
+
     const genOptions = {
+      ...options,
       temperature: options.temperature ?? 0.7,
       max_tokens: options.max_tokens ?? 2048,
       top_p: options.top_p ?? 0.9,
       timeout,
-      ...options
+      signal: controller.signal,
+      // A whole Agent stage already has a hard deadline and an outer fallback.
+      // Per-adapter transparent retries used to multiply a 35s Outliner wait.
+      maxRetries: options.maxRetries ?? 0
     };
 
-    const isCritic = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer', 'future-guardian'].includes(agentType);
+    const isCritic = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer'].includes(agentType);
     publishPromptTrace({
       kind: 'agent',
       title: `Agent 模型请求：${agentType}`,
@@ -115,15 +160,24 @@ class AgentRunner {
     try {
       let response = '';
       if (onChunk) {
-        response = await client.chatStream(messages, genOptions, onChunk);
+        response = await Promise.race([
+          client.chatStream(messages, genOptions, chunk => {
+            if (!controller.signal.aborted && !this._aborted) onChunk(chunk);
+          }),
+          aborted
+        ]);
       } else {
-        response = await client.chat(messages, genOptions);
+        response = await Promise.race([client.chat(messages, genOptions), aborted]);
       }
       eventBus.emit('agent:call-end', { agentType, success: true });
       return this._parseResponse(response, agentType);
     } catch (err) {
       eventBus.emit('agent:call-end', { agentType, success: false, error: err.message });
       throw err;
+    } finally {
+      if (timer !== null) clearTimeout(timer);
+      parentSignal?.removeEventListener('abort', abortFromParent);
+      this._activeCalls.delete(activeCall);
     }
   }
 
@@ -238,12 +292,6 @@ class AgentRunner {
     }
 
     if (extraContext.outline) userContent += `[叙事大纲]\n${JSON.stringify(extraContext.outline)}\n\n`;
-    if (extraContext.guardianCandidates?.length) {
-      userContent += `[待判定安全候选 · 本地整数ID]\n${JSON.stringify(extraContext.guardianCandidates)}\n\n`;
-    }
-    if (extraContext.guardianOutline) {
-      userContent += `[待判定安全大纲 · 本地整数ID]\n${JSON.stringify(extraContext.guardianOutline)}\n\n`;
-    }
     if (extraContext.reviews) userContent += `[审查建议]\n${JSON.stringify(extraContext.reviews)}\n\n`;
     if (extraContext.draft) userContent += `[初稿正文]\n${extraContext.draft}\n\n`;
     if (extraContext.characterInputs?.length) userContent += `[角色代理素材]\n${JSON.stringify(extraContext.characterInputs)}\n\n`;
@@ -444,7 +492,7 @@ class AgentRunner {
     if (braceMatch) { try { return JSON.parse(braceMatch[1]); } catch {} }
 
     // Critic Agent 专用：修复常见 JSON 错误
-    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner' || agentType === 'future-guardian') {
+    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner') {
       try {
         let fixed = text;
         // 去掉尾随逗号
@@ -474,10 +522,6 @@ class AgentRunner {
     if (agentType === 'outliner') {
       return { beats: [], estimatedLength: 800, variableSummary: 'JSON解析失败' };
     }
-    if (agentType === 'future-guardian') {
-      return { scope: 'invalid', decision: 'invalid', candidate_ids: [], beat_ids: [] };
-    }
-
     return { _raw: text };
   }
 }

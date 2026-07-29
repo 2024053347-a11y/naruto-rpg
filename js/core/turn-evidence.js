@@ -34,6 +34,17 @@ const WORLD_FIELDS = Object.freeze([
 const ATTRIBUTE_PREFIXES = Object.freeze(['属性·', '进度·']);
 const ENTITY_PREFIXES = Object.freeze(['技能·', '物品·']);
 
+export const UPDATE_OBLIGATION_DOMAINS = Object.freeze([
+  Object.freeze({ id: 'world', label: '时间地点与地图' }),
+  Object.freeze({ id: 'attributes', label: '资源属性与成长' }),
+  Object.freeze({ id: 'skills', label: '技能与忍术' }),
+  Object.freeze({ id: 'equipment', label: '物品金钱与装备' }),
+  Object.freeze({ id: 'missions', label: '任务' }),
+  Object.freeze({ id: 'relationships', label: '人物关系与NPC状态' }),
+  Object.freeze({ id: 'combat', label: '战斗' }),
+  Object.freeze({ id: 'events', label: '事件' })
+]);
+
 function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
@@ -99,6 +110,101 @@ function relationshipNames(state) {
   return Object.keys(state?._relationships || {});
 }
 
+function nonEmptyText(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function candidateAliases(value) {
+  return [...new Set((Array.isArray(value) ? value : [])
+    .map(nonEmptyText)
+    .filter(alias => alias.length >= 2))];
+}
+
+export function buildUpdaterObligations({
+  state = {}, narrativeResponse = '', evidencePacket = null, characterMemoryDelta = null
+} = {}) {
+  const narrative = String(narrativeResponse || '');
+  const playerName = nonEmptyText(state?.['玩家·姓名']);
+  const relationships = isRecord(state?._relationships) ? state._relationships : {};
+  const candidates = new Map();
+  const sourcePriority = { worldbook: 1, plot: 2, relationship: 3, combat: 4, agent: 5 };
+  const addCandidate = (nameValue, source, aliases = [], agentThought = '') => {
+    const name = nonEmptyText(nameValue);
+    if (!name || name === playerName || name.length < 2) return;
+    const normalizedAliases = candidateAliases(aliases);
+    let canonicalName = name;
+    for (const [existingName, existing] of candidates) {
+      if (existingName === name
+        || existing.aliases.includes(name)
+        || normalizedAliases.includes(existingName)) {
+        canonicalName = existingName;
+        break;
+      }
+    }
+    const previous = candidates.get(canonicalName) || {
+      npc: canonicalName,
+      aliases: [],
+      source,
+      agent_inner_thought: ''
+    };
+    previous.aliases = [...new Set([
+      ...previous.aliases,
+      ...(canonicalName !== name ? [name] : []),
+      ...normalizedAliases
+    ])];
+    if ((sourcePriority[source] || 0) >= (sourcePriority[previous.source] || 0)) previous.source = source;
+    if (nonEmptyText(agentThought)) previous.agent_inner_thought = nonEmptyText(agentThought);
+    candidates.set(canonicalName, previous);
+  };
+
+  for (const [name, relationship] of Object.entries(relationships)) {
+    addCandidate(name, 'relationship', relationship?.aliases || []);
+  }
+  if (state?._combat?.enemy_name) addCandidate(state._combat.enemy_name, 'combat');
+  for (const scene of evidencePacket?.current_plot?.scenes || []) {
+    for (const participant of scene?.participants || []) addCandidate(participant, 'plot');
+  }
+  for (const entry of evidencePacket?.worldbook_entries || []) {
+    const profile = entry?.character_profile;
+    if (!profile) continue;
+    const profileNames = candidateAliases(profile.names || []);
+    const canonical = profileNames[0] || nonEmptyText(entry.title);
+    addCandidate(canonical, 'worldbook', [...profileNames.slice(1), ...(profile.aliases || [])]);
+  }
+  for (const [name, change] of Object.entries(characterMemoryDelta?.changes || {})) {
+    const latestThought = (change?.privateIntentAppend || []).at(-1)?.thought || '';
+    addCandidate(change?.npcName || name, 'agent', change?.aliases || [], latestThought);
+  }
+
+  const presentNpcs = [];
+  for (const candidate of candidates.values()) {
+    const matched = [candidate.npc, ...candidate.aliases]
+      .some(token => token.length >= 2 && narrative.includes(token));
+    if (!matched) continue;
+    presentNpcs.push({
+      npc: candidate.npc,
+      ...(candidate.aliases.length ? { aliases: clone(candidate.aliases) } : {}),
+      existing: Object.prototype.hasOwnProperty.call(relationships, candidate.npc),
+      source: candidate.source,
+      ...(candidate.agent_inner_thought ? { agent_inner_thought: candidate.agent_inner_thought } : {})
+    });
+  }
+
+  const activeMissions = Object.entries(state?._missions?.active || {}).map(([key, mission]) => ({
+    id: nonEmptyText(mission?.id) || key,
+    title: nonEmptyText(mission?.title || mission?.name),
+    status: nonEmptyText(mission?.status) || 'active',
+    objective: nonEmptyText(mission?.objective),
+    progress: clone(mission?.progress || null)
+  })).filter(mission => mission.id);
+
+  return {
+    fixed_domains: UPDATE_OBLIGATION_DOMAINS.map(clone),
+    present_npcs: presentNpcs,
+    active_missions: activeMissions
+  };
+}
+
 function sceneMatches(scene, { location, query, names, activeSceneIds }) {
   if (activeSceneIds.has(scene?.id)) return true;
   if (location && textOverlaps(scene?.location, location)) return true;
@@ -135,7 +241,7 @@ function observableScene(scene, { includeIds = false } = {}) {
 }
 
 function compileCurrentPlot(plotContext, state, userInput) {
-  if (!plotContext?.day || plotContext.is_future) return null;
+  if (!plotContext?.day) return null;
   const location = state?.['世界·地点'] || '';
   const names = new Set(relationshipNames(state));
   if (state?._combat?.enemy_name) names.add(state._combat.enemy_name);
@@ -150,9 +256,16 @@ function compileCurrentPlot(plotContext, state, userInput) {
     names,
     activeSceneIds
   }));
-  if (!selected.length && allScenes.length === 1) selected = allScenes;
+  if (!selected.length && (plotContext.is_future || allScenes.length === 1)) selected = allScenes;
+  const targetDate = plotContext.target_date || plotContext.day.date || plotContext.current_date;
   return {
-    date: plotContext.current_date,
+    date: targetDate,
+    current_date: plotContext.current_date,
+    target_date: targetDate,
+    days_until: Math.max(0, Number(plotContext.days_until) || 0),
+    date_relation: plotContext.date_relation === 'future'
+      ? 'nearest_future'
+      : (plotContext.date_relation || (plotContext.is_future ? 'nearest_future' : 'current')),
     day_id: plotContext.day.id,
     title: plotContext.day.title,
     day_goal: plotContext.day.day_goal,
@@ -160,16 +273,8 @@ function compileCurrentPlot(plotContext, state, userInput) {
     reference_facts: clone(plotContext.day.reference_facts || []),
     matched_scene_count: selected.length,
     total_scene_count: allScenes.length,
-    scenes: selected.map(scene => observableScene(scene, { includeIds: true }))
-  };
-}
-
-function compileNextAnchor(plotContext) {
-  if (!plotContext?.day || !plotContext.is_future) return null;
-  return {
-    date: plotContext.target_date || plotContext.day.date,
-    days_until: Number(plotContext.days_until) || 0,
-    rule: '这是未来日期边界，不是跳转指令；不得透露或提前执行该日人物、场景、节拍与结果。'
+    matched_scene_ids: selected.map(scene => scene.id).filter(Boolean),
+    scenes: allScenes.map(scene => observableScene(scene, { includeIds: true }))
   };
 }
 
@@ -238,12 +343,22 @@ function compactTechnique(technique, learnedNames) {
   };
 }
 
+function compactRelationshipEntries(value, limit) {
+  if (Array.isArray(value)) return clone(value.slice(0, limit));
+  const summary = nonEmptyText(value);
+  return summary ? [{ turn: 0, time: '', summary }] : [];
+}
+
 function compactRelationships(state) {
   const result = {};
   for (const [name, relationship] of Object.entries(state?._relationships || {})) {
     result[name] = {
       entity_id: relationship.entity_id || relationship.npc_id || null,
       role: relationship.role || '',
+      faction: relationship.faction || '',
+      status: relationship.status || '',
+      location: relationship.location || '',
+      combatant: relationship.combatant === true ? true : relationship.combatant === false ? false : null,
       affection: Number(relationship.affection) || 0,
       trust: Number(relationship.trust) || 0,
       respect: Number(relationship.respect) || 0,
@@ -252,6 +367,8 @@ function compactRelationships(state) {
       debts: clone(relationship.debts || []),
       known_secrets: clone(relationship.known_secrets || []),
       grand_summary: relationship.grand_summary || '',
+      history: compactRelationshipEntries(relationship.history, 3),
+      inner_thoughts: compactRelationshipEntries(relationship.inner_thoughts, 5),
       combat_stats: clone(relationship.combat_stats || null)
     };
   }
@@ -343,7 +460,9 @@ export class TurnEvidenceCompiler {
     this.continuityLedger = continuityLedger;
   }
 
-  compile({ state = {}, userInput = '', nodeId = null, branchId = null } = {}) {
+  compile({
+    state = {}, userInput = '', nodeId = null, branchId = null, updateObligations = null
+  } = {}) {
     const currentDate = currentDateOf(state);
     const plotContext = currentDate ? this.canonDatabase.getPlotDayContext({ state }) : null;
     const snapshotContext = currentDate ? this.canonDatabase.getYearSnapshotContext({ state }) : null;
@@ -383,7 +502,7 @@ export class TurnEvidenceCompiler {
 
     const openingContract = resolveOpeningContract(state);
     return {
-      schema: 'naruto.turn-evidence/v1',
+      schema: 'naruto.turn-evidence/v2',
       compiled_at: Date.now(),
       node_id: resolvedNodeId,
       branch_id: resolvedBranchId,
@@ -396,8 +515,7 @@ export class TurnEvidenceCompiler {
       worldbook_entries: worldbookEntries,
       year_snapshot: relevantSnapshot(snapshotContext, state, userInput),
       current_plot: compileCurrentPlot(plotContext, state, userInput),
-      next_anchor: compileNextAnchor(plotContext),
-      protected_future: plotContext?.is_future ? clone(plotContext.day) : null,
+      update_obligations: updateObligations ? clone(updateObligations) : null,
       technique_definitions: techniques,
       conflicts: [],
       provenance: {
@@ -420,9 +538,16 @@ export class TurnEvidenceCompiler {
     const includeIds = audience === 'updater' || isPlanner
       || (audience === 'writer' && includeOperationalIds === true);
     const currentPlot = packet.current_plot ? clone(packet.current_plot) : null;
-    if (currentPlot && !includeIds) {
-      delete currentPlot.day_id;
-      currentPlot.scenes = currentPlot.scenes.map(scene => observableScene(scene, { includeIds: false }));
+    if (currentPlot) {
+      if (audience !== 'updater' && !isPlanner) {
+        const matchedIds = new Set(currentPlot.matched_scene_ids || []);
+        currentPlot.scenes = currentPlot.scenes.filter(scene => matchedIds.has(scene.id));
+      }
+      delete currentPlot.matched_scene_ids;
+      if (!includeIds) {
+        delete currentPlot.day_id;
+        currentPlot.scenes = currentPlot.scenes.map(scene => observableScene(scene, { includeIds: false }));
+      }
     }
     const yearSnapshot = packet.year_snapshot ? clone(packet.year_snapshot) : null;
     if (yearSnapshot && !isPlanner) {
@@ -451,7 +576,7 @@ export class TurnEvidenceCompiler {
     provenance.worldbook = worldbookEntries.map(entry => entry.id || entry.title).filter(Boolean);
     if (audience !== 'updater' && !isPlanner) provenance.plot = null;
     return {
-      schema: 'naruto.evidence-view/v1',
+      schema: 'naruto.evidence-view/v2',
       audience,
       entity_id: entityId,
       node_id: packet.node_id,
@@ -474,9 +599,10 @@ export class TurnEvidenceCompiler {
       worldbook_entries: worldbookEntries,
       year_snapshot: yearSnapshot,
       current_plot: isNpc ? null : currentPlot,
-      next_anchor: isPlanner || !packet.current_plot ? clone(packet.next_anchor) : null,
       technique_definitions: clone(packet.technique_definitions || []),
-      protected_future: isPlanner ? clone(packet.protected_future) : null,
+      ...(audience === 'updater' && packet.update_obligations
+        ? { update_obligations: clone(packet.update_obligations) }
+        : {}),
       conflicts: clone(packet.conflicts || []),
       provenance
     };
@@ -498,13 +624,12 @@ export function renderEvidenceView(view, { stage = 'main' } = {}) {
     jsonBlock('当前日期年度公开状态', view.year_snapshot),
     jsonBlock('相关世界书', view.worldbook_entries),
     jsonBlock('当前可接续剧情', view.current_plot),
-    jsonBlock('下一剧情日期边界', view.next_anchor),
-    jsonBlock('受保护未来 · 仅规划器', view.protected_future),
+    jsonBlock('本回合更新义务', view.update_obligations),
     jsonBlock('相关忍术定义', view.technique_definitions),
     jsonBlock('待裁决冲突', view.conflicts)
   ].filter(Boolean);
   if (view.current_date) blocks.splice(1, 0, `当前项目日期: ${formatCanonDate(view.current_date)}`);
-  blocks.push(`[使用约束]\n只使用本证据视图允许的事实。未提供的设定保持未知；不得从预训练知识补成确定事实。NEXT_ANCHOR 只限制时间，不得主动跳转或暗示其内容。${view.audience === 'planner' ? '受保护未来只供内部维护因果；任何下游候选、大纲、审查意见和正文都不得引用、复述、暗示或提前执行其标题、ID、人物行动与结果。' : '本视图不含受保护未来细节；不得猜测或补全。'}`);
+  blocks.push('[使用约束]\n只使用本证据视图允许的事实。未提供的设定保持未知；不得从预训练知识补成确定事实。最近剧情日属于可按当前分支引用、执行和改写的普通剧情上下文；仍须遵守人物知识权限与结构化数据契约。');
   return blocks.join('\n\n');
 }
 

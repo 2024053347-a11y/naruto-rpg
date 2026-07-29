@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { getAllUsers, banUser, unbanUser, getLoginLog, getTotalSaveCount } from '../db/index.js';
+import { asyncRoute } from '../middleware/async-route.js';
 
 // 管理员密钥：必须通过 .env ADMIN_KEY 配置，未配置时管理面板整体禁用（无默认密码）
 const ADMIN_KEY = process.env.ADMIN_KEY || '';
@@ -29,7 +30,7 @@ function requireAdmin(req, res, next) {
 router.use(requireAdmin);
 
 // GET /api/admin/stats - 概览统计
-router.get('/stats', async (req, res) => {
+router.get('/stats', asyncRoute(async (req, res) => {
   try {
     const now = new Date();
     const today = now.toISOString().slice(0, 10);
@@ -66,10 +67,10 @@ router.get('/stats', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}));
 
 // GET /api/admin/users - 用户列表
-router.get('/users', async (req, res) => {
+router.get('/users', asyncRoute(async (req, res) => {
   try {
     const users = await getAllUsers();
     const page = parseInt(req.query.page) || 1;
@@ -100,10 +101,10 @@ router.get('/users', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}));
 
 // POST /api/admin/users/:id/ban - 封禁用户
-router.post('/users/:id/ban', async (req, res) => {
+router.post('/users/:id/ban', asyncRoute(async (req, res) => {
   try {
     const { id } = req.params;
     const { reason } = req.body || {};
@@ -113,10 +114,10 @@ router.post('/users/:id/ban', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}));
 
 // POST /api/admin/users/:id/unban - 解封用户
-router.post('/users/:id/unban', async (req, res) => {
+router.post('/users/:id/unban', asyncRoute(async (req, res) => {
   try {
     const { id } = req.params;
     const user = await unbanUser(id);
@@ -125,6 +126,6 @@ router.post('/users/:id/unban', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}));
 
 export default router;

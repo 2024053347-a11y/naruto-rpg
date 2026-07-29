@@ -225,6 +225,15 @@ test('legacy AI bloodline collection writes are not silently discarded', () => {
   assert.equal(stateManager.get('技能·血继限界'), '写轮眼·单勾玉');
 });
 
+test('secondary calendar writes synchronize the numeric world month', () => {
+  stateManager.batchUpdate([{
+    path: 'world_state.calendar', op: 'set', value: '木叶64年7月15日·正午'
+  }]);
+
+  assert.equal(stateManager.get('世界·时间'), '木叶64年7月15日·正午');
+  assert.equal(stateManager.get('世界·月份'), 7);
+});
+
 test('AI removal of equipped gear clears its slot and applied bonus', () => {
   stateManager.update([
     { key: '物品·武器·查克拉刀·数量', op: '=', value: 1 },
@@ -323,7 +332,7 @@ test('main and secondary prompts explain complete item and skill deletion', () =
   assert.match(mainPrompt, /忍术遗忘[\s\S]*skills\.jutsu[\s\S]*"op":"remove"/);
   assert.doesNotMatch(mainPrompt, /【物品删除】设0/);
   assert.match(secondaryPrompt, /学习\/创造\/练习\/升级\/遗忘\/删除/);
-  assert.match(secondaryPrompt, /最后一件[\s\S]*op="remove"/);
+  assert.match(secondaryPrompt, /最后一件[\s\S]*"op":"remove"/);
 });
 
 test('runtime deletion protocol also upgrades saved legacy updater presets', () => {

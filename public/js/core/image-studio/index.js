@@ -1021,5 +1021,6 @@ export * from './settings.js';
 export * from './storage.js';
 export * from './transport.js';
 export * from './worldbook.js';
+export * from './zip.js';
 
 export default imageStudio;

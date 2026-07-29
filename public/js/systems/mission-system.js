@@ -1,5 +1,6 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
+import { normalizeMissionStatus } from '../data/instruction-contract.js';
 
 class MissionSystem {
   processInstruction(missionData) {
@@ -261,8 +262,9 @@ class MissionSystem {
         break;
       }
     }
-    const isNewMissionStatus = next.status === 'accepted' || next.status === 'in_progress';
-    if (isNewMissionStatus) next.status = 'active';
+    const rawStatus = String(next.status || '').trim().toLowerCase();
+    const isNewMissionStatus = rawStatus === 'accepted' || rawStatus === 'in_progress';
+    if (rawStatus) next.status = normalizeMissionStatus(rawStatus);
     if (next.progress_update && !next.progress) {
       next.progress = {
         current_step: next.progress_update.step,

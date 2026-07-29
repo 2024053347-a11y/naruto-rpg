@@ -88,10 +88,13 @@ function Invoke-NativeWithRetry {
     [Parameter(Mandatory = $true)][string]$FailureMessage,
     [int]$Attempts = 3,
     [int]$InitialDelaySeconds = 4,
+    [int]$MaxDelaySeconds = 30,
     [string[]]$FinalAttemptPrefixArguments = @()
   )
 
   if ($Attempts -lt 1) { throw '重试次数必须至少为 1' }
+  if ($InitialDelaySeconds -lt 1) { throw '初始重试间隔必须至少为 1 秒' }
+  if ($MaxDelaySeconds -lt 1) { throw '最大重试间隔必须至少为 1 秒' }
 
   $LastNativeExitCode = 1
   for ($Attempt = 1; $Attempt -le $Attempts; $Attempt += 1) {
@@ -109,7 +112,7 @@ function Invoke-NativeWithRetry {
     if ($LastNativeExitCode -eq 0) { return }
 
     if ($Attempt -lt $Attempts) {
-      $DelaySeconds = $InitialDelaySeconds * $Attempt
+      $DelaySeconds = [Math]::Min($InitialDelaySeconds * $Attempt, $MaxDelaySeconds)
       Write-Warning "$FailureMessage (exit $LastNativeExitCode)，$DelaySeconds 秒后重试。"
       Start-Sleep -Seconds $DelaySeconds
     }
@@ -126,6 +129,20 @@ function Resolve-CommandPath {
     if ($null -ne $Command) { return $Command.Source }
   }
   throw "缺少命令：$($Names -join ' / ')"
+}
+
+function Resolve-TarCommand {
+  # Windows 自带的 System32\tar.exe（bsdtar）原生支持 "C:\..." 本地路径。
+  # PATH 里的 GNU tar（例如 Git 的 usr\bin\tar.exe）会把盘符冒号解释成
+  # 远程主机（"Cannot connect to C: resolve failed"），必须加 --force-local。
+  $SystemTar = Join-Path ([Environment]::GetFolderPath('System')) 'tar.exe'
+  if (Test-Path -LiteralPath $SystemTar -PathType Leaf) {
+    return @{ Command = $SystemTar; ExtraArguments = @() }
+  }
+  $Command = Resolve-CommandPath @('tar.exe', 'tar')
+  $VersionText = [string](& $Command --version 2>$null | Select-Object -First 1)
+  $ExtraArguments = if ($VersionText -match 'GNU tar') { @('--force-local') } else { @() }
+  return @{ Command = $Command; ExtraArguments = $ExtraArguments }
 }
 
 function Remove-SafeTemporaryPath {
@@ -237,12 +254,12 @@ function Copy-ProductionBackendSources {
 
 function Assert-PackageContents {
   param(
-    [Parameter(Mandatory = $true)][string]$TarCommand,
+    [Parameter(Mandatory = $true)][hashtable]$Tar,
     [Parameter(Mandatory = $true)][string]$Archive
   )
 
   $ListFlag = if ($DryRun) { '-tf' } else { '-tzf' }
-  $RawEntries = & $TarCommand $ListFlag $Archive
+  $RawEntries = & $Tar.Command @($Tar.ExtraArguments + @($ListFlag, $Archive))
   if ($LASTEXITCODE -ne 0) { throw '无法读取部署包目录' }
   $Entries = @($RawEntries | ForEach-Object {
     $NormalizedEntry = $_.Replace([char]92, [char]47)
@@ -281,7 +298,9 @@ function Assert-PackageContents {
       'backend/package-lock.json',
       'backend/js/core/timeline-save-schema.js',
       'backend/js/core/continuity-ledger.js',
-      'backend/js/utils/format.js'
+      'backend/js/utils/format.js',
+      'ops/systemd/naruto-rpg.service.d/limits.conf',
+      'ops/sysctl/90-naruto-rpg-memory.conf'
     )) {
       if ($Entries -notcontains $Required) { throw "正式站部署包缺少后端文件：$Required" }
     }
@@ -341,12 +360,18 @@ try {
     $BackendDir = Join-Path $PayloadDir 'backend'
     New-Item -ItemType Directory -Force -Path $BackendDir | Out-Null
     Copy-ProductionBackendSources $BackendDir
+
+    $SystemdPayloadDir = Join-Path $PayloadDir 'ops\systemd\naruto-rpg.service.d'
+    $SysctlPayloadDir = Join-Path $PayloadDir 'ops\sysctl'
+    New-Item -ItemType Directory -Force -Path $SystemdPayloadDir, $SysctlPayloadDir | Out-Null
+    Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\systemd\naruto-rpg.service.d\limits.conf') -Destination $SystemdPayloadDir -Force
+    Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\sysctl\90-naruto-rpg-memory.conf') -Destination $SysctlPayloadDir -Force
   }
 
-  $TarCommand = Resolve-CommandPath @('tar.exe', 'tar')
+  $Tar = Resolve-TarCommand
   $CreateFlag = if ($DryRun) { '-cf' } else { '-czf' }
-  Invoke-NativeChecked $TarCommand @($CreateFlag, $ArchivePath, '-C', $PayloadDir, '.') '创建部署包失败'
-  Assert-PackageContents $TarCommand $ArchivePath
+  Invoke-NativeChecked $Tar.Command ($Tar.ExtraArguments + @($CreateFlag, $ArchivePath, '-C', $PayloadDir, '.')) '创建部署包失败'
+  Assert-PackageContents $Tar $ArchivePath
   Write-Output ('PACKAGE_MB={0:N2}' -f ((Get-Item -LiteralPath $ArchivePath).Length / 1MB))
 
   if ($DryRun) {
@@ -380,21 +405,19 @@ try {
     -Command $ScpCommand `
     -Arguments ($SshOptions + @($ArchivePath, "${Server}:$RemoteArchivePart")) `
     -FailureMessage '上传部署包失败' `
-    -Attempts 3 `
-    -InitialDelaySeconds 4 `
+    -Attempts 6 `
+    -InitialDelaySeconds 10 `
+    -MaxDelaySeconds 30 `
     -FinalAttemptPrefixArguments @('-O')
 
   $FinalizeRemoteUpload = "set -eu; if test -f '$RemoteArchivePart'; then printf '%s  %s\n' '$ArchiveSha256' '$RemoteArchivePart' | sha256sum -c -; mv -f '$RemoteArchivePart' '$RemoteArchive'; else test -f '$RemoteArchive'; printf '%s  %s\n' '$ArchiveSha256' '$RemoteArchive' | sha256sum -c -; fi"
-  Invoke-NativeWithRetry `
-    -Command $SshCommand `
-    -Arguments ($SshOptions + @($Server, $FinalizeRemoteUpload)) `
-    -FailureMessage '校验上传部署包失败' `
-    -Attempts 3 `
-    -InitialDelaySeconds 4
-  Write-Output "UPLOAD_SHA256=$ArchiveSha256"
+  # Give sshd time to release the upload connection before the single
+  # verification/deployment session is opened.
+  Start-Sleep -Seconds 12
 
   $RemoteSteps = @(
     'set -eu',
+    $FinalizeRemoteUpload,
     "rm -rf '$RemoteRelease'",
     "mkdir -p '$RemoteRelease' '$($Target.TargetDir)'",
     "tar xzf '$RemoteArchive' -C '$RemoteRelease'",
@@ -424,6 +447,8 @@ try {
     $RemoteSteps += @(
       "test -s '$RemoteRelease/backend/server/index.js'",
       "test -s '$RemoteRelease/backend/js/core/timeline-save-schema.js'",
+      "test -s '$RemoteRelease/ops/systemd/naruto-rpg.service.d/limits.conf'",
+      "test -s '$RemoteRelease/ops/sysctl/90-naruto-rpg-memory.conf'",
       "mkdir -p '/opt/naruto-rpg/server' '/opt/naruto-rpg/js'",
       "cp -a '$RemoteRelease/backend/server/.' '/opt/naruto-rpg/server/'",
       "cp -a '$RemoteRelease/backend/js/.' '/opt/naruto-rpg/js/'",
@@ -431,8 +456,17 @@ try {
       "cd '/opt/naruto-rpg' && npm install --omit=dev --silent",
       "chmod 600 '/opt/naruto-rpg/.env' 2>/dev/null || true",
       "chown -R www-data:www-data '/opt/naruto-rpg'",
+      "install -D -m 0644 '$RemoteRelease/ops/systemd/naruto-rpg.service.d/limits.conf' '/etc/systemd/system/naruto-rpg.service.d/limits.conf'",
+      "install -m 0644 '$RemoteRelease/ops/sysctl/90-naruto-rpg-memory.conf' '/etc/sysctl.d/90-naruto-rpg-memory.conf'",
+      'systemctl daemon-reload',
+      'sysctl -p /etc/sysctl.d/90-naruto-rpg-memory.conf',
       'systemctl restart naruto-rpg',
-      'systemctl is-active --quiet naruto-rpg'
+      'systemctl is-active --quiet naruto-rpg',
+      "systemctl show naruto-rpg --property=MemoryHigh --value | grep -Fxq '268435456'",
+      "systemctl show naruto-rpg --property=MemoryMax --value | grep -Fxq '402653184'",
+      "systemctl show naruto-rpg --property=MemorySwapMax --value | grep -Fxq '134217728'",
+      "sysctl -n vm.swappiness | grep -Fxq '10'",
+      'ready=; for attempt in $(seq 1 30); do if curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3000/health/ready; then ready=1; break; fi; sleep 1; done; test "$ready" = 1'
     )
   }
 
@@ -451,8 +485,32 @@ try {
       "tr -d '\r' < '$StagingHeaders' | grep -Fxi 'x-staging: true'"
     )
   }
-  $RemoteSteps += "rm -rf '$RemoteRelease' '$RemoteArchive' '$RemoteArchivePart'"
-  Invoke-NativeChecked $SshCommand ($SshOptions + @($Server, ($RemoteSteps -join '; '))) '远端部署或验证失败'
+  # The server throttles rapid consecutive SSH sessions. Keep the verified
+  # archive until one complete deployment attempt is acknowledged so retries
+  # remain idempotent after an authentication-time disconnect.
+  $RemoteDeployCommand = $RemoteSteps -join '; '
+  Invoke-NativeWithRetry `
+    -Command $SshCommand `
+    -Arguments ($SshOptions + @($Server, $RemoteDeployCommand)) `
+    -FailureMessage '远端部署或验证失败' `
+    -Attempts 6 `
+    -InitialDelaySeconds 10 `
+    -MaxDelaySeconds 30
+  Write-Output "UPLOAD_SHA256=$ArchiveSha256"
+
+  $RemoteCleanupCommand = "rm -rf '$RemoteRelease' '$RemoteArchive' '$RemoteArchivePart'"
+  Start-Sleep -Seconds 12
+  try {
+    Invoke-NativeWithRetry `
+      -Command $SshCommand `
+      -Arguments ($SshOptions + @($Server, $RemoteCleanupCommand)) `
+      -FailureMessage '远端临时文件清理失败' `
+      -Attempts 3 `
+      -InitialDelaySeconds 10 `
+      -MaxDelaySeconds 30
+  } catch {
+    Write-Warning "远端临时文件清理失败，不影响已完成部署：$($_.Exception.Message)"
+  }
 
   $Succeeded = $true
   $ExitCode = 0

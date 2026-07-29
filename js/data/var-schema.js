@@ -94,14 +94,61 @@ export const GROWTH_RULES = {
 };
 
 export const NPC_TEMPLATE_FIELDS = [
-  'npc', 'affection', 'trust', 'respect',
+  'npc', 'name', '姓名', 'affection', 'trust', 'respect',
   '查克拉', '查克拉上限', '生命力', '生命力上限',
   '体力', '体力上限', '速度', '精神力', '精神力上限',
   '忍术造诣', '体术造诣', '幻术造诣',
   '忍阶', '查克拉属性', '忍术',
-  'affection_change', 'trust_change',
+  'affection_change', 'trust_change', 'respect_change',
+  'affection_delta', 'trust_delta', 'respect_delta',
   'inner_thoughts', 'history'
 ];
+
+const RELATIONSHIP_DELTA_ALIASES = {
+  affection_change: 'affection_delta',
+  trust_change: 'trust_delta',
+  respect_change: 'respect_delta'
+};
+const RELATIONSHIP_SCORE_FIELDS = ['affection', 'trust', 'respect'];
+
+export function finiteRelationshipNumber(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (typeof value !== 'string' || !value.trim()) return undefined;
+  const parsed = Number(value.trim());
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+/**
+ * Normalize relationship aliases commonly emitted by AI models. Invalid identities
+ * reject the instruction; invalid optional deltas are omitted instead of poisoning state.
+ */
+export function normalizeRelationshipInstruction(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+
+  const npc = [value.npc, value.name, value['姓名']]
+    .find(candidate => typeof candidate === 'string' && candidate.trim());
+  if (!npc) return null;
+
+  const normalized = { ...value, npc: npc.trim() };
+  delete normalized.name;
+  delete normalized['姓名'];
+
+  for (const field of RELATIONSHIP_SCORE_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(value, field)) continue;
+    const score = finiteRelationshipNumber(value[field]);
+    if (score === undefined) delete normalized[field];
+    else normalized[field] = score;
+  }
+
+  for (const [canonical, alias] of Object.entries(RELATIONSHIP_DELTA_ALIASES)) {
+    const delta = finiteRelationshipNumber(value[canonical] ?? value[alias]);
+    delete normalized[alias];
+    if (delta === undefined) delete normalized[canonical];
+    else normalized[canonical] = delta;
+  }
+
+  return normalized;
+}
 
 // AI模型经常使用非标准变量名，此表将它们映射到正确的v4.0扁平键名
 export const VAR_ALIASES = {
@@ -193,20 +240,61 @@ export function isKnownKey(key) {
   return false;
 }
 
-const STRUCTURED_SCALAR_PATHS = new Set([
-  'player.name', 'player.age', 'player.soul_age', 'player.gender', 'player.rank', 'player.official_rank',
-  'player.background', 'player.chakra_nature', 'player.difficulty', 'player.personality',
-  'player.public_identity', 'player.current_goal', 'player.reputation_tags', 'player.flags',
-  'player.alive', 'player.death_cause',
-  'attributes.chakra', 'attributes.chakra_current', 'attributes.spirit', 'attributes.spirit_current',
-  'attributes.vitality', 'attributes.vitality_current', 'attributes.stamina', 'attributes.stamina_current',
-  'attributes.willpower', 'attributes.willpower_current', 'attributes.speed', 'attributes.luck',
-  'progression.exp', 'progression.exp_to_next', 'progression.jutsu_mastery',
-  'progression.taijutsu_mastery', 'progression.genjutsu_mastery', 'progression.defense_mastery',
-  'progression.missions_done', 'progression.pending_breakthrough', 'progression.ryo',
-  'progression.titles', 'progression.achievements', 'equipment.ryo',
-  'world_state.current_location', 'world_state.calendar', 'world_state.timeline', 'world_state.month',
-  'world_state.weather', 'world_state.explored_regions', 'world_state.active_events'
+export const STRUCTURED_SCALAR_PATH_MAP = Object.freeze({
+  'player.name': '玩家·姓名',
+  'player.age': '玩家·年龄',
+  'player.soul_age': '玩家·灵魂年龄',
+  'player.gender': '玩家·性别',
+  'player.rank': '玩家·忍阶',
+  'player.official_rank': '玩家·正式忍阶',
+  'player.background': '玩家·出身',
+  'player.chakra_nature': '玩家·查克拉属性',
+  'player.difficulty': '玩家·难度',
+  'player.personality': '玩家·个性',
+  'player.public_identity': '玩家·公开身份',
+  'player.current_goal': '玩家·当前目标',
+  'player.reputation_tags': '玩家·声望标签',
+  'player.flags': '玩家·标志',
+  'player.alive': '玩家·存活',
+  'player.death_cause': '玩家·死因',
+  'attributes.chakra': '属性·查克拉',
+  'attributes.chakra_current': '属性·当前查克拉',
+  'attributes.spirit': '属性·精神力',
+  'attributes.spirit_current': '属性·当前精神力',
+  'attributes.vitality': '属性·生命力',
+  'attributes.vitality_current': '属性·当前生命力',
+  'attributes.stamina': '属性·体力',
+  'attributes.stamina_current': '属性·当前体力',
+  'attributes.willpower': '属性·体力',
+  'attributes.willpower_current': '属性·当前体力',
+  'attributes.speed': '属性·速度',
+  'attributes.luck': '属性·幸运',
+  'progression.exp': '进度·经验',
+  'progression.exp_to_next': '进度·下一级经验',
+  'progression.jutsu_mastery': '进度·忍术熟练度',
+  'progression.taijutsu_mastery': '进度·体术熟练度',
+  'progression.genjutsu_mastery': '进度·幻术熟练度',
+  'progression.defense_mastery': '进度·防御熟练度',
+  'progression.missions_done': '进度·已完成任务',
+  'progression.pending_breakthrough': '进度·突破待处理',
+  'progression.ryo': '进度·金钱',
+  'progression.titles': '进度·称号',
+  'progression.achievements': '进度·成就',
+  'equipment.ryo': '进度·金钱',
+  'world_state.current_location': '世界·地点',
+  'world_state.calendar': '世界·时间',
+  'world_state.timeline': '世界·年代',
+  'world_state.month': '世界·月份',
+  'world_state.weather': '世界·天气',
+  'world_state.explored_regions': '世界·已探索区域',
+  'world_state.active_events': '世界·活跃事件'
+});
+const STRUCTURED_SCALAR_PATHS = new Set(Object.keys(STRUCTURED_SCALAR_PATH_MAP));
+const STRUCTURED_LEGACY_SCALAR_PATHS = new Set([
+  'attributes.willpower',
+  'attributes.willpower_current',
+  'progression.ryo',
+  'world_state.explored_regions'
 ]);
 const STRUCTURED_OPS = new Set(['set', 'add', 'sub', 'assign', 'push', 'remove']);
 const STRUCTURED_SKILL_FIELDS = new Set([
@@ -231,6 +319,97 @@ function hasUpdateValue(update) {
   return Object.prototype.hasOwnProperty.call(update, 'value') && update.value !== undefined;
 }
 
+function finiteNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function nonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function recordValue(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+}
+
+export function normalizeStructuredVariableUpdate(update) {
+  if (!update || typeof update !== 'object' || Array.isArray(update)) return update;
+  const normalized = { ...update };
+  if (typeof normalized.path === 'string') normalized.path = normalized.path.trim();
+  if (typeof normalized.op === 'string') normalized.op = normalized.op.trim().toLowerCase();
+  if (typeof normalized.key === 'string') normalized.key = normalized.key.trim();
+  return normalized;
+}
+
+export function calendarMonthFromValue(value) {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  const canonical = text.match(/^K\d{3,4}-(\d{2})-\d{2}(?:[T·\s].*)?$/i);
+  const localized = text.match(/^木叶\s*\d+\s*年\s*(\d{1,2})\s*月\s*\d{1,2}\s*日(?:[·\s].*)?$/);
+  const month = Number(canonical?.[1] ?? localized?.[1]);
+  return Number.isInteger(month) && month >= 1 && month <= 12 ? month : null;
+}
+
+function validateNumericValue(path, op, value, { min = null, max = null } = {}) {
+  if (!finiteNumber(value)) return { valid: false, reason: `数值路径 ${path} 的 value 必须是有限数字` };
+  if (['add', 'sub'].includes(op) && value < 0) {
+    return { valid: false, reason: `数值路径 ${path} 的 ${op} value 不能为负数` };
+  }
+  if (op === 'set' && min != null && value < min) return { valid: false, reason: `路径 ${path} 最小值为 ${min}` };
+  if (op === 'set' && max != null && value > max) return { valid: false, reason: `路径 ${path} 最大值为 ${max}` };
+  return { valid: true };
+}
+
+function validateScalarUpdate(path, op, value) {
+  const flatKey = STRUCTURED_SCALAR_PATH_MAP[path];
+  const schema = VAR_SCHEMA[flatKey];
+  if (!schema) return { valid: false, reason: `标量路径 ${path} 缺少状态映射` };
+  if (schema.type === 'number') {
+    if (!['set', 'add', 'sub'].includes(op)) return { valid: false, reason: `数值路径 ${path} 只支持 set/add/sub` };
+    const numeric = validateNumericValue(path, op, value, schema);
+    if (!numeric.valid) return numeric;
+  } else {
+    if (op !== 'set') return { valid: false, reason: `文本路径 ${path} 只支持 set` };
+    if (typeof value !== 'string') return { valid: false, reason: `文本路径 ${path} 的 value 必须是字符串` };
+  }
+  const validation = validate(flatKey, value);
+  return validation.valid ? { valid: true, kind: 'scalar' } : { valid: false, reason: validation.reason };
+}
+
+const REQUIRED_ABILITY_FIELDS = ['name', 'rank', 'element', 'resource_type', 'cost', 'power', 'mastery', 'description'];
+const REQUIRED_TALENT_FIELDS = ['name', 'rank', 'mastery', 'description'];
+const REQUIRED_ITEM_FIELDS = ['quantity', 'quality', 'description'];
+const NUMERIC_SKILL_FIELDS = new Set(['cost', 'power', 'mastery']);
+const NUMERIC_ITEM_FIELDS = new Set(['quantity', 'power', 'cost']);
+
+function missingObjectFields(value, fields) {
+  return fields.filter(field => !Object.prototype.hasOwnProperty.call(value, field)
+    || value[field] === undefined
+    || (typeof value[field] === 'string' && !value[field].trim()));
+}
+
+function validateSkillField(path, field, op, value) {
+  if (NUMERIC_SKILL_FIELDS.has(field)) {
+    if (!['set', 'add', 'sub', 'assign'].includes(op)) return { valid: false, reason: `技能数值字段 ${field} 不支持 ${op}` };
+    const bounds = field === 'mastery' ? { min: 0, max: 100 } : { min: 0 };
+    return validateNumericValue(path, op === 'assign' ? 'set' : op, value, bounds);
+  }
+  if (!['set', 'assign'].includes(op)) return { valid: false, reason: `技能文本字段 ${field} 只支持 set/assign` };
+  return nonEmptyString(value)
+    ? { valid: true }
+    : { valid: false, reason: `技能字段 ${field} 的 value 必须是非空字符串` };
+}
+
+function validateItemField(path, field, op, value) {
+  if (NUMERIC_ITEM_FIELDS.has(field)) {
+    if (!['set', 'add', 'sub'].includes(op)) return { valid: false, reason: `物品数值字段 ${field} 只支持 set/add/sub` };
+    return validateNumericValue(path, op, value, { min: 0 });
+  }
+  if (op !== 'set') return { valid: false, reason: `物品文本字段 ${field} 只支持 set` };
+  return nonEmptyString(value)
+    ? { valid: true }
+    : { valid: false, reason: `物品字段 ${field} 的 value 必须是非空字符串` };
+}
+
 /**
  * Shared allow-list for AI-authored structured variable writes. Keeping this at the schema layer
  * prevents the validator, parser and state manager from accepting different path protocols.
@@ -240,34 +419,60 @@ export function validateStructuredVariableUpdate(update) {
     return { valid: false, reason: '变量更新必须是JSON对象' };
   }
 
+  update = normalizeStructuredVariableUpdate(update);
+
   if (update.key && ['=', '+', '-'].includes(update.op)) {
     if (!isKnownKey(update.key)) return { valid: false, reason: `未知平铺变量: ${update.key}` };
     if (!hasUpdateValue(update)) return { valid: false, reason: `变量 ${update.key} 缺少 value` };
-    return { valid: true, kind: 'flat' };
+    if (update.op === '+' || update.op === '-') {
+      if (!isNumeric(update.key)) {
+        return { valid: false, reason: `文本平铺变量 ${update.key} 不支持 ${update.op}` };
+      }
+      const delta = Number(update.value);
+      if (!Number.isFinite(delta) || delta < 0) {
+        return { valid: false, reason: `数值平铺变量 ${update.key} 的增减值必须是非负有限数字` };
+      }
+      return { valid: true, kind: 'flat' };
+    }
+    const coerced = coerceValue(update.key, update.value);
+    if (coerced === undefined || (isNumeric(update.key) && !Number.isFinite(coerced))) {
+      return { valid: false, reason: `平铺变量 ${update.key} 的 value 类型无效` };
+    }
+    const validation = validate(update.key, coerced);
+    return validation.valid ? { valid: true, kind: 'flat' } : { valid: false, reason: validation.reason };
   }
 
-  const path = typeof update.path === 'string' ? update.path.trim() : '';
-  const op = String(update.op || '').toLowerCase();
+  const path = typeof update.path === 'string' ? update.path : '';
+  const op = String(update.op || '');
   if (!structuredPathIsSafe(path)) return { valid: false, reason: `无效或不安全的变量路径: ${path || '(空)'}` };
   if (!STRUCTURED_OPS.has(op)) return { valid: false, reason: `路径 ${path} 使用了不支持的操作: ${op || '(空)'}` };
   if (op !== 'remove' && !hasUpdateValue(update)) return { valid: false, reason: `路径 ${path} 的 ${op} 操作缺少 value` };
   if (op === 'assign' && !String(update.key || '').trim()) return { valid: false, reason: `路径 ${path} 的 assign 操作缺少 key` };
 
   if (STRUCTURED_SCALAR_PATHS.has(path)) {
-    return ['set', 'add', 'sub'].includes(op)
-      ? { valid: true, kind: 'scalar' }
-      : { valid: false, reason: `标量路径 ${path} 不支持 ${op}` };
+    if (path === 'world_state.calendar' && op === 'set' && calendarMonthFromValue(update.value) == null) {
+      return { valid: false, reason: 'world_state.calendar 必须使用完整日期，如“木叶52年7月15日·正午”或“K052-07-15”' };
+    }
+    return validateScalarUpdate(path, op, update.value);
   }
 
   if (path === 'world_state.map.known_locations') {
-    return ['assign', 'remove'].includes(op) && String(update.key || '').trim()
-      ? { valid: true, kind: 'map' }
-      : { valid: false, reason: `${path} 只支持带 key 的 assign/remove` };
+    if (!['assign', 'remove'].includes(op) || !nonEmptyString(update.key)) {
+      return { valid: false, reason: `${path} 只支持带非空 key 的 assign/remove` };
+    }
+    if (op === 'assign') {
+      const location = recordValue(update.value);
+      if (!location || !finiteNumber(location.x) || !finiteNumber(location.y)
+        || !nonEmptyString(location.desc) || !nonEmptyString(location.tier)) {
+        return { valid: false, reason: `${path} assign 的 value 必须包含数字 x/y、非空 desc 和 tier` };
+      }
+    }
+    return { valid: true, kind: 'map' };
   }
   if (path === 'world_state.map.explored_regions') {
-    return ['push', 'set'].includes(op)
-      ? { valid: true, kind: 'map' }
-      : { valid: false, reason: `${path} 只支持 push/set` };
+    if (op === 'push' && nonEmptyString(update.value)) return { valid: true, kind: 'map' };
+    if (op === 'set' && Array.isArray(update.value) && update.value.every(nonEmptyString)) return { valid: true, kind: 'map' };
+    return { valid: false, reason: `${path} 只支持 push 非空字符串或 set 字符串数组` };
   }
   if (path === 'progression.reputation') {
     return op === 'remove' && String(update.key || '').trim()
@@ -275,14 +480,15 @@ export function validateStructuredVariableUpdate(update) {
       : { valid: false, reason: `${path} 只支持带 key 的 remove` };
   }
   if (/^progression\.reputation\.[^.]+$/.test(path)) {
-    return ['set', 'add', 'sub'].includes(op)
-      ? { valid: true, kind: 'reputation' }
-      : { valid: false, reason: `声望路径 ${path} 不支持 ${op}` };
+    if (!['set', 'add', 'sub'].includes(op)) return { valid: false, reason: `声望路径 ${path} 不支持 ${op}` };
+    const numeric = validateNumericValue(path, op, update.value);
+    return numeric.valid ? { valid: true, kind: 'reputation' } : numeric;
   }
   if (/^equipment\.equipped\.(weapon|armor|accessory1|accessory2)$/.test(path)) {
-    return ['set', 'remove'].includes(op)
+    if (op === 'remove') return { valid: true, kind: 'equipped' };
+    return op === 'set' && nonEmptyString(update.value)
       ? { valid: true, kind: 'equipped' }
-      : { valid: false, reason: `装备槽路径 ${path} 不支持 ${op}` };
+      : { valid: false, reason: `装备槽路径 ${path} 只支持 set 非空字符串或 remove` };
   }
 
   const skillCollection = path.match(new RegExp(`^skills\.(${STRUCTURED_SKILL_CATEGORIES})$`));
@@ -293,11 +499,33 @@ export function validateStructuredVariableUpdate(update) {
   }
   const skill = path.match(new RegExp(`^skills\.(${STRUCTURED_SKILL_CATEGORIES})\.([^.]+)(?:\.([^.]+))?$`));
   if (skill) {
+    const category = skill[1];
     const field = skill[3];
     if (field && !STRUCTURED_SKILL_FIELDS.has(field)) return { valid: false, reason: `技能字段不受支持: ${field}` };
     if (op === 'assign' && field) return { valid: false, reason: '技能 assign 应指向技能对象并用 key 指定字段' };
     if (op === 'remove' && field) return { valid: false, reason: '删除技能必须删除完整技能对象' };
     if (op === 'push') return { valid: false, reason: '技能路径不支持 push' };
+    if (field) {
+      const fieldValidation = validateSkillField(path, field, op, update.value);
+      return fieldValidation.valid ? { valid: true, kind: 'skill' } : fieldValidation;
+    }
+    if (op === 'remove') return { valid: true, kind: 'skill' };
+    if (op === 'assign') {
+      const key = String(update.key || '');
+      if (!STRUCTURED_SKILL_FIELDS.has(key)) return { valid: false, reason: `技能字段不受支持: ${key || '(空)'}` };
+      const fieldValidation = validateSkillField(path, key, op, update.value);
+      return fieldValidation.valid ? { valid: true, kind: 'skill' } : fieldValidation;
+    }
+    if (op !== 'set') return { valid: false, reason: `技能对象 ${path} 只支持 set/assign/remove` };
+    const value = recordValue(update.value);
+    if (!value) return { valid: false, reason: `技能对象 ${path} 的 set value 必须是对象` };
+    const required = ['talents', 'kekkei_genkai'].includes(category) ? REQUIRED_TALENT_FIELDS : REQUIRED_ABILITY_FIELDS;
+    const missing = missingObjectFields(value, required);
+    if (missing.length) return { valid: false, reason: `新技能 ${path} 缺少完整字段: ${missing.join(', ')}` };
+    for (const fieldName of required) {
+      const fieldValidation = validateSkillField(path, fieldName, 'set', value[fieldName]);
+      if (!fieldValidation.valid) return fieldValidation;
+    }
     return { valid: true, kind: 'skill' };
   }
 
@@ -313,10 +541,44 @@ export function validateStructuredVariableUpdate(update) {
     if (field && !STRUCTURED_ITEM_FIELDS.has(field)) return { valid: false, reason: `物品字段不受支持: ${field}` };
     if (op === 'assign' || op === 'push') return { valid: false, reason: `物品路径不支持 ${op}` };
     if (op === 'remove' && field) return { valid: false, reason: '删除物品必须删除完整物品对象' };
+    if (field) {
+      const fieldValidation = validateItemField(path, field, op, update.value);
+      return fieldValidation.valid ? { valid: true, kind: 'item' } : fieldValidation;
+    }
+    if (op === 'remove') return { valid: true, kind: 'item' };
+    if (op !== 'set') return { valid: false, reason: `物品对象 ${path} 只支持 set/remove` };
+    const value = recordValue(update.value);
+    if (!value) return { valid: false, reason: `物品对象 ${path} 的 set value 必须是对象` };
+    const missing = missingObjectFields(value, REQUIRED_ITEM_FIELDS);
+    if (missing.length) return { valid: false, reason: `新物品 ${path} 缺少完整字段: ${missing.join(', ')}` };
+    for (const fieldName of REQUIRED_ITEM_FIELDS) {
+      const fieldValidation = validateItemField(path, fieldName, 'set', value[fieldName]);
+      if (!fieldValidation.valid) return fieldValidation;
+    }
     return { valid: true, kind: 'item' };
   }
 
   return { valid: false, reason: `变量路径不在允许清单中: ${path}` };
+}
+
+export function getStructuredVariableContractPrompt() {
+  const numeric = [];
+  const text = [];
+  for (const [path, flatKey] of Object.entries(STRUCTURED_SCALAR_PATH_MAP)) {
+    if (STRUCTURED_LEGACY_SCALAR_PATHS.has(path)) continue;
+    (VAR_SCHEMA[flatKey]?.type === 'number' ? numeric : text).push(path);
+  }
+  return `【结构化变量 DSL · 唯一写入契约】
+- <variable> 内必须是严格 JSON 对象：双引号、无注释、无尾逗号。
+- op 只能使用精确小写：set, add, sub, assign, push, remove。
+- 文本标量只允许 set：${text.join(', ')}。
+- 数值标量允许 set/add/sub，value 必须是非负有限数字：${numeric.join(', ')}。
+- 声望：progression.reputation.* 允许 set/add/sub；删除某村声望使用 progression.reputation + remove + key。
+- 装备槽：equipment.equipped.weapon、equipment.equipped.armor、equipment.equipped.accessory1、equipment.equipped.accessory2，只允许 set 字符串或 remove。
+- 地图地点：world_state.map.known_locations 只允许 assign/remove + key；assign value 必须含 x、y、desc、tier。探索区域 world_state.map.explored_regions 使用 push 字符串，或 set 字符串数组。
+- 技能：skills.(jutsu|taijutsu|genjutsu|support).准确名称。新建用 set 完整对象，必须含 name/rank/element/resource_type/cost/power/mastery/description；单字段使用对象路径 assign + key，或字段路径 set/add/sub。天赋与血继 skills.(talents|kekkei_genkai).准确名称 新建必须含 name/rank/mastery/description。
+- 物品：equipment.(weapons|armor|tools|consumables).准确名称。新建用 set 完整对象，必须含 quantity/quality/description；quantity 用 set/add/sub，其他字段用字段路径 set。物品对象不支持 assign。
+- 删除完整技能或物品必须对父集合使用 remove + key。`;
 }
 
 export function validate(key, value) {
@@ -457,7 +719,7 @@ export function generateMainVarInstructions(updaterEnabled) {
 - 任务、关系、战斗、伤势、资源、地点与时间只有实际改变时才在正文中明确表现。
 - 不为方便后台而制造变化，不写猜测数值，不从模型预训练知识擅自补全NPC能力。
 
-事实仍按“当前状态/开局契约 → 持久记忆与近期对话 → 本回合世界书 → 玩家声称 → 模型预训练知识”排序。世界书与存档高于模型常识。<reasoning> 只写可见核对结论与依据，不得写入受保护未来、NPC未公开秘密或审校模型私有记录。`;
+事实仍按“当前状态/开局契约 → 持久记忆与近期对话 → 本回合世界书 → 玩家声称 → 模型预训练知识”排序。世界书与存档高于模型常识。<reasoning> 只写可见核对结论与依据，不得写入NPC未公开秘密或审校模型私有记录。`;
   }
 
   return `[系统指令：变量模式]
@@ -509,6 +771,7 @@ ${getBriefPromptRef()}
 【装备槽】: 物品·已装备·武器 =草薙剑
 
 【常见战斗资源操作】:
+时间变化必须写入含年月日与时段的完整 世界·时间，本地自动同步数字 世界·月份，禁止另写矛盾月份。
 属性·当前查克拉 -30   ← 释放C级忍术消耗30查克拉
 属性·当前生命力 -15   ← 被苦无擦伤造成15伤害
 属性·当前体力 -15     ← 释放体术消耗15体力
@@ -518,8 +781,7 @@ ${getBriefPromptRef()}
 进度·金钱 +500        ← 任务报酬
 进度·金钱 -200        ← 在武器店购物
 世界·地点 =木叶·火影办公室  ← 场景切换
-世界·时间 =木叶64年春·午后  ← 时间推进 (文本描述)
-世界·月份 =3            ← ⚠️极其重要：月份必须是数字(1-12)，绝对不能写"春/夏"等文字！
+世界·时间 =木叶64年3月15日·午后  ← 完整日期示例
 
 【地点变更规则——每次移动必须同步更新坐标】：
 仅改 世界·地点 会导致地图无法定位。同时必须用 <variable> 标签更新 known_locations：
@@ -532,9 +794,10 @@ ${getBriefPromptRef()}
 
 【关系/记忆/任务/战斗】必须使用 JSON 标签，禁止用 <var> 平键：
 - 关系变化 → <relationship>{"npc":"...","affection_change":2,"trust_change":3,...}</relationship>
-- 记忆摘要 → <memory>{"summary":"...","facts":[],"clues":[],...}</memory>
-- 新任务 → <mission>{"id":"稳定ID","status":"active","title":"明确任务名","rank":"D|C|B|A|S","objective":"明确目标"}</mission>；已有任务增量可省略未变化字段
-- 战斗状态 → <combat state="start|player_turn|...">{"enemy_name":"...",...}</combat>
+- 记忆摘要 → <memory>{"summary":"...","facts":[],"clues":[],"pins":[],"remove_pins":[],"npc_notes":{}}</memory>
+- 任务 status 只允许 active|progress|completed|failed|abandoned；新任务 → <mission>{"id":"稳定ID","status":"active","title":"明确任务名","rank":"D|C|B|A|S","objective":"明确目标"}</mission>；已有任务只写真实变化
+- 开战 → <combat state="start">{"enemy_name":"姓名","enemy_rank":"忍阶"}</combat>；行动与结束必须使用对应 state 所需的非空字段
+- 普通事件 → <event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"事实"}</event>；结束状态使用 completed|resolved|ended|failed|cancelled
 - 无论本回合有无其他变更，末尾必须输出一条 <memory>，只记录本回合已发生事实、直接结果和下一轮待承接事项。
 
 【严禁】日常闲聊/赶路/观察不得增加 进度·经验。训练+10~20，战斗+15~25，任务+10~30。
@@ -545,7 +808,7 @@ ${getBriefPromptRef()}
 【NPC战斗卡 — 首次完整建档与增量更新】
 - 已有NPC战斗卡：直接复用当前状态提供的数值、战力等级和忍术，只输出本回合真实变化，禁止重新估值、补全或重建整张卡。
 - 最终正文首次实际登场的有名人物必须输出 <relationship> 并明确 combatant。平民、纯文职或无战斗能力者写 combatant:false，不生成战斗卡。
-- 战斗型忍者写 combatant:true，并在 combat_stats 中至少提供 rank、chakra_nature 和一个 jutsu；原创忍者可按身份与时代创建少量合理基础术，但不得伪造 JT 数据库ID。本地按忍阶补齐六项属性与三系造诣。
+- 战斗型忍者写 combatant:true，并提供 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}；没有可靠属性或招式证据时保留空数组，不得猜测。若提供忍术，每条必须完整包含 name/rank/element/resource_type/cost/power/mastery/description/type，且不得伪造 JT 数据库ID。本地按忍阶补齐六项属性与三系造诣。
 - 本地系统会将六项最终属性和三系造诣限制在忍阶基准内，并用与玩家相同的综合公式自动计算战力等级。所有当前资源不得超过上限；后续整卡信息不得把受伤或消耗后的当前值恢复到上限。
 - 招式记录名称、等级、属性、熟练度、描述、类型、消耗资源与单次消耗。具体点数以数据库中该招式的 cost 为唯一依据，禁止根据等级重算；忍术扣查克拉、幻术扣精神力、体术扣体力，支援术按其消耗资源字段。玩家与NPC完全相同。
 

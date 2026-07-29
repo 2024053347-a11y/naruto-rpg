@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('player settings exposes four focused pages and one AI connection owner', async ({ page }) => {
+test('player settings exposes five focused pages and one AI connection owner', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
 
@@ -9,12 +9,13 @@ test('player settings exposes four focused pages and one AI connection owner', a
 
   const settings = page.locator('settings-panel');
   const navigation = settings.locator('.tab-btn');
-  await expect(navigation).toHaveCount(4);
+  await expect(navigation).toHaveCount(5);
   await expect(navigation).toHaveText([
     '外观与阅读',
     '游玩与输出',
     'AI 连接',
-    '声音与画面'
+    '声音与画面',
+    '支持项目'
   ]);
 
   await settings.locator('[data-section="connection"]').click();
@@ -25,6 +26,52 @@ test('player settings exposes four focused pages and one AI connection owner', a
   await expect(settings.locator('[data-action="import"]')).toHaveCount(0);
   await expect(settings.locator('[data-action="open-creator-workbench"]')).toBeVisible();
   expect(pageErrors).toEqual([]);
+});
+
+test('project support stays optional and exposes safe Afdian and WeChat methods', async ({ page }) => {
+  await page.goto('/tests/fixtures/settings-panel-harness.html');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+
+  const settings = page.locator('settings-panel');
+  await settings.locator('[data-section="support"]').click();
+  await expect(settings.locator('#tab-support')).toBeVisible();
+  await expect(settings.locator('#tab-support h3')).toHaveText('支持忍者手记持续开发');
+  await expect(settings.locator('.save-state')).toHaveText('赞助完全自愿，不影响游戏功能');
+  await expect(settings.locator('.actions > [data-action="save"]')).toBeHidden();
+  await expect(settings.locator('.actions > [data-action="close"]')).toHaveText('关闭');
+  await expect(settings.locator('.support-story')).toContainText('忍者手记是一款由个人独立开发并持续维护的开源 RPG 项目');
+  await expect(settings.locator('.support-story')).toContainText('近1000 注册用户');
+  await expect(settings.locator('.support-use-list li')).toHaveText([
+    '项目服务器及运行环境维护',
+    '新玩法与功能开发',
+    '游戏体验优化',
+    '项目长期维护与更新'
+  ]);
+  await expect(settings.locator('.support-community')).toContainText('即使不进行赞助');
+  await expect(settings.locator('.support-gratitude')).toHaveText('感谢每一位参与忍者手记成长过程的玩家。');
+
+  const afdian = settings.locator('.support-primary-link');
+  await expect(afdian).toHaveAttribute('href', 'https://www.ifdian.net/a/2608_1?utm_source=copylink&utm_medium=link');
+  await expect(afdian).toHaveAttribute('target', '_blank');
+  await expect(afdian).toHaveAttribute('rel', 'noopener noreferrer');
+
+  const qr = settings.locator('.support-qr-frame img');
+  await expect(qr).toHaveAttribute('alt', '微信赞赏码');
+  await expect(qr).toHaveJSProperty('complete', true);
+  expect(await qr.evaluate(image => image.naturalWidth)).toBe(1210);
+
+  const communityLinks = settings.locator('.support-community-link');
+  await expect(communityLinks).toHaveCount(2);
+  await expect(communityLinks.nth(0)).toHaveAttribute('href', 'https://github.com/2024053347-a11y/naruto-rpg');
+  await expect(communityLinks.nth(1)).toHaveAttribute('href', 'https://github.com/2024053347-a11y/naruto-rpg/issues');
+  for (const link of await communityLinks.all()) {
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  }
+
+  await settings.locator('[data-section="appearance"]').click();
+  await expect(settings.locator('.actions > [data-action="save"]')).toBeVisible();
+  await expect(settings.locator('.actions > [data-action="close"]')).toHaveText('放弃');
 });
 
 test('player settings keeps a page draft and applies only when requested', async ({ page }) => {
@@ -154,15 +201,66 @@ test('creator workbench deep-links to the requested resource inside a tool', asy
   expect(position.focused).toBe(true);
 });
 
-test('player gameplay owns no archive tools and media exposes only daily image controls', async ({ page }) => {
+test('player gameplay restores archive controls, storage stats and both export formats', async ({ page }) => {
+  await page.goto('/tests/fixtures/settings-panel-harness.html');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+  await page.evaluate(async () => {
+    const { timelineSystem } = await import('/js/systems/timeline-system.js');
+    const { eventBus } = await import('/js/core/event-bus.js');
+    window.__ARCHIVE_STATS_CALLS__ = 0;
+    window.__ARCHIVE_RUNS__ = 0;
+    window.__EXPORT_REQUESTS__ = [];
+    timelineSystem.getStorageStats = async () => {
+      window.__ARCHIVE_STATS_CALLS__++;
+      return { totalNodes: 120, activeCount: 100, archivedCount: 20, estimatedBytes: 2.5 * 1024 * 1024 };
+    };
+    timelineSystem.manualArchive = async () => {
+      window.__ARCHIVE_RUNS__++;
+      return { archived: 12 };
+    };
+    eventBus.on('timeline:export-request', request => window.__EXPORT_REQUESTS__.push(request));
+  });
+
+  const settings = page.locator('settings-panel');
+  await settings.locator('[data-section="gameplay"]').click();
+  await expect(settings.locator('[name="autoArchive"]')).toBeVisible();
+  await expect(settings.locator('[data-action="check-storage"]')).toBeVisible();
+  await expect(settings.locator('[data-action="manual-archive"]')).toBeVisible();
+  await expect(settings.locator('[data-action="export-save"]')).toBeVisible();
+  await expect(settings.locator('[data-action="export-save-json"]')).toBeVisible();
+  await expect(settings.locator('#storage-info')).toContainText('节点 120');
+  await expect(settings.locator('#storage-info')).toContainText('2.50 MB');
+
+  await settings.locator('[data-action="manual-archive"]').click();
+  await page.locator('game-modal').getByRole('button', { name: '确认归档', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.__ARCHIVE_RUNS__)).toBe(1);
+  await expect.poll(() => page.evaluate(() => window.__ARCHIVE_STATS_CALLS__)).toBeGreaterThanOrEqual(2);
+
+  await settings.locator('[data-action="export-save"]').click();
+  await settings.locator('[data-action="export-save-json"]').click();
+  await expect.poll(() => page.evaluate(() => window.__EXPORT_REQUESTS__)).toEqual([
+    { compression: 'auto' },
+    { compression: 'json' }
+  ]);
+
+  const autoArchive = settings.locator('[name="autoArchive"]');
+  const originalAutoArchive = await autoArchive.isChecked();
+  await autoArchive.setChecked(!originalAutoArchive);
+  await settings.locator('.actions > [data-action="save"]').click();
+  await expect.poll(() => page.evaluate(async () => {
+    const { stateManager } = await import('/js/core/state-manager.js');
+    return stateManager.getSub('_ui').settings.autoArchive;
+  })).toBe(!originalAutoArchive);
+
+  await settings.locator('[data-section="media"]').click();
+  await expect(settings.locator('[name="imageEnabled"]')).toBeVisible();
+});
+
+test('player media exposes only daily image controls', async ({ page }) => {
   await page.goto('/tests/fixtures/settings-panel-harness.html');
   await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
 
   const settings = page.locator('settings-panel');
-  await settings.locator('[data-section="gameplay"]').click();
-  await expect(settings.locator('[data-action="check-storage"]')).toHaveCount(0);
-  await expect(settings.locator('[data-action="manual-archive"]')).toHaveCount(0);
-
   await settings.locator('[data-section="media"]').click();
   await expect(settings.locator('[name="imageEnabled"]')).toBeVisible();
   const imageMode = settings.locator('[name="imageTurnMode"]').locator('..');

@@ -169,9 +169,9 @@ function skipWhitespace(source, index) {
   return cursor;
 }
 
-function isBareContractStartPrefix(source) {
-  if (!source.startsWith('{')) return false;
-  let index = skipWhitespace(source, 1);
+function isBareContractStartPrefix(source, from = 0) {
+  if (source[from] !== '{') return false;
+  let index = skipWhitespace(source, from + 1);
 
   let consumed = consumeLiteralPrefix(source, index, '"schema"');
   if (!consumed.prefix) return false;
@@ -205,8 +205,11 @@ export function stripImageContracts(source, { streaming = false } = {}) {
     // Models occasionally omit <image_contract> and append the JSON object
     // directly. Hold a schema-first JSON prefix until it is either proven to
     // be ordinary text or recognised and removed as a visual contract.
-    for (let start = clean.lastIndexOf('{'); start >= 0; start = clean.lastIndexOf('{', start - 1)) {
-      if (isBareContractStartPrefix(clean.slice(start))) {
+    // lastIndexOf(_, -1) clamps to 0, so step the cursor manually or a brace
+    // at index 0 (e.g. the Outliner streaming a bare JSON outline) never
+    // exits this loop and freezes the page.
+    for (let start = clean.lastIndexOf('{'); start >= 0; start = start > 0 ? clean.lastIndexOf('{', start - 1) : -1) {
+      if (isBareContractStartPrefix(clean, start)) {
         clean = clean.slice(0, start);
         break;
       }

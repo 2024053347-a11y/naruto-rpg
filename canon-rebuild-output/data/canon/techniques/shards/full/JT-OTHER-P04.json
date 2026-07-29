@@ -49,7 +49,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "出云和子铁用他们的苦无刃从两侧攻击敌人并刺穿他们。",
+        "summary": "出云和虎彻使用苦无刀从两侧攻击敌人并将其刺穿。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -98,7 +98,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -118,7 +119,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -169,7 +170,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将一根绳子的两端连接到剑上，使其成为双头刃。然后使用者旋转刀片以形成盾牌，并可以用双端武器攻击。",
+        "summary": "大蛇丸将该术传授给御手洗红豆。使用者抓住目标受害者的一只手并迫使其协助执行必要的手印。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -218,7 +219,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -238,7 +240,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -288,7 +290,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "一种主要用于运输的术，忍犬变得足够大以骑乘。",
+        "summary": "通过不断地将查克拉注入其中，该术可以提高刀片的锋利度和耐久力，防止其碎裂。同时，这是一项微妙的术，需要持续集中注意力才能保持活跃。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -338,7 +340,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -358,7 +361,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -409,7 +412,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从嘴中吐出一根锋利的骨矛。",
+        "summary": "这是由宇智波佐助开发和掌握的一种独特的剑术风格，他将这项技能传授给了他的学生博人。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -459,7 +462,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -479,7 +483,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -530,7 +534,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从手腕发射针头，针头后面系着非常细的线。由于线的细度和几乎完全透明，对手很难看到针线。这可用于捕获和操纵物体或人。",
+        "summary": "最硬绝对防御·守鹤之盾会从地下提取高密度矿物并与沙混合，塑成守鹤外形的坚固盾牌，用于正面抵挡高威力攻击。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -573,7 +577,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -593,7 +598,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -643,7 +648,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "阿凯用绷带保护他的手臂和手部，然后瞄准一个区域进行毁灭性的打击。",
+        "summary": "超大玉螺旋丸是大玉螺旋丸的更强大版本。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -711,7 +716,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -731,7 +737,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -782,7 +788,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从嘴中吐出一种粘性极强的物质，可以将目标固定在一个位置。",
+        "summary": "在创造了大量的影分身之后，鸣人和他的分身各自创造了一个螺旋丸，以毁灭性的效果轰炸他们的目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -825,7 +831,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -845,7 +852,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -895,7 +902,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者跳得很高并加入一个旋转踢击以产生更大的力量。",
+        "summary": "使用者将手放在目标的脸上，让他们可以拿走这张脸并将其用作自己的脸。因为他们使用的是真实的面孔而不是伪装，所以使用者不会因为不完美或小缺陷而面临被发现的风险。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -938,7 +945,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -958,7 +966,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1007,7 +1015,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "一种用于收集目标血液的术，通过制造一个小伤口。",
+        "summary": "这种训练方法是为了获得更好的查克拉控制。为此，使用者必须从脚底发出持续的查克拉流，并利用排斥力在水面上行走。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -1043,7 +1051,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1063,7 +1072,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1112,7 +1121,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者使用油以产生覆盖地面的黏液，使对手难以站立或行走。",
+        "summary": "此术利用查克拉暂时增强头部的新陈代谢，并控制头发因此而变长。加长的头发中还有查克拉流淌，使其硬度堪比钢丝。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1161,7 +1170,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1181,7 +1191,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1231,7 +1241,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将查克拉集中在手中，用手发出探照灯般的光。这种光可以穿透泥土和纸张等材料，揭示另一边的物体的轮廓。",
+        "summary": "知狼朽是犀犬独有的忍术。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1286,7 +1296,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1306,7 +1317,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1358,7 +1369,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "一种简单的术，使用者从掌心释放出明亮的闪光，可以暂时致盲附近的对手。",
+        "summary": "使用查克拉将使用者自身的细胞转变为植物而创造的分身。分身的功能可以像用于身体替换术的木制假人一样简单，也可以完全移动并能够执行忍术。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -1413,7 +1424,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1433,7 +1445,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1485,7 +1497,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将查克拉集中在他们的声音中以放大音量，允许他们从远处口头沟通。",
+        "summary": "千手柱间创造了茂密的树木生长，并使用他的查克拉控制树木的生长方式。树木的生命力强大到足以在它们发芽时撕裂大地，并进一步刺穿它们遇到的任何其他障碍物。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1534,7 +1546,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1554,7 +1567,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1606,7 +1619,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者用绳索绑住武器然后将其扔向目标。",
+        "summary": "利用木遁的固有特性（允许使用者强制树木在任何表面上快速生长），使用者创造了一片茂密的开花树木森林。在森林形成期间，使用者可以让树枝在森林形成完成之前限制任何试图攻击使用者的目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "mid, long",
@@ -1655,7 +1668,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1675,7 +1689,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1727,7 +1741,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从耳中释放出细长的耳塞，可以延长以从远处攻击目标。",
+        "summary": "这是一种多功能术，使用者可以从身上产生锋利的木刺，以制作类似于临时剑的短程武器，或者将它们用作射弹，可以远程触发树枝的生长，刺穿敌人，结果通常会导致目标死亡。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1782,7 +1796,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1802,7 +1817,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -1855,7 +1870,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者结印以快速产生连接两个表面的细绳或绳索。",
+        "summary": "通过将查克拉送入地下，将植物的根部转化为原料。此术允许通过强制加速生长来建造建筑物。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -1898,7 +1913,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1918,7 +1934,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1970,7 +1986,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者用查克拉包裹他们的身体，然后快速旋转以产生可用于防御或进攻的屏障。",
+        "summary": "使用者将查克拉转化为地下的木材，让它快速生长，形成一座木制监狱。监狱的大小取决于使用者的想象。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -2013,7 +2029,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2033,7 +2050,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2085,7 +2102,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从体内释放出大量粘性物质，该物质硬化并在使用者周围形成保护壳。",
+        "summary": "将自己的手臂变成大树的功法。利用查克拉，组织在细胞水平上转化为树木。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -2140,7 +2157,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2160,7 +2178,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2212,7 +2230,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者向面具注入大量查克拉，从面具的眼睛和嘴中释放出各种形状和形态。",
+        "summary": "带土从地里拔出几根粗大的树根，并用它们来粉碎他的对手。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -2261,7 +2279,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2281,7 +2300,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2333,7 +2352,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者从嘴中吹出一团毒雾，覆盖目标区域。",
+        "summary": "使用者创造出许多巨大的木手，从地下向上伸出，然后包围并试图限制选定的敌人。这些手掌的大小，每一只都有尾兽大小。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -2377,7 +2396,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2397,7 +2417,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2450,7 +2470,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "山中井野进行精神传输，使她能够接管并阅读目标的思想。",
+        "summary": "在形成必要的密封后，大和能够在短短的时间内将一个区域变成一片广阔的森林，树木和草丛从他所在的任何地形上生长出来。该术与柱间的标志性术非常相似，尽管规模较小。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -2493,7 +2513,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2513,7 +2534,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2565,7 +2586,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "日向宁次使用柔拳从远处攻击目标的关键穴道。",
+        "summary": "木遁的放大版：四柱房屋术，大和不是创造单个房屋，而是一次创造多个房屋。由于用此术创造的结构数量巨大，他似乎很快就筋疲力尽了。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2608,7 +2629,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2628,7 +2650,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2680,7 +2702,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "大和制造木制枷锁以束缚目标。这些枷锁还具有压制目标查克拉的附加效果。",
+        "summary": "木遁·枷会生成木桩或木质拘束具限制目标，同时压制目标的查克拉，使被俘者更难挣脱或施术反击。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -2722,7 +2744,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2742,7 +2765,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2794,7 +2817,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土使用他的神威空间偏转攻击或将物体吸入另一个维度。",
+        "summary": "木遁·木龙之术会创造巨大的木龙，用于缠绕、压制或攻击目标；木龙还能吸收接触对象的查克拉，足以束缚尾兽。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -2849,7 +2872,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2869,7 +2893,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2921,7 +2945,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "大蛇丸使用封印术将目标困在限制其移动和查克拉的结界内。",
+        "summary": "在形成所需的手印后，使用者用木头创造出一个巨大的雕像般的生物。这种具有全身和鬼脸的人形生物通常是用木龙缠绕在其躯干上制成的，通常在战斗中作为化身使用。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2970,7 +2994,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2990,7 +3015,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -3042,7 +3067,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "犬冢牙和赤丸合作执行联合攻击，在不同方向攻击目标，使目标难以同时防御两者。",
+        "summary": "这是一个用途极其广泛的招式，它利用查克拉来激活地下的根部，并以使用该术的人为参考点，使木柱从左右出现。木柱以圆顶形状连接在一起，使用者位于中心。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -3085,7 +3110,8 @@
         ],
         "tags": [
           "other",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3105,7 +3131,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-OTHER-AUTO",
-        "reviewed_by": "manual-translation-JT-OTHER-P04-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {

@@ -1,4 +1,4 @@
-export const DEFAULT_MAIN_PRESET_VERSION = '20260723-evidence-single-call-v9';
+export const DEFAULT_MAIN_PRESET_VERSION = '20260728-open-future-context-v12';
 export const MAIN_PRESET_STORAGE_KEY = 'naruto_main_preset';
 export const MAIN_PRESET_BACKUP_PREFIX = 'naruto_main_preset_backup_';
 
@@ -26,14 +26,13 @@ export const DEFAULT_MAIN_PRESET = {
 遇到矛盾时采用更高优先级证据，并在本回合规定的 <reasoning> 结构化推演中简要说明裁决依据。没有证据时保持不确定，不得把猜测写成既定事实，也不得把审校记录混入剧情正文。`
     },
     {
-      id: 'main_builtin_timeline', name: '02 · 当前日期与未来事件隔离', enabled: true, role: 'system', activation: 'always',
+      id: 'main_builtin_timeline', name: '02 · 时间连续性与项目剧情', enabled: true, role: 'system', activation: 'always',
       content: `每回合先锁定当前木叶年份、月份、日期和时段。
 
 - 没有玩家或系统明确发起时间跳跃时，只能推进当前行动合理消耗的时间。
 - 禁止用蒙太奇、旁白或回忆突然推进数年、十几年。
-- 当前年代尚未发生的死亡、叛逃、组织成立、人物形态、秘密公开、忍术发明和重大事件一律隔离。
-- 未来信息不得以预言、角色常识、旁白暗示或“众所周知”的方式倒灌。
-- 人物年龄、存活、身份、阵营、掌握能力与公开情报必须按当前日期判断。
+- 最近一个项目剧情日即使晚于当前日期，也作为普通分支素材，可以在当前回合引用、推进、改写和结算；提前执行剧情不会自动修改游戏日期。
+- 人物年龄、身份、阵营、能力资格与公开情报以当前状态、开局契约和年度基线判断；当前分支已经造成的变化高于基线。
 - 到期项目正史只是基准参考；若玩家已经改变前置条件，应结合当前分支改写、跳过或延期，不能强制世界收束回基准线。`
     },
     {
@@ -44,11 +43,11 @@ export const DEFAULT_MAIN_PRESET = {
 - DAY-{HIST|P1|P2|BOR}-* 是完整剧情日，SCN-{HIST|P1|P2|BOR}-* 是单一地点与冲突线程，EV-{HIST|P1|P2|BOR}-* 是场景内原子节拍；花括号中的时代段以运行时实际 ID 为准。完整注入一天不等于本回合必须演完一天；只推进当前视角可以自然接续的场景，达到 stop_condition 就停下，把其他并行场景留给合理切换或后续回合。
 - 任何两个不同地点、视角或冲突线程都不得强行拼成一幕。离屏场景只在 requirements 仍成立且 blockers 未触发时推进；玩家影响到其前置时必须 altered、skipped 或 postponed。
 - reference_facts 是背景、回顾或版本说明，只用于一致性校验，绝不能当作当前日期新动作、新遭遇或新状态执行。
-- 叙事模型不会收到未来剧情正文；当天无可接续剧情时只会收到 NEXT_ANCHOR 的目标日期与 days_until。它只是日程边界，不是跳转指令，也不证明该日会发生什么。
-- 禁止根据 NEXT_ANCHOR、模型记忆或原作印象猜测未来 DAY/SCN/EV、桥段、人物行动和结果；应维持当前世界的自由行动。
+- 当前日期没有未结算剧情日时，系统只提供最近一个后续剧情日。它与当前日剧情使用同一普通上下文，可按当前分支引用、推进或改写，不要求先推进到目标日期。
+- 只能使用系统实际提供的 DAY/SCN/EV；不得用模型记忆或原作印象伪造未提供的项目节点。
 - 先核对 requirements、blockers、当前地点、人物状态和玩家造成的分支，再使用场景提供的 fallback 方向；AI只能补充分支细节，不能抹除玩家影响来恢复基准结果。
 - DAY/SCN/EV 均可记录生命周期，但粒度必须匹配真实结果：只完成一个节拍就记 EV，只结算一个场景就记 SCN；只有当天所有场景都有明确结果时才可记 DAY。状态仅限 occurred、altered、skipped、postponed。
-- postponed 必须提供晚于当前日期的合法 reschedule_to；到期后重新评估。已经最终裁定的ID不得重复记账，未来日期ID会被本地系统拒绝。
+- postponed 必须提供晚于当前日期的合法 reschedule_to；到期后重新评估。已经最终裁定的ID不得重复记账。
 - 项目日期是为游戏冻结的日期，不得向玩家宣称为漫画明示的绝对日期。`
     },
     {
@@ -80,7 +79,7 @@ export const DEFAULT_MAIN_PRESET = {
 - 区分公众知识、村内机密、组织秘密、个人秘密和幕后真相。
 - 普通NPC不能知道带土真实身份、黑绝计划、灭族真相等尚未公开的信息。
 - 世界书写明的项目设定高于漫画印象和模型数据库。
-- 世界书只说明未来边界时，不得把未来剧情正文泄露给当前角色。
+- 幕后或秘密条目只能维持叙事一致性，不得自动转化为角色知识。
 - 新人物、地点、组织或能力没有世界书/状态依据时，保持克制并标记不确定，禁止为了热闹擅自加入原作核心角色。`
     },
     {
@@ -92,7 +91,8 @@ export const DEFAULT_MAIN_PRESET = {
 - “让他带我去”应视为请求或命令尝试，由NPC独立决定。
 - “一击打倒对方”只保留攻击尝试，结果依据能力、局势和卦象判定。
 - 结尾停在NPC反应、环境变化、判定结果或悬念处，把下一步决定交还玩家。
-- 不输出替玩家决定的固定选项列表，除非用户明确要求建议。`
+- 正文末尾必须给出 3 条非穷尽的行动建议，每行严格使用“[行动] 具体行动”格式；选项只描述玩家可以尝试的下一步，不预设成功、台词、心理或结果。
+- 行动项只是可点击填入输入框的建议，不会自动执行，也不限制玩家自由输入其他行动。`
     },
     {
       id: 'main_builtin_npc', name: '06 · NPC独立意志与抗神化', enabled: true, role: 'system', activation: 'always',
@@ -149,7 +149,14 @@ export const DEFAULT_MAIN_PRESET = {
 - 结果结合角色真实能力、难度、环境、情报和准备，不按固定主角加成。
 - 失败不能等于“什么都没发生”，应落为代偿达成、部分达成或引出新局势。
 - 正文可以说明使用了第几枚卦及结果等级，但不得展示公式、目标线或原始数值。
-- 未使用的卦不强制消耗。`
+- 未使用的卦不强制消耗。
+- 发生判定时必须严格输出以下完整格式；中括号内容替换为本回合文本，不要省略起止标记：
+≈卦象判定≈
+[行动简述]
+卦象：第[壹/贰/叁/肆/伍/陆]枚 → [天命/瞬身/及第/代偿达成/部分达成/转机]
+[一句不含公式和原始数值的叙事结果]
+≈卦终≈
+- “≈卦终≈”必须在文末 [行动] 建议之前闭合；没有发生判定时不要输出卦象块。`
     },
     {
       id: 'main_builtin_pov', name: '11 · 正文人称与玩家主权', enabled: true, role: 'system', activation: 'always',
@@ -192,12 +199,12 @@ export const DEFAULT_MAIN_PRESET = {
 - 连续性与因果：核对人物状态、关系、伤势、资源、物品、忍术、任务、线索与本回合直接因果。
 - 变量依据：说明哪些正文结果会产生状态变化，哪些没有充分依据所以保持不变。
 
-不得写入受保护未来、NPC未公开秘密、证据编号和审校模型私有记录；不得写入未提供的隐藏系统内容，也不得用猜测补全事实。关闭 </reasoning> 后再开始剧情正文，正文不得复述这段推演。`
+不得写入NPC未公开秘密、证据编号和审校模型私有记录；不得写入未提供的隐藏系统内容，也不得用猜测补全事实。关闭 </reasoning> 后再开始剧情正文，正文不得复述这段推演。`
     },
     {
       id: 'main_builtin_review_candidate', name: '15 · 内部校验：因果、角色与连续性', enabled: true, role: 'system', activation: 'always',
       content: `在 <reasoning> 中继续检查准备写入的局部因果链：
-- 年代、人物存活/年龄/能力与本回合证据一致；不提前兑现 NEXT_ANCHOR 或任何未来事件。
+- 年代、人物存活/年龄/能力与本回合证据一致；项目提供的剧情日可按当前分支提前引用、推进或改写。
 - NPC有独立动机且只使用其可知信息；不OOC、不工具人化、不泄露私有意图。
 - 承接玩家历史、关系、伤势、物品、忍术、任务和线索；不重置、不凭空复原。
 - 结尾停在世界回应或新局势，把下一步交还玩家。
@@ -240,7 +247,7 @@ export const DEFAULT_MAIN_PRESET = {
 - 当前生命力是HP，非战斗或无受伤剧情不得随意扣除；当前体力只是体术资源。
 - 闲聊、赶路、观察、购物不得增加历练；训练、战斗、完成任务才可少量增加。
 - 单回合技能熟练度提升不超过合理小幅，禁止一次普通使用直接精通。
-- 地点变化更新 世界·地点；时间变化更新完整 世界·时间 和数字 世界·月份。
+- 地点变化更新 世界·地点；时间变化写入含年月日与时段的完整 世界·时间，本地会自动同步数字 世界·月份，禁止另写矛盾月份。
 - 首次探索地点时同步写入 world_state.map.known_locations；首次探索区域才追加 explored_regions。
 - 同一施术已经由 <combat> 结算时，禁止再用变量重复扣除资源。`
     },
@@ -253,7 +260,7 @@ export const DEFAULT_MAIN_PRESET = {
 - 丢弃、售出或消耗最后一件物品，必须删除整个对象，禁止只把数量设为0：
 <variable>{"path":"equipment.consumables","op":"remove","key":"准确物品名"}</variable>
 - 分类只能使用 equipment.weapons / equipment.armor / equipment.tools / equipment.consumables。
-- 新忍术写入名称、等级、属性、消耗、威力、熟练度和描述。
+- 新忍术写入名称、等级、属性、消耗资源、消耗、威力、熟练度和描述。
 - 遗忘或失去忍术必须删除整个技能，禁止只把熟练度设为0：
 <variable>{"path":"skills.jutsu","op":"remove","key":"准确技能名"}</variable>
 - 技能分类只能使用 skills.jutsu / taijutsu / genjutsu / support / talents / kekkei_genkai。
@@ -263,14 +270,15 @@ export const DEFAULT_MAIN_PRESET = {
       id: 'main_builtin_var_off_tags', name: '21 · 变量模型关闭：结构标签与NPC卡', enabled: true, role: 'system', activation: 'variable_updater_disabled',
       content: `复杂数据使用JSON结构标签：
 - 关系变化：<relationship>{"npc":"姓名","affection_change":0,"trust_change":0,"respect_change":0,"reason":"依据","inner_thoughts":"本回合","history":"本回合摘要"}</relationship>
-- 任务变化：<mission>{"id":"稳定ID","status":"active|progress|completed|failed","title":"任务名"}</mission>
-- 记忆摘要：<memory>{"summary":"本回合事实与待办","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>
-- 战斗状态：<combat state="start|player_turn|enemy_turn|victory|defeat|retreat">{}</combat>
+- 任务 status 只允许 active|progress|completed|failed|abandoned。新任务：<mission>{"id":"稳定ID","status":"active","title":"任务名","rank":"D|C|B|A|S","objective":"明确目标"}</mission>；已有任务只写真实变化。
+- 记忆摘要：<memory>{"summary":"本回合事实与待办","facts":[],"clues":[],"pins":[],"remove_pins":[],"npc_notes":{}}</memory>
+- 开战：<combat state="start">{"enemy_name":"姓名","enemy_rank":"忍阶"}</combat>
 - 玩家行动：<combat state="player_turn">{"actor":"player","action_name":"准确技能名","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_enemy":数值,"log":"结果"}</combat>
 - NPC行动：<combat state="enemy_turn">{"actor":"enemy","action_name":"准确技能名","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_player":数值,"log":"结果"}</combat>
-- 世界事件：<event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"结果"}</event>
+- 战斗结束：<combat state="victory|defeat|retreat">{"log":"胜负依据"}</combat>
+- 世界事件创建或推进：<event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"结果"}</event>；普通事件结束状态使用 completed|resolved|ended|failed|cancelled。
 
-已有NPC战斗卡只输出真实增量，不重建整卡。未知NPC普通登场不需要战斗卡；只有实际战斗/训练且状态或世界书有证据时才填写已确认字段。未知字段省略，禁止凭预训练知识添加招牌忍术。`
+已有NPC战斗卡只输出真实增量，不重建整卡。最终正文中新实际登场的有名人物必须建档并明确分类：非战斗人员写 combatant:false；战斗人员写 combatant:true 和 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}。没有可靠属性或招式证据时保留空数组，禁止凭预训练知识添加招牌忍术；若提供忍术，每条必须完整包含 name/rank/element/resource_type/cost/power/mastery/description/type。`
     },
     {
       id: 'main_builtin_output', name: '22 · 最终输出顺序', enabled: true, role: 'system', activation: 'always',

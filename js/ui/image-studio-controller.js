@@ -1,7 +1,14 @@
+import { NOVELAI_IMAGE_MODELS, NOVELAI_PROVIDER_DEFAULTS } from '../core/image-studio/settings.js';
+
+export { NOVELAI_IMAGE_MODELS };
+
 const PROVIDER_ALIASES = Object.freeze({
   openai: 'openai-compatible',
   openai_compatible: 'openai-compatible',
   'openai-compatible': 'openai-compatible',
+  novelai: 'novelai',
+  'novel-ai': 'novelai',
+  nai: 'novelai',
   comfy: 'comfyui',
   comfyui: 'comfyui',
   automatic1111: 'a1111',
@@ -9,7 +16,7 @@ const PROVIDER_ALIASES = Object.freeze({
   a1111: 'a1111'
 });
 
-export const IMAGE_PROVIDER_IDS = Object.freeze(['openai-compatible', 'comfyui', 'a1111']);
+export const IMAGE_PROVIDER_IDS = Object.freeze(['openai-compatible', 'novelai', 'comfyui', 'a1111']);
 
 export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
   enabled: false,
@@ -31,6 +38,10 @@ export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
       apiKeyHeader: 'Authorization',
       model: 'gpt-image-1',
       size: '1024x1024'
+    },
+    novelai: {
+      label: 'NovelAI Diffusion',
+      ...NOVELAI_PROVIDER_DEFAULTS
     },
     comfyui: {
       label: '本地 ComfyUI',
@@ -166,6 +177,10 @@ export function normalizeImageSettings(value = {}) {
     'openai-compatible': mergeObject(
       DEFAULT_IMAGE_SETTINGS.providers['openai-compatible'],
       mergeObject(mergeObject(inputProviders.openai, inputProviders.openai_compatible), inputProviders['openai-compatible'])
+    ),
+    novelai: mergeObject(
+      DEFAULT_IMAGE_SETTINGS.providers.novelai,
+      mergeObject(mergeObject(inputProviders.nai, inputProviders['novel-ai']), inputProviders.novelai)
     ),
     comfyui: mergeObject(
       DEFAULT_IMAGE_SETTINGS.providers.comfyui,

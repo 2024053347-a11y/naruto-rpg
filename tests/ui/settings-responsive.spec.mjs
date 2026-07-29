@@ -86,6 +86,82 @@ test('player settings keeps its navigation, content and actions inside supported
   }
 });
 
+test('archive controls stay readable on desktop and mobile', async ({ page }) => {
+  await mkdir('.codex-tmp/settings-visual', { recursive: true });
+  for (const viewport of [VIEWPORTS[0], VIEWPORTS[2], VIEWPORTS[3]]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/tests/fixtures/settings-panel-harness.html');
+    await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+    const settings = page.locator('settings-panel');
+    await settings.locator('[data-section="gameplay"]').click();
+    await settings.locator('.storage-section').scrollIntoViewIfNeeded();
+
+    const fit = await settings.evaluate(host => {
+      const root = host.shadowRoot;
+      const content = root.querySelector('.content');
+      const tool = root.querySelector('.storage-tool').getBoundingClientRect();
+      const buttons = [...root.querySelectorAll('.storage-actions .btn')].map(button => ({
+        clientWidth: button.clientWidth,
+        scrollWidth: button.scrollWidth,
+        height: button.getBoundingClientRect().height
+      }));
+      return {
+        contentOverflow: content.scrollWidth > content.clientWidth,
+        tool: { left: tool.left, right: tool.right, width: tool.width },
+        buttons
+      };
+    });
+    expect(fit.contentOverflow).toBe(false);
+    expect(fit.tool.left).toBeGreaterThanOrEqual(-1);
+    expect(fit.tool.right).toBeLessThanOrEqual(viewport.width + 1);
+    expect(fit.tool.width).toBeGreaterThan(0);
+    for (const button of fit.buttons) {
+      expect(button.scrollWidth).toBeLessThanOrEqual(button.clientWidth + 1);
+      expect(button.height).toBeGreaterThanOrEqual(viewport.width <= 768 ? 44 : 34);
+    }
+    await page.screenshot({
+      path: `.codex-tmp/settings-visual/archive-${viewport.width}x${viewport.height}.png`,
+      fullPage: false
+    });
+  }
+});
+
+test('support methods and reward code fit desktop and mobile settings', async ({ page }) => {
+  for (const viewport of [VIEWPORTS[0], VIEWPORTS[2], VIEWPORTS[3]]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/tests/fixtures/settings-panel-harness.html');
+    await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+    const settings = page.locator('settings-panel');
+    await settings.locator('[data-section="support"]').click();
+
+    const fit = await settings.evaluate(host => {
+      const root = host.shadowRoot;
+      const content = root.querySelector('.content');
+      const qr = root.querySelector('.support-qr-frame').getBoundingClientRect();
+      const links = [...root.querySelectorAll('.support-primary-link, .support-image-actions a, .support-community-actions a')].map(link => ({
+        clientWidth: link.clientWidth,
+        scrollWidth: link.scrollWidth,
+        height: link.getBoundingClientRect().height
+      }));
+      return {
+        contentOverflow: content.scrollWidth > content.clientWidth,
+        qr: { left: qr.left, right: qr.right, width: qr.width, height: qr.height },
+        links
+      };
+    });
+
+    expect(fit.contentOverflow).toBe(false);
+    expect(fit.qr.left).toBeGreaterThanOrEqual(-1);
+    expect(fit.qr.right).toBeLessThanOrEqual(viewport.width + 1);
+    expect(fit.qr.width).toBeGreaterThan(0);
+    expect(Math.abs(fit.qr.width - fit.qr.height)).toBeLessThanOrEqual(1);
+    for (const link of fit.links) {
+      expect(link.scrollWidth).toBeLessThanOrEqual(link.clientWidth + 1);
+      if (viewport.width <= 768) expect(link.height).toBeGreaterThanOrEqual(44);
+    }
+  }
+});
+
 test('creator editor layer fits between the header and actions at supported viewports', async ({ page }) => {
   await mkdir('.codex-tmp/settings-visual', { recursive: true });
 

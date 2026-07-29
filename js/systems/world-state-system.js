@@ -2,6 +2,7 @@ import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { formatGameTime } from '../utils/format.js';
 import { CANON_DATABASE } from '../data/canon-database.js';
+import { FINAL_EVENT_STATUSES } from '../data/instruction-contract.js';
 
 class WorldStateSystem {
   getWorldState() {
@@ -179,7 +180,7 @@ class WorldStateSystem {
       eventBus.emit('state:invalid-write', { type: 'project-timeline', ...timelineCheck });
       return null;
     }
-    const finalStatuses = new Set(['completed', 'resolved', 'ended', 'failed', 'cancelled']);
+    const finalStatuses = new Set(FINAL_EVENT_STATUSES);
 
     const eventsStr = stateManager.get('世界·活跃事件') || '';
     const events = eventsStr ? eventsStr.split('\n').filter(Boolean) : [];

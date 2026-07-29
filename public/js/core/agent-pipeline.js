@@ -2,21 +2,11 @@ import { eventBus } from './event-bus.js';
 import { AgentRunner, AgentAbortError } from './agent-runner.js';
 import { AGENT_TIMEOUTS } from './agent-manifests.js';
 import { getAgentConfig } from '../data/agent-config.js';
-import { assertNoProtectedFutureLeak } from './protected-future-guard.js';
 
 export const CHARACTER_MEMORY_DELTA_SCHEMA = 'naruto.character-memory-delta/v1';
-export const FUTURE_GUARDIAN_CONTROL_SCHEMA = 'naruto.future-guardian-control/v1';
-
-const FUTURE_GUARDIAN_DECISIONS = new Set(['approve', 'filter', 'reject']);
 
 function cloneJson(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
-}
-
-function localNumericId(value) {
-  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0
-    ? value
-    : null;
 }
 
 function normalizeCandidateResult(result) {
@@ -50,38 +40,6 @@ function normalizeOutlineResult(result) {
     ...cloneJson(result),
     beats: source.map((beat, index) => ({ ...cloneJson(beat), id: index + 1 }))
   };
-}
-
-/**
- * The only application boundary for future-guardian output. Unknown keys and
- * free text are deliberately discarded; only local integer IDs and enums can
- * survive. Invalid output returns null so callers can keep their safe input.
- */
-export function parseFutureGuardianControl(value, { scope, validIds = [] } = {}) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  if (scope !== 'candidates' && scope !== 'outline') return null;
-  if (value.scope != null && value.scope !== scope) return null;
-  const decision = String(value.decision || '').trim().toLowerCase();
-  if (!FUTURE_GUARDIAN_DECISIONS.has(decision)) return null;
-  const valid = new Set(validIds.map(localNumericId).filter(Boolean));
-  const sourceIds = scope === 'candidates' ? value.candidate_ids : value.beat_ids;
-  const ids = [...new Set((Array.isArray(sourceIds) ? sourceIds : [])
-    .map(localNumericId)
-    .filter(id => id && valid.has(id)))].sort((left, right) => left - right);
-  return Object.freeze({
-    schema: FUTURE_GUARDIAN_CONTROL_SCHEMA,
-    scope,
-    decision,
-    candidate_ids: Object.freeze(scope === 'candidates' ? ids : []),
-    beat_ids: Object.freeze(scope === 'outline' ? ids : [])
-  });
-}
-
-function futureGuardianRejectError(stage) {
-  const error = new Error(`未来护栏拒绝了${stage}，本回合降级为安全直写`);
-  error.code = 'FUTURE_GUARDIAN_REJECTED';
-  error.stage = stage;
-  return error;
 }
 
 function cleanMemoryText(value, max = 600) {
@@ -169,6 +127,7 @@ class AgentPipeline {
     this.memorySystem = memorySystem;
     this.runner = new AgentRunner({ pipeline });
     this._aborted = false;
+    this._abortReason = null;
     this._totalTimer = null;
     this._pendingCharacterMemoryDelta = null;
   }
@@ -181,14 +140,16 @@ class AgentPipeline {
     return getAgentConfig().mode || 'standard';
   }
 
-  abort() {
+  abort(reason = new AgentAbortError()) {
     this._aborted = true;
-    this.runner.abort();
+    this._abortReason = reason instanceof Error ? reason : new AgentAbortError();
+    this.runner.abort(this._abortReason);
     if (this._totalTimer) { clearTimeout(this._totalTimer); this._totalTimer = null; }
   }
 
   async execute(state, userInput, onProgress = () => {}, mainMessages = null) {
     this._aborted = false;
+    this._abortReason = null;
     this.runner.configure();
 
     const mode = AgentPipeline.getMode();
@@ -198,7 +159,13 @@ class AgentPipeline {
 
     const totalTimeout = AGENT_TIMEOUTS.pipeline_total || 240000;
     const totalPromise = new Promise((_, reject) => {
-      this._totalTimer = setTimeout(() => reject(new Error('Agent pipeline total timeout')), totalTimeout);
+      this._totalTimer = setTimeout(() => {
+        const error = new Error(`Agent pipeline total timeout (${totalTimeout}ms)`);
+        error.code = 'AGENT_PIPELINE_TIMEOUT';
+        error.isTimeout = true;
+        this.abort(error);
+        reject(error);
+      }, totalTimeout);
     });
 
     try {
@@ -209,6 +176,7 @@ class AgentPipeline {
       return result;
     } catch (err) {
       if (err instanceof AgentAbortError) throw err;
+      if (!this._aborted) this.runner.abort();
       console.warn('[AgentPipeline] Pipeline failed, falling back:', err.message);
       eventBus.emit('agent:fallback', { reason: err.message });
       onProgress('fallback', `降级为标准生成: ${err.message}`);
@@ -349,22 +317,9 @@ class AgentPipeline {
 
     if (!result?.candidates?.length) return null;
 
-    const guardianControl = await this._requestFutureGuardianControl(state, userInput, {
-      scope: 'candidates',
-      candidates: result.candidates
-    });
-    if (this._futureGuardianEnabled() && !guardianControl) return null;
-    let candidates = result.candidates;
-    if (guardianControl?.decision === 'reject') return null;
-    if (guardianControl?.decision === 'filter') {
-      const allowed = new Set(guardianControl.candidate_ids);
-      candidates = candidates.filter(candidate => allowed.has(candidate.id));
-      if (!candidates.length) return null;
-    }
-
     const rec = result.recommended || 1;
-    const selected = candidates.find(c => c.id === rec) || candidates[0];
-    eventBus.emit('agent:brainstorm', { candidates, selected, guardianControl });
+    const selected = result.candidates.find(c => c.id === rec) || result.candidates[0];
+    eventBus.emit('agent:brainstorm', { candidates: result.candidates, selected });
     return selected;
   }
 
@@ -386,67 +341,7 @@ class AgentPipeline {
     const result = normalizeOutlineResult(rawResult);
 
     if (!result?.beats?.length) throw new Error('Outliner 未能生成有效大纲');
-    const guardianControl = await this._requestFutureGuardianControl(state, userInput, {
-      scope: 'outline',
-      outline: result
-    });
-    if (this._futureGuardianEnabled() && !guardianControl) {
-      throw futureGuardianRejectError('未通过因果护栏的大纲');
-    }
-    if (guardianControl?.decision === 'reject') throw futureGuardianRejectError('安全大纲');
-    if (guardianControl?.decision === 'filter') {
-      const allowed = new Set(guardianControl.beat_ids);
-      result.beats = result.beats.filter(beat => allowed.has(beat.id));
-      if (!result.beats.length) throw futureGuardianRejectError('安全大纲');
-    }
     return result;
-  }
-
-  _futureGuardianEnabled() {
-    const policy = this.pipeline?._activeCallPolicy;
-    return Boolean(
-      policy
-      && policy.strictSingleCall !== true
-      && policy.features?.agents === true
-      && this.pipeline?._lastTurnEvidencePacket?.protected_future
-    );
-  }
-
-  async _requestFutureGuardianControl(state, userInput, {
-    scope, candidates = [], outline = null
-  } = {}) {
-    if (!this._futureGuardianEnabled()) return null;
-    const validIds = scope === 'candidates'
-      ? candidates.map(candidate => candidate.id)
-      : (outline?.beats || []).map(beat => beat.id);
-    if (!validIds.length) return null;
-    try {
-      const rawControl = await this.runner.run('future-guardian', {
-        state,
-        userInput,
-        taskPrompt: scope === 'candidates'
-          ? '审查候选与受保护未来是否冲突。只返回 scope=candidates 的无语义控制码。'
-          : '审查大纲与受保护未来是否冲突。只返回 scope=outline 的无语义控制码。',
-        extraContext: scope === 'candidates'
-          ? { guardianCandidates: cloneJson(candidates) }
-          : { guardianOutline: cloneJson(outline) },
-        options: { temperature: 0, max_tokens: 256 },
-        onChunk: chunk => eventBus.emit('agent:stream', { agent: 'future-guardian', chunk })
-      });
-      const control = parseFutureGuardianControl(rawControl, { scope, validIds });
-      if (!control) {
-        console.warn(`[AgentPipeline] Future guardian returned invalid ${scope} control; discarding unverified handoff`);
-        eventBus.emit('agent:stage-skip', { stage: `future-guardian:${scope}`, reason: 'invalid-control' });
-        return null;
-      }
-      eventBus.emit('agent:future-guardian', { control });
-      return control;
-    } catch (error) {
-      if (error instanceof AgentAbortError || this._aborted) throw error;
-      console.warn(`[AgentPipeline] Future guardian unavailable for ${scope}; discarding unverified handoff:`, error.message);
-      eventBus.emit('agent:stage-skip', { stage: `future-guardian:${scope}`, reason: error.message });
-      return null;
-    }
   }
 
   async _reviewOutline(state, outline) {
@@ -483,12 +378,6 @@ class AgentPipeline {
 
     for (const [, result] of reviews) {
       if (!result.success || !result.data?.issues) continue;
-      try {
-        this._assertProtectedFutureOutputSafe(result.data, 'outline-critic');
-      } catch (error) {
-        console.warn('[AgentPipeline] Dropped future-contaminated outline review:', error.message);
-        continue;
-      }
       for (const issue of result.data.issues) {
         if (issue.severity === 'error' && issue.beatId) {
           const beat = merged.beats.find(b => b.id === issue.beatId);
@@ -509,12 +398,6 @@ class AgentPipeline {
     const reviewSummary = [];
     for (const [type, result] of reviews) {
       if (!result.success || !result.data) continue;
-      try {
-        this._assertProtectedFutureOutputSafe(result.data, `writer-review:${type}`);
-      } catch (error) {
-        console.warn('[AgentPipeline] Dropped future-contaminated writer review:', error.message);
-        continue;
-      }
       reviewSummary.push({ agent: type, ...result.data });
     }
     if (outline._hardConstraints?.length) {
@@ -598,14 +481,6 @@ class AgentPipeline {
   async _polishDraft(state, userInput, draft, draftReviews, mainMessages) {
     const suggestions = [];
     for (const [type, result] of draftReviews) {
-      if (result.success && result.data) {
-        try {
-          this._assertProtectedFutureOutputSafe(result.data, `draft-critic:${type}`);
-        } catch (error) {
-          console.warn('[AgentPipeline] Dropped future-contaminated draft review:', error.message);
-          continue;
-        }
-      }
       if (result.success && result.data?.suggestions) {
         suggestions.push(...result.data.suggestions.map(s => ({ ...s, from: type })));
       }
@@ -672,13 +547,6 @@ class AgentPipeline {
     for (const [key, result] of results) {
       const npcName = key.replace(/^char-\d+-/, '');
       if (!result.success) {
-        failed.push(npcName);
-        continue;
-      }
-      try {
-        this._assertProtectedFutureOutputSafe(result.data, `character:${npcName}`);
-      } catch (error) {
-        console.warn(`[AgentPipeline] Dropped future-contaminated character output for ${npcName}:`, error.message);
         failed.push(npcName);
         continue;
       }
@@ -749,20 +617,8 @@ class AgentPipeline {
 
   // ── Utility ──
 
-  _assertProtectedFutureOutputSafe(value, stage) {
-    return assertNoProtectedFutureLeak(
-      value,
-      this.pipeline?._lastTurnEvidencePacket?.protected_future,
-      {
-        stage,
-        allowedEvidence: this.pipeline?._lastTurnEvidenceViews?.writer || null
-      }
-    );
-  }
-
   _assertPlannerOutputSafe(value, stage) {
     const packet = this.pipeline?._lastTurnEvidencePacket;
-    this._assertProtectedFutureOutputSafe(value, stage);
     const restrictedWorldbook = (packet?.worldbook_entries || []).filter(entry => (
       entry?.knowledge?.visibility === 'secret' || entry?.knowledge?.visibility === 'backstage'
     ));
@@ -777,11 +633,11 @@ class AgentPipeline {
       }
     }
     const hit = [...markers].find(marker => serialized.includes(marker));
-    if (hit) throw new Error(`${stage} 输出泄露受保护的未来或私密内容: ${hit}`);
+    if (hit) throw new Error(`${stage} 输出泄露受限制的私密内容: ${hit}`);
   }
 
   _checkAbort() {
-    if (this._aborted) throw new AgentAbortError();
+    if (this._aborted) throw (this._abortReason || new AgentAbortError());
   }
 }
 

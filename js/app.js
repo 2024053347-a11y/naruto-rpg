@@ -19,6 +19,7 @@ import { buildOpeningPrompt } from './systems/opening-prompt.js';
 import { migrateStorage } from './core/storage-migrations.js';
 import { imageFeatureIntegration } from './core/image-studio/integration.js';
 import { resolveAICallPolicy } from './core/ai-call-policy.js';
+import { TIMELINE_FILE_ACCEPT, decodeTimelineSaveFile } from './core/timeline-file-codec.js';
 
 import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
@@ -138,8 +139,7 @@ class NarutoRPGApp {
 
     eventBus.on('app:timeline-import-file', async ({ file }) => {
       try {
-        const text = await file.text();
-        const data = JSON.parse(text);
+        const data = await decodeTimelineSaveFile(file);
 
         // 检查现有库是否非空,决定是否需要询问导入模式
         const existingNodes = await stateManager.dbGetAll('timeline_nodes') || [];
@@ -156,7 +156,11 @@ class NarutoRPGApp {
         } else {
           const history = await timelineSystem._reconstructChatHistory(node);
           this.pipeline?.setHistory(history);
-          appShell.restoreChatHistory(history, node?.clean_response || node?.ai_response_summary || '存档已导入。');
+          appShell.restoreChatHistory(
+            history,
+            node?.clean_response || node?.ai_response_summary || '存档已导入。',
+            { timelineNodeId: node?.id || null }
+          );
           this._sendSystemMessage('时间线存档导入成功(覆盖模式)。');
         }
       } catch (error) {
@@ -310,11 +314,14 @@ class NarutoRPGApp {
       }
     });
 
-    eventBus.on('timeline:export-request', async () => {
+    eventBus.on('timeline:export-request', async ({ compression = 'auto' } = {}) => {
       try {
-        await timelineSystem.exportTimeline();
+        const result = await timelineSystem.exportTimeline({ compression });
+        this._sendSystemMessage(result.fallbackReason
+          ? `浏览器未能创建 gzip，已改为导出普通 JSON：${result.fallbackReason}`
+          : `本地存档已导出（${result.format === 'gzip' ? 'gzip 压缩' : '普通 JSON'}）。`);
       } catch (e) {
-        this._sendSystemMessage('导出失败');
+        this._sendSystemMessage(`导出失败: ${e.message}`);
       }
     });
 
@@ -453,13 +460,7 @@ class NarutoRPGApp {
 
       if (localStorage.getItem('naruto_auto_cloud_sync') === 'true') {
         try {
-          const data = await timelineSystem.getExportData({ includeArchive: false });
-          const preview = {
-            name: stateManager.get().player?.name || '未知',
-            location: stateManager.get().world_state?.current_location || '未知',
-            time: Date.now()
-          };
-          await cloudSave.quickSave('默认云存档', data, preview);
+          await this._queueCloudSave();
           console.log('[CloudSave] 自动同步成功');
         } catch (err) {
           console.error('[CloudSave] 自动同步失败', err);
@@ -473,13 +474,22 @@ class NarutoRPGApp {
   }
 
   async _syncCloudSaveAfterImage() {
-    const data = await timelineSystem.getExportData({ includeArchive: false });
-    const preview = {
-      name: stateManager.get().player?.name || stateManager.get('玩家·姓名') || '未知',
-      location: stateManager.get().world_state?.current_location || stateManager.get('世界·地点') || '未知',
-      time: Date.now()
-    };
-    await cloudSave.quickSave('默认云存档', data, preview);
+    return this._queueCloudSave();
+  }
+
+  async _queueCloudSave() {
+    return cloudSave.scheduleQuickSave('默认云存档', async () => {
+      const data = await timelineSystem.getExportData({ includeArchive: false });
+      const state = stateManager.get();
+      return {
+        saveData: data,
+        previewData: {
+          name: state.player?.name || stateManager.get('玩家·姓名') || '未知',
+          location: state.world_state?.current_location || stateManager.get('世界·地点') || '未知',
+          time: Date.now()
+        }
+      };
+    });
   }
 
   async _checkSavedGame() {
@@ -930,13 +940,7 @@ class NarutoRPGApp {
             btn.textContent = '上传中...';
             btn.disabled = true;
           }
-          const data = await timelineSystem.getExportData({ includeArchive: false });
-          const preview = { 
-            name: stateManager.get().player?.name || '未知',
-            location: stateManager.get().world_state?.current_location || '未知',
-            time: Date.now()
-          };
-          await cloudSave.quickSave('默认云存档', data, preview);
+          await this._queueCloudSave();
           this._sendSystemMessage('云存档上传成功！');
           modal.close();
           this._openProfilePanel(); 
@@ -957,8 +961,7 @@ class NarutoRPGApp {
             return this._sendSystemMessage('未找到云端存档。');
           }
           this._sendSystemMessage('正在下载云存档...');
-          const fullSave = await cloudSave.downloadSave(saves[0].id);
-          const file = new File([JSON.stringify(fullSave.save_data)], 'cloud_save.json', { type: 'application/json' });
+          const file = await cloudSave.downloadSave(saves[0].id);
           eventBus.emit('app:timeline-import-file', { file });
           modal.close();
         } catch(e) {
@@ -985,13 +988,18 @@ class NarutoRPGApp {
       });
 
       modal.shadowRoot?.querySelector('#btn-export-save')?.addEventListener('click', async () => {
-        try { await timelineSystem.exportTimeline(); this._sendSystemMessage('本地存档已导出。'); }
+        try {
+          const result = await timelineSystem.exportTimeline();
+          this._sendSystemMessage(result.fallbackReason
+            ? `浏览器未能创建 gzip，已改为导出普通 JSON：${result.fallbackReason}`
+            : '本地压缩存档已导出。');
+        }
         catch(e) { this._sendSystemMessage('导出失败: ' + e.message); }
       });
       modal.shadowRoot?.querySelector('#btn-import-cloud')?.addEventListener('click', () => {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
-        fileInput.accept = '.json';
+        fileInput.accept = TIMELINE_FILE_ACCEPT;
         fileInput.onchange = (e) => {
           const file = e.target.files?.[0];
           if (file) eventBus.emit('app:timeline-import-file', { file });

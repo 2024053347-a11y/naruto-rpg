@@ -8,20 +8,55 @@ import { config } from './config.js';
 import { initDb } from './db/index.js';
 import authRouter from './auth/discord.js';
 import savesRouter from './api/saves.js';
-import aiProxyRouter from './api/ai-proxy.js';
+import aiProxyRouter, { aiProxyAdmission } from './api/ai-proxy.js';
 import musicFavoritesRouter from './api/music-favorites.js';
 import adminRouter from './api/admin.js';
 import imageAssetsRouter from './api/image-assets.js';
-import { requireHtmlAuth } from './middleware/auth.js';
+import { requireAuth, requireHtmlAuth } from './middleware/auth.js';
+import { asyncRoute } from './middleware/async-route.js';
 import { createResponseCompression } from './middleware/response-compression.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const HTTP_HEADERS_TIMEOUT_MS = 70_000;
+const HTTP_REQUEST_TIMEOUT_MS = 360_000;
+const HTTP_KEEP_ALIVE_TIMEOUT_MS = 65_000;
+const SHUTDOWN_DRAIN_TIMEOUT_MS = 30_000;
+
+function errorFields(error) {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      code: typeof error.code === 'string' ? error.code : undefined,
+      message: String(error.message || error.name).slice(0, 2000)
+    };
+  }
+  return { message: String(error).slice(0, 2000) };
+}
+
+function logRuntimeEvent(level, event, details = {}) {
+  const line = JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level,
+    event,
+    ...details
+  });
+  if (level === 'error') console.error(line);
+  else if (level === 'warn') console.warn(line);
+  else console.log(line);
+}
 
 // 1. 初始化数据库（ESM 顶层 await：持久层就绪前不接收任何请求）
-await initDb();
+try {
+  await initDb();
+} catch (error) {
+  logRuntimeEvent('error', 'fatal', { source: 'database_init', error: errorFields(error) });
+  process.exit(1);
+}
 
 const app = express();
 app.set('trust proxy', config.http.trustProxy);
+let serviceReady = false;
+let shuttingDown = false;
 
 // 2. 安全与性能中间件配置
 app.use(helmet({
@@ -62,6 +97,17 @@ app.use(helmet({
 app.use(createResponseCompression());
 app.use(cookieParser());
 
+app.get('/health/live', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.status(200).json({ status: 'ok' });
+});
+
+app.get('/health/ready', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  const ready = serviceReady && !shuttingDown;
+  res.status(ready ? 200 : 503).json({ status: ready ? 'ready' : 'not_ready' });
+});
+
 // 3. 速率限制中间件 (防暴破/恶意请求)
 const authLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 分钟
@@ -86,7 +132,15 @@ const defaultJsonParser = express.json({ limit: '2mb' });
 
 app.use('/auth', authLimiter, defaultJsonParser, authRouter);
 app.use('/api/saves', apiLimiter, savesRouter);
-app.use('/api/ai-proxy', apiLimiter, defaultJsonParser, aiProxyRouter);
+// Authenticate and reject excess concurrency before spending memory on JSON parsing.
+app.use(
+  '/api/ai-proxy',
+  apiLimiter,
+  asyncRoute(requireAuth),
+  aiProxyAdmission,
+  defaultJsonParser,
+  aiProxyRouter
+);
 app.use('/api/music', apiLimiter, defaultJsonParser, musicFavoritesRouter);
 app.use('/api/admin', authLimiter, defaultJsonParser, adminRouter);
 // This router owns its bounded JSON/multipart parsers so authentication runs first.
@@ -94,11 +148,11 @@ app.use('/api/image-assets', apiLimiter, imageAssetsRouter);
 
 // 5. 网页认证入口拦截
 // 玩家在请求根路径 / 或 index.html 时，必须通过身份验证，否则重定向到登录页面
-app.get('/', requireHtmlAuth, (req, res) => {
+app.get('/', asyncRoute(requireHtmlAuth), (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-app.get('/index.html', requireHtmlAuth, (req, res) => {
+app.get('/index.html', asyncRoute(requireHtmlAuth), (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
@@ -113,21 +167,98 @@ app.use((req, res) => {
 
 // 8. 全局错误捕获中间件 — 不泄露内部细节给客户端
 app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
   if (err?.type === 'entity.too.large') {
     return res.status(413).json({ error: '请求体超过允许的大小' });
   }
   if (err?.type === 'entity.parse.failed' || (err instanceof SyntaxError && err?.status === 400)) {
     return res.status(400).json({ error: '请求体不是有效的 JSON' });
   }
-  console.error('[SERVER ERROR]', err.stack || err.message || err);
-  res.status(500).json({ error: '服务器内部错误，请稍后重试' });
+  logRuntimeEvent('error', 'request_error', {
+    method: req.method,
+    error: errorFields(err)
+  });
+  return res.status(500).json({ error: '服务器内部错误，请稍后重试' });
 });
 
 // 9. 启动服务
-app.listen(config.port, () => {
-  console.log(`===============================================`);
-  console.log(`  忍者手记 RPG 服务器已启动`);
-  console.log(`  运行环境: ${config.nodeEnv}`);
-  console.log(`  监听端口: http://localhost:${config.port}`);
-  console.log(`===============================================`);
+const server = app.listen(config.port, () => {
+  serviceReady = true;
+  logRuntimeEvent('info', 'server_listening', {
+    environment: config.nodeEnv,
+    port: config.port
+  });
 });
+
+server.headersTimeout = HTTP_HEADERS_TIMEOUT_MS;
+server.requestTimeout = HTTP_REQUEST_TIMEOUT_MS;
+server.keepAliveTimeout = HTTP_KEEP_ALIVE_TIMEOUT_MS;
+
+const sockets = new Set();
+server.on('connection', (socket) => {
+  sockets.add(socket);
+  socket.once('close', () => sockets.delete(socket));
+});
+
+let shutdownFinished = false;
+let requestedExitCode = 0;
+
+function completeShutdown(reason, error) {
+  if (shutdownFinished) return;
+  shutdownFinished = true;
+  logRuntimeEvent(error ? 'error' : 'info', 'server_stopped', {
+    reason,
+    error: error ? errorFields(error) : undefined
+  });
+  process.exit(error ? 1 : requestedExitCode);
+}
+
+function beginShutdown(reason, exitCode = 0) {
+  requestedExitCode = Math.max(requestedExitCode, exitCode);
+  if (shuttingDown) return;
+  shuttingDown = true;
+  serviceReady = false;
+  logRuntimeEvent('info', 'shutdown_started', {
+    reason,
+    drainTimeoutMs: SHUTDOWN_DRAIN_TIMEOUT_MS,
+    activeConnections: sockets.size
+  });
+
+  const forceTimer = setTimeout(() => {
+    logRuntimeEvent('warn', 'shutdown_forced', {
+      reason,
+      activeConnections: sockets.size
+    });
+    server.closeAllConnections?.();
+    for (const socket of sockets) socket.destroy();
+    completeShutdown(reason, requestedExitCode === 0
+      ? undefined
+      : new Error('Forced shutdown after drain timeout'));
+  }, SHUTDOWN_DRAIN_TIMEOUT_MS);
+  forceTimer.unref?.();
+
+  server.close((error) => {
+    clearTimeout(forceTimer);
+    if (error?.code === 'ERR_SERVER_NOT_RUNNING') {
+      completeShutdown(reason);
+      return;
+    }
+    completeShutdown(reason, error);
+  });
+  server.closeIdleConnections?.();
+}
+
+server.on('error', (error) => {
+  logRuntimeEvent('error', 'server_error', { error: errorFields(error) });
+  beginShutdown('server_error', 1);
+});
+
+function handleFatal(source, error) {
+  logRuntimeEvent('error', 'fatal', { source, error: errorFields(error) });
+  beginShutdown(source, 1);
+}
+
+process.once('SIGTERM', () => beginShutdown('SIGTERM'));
+process.once('SIGINT', () => beginShutdown('SIGINT'));
+process.once('uncaughtException', (error) => handleFatal('uncaughtException', error));
+process.once('unhandledRejection', (reason) => handleFatal('unhandledRejection', reason));

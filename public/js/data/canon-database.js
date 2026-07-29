@@ -11,11 +11,14 @@ import {
   saveCanonRecord,
   setCanonRecordEnabled
 } from './canon-database-overrides.js';
+import {
+  isProjectTimelineEventId,
+  PROJECT_TIMELINE_EVENT_STATUSES
+} from './instruction-contract.js';
 
 const RESOURCE_LABELS = Object.freeze({ chakra: '查克拉', spirit: '精神力', stamina: '体力' });
 const TYPE_LABELS = Object.freeze({ jutsu: '忍术', genjutsu: '幻术', taijutsu: '体术', support: '支援' });
-const PROJECT_TIMELINE_ID_PATTERN = /^(?:DAY|SCN|EV)-(?:HIST|P1|P2|BOR)-[A-Z0-9]+(?:-[A-Z0-9]+)*$/;
-const PROJECT_TIMELINE_STATUSES = new Set(['occurred', 'altered', 'skipped', 'postponed']);
+const PROJECT_TIMELINE_STATUSES = new Set(PROJECT_TIMELINE_EVENT_STATUSES);
 const ELEMENT_LABELS = Object.freeze({
   none: '\u65e0', fire: '\u706b', wind: '\u98ce', lightning: '\u96f7', earth: '\u571f', water: '\u6c34',
   yin: '\u9634', yang: '\u9633', 'yin-yang': '\u9634\u9633'
@@ -527,7 +530,7 @@ function timelineDecisions(state) {
     try {
       const event = JSON.parse(line);
       const status = String(event.status || '').toLowerCase();
-      if (PROJECT_TIMELINE_ID_PATTERN.test(event.id || '') && PROJECT_TIMELINE_STATUSES.has(status)) {
+      if (isProjectTimelineEventId(event.id) && PROJECT_TIMELINE_STATUSES.has(status)) {
         decisions.set(event.id, { ...event, status });
       }
     } catch {}
@@ -634,16 +637,17 @@ function formatPlotScene(scene, index, decisions, currentDate) {
 
 function formatPlotDayContext(context) {
   if (!context?.day) return '';
-  const { day, current_date: currentDate, is_future: isFuture, days_until: daysUntil, decisions } = context;
-  const startMarker = isFuture
-    ? `<<< FUTURE_ONLY_START current=${currentDate} target=${day.date} days_until=${daysUntil} >>>`
-    : `<<< CURRENT_DAY_START date=${day.date} >>>`;
-  const endMarker = isFuture ? '<<< FUTURE_ONLY_END >>>' : '<<< CURRENT_DAY_END >>>';
+  const {
+    day,
+    current_date: currentDate,
+    target_date: targetDate,
+    date_relation: dateRelation,
+    days_until: daysUntil,
+    decisions
+  } = context;
   const lines = [
-    startMarker,
-    isFuture
-      ? `【最近未来完整剧情日，仅供AI内部规划】当前日期 ${formatCanonDate(currentDate)}；目标日期 ${formatCanonDate(day.date)}；相距 ${daysUntil} 天。以下任何场景、节拍、台词、结果和ID都不得出现在当前沉浸式正文或状态写入中。`
-      : `【当前日期完整剧情日】${formatCanonDate(day.date)}。以下列出当天全部 ${day.scenes?.length || 0} 个独立场景；按地点、线程和停止条件分别推进，不得强行拼接。`,
+    `<<< CURRENT_PLOT_START current=${currentDate} target=${targetDate} days_until=${daysUntil} date_relation=${dateRelation} >>>`,
+    `【当前可用完整剧情日】当前日期 ${formatCanonDate(currentDate)}；剧情日 ${formatCanonDate(day.date)}；日期关系=${dateRelation}，相距 ${daysUntil} 天。该剧情日可作为当前分支的普通剧情上下文引用、推进和改写；使用其中事件不会自动改变游戏日期。以下列出全部 ${day.scenes?.length || 0} 个独立场景，按地点、线程和停止条件分别推进。`,
     `DAY: ${day.id} | status=${nodeStatus(day.id, decisions, currentDate)} | arc=${day.arc_id}`,
     `标题: ${day.title}`,
     `当日目标: ${day.day_goal}`,
@@ -652,7 +656,7 @@ function formatPlotDayContext(context) {
     ...((day.scenes || []).map((scene, index) => formatPlotScene(scene, index, decisions, currentDate))),
     listLines('日终基准状态', day.end_state),
     `后续转场: ${day.transition}`,
-    endMarker
+    '<<< CURRENT_PLOT_END >>>'
   ];
   return lines.join('\n');
 }
@@ -772,7 +776,7 @@ export const CANON_DATABASE = {
     const decisions = timelineDecisions(state);
     const exact = narrativeDays.find(day => day.date === currentDate && !dayIsSettled(day, decisions, currentDate));
     if (exact) {
-      return { current_date: currentDate, target_date: exact.date, is_future: false, days_until: 0, day: exact, decisions, nodes };
+      return { current_date: currentDate, target_date: exact.date, date_relation: 'current', is_future: false, days_until: 0, day: exact, decisions, nodes };
     }
 
     const postponedDue = [...decisions.entries()]
@@ -783,7 +787,7 @@ export const CANON_DATABASE = {
       .map(node => node.day)
       .find(Boolean);
     if (postponedDue) {
-      return { current_date: currentDate, target_date: currentDate, original_date: postponedDue.date, is_future: false, is_rescheduled: true, days_until: 0, day: postponedDue, decisions, nodes };
+      return { current_date: currentDate, target_date: currentDate, original_date: postponedDue.date, date_relation: 'rescheduled', is_future: false, is_rescheduled: true, days_until: 0, day: postponedDue, decisions, nodes };
     }
 
     const future = narrativeDays.find(day => day.date.localeCompare(currentDate) > 0 && !dayIsSettled(day, decisions, currentDate));
@@ -791,6 +795,7 @@ export const CANON_DATABASE = {
     return {
       current_date: currentDate,
       target_date: future.date,
+      date_relation: 'future',
       is_future: true,
       days_until: canonDateDistance(currentDate, future.date),
       day: future,
@@ -805,7 +810,7 @@ export const CANON_DATABASE = {
 
   validateTimelineEventUpdate(eventData, { state = {} } = {}) {
     const id = String(eventData?.id || '');
-    if (!PROJECT_TIMELINE_ID_PATTERN.test(id)) return { allowed: true, timeline: false };
+    if (!isProjectTimelineEventId(id)) return { allowed: true, timeline: false };
     const currentDate = normalizeCanonDate(state['世界·时间'] || state['世界·年代']);
     if (!currentDate) return { allowed: false, timeline: true, id, reason: '当前存档没有合法完整日期，拒绝写入项目正史状态。' };
     const node = this.getPlotNode(id);
@@ -820,9 +825,6 @@ export const CANON_DATABASE = {
         currentDate,
         reason: '年度快照是只读参考基线，不是可写入 occurred/altered/skipped/postponed 的剧情事件。'
       };
-    }
-    if (node.date.localeCompare(currentDate) > 0) {
-      return { allowed: false, timeline: true, id, nodeDate: node.date, currentDate, reason: `未来节点 ${id} 的日期 ${node.date} 尚未到达。` };
     }
     const status = String(eventData?.status || '').toLowerCase();
     if (!PROJECT_TIMELINE_STATUSES.has(status)) {
@@ -886,7 +888,7 @@ export const CANON_DATABASE = {
       '- DAY/SCN/EV 是日、场景和原子节拍三个层级。当前日内容是可分支基准，不是强制剧本；核对 requirements 与 blockers 后裁定 occurred/altered/skipped/postponed。',
       '- 当天全部场景会完整提供。每个 SCENE_START/SCENE_END 都是独立地点与冲突线程；只推进当前视角能够接续的场景，禁止把并行地点强行缝成连续一幕。',
       '- reference_facts 只用于校验背景和回顾，绝不能作为当前日期新事件执行或记账。',
-      '- FUTURE_ONLY 区块只用于AI内部规划。到达目标日期前，沉浸式正文、角色知识、状态和 <event> 中不得出现其场景、节拍、结果或ID。',
+      '- 当前日期没有未结算剧情日时，只提供最近一个后续剧情日；它是普通分支素材，可在当前回合引用、推进、改写并写入 <event>，且不会自动修改游戏日期。',
       '- 玩家改变前置后必须使用场景预设的 fallback 方向，再由AI补充分支细节；不得为了回归基准抹除玩家影响。',
       '- YEAR_SNAPSHOT 是当前年份的年初只读基线，不是剧情节点；PUBLIC_STATE 仍受角色知识边界约束，BACKSTAGE_TRUTH 只能由叙事后台使用，绝不能自动变成玩家或NPC知识。',
       '- JT记录说明术本身，不证明当前角色已经掌握；施展前仍须核对角色技能表、资格、当前日期和学习来源。',

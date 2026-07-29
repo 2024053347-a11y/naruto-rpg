@@ -15,14 +15,6 @@ export const AGENT_MANIFESTS = {
     maxContextChars: 8000,
     systemPromptKey: 'OUTLINER'
   },
-  'future-guardian': {
-    stateFields: [],
-    includeHistory: false,
-    historyTurns: 0,
-    includePreset: false,
-    maxContextChars: 12000,
-    systemPromptKey: 'FUTURE_GUARDIAN'
-  },
   'critic-realism': {
     stateFields: ['世界·地点', '世界·时间', '世界·年代', '世界·天气', '世界·已探索区域', '世界·活跃事件', '世界·月份', '玩家·忍阶', '玩家·所属村', '玩家·查克拉属性', '属性·查克拉', '属性·当前查克拉', '属性·生命力', '属性·当前生命力', '属性·精神力', '属性·当前精神力', '属性·体力', '属性·当前体力', '属性·速度', '属性·幸运', '_relationships', '_missions', '_memory.recent_summary'],
     includeHistory: false,
@@ -84,7 +76,6 @@ export const AGENT_MANIFESTS = {
 export const AGENT_TIMEOUTS = {
   brainstormer: 20000,
   outliner: 35000,
-  'future-guardian': 25000,
   'critic-realism': 20000,
   'critic-character': 20000,
   'critic-detail': 20000,

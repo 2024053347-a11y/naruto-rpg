@@ -22,7 +22,6 @@ import {
   toPersistedReviewNarrative
 } from '../js/core/narrative-review-transaction.js';
 import {
-  assertNarrativeReviewEvidenceSafe,
   buildNarrativeReviewMessages,
   parseNarrativeReviewPreview,
   requestNarrativeReviewPreview
@@ -110,9 +109,9 @@ await test('private markup cannot be smuggled through legal machine-tag JSON', (
   assert.doesNotMatch(JSON.stringify(parsed), /秘密|private|audit_internal/);
 });
 
-await test('review prompt receives safe candidate only and rejects protected future evidence', () => {
+await test('review prompt receives ordinary future plot evidence and a safe candidate', () => {
   const messages = buildNarrativeReviewMessages({
-    sourceMessages: [{ role: 'system', content: '当前日期 K052-03-01\nNEXT_ANCHOR {date: K052-03-04, days_until: 3}' }],
+    sourceMessages: [{ role: 'system', content: '<<< CURRENT_PLOT_START current=K052-03-01 target=K052-03-04 days_until=3 date_relation=future >>>\n场景标题: 三日后的会面\n<<< CURRENT_PLOT_END >>>' }],
     candidateResponse: '<thinking>草稿私密推理</thinking><final>候选正文写错了当前日期。</final>',
     feedback: '把日期修正，但不要替玩家行动。'
   });
@@ -121,17 +120,8 @@ await test('review prompt receives safe candidate only and rejects protected fut
   assert.match(request, /把日期修正/);
   assert.doesNotMatch(request, /草稿私密推理/);
   assert.match(request, /尚未提交|非提交预览/);
-  assert.throws(
-    () => assertNarrativeReviewEvidenceSafe([{ content: '<<< FUTURE_ONLY_START >>>秘密未来<<< FUTURE_ONLY_END >>>' }]),
-    error => error?.code === 'REVIEW_PROTECTED_FUTURE_EVIDENCE'
-  );
-  assert.throws(
-    () => buildNarrativeReviewMessages({
-      sourceMessages: [{ content: '{"protected_future":{"title":"不可见"}}' }],
-      candidateResponse: '候选正文'
-    }),
-    error => error?.code === 'REVIEW_PROTECTED_FUTURE_EVIDENCE'
-  );
+  assert.match(request, /三日后的会面/);
+  assert.doesNotMatch(request, /未来硬隔离|NEXT_ANCHOR|FUTURE_ONLY|protected_future/);
 });
 
 await test('review output becomes an uncommitted artifact with hidden audit', () => {

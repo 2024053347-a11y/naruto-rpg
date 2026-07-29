@@ -231,7 +231,9 @@ export function inspectContinuityLedger(ledger) {
     const result = inspectMemoryEvent(event);
     if (!result.valid) errors.push(`events[${index}]: ${result.errors.join(', ')}`);
     if (ids.has(event?.event_id)) errors.push(`事件 ID 重复: ${event.event_id}`);
-    for (const ref of [...(event?.supersedes || []), ...(event?.retracts || [])]) {
+    const supersedes = Array.isArray(event?.supersedes) ? event.supersedes : [];
+    const retracts = Array.isArray(event?.retracts) ? event.retracts : [];
+    for (const ref of [...supersedes, ...retracts]) {
       if (!ids.has(ref)) errors.push(`${event?.event_id || index}: 引用了不存在或尚未记录的事件 ${ref}`);
     }
     if (Number.isInteger(event?.sequence) && event.sequence <= previousSequence) {

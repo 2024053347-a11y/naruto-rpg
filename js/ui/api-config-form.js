@@ -206,8 +206,7 @@ export class ApiConfigForm extends HTMLElement {
     const preservedOptionalConfig = {
       variableUpdater: this._config.variableUpdater,
       narrativeReview: this._config.narrativeReview,
-      aiCallPolicy: this._config.aiCallPolicy,
-      futurePlanner: this._config.futurePlanner
+      aiCallPolicy: this._config.aiCallPolicy
     };
 
     // 酒馆模型不需要 API 地址和密钥

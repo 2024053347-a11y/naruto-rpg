@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shinobi daily harness</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body { background: #070a0e; color: #e8e4d9; }
+    main { width: min(760px, calc(100% - 24px)); margin: 32px auto; }
+    .chat-content { font: 15px/1.8 var(--font-body); }
+    .chat-content > p { margin: 0 0 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="chat-content" aria-label="本回正文">
+      <p>雨后的木叶街道映着灯火。任务发布所刚刚换上新的公开告示，值班忍者逐项核对印章与编号。</p>
+      <p>你站在公告栏前，没有替任何尚未确认的委托作出决定。</p>
+    </article>
+  </main>
+  <script type="module">
+    const [{ SHINOBI_DAILY_EXAMPLE }, { createShinobiDailyTrigger }] = await Promise.all([
+      import('../../js/core/shinobi-daily.js'),
+      import('../../js/ui/shinobi-daily-modal.js')
+    ]);
+    const trigger = createShinobiDailyTrigger(SHINOBI_DAILY_EXAMPLE);
+    document.querySelector('.chat-content').appendChild(trigger);
+    window.__SHINOBI_DAILY_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

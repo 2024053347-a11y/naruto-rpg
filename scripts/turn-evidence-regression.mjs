@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 import {
+  buildUpdaterObligations,
   TurnEvidenceCompiler,
   renderEvidenceView
 } from '../js/core/turn-evidence.js';
@@ -29,29 +30,100 @@ function stateAt(time, extra = {}) {
   };
 }
 
-test('writer only receives a spoiler-free next anchor on blank days', () => {
+test('the nearest future plot day becomes ordinary current_plot context on blank days', () => {
   const compiler = new TurnEvidenceCompiler();
   const packet = compiler.compile({ state: stateAt('木叶63年1月1日·清晨'), userInput: '我在训练场练习' });
-  assert.equal(packet.next_anchor.date, 'K064-01-01');
-  assert.ok(packet.protected_future?.title, 'test fixture should contain a protected future day');
+  assert.equal(packet.current_plot?.target_date, 'K064-01-01');
+  assert.equal(packet.current_plot?.date_relation, 'nearest_future');
+  assert.equal(Object.hasOwn(packet, 'next_anchor'), false);
+  assert.equal(Object.hasOwn(packet, 'protected_future'), false);
 
   const writer = compiler.project(packet, { audience: 'writer' });
+  const updater = compiler.project(packet, { audience: 'updater' });
   const rendered = renderEvidenceView(writer);
-  assert.equal(writer.protected_future, null);
+  assert.equal(Object.hasOwn(writer, 'next_anchor'), false);
+  assert.equal(Object.hasOwn(writer, 'protected_future'), false);
   assert.match(rendered, /K064-01-01/);
-  assert.doesNotMatch(rendered, new RegExp(packet.protected_future.title));
-  assert.doesNotMatch(rendered, /DAY-P1-|SCN-P1-|EV-P1-/);
+  assert.match(rendered, new RegExp(packet.current_plot.title));
+  assert.ok(writer.current_plot.scenes.length > 0, 'nearest future day must provide usable scene context');
+  assert.ok(updater.current_plot.day_id?.startsWith('DAY-'));
+  assert.doesNotMatch(rendered, /NEXT_ANCHOR|受保护未来|不得.*提前/);
 });
 
-test('only the planner view can receive protected future data', () => {
+test('nearest future plot is ordinary context for writer, updater and planner', () => {
   const compiler = new TurnEvidenceCompiler();
   const packet = compiler.compile({ state: stateAt('木叶52年1月1日·清晨') });
   const writer = compiler.project(packet, { audience: 'writer' });
   const updater = compiler.project(packet, { audience: 'updater' });
   const planner = compiler.project(packet, { audience: 'planner' });
-  assert.equal(writer.protected_future, null);
-  assert.equal(updater.protected_future, null);
-  assert.equal(planner.protected_future?.id, packet.protected_future?.id);
+  assert.equal(packet.current_plot?.date_relation, 'nearest_future');
+  assert.equal(writer.current_plot?.target_date, packet.current_plot?.target_date);
+  assert.equal(updater.current_plot?.day_id, packet.current_plot?.day_id);
+  assert.equal(planner.current_plot?.day_id, packet.current_plot?.day_id);
+});
+
+test('updater receives bounded relationship history and private update obligations only', () => {
+  const history = Array.from({ length: 6 }, (_, index) => ({ turn: 6 - index, summary: `互动${6 - index}` }));
+  const thoughts = Array.from({ length: 7 }, (_, index) => ({ turn: 7 - index, summary: `心声${7 - index}` }));
+  const updateObligations = {
+    present_npcs: [{ name: '卡卡西', existing: true, source: 'relationship', agent_inner_thought: '这次训练有进步。' }],
+    active_missions: [{ id: 'mission-training', title: '基础训练', status: 'active' }]
+  };
+  const compiler = new TurnEvidenceCompiler({ worldbookResolver: { resolve: () => [] } });
+  const packet = compiler.compile({
+    state: stateAt('木叶64年1月1日·清晨', {
+      _relationships: {
+        卡卡西: {
+          role: '指导上忍', faction: '木叶', status: 'friendly', location: '第三训练场',
+          history, inner_thoughts: thoughts
+        }
+      },
+      _missions: { active: { 'mission-training': { id: 'mission-training', title: '基础训练', status: 'active' } } }
+    }),
+    userInput: '卡卡西结束了训练',
+    updateObligations
+  });
+  const updater = compiler.project(packet, { audience: 'updater' });
+  const writer = compiler.project(packet, { audience: 'writer' });
+  const relationship = updater.current_state.relationships.卡卡西;
+  assert.deepEqual(relationship.history.map(item => item.summary), ['互动6', '互动5', '互动4']);
+  assert.deepEqual(relationship.inner_thoughts.map(item => item.summary), ['心声7', '心声6', '心声5', '心声4', '心声3']);
+  assert.equal(relationship.status, 'friendly');
+  assert.equal(relationship.location, '第三训练场');
+  assert.deepEqual(updater.update_obligations, updateObligations);
+  assert.equal(Object.hasOwn(writer, 'update_obligations'), false);
+});
+
+test('update obligations include only NPCs present in the accepted narrative and every active mission', () => {
+  const state = stateAt('木叶64年1月1日·清晨', {
+    _relationships: {
+      旗木卡卡西: { aliases: ['卡卡西'] },
+      佐助: { aliases: ['宇智波佐助'] }
+    },
+    _combat: { enemy_name: '水木' },
+    _missions: {
+      active: {
+        escort: { id: 'escort', title: '护送卷轴', status: 'active', objective: '送到火影楼' },
+        training: { id: 'training', title: '基础训练', status: 'progress', progress: { current_step: 1 } }
+      }
+    }
+  });
+  const obligations = buildUpdaterObligations({
+    state,
+    narrativeResponse: '旗木卡卡西收起铃铛，水木则从训练场边缘现身。另一名队员只存在于任务资料中。',
+    evidencePacket: { current_plot: { scenes: [{ participants: ['卡卡西', '佐助', '水木'] }] }, worldbook_entries: [] },
+    characterMemoryDelta: {
+      changes: {
+        卡卡西: { privateIntentAppend: [{ thought: '这次测试达到了目的。' }] },
+        伊鲁卡: { privateIntentAppend: [{ thought: '我还没有登场。' }] }
+      }
+    }
+  });
+  assert.deepEqual(obligations.present_npcs.map(item => item.npc), ['旗木卡卡西', '水木']);
+  assert.equal(obligations.present_npcs.find(item => item.npc === '旗木卡卡西').agent_inner_thought, '这次测试达到了目的。');
+  assert.equal(obligations.present_npcs.some(item => item.npc === '伊鲁卡'), false);
+  assert.deepEqual(obligations.active_missions.map(item => item.id), ['escort', 'training']);
+  assert.equal(obligations.fixed_domains.length, 8);
 });
 
 test('current plot projection selects the observable scene and keeps IDs updater-only', () => {

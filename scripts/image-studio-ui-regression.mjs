@@ -96,6 +96,39 @@ await test('OpenAI-compatible UI exposes the three proxy-supported API key heade
   assert.match(uiSource, /data-action="use-main-api"/);
 });
 
+await test('NovelAI UI exposes token, model, sampler, scheduler, dimensions, and quality controls', () => {
+  assert.ok(imageStudioController.IMAGE_PROVIDER_IDS.includes('novelai'));
+  assert.equal(imageStudioController.normalizeProviderId('nai'), 'novelai');
+  assert.equal(imageStudioController.normalizeProviderId('novel-ai'), 'novelai');
+  for (const field of [
+    'novelai.apiUrl', 'novelai.apiKey', 'novelai.model', 'novelai.sampler',
+    'novelai.noiseSchedule', 'novelai.steps', 'novelai.width', 'novelai.height',
+    'novelai.scale', 'novelai.cfgRescale', 'novelai.qualityToggle'
+  ]) {
+    assert.match(uiSource, new RegExp(`name=["']${field.replace('.', '\\.')}`));
+  }
+  assert.match(uiSource, /nai-diffusion-4-5-full/);
+  assert.match(uiSource, /NovelAI/);
+});
+
+await test('NovelAI UI settings preserve manual future model IDs and generation controls', () => {
+  const normalized = imageStudioController.normalizeImageSettings({
+    activeProviderId: 'nai',
+    providers: {
+      'novel-ai': {
+        apiUrl: 'https://image.novelai.net', apiKey: 'fixture-token', model: 'nai-future-model',
+        sampler: 'k_dpmpp_2m', noiseSchedule: 'exponential', steps: 31,
+        width: 1024, height: 1024, scale: 6.5, cfgRescale: 0.25, qualityToggle: false
+      }
+    }
+  });
+  assert.equal(normalized.activeProviderId, 'novelai');
+  assert.equal(normalized.providers.novelai.model, 'nai-future-model');
+  assert.equal(normalized.providers.novelai.noiseSchedule, 'exponential');
+  assert.equal(normalized.providers.novelai.qualityToggle, false);
+  assert.equal(normalized.providers.novelai.cfgRescale, 0.25);
+});
+
 if (failures.length) {
   throw new AggregateError(failures, `${failures.length} image studio UI regression test(s) failed`);
 }

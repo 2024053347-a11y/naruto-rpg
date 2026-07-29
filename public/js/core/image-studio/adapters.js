@@ -1,4 +1,6 @@
 import { ImageTransport, imageError } from './transport.js';
+import { NOVELAI_IMAGE_MODELS } from './settings.js';
+import { extractFirstImageFromZip } from './zip.js';
 
 function nowSeed(value = '') {
   let hash = 2166136261;
@@ -172,6 +174,116 @@ function normalizeModelCatalog(payload, currentModel = '') {
   };
 }
 
+function boundedNumber(value, minimum, maximum, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.min(maximum, Math.max(minimum, number)) : fallback;
+}
+
+function boundedInteger(value, minimum, maximum, fallback) {
+  return Math.round(boundedNumber(value, minimum, maximum, fallback));
+}
+
+function novelDimension(value, fallback) {
+  const rounded = Math.round(boundedNumber(value, 64, 2048, fallback) / 64) * 64;
+  return Math.min(2048, Math.max(64, rounded));
+}
+
+export class NovelAIImageAdapter {
+  constructor(transport) { this.transport = transport; this.type = 'novelai'; }
+
+  async probe(provider) {
+    if (!String(provider?.apiUrl || '').trim()) throw imageError('PROFILE_INVALID', '请填写 NovelAI API 地址');
+    if (!String(provider?.apiKey || '').trim()) throw imageError('AUTH', '请填写 NovelAI API Token');
+    const models = NOVELAI_IMAGE_MODELS.map(item => item.id);
+    const model = String(provider.model || NOVELAI_IMAGE_MODELS[0].id).trim();
+    if (model && !models.includes(model)) models.push(model);
+    return {
+      status: 'configured', verified: false, adapter: this.type, model, models, imageModels: [...models],
+      recommendedModel: NOVELAI_IMAGE_MODELS[0].id,
+      message: '配置已识别；Token 将在首次生成时验证',
+      capabilities: {
+        textToImage: true, referenceImage: false, deterministicSeed: true, resumable: false, cancel: 'request'
+      }
+    };
+  }
+
+  async generate({ provider, prompt, negativePrompt, parameters = {}, signal }) {
+    const input = String(prompt || '').trim();
+    if (!input) throw imageError('PROFILE_INVALID', 'NovelAI 画面提示词不能为空');
+    if (!String(provider?.apiKey || '').trim()) throw imageError('AUTH', '请填写 NovelAI API Token');
+    const negative = String(negativePrompt || '').trim();
+    const model = String(provider.model || NOVELAI_IMAGE_MODELS[0].id).trim();
+    const seedSource = Number.isInteger(parameters.seed) ? parameters.seed
+      : (Number.isInteger(provider.seed) ? provider.seed : nowSeed(input));
+    const seed = boundedInteger(seedSource, 0, 0xffffffff, nowSeed(input));
+    const width = novelDimension(parameters.width ?? provider.width, 832);
+    const height = novelDimension(parameters.height ?? provider.height, 1216);
+    const steps = boundedInteger(parameters.steps ?? provider.steps, 1, 50, 28);
+    const scale = boundedNumber(parameters.scale ?? parameters.cfgScale ?? provider.scale, 0, 20, 5);
+    const cfgRescale = boundedNumber(
+      parameters.cfgRescale ?? parameters.cfg_rescale ?? provider.cfgRescale, 0, 1, 0
+    );
+    const sampler = String(parameters.sampler || provider.sampler || 'k_euler_ancestral').trim();
+    const noiseSchedule = String(
+      parameters.noiseSchedule || parameters.scheduler || provider.noiseSchedule || 'karras'
+    ).trim();
+    const qualityToggle = typeof parameters.qualityToggle === 'boolean'
+      ? parameters.qualityToggle : provider.qualityToggle !== false;
+    const body = {
+      input,
+      model,
+      action: 'generate',
+      parameters: {
+        params_version: 3,
+        prefer_brownian: true,
+        width,
+        height,
+        scale,
+        sampler,
+        steps,
+        seed,
+        negative_prompt: negative,
+        n_samples: 1,
+        ucPreset: 0,
+        qualityToggle,
+        noise_schedule: noiseSchedule,
+        cfg_rescale: cfgRescale,
+        add_original_image: false,
+        controlnet_strength: 1,
+        deliberate_euler_ancestral_bug: false,
+        dynamic_thresholding: false,
+        legacy: false,
+        legacy_v3_extend: false,
+        sm: false,
+        sm_dyn: false,
+        uncond_scale: 1,
+        skip_cfg_above_sigma: null,
+        use_coords: false,
+        characterPrompts: [],
+        reference_image_multiple: [],
+        reference_information_extracted_multiple: [],
+        reference_strength_multiple: [],
+        v4_prompt: {
+          caption: { base_caption: input, char_captions: [] },
+          use_coords: false,
+          use_order: true
+        },
+        v4_negative_prompt: {
+          caption: { base_caption: negative, char_captions: [] }
+        }
+      }
+    };
+    const archive = await this.transport.blob(provider, '/ai/generate-image', {
+      method: 'POST', body, signal, accept: 'application/zip'
+    });
+    const blob = await extractFirstImageFromZip(archive);
+    return {
+      images: [await generatedImage(blob)],
+      metadata: { seed, model, sampler, noiseSchedule }
+    };
+  }
+}
+
 export class OpenAIImageAdapter {
   constructor(transport) { this.transport = transport; this.type = 'openai'; }
 
@@ -328,6 +440,10 @@ export class ImageAdapterRegistry {
     this.adapters = new Map();
     this.register('openai', new OpenAIImageAdapter(transport));
     this.register('openai-compatible', this.adapters.get('openai'));
+    const novelai = new NovelAIImageAdapter(transport);
+    this.register('novelai', novelai);
+    this.register('novel-ai', novelai);
+    this.register('nai', novelai);
     this.register('comfyui', new ComfyUIImageAdapter(transport));
     const a1111 = new A1111ImageAdapter(transport);
     this.register('a1111', a1111);

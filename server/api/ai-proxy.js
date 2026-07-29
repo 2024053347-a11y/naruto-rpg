@@ -5,12 +5,36 @@ import { request as httpsRequest } from 'node:https';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { requireAuth } from '../middleware/auth.js';
+import { asyncRoute } from '../middleware/async-route.js';
+import {
+  createAdmissionController,
+  createAdmissionMiddleware
+} from '../middleware/admission.js';
 import { config } from '../config.js';
 
 const router = Router();
 
-// 强制验证登录状态，防止未授权用户盗用代理
-router.use(requireAuth);
+// index.js authenticates and performs admission before parsing JSON. Keep a
+// defensive auth boundary for tests or future mounts that use this router directly.
+router.use(asyncRoute((req, res, next) => (
+  req.user?.id ? next() : requireAuth(req, res, next)
+)));
+
+export const aiProxyAdmissionController = createAdmissionController({
+  text: { perUser: 3, global: 16 },
+  image: { perUser: 1, global: 4 }
+});
+
+export function resolveAdmissionCategory(rawPurpose) {
+  const purpose = String(rawPurpose || 'generic').trim().toLowerCase();
+  return purpose === 'image-generation' || purpose === 'image-download' ? 'image' : 'text';
+}
+
+export const aiProxyAdmission = createAdmissionMiddleware({
+  controller: aiProxyAdmissionController,
+  selectCategory: (req) => resolveAdmissionCategory(req.headers['x-proxy-purpose']),
+  identify: (req) => req.user?.id
+});
 
 /** 仅转发白名单内的请求头，避免把 Cookie / 内部头泄露给上游 */
 const FORWARDABLE_REQUEST_HEADERS = ['content-type', 'accept', 'anthropic-version', 'anthropic-beta', 'user-agent'];
@@ -177,7 +201,7 @@ function createByteLimit(maxBytes) {
     transform(chunk, _encoding, callback) {
       received += chunk.length;
       if (received > maxBytes) {
-        const error = new Error(`AI 上游流式响应超过 ${maxBytes} 字节限制`);
+        const error = new Error(`AI 上游响应超过 ${maxBytes} 字节限制`);
         error.code = 'ERR_AI_STREAM_TOO_LARGE';
         callback(error);
         return;
@@ -185,6 +209,18 @@ function createByteLimit(maxBytes) {
       callback(null, chunk);
     }
   });
+}
+
+export async function forwardBoundedResponse(upstreamResponse, res, {
+  signal,
+  maxResponseBytes
+} = {}) {
+  const streams = [upstreamResponse];
+  if (Number.isFinite(maxResponseBytes) && maxResponseBytes > 0) {
+    streams.push(createByteLimit(maxResponseBytes));
+  }
+  streams.push(res);
+  await pipeline(...streams, { signal });
 }
 
 export async function forwardStreamingResponse(upstreamResponse, res, {
@@ -199,12 +235,7 @@ export async function forwardStreamingResponse(upstreamResponse, res, {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('X-Accel-Buffering', 'no');
   res.flushHeaders?.();
-  const streams = [upstreamResponse];
-  if (Number.isFinite(maxResponseBytes) && maxResponseBytes > 0) {
-    streams.push(createByteLimit(maxResponseBytes));
-  }
-  streams.push(res);
-  await pipeline(...streams, { signal });
+  await forwardBoundedResponse(upstreamResponse, res, { signal, maxResponseBytes });
 }
 
 const PROXY_PURPOSES = new Set(['generic', 'models', 'image-generation', 'image-download']);
@@ -230,7 +261,7 @@ export function resolveProxyPurposePolicy(rawPurpose, proxyConfig = config.proxy
  *
  * 所有流量经 HTTPS 传输，API Key 仅在服务端内存短暂驻留，不落盘不记录。
  */
-router.all('/', async (req, res) => {
+router.all('/', asyncRoute(async (req, res) => {
   const targetUrl = req.headers['x-target-url'];
   const apiKey = req.headers['x-user-api-key'];
   const apiKeyHeaderName = req.headers['x-api-key-header'] || 'Authorization';
@@ -348,18 +379,16 @@ router.all('/', async (req, res) => {
         if (!res.destroyed && !res.writableEnded) res.end();
       }
     } else {
-      const chunks = [];
       const maxResponseBytes = proxyPolicy.maxResponseMb * 1024 * 1024;
-      let responseBytes = 0;
-      for await (const chunk of upstreamResponse) {
-        responseBytes += chunk.length;
-        if (responseBytes > maxResponseBytes) {
-          upstreamResponse.destroy();
-          return res.status(502).json({ error: `AI 上游响应超过 ${proxyPolicy.maxResponseMb}MB 限制` });
-        }
-        chunks.push(Buffer.from(chunk));
+      const declaredLength = Number(upstreamResponse.headers['content-length']);
+      if (Number.isFinite(declaredLength) && declaredLength > maxResponseBytes) {
+        upstreamResponse.destroy();
+        return res.status(502).json({ error: `AI 上游响应超过 ${proxyPolicy.maxResponseMb}MB 限制` });
       }
-      res.send(Buffer.concat(chunks));
+      await forwardBoundedResponse(upstreamResponse, res, {
+        signal: upstreamAbort.signal,
+        maxResponseBytes
+      });
     }
   } catch (error) {
     if (error.name === 'AbortError') {
@@ -368,6 +397,14 @@ router.all('/', async (req, res) => {
       }
       if (upstreamTimedOut && !res.destroyed && !res.writableEnded) res.end();
       return; // 客户端已断开或流式响应已结束，无需再次响应
+    }
+    if (error.code === 'ERR_AI_STREAM_TOO_LARGE') {
+      console.warn(`[AI PROXY] Upstream response exceeded ${proxyPolicy.maxResponseMb}MB limit`);
+      if (!res.destroyed && !res.headersSent) {
+        return res.status(502).json({ error: `AI 上游响应超过 ${proxyPolicy.maxResponseMb}MB 限制` });
+      }
+      if (!res.destroyed) res.destroy(error);
+      return;
     }
     if (res.destroyed) return;
     console.error('[AI PROXY] Upstream failed:', error.message, error.cause || '');
@@ -381,7 +418,7 @@ router.all('/', async (req, res) => {
     res.off('close', abortForDisconnectedClient);
     req.off('aborted', abortForDisconnectedClient);
   }
-});
+}));
 
 export { isPrivateAddress, validateTargetUrl };
 export default router;

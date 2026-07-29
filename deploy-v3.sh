@@ -12,7 +12,7 @@ set -euo pipefail
 
 # ── 配置 ────────────────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+PROJECT_DIR="$SCRIPT_DIR"
 PACKAGE_JSON="$PROJECT_DIR/package.json"
 
 # 从 package.json 读取版本号
@@ -61,6 +61,31 @@ log()   { echo -e "${CYAN}[DEPLOY]${NC} $*"; }
 ok()    { echo -e "${GREEN}[  OK ]${NC} $*"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $*"; }
 fail()  { echo -e "${RED}[FAIL]${NC} $*"; exit 1; }
+
+retry_remote() {
+  local label="$1"
+  local attempts="$2"
+  local initial_delay="$3"
+  shift 3
+  local attempt status=1 delay
+  for ((attempt = 1; attempt <= attempts; attempt++)); do
+    log "$label (尝试 $attempt/$attempts)..."
+    if "$@"; then
+      return 0
+    else
+      status=$?
+    fi
+    if (( attempt < attempts )); then
+      delay=$((initial_delay * attempt))
+      if (( delay > 30 )); then
+        delay=30
+      fi
+      warn "$label 失败 (exit $status)，${delay} 秒后重试"
+      sleep "$delay"
+    fi
+  done
+  return "$status"
+}
 
 # ── 参数解析 ──────────────────────────────────────────────────────────────
 DRY_RUN=false
@@ -173,6 +198,18 @@ rsync -a \
 cp "$PROJECT_DIR/package.json" "$BACKEND_PAYLOAD/"
 cp "$PROJECT_DIR/package-lock.json" "$BACKEND_PAYLOAD/"
 
+# 云存档 API 复用浏览器侧的时间线校验器，保持与服务端相同的相对导入路径。
+mkdir -p "$BACKEND_PAYLOAD/js/core" "$BACKEND_PAYLOAD/js/utils"
+cp "$PROJECT_DIR/js/core/timeline-save-schema.js" "$BACKEND_PAYLOAD/js/core/"
+cp "$PROJECT_DIR/js/core/continuity-ledger.js" "$BACKEND_PAYLOAD/js/core/"
+cp "$PROJECT_DIR/js/utils/format.js" "$BACKEND_PAYLOAD/js/utils/"
+
+# 正式站资源边界与主机内存策略。
+mkdir -p "$PAYLOAD_DIR/ops/systemd/naruto-rpg.service.d" "$PAYLOAD_DIR/ops/sysctl"
+cp "$PROJECT_DIR/deploy/systemd/naruto-rpg.service.d/limits.conf" \
+  "$PAYLOAD_DIR/ops/systemd/naruto-rpg.service.d/"
+cp "$PROJECT_DIR/deploy/sysctl/90-naruto-rpg-memory.conf" "$PAYLOAD_DIR/ops/sysctl/"
+
 ok "部署包组装完成"
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -190,6 +227,11 @@ REQUIRED_FILES=(
   "backend/server/index.js"
   "backend/package.json"
   "backend/package-lock.json"
+  "backend/js/core/timeline-save-schema.js"
+  "backend/js/core/continuity-ledger.js"
+  "backend/js/utils/format.js"
+  "ops/systemd/naruto-rpg.service.d/limits.conf"
+  "ops/sysctl/90-naruto-rpg-memory.conf"
 )
 
 for f in "${REQUIRED_FILES[@]}"; do
@@ -241,19 +283,19 @@ SSH_OPTS=(
   -o ConnectionAttempts=3
   -o ServerAliveInterval=15
   -o ServerAliveCountMax=4
+  -o TCPKeepAlive=yes
+  -o IPQoS=none
 )
 
 # 上传
 REMOTE_ARCHIVE="/tmp/naruto-rpg-production-${DEPLOYMENT_ID}.tar.gz"
 log "上传部署包到 $DEPLOY_SERVER..."
-scp "${SSH_OPTS[@]}" "$ARCHIVE" "${DEPLOY_SERVER}:${REMOTE_ARCHIVE}.part" || fail "上传失败"
+retry_remote "上传部署包" 6 10 \
+  scp "${SSH_OPTS[@]}" "$ARCHIVE" "${DEPLOY_SERVER}:${REMOTE_ARCHIVE}.part" \
+  || fail "上传失败"
 
-# 校验远端文件
-log "校验远端部署包..."
-ssh "${SSH_OPTS[@]}" "$DEPLOY_SERVER" \
-  "set -eu; printf '%s  %s\n' '$ARCHIVE_SHA256' '${REMOTE_ARCHIVE}.part' | sha256sum -c - && mv -f '${REMOTE_ARCHIVE}.part' '$REMOTE_ARCHIVE'" \
-  || fail "远端校验失败"
-ok "上传并校验完成"
+# 避免上传连接结束后立刻再次触发 sshd 的连接限流。
+sleep 12
 
 # ══════════════════════════════════════════════════════════════════════════
 # STEP 6: 远端部署
@@ -264,6 +306,7 @@ REMOTE_WORK="/tmp/naruto-rpg-release-${DEPLOYMENT_ID}"
 
 REMOTE_SCRIPTS=(
   "set -eu"
+  "if [ -f '${REMOTE_ARCHIVE}.part' ]; then printf '%s  %s\n' '$ARCHIVE_SHA256' '${REMOTE_ARCHIVE}.part' | sha256sum -c - && mv -f '${REMOTE_ARCHIVE}.part' '$REMOTE_ARCHIVE'; else test -f '$REMOTE_ARCHIVE'; printf '%s  %s\n' '$ARCHIVE_SHA256' '$REMOTE_ARCHIVE' | sha256sum -c -; fi"
 
   # 解压
   "rm -rf '$REMOTE_WORK'"
@@ -272,8 +315,8 @@ REMOTE_SCRIPTS=(
   "test -s '$REMOTE_WORK/static/index.html'"
 
   # 备份旧版本
-  "if [ -d '$TARGET_DIR' ]; then"
-  "  BACKUP_DIR='${TARGET_DIR}.bak.$(date +%Y%m%d%H%M%S)'"
+  "BACKUP_DIR='${TARGET_DIR}.bak.${DEPLOYMENT_ID}'"
+  "if [ -d '$TARGET_DIR' ] && [ ! -e \"\$BACKUP_DIR\" ]; then"
   "  cp -a '$TARGET_DIR' \"\$BACKUP_DIR\""
   "  echo \"旧版本已备份到 \$BACKUP_DIR\""
   "fi"
@@ -286,8 +329,9 @@ REMOTE_SCRIPTS=(
   "rm -f '$TARGET_DIR/.env' '$TARGET_DIR/.env.example' '$TARGET_DIR/package.json' '$TARGET_DIR/package-lock.json'"
 
   # 更新后端
-  "mkdir -p '$BACKEND_DIR/server'"
+  "mkdir -p '$BACKEND_DIR/server' '$BACKEND_DIR/js'"
   "cp -a '$REMOTE_WORK/backend/server/.' '$BACKEND_DIR/server/'"
+  "cp -a '$REMOTE_WORK/backend/js/.' '$BACKEND_DIR/js/'"
   "cp '$REMOTE_WORK/backend/package.json' '$REMOTE_WORK/backend/package-lock.json' '$BACKEND_DIR/'"
 
   # 安装依赖
@@ -301,9 +345,18 @@ REMOTE_SCRIPTS=(
   # Nginx 检查
   "nginx -t"
 
-  # 重启服务
+  # 应用资源边界与主机内存策略后重启服务
+  "install -D -m 0644 '$REMOTE_WORK/ops/systemd/naruto-rpg.service.d/limits.conf' '/etc/systemd/system/naruto-rpg.service.d/limits.conf'"
+  "install -m 0644 '$REMOTE_WORK/ops/sysctl/90-naruto-rpg-memory.conf' '/etc/sysctl.d/90-naruto-rpg-memory.conf'"
+  "systemctl daemon-reload"
+  "sysctl -p /etc/sysctl.d/90-naruto-rpg-memory.conf"
   "systemctl restart naruto-rpg"
   "systemctl is-active --quiet naruto-rpg"
+  "systemctl show naruto-rpg --property=MemoryHigh --value | grep -Fxq '268435456'"
+  "systemctl show naruto-rpg --property=MemoryMax --value | grep -Fxq '402653184'"
+  "systemctl show naruto-rpg --property=MemorySwapMax --value | grep -Fxq '134217728'"
+  "sysctl -n vm.swappiness | grep -Fxq '10'"
+  "ready=; for attempt in \$(seq 1 30); do if curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3000/health/ready; then ready=1; break; fi; sleep 1; done; test \"\$ready\" = 1"
 
   # 清理缓存
   "rm -rf '$TARGET_DIR/sw.js.cache' 2>/dev/null || true"
@@ -313,13 +366,19 @@ REMOTE_SCRIPTS=(
   "grep -Fq '?v=$BUILD_ID' '$TARGET_DIR/login.html'"
   "grep -Fq '\"version\":\"$RELEASE_VERSION\"' '$TARGET_DIR/version.json'"
 
-  # 清理远端临时文件
-  "rm -rf '$REMOTE_WORK' '$REMOTE_ARCHIVE'"
 )
 
 log "执行远端部署..."
-ssh "${SSH_OPTS[@]}" "$DEPLOY_SERVER" "$(printf '%s\n' "${REMOTE_SCRIPTS[@]}")" \
+REMOTE_DEPLOY_COMMAND="$(printf '%s\n' "${REMOTE_SCRIPTS[@]}")"
+retry_remote "执行远端部署" 6 10 \
+  ssh "${SSH_OPTS[@]}" "$DEPLOY_SERVER" "$REMOTE_DEPLOY_COMMAND" \
   || fail "远端部署失败"
+
+sleep 12
+if ! retry_remote "清理远端临时文件" 3 10 \
+  ssh "${SSH_OPTS[@]}" "$DEPLOY_SERVER" "rm -rf '$REMOTE_WORK' '$REMOTE_ARCHIVE' '${REMOTE_ARCHIVE}.part'"; then
+  warn "远端临时文件清理失败，不影响已完成部署"
+fi
 
 # 健康检查
 log "执行健康检查..."

@@ -11,9 +11,12 @@ const read = file => readFileSync(path.join(root, file), 'utf8');
 const stagingBat = read('部署测试站.bat');
 const productionBat = read('部署正式站.bat');
 const deployScript = read('deploy.ps1');
+const bashDeployScript = read('deploy-v3.sh');
 const deployBytes = readFileSync(path.join(root, 'deploy.ps1'));
 const packageJson = JSON.parse(read('package.json'));
 const stagingNginx = read('deploy/nginx/naruto-rpg-staging.conf');
+const systemdLimits = read('deploy/systemd/naruto-rpg.service.d/limits.conf');
+const memorySysctl = read('deploy/sysctl/90-naruto-rpg-memory.conf');
 
 assert.equal(packageJson.version, '3.0.0', 'production release metadata must identify v3');
 
@@ -51,8 +54,17 @@ assert.deepEqual(
 
 for (const file of ['部署测试站.bat', '部署正式站.bat']) {
   const bytes = readFileSync(path.join(root, file));
-  assert.deepEqual([...bytes.subarray(0, 3)], [0xef, 0xbb, 0xbf], `${file} must use UTF-8 BOM`);
+  assert.deepEqual(
+    [...bytes.subarray(0, 5)],
+    [...Buffer.from('@echo', 'ascii')],
+    `${file} must start with ASCII @echo so cmd.exe does not execute the UTF-8 BOM`
+  );
   assert.ok(bytes.includes(Buffer.from('\r\n')), `${file} must use CRLF for cmd.exe`);
+  assert.doesNotMatch(
+    bytes.toString('binary'),
+    /(?<!\r)\n|\r(?!\n)/,
+    `${file} must not contain mixed line endings`
+  );
 }
 
 for (const [name, source] of [
@@ -65,7 +77,8 @@ for (const [name, source] of [
 
 assert.match(stagingBat, /-Mode\s+staging/i, 'staging entry must target staging');
 assert.doesNotMatch(stagingBat, /-Mode\s+production/i, 'staging entry must never target production');
-assert.match(productionBat, /DEPLOY-PRODUCTION/, 'production entry must require an explicit typed confirmation');
+assert.match(productionBat, /按任意键开始部署/, 'production entry must use a simple key confirmation');
+assert.doesNotMatch(productionBat, /set\s+\/p/i, 'production entry must not require a typed passphrase');
 assert.match(productionBat, /-Mode\s+production[\s\S]*-ConfirmProduction/i, 'production entry must pass the confirmation switch');
 
 assert.match(deployScript, /\[switch\]\$DryRun/, 'deployer must expose an offline DryRun mode');
@@ -84,6 +97,64 @@ assert.doesNotMatch(
 );
 assert.match(deployScript, /server\\data/, 'production package must explicitly protect server/data');
 assert.match(deployScript, /server\\db/, 'production package must explicitly protect legacy server/db runtime data');
+for (const directive of [
+  'MemoryHigh=256M',
+  'MemoryMax=384M',
+  'MemorySwapMax=128M',
+  'OOMPolicy=kill',
+  'Restart=on-failure',
+  'TimeoutStopSec=30s'
+]) {
+  assert.ok(systemdLimits.includes(directive), `systemd limits must include ${directive}`);
+}
+assert.match(memorySysctl, /^vm\.swappiness\s*=\s*10$/m, 'host memory policy must permit bounded swapping');
+assert.match(deployScript, /ops[\\/]systemd[\\/]naruto-rpg\.service\.d[\\/]limits\.conf/i);
+assert.match(deployScript, /ops[\\/]sysctl[\\/]90-naruto-rpg-memory\.conf/i);
+assert.match(deployScript, /systemctl\s+daemon-reload/i, 'production deployment must reload systemd after installing limits');
+assert.match(deployScript, /sysctl\s+-p\s+\/etc\/sysctl\.d\/90-naruto-rpg-memory\.conf/i);
+assert.match(deployScript, /127\.0\.0\.1:3000\/health\/ready/i, 'production deployment must wait for backend readiness');
+assert.match(bashDeployScript, /PROJECT_DIR="\$SCRIPT_DIR"/, 'root-level Bash deployer must use the repository root');
+for (const requiredPath of [
+  'js/core/timeline-save-schema.js',
+  'js/core/continuity-ledger.js',
+  'js/utils/format.js',
+  'deploy/systemd/naruto-rpg.service.d/limits.conf',
+  'deploy/sysctl/90-naruto-rpg-memory.conf'
+]) {
+  assert.ok(bashDeployScript.includes(requiredPath), `Bash deployment must package ${requiredPath}`);
+}
+assert.match(bashDeployScript, /127\.0\.0\.1:3000\/health\/ready/i, 'Bash deployment must wait for backend readiness');
+assert.match(bashDeployScript, /function?\s*retry_remote|retry_remote\s*\(\)/i, 'Bash deployment must define remote retries');
+assert.match(
+  bashDeployScript,
+  /retry_remote\s+"执行远端部署"[\s\S]{0,240}ssh/i,
+  'Bash production deployment must retry its final SSH execution'
+);
+assert.match(
+  bashDeployScript,
+  /REMOTE_SCRIPTS=\([\s\S]{0,220}sha256sum -c/i,
+  'Bash archive verification must share the retried deployment SSH session'
+);
+assert.doesNotMatch(
+  bashDeployScript,
+  /retry_remote\s+"校验远端部署包"/i,
+  'Bash archive verification must not consume a separate SSH connection'
+);
+assert.match(
+  bashDeployScript,
+  /if \[ -f '\$\{REMOTE_ARCHIVE\}\.part' \][\s\S]{0,500}else test -f '\$REMOTE_ARCHIVE'/i,
+  'Bash archive verification must be idempotent after a lost SSH acknowledgement'
+);
+assert.match(
+  bashDeployScript,
+  /BACKUP_DIR='\$\{TARGET_DIR\}\.bak\.\$\{DEPLOYMENT_ID\}'[\s\S]{0,180}! -e \\"\\\$BACKUP_DIR\\"/i,
+  'Bash deployment retries must not create duplicate production backups'
+);
+assert.match(
+  bashDeployScript,
+  /retry_remote\s+"清理远端临时文件"/i,
+  'Bash cleanup must run separately after a confirmed deployment'
+);
 for (const sharedModule of [
   'js/core/timeline-save-schema.js',
   'js/core/continuity-ledger.js',
@@ -121,6 +192,36 @@ assert.match(
   deployScript,
   /mv\s+-f\s+'?\$RemoteArchivePart'?\s+'?\$RemoteArchive'?/i,
   'verified upload must be atomically promoted'
+);
+assert.match(
+  deployScript,
+  /\$RemoteSteps\s*=\s*@\([\s\S]{0,160}\$FinalizeRemoteUpload/i,
+  'archive verification must share the retried deployment SSH session'
+);
+assert.doesNotMatch(
+  deployScript,
+  /-Arguments\s*\(\$SshOptions\s*\+\s*@\(\$Server,\s*\$FinalizeRemoteUpload\)\)/i,
+  'archive verification must not consume a separate SSH connection'
+);
+assert.match(
+  deployScript,
+  /Start-Sleep\s+-Seconds\s+12[\s\S]{0,500}\$RemoteSteps\s*=\s*@\(/i,
+  'deployment must cool down after upload before opening SSH'
+);
+assert.match(
+  deployScript,
+  /\$RemoteDeployCommand\s*=\s*\$RemoteSteps\s*-join\s*';\s*'[\s\S]{0,500}Invoke-NativeWithRetry[\s\S]{0,900}-Arguments\s*\(\$SshOptions\s*\+\s*@\(\$Server,\s*\$RemoteDeployCommand\)\)/i,
+  'the final remote deployment must retry transient SSH disconnects'
+);
+assert.doesNotMatch(
+  deployScript,
+  /\$RemoteSteps\s*\+=\s*"rm\s+-rf\s+'\$RemoteRelease'\s+'\$RemoteArchive'/i,
+  'the retried deployment command must not delete its own retry payload'
+);
+assert.match(
+  deployScript,
+  /\$RemoteCleanupCommand[\s\S]{0,1000}远端临时文件清理失败/i,
+  'remote payload cleanup must run separately after a confirmed deployment'
 );
 
 const stagingTarget = extractBracedBlock(deployScript, /\bstaging\s*=\s*@\{/i, 'staging target');
@@ -201,14 +302,26 @@ if (process.platform === 'win32') {
   assert.match(productionDryRun.stdout, /RUNTIME_DATA_EXCLUDED=true/);
 
   const cmd = process.env.ComSpec || `${process.env.SystemRoot || 'C:\\Windows'}\\System32\\cmd.exe`;
-  const wrapperFailure = spawnSync(cmd, [
-    '/d', '/c', 'call 部署测试站.bat -DefinitelyInvalidParameter'
-  ], {
+  // NoDefaultCurrentDirectoryInExePath=1（Node 及新版 Windows 环境）会禁止
+  // cmd.exe 从当前目录解析裸文件名，因此必须用显式相对路径调用。
+  const wrapperOptions = {
     cwd: root,
     encoding: 'utf8',
-    timeout: 15_000,
+    timeout: 60_000,
+    maxBuffer: 4 * 1024 * 1024,
     env: { ...process.env, NARUTO_DEPLOY_NO_PAUSE: '1' }
-  });
+  };
+  const productionWrapperDryRun = spawnSync(cmd, [
+    '/d', '/c', 'call .\\部署正式站.bat -DryRun -SkipBuild'
+  ], wrapperOptions);
+  const productionWrapperOutput = `${productionWrapperDryRun.stdout}\n${productionWrapperDryRun.stderr}`;
+  assert.equal(productionWrapperDryRun.status, 0, productionWrapperOutput);
+  assert.match(productionWrapperOutput, /DRY_RUN_OK=production/);
+  assert.match(productionWrapperOutput, /正式站部署成功/);
+
+  const wrapperFailure = spawnSync(cmd, [
+    '/d', '/c', 'call .\\部署测试站.bat -DefinitelyInvalidParameter'
+  ], wrapperOptions);
   assert.notEqual(wrapperFailure.status, 0, 'staging wrapper must propagate PowerShell failure');
   const wrapperOutput = `${wrapperFailure.stdout}\n${wrapperFailure.stderr}`;
   assert.match(wrapperOutput, /测试站部署失败，错误码：[1-9][0-9]*/);

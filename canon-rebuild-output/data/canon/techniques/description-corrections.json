@@ -1,0 +1,1023 @@
+{
+  "schema_version": "naruto.technique.description-corrections.v1",
+  "generated_at": "2026-07-26T02:06:56.539Z",
+  "provenance": "Narutopedia source_ref pages; Chinese summaries terminology-normalized and key records manually reviewed.",
+  "count": 203,
+  "corrections": [
+    {
+      "id": "JT-OTHER-0023",
+      "source_title": "Calorie Control",
+      "summary": "卡路里控制能把秋道一族体内储存的热量转化为查克拉，并配合倍化之术强化身体。熟练者可自行控制转化比例，经验不足者则需要三色药丸辅助。"
+    },
+    {
+      "id": "JT-OTHER-0071",
+      "source_title": "Human Beast Combination Transformation: Double-Headed Wolf",
+      "summary": "犬冢一族成员与忍犬共同施展组合变身，化作双头巨狼。变身后体型、爪牙和力量都会大幅提升，并可施展破坏力更强的牙通牙系招式。"
+    },
+    {
+      "id": "JT-OTHER-0101",
+      "source_title": "Mechanical Light Shield Block",
+      "summary": "此术是基于查克拉的盾牌，用于防御攻击。这种形式的防御通常安装在木偶中，使用者张开分段的手臂并辐射查克拉，形成浅蓝色的薄盾。"
+    },
+    {
+      "id": "JT-OTHER-0102",
+      "source_title": "Memory-Concealing Manipulative Sand Technique",
+      "summary": "使用者通过将一根极小的针埋入大脑的记忆中心来封锁目标的记忆。可以通过取消该术来恢复记忆，从而破坏针。"
+    },
+    {
+      "id": "JT-OTHER-0103",
+      "source_title": "Mind Body Disturbance Technique",
+      "summary": "使用者将查克拉发送到目标的神经系统中，使他们能够完全控制目标的身体。与心转身之术不同的是，使用该术时，使用者的意识会留在自己的体内，这意味着即使在寡不敌众的情况下也可以安全地使用。"
+    },
+    {
+      "id": "JT-OTHER-0104",
+      "source_title": "Mind Body Switch Technique",
+      "summary": "心转身之术是山中一族的秘传忍术。施术者将精神投射到目标体内并控制其行动；施术期间本体会失去意识，若未命中，精神返回也需要时间。"
+    },
+    {
+      "id": "JT-OTHER-0105",
+      "source_title": "Mind Body Transmission Formation",
+      "summary": "心伝身阵是山中井阵创造的一项术，用于对抗人类神树及其抑制查克拉特征的能力。"
+    },
+    {
+      "id": "JT-OTHER-0106",
+      "source_title": "Mind Body Transmission Technique",
+      "summary": "心伝身之术是山中一族成员用来与人进行心灵感应交流的一种术。通过专注，使用者可以同时与多个人进行交流，并且在该术生效时目标也可以相互交流。"
+    },
+    {
+      "id": "JT-OTHER-0107",
+      "source_title": "Mind Clone Switch Technique",
+      "summary": "此术允许使用者通过分身他们的意识将他们的意识转移到多个目标，让他们在短时间内完全控制身体。与心转身之术一样，在使用该术时，使用者的身体处于毫无防御的状态。"
+    },
+    {
+      "id": "JT-OTHER-0108",
+      "source_title": "Mind's Eye of the Kagura",
+      "summary": "神楽心眼是一种可以让人们从超远距离细致地感知查克拉的术。这些感官能力赋予香燐甚至超越瞳术的能力。"
+    },
+    {
+      "id": "JT-OTHER-0109",
+      "source_title": "Mirrored Sudden Attacker Technique",
+      "summary": "五印结界下方设有第二个陷阱。当“禁止”标签被删除时，该术会自动启动。"
+    },
+    {
+      "id": "JT-OTHER-0110",
+      "source_title": "Monstrous Sand Arm",
+      "summary": "在收集大量沙子后，我爱罗将其形成守鹤手臂的复制品，以抓住和/或压碎对手。"
+    },
+    {
+      "id": "JT-OTHER-0111",
+      "source_title": "Multi-Size Technique",
+      "summary": "这是秋道家族传承下来的标志性能力。表演时，秋道的体型会变大，体重和力量也会相应增加，从而使他们的物理攻击更加强大。"
+    },
+    {
+      "id": "JT-OTHER-0112",
+      "source_title": "Multiple Shadow Clone Technique",
+      "summary": "多重影分身之术是影分身之术的大规模版本，可一次制造大量具有实体的分身。每个分身都会分得本体的查克拉，因此数量越多，消耗和风险越高。"
+    },
+    {
+      "id": "JT-OTHER-0113",
+      "source_title": "Multiple Wood Release Clone Technique",
+      "summary": "该术本质上是木材分身术的大型版本，使用者使用附近预先存在的植被作为媒介来创造大量木材分身。"
+    },
+    {
+      "id": "JT-OTHER-0114",
+      "source_title": "Mutually Multiplying Explosive Tags",
+      "summary": "互乘起爆符是一种术，是专为转世者设计的战斗风格的一部分，并使用特殊的爆炸标签来制造近乎无限的一系列爆炸。通过使用自己的身体作为纸张的媒介，转世的个体创造了几个由大张纸形成的爆炸标签，每个标签上都有五个封印。"
+    },
+    {
+      "id": "JT-OTHER-0115",
+      "source_title": "Needle Jizō",
+      "summary": "自来也使用查克拉来硬化他的头发并将其塑造成尖刺，这些尖刺像金属武器一样锋利。他的头发也长得足够长，可以包裹住他，充当盔甲。"
+    },
+    {
+      "id": "JT-OTHER-0116",
+      "source_title": "Net Shadow Paralysis Technique",
+      "summary": "使用者将他们的阴影投射到锁定在表面上的多个斑点中。从那里，它们会在表面爬行，寻找目标。"
+    },
+    {
+      "id": "JT-OTHER-0117",
+      "source_title": "Nine-Tails Chakra Mode",
+      "summary": "九尾查克拉模式是一种独特的转换形式，被授予九尾的人柱力。"
+    },
+    {
+      "id": "JT-OTHER-0118",
+      "source_title": "Octopus Leg Clone Technique",
+      "summary": "通过使用牛鬼的一小部分查克拉并牺牲其一根触手，奇拉比可以创造出一个完美的自己分身，无论是写轮眼还是晓都无法区分。这个分身显然是持久的，可以承受相当大的伤害，只有在查克拉完全耗尽时才会恢复到触手状态。"
+    },
+    {
+      "id": "JT-OTHER-0119",
+      "source_title": "One's Own Life Reincarnation",
+      "summary": "己生转生是千代开发的禁术，可把施术者的生命力转移给他人，既能治疗重伤，也能令死者复生；若救治对象已经死亡，施术者通常会付出生命。"
+    },
+    {
+      "id": "JT-OTHER-0120",
+      "source_title": "Orochimaru-Style Body Replacement Technique",
+      "summary": "大蛇丸流替身术会让使用者从旧身体的口中吐出一具完整的新身体，以摆脱重伤和束缚；恢复效果强，但会消耗大量查克拉。"
+    },
+    {
+      "id": "JT-OTHER-0121",
+      "source_title": "Paper Clone",
+      "summary": "一种利用小南的能力来操纵她的纸张的形状和颜色的术，将其形成一个或多个她自己的复制品。当分身被击中时，它只会变回一张纸。"
+    },
+    {
+      "id": "JT-OTHER-0122",
+      "source_title": "Paper Drizzle",
+      "summary": "用纸制作出翅膀后，小南使用它们快速连续地向目标发射大量纸。在动画中，这种攻击的强度足以压倒自来也的火焰释放：火焰子弹术。"
+    },
+    {
+      "id": "JT-OTHER-0123",
+      "source_title": "Paper Person of God Technique",
+      "summary": "小南将 6000 亿个爆炸性标签伪装成周围的风景，无论是地球还是水，其复杂程度甚至连写轮眼也无法看穿。"
+    },
+    {
+      "id": "JT-OTHER-0124",
+      "source_title": "Paper Shuriken",
+      "summary": "一种利用查克拉将纸张硬化并塑造成手里剑的术。使用者可以通过进一步改变手里剑的最终形状来增强手里剑的威力。"
+    },
+    {
+      "id": "JT-OTHER-0125",
+      "source_title": "Parasite Clone",
+      "summary": "寄生分身术是晓的白绝使用的一种术。"
+    },
+    {
+      "id": "JT-OTHER-0126",
+      "source_title": "Parasite Demon Demolition Technique",
+      "summary": "右近只能在激活他的诅咒封印的第二层后才能执行此术。他利用查克拉在细胞和蛋白质水平上分解自己的身体，以便进入目标的身体。"
+    },
+    {
+      "id": "JT-OTHER-0127",
+      "source_title": "Parasitic Destruction Insect Technique",
+      "summary": "油目一族的成员出生后不久，成千上万的昆虫就被允许在他或她的身体上定居。作为以宿主查克拉为食的交换条件，昆虫会遵循宿主的每一个命令：从攻击到防御到侦察，以及介于两者之间的一切。"
+    },
+    {
+      "id": "JT-OTHER-0128",
+      "source_title": "Parasitic Giant Insect — Bug Bite",
+      "summary": "当一名油女一族成员将一些小虫虫放在敌人的皮肤上后，这些昆虫立即钻入受害者的身体并开始吞噬其肉体和查克拉。这个过程导致昆虫的体型迅速增大，直到宿主身体被从里到外完全吃掉。"
+    },
+    {
+      "id": "JT-OTHER-0129",
+      "source_title": "Parent and Child Rasengan",
+      "summary": "亲子螺旋丸由父母与孩子共同注入查克拉，将两人的螺旋丸融合成威力更大的螺旋丸，是需要双方协调的合作忍术。"
+    },
+    {
+      "id": "JT-OTHER-0130",
+      "source_title": "Partial Multi-Size Technique",
+      "summary": "这是多尺寸术的更实际应用。使用者不会增加整个身体的尺寸，而是仅增加特定身体部位的尺寸，通常是手臂和腿。"
+    },
+    {
+      "id": "JT-OTHER-0131",
+      "source_title": "Planetary Rasengan",
+      "summary": "惑星螺旋丸以一颗大玉螺旋丸为核心，外侧环绕三颗普通螺旋丸；不同方向的旋转在命中后相互作用，形成破坏力极强的乱流。"
+    },
+    {
+      "id": "JT-OTHER-0132",
+      "source_title": "Possession",
+      "summary": "依附是黑绝拥有的一项独特能力，它可以利用其可塑性的身体将自己覆盖在目标上。该术主要是通过包裹目标的身体来限制目标的行动，直接引导目标的意志，强制其听从自己的命令。"
+    },
+    {
+      "id": "JT-OTHER-0133",
+      "source_title": "Prepared Needle Shot",
+      "summary": "静音的前臂上佩戴着一个装置，其中装有 5 个千本。当千本包含在设备内时，它会浸入一种足以使受害者仅因擦伤而濒临死亡的毒药中。"
+    },
+    {
+      "id": "JT-OTHER-0134",
+      "source_title": "Prison Sand Burial",
+      "summary": "我爱罗使用他的查克拉打开大地，并使用他的沙子将目标拉到地下 200 米；目标被拖得如此之快以至于无法逃脱。由于埋藏的深度，目标甚至无法移动一根手指。"
+    },
+    {
+      "id": "JT-OTHER-0135",
+      "source_title": "Psycho Mind Transmission",
+      "summary": "使用者通过将手放在目标的头上来进入目标的潜意识并提取所需的任何信息，即使目标已经忘记或已被阻止。可以使用特殊装置来减少读取目标思想所需的时间，并允许其他忍者提供协助。"
+    },
+    {
+      "id": "JT-OTHER-0136",
+      "source_title": "Quicksand Waterfall Flow",
+      "summary": "我爱罗使用他自己的沙子，将地下的岩石和矿物质磨成大量的沙子，然后带到地面上。当沙子浮出水面时，大地会震动，我爱罗然后会像海啸一样操纵沙子撞击他的目标。"
+    },
+    {
+      "id": "JT-OTHER-0137",
+      "source_title": "Rasengan",
+      "summary": "螺旋丸是一种以查克拉旋转球形式出现的忍术，由波风水门发明。"
+    },
+    {
+      "id": "JT-OTHER-0138",
+      "source_title": "Rasengan: \"Uzuhiko\"",
+      "summary": "螺旋丸·涡彦是博人开发的螺旋丸变体，借用行星自转产生的力量持续影响目标，使其失去平衡并承受难以消退的旋转冲击。"
+    },
+    {
+      "id": "JT-OTHER-0139",
+      "source_title": "Red Secret Technique: Machinery Triangles",
+      "summary": "勘九郎使用蝎木偶分离其头部，并从木偶的颈部和手掌发射几把带有爆炸球的三角形刀片。"
+    },
+    {
+      "id": "JT-OTHER-0140",
+      "source_title": "Regeneration Ability",
+      "summary": "再生能力源自千手柱间异乎常人的生命力，可在不结印的情况下快速修复自身伤势；移植柱间细胞者也可能获得不同程度的恢复能力。"
+    },
+    {
+      "id": "JT-OTHER-0141",
+      "source_title": "Resonance Blast",
+      "summary": "带土从地底下长出一棵大树，开着四朵花，形成四个尾兽玉。为了确保球不会失手，带土用了六赤阳阵来遏制爆炸，而忍者联军则传送到了结界外避开了。"
+    },
+    {
+      "id": "JT-OTHER-0142",
+      "source_title": "Resonating Echo Drill",
+      "summary": "托斯·砧使用手臂上佩戴的共振回声扬声器来产生强大的声波。或者他可以使用他的查克拉引导他们到达特定目标；因为攻击使用的是声音，所以无法被格挡。"
+    },
+    {
+      "id": "JT-OTHER-0143",
+      "source_title": "Revolt of the Demon World",
+      "summary": "多由也用魔笛演奏了一段旋律——她的“终曲”，导致由查克拉制成的多嘴蠕虫状灵魂从多奇的嘴中出现。神灵的查克拉几乎全部是精神能量，导致他们贪婪地寻找肉身能量以达到平衡。"
+    },
+    {
+      "id": "JT-OTHER-0144",
+      "source_title": "Rope Escape Technique",
+      "summary": "忍者的信条是他们必须逃离任何情况，无论事情看起来多么困难。因此，这是木叶忍者学院教授的第一个忍术。"
+    },
+    {
+      "id": "JT-OTHER-0145",
+      "source_title": "Rupture",
+      "summary": "使用者猛烈地挥舞查克拉强化剑，意图攻击接近的对手，释放查克拉波来切割目标。"
+    },
+    {
+      "id": "JT-OTHER-0146",
+      "source_title": "Sand Binding Coffin",
+      "summary": "我爱罗使用储存在沙葫芦中的沙子来固定目标并捕获他们。由于沙子具有天然的可塑性，目标一旦被沙子包围，大多数常用的防御或逃跑方法就会变得无效。"
+    },
+    {
+      "id": "JT-OTHER-0147",
+      "source_title": "Sand Binding Prison",
+      "summary": "捕获忍术是我爱罗的特征。使用普通的沙子，可以创造出一个完全密闭的空间，在其中捕获敌人。"
+    },
+    {
+      "id": "JT-OTHER-0148",
+      "source_title": "Sand Clone",
+      "summary": "使用者将沙子塑造成与自己相似的形状，为自己而战。与其他分身术不同，沙分身的构成通常在任何时候都是显而易见的，仅采用使用者的形状，而不是其确切的外观。"
+    },
+    {
+      "id": "JT-OTHER-0149",
+      "source_title": "Sand Drizzle",
+      "summary": "我爱罗在高空形成小沙块，他将其像雨一样落到目标上。 我爱罗可以用查克拉控制沙块，确保它们击中目标，甚至引导它们到达目标的盲点。"
+    },
+    {
+      "id": "JT-OTHER-0150",
+      "source_title": "Sand Hail",
+      "summary": "砂冰雹是我爱罗沙雨的放大版本。"
+    },
+    {
+      "id": "JT-OTHER-0151",
+      "source_title": "Sand Shuriken",
+      "summary": "我爱罗在准备进入尾兽模式时，将手臂上的沙子塑造成多个手里剑。通过挥动他的手臂（由于他的变形，手臂比平常更强大），手里剑会快速发射，每一次额外的挥动都可以进行额外的齐射。"
+    },
+    {
+      "id": "JT-OTHER-0152",
+      "source_title": "Sand Waterfall Funeral",
+      "summary": "在用沙子包裹目标后，例如使用沙子束缚棺材，我爱罗握紧拳头使沙子收缩。沙子从各个方向压向目标，直到将其粉碎并杀死。"
+    },
+    {
+      "id": "JT-OTHER-0153",
+      "source_title": "Sand Waterfall Imperial Funeral",
+      "summary": "当目标被流沙瀑布流吞没后，我爱罗将双手猛击沙子并激活该术。与常规的沙瀑布葬礼一样，沙子会压缩并研磨目标，尽管规模比常规版本大得多。"
+    },
+    {
+      "id": "JT-OTHER-0154",
+      "source_title": "Scale Powder",
+      "summary": "使用者从口中或身体中释放出大量细粉末，由于其发光特性，这些粉末非常明亮，可以暂时致盲其作用区域内的多个目标。"
+    },
+    {
+      "id": "JT-OTHER-0155",
+      "source_title": "Scattering Thousand Crows Technique",
+      "summary": "此术召唤无数乌鸦，使敌人眼花缭乱。使用者可以通过指尖发射查克拉并将其转变为高频波来自由地操纵乌鸦。"
+    },
+    {
+      "id": "JT-OTHER-0156",
+      "source_title": "Scorch Release: Extremely Steaming Murder",
+      "summary": "灼遁·过蒸杀会制造并操纵高温球体。球体穿过目标时会瞬间蒸发其体内水分，使身体干枯，是叶仓使用的致命灼遁忍术。"
+    },
+    {
+      "id": "JT-OTHER-0157",
+      "source_title": "Sea of Trees Erosion",
+      "summary": "使用木遁，使用者可以操纵地形，带出不同大小的地下树根以适应各种进攻情况，例如使用树根进行欺骗、误导和限制。人们还可以使用大型版本，在更大的区域内长出巨大的根，这些根相互缠绕在一起，其力量如此之大，任何夹在中间的人都会被猛烈地压死。"
+    },
+    {
+      "id": "JT-OTHER-0158",
+      "source_title": "Secret Technique Stone Needles",
+      "summary": "该术利用使用者的查克拉作为麻痹剂。使用者向对手投掷附有绳子的苦无。"
+    },
+    {
+      "id": "JT-OTHER-0159",
+      "source_title": "Secret Technique: Insect Sphere",
+      "summary": "使用者发送寄坏虫进行大范围传播，一旦找到目标，昆虫就会立即聚集，在目标周围形成一个球体。然后他们将自己附着在目标上并开始吞噬他们的查克拉。"
+    },
+    {
+      "id": "JT-OTHER-0160",
+      "source_title": "Senbon Shower",
+      "summary": "此术需要装有数百个千本弹簧的特殊雨伞。使用者打开几把这样的雨伞并将它们旋转到空中。"
+    },
+    {
+      "id": "JT-OTHER-0161",
+      "source_title": "Sensing Technique",
+      "summary": "感知之术让感知型忍者把查克拉转化为感知能力，用于探测、辨认并追踪周围的查克拉特征；有效范围取决于施术者水平。"
+    },
+    {
+      "id": "JT-OTHER-0162",
+      "source_title": "Sensing Transmission",
+      "summary": "通过与另一个人进行身体接触，使用者能够将他们当前的感知直接传输到目标的大脑中。然后，使用者的感知可以进一步转移到该人所连接的另一个人，无论是物理上还是通过他们的影子等方式。"
+    },
+    {
+      "id": "JT-OTHER-0163",
+      "source_title": "Sexy Reverse Harem Technique",
+      "summary": "鸣人制造多个影分身并同时变成数名裸体男性，以强烈的视觉冲击扰乱或制服目标；这是后宫术的反向变体。"
+    },
+    {
+      "id": "JT-OTHER-0164",
+      "source_title": "Sexy Technique",
+      "summary": "使用者以变身术化为裸体美女，用诱惑、惊吓或视觉冲击分散目标注意力；鸣人常用它恶作剧，也能借此在战斗中制造破绽。"
+    },
+    {
+      "id": "JT-OTHER-0165",
+      "source_title": "Sexy: Boy on Boy Technique",
+      "summary": "使用者与分身变成两名裸体男性，以迎合女性目标的偏好并造成强烈精神冲击；人物组合和姿势会影响效果。"
+    },
+    {
+      "id": "JT-OTHER-0166",
+      "source_title": "Sexy: Girl on Girl Technique",
+      "summary": "使用者与分身变成两名不同的裸体女性，以诱惑或扰乱目标；选择符合目标偏好的形象可提高成功率。"
+    },
+    {
+      "id": "JT-OTHER-0167",
+      "source_title": "Shadow Clone Technique",
+      "summary": "影分身之术是千手扉间创造的分身术。"
+    },
+    {
+      "id": "JT-OTHER-0168",
+      "source_title": "Shadow Clutch Technique",
+      "summary": "使用者将自己的影子实体化并增强其力量，变得像钢铁一样。然后，使用者捕捉目标的影子并强行移动它们。"
+    },
+    {
+      "id": "JT-OTHER-0169",
+      "source_title": "Shadow Gathering Technique",
+      "summary": "这是使用实体化阴影的忍术，但与同系的影缝术相比，该术更注重对阴影动作的细微控制。它的精确度甚至可以让触手穿过小孔。"
+    },
+    {
+      "id": "JT-OTHER-0170",
+      "source_title": "Shadow Imitation Shadow Bind Technique",
+      "summary": "影子模仿·影缚术是奈良一族成员使用的秘术之一。"
+    },
+    {
+      "id": "JT-OTHER-0171",
+      "source_title": "Shadow Imitation Shuriken Technique",
+      "summary": "影子模仿手里剑术是奈良鹿丸在自学使用猿飞阿斯玛的查克拉刀时发明的忍术。"
+    },
+    {
+      "id": "JT-OTHER-0172",
+      "source_title": "Shadow Imitation Technique",
+      "summary": "影子模仿术是奈良一族的标志性术。"
+    },
+    {
+      "id": "JT-OTHER-0173",
+      "source_title": "Shadow Senbon",
+      "summary": "使用者同时投出带铃和不带铃的千本，以铃声诱导对手误判攻击位置，再让无声千本从盲区命中目标。"
+    },
+    {
+      "id": "JT-OTHER-0174",
+      "source_title": "Shadow Sewing Technique",
+      "summary": "这是奈良一族秘术中的忍术，它利用实体化的影子进行攻击和束缚，而不是像拟影术那样仅仅进行定身和控制。使用者将影子的形状改变为几根锋利的卷须状针，并分别控制每根针。"
+    },
+    {
+      "id": "JT-OTHER-0175",
+      "source_title": "Shadow Shuriken Technique",
+      "summary": "使用者将两把手里剑放在一起，同时将它们扔向目标；投掷的手里剑越大，所需的技能就越高。目标是让目标将注意力集中在两个手里剑中位于顶部的那一个上，而不会注意到在其下方移动的第二个手里剑。"
+    },
+    {
+      "id": "JT-OTHER-0176",
+      "source_title": "Shadow–Neck Binding Technique",
+      "summary": "影首缚术是影子模仿术的攻击型变化。影子沿目标身体向上延伸并化作手掌，最终扼住颈部；距离越近，束缚力越强。"
+    },
+    {
+      "id": "JT-OTHER-0177",
+      "source_title": "Shapeshifting Technique",
+      "summary": "佩恩将一个人的查克拉的一部分分配给活人祭品。这导致牺牲品成为个人的相同副本，并完美模仿原件的血继限界（例如写轮眼）和独特的武器（例如鲛肌）。"
+    },
+    {
+      "id": "JT-OTHER-0178",
+      "source_title": "Shield of Sand",
+      "summary": "砂之盾是我爱罗的“绝对防御”的第一部分，他的沙甲是第二部分。"
+    },
+    {
+      "id": "JT-OTHER-0179",
+      "source_title": "Shuriken Shadow Clone Technique",
+      "summary": "此术是猿飞日斩发明的，其概念化和效率彰显了他“教授”的头衔。投掷单个手里剑后，使用者用查克拉复制它，就像影分身之术复制使用者一样；创造影分身本身就很困难，但专门复制无生命的物体则更加困难。"
+    },
+    {
+      "id": "JT-OTHER-0180",
+      "source_title": "Silent Killing",
+      "summary": "顾名思义，此术只是一种无声地通过击中对手的要害来杀死对手的方法，通常是从后面用刀片。此外，由于使用者移动无声，因此无法预测和防御攻击。"
+    },
+    {
+      "id": "JT-OTHER-0181",
+      "source_title": "Six Paths Yang Power",
+      "summary": "六道阳之力是大筒木羽衣授予鸣人的力量，以右手掌上的太阳状印记为标志，并与佐助的六道阴之力共同用于六道·地爆天星。"
+    },
+    {
+      "id": "JT-OTHER-0182",
+      "source_title": "Six Paths Yin Power",
+      "summary": "六道阴之力是大筒木羽衣授予佐助的力量，以左手掌上的新月状印记为标志，并与鸣人的六道阳之力共同用于六道·地爆天星。"
+    },
+    {
+      "id": "JT-OTHER-0183",
+      "source_title": "Slug Great Division",
+      "summary": "蛞蝓是一种软体动物，它的身体天生就难以抓住，这反过来又赋予了它天然的防御能力。作为额外的防御，当它受到物理攻击时，它可以将自己的身体分成无数个更小的版本，从而使攻击无效。"
+    },
+    {
+      "id": "JT-OTHER-0184",
+      "source_title": "Snake Clone Technique",
+      "summary": "使用蛇作为催化剂，使用者可以创造自己的分身或功能类似于影分身的物体。当受到足够的伤害时，分身将恢复成蛇。"
+    },
+    {
+      "id": "JT-OTHER-0185",
+      "source_title": "Soft Physique Modification",
+      "summary": "在执行此术之前，必须首先修改使用者的身体以增加其灵活性和弹性。完成此操作后，使用者可以随心所欲地伸展和弯曲自己的身体，将其伸展到很大的长度并再次缩回。"
+    },
+    {
+      "id": "JT-OTHER-0186",
+      "source_title": "Spider Bind",
+      "summary": "鬼童丸从嘴里吐出一张丝线，丝网的大小根据目标的距离和他打算捕获的数量进行调整。一旦接触，网络就会将目标推离鬼童丸并包裹住他们，将他们困住。"
+    },
+    {
+      "id": "JT-OTHER-0187",
+      "source_title": "Spider Cocoon",
+      "summary": "鬼童丸将目标囚禁在蜘蛛丝茧中。由于蜘蛛丝在目标周围被拉得很紧，一旦被困住就无法移动。"
+    },
+    {
+      "id": "JT-OTHER-0188",
+      "source_title": "Spider Sticking Spit",
+      "summary": "鬼童丸从嘴里向目标吐出一条粗绳子。绳子非常粘，因为所有网都分层在一起，鬼童丸可以通过改变流入绳子的查克拉量来进一步增加（或减少）粘性。"
+    },
+    {
+      "id": "JT-OTHER-0189",
+      "source_title": "Spider Sticky Gold",
+      "summary": "鬼童丸在他的体内产生一种金色的金属物质，他可以像唾液一样聚集在嘴里，或者像汗水一样从毛孔中分泌出来。它最初被创造出来时具有很强的延展性，但一旦与空气接触，它就会迅速硬化，变得像钢铁一样坚固。"
+    },
+    {
+      "id": "JT-OTHER-0190",
+      "source_title": "Spider War Bow: Terrible Split",
+      "summary": "鬼童丸首先小心地从嘴里吐出蜘蛛粘金，创造出一把战弓。有了它，他能够射箭，利用他身体的八肢来增强弓的张力，超出常人的能力。"
+    },
+    {
+      "id": "JT-OTHER-0191",
+      "source_title": "Spider Web Area",
+      "summary": "蜘蛛巢域会在区域内铺设大量蛛丝感知线。鬼童丸持续向蛛丝输送查克拉，借由细微振动察觉任何接触者和空气扰动。"
+    },
+    {
+      "id": "JT-OTHER-0192",
+      "source_title": "Spider Web Flower",
+      "summary": "鬼童丸从嘴里向一个或多个目标吐出几张小网；网队的小尺寸意味着他们可以快速生产，增加了他命中目标的机会。这些网用查克拉制成粘性，使它们在接触时粘附在目标上，并将它们粘附到网接触到的任何其他物体或表面上。"
+    },
+    {
+      "id": "JT-OTHER-0193",
+      "source_title": "Spider Web Unrolling",
+      "summary": "鬼童丸创造了一个线团，然后用六只手臂将其展开成一张大网。他最常在空中使用此功能，让网络散布到更广阔的区域。"
+    },
+    {
+      "id": "JT-OTHER-0194",
+      "source_title": "Spiralling Absorption Sphere",
+      "summary": "鸣人在九尾查克拉模式下使用他的查克拉手臂，在手中形成一个大玉螺旋丸，然后将其扔到背上。然后，他使用额外的查克拉手臂抓住敌人并将其粉碎到球体中，模拟受害者被“吸收”到螺旋丸中。"
+    },
+    {
+      "id": "JT-OTHER-0195",
+      "source_title": "Spiralling Serial Spheres",
+      "summary": "螺旋连丸是常规螺旋丸的双手版本。"
+    },
+    {
+      "id": "JT-OTHER-0196",
+      "source_title": "Spiralling Strife Spheres",
+      "summary": "鸣人在处于九尾查克拉模式时，会使用查克拉臂在头顶上方形成多个螺旋丸。然后，他使用额外的手臂握住螺旋丸并同时攻击多个对手。"
+    },
+    {
+      "id": "JT-OTHER-0197",
+      "source_title": "Spirit Transformation Technique",
+      "summary": "这种高度通用的术可以让使用者的灵魂离开他们的身体。通过占据目标，灵魂可以压制和崩溃受害者的精神，杀死他们，或者自由地操纵他们的行动。"
+    },
+    {
+      "id": "JT-OTHER-0198",
+      "source_title": "Spore Technique",
+      "summary": "白绝能够将孢子大小的寄生虫分身植入他人的身体上，以对其进行远程监控。由于这些分身寄生在受害者的查克拉上，并且没有自己的查克拉，因此标准的感官能力无法检测到它们。"
+    },
+    {
+      "id": "JT-OTHER-0199",
+      "source_title": "Storm Release: Laser Circus",
+      "summary": "该术会产生多束光束并将其射向敌人。首先，当该技能被激活时，明亮的能量光环会在使用者的手周围扩散，然后它会包围使用者的手，并从那里向敌人射出光束。"
+    },
+    {
+      "id": "JT-OTHER-0200",
+      "source_title": "Substitute Technique",
+      "summary": "替代术是白绝独有的术。它允许他出于各种目的假设任何个人的身份：虽然本质上与标准变身术相似，但它拥有更大的实用性。"
+    },
+    {
+      "id": "JT-OTHER-0201",
+      "source_title": "Successive Shots Sand Drizzle",
+      "summary": "我爱罗向对手快速发射子弹般的沙子，一举将其击倒。"
+    },
+    {
+      "id": "JT-OTHER-0202",
+      "source_title": "Super Beast Imitating Drawing",
+      "summary": "超兽伪画是一种允许使用者根据使用者意愿制作墨迹绘图动画的术。"
+    },
+    {
+      "id": "JT-OTHER-0203",
+      "source_title": "Super God Imitating Drawing",
+      "summary": "超神伪画是掌握了超兽模仿图的人可以使用的术。"
+    },
+    {
+      "id": "JT-OTHER-0204",
+      "source_title": "Super Mini-Tailed Beast Ball",
+      "summary": "在九尾查克拉模式下，鸣人会收集并平衡必要的黑白查克拉，形成一个浓缩的小型尾兽玉。撞击后，球会爆炸，产生非常大的爆炸半径。"
+    },
+    {
+      "id": "JT-OTHER-0205",
+      "source_title": "Super Multi-Size Technique",
+      "summary": "这是秋道家族的多尺寸术的增强版。它本质上与基本版本相同，尽管使用者变得明显更大，其规模与山相当。"
+    },
+    {
+      "id": "JT-OTHER-0206",
+      "source_title": "Sword of Kusanagi: Longsword of the Sky",
+      "summary": "该术允许大蛇丸控制草薙剑。当他手指一动时，草薙剑也会做出同样的动作，甚至到了在空中移动的程度。"
+    },
+    {
+      "id": "JT-OTHER-0207",
+      "source_title": "Tailed Beast Ball",
+      "summary": "尾兽玉是尾兽与完全尾兽化人柱力的代表性奥义。使用者按比例凝聚阴、阳查克拉并压缩成球，随后吞入口中引爆或直接发射。"
+    },
+    {
+      "id": "JT-OTHER-0208",
+      "source_title": "Tailed Beast Heavy Cannon",
+      "summary": "尾兽重炮会在口中形成尾兽玉并把它转化为持续的高密度查克拉光束，用直线贯穿和扫荡大范围目标。"
+    },
+    {
+      "id": "JT-OTHER-0209",
+      "source_title": "Tailed Beast Rasengan",
+      "summary": "尾兽螺旋丸是鸣人尝试以螺旋丸原理模拟尾兽玉的未完成术，需要同时平衡阴、阳查克拉；它后来成为开发相关奥义的基础。"
+    },
+    {
+      "id": "JT-OTHER-0210",
+      "source_title": "Tailed Beast Telepathy",
+      "summary": "所有尾兽都拥有的一种与生俱来的技能，可以让它们在被称为“潜意识”的更深层次上进行交流。这种通讯与人柱力及其尾兽所使用的通讯方式不同，因为没有封印或其他限制，所有尾兽及其各自的人柱力都可以使用。"
+    },
+    {
+      "id": "JT-OTHER-0211",
+      "source_title": "Telescope Technique",
+      "summary": "通过凝视水晶球，使用者可以看到他们知道查克拉特征的任何人的当前活动。使用者可以从任何位置查看主题，无论距离或潜在障碍物如何，这使其成为情报收集的理想选择。"
+    },
+    {
+      "id": "JT-OTHER-0212",
+      "source_title": "Temporary Paralysis Technique",
+      "summary": "使用此术会导致一个或多个目标在物理上无法动弹，就好像它们被无形的钢绳绑住一样。因为这是一种相对简单的术，所以即使下忍也应该能够执行它。"
+    },
+    {
+      "id": "JT-OTHER-0213",
+      "source_title": "Ten Directions",
+      "summary": "十方是大筒木芝居使用的神术。它使使用者能够预见未来。"
+    },
+    {
+      "id": "JT-OTHER-0214",
+      "source_title": "Tenpenchii",
+      "summary": "通过利用其不可估量的查克拉干扰自然能量，十尾能够同时制造各种自然灾害，摧毁周围地区，并以自身为中心。该术涉及的现象包括：地震、洪水、雷暴和龙卷风。"
+    },
+    {
+      "id": "JT-OTHER-0215",
+      "source_title": "Third Eye",
+      "summary": "我爱罗用沙子创造了一只眼睛，无论它在哪里创造出来，它都会悬浮在空气中。 我爱罗使用查克拉将眼睛与其视神经连接起来，使他能够看到第三只眼视野中的任何内容。"
+    },
+    {
+      "id": "JT-OTHER-0216",
+      "source_title": "Thousand Hands Manipulation Force",
+      "summary": "千手操武让第三代风影人傀儡展开左臂的机关，释放出大量傀儡手臂追击和捕捉目标；手臂中还暗藏毒雾、苦无与钢索等机关。"
+    },
+    {
+      "id": "JT-OTHER-0217",
+      "source_title": "Toad Flatness — Shadow Manipulation Technique",
+      "summary": "使用者首先将自己的查克拉注入目标的影子中。然后，使用者将自己压平成纸一样薄，并与目标的影子融合，让他们完全控制目标的思想和身体。"
+    },
+    {
+      "id": "JT-OTHER-0218",
+      "source_title": "Toad Oil Bullet",
+      "summary": "使用者将他们的查克拉转化为一种极其粘稠的油，并将其以巨大的质量或一连串的小子弹的形式吐出。那些被它缠住的人会发现很难移动，而且仅仅用普通水洗掉油污并不容易。"
+    },
+    {
+      "id": "JT-OTHER-0219",
+      "source_title": "Tongue Tooth Sticky Acid",
+      "summary": "蛞蝓从口中释放出一种酸性糊状物，由于蛞蝓的大小和高度，这种糊状物会扩散到大范围。酸的浓度和密度足以熔化石头。"
+    },
+    {
+      "id": "JT-OTHER-0220",
+      "source_title": "Top Transformed Buddha",
+      "summary": "在创造出拥有数百或数千只手的巨大木雕像后，使用者同时利用所有这些手向目标发出强大的打击。由于所涉及的拳头数量巨大，防御全部拳头几乎是不可能的。"
+    },
+    {
+      "id": "JT-OTHER-0221",
+      "source_title": "Transformation Technique",
+      "summary": "变身术允许使用者采用他们选择的任何外观。"
+    },
+    {
+      "id": "JT-OTHER-0222",
+      "source_title": "Transformation: Adamantine Staff",
+      "summary": "使用者变身为一根法杖，供召唤者用作武器；阎魔的杖形态是猿飞日斩的首选武器，他在数十年的战争中大量使用它，为他赢得了“忍者之神”的声誉。法杖坚硬如钻石，破坏力极强。"
+    },
+    {
+      "id": "JT-OTHER-0223",
+      "source_title": "Transmission Wood",
+      "summary": "将木分身转化为种子后，种子可以通过将其种植在目标身上或让其摄入来追踪目标。只有该术的使用者才能检测到种子的传输。"
+    },
+    {
+      "id": "JT-OTHER-0224",
+      "source_title": "Tree Climbing Practice",
+      "summary": "爬树修行是一种用于获得更多查克拉控制技能的训练方法。这种训练包括将一定数量的查克拉集中到脚底，并用它来爬树，而无需用手。"
+    },
+    {
+      "id": "JT-OTHER-0225",
+      "source_title": "Turning into a Frog Technique",
+      "summary": "通过触摸目标的额头，然后根据使用者形成的心理图像，目标就会变成树蛙。这主要是用来审问几名战俘的。"
+    },
+    {
+      "id": "JT-OTHER-0226",
+      "source_title": "Twin Fangs Slash",
+      "summary": "出云和虎彻使用苦无刀从两侧攻击敌人并将其刺穿。"
+    },
+    {
+      "id": "JT-OTHER-0227",
+      "source_title": "Twin Snakes Mutual Death Technique",
+      "summary": "大蛇丸将该术传授给御手洗红豆。使用者抓住目标受害者的一只手并迫使其协助执行必要的手印。"
+    },
+    {
+      "id": "JT-OTHER-0228",
+      "source_title": "Uchiha Style Blade Technique: Hagoromo",
+      "summary": "通过不断地将查克拉注入其中，该术可以提高刀片的锋利度和耐久力，防止其碎裂。同时，这是一项微妙的术，需要持续集中注意力才能保持活跃。"
+    },
+    {
+      "id": "JT-OTHER-0229",
+      "source_title": "Uchiha Style Kenjutsu",
+      "summary": "这是由宇智波佐助开发和掌握的一种独特的剑术风格，他将这项技能传授给了他的学生博人。"
+    },
+    {
+      "id": "JT-OTHER-0230",
+      "source_title": "Ultimately Hard Absolute Defence: Shield of Shukaku",
+      "summary": "最硬绝对防御·守鹤之盾会从地下提取高密度矿物并与沙混合，塑成守鹤外形的坚固盾牌，用于正面抵挡高威力攻击。"
+    },
+    {
+      "id": "JT-OTHER-0231",
+      "source_title": "Ultra-Big Ball Rasengan",
+      "summary": "超大玉螺旋丸是大玉螺旋丸的更强大版本。"
+    },
+    {
+      "id": "JT-OTHER-0232",
+      "source_title": "Ultra-Many Spiralling Serial Spheres",
+      "summary": "在创造了大量的影分身之后，鸣人和他的分身各自创造了一个螺旋丸，以毁灭性的效果轰炸他们的目标。"
+    },
+    {
+      "id": "JT-OTHER-0233",
+      "source_title": "Vanishing Facial Copy Technique",
+      "summary": "使用者将手放在目标的脸上，让他们可以拿走这张脸并将其用作自己的脸。因为他们使用的是真实的面孔而不是伪装，所以使用者不会因为不完美或小缺陷而面临被发现的风险。"
+    },
+    {
+      "id": "JT-OTHER-0234",
+      "source_title": "Water Surface Walking Practice",
+      "summary": "这种训练方法是为了获得更好的查克拉控制。为此，使用者必须从脚底发出持续的查克拉流，并利用排斥力在水面上行走。"
+    },
+    {
+      "id": "JT-OTHER-0235",
+      "source_title": "Wild Lion's Mane Technique",
+      "summary": "此术利用查克拉暂时增强头部的新陈代谢，并控制头发因此而变长。加长的头发中还有查克拉流淌，使其硬度堪比钢丝。"
+    },
+    {
+      "id": "JT-OTHER-0236",
+      "source_title": "Wisdom Wolf Decay",
+      "summary": "知狼朽是犀犬独有的忍术。"
+    },
+    {
+      "id": "JT-OTHER-0237",
+      "source_title": "Wood Clone Technique",
+      "summary": "使用查克拉将使用者自身的细胞转变为植物而创造的分身。分身的功能可以像用于身体替换术的木制假人一样简单，也可以完全移动并能够执行忍术。"
+    },
+    {
+      "id": "JT-OTHER-0238",
+      "source_title": "Wood Release Secret Technique: Nativity of a World of Trees",
+      "summary": "千手柱间创造了茂密的树木生长，并使用他的查克拉控制树木的生长方式。树木的生命力强大到足以在它们发芽时撕裂大地，并进一步刺穿它们遇到的任何其他障碍物。"
+    },
+    {
+      "id": "JT-OTHER-0239",
+      "source_title": "Wood Release: Advent of a World of Flowering Trees",
+      "summary": "利用木遁的固有特性（允许使用者强制树木在任何表面上快速生长），使用者创造了一片茂密的开花树木森林。在森林形成期间，使用者可以让树枝在森林形成完成之前限制任何试图攻击使用者的目标。"
+    },
+    {
+      "id": "JT-OTHER-0240",
+      "source_title": "Wood Release: Cutting Technique",
+      "summary": "这是一种多功能术，使用者可以从身上产生锋利的木刺，以制作类似于临时剑的短程武器，或者将它们用作射弹，可以远程触发树枝的生长，刺穿敌人，结果通常会导致目标死亡。"
+    },
+    {
+      "id": "JT-OTHER-0241",
+      "source_title": "Wood Release: Four-Pillar House Technique",
+      "summary": "通过将查克拉送入地下，将植物的根部转化为原料。此术允许通过强制加速生长来建造建筑物。"
+    },
+    {
+      "id": "JT-OTHER-0242",
+      "source_title": "Wood Release: Four-Pillar Prison Technique",
+      "summary": "使用者将查克拉转化为地下的木材，让它快速生长，形成一座木制监狱。监狱的大小取决于使用者的想象。"
+    },
+    {
+      "id": "JT-OTHER-0243",
+      "source_title": "Wood Release: Great Forest Technique",
+      "summary": "将自己的手臂变成大树的功法。利用查克拉，组织在细胞水平上转化为树木。"
+    },
+    {
+      "id": "JT-OTHER-0244",
+      "source_title": "Wood Release: Great Spear Tree",
+      "summary": "带土从地里拔出几根粗大的树根，并用它们来粉碎他的对手。"
+    },
+    {
+      "id": "JT-OTHER-0245",
+      "source_title": "Wood Release: Hotei Technique",
+      "summary": "使用者创造出许多巨大的木手，从地下向上伸出，然后包围并试图限制选定的敌人。这些手掌的大小，每一只都有尾兽大小。"
+    },
+    {
+      "id": "JT-OTHER-0246",
+      "source_title": "Wood Release: Nativity of a Sea of Trees",
+      "summary": "在形成必要的密封后，大和能够在短短的时间内将一个区域变成一片广阔的森林，树木和草丛从他所在的任何地形上生长出来。该术与柱间的标志性术非常相似，尽管规模较小。"
+    },
+    {
+      "id": "JT-OTHER-0247",
+      "source_title": "Wood Release: Serial Pillar Houses Technique",
+      "summary": "木遁的放大版：四柱房屋术，大和不是创造单个房屋，而是一次创造多个房屋。由于用此术创造的结构数量巨大，他似乎很快就筋疲力尽了。"
+    },
+    {
+      "id": "JT-OTHER-0248",
+      "source_title": "Wood Release: Stocks",
+      "summary": "木遁·枷会生成木桩或木质拘束具限制目标，同时压制目标的查克拉，使被俘者更难挣脱或施术反击。"
+    },
+    {
+      "id": "JT-OTHER-0249",
+      "source_title": "Wood Release: Wood Dragon Technique",
+      "summary": "木遁·木龙之术会创造巨大的木龙，用于缠绕、压制或攻击目标；木龙还能吸收接触对象的查克拉，足以束缚尾兽。"
+    },
+    {
+      "id": "JT-OTHER-0250",
+      "source_title": "Wood Release: Wood Human Technique",
+      "summary": "在形成所需的手印后，使用者用木头创造出一个巨大的雕像般的生物。这种具有全身和鬼脸的人形生物通常是用木龙缠绕在其躯干上制成的，通常在战斗中作为化身使用。"
+    },
+    {
+      "id": "JT-OTHER-0251",
+      "source_title": "Wood Release: Wood Locking Wall",
+      "summary": "这是一个用途极其广泛的招式，它利用查克拉来激活地下的根部，并以使用该术的人为参考点，使木柱从左右出现。木柱以圆顶形状连接在一起，使用者位于中心。"
+    },
+    {
+      "id": "JT-SEN-0003",
+      "source_title": "Chain",
+      "summary": "使用者可以让他们的手臂伸展，覆盖的距离远大于他们自己的身体，让他们可以做很多事情，比如找回倒下的盟友或扔掉他们的对手。"
+    },
+    {
+      "id": "JT-SEN-0004",
+      "source_title": "Cursed Seal of Earth",
+      "summary": "地之咒印是大蛇丸最强的咒印之一，与天之咒印对应。解放后会持续侵蚀并改变宿主身体，以换取大幅强化的查克拉和战斗能力。"
+    },
+    {
+      "id": "JT-SEN-0005",
+      "source_title": "Cursed Seal of Heaven",
+      "summary": "天之咒印是大蛇丸最强的咒印之一，与地之咒印对应。解放后会持续侵蚀并改变宿主身体，以换取大幅强化的查克拉和战斗能力。"
+    },
+    {
+      "id": "JT-SEN-0006",
+      "source_title": "Fighting Tongue Bind",
+      "summary": "舌战缚将仙术查克拉集中到志麻的舌头，使其伸长并追踪气味，随后卷住目标进行束缚。"
+    },
+    {
+      "id": "JT-SEN-0007",
+      "source_title": "Fighting Tongue Slash",
+      "summary": "舌战斩将仙术查克拉集中到深作的舌头，使其变得坚硬锋利，并以高速伸出切开岩石、金属或敌人。"
+    },
+    {
+      "id": "JT-SEN-0008",
+      "source_title": "Great Snake Thrust",
+      "summary": "大蛇突是在仙人模式下把查克拉蛇向前刺出，以伸长的蛇形肢体突袭并贯穿对手。"
+    },
+    {
+      "id": "JT-SEN-0009",
+      "source_title": "Multiple Lotus Nonself Connected Cannons",
+      "summary": "多莲不自连炮让仙人化第二状态的使用者长出多组喷射器般的附肢，快速吸收自然能量后释放大范围查克拉爆炸。"
+    },
+    {
+      "id": "JT-SEN-0010",
+      "source_title": "Orochimaru's Juinjutsu",
+      "summary": "大蛇丸之咒印术是一种基于转换的诅咒印章，大蛇丸可以将其应用于其他人以用于各种目的。"
+    },
+    {
+      "id": "JT-SEN-0011",
+      "source_title": "Sage Art Wood Release: True Several Thousand Hands",
+      "summary": "仙法木遁·真数千手是一种创造出可由使用者自由控制的巨型多手木制雕像的术。"
+    },
+    {
+      "id": "JT-SEN-0012",
+      "source_title": "Sage Art: Amphibian Technique",
+      "summary": "仙法·两生之术由深作和志麻与自来也融合，帮助他持续收集自然能量、维持仙人模式，并让三者能够协同施术。"
+    },
+    {
+      "id": "JT-SEN-0013",
+      "source_title": "Sage Art: Frog Call",
+      "summary": "仙法·蛙鸣由深作与志麻把仙术查克拉集中在喉部，再同时发出强烈蛙鸣；声波可干扰并暂时麻痹范围内的目标。"
+    },
+    {
+      "id": "JT-SEN-0014",
+      "source_title": "Sage Art: Inorganic Reincarnation",
+      "summary": "仙法·无機転生允许使用者通过在大气中充满自然能量来为无机物质注入生命。"
+    },
+    {
+      "id": "JT-SEN-0015",
+      "source_title": "Sage Art: Many Ultra-Big Ball Spiralling Serial Spheres",
+      "summary": "仙法·超大玉螺旋多连丸是漩涡鸣人使用的一项术，它通过自然能量增强了他的螺旋丸。"
+    },
+    {
+      "id": "JT-SEN-0016",
+      "source_title": "Sage Art: Storm Release Light Fang",
+      "summary": "仙法·岚遁光牙把仙术查克拉注入岚遁，从口中射出高速细光束；光束切割力极强，甚至能够斩断求道玉。"
+    },
+    {
+      "id": "JT-SEN-0017",
+      "source_title": "Sage Art: White Rage Technique",
+      "summary": "仙法·白激之术是龙地洞仙术。使用者吐出龙形能量体，使其环绕光球高速旋转，产生强光与剧烈声振，扰乱对手的视觉、听觉和身体平衡。"
+    },
+    {
+      "id": "JT-SEN-0018",
+      "source_title": "Sage Art: Yin Release Lightning Dispatch",
+      "summary": "仙法·阴遁雷派是宇智波斑使用的忍术。"
+    },
+    {
+      "id": "JT-SEN-0019",
+      "source_title": "Sage Mode",
+      "summary": "仙人模式是将自然能量与自身查克拉平衡融合、生成仙术查克拉的强化状态，可提升感知与身体能力，并强化原有忍术。"
+    },
+    {
+      "id": "JT-SEN-0020",
+      "source_title": "Sage Transformation",
+      "summary": "仙人化会让使用者吸收自然能量并改变身体形态，可生成武器般的肢体，同时提升力量、速度、感知和耐久力；过度使用也可能增强攻击性并导致失控。"
+    },
+    {
+      "id": "JT-SEN-0021",
+      "source_title": "Six Paths Sage Mode",
+      "summary": "六道仙人模式是羽衣授予鸣人的特殊强化形态，使他能够运用六道仙术，显著提升感知、飞行、体术与忍术能力。"
+    },
+    {
+      "id": "JT-SEN-0022",
+      "source_title": "Six Paths Senjutsu",
+      "summary": "六道仙术是融合六道之力的特殊仙术体系，由大筒木羽衣等人使用；其使用者能操纵求道玉，并以仙术力量强化攻防。"
+    },
+    {
+      "id": "JT-SEN-0023",
+      "source_title": "Six Paths: Kunitsukami",
+      "summary": "六道·国津守会形成巨大的多臂查克拉化身，能够与完全体须佐能乎抗衡，并可借助求道玉进行攻击或防御。"
+    },
+    {
+      "id": "JT-SEN-0024",
+      "source_title": "Strange Transmission Distant Shadow",
+      "summary": "传异远影让兜借助左近的血继限界，从身体上复制出已吸收细胞来源者的上半身，并让分身施展对应的血继限界、秘术或忍术。"
+    },
+    {
+      "id": "JT-SPACE-0002",
+      "source_title": "Amenotejikara",
+      "summary": "天手力是佐助借助轮回眼施展的时空间忍术，可在有效范围内瞬间与人或物交换位置，也能让两个目标彼此换位。"
+    },
+    {
+      "id": "JT-SPACE-0003",
+      "source_title": "Amplification Summoning Technique",
+      "summary": "增幅通灵之术会在通灵兽遭受攻击时触发，使其分裂并增殖出更多个体；持续攻击反而会增加其数量和包围能力。"
+    },
+    {
+      "id": "JT-SPACE-0004",
+      "source_title": "Binding Snake Glare Spell",
+      "summary": "使用者召唤一两条大蛇从袖子中爬出，盘绕捕获它们的敌人。这是活捉某人或通过束缚造成伤害的绝佳术，如果情况需要，蛇可以用毒牙咬伤受害者。"
+    },
+    {
+      "id": "JT-SPACE-0005",
+      "source_title": "Flying Thunder Formation Technique",
+      "summary": "飞雷阵之术由三名火影护卫队成员共同施展。三人同步集中查克拉后，可把自己或接触到的目标传送到预定地点，但准备速度慢于飞雷神之术。"
+    },
+    {
+      "id": "JT-SPACE-0006",
+      "source_title": "Flying Thunder God — Second Step",
+      "summary": "飞雷神·二段是水门从飞雷神之术开发的术。水门先是扔出飞雷神苦无，直接攻击对手；一旦苦无接近目标，甚至超过目标，他就会传送到所述苦无，立即从目标的盲点攻击他的目标。"
+    },
+    {
+      "id": "JT-SPACE-0007",
+      "source_title": "Flying Thunder God Mutually Instantaneous Revolving Technique",
+      "summary": "飞雷神互瞬回之术需要两名飞雷神使用者预先在彼此身上留下术式，再同时交换双方位置，用于救援、转移目标或扰乱敌人。"
+    },
+    {
+      "id": "JT-SPACE-0008",
+      "source_title": "Flying Thunder God Slash",
+      "summary": "飞雷神斩将飞雷神术式与刀术结合：使用者瞬移至已标记目标的死角，并在出现的瞬间完成高速斩击。"
+    },
+    {
+      "id": "JT-SPACE-0009",
+      "source_title": "Flying Thunder God Technique",
+      "summary": "飞雷神之术是千手扉间开发的S级时空间忍术。使用者先在目标或地点留下术式，之后便可无视常规移动距离，瞬间转移到任一有效标记处。"
+    },
+    {
+      "id": "JT-SPACE-0010",
+      "source_title": "Formation of Ten Thousand Snakes",
+      "summary": "凭借此术，无数召唤蛇从大蛇丸的口中爬出，追杀敌人。如此压倒性的数量，形成了真正的“蛇墙”，让防御和躲避变得毫无意义。"
+    },
+    {
+      "id": "JT-SPACE-0011",
+      "source_title": "Hidden Shadow Snake Hands",
+      "summary": "使用者从袖子下召唤出几条蛇，将它们部署到目标身上以出其不意。蛇按照召唤者的命令行事，通过咬住或勒紧目标来攻击或捕获目标。"
+    },
+    {
+      "id": "JT-SPACE-0012",
+      "source_title": "Kamui Running",
+      "summary": "带土冲向目的地，使用神威使他的身体完全无形，避免受到任何攻击的伤害。"
+    },
+    {
+      "id": "JT-SPACE-0013",
+      "source_title": "Kamui Running: Brutal",
+      "summary": "带土使用神威冲向对手，用手臂上长出的树枝刺穿他们。"
+    },
+    {
+      "id": "JT-SPACE-0014",
+      "source_title": "Kamui Shuriken",
+      "summary": "神威手里剑由卡卡西的须佐能乎投掷。手里剑命中或掠过目标时会发动神威，把接触到的部分扭曲并转移到神威空间。"
+    },
+    {
+      "id": "JT-SPACE-0015",
+      "source_title": "Many Hidden Shadow Snake Hands",
+      "summary": "通过增加隐影蛇手召唤的蛇的数量，这个忍术的多样性也随之增加。大蛇群瞬间出现，每条蛇都各自做出恐吓、牵制、捕捉敌人的协同攻击。"
+    },
+    {
+      "id": "JT-SPACE-0016",
+      "source_title": "Rain of Spiders",
+      "summary": "鬼童丸在目标上方召唤巨大蜘蛛。然后巨大蜘蛛会产生一袋小蜘蛛，许多小蜘蛛如雨点般落在目标上，在落下时旋转出一串串查克拉。"
+    },
+    {
+      "id": "JT-SPACE-0017",
+      "source_title": "Reverse Summoning Technique",
+      "summary": "逆通灵之术与常规通灵方向相反，可由通灵兽把与其签订契约的忍者召唤到自身所在位置，也可借助预先布置的通灵式把目标转移到指定地点。"
+    },
+    {
+      "id": "JT-SPACE-0018",
+      "source_title": "Spiralling Flash Super Round Dance Howl Style Three",
+      "summary": "螺旋闪光超轮舞吼三式由水门设计，先在周围散布多枚飞雷神苦无，再连续瞬移，从多个死角高速攻击目标。"
+    },
+    {
+      "id": "JT-SPACE-0019",
+      "source_title": "Summoning Rinnegan",
+      "summary": "通灵轮回眼让轮回眼的畜生道召唤人或动物，并在召唤物眼中复制轮回眼；双方共享视野，施术者还能通过黑棒远程控制召唤物。"
+    },
+    {
+      "id": "JT-SPACE-0020",
+      "source_title": "Summoning Technique",
+      "summary": "通灵之术通过契约和血作为媒介，把动物、物品或其他目标从远处瞬间召唤到施术者所在位置；大型目标通常需要更多查克拉。"
+    },
+    {
+      "id": "JT-SPACE-0021",
+      "source_title": "Summoning: Demonic Statue of the Outer Path",
+      "summary": "通灵·外道魔像是轮回眼使用者召唤并操纵外道魔像的术，可用于拘束尾兽、抽取查克拉或作为十尾复活的容器。"
+    },
+    {
+      "id": "JT-SPACE-0022",
+      "source_title": "Summoning: Food Cart Destroyer Technique",
+      "summary": "使用者在空中召唤一只蟾蜍，蟾蜍掉到地上。撞击时，地面会震动，结构会被破坏，使用者的目标会被蟾蜍的重量压住，无法移动。"
+    },
+    {
+      "id": "JT-SPACE-0023",
+      "source_title": "Summoning: Impure World Reincarnation",
+      "summary": "通灵·秽土转生是一种将死者的灵魂绑定到活体容器上的忍术，将其恢复到生命最后时刻的状态，以便执行召唤者的命令。它最初由千手扉间创造，一段时间后他宣布它为禁术。"
+    },
+    {
+      "id": "JT-SPACE-0024",
+      "source_title": "Summoning: Quintuple Rashōmon",
+      "summary": "通灵·五重罗生门会连续召唤五座罗生门，以多层偏转和削弱来袭攻击；使用者无需让五扇门保持同一朝向。"
+    },
+    {
+      "id": "JT-SPACE-0025",
+      "source_title": "Summoning: Rashōmon",
+      "summary": "通灵·罗生门会召唤刻有鬼面的巨大门扉作为防御壁，用厚重门体正面阻挡或削弱强力攻击。"
+    },
+    {
+      "id": "JT-SPACE-0026",
+      "source_title": "Summoning: Toad Mouth Bind",
+      "summary": "通灵·蛤蟆口缚不会召唤整只蛤蟆，而是把妙木山巨岩宿蛤蟆的食道召唤到目标周围，以坚韧肉壁困住并消化敌人。"
+    },
+    {
+      "id": "JT-SPACE-0027",
+      "source_title": "Summoning: Toad Shop Technique",
+      "summary": "通灵·蛤蟆见世之术召唤能伪装成建筑物的妙木山蛤蟆，用作隐蔽据点或诱捕设施；进入建筑的目标会落入蛤蟆体内。"
+    },
+    {
+      "id": "JT-SPACE-0028",
+      "source_title": "Summoning: Triple Rashōmon",
+      "summary": "通灵·三重罗生门是标准召唤：罗生门的升级版，顾名思义，它召唤的不是一个，而是三个来势汹汹的罗生门。此术需要两道召唤印才能完成，这些门的作用与单个罗生门相同，但防御力却增加了三倍。"
+    },
+    {
+      "id": "JT-SPACE-0029",
+      "source_title": "Yomotsu Hirasaka",
+      "summary": "黄泉比良坂是大筒木一族成员使用的血继网罗术，据说是所有时空忍术的鼻祖。"
+    }
+  ]
+}

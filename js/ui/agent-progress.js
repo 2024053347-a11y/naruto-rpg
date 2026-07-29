@@ -69,7 +69,7 @@ class AgentProgress extends HTMLElement {
 
   _onStream(agent, chunk) {
     if (!chunk) return;
-    // Planner 的未来推演可以展示；NPC 私密意图与审校记录不能伪装成正文。
+    // 公开的规划流可以展示；NPC 私密意图与审校记录不能伪装成正文。
     if (String(agent || '').startsWith('char-') || String(agent || '').startsWith('critic-')) return;
     if (this._streamAgent !== agent) {
       this._streamAgent = agent;
@@ -414,7 +414,7 @@ class AgentProgress extends HTMLElement {
 
     let stageIdx = STAGES.findIndex(s => s.key === this._currentStage);
     if (stageIdx === -1 && this._currentStage === 'done') stageIdx = STAGES.length - 1;
-    
+
     // Calculate fill percentage
     const progressPct = Math.max(0, (stageIdx / (STAGES.length - 1)) * 100);
     this._fillEl.style.width = `${progressPct}%`;

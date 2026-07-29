@@ -163,7 +163,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土将目标吸入他的神威空间或将部分目标身体转移到该空间，有效地使部分目标消失。",
+        "summary": "天手力是佐助借助轮回眼施展的时空间忍术，可在有效范围内瞬间与人或物交换位置，也能让两个目标彼此换位。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -206,7 +206,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -226,7 +227,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -276,7 +277,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土使用神威使自己的身体部分或全部虚体化，使攻击穿过他而不造成伤害。在虚体化期间，他不能攻击，但可以移动到该空间的另一部分并重新实体化。",
+        "summary": "增幅通灵之术会在通灵兽遭受攻击时触发，使其分裂并增殖出更多个体；持续攻击反而会增加其数量和包围能力。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -319,7 +320,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -339,7 +341,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -389,7 +391,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土从神威空间中取出物品或投射物，允许他从意想不到的方向攻击。",
+        "summary": "使用者召唤一两条大蛇从袖子中爬出，盘绕捕获它们的敌人。这是活捉某人或通过束缚造成伤害的绝佳术，如果情况需要，蛇可以用毒牙咬伤受害者。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -444,7 +446,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -464,7 +467,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -514,7 +517,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土将他接触的人或物吸入神威空间。",
+        "summary": "飞雷阵之术由三名火影护卫队成员共同施展。三人同步集中查克拉后，可把自己或接触到的目标传送到预定地点，但准备速度慢于飞雷神之术。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -569,7 +572,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -589,7 +593,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -640,7 +644,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "带土将神威空间的一部分与现实世界重叠，允许他捕获范围内的目标或保护盟友。",
+        "summary": "飞雷神·二段是水门从飞雷神之术开发的术。水门先是扔出飞雷神苦无，直接攻击对手；一旦苦无接近目标，甚至超过目标，他就会传送到所述苦无，立即从目标的盲点攻击他的目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -683,7 +687,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -703,7 +708,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -753,7 +758,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "卡卡西使用神威扭曲空间以偏转攻击或将目标的部分身体送入神威空间。",
+        "summary": "飞雷神互瞬回之术需要两名飞雷神使用者预先在彼此身上留下术式，再同时交换双方位置，用于救援、转移目标或扰乱敌人。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -802,7 +807,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -822,7 +828,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -873,7 +879,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "大筒木一式将物体缩小到微观尺寸，使其在常规视野中消失。",
+        "summary": "飞雷神斩将飞雷神术式与刀术结合：使用者瞬移至已标记目标的死角，并在出现的瞬间完成高速斩击。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -922,7 +928,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -942,7 +949,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -992,7 +999,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "大筒木一族使用时空术在不同维度之间旅行。",
+        "summary": "飞雷神之术是千手扉间开发的S级时空间忍术。使用者先在目标或地点留下术式，之后便可无视常规移动距离，瞬间转移到任一有效标记处。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1041,7 +1048,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1061,7 +1069,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1111,7 +1119,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "佐助使用轮回眼的能力在维度之间切换或在不同位置之间传送。",
+        "summary": "凭借此术，无数召唤蛇从大蛇丸的口中爬出，追杀敌人。如此压倒性的数量，形成了真正的“蛇墙”，让防御和躲避变得毫无意义。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1155,7 +1163,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1175,7 +1184,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1226,7 +1235,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将目标与其自身交换位置，有时与目标意想不到地交换。",
+        "summary": "使用者从袖子下召唤出几条蛇，将它们部署到目标身上以出其不意。蛇按照召唤者的命令行事，通过咬住或勒紧目标来攻击或捕获目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -1293,7 +1302,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1313,7 +1323,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1363,7 +1373,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用时空术制造一个进入另一维度的门户。",
+        "summary": "带土冲向目的地，使用神威使他的身体完全无形，避免受到任何攻击的伤害。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -1406,7 +1416,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1426,7 +1437,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1477,7 +1488,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "飞雷神之术允许使用者瞬间移动到他们放置的术式的任何位置。",
+        "summary": "带土使用神威冲向对手，用手臂上长出的树枝刺穿他们。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -1520,7 +1531,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1540,7 +1552,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1591,7 +1603,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "四代目火影在目标上放置飞雷神术式，允许他传送到目标的位置或附近。",
+        "summary": "神威手里剑由卡卡西的须佐能乎投掷。手里剑命中或掠过目标时会发动神威，把接触到的部分扭曲并转移到神威空间。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1634,7 +1646,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1654,7 +1667,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1704,7 +1717,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者使用飞雷神术式将一个位置连接到另一个位置，允许物体或人通过空间传送。",
+        "summary": "通过增加隐影蛇手召唤的蛇的数量，这个忍术的多样性也随之增加。大蛇群瞬间出现，每条蛇都各自做出恐吓、牵制、捕捉敌人的协同攻击。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1759,7 +1772,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1779,7 +1793,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1829,7 +1843,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者通过时空术将队友传送到他们的位置，或将目标传送走。",
+        "summary": "鬼童丸在目标上方召唤巨大蜘蛛。然后巨大蜘蛛会产生一袋小蜘蛛，许多小蜘蛛如雨点般落在目标上，在落下时旋转出一串串查克拉。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -1878,7 +1892,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1898,7 +1913,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1948,7 +1963,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者通过时空门将攻击偏转到另一个位置。",
+        "summary": "逆通灵之术与常规通灵方向相反，可由通灵兽把与其签订契约的忍者召唤到自身所在位置，也可借助预先布置的通灵式把目标转移到指定地点。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2021,7 +2036,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2041,7 +2057,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2091,7 +2107,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者用时空术包裹攻击或物体，将其送到另一个维度。",
+        "summary": "螺旋闪光超轮舞吼三式由水门设计，先在周围散布多枚飞雷神苦无，再连续瞬移，从多个死角高速攻击目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -2134,7 +2150,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2154,7 +2171,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2204,7 +2221,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者操纵空间以扩大或压缩距离，使他们能够从远处攻击。",
+        "summary": "通灵轮回眼让轮回眼的畜生道召唤人或动物，并在召唤物眼中复制轮回眼；双方共享视野，施术者还能通过黑棒远程控制召唤物。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2254,7 +2271,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2274,7 +2292,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2326,7 +2344,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将一个区域分割到另一个维度，将其与现实世界隔离。此术常用于捕获目标。",
+        "summary": "通灵之术通过契约和血作为媒介，把动物、物品或其他目标从远处瞬间召唤到施术者所在位置；大型目标通常需要更多查克拉。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2591,7 +2609,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2611,7 +2630,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -2662,7 +2681,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将另一个维度的空间部分拉到现实世界中。",
+        "summary": "通灵·外道魔像是轮回眼使用者召唤并操纵外道魔像的术，可用于拘束尾兽、抽取查克拉或作为十尾复活的容器。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2717,7 +2736,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2737,7 +2757,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2787,7 +2807,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者召唤一个巨大的术式阵，将整个区域与外部世界隔离。",
+        "summary": "使用者在空中召唤一只蟾蜍，蟾蜍掉到地上。撞击时，地面会震动，结构会被破坏，使用者的目标会被蟾蜍的重量压住，无法移动。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -2848,7 +2868,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2868,7 +2889,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2918,7 +2939,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "天手力允许使用者与视线内的任何物体或人交换位置。",
+        "summary": "通灵·秽土转生是一种将死者的灵魂绑定到活体容器上的忍术，将其恢复到生命最后时刻的状态，以便执行召唤者的命令。它最初由千手扉间创造，一段时间后他宣布它为禁术。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2973,7 +2994,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2993,7 +3015,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -3043,7 +3065,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将目标冻结在空间中，在有限的时间内阻止其移动。",
+        "summary": "通灵·五重罗生门会连续召唤五座罗生门，以多层偏转和削弱来袭攻击；使用者无需让五扇门保持同一朝向。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -3086,7 +3108,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3106,7 +3129,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -3156,7 +3179,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "飞雷阵之术允许多人同时传送。",
+        "summary": "通灵·罗生门会召唤刻有鬼面的巨大门扉作为防御壁，用厚重门体正面阻挡或削弱强力攻击。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -3211,7 +3234,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3231,7 +3255,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -3282,7 +3306,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者留下一个印记，作为通过时空术传送到该位置的定位点。",
+        "summary": "通灵·蛤蟆口缚不会召唤整只蛤蟆，而是把妙木山巨岩宿蛤蟆的食道召唤到目标周围，以坚韧肉壁困住并消化敌人。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -3325,7 +3349,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3345,7 +3370,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -3395,7 +3420,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将物体或人压缩到微观尺寸，并将其封印在容器内。",
+        "summary": "通灵·蛤蟆见世之术召唤能伪装成建筑物的妙木山蛤蟆，用作隐蔽据点或诱捕设施；进入建筑的目标会落入蛤蟆体内。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -3438,7 +3463,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3458,7 +3484,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -3508,7 +3534,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者用时空术移走部分目标的身体。",
+        "summary": "通灵·三重罗生门是标准召唤：罗生门的升级版，顾名思义，它召唤的不是一个，而是三个来势汹汹的罗生门。此术需要两道召唤印才能完成，这些门的作用与单个罗生门相同，但防御力却增加了三倍。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -3563,7 +3589,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3583,7 +3610,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -3634,7 +3661,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者打开一个通往另一个维度的裂缝，释放出巨大的能量爆发。",
+        "summary": "黄泉比良坂是大筒木一族成员使用的血继网罗术，据说是所有时空忍术的鼻祖。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -3683,7 +3710,8 @@
         ],
         "tags": [
           "space",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -3703,7 +3731,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SPACE-AUTO",
-        "reviewed_by": "manual-translation-JT-SPACE-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {

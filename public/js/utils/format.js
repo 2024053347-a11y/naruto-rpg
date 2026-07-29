@@ -94,7 +94,12 @@ export function setValueByPath(obj, path, value) {
   const lastKey = keys.pop();
   let target = obj;
   for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(target, key) || target[key] == null) {
+    // 中间节点若缺失或是标量（null/true/数字/字符串），替换为对象。
+    // ES 模块处于严格模式，对布尔等原始值赋属性会抛
+    // "Cannot create property 'x' on boolean 'true'"，必须在此兜住。
+    if (!Object.prototype.hasOwnProperty.call(target, key)
+      || target[key] == null
+      || typeof target[key] !== 'object') {
       target[key] = {};
     }
     target = target[key];

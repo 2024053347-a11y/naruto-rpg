@@ -275,7 +275,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者通过从环境中吸收自然能量并将其与自身查克拉混合来激活仙人模式。这种状态大大增强了使用者的身体能力，并允许他们使用仙术。",
+        "summary": "使用者可以让他们的手臂伸展，覆盖的距离远大于他们自己的身体，让他们可以做很多事情，比如找回倒下的盟友或扔掉他们的对手。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -318,7 +318,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -338,7 +339,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -388,7 +389,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用仙人模式的力量增强其再生能力，并提高对伤害的抵抗力。",
+        "summary": "地之咒印是大蛇丸最强的咒印之一，与天之咒印对应。解放后会持续侵蚀并改变宿主身体，以换取大幅强化的查克拉和战斗能力。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -431,7 +432,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -451,7 +453,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -499,7 +501,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "鸣人利用仙人模式将自然能量集中在脚上，显著增加其踢击的力量。",
+        "summary": "天之咒印是大蛇丸最强的咒印之一，与地之咒印对应。解放后会持续侵蚀并改变宿主身体，以换取大幅强化的查克拉和战斗能力。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -548,7 +550,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -568,7 +571,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -617,7 +620,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "鸣人与他的影分身合作，利用仙人模式形成一个巨大的螺旋丸，在击中目标时释放出巨大的自然能量。",
+        "summary": "舌战缚将仙术查克拉集中到志麻的舌头，使其伸长并追踪气味，随后卷住目标进行束缚。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -660,7 +663,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -680,7 +684,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -730,7 +734,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "深作大人和志摩大人使用他们的声音产生强大的声波攻击，可以通过共振对目标造成内部损伤。",
+        "summary": "舌战斩将仙术查克拉集中到深作的舌头，使其变得坚硬锋利，并以高速伸出切开岩石、金属或敌人。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -773,7 +777,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -793,7 +798,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -843,7 +848,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者闭上他们的眼睛并集中以收集自然能量。在此期间，他们更容易受到攻击。一旦掌握了仙人模式，收集自然能量的过程变得更快、更直观。",
+        "summary": "大蛇突是在仙人模式下把查克拉蛇向前刺出，以伸长的蛇形肢体突袭并贯穿对手。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -886,7 +891,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -906,7 +912,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -956,7 +962,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用仙人模式增强其柔拳。他们可以更有效地瞄准对手的穴道。",
+        "summary": "多莲不自连炮让仙人化第二状态的使用者长出多组喷射器般的附肢，快速吸收自然能量后释放大范围查克拉爆炸。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -999,7 +1005,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1019,7 +1026,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1069,7 +1076,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者使用仙术查克拉增强其身体的再生能力。这允许他们再生失去的四肢和器官，尽管该过程并非瞬间。",
+        "summary": "大蛇丸之咒印术是一种基于转换的诅咒印章，大蛇丸可以将其应用于其他人以用于各种目的。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -1113,7 +1120,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1133,7 +1141,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1185,7 +1193,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "重吾激活一种状态，在该状态下他的身体发生变化，赋予他增加的力量和攻击性。此状态使他能够从身体的各个部分产生武器。",
+        "summary": "仙法木遁·真数千手是一种创造出可由使用者自由控制的巨型多手木制雕像的术。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1228,7 +1236,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1248,7 +1257,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1299,7 +1308,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "重吾使用其特殊能力将自然能量注入目标体内，使其身体开始不受控制地变化，通常导致目标变得无法移动或严重受损。",
+        "summary": "仙法·两生之术由深作和志麻与自来也融合，帮助他持续收集自然能量、维持仙人模式，并让三者能够协同施术。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -1348,7 +1357,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1368,7 +1378,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1418,7 +1428,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者激活咒印以获得增强的能力和变化。咒印利用自然能量增强使用者的能力。",
+        "summary": "仙法·蛙鸣由深作与志麻把仙术查克拉集中在喉部，再同时发出强烈蛙鸣；声波可干扰并暂时麻痹范围内的目标。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1467,7 +1477,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1487,7 +1498,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1537,7 +1548,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者将自然能量集中在脚下的地面上，然后释放它以产生强大的冲击波。",
+        "summary": "仙法·无機転生允许使用者通过在大气中充满自然能量来为无机物质注入生命。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1580,7 +1591,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1600,7 +1612,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1650,7 +1662,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "鸣人利用仙人模式增强他的感官，使他能够跟踪对手的查克拉并以更高的精度躲避攻击。",
+        "summary": "仙法·超大玉螺旋多连丸是漩涡鸣人使用的一项术，它通过自然能量增强了他的螺旋丸。",
         "functions": [],
         "targeting": "unknown",
         "range": "short",
@@ -1693,7 +1705,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1713,7 +1726,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1764,7 +1777,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "鸣人与他的影分身协调，使用螺旋丸的联合攻击，结合仙人模式的增强效果。",
+        "summary": "仙法·岚遁光牙把仙术查克拉注入岚遁，从口中射出高速细光束；光束切割力极强，甚至能够斩断求道玉。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -1807,7 +1820,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1827,7 +1841,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1878,7 +1892,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用仙人模式增强其体术攻击的速度和威力。",
+        "summary": "仙法·白激之术是龙地洞仙术。使用者吐出龙形能量体，使其环绕光球高速旋转，产生强光与剧烈声振，扰乱对手的视觉、听觉和身体平衡。",
         "functions": [],
         "targeting": "unknown",
         "range": "mid",
@@ -1921,7 +1935,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -1941,7 +1956,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -1992,7 +2007,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "药师兜使用龙地洞的仙人模式，使他能够使用独特的蛇系仙术。",
+        "summary": "仙法·阴遁雷派是宇智波斑使用的忍术。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid",
@@ -2035,7 +2050,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2055,7 +2071,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2106,7 +2122,7 @@
       "power_mode": "utility",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用自然能量制造一个坚硬的外壳或皮肤，提供免受攻击的保护。",
+        "summary": "仙人模式是将自然能量与自身查克拉平衡融合、生成仙术查克拉的强化状态，可提升感知与身体能力，并强化原有忍术。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2215,7 +2231,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2235,7 +2252,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2285,7 +2302,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者召唤两只巨大的蛤蟆，它们合作执行联合攻击。",
+        "summary": "仙人化会让使用者吸收自然能量并改变身体形态，可生成武器般的肢体，同时提升力量、速度、感知和耐久力；过度使用也可能增强攻击性并导致失控。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2340,7 +2357,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2360,7 +2378,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL",
+        "reviewed_by": "semantic-description-repair-2026-07-26",
         "user_reviewed_by": "repair-technique-users-v1"
       },
       "resource_type": "chakra",
@@ -2411,7 +2429,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者制造一个覆盖广阔区域的巨大幻术屏障，困住屏障内的所有目标。",
+        "summary": "六道仙人模式是羽衣授予鸣人的特殊强化形态，使他能够运用六道仙术，显著提升感知、飞行、体术与忍术能力。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2454,7 +2472,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2474,7 +2493,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2524,7 +2543,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用自然能量增强他们的武器，在武器上注入仙术以增加伤害。",
+        "summary": "六道仙术是融合六道之力的特殊仙术体系，由大筒木羽衣等人使用；其使用者能操纵求道玉，并以仙术力量强化攻防。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2604,7 +2623,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2624,7 +2644,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2675,7 +2695,7 @@
       "power_mode": "defense",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者以仙术查克拉为基础制造螺旋丸，并将自然能量注入其中以增加其破坏力。",
+        "summary": "六道·国津守会形成巨大的多臂查克拉化身，能够与完全体须佐能乎抗衡，并可借助求道玉进行攻击或防御。",
         "functions": [],
         "targeting": "unknown",
         "range": "short, mid, long",
@@ -2719,7 +2739,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2739,7 +2760,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {
@@ -2790,7 +2811,7 @@
       "power_mode": "damage",
       "value_basis": "project_balance_v2",
       "effect": {
-        "summary": "使用者利用仙术查克拉克服对手的防御。这种以自然能量增强的攻击可以绕过基于查克拉的防御。",
+        "summary": "传异远影让兜借助左近的血继限界，从身体上复制出已吸收细胞来源者的上半身，并让分身施展对应的血继限界、秘术或忍术。",
         "functions": [],
         "targeting": "unknown",
         "range": "unknown",
@@ -2833,7 +2854,8 @@
         ],
         "tags": [
           "sen",
-          "zh-reviewed"
+          "zh-reviewed",
+          "description-source-verified"
         ]
       },
       "source_refs": [
@@ -2853,7 +2875,7 @@
       "qa": {
         "status": "draft",
         "generated_batch": "JT-SEN-AUTO",
-        "reviewed_by": "manual-translation-JT-SEN-P01-BATCH-ALL"
+        "reviewed_by": "semantic-description-repair-2026-07-26"
       },
       "resource_type": "chakra",
       "cost_design": {

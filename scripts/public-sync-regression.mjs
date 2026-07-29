@@ -5,6 +5,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const textExtensions = new Set(['.css', '.html', '.js', '.json', '.md', '.svg']);
+const publicOnlyFiles = new Set([
+  path.normalize('img/login-bg.png'),
+  path.normalize('img/login-logo.png')
+]);
 let checked = 0;
 
 function normalizedText(file) {
@@ -34,9 +38,32 @@ function compareTree(relativeDir) {
   }
 }
 
+function rejectExtraPublicFiles(relativeDir) {
+  const deployedDir = path.join(root, 'public', relativeDir);
+  assert.ok(fs.existsSync(deployedDir), `Missing public directory: ${path.relative(root, deployedDir)}`);
+  for (const entry of fs.readdirSync(deployedDir, { withFileTypes: true })) {
+    const relative = path.join(relativeDir, entry.name);
+    const source = path.join(root, relative);
+    if (!fs.existsSync(source)) {
+      assert.ok(
+        entry.isFile() && publicOnlyFiles.has(path.normalize(relative)),
+        `Orphaned public copy: ${path.join('public', relative)}`
+      );
+      continue;
+    }
+    if (entry.isDirectory()) rejectExtraPublicFiles(relative);
+  }
+}
+
 for (const file of ['index.html', 'manifest.json', 'sw.js']) {
   compareFile(path.join(root, file), path.join(root, 'public', file));
 }
-for (const directory of ['js', 'css', 'img', 'assets']) compareTree(directory);
+for (const directory of ['js', 'css', 'img', 'assets']) {
+  compareTree(directory);
+  rejectExtraPublicFiles(directory);
+}
+for (const relative of publicOnlyFiles) {
+  assert.ok(fs.existsSync(path.join(root, 'public', relative)), `Missing public-only asset: ${relative}`);
+}
 
 console.log(`PASS ${checked} shared source/public files are synchronized.`);

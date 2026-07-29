@@ -5,7 +5,6 @@ import { WORLD_BOOK_ENTRIES } from '../data/worldbook/index.js';
 import { KNOWLEDGE_BASE } from '../data/knowledge-base.js';
 import { getMemoryConfig } from '../data/memory-config.js';
 import { createContinuityCasToken, isContinuityCasCurrent } from '../core/continuity-ledger.js';
-import { assertNoProtectedFutureLeak } from '../core/protected-future-guard.js';
 
 const KEEP_TURN_SUMMARIES_AFTER_COMPRESSION = 3;
 const TURN_SUMMARY_LIMIT = 900;
@@ -36,20 +35,6 @@ const DEEP_INPUT_CHAR_LIMIT = 12000;
 const DEEP_OUTPUT_MAX_TOKENS = 3000;
 const COMPRESSION_INPUT_CHAR_LIMIT = 6000;
 const NPC_NOTE_LIMIT_PER_NPC = 10;
-
-function isAuxiliaryMemoryOutputSafe(value, futureGuard, stage) {
-  try {
-    assertNoProtectedFutureLeak(value, futureGuard?.protectedFuture, {
-      stage,
-      allowedEvidence: futureGuard?.allowedEvidence || null
-    });
-    return true;
-  } catch (error) {
-    if (error?.code !== 'PROTECTED_FUTURE_LEAK') throw error;
-    console.warn(`[MemorySystem] Rejected future-contaminated ${stage}; raw memory retained for retry`);
-    return false;
-  }
-}
 
 class MemorySystem {
   constructor() {
@@ -420,25 +405,25 @@ class MemorySystem {
     }
   }
 
-  aiCompress(client, { futureGuard = null } = {}) {
+  aiCompress(client) {
     if (this._compressionPromise) return this._compressionPromise;
-    const task = this._runAiCompression(client, { futureGuard }).finally(() => {
+    const task = this._runAiCompression(client).finally(() => {
       if (this._compressionPromise === task) this._compressionPromise = null;
     });
     this._compressionPromise = task;
     return task;
   }
 
-  async _runAiCompression(client, { futureGuard = null } = {}) {
+  async _runAiCompression(client) {
     // 编排: 滚动压缩 → 章节升级 → 卷升级。各自独立版本防护,单次调用最多3个AI请求
     let did = false;
-    try { did = (await this._aiCompressPending(client, futureGuard)) || did; } catch {}
-    try { did = (await this._aiUpgradeChapter(client, futureGuard)) || did; } catch {}
-    try { did = (await this._aiUpgradeVolume(client, futureGuard)) || did; } catch {}
+    try { did = (await this._aiCompressPending(client)) || did; } catch {}
+    try { did = (await this._aiUpgradeChapter(client)) || did; } catch {}
+    try { did = (await this._aiUpgradeVolume(client)) || did; } catch {}
     return did;
   }
 
-  async _aiCompressPending(client, futureGuard = null) {
+  async _aiCompressPending(client) {
     const memory = this._loadMemory();
     const boundary = this._captureAsyncBoundary(memory);
     const pending = memory._pendingCompressionText || '';
@@ -460,9 +445,6 @@ class MemorySystem {
         }
         const previous = current.compressed_summary || '';
         const cleanSummary = summary.trim().replace(/^[阶段摘要AI摘要]*[:：\s]*/, '');
-        if (!isAuxiliaryMemoryOutputSafe(cleanSummary, futureGuard, 'memory-ai-compression')) {
-          return false;
-        }
         current.compressed_summary = `${previous}\n[AI摘要] ${cleanSummary}`.slice(-COMPRESSED_SUMMARY_LIMIT);
         current._pendingCompressionText = pending.slice(chunk.length);
         this._saveMemory(current);
@@ -474,7 +456,7 @@ class MemorySystem {
     return false;
   }
 
-  async _aiUpgradeChapter(client, futureGuard = null) {
+  async _aiUpgradeChapter(client) {
     const memory = this._loadMemory();
     const chapters = this._parseChapterData(memory.chapters);
     const target = chapters.find(c => c.raw);
@@ -491,7 +473,6 @@ class MemorySystem {
       if (out && out.trim().length > 30) {
         const fresh = this._loadMemory();
         if (!this._isAsyncBoundaryCurrent(boundary, fresh)) return false;
-        if (!isAuxiliaryMemoryOutputSafe(out, futureGuard, 'memory-chapter-upgrade')) return false;
         const freshChapters = this._parseChapterData(fresh.chapters);
         const ch = freshChapters.find(c => c.id === target.id);
         if (!ch || !ch.raw) return false;
@@ -510,7 +491,7 @@ class MemorySystem {
     return false;
   }
 
-  async _aiUpgradeVolume(client, futureGuard = null) {
+  async _aiUpgradeVolume(client) {
     const memory = this._loadMemory();
     const volumes = this._parseChapterData(memory.volumes);
     const target = volumes.find(v => v.raw);
@@ -527,7 +508,6 @@ class MemorySystem {
       if (out && out.trim().length > 30) {
         const fresh = this._loadMemory();
         if (!this._isAsyncBoundaryCurrent(boundary, fresh)) return false;
-        if (!isAuxiliaryMemoryOutputSafe(out, futureGuard, 'memory-volume-upgrade')) return false;
         const freshVols = this._parseChapterData(fresh.volumes);
         const v = freshVols.find(x => x.id === target.id);
         if (!v || !v.raw) return false;
@@ -635,16 +615,16 @@ class MemorySystem {
     };
   }
 
-  deepConsolidate(client, { force = false, futureGuard = null } = {}) {
+  deepConsolidate(client, { force = false } = {}) {
     if (this._deepConsolidationPromise) return this._deepConsolidationPromise;
-    const task = this._runDeepConsolidation(client, { force, futureGuard }).finally(() => {
+    const task = this._runDeepConsolidation(client, { force }).finally(() => {
       if (this._deepConsolidationPromise === task) this._deepConsolidationPromise = null;
     });
     this._deepConsolidationPromise = task;
     return task;
   }
 
-  async _runDeepConsolidation(client, { force = false, futureGuard = null } = {}) {
+  async _runDeepConsolidation(client, { force = false } = {}) {
     const cfg = getMemoryConfig();
     if (!force && !cfg.deepEnabled) return false;
     const memory = this._loadMemory();
@@ -673,9 +653,6 @@ class MemorySystem {
     const fresh = this._loadMemory();
     if (!this._isAsyncBoundaryCurrent(boundary, fresh)) {
       console.warn('[MemorySystem] Deep consolidation aborted: branch, node or memory changed during call');
-      return false;
-    }
-    if (!isAuxiliaryMemoryOutputSafe(parsed, futureGuard, 'memory-deep-consolidation')) {
       return false;
     }
 

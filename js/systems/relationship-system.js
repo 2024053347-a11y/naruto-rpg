@@ -1,5 +1,6 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
+import { normalizeRelationshipInstruction, finiteRelationshipNumber } from '../data/var-schema.js';
 import { normalizeNpcCombatStats } from './npc-balance.js';
 import {
   calculateCombatLevel,
@@ -77,6 +78,10 @@ function seedFrom(value) {
   return hash >>> 0;
 }
 
+function finiteNumberOr(value, fallback = 0) {
+  return finiteRelationshipNumber(value) ?? fallback;
+}
+
 class RelationshipSystem {
   refreshCombatLevels() {
     const relationships = stateManager.getSub('_relationships') || {};
@@ -100,31 +105,35 @@ class RelationshipSystem {
   }
 
   processInstruction(data) {
-    if (!data || typeof data !== 'object') {
+    const normalizedData = normalizeRelationshipInstruction(data);
+    if (!normalizedData) {
       console.warn('[RelationshipSystem] Invalid relationship instruction:', typeof data);
       return;
     }
+    data = normalizedData;
     if (data.op === 'delete') {
       this.deleteRelationship(data.npc);
       return;
     }
-    if (!data.npc) {
-      console.warn('[RelationshipSystem] Relationship instruction missing npc:', data);
-      return;
-    }
 
     const all = stateManager.getSub('_relationships') || {};
+    const isNewNpc = !Object.prototype.hasOwnProperty.call(all, data.npc);
     const current = this._normalizeRelationship(all[data.npc]);
     const turn = stateManager.get('系统·回合数') || 0;
     const calStr = stateManager.get('世界·时间');
     const now = typeof calStr === 'string' ? calStr : this._formatCalendar(calStr);
 
-    const affectionChange = data.affection_change ?? data.affection_delta ?? 0;
-    const trustChange = data.trust_change ?? data.trust_delta ?? 0;
-    const respectChange = data.respect_change ?? data.respect_delta ?? 0;
-    if (affectionChange) current.affection = (current.affection || 0) + affectionChange;
-    if (trustChange) current.trust = (current.trust || 0) + trustChange;
-    if (respectChange) current.respect = (current.respect || 0) + respectChange;
+    // A delta is authoritative when both forms are present. An absolute score
+    // only initializes a brand-new NPC: models frequently echo the relationship
+    // card with stale absolute numbers, which must never stomp accumulated scores.
+    for (const field of ['affection', 'trust', 'respect']) {
+      const changeField = `${field}_change`;
+      if (Object.prototype.hasOwnProperty.call(data, changeField)) {
+        current[field] += data[changeField];
+      } else if (isNewNpc && Object.prototype.hasOwnProperty.call(data, field)) {
+        current[field] = data[field];
+      }
+    }
     if (data.reason) {
       current.last_interaction = data.reason;
       current.last_interaction_at = Date.now();
@@ -135,20 +144,32 @@ class RelationshipSystem {
     if (data.status) current.status = data.status;
     if (data.location) current.location = data.location;
 
-    let combinedEntry = [];
+    let recordedInteraction = false;
+    let legacyThought = '';
     if (typeof data.history === 'string' && data.history.trim()) {
-      combinedEntry.push(`[历史] ${data.history.trim()}`);
-    }
-    if (typeof data.inner_thoughts === 'string' && data.inner_thoughts.trim()) {
-      combinedEntry.push(`[心声] ${data.inner_thoughts.trim()}`);
-    }
-    
-    if (combinedEntry.length > 0) {
-      const summaryStr = combinedEntry.join(' ');
-      if (!current.history.length || current.history[0].summary !== summaryStr) {
-        const entry = { turn, time: now, summary: summaryStr };
-        current.history = [entry, ...current.history].slice(0, HISTORY_MAX);
+      const rawHistory = data.history.trim();
+      legacyThought = rawHistory.match(/\[心声\]\s*([\s\S]+)$/)?.[1]?.trim() || '';
+      const summary = rawHistory
+        .replace(/^\[历史\]\s*/, '')
+        .replace(/\s*\[心声\][\s\S]*$/, '')
+        .trim();
+      if (summary && (!current.history.length || current.history[0].summary !== summary || current.history[0].turn !== turn)) {
+        current.history = [{ turn, time: now, summary }, ...current.history].slice(0, HISTORY_MAX);
       }
+      recordedInteraction = Boolean(summary);
+    }
+    const thoughtSource = typeof data.inner_thoughts === 'string' && data.inner_thoughts.trim()
+      ? data.inner_thoughts
+      : legacyThought;
+    if (thoughtSource) {
+      const summary = thoughtSource.trim().replace(/^\[心声\]\s*/, '');
+      if (!current.inner_thoughts.length || current.inner_thoughts[0].summary !== summary || current.inner_thoughts[0].turn !== turn) {
+        current.inner_thoughts = [{ turn, time: now, summary }, ...current.inner_thoughts].slice(0, THOUGHTS_MAX);
+      }
+      recordedInteraction = true;
+    }
+
+    if (recordedInteraction) {
       // 置顶角色互动计数
       if (current.pinned) {
         current.summary_turn_counter = (current.summary_turn_counter || 0) + 1;
@@ -377,25 +398,41 @@ class RelationshipSystem {
 
   _normalizeRelationship(value) {
     if (typeof value === 'number') {
-      return { affection: value, trust: 0, respect: 0, info: '', history: [], inner_thoughts: [] };
+      return { affection: finiteNumberOr(value), trust: 0, respect: 0, info: '', history: [], inner_thoughts: [] };
     }
     if (!value || typeof value !== 'object') {
       return { affection: 0, trust: 0, respect: 0, info: '', history: [], inner_thoughts: [] };
     }
-    const upgradeField = (v) => {
-      if (typeof v === 'string' && v.trim()) return [{ turn: 0, time: '', summary: v.trim() }];
-      if (Array.isArray(v)) return v;
-      return [];
+    const upgradeField = (v, limit) => {
+      const values = typeof v === 'string' && v.trim()
+        ? [{ turn: 0, time: '', summary: v.trim() }]
+        : Array.isArray(v) ? v : [];
+      return values.map(entry => {
+        if (typeof entry === 'string') return { turn: 0, time: '', summary: entry.trim() };
+        if (!entry || typeof entry !== 'object') return null;
+        const summary = String(entry.summary ?? entry.content ?? '').trim();
+        return summary ? { ...entry, summary } : null;
+      }).filter(Boolean).slice(0, limit);
     };
+    const history = upgradeField(value.history, HISTORY_MAX);
+    const innerThoughts = upgradeField(value.inner_thoughts, THOUGHTS_MAX);
+    // Older saves embedded private thoughts in history. Keep those entries for
+    // display compatibility while also hydrating the dedicated thought queue.
+    for (const entry of history) {
+      const match = entry.summary.match(/\[心声\]\s*([^\[]+)/);
+      const summary = match?.[1]?.trim();
+      if (!summary || innerThoughts.some(item => item.summary === summary && item.turn === entry.turn)) continue;
+      innerThoughts.push({ turn: entry.turn ?? 0, time: entry.time || '', summary });
+    }
     const normalized = {
       ...value,
-      affection: Number(value.affection) || 0,
-      trust: Number(value.trust) || 0,
-      respect: Number(value.respect) || 0,
+      affection: finiteNumberOr(value.affection),
+      trust: finiteNumberOr(value.trust),
+      respect: finiteNumberOr(value.respect),
       info: value.info || '',
       pinned: value.pinned ?? false,
-      history: upgradeField(value.history),
-      inner_thoughts: upgradeField(value.inner_thoughts),
+      history: history.slice(0, HISTORY_MAX),
+      inner_thoughts: innerThoughts.slice(0, THOUGHTS_MAX),
       role: value.role || '',
       faction: value.faction || '',
       status: value.status || 'neutral',
@@ -403,7 +440,7 @@ class RelationshipSystem {
       known_secrets: Array.isArray(value.known_secrets) ? value.known_secrets : [],
       promises: Array.isArray(value.promises) ? value.promises : [],
       debts: Array.isArray(value.debts) ? value.debts : [],
-      summary_turn_counter: Number(value.summary_turn_counter) || 0,
+      summary_turn_counter: finiteNumberOr(value.summary_turn_counter),
       summaries: Array.isArray(value.summaries) ? value.summaries : [],
       grand_summary: value.grand_summary || ''
     };

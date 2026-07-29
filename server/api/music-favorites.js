@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
+import { asyncRoute } from '../middleware/async-route.js';
 import * as db from '../db/index.js';
 
 const router = Router();
@@ -55,9 +56,9 @@ async function removeFavorite(req, res) {
 }
 
 // `/favorites` 是已发布前端使用的路径；根路径保留给旧版客户端。
-router.get(['/', '/favorites'], listFavorites);
-router.put(['/', '/favorites'], replaceFavorites);
-router.post(['/', '/favorites'], addFavorite);
-router.delete(['/:songId', '/favorites/:songId'], removeFavorite);
+router.get(['/', '/favorites'], asyncRoute(listFavorites));
+router.put(['/', '/favorites'], asyncRoute(replaceFavorites));
+router.post(['/', '/favorites'], asyncRoute(addFavorite));
+router.delete(['/:songId', '/favorites/:songId'], asyncRoute(removeFavorite));
 
 export default router;

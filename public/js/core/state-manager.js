@@ -1,6 +1,16 @@
 import { deepClone, generateId, getValueByPath, setValueByPath, isSafePath, isSafePathKey } from '../utils/format.js';
 import { eventBus } from './event-bus.js';
-import { getDefaults, isKnownKey, coerceValue, isNumeric, VAR_SCHEMA, validate } from '../data/var-schema.js';
+import {
+  calendarMonthFromValue,
+  coerceValue,
+  getDefaults,
+  isKnownKey,
+  isNumeric,
+  normalizeStructuredVariableUpdate,
+  STRUCTURED_SCALAR_PATH_MAP,
+  validate,
+  VAR_SCHEMA
+} from '../data/var-schema.js';
 import { createContinuityLedger, migrateLegacyMemory } from './continuity-ledger.js';
 
 const DB_NAME = 'naruto_rpg';
@@ -398,11 +408,24 @@ class StateManager {
               this.state[key] = coerced;
             }
           }
+          if (key === '世界·时间') {
+            const month = calendarMonthFromValue(coerced);
+            if (month != null && this.state['世界·月份'] !== month) {
+              oldValues['世界·月份'] = deepClone(this.state['世界·月份']);
+              this.state['世界·月份'] = month;
+              applied.push({ key: '世界·月份', op: '=', value: month, derivedFrom: '世界·时间' });
+            }
+          }
           applied.push(v);
           break;
         }
         case '+':
         case '-': {
+          if (!isNumeric(key)) {
+            console.warn('[StateManager] 非数字变量不支持增减:', key);
+            eventBus.emit('state:invalid-write', { key, reason: 'non-numeric-operation', rawValue: rawVal });
+            continue;
+          }
           const delta = Number(rawVal);
           if (!Number.isFinite(delta)) {
             console.warn('[StateManager] reject non-numeric delta:', key, rawVal);
@@ -455,32 +478,10 @@ class StateManager {
     // Path-based protocol from secondary variable updater
     // Maps legacy English paths to v4.0 flat Chinese keys
     const PATH_MAP = {
-      'player.name': '玩家·姓名', 'player.age': '玩家·年龄', 'player.soul_age': '玩家·灵魂年龄',
-      'player.gender': '玩家·性别', 'player.rank': '玩家·忍阶', 'player.official_rank': '玩家·正式忍阶',
-      'player.background': '玩家·出身', 'player.chakra_nature': '玩家·查克拉属性',
-      'player.difficulty': '玩家·难度', 'player.personality': '玩家·个性',
-      'player.public_identity': '玩家·公开身份', 'player.current_goal': '玩家·当前目标',
-      'player.reputation_tags': '玩家·声望标签', 'player.flags': '玩家·标志',
-      'player.alive': '玩家·存活', 'player.death_cause': '玩家·死因',
-      'attributes.chakra': '属性·查克拉', 'attributes.chakra_current': '属性·当前查克拉',
-      'attributes.spirit': '属性·精神力', 'attributes.spirit_current': '属性·当前精神力',
-      'attributes.vitality': '属性·生命力', 'attributes.vitality_current': '属性·当前生命力',
-      'attributes.stamina': '属性·体力', 'attributes.stamina_current': '属性·当前体力',
-      // Legacy updater paths now mean the stamina resource formerly named willpower.
-      'attributes.willpower': '属性·体力', 'attributes.willpower_current': '属性·当前体力',
-      'attributes.speed': '属性·速度', 'attributes.luck': '属性·幸运',
-      'progression.exp': '进度·经验', 'progression.exp_to_next': '进度·下一级经验',
-      'progression.jutsu_mastery': '进度·忍术熟练度', 'progression.taijutsu_mastery': '进度·体术熟练度',
-      'progression.genjutsu_mastery': '进度·幻术熟练度', 'progression.defense_mastery': '进度·防御熟练度',
-      'progression.missions_done': '进度·已完成任务', 'progression.pending_breakthrough': '进度·突破待处理',
-      'progression.ryo': '进度·金钱', 'equipment.ryo': '进度·金钱',
-      'progression.titles': '进度·称号', 'progression.achievements': '进度·成就',
-      'world_state.current_location': '世界·地点', 'world_state.calendar': '世界·时间',
-      'world_state.timeline': '世界·年代', 'world_state.month': '世界·月份',
-      'world_state.weather': '世界·天气', 'world_state.explored_regions': '世界·已探索区域',
-      'world_state.active_events': '世界·活跃事件',
-      'skills.kekkei_genkai': '技能·血继限界',
-      'system.turn_count': '系统·回合数',
+      ...STRUCTURED_SCALAR_PATH_MAP,
+      // Read old secondary-updater output without advertising this whole-collection path
+      // in the current structured-variable contract.
+      'skills.kekkei_genkai': '技能·血继限界'
     };
     const OP_MAP = { 'set': '=', 'add': '+', 'sub': '-' };
 
@@ -495,8 +496,9 @@ class StateManager {
       return deletedKeys.length;
     };
 
-    for (const v of vars) {
-      if (!v) continue;
+    for (const rawUpdate of vars) {
+      if (!rawUpdate) continue;
+      const v = rawUpdate.path ? normalizeStructuredVariableUpdate(rawUpdate) : rawUpdate;
 
       // Already in flat format
       if (v.key && ['=', '+', '-'].includes(v.op)) {
@@ -693,6 +695,15 @@ class StateManager {
       }
 
       // Fallback: try direct state property
+      // 内部键（_combat/_relationships/_memory 等）不接受 AI 路径直写——
+      // 曾有模型输出 {"path":"_combat","op":"set","value":true} 把战斗态污染成布尔值，
+      // 之后 _endCombat 里 combat.state='peace' 直接抛
+      // "Cannot create property 'state' on boolean 'true'"，玩家永久卡死。
+      if (path.startsWith('_')) {
+        console.warn('[StateManager] batchUpdate: reject internal path write:', path);
+        eventBus.emit('state:invalid-write', { key: path, reason: 'internal-path' });
+        continue;
+      }
       if (!path.startsWith('skills.') && !path.startsWith('items.')) {
         console.warn('[StateManager] batchUpdate: unrecognized path, attempting direct set:', path);
       }
@@ -816,7 +827,14 @@ class StateManager {
   _deepMerge(defaults, snapshot) {
     if (snapshot === null || snapshot === undefined) return defaults;
     if (Array.isArray(snapshot)) return snapshot;
-    if (typeof snapshot !== 'object') return snapshot;
+    // 存档中的非对象值不可覆盖一个有结构的默认对象（典型：_combat: true）
+    if (typeof snapshot !== 'object') {
+      if (defaults !== null && defaults !== undefined && typeof defaults === 'object' && !Array.isArray(defaults)) {
+        console.warn('[StateManager] restore ignored non-object value for structured key');
+        return defaults;
+      }
+      return snapshot;
+    }
     if (defaults === null || defaults === undefined || typeof defaults !== 'object' || Array.isArray(defaults)) {
       return snapshot;
     }
@@ -886,6 +904,23 @@ class StateManager {
       const v4 = source._version === '4.0' ? source : this._migrateV3toV4(source);
       normalized = this._migrateV4toV5(v4);
       normalized = this._deepMerge(this._buildDefaultState(), normalized);
+    }
+    // 内部结构键消毒：坏存档/劣质写入可能把 _combat 等污染成 true/字符串等标量，
+    // 战斗系统随后 combat.state='peace' 会抛 "Cannot create property 'state' on boolean"。
+    // 可空对象键 → 归 null；必须为对象的键 → 归默认值。放在 continuity 迁移之前，
+    // 因为迁移本身要读 _memory/_meta。
+    for (const key of ['_combat', '_opening_contract']) {
+      if (normalized[key] !== null && (typeof normalized[key] !== 'object' || Array.isArray(normalized[key]))) {
+        console.warn(`[StateManager] restore sanitized non-object ${key}:`, typeof normalized[key]);
+        normalized[key] = null;
+      }
+    }
+    const structuredDefaults = this._buildDefaultState();
+    for (const key of ['_relationships', '_missions', '_memory', '_map', '_meta', '_agent_memories']) {
+      if (!normalized[key] || typeof normalized[key] !== 'object' || Array.isArray(normalized[key])) {
+        console.warn(`[StateManager] restore sanitized non-object ${key}:`, typeof normalized[key]);
+        normalized[key] = structuredDefaults[key];
+      }
     }
     normalized._continuity = migrateLegacyMemory(normalized._continuity, normalized._memory, {
       nodeId: normalized._meta?.current_node_id || 'legacy_restore',
@@ -1477,29 +1512,31 @@ class StateManager {
       return;
     }
 
+    const persistedConfig = { ...config };
+    delete persistedConfig.futurePlanner;
+
     // HTTP 后端强制走同源代理；酒馆通过 iframe 桥接，不能误送进 HTTP 代理。
-    config.useProxy = config.backend !== 'tavern';
+    persistedConfig.useProxy = persistedConfig.backend !== 'tavern';
     
     // Update in-memory cache with plain config
-    this._apiConfigCache = { ...config };
+    this._apiConfigCache = { ...persistedConfig };
 
     try {
       const { saveApiConfigSecure } = await import('../utils/api-crypto.js');
-      await saveApiConfigSecure(config);
+      await saveApiConfigSecure(persistedConfig);
     } catch (e) {
       console.warn('[StateManager] Encrypted API save failed, fallback to plain:', e.message);
       const safeConfig = {
-        apiUrl: String(config.apiUrl || ''),
-        apiKey: String(config.apiKey || ''),
-        model: String(config.model || ''),
-        backend: String(config.backend || 'openai'),
-        disableStreaming: Boolean(config.disableStreaming),
-        promptPreset: config.promptPreset,
-        variableUpdater: config.variableUpdater,
-        narrativeReview: config.narrativeReview,
-        aiCallPolicy: config.aiCallPolicy,
-        futurePlanner: config.futurePlanner,
-        useProxy: config.backend !== 'tavern',
+        apiUrl: String(persistedConfig.apiUrl || ''),
+        apiKey: String(persistedConfig.apiKey || ''),
+        model: String(persistedConfig.model || ''),
+        backend: String(persistedConfig.backend || 'openai'),
+        disableStreaming: Boolean(persistedConfig.disableStreaming),
+        promptPreset: persistedConfig.promptPreset,
+        variableUpdater: persistedConfig.variableUpdater,
+        narrativeReview: persistedConfig.narrativeReview,
+        aiCallPolicy: persistedConfig.aiCallPolicy,
+        useProxy: persistedConfig.backend !== 'tavern',
       };
       this._handleLocalStorageSet('naruto_api_config', JSON.stringify(safeConfig));
     }
@@ -1513,6 +1550,7 @@ class StateManager {
       if (!local) return null;
       const parsed = JSON.parse(local);
       if (!parsed || typeof parsed !== 'object') return null;
+      delete parsed.futurePlanner;
       // 老配置迁移：HTTP 后端强制走代理，酒馆始终走 iframe 桥接。
       if (parsed.backend === 'tavern') {
         parsed.useProxy = false;
@@ -1531,6 +1569,7 @@ class StateManager {
       const { loadApiConfigSecure } = await import('../utils/api-crypto.js');
       const secure = await loadApiConfigSecure();
       if (secure) {
+        delete secure.futurePlanner;
         this._apiConfigCache = secure;
         return secure;
       }
@@ -1547,6 +1586,7 @@ class StateManager {
       const meta = await this.dbGet(STORE_META, 'naruto_api_config');
       if (meta?.value) {
         const parsed = JSON.parse(meta.value);
+        delete parsed.futurePlanner;
         parsed.useProxy = parsed.backend === 'tavern' ? false : Boolean(parsed.apiKey);
         return parsed;
       }

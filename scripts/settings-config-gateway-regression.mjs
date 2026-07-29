@@ -24,8 +24,7 @@ async function main() {
   const latestAuxiliaryConfig = {
     variableUpdater: { enabled: true, model: 'variables-latest', transport: { streaming: true } },
     narrativeReview: { enabled: true, model: 'review-latest' },
-    aiCallPolicy: { strictSingleCall: false, limits: { review: 2 } },
-    futurePlanner: { enabled: false, model: 'planner-latest' }
+    aiCallPolicy: { strictSingleCall: false, limits: { review: 2 } }
   };
   const manager = createManager({
     apiUrl: 'https://old.example/v1',
@@ -34,6 +33,7 @@ async function main() {
     backend: 'openai',
     disableStreaming: false,
     promptPreset: { id: 'current-preset' },
+    futurePlanner: { enabled: false, model: 'legacy-planner' },
     ...latestAuxiliaryConfig
   });
   const gateway = createSettingsConfigGateway(manager);
@@ -58,6 +58,7 @@ async function main() {
   for (const [key, value] of Object.entries(latestAuxiliaryConfig)) {
     assert.deepEqual(saved[key], value, `main connection save must preserve latest ${key}`);
   }
+  assert.equal('futurePlanner' in saved, false);
 
   const auxiliaryManager = createManager({
     apiUrl: 'https://current.example/v1',
@@ -84,7 +85,11 @@ async function main() {
   });
   assert.deepEqual(auxiliarySaved.narrativeReview, { enabled: true, model: 'review-current' });
   assert.deepEqual(auxiliarySaved.aiCallPolicy, { strictSingleCall: false });
-  assert.deepEqual(auxiliarySaved.futurePlanner, { enabled: false });
+  assert.equal('futurePlanner' in auxiliarySaved, false);
+  await assert.rejects(
+    () => auxiliaryGateway.saveAuxiliaryConfig('futurePlanner', { enabled: true }),
+    /Unsupported auxiliary API config/
+  );
 
   let releaseFirstSave;
   let markFirstSaveStarted;

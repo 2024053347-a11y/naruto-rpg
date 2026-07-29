@@ -354,8 +354,13 @@ try {
 
     const acceptedResponses = responses.filter((response) => response.status === 201);
     assert.equal(acceptedResponses.length, 1);
-    assert.equal(responses.filter((response) => response.status === 400).length, 7);
     createdSaveId = (await acceptedResponses[0].json()).id;
+    const rejectedResponses = responses.filter((response) => response.status !== 201);
+    assert.equal(rejectedResponses.length, 7);
+    assert.equal(
+      rejectedResponses.every((response) => response.status === 400 || response.status === 429),
+      true
+    );
 
     const listResponse = await fetch(`http://127.0.0.1:${port}/api/saves`);
     assert.equal(listResponse.status, 200);
@@ -377,18 +382,17 @@ try {
 
   await check('cloud-save updates enforce the same preview bounds as creates', async () => {
     assert.ok(createdSaveId);
-    const [wrongType, oversized] = await Promise.all([
-      fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preview_data: [] })
-      }),
-      fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preview_data: { summary: 'x'.repeat(65 * 1024) } })
-      })
-    ]);
+    const wrongType = await fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preview_data: [] })
+    });
+    await wrongType.json();
+    const oversized = await fetch(`http://127.0.0.1:${port}/api/saves/${createdSaveId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preview_data: { summary: 'x'.repeat(65 * 1024) } })
+    });
 
     assert.equal(wrongType.status, 400);
     assert.equal(oversized.status, 400);

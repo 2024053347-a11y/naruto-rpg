@@ -10,8 +10,7 @@ const MAIN_AI_CONNECTION_FIELDS = Object.freeze([
 const AUXILIARY_CONFIG_KEYS = new Set([
   'variableUpdater',
   'narrativeReview',
-  'aiCallPolicy',
-  'futurePlanner'
+  'aiCallPolicy'
 ]);
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 
@@ -59,6 +58,7 @@ export class SettingsConfigGateway {
     return this._enqueueAPICommit(async () => {
       const current = this.manager.getAPIConfig() || {};
       const next = isRecord(current) ? clone(current) : {};
+      delete next.futurePlanner;
 
       for (const field of MAIN_AI_CONNECTION_FIELDS) {
         if (Object.prototype.hasOwnProperty.call(patch, field) && patch[field] !== undefined) {
@@ -80,6 +80,7 @@ export class SettingsConfigGateway {
     return this._enqueueAPICommit(async () => {
       const current = this.manager.getAPIConfig() || {};
       const next = isRecord(current) ? clone(current) : {};
+      delete next.futurePlanner;
       next[section] = mergePatch(current[section], patch);
 
       await this.manager.saveAPIConfig(next);

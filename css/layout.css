@@ -379,6 +379,96 @@ body[data-paragraph-indent="true"] .chat-content p { text-indent: 2em; }
   line-height: 1.5;
   font-family: var(--font-body);
 }
+
+/* ── Shinobi Daily entry (fixed renderer; model supplies data only) ──── */
+.shinobi-daily-launch {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 68px;
+  margin-top: 24px;
+  padding: 10px 14px;
+  border: 1px solid #9f947a;
+  border-top: 3px double #2b2a26;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 20px, rgba(43, 42, 38, 0.03) 20px 21px),
+    linear-gradient(160deg, #f8f3e6 0%, #e9dfc6 100%);
+  color: #2b2a26;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2), inset 0 0 22px rgba(43, 42, 38, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.shinobi-daily-launch:hover {
+  border-color: #9e2f24;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.27), inset 0 0 22px rgba(43, 42, 38, 0.06);
+}
+.shinobi-daily-launch:focus-visible {
+  outline: 2px solid #c69c6d;
+  outline-offset: 3px;
+}
+.shinobi-daily-launch__seal {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #9e2f24;
+  border-radius: 3px;
+  color: #7c231b;
+  font: 700 25px/1 "STKaiti", KaiTi, serif;
+  transform: rotate(-4deg);
+}
+.shinobi-daily-launch__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.shinobi-daily-launch__copy strong {
+  color: #2b2a26;
+  font: 700 20px/1.25 "STKaiti", KaiTi, serif;
+  letter-spacing: 0;
+}
+.shinobi-daily-launch__copy small {
+  color: #6d695f;
+  font: 11px/1.45 var(--font-body);
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+.shinobi-daily-launch__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-left: 2px solid #9e2f24;
+  color: #742018;
+  font: 700 12px/1.2 var(--font-title);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .shinobi-daily-launch {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 11px;
+  }
+  .shinobi-daily-launch__seal { width: 38px; height: 38px; font-size: 22px; }
+  .shinobi-daily-launch__action {
+    grid-column: 2;
+    justify-content: flex-start;
+    min-height: 26px;
+    padding: 2px 0 0;
+    border-left: 0;
+    border-top: 1px solid rgba(158, 47, 36, 0.35);
+  }
+}
 .vu-edit-input:focus { border-color: var(--c-kin); box-shadow: 0 0 6px rgba(198,156,109,0.15); }
 .vu-edit-save, .vu-edit-cancel {
   width: 28px; height: 28px; border-radius: 4px;

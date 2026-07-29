@@ -16,20 +16,23 @@ import {
   saveVariableUpdaterPreset
 } from '../js/data/variable-updater-preset.js';
 import {
-  assertNarrativeReviewEvidenceSafe,
   buildNarrativeReviewMessages,
-  detectFutureSceneLeakage,
   getNarrativeReviewConfig,
   parseNarrativeReviewPreview,
   validateNarrativeReviewOutput
 } from '../js/core/narrative-review.js';
 import { MessagePipeline } from '../js/core/pipeline.js';
 import {
+  buildVariableUpdaterMessages,
   sanitizeVariableUpdaterOutput,
   validateVariableUpdaterOutput
 } from '../js/core/variable-updater.js';
 import { instructionParser } from '../js/core/instruction-parser.js';
-import { generateMainVarInstructions } from '../js/data/var-schema.js';
+import {
+  generateMainVarInstructions,
+  getStructuredVariableContractPrompt,
+  validateStructuredVariableUpdate
+} from '../js/data/var-schema.js';
 
 let passed = 0;
 function test(name, fn) {
@@ -44,7 +47,7 @@ function assertVisibleReasoningContract(text, tag, label) {
     new RegExp(`(?:必须|务必|请)[^。\\n]{0,120}(?:输出|写入)[^。\\n]{0,40}<${tag}>`, 'i'),
     `${label} must require a visible <${tag}> block`
   );
-  assert.match(text, /不得写入受保护未来、NPC未公开秘密、证据编号和审校模型私有记录/);
+  assert.match(text, /不得写入NPC未公开秘密、证据编号和审校模型私有记录/);
 }
 
 function createStorage(seed = {}) {
@@ -69,6 +72,9 @@ test('main preset is evidence-led and contains no unresolved runtime placeholder
   assertVisibleReasoningContract(text, 'reasoning', 'main preset');
   assert.doesNotMatch(text, /\$\{[^}]+\}/);
   assert.doesNotMatch(text, /SYSTEM INITIALIZATION|50亿美金|mainDatabase/);
+  assert.match(text, /\[行动\][\s\S]*每行|每行[\s\S]*\[行动\]/, 'main preset must require clickable action options');
+  assert.doesNotMatch(text, /不输出替玩家决定的固定选项列表/);
+  assert.match(text, /≈卦象判定≈[\s\S]*卦象：[\s\S]*≈卦终≈/, 'main preset must provide the divination rendering contract');
 });
 
 test('all main-model rules are visible as editable preset entries', () => {
@@ -158,16 +164,37 @@ test('variable updater migration replaces built-ins and preserves user entries',
   assert.ok(migrated.entries.some(entry => entry.id === 'custom_variable_rule' && entry.content === 'keep'));
 });
 
-test('variable updater refuses pretrained canon over state and worldbook', () => {
+test('variable updater uses evidence priority without asking the updater to classify future prose', () => {
   const text = DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content).join('\n');
   assert.match(text, /世界书.*模型预训练知识/s);
-  assert.match(text, /未来倒灌/);
   assert.match(text, /上一轮相关行动/);
   assert.match(text, /最后一件.*remove/s);
   assert.match(text, /已有战斗卡.*禁止重复生成整张战斗卡/s);
   assert.match(text, /原创忍者.*不得伪造 JT ID/s);
-  assert.match(text, /七段自检/);
-  assertVisibleReasoningContract(text, 'variable_thinking', 'variable updater preset');
+  assert.match(text, /简短差异审计/);
+  assert.match(text, /必须[^\n]*输出[^\n]*<variable_thinking>/);
+  assert.doesNotMatch(text, /未来倒灌|受保护未来|未来事件/);
+  assert.doesNotMatch(text, /NEXT_ANCHOR|protected_future/);
+  assert.match(text, /target_date 即使晚于 current_date[\s\S]*允许[\s\S]*<event>/);
+});
+
+test('main-model fallback tags match the executable updater contracts', () => {
+  const editable = DEFAULT_MAIN_PRESET.entries
+    .filter(entry => entry.activation === 'variable_updater_disabled')
+    .map(entry => entry.content).join('\n');
+  const generated = generateMainVarInstructions(false);
+  for (const prompt of [editable, generated]) {
+    assert.match(prompt, /完整[^\n]*世界·时间[^\n]*自动同步[^\n]*世界·月份/);
+    assert.doesNotMatch(prompt, /完整 世界·时间 和数字 世界·月份/);
+    assert.match(prompt, /active\|progress\|completed\|failed\|abandoned/);
+    assert.match(prompt, /remove_pins/);
+    assert.match(prompt, /<combat state="start">\{"enemy_name"/);
+    assert.doesNotMatch(prompt, /<combat state="start\|[^\n]+>\{\}<\/combat>/);
+    assert.match(prompt, /completed\|resolved\|ended\|failed\|cancelled/);
+    assert.match(prompt, /combatant:false/);
+    assert.match(prompt, /"chakra_nature":\[\],"jutsu":\[\]/);
+    assert.match(prompt, /resource_type|消耗资源/);
+  }
 });
 
 test('variable updater sanitizer preserves both supported self-check tags', () => {
@@ -190,6 +217,8 @@ test('variable updater combat contract matches the parser and settlement fields'
     assert.match(text, /<combat state="player_turn">[\s\S]*action_name[\s\S]*damage_to_enemy/);
     assert.match(text, /<combat state="enemy_turn">[\s\S]*action_name[\s\S]*damage_to_player/);
   }
+  assert.match(presetText, /结束状态只能逐字使用 victory、defeat、retreat/);
+  assert.doesNotMatch(presetText, /<combat state="player_retreat">/);
 
   const output = sanitizeVariableUpdaterOutput([
     '<variable_thinking>七、差异复检：输出清单：variable=0, mission=0, relationship=0, memory=1, combat=1, event=0。</variable_thinking>',
@@ -236,6 +265,94 @@ test('variable updater rejects unknown paths and structurally empty operations',
   }
 });
 
+test('structured scalar validation rejects operations and values that the state writer cannot apply', () => {
+  const invalid = [
+    { path: 'player.name', op: 'add', value: 1 },
+    { path: 'world_state.calendar', op: 'add', value: 1 },
+    { path: 'world_state.month', op: 'set', value: 'spring' },
+    { path: 'attributes.chakra_current', op: 'sub', value: -10 },
+    { path: 'player.alive', op: 'set', value: 'unknown' }
+  ];
+  for (const update of invalid) {
+    assert.equal(validateStructuredVariableUpdate(update).valid, false, JSON.stringify(update));
+  }
+  for (const update of [
+    { path: 'player.name', op: 'set', value: '鸣人' },
+    { path: 'world_state.calendar', op: 'set', value: '木叶52年7月15日·正午' },
+    { path: 'world_state.month', op: 'set', value: 7 },
+    { path: 'attributes.chakra_current', op: 'sub', value: 10 }
+  ]) {
+    assert.equal(validateStructuredVariableUpdate(update).valid, true, JSON.stringify(update));
+  }
+});
+
+test('legacy flat variables use the same type-aware operations as the state writer', () => {
+  assert.equal(validateStructuredVariableUpdate({
+    key: '世界·地点', op: '+', value: '火影岩'
+  }).valid, false);
+  assert.equal(validateStructuredVariableUpdate({
+    key: '属性·当前查克拉', op: '-', value: Number.POSITIVE_INFINITY
+  }).valid, false);
+  assert.equal(validateStructuredVariableUpdate({
+    key: '属性·当前查克拉', op: '+', value: -1
+  }).valid, false);
+  assert.equal(validateStructuredVariableUpdate({
+    key: '属性·当前查克拉', op: '+', value: 10
+  }).valid, true);
+  assert.equal(validateStructuredVariableUpdate({
+    key: '世界·地点', op: '=', value: '火影岩'
+  }).valid, true);
+});
+
+test('structured parser normalizes operation casing after validation', () => {
+  const output = sanitizeVariableUpdaterOutput([
+    '<variable_thinking>地点已发生变化；其余领域无变化。</variable_thinking>',
+    '<variable>{"path":"world_state.current_location","op":"SET","value":"第三训练场"}</variable>',
+    '<memory>{"summary":"玩家抵达第三训练场。"}</memory>'
+  ].join('\n'));
+  const validation = validateVariableUpdaterOutput(output, { state: { '系统·回合数': 2 } });
+  assert.equal(validation.valid, true, validation.errors.join('\n'));
+  assert.deepEqual(instructionParser.parse(output).variables[0], {
+    path: 'world_state.current_location', op: 'set', value: '第三训练场'
+  });
+});
+
+test('new skills and items require complete executable entity payloads', () => {
+  for (const update of [
+    { path: 'skills.jutsu.test', op: 'set', value: { name: 'test' } },
+    { path: 'equipment.tools.kunai', op: 'set', value: { name: 'kunai' } }
+  ]) {
+    assert.equal(validateStructuredVariableUpdate(update).valid, false, JSON.stringify(update));
+  }
+  assert.equal(validateStructuredVariableUpdate({
+    path: 'skills.jutsu.水遁·水乱波', op: 'set', value: {
+      name: '水遁·水乱波', rank: 'C', element: '水', resource_type: '查克拉',
+      cost: 18, power: 32, mastery: 60, description: '向前方释放水流。'
+    }
+  }).valid, true);
+  assert.equal(validateStructuredVariableUpdate({
+    path: 'equipment.tools.苦无', op: 'set',
+    value: { quantity: 2, quality: '普通', description: '标准忍具。' }
+  }).valid, true);
+});
+
+test('generated variable DSL documents canonical paths without legacy aliases', () => {
+  const contract = getStructuredVariableContractPrompt();
+  for (const path of [
+    'player.current_goal', 'attributes.spirit_current', 'attributes.stamina_current',
+    'progression.exp', 'equipment.ryo',
+    'progression.reputation.*', 'equipment.equipped.weapon',
+    'world_state.calendar', 'world_state.month', 'world_state.weather',
+    'world_state.map.known_locations', 'world_state.map.explored_regions'
+  ]) assert.match(contract, new RegExp(path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  for (const legacyPath of [
+    'attributes.willpower', 'attributes.willpower_current',
+    'progression.ryo', 'world_state.explored_regions'
+  ]) assert.doesNotMatch(contract, new RegExp(legacyPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.match(contract, /set, add, sub, assign, push, remove/);
+  assert.doesNotMatch(contract, /\breplace\b|\bupdate\b|\bappend\b/);
+});
+
 test('variable updater requires executable mission event and npc records', () => {
   const wrap = (manifest, tag) => sanitizeVariableUpdaterOutput([
     `<variable_thinking>七、差异复检：输出清单：${manifest}。</variable_thinking>`,
@@ -271,14 +388,13 @@ test('variable updater preset cannot discard the confirmed narrative macro', () 
   }
 });
 
-test('variable updater rejects a declared mission when the top-level mission tag is missing', () => {
+test('free-form audit prose cannot invent a missing mission requirement', () => {
   const cleaned = sanitizeVariableUpdaterOutput([
-    '<variable_thinking>五、任务成长与地图：本轮已确认接取护送委托，需要新增任务并输出 <mission>。\n七、差异复检：准备写入新任务。</variable_thinking>',
-    '<memory>{"summary":"玩家接下护送委托，下一回合应承接任务目标。"}</memory>'
+    '<variable_thinking>任务成长与世界：地点和时间需要更新；任务本身无变化。</variable_thinking>',
+    '<memory>{"summary":"玩家移动后时间经过了一小时；本轮没有任务变化。"}</memory>'
   ].join('\n'));
   const result = validateVariableUpdaterOutput(cleaned);
-  assert.equal(result.valid, false);
-  assert.match(result.errors.join('\n'), /mission|任务/i);
+  assert.equal(result.valid, true, result.errors.join('\n'));
 });
 
 test('variable updater accepts a declared mission when a real top-level mission tag exists', () => {
@@ -314,31 +430,37 @@ test('variable updater permits a partial update for an already active mission', 
   assert.equal(result.valid, true, result.errors.join('\n'));
 });
 
-test('variable updater also rejects a declared new character record without relationship output', () => {
+test('free-form audit prose cannot invent a missing relationship requirement', () => {
   const cleaned = sanitizeVariableUpdaterOutput([
-    '<variable_thinking>三、人物关系：新人物药师野乃宇已实际登场，需要新增人物关系档案。\n七、差异复检：准备写入人物关系。</variable_thinking>',
-    '<memory>{"summary":"药师野乃宇在本轮登场并与玩家交谈。"}</memory>'
+    '<variable_thinking>人物关系：检查是否需要新增人物关系档案；结论为无变化。</variable_thinking>',
+    '<memory>{"summary":"玩家独自完成整理，没有人物关系变化。"}</memory>'
   ].join('\n'));
   const result = validateVariableUpdaterOutput(cleaned);
-  assert.equal(result.valid, false);
-  assert.match(result.errors.join('\n'), /relationship|人物关系/i);
+  assert.equal(result.valid, true, result.errors.join('\n'));
 });
 
-test('variable updater rejects a new ninja relationship without rank and jutsu', () => {
+test('variable updater rejects an unclassified ninja card but permits explicit unknown arrays', () => {
   const cleaned = sanitizeVariableUpdaterOutput([
-    '<variable_thinking>三、人物关系：新人物雾隐追忍已登场，需要建立战斗型人物档案。\n七、差异复检：输出清单：variable=0, mission=0, relationship=1, memory=1, combat=0, event=0。</variable_thinking>',
+    '<variable_thinking>新人物需要建立战斗型人物档案。</variable_thinking>',
     '<relationship>{"npc":"雾隐追忍","combatant":true,"role":"追忍"}</relationship>',
     '<memory>{"summary":"雾隐追忍拦住了玩家。"}</memory>'
   ].join('\n'));
   const result = validateVariableUpdaterOutput(cleaned, { state: { _relationships: {} } });
   assert.equal(result.valid, false);
-  assert.match(result.errors.join('\n'), /忍阶|忍术|战斗卡/);
+  assert.match(result.errors.join('\n'), /忍阶|jutsu|chakra_nature|战斗卡/);
+
+  const explicitUnknown = sanitizeVariableUpdaterOutput([
+    '<variable_thinking>该忍者已确认忍阶，但没有可靠的属性或招式证据。</variable_thinking>',
+    '<relationship>{"npc":"雾隐追忍","combatant":true,"combat_stats":{"rank":"中忍","chakra_nature":[],"jutsu":[]}}</relationship>',
+    '<memory>{"summary":"雾隐追忍拦住了玩家，能力细节仍未知。"}</memory>'
+  ].join('\n'));
+  assert.equal(validateVariableUpdaterOutput(explicitUnknown, { state: { _relationships: {} } }).valid, true);
 });
 
-test('variable updater accepts a nested complete combat card or an explicit civilian classification', () => {
+test('variable updater accepts a complete nested combat card or an explicit civilian classification', () => {
   const ninja = sanitizeVariableUpdaterOutput([
-    '<variable_thinking>三、人物关系：新人物雾隐追忍已登场并展示水遁。\n七、差异复检：输出清单：variable=0, mission=0, relationship=1, memory=1, combat=0, event=0。</variable_thinking>',
-    '<relationship>{"npc":"雾隐追忍","combatant":true,"combat_stats":{"rank":"中忍","chakra_nature":["水"],"jutsu":[{"name":"水遁·水乱波","rank":"C","mastery":60}]}}</relationship>',
+    '<variable_thinking>新人物已展示有完整数据库依据的水遁。</variable_thinking>',
+    '<relationship>{"npc":"雾隐追忍","combatant":true,"combat_stats":{"rank":"中忍","chakra_nature":["水"],"jutsu":[{"name":"水遁·水乱波","rank":"C","element":"水","resource_type":"查克拉","cost":18,"power":32,"mastery":60,"description":"向前方释放水流。","type":"忍术"}]}}</relationship>',
     '<memory>{"summary":"雾隐追忍施展水遁拦截玩家。"}</memory>'
   ].join('\n'));
   const civilian = sanitizeVariableUpdaterOutput([
@@ -348,6 +470,55 @@ test('variable updater accepts a nested complete combat card or an explicit civi
   ].join('\n'));
   assert.equal(validateVariableUpdaterOutput(ninja, { state: { _relationships: {} } }).valid, true);
   assert.equal(validateVariableUpdaterOutput(civilian, { state: { _relationships: {} } }).valid, true);
+});
+
+test('mission and event status validation matches their business systems', () => {
+  const wrap = body => sanitizeVariableUpdaterOutput([
+    '<variable_thinking>对应业务状态已在正文中明确改变。</variable_thinking>',
+    body,
+    '<memory>{"summary":"对应状态已更新。"}</memory>'
+  ].join('\n'));
+  const state = { '系统·回合数': 2, _missions: { active: { M1: { id: 'M1', title: '巡逻' } } } };
+  assert.equal(validateVariableUpdaterOutput(wrap('<mission>{"id":"M1","status":"abandoned"}</mission>'), { state }).valid, true);
+  for (const status of ['completed', 'resolved', 'ended', 'failed', 'cancelled']) {
+    const output = wrap(`<event>{"id":"ordinary-1","status":"${status}","description":"事件结束"}</event>`);
+    assert.equal(validateVariableUpdaterOutput(output, { state }).valid, true, status);
+  }
+  const project = wrap('<event>{"id":"DAY-P1-START-001","status":"completed","description":"错误状态"}</event>');
+  assert.equal(validateVariableUpdaterOutput(project, { state }).valid, false);
+});
+
+test('combat validation requires state-specific executable fields', () => {
+  const wrap = combat => sanitizeVariableUpdaterOutput([
+    '<variable_thinking>战斗状态发生变化。</variable_thinking>', combat,
+    '<memory>{"summary":"战斗状态已记录。"}</memory>'
+  ].join('\n'));
+  for (const empty of [
+    '<combat state="start">{}</combat>',
+    '<combat state="player_turn">{}</combat>',
+    '<combat state="victory">{}</combat>'
+  ]) assert.equal(validateVariableUpdaterOutput(wrap(empty)).valid, false, empty);
+  assert.equal(validateVariableUpdaterOutput(wrap(
+    '<combat state="start">{"enemy_name":"雾隐追忍","enemy_rank":"中忍"}</combat>'
+  )).valid, true);
+  assert.equal(validateVariableUpdaterOutput(wrap(
+    '<combat state="victory">{"log":"敌人失去战斗能力。"}</combat>'
+  )).valid, true);
+});
+
+test('runtime updater prompt is deduplicated and ordered system before user data', () => {
+  const marker = 'UNIQUE_STATE_MARKER_7F2A';
+  const opening = 'UNIQUE_OPENING_MARKER_7F2A';
+  const messages = buildVariableUpdaterMessages(DEFAULT_VARIABLE_UPDATER_PRESET, {
+    state: { '系统·回合数': 2 }, compactState: { marker },
+    userInput: '等待', narrativeResponse: '时间经过。',
+    openingContract: opening,
+    knowledgeContext: `[当前状态]\n{"marker":"${marker}"}`
+  });
+  assert.deepEqual(messages.map(message => message.role), ['system', 'user']);
+  const prompt = messages.map(message => message.content).join('\n');
+  assert.equal(prompt.split(marker).length - 1, 1, 'current state must appear once');
+  assert.equal(prompt.split(opening).length - 1, 1, 'opening contract must appear once');
 });
 
 test('first-turn fill mode must materialize blank talent and ability categories', () => {
@@ -366,7 +537,7 @@ test('first-turn fill mode must materialize blank talent and ability categories'
   const complete = sanitizeVariableUpdaterOutput([
     '<variable_thinking>四、技能物品：补全开局天赋与初始忍术。\n七、差异复检：输出清单：variable=2, mission=0, relationship=0, memory=1, combat=0, event=0。</variable_thinking>',
     '<variable>{"path":"skills.kekkei_genkai.冰遁","op":"set","value":{"name":"冰遁","rank":"初醒","mastery":35,"description":"融合水与风制造冰。"}}</variable>',
-    '<variable>{"path":"skills.jutsu.冰遁·冰针","op":"set","value":{"name":"冰遁·冰针","rank":"D","element":"冰","cost":12,"power":22,"mastery":30,"description":"凝结冰针。"}}</variable>',
+    '<variable>{"path":"skills.jutsu.冰遁·冰针","op":"set","value":{"name":"冰遁·冰针","rank":"D","element":"冰","resource_type":"查克拉","cost":12,"power":22,"mastery":30,"description":"凝结冰针。"}}</variable>',
     '<memory>{"summary":"开局档案补全冰遁与基础冰遁忍术。"}</memory>'
   ].join('\n'));
   assert.equal(validateVariableUpdaterOutput(complete, { state }).valid, true);
@@ -445,24 +616,18 @@ test('review output becomes a hidden-audit, non-committed narrative preview', ()
   assert.doesNotMatch(artifact.displayText, /引用 E1|问题位置|audit_internal/);
 });
 
-test('review quarantines FUTURE_ONLY scenes and rejects leakage outside reasoning', () => {
+test('review accepts the nearest future day as ordinary plot evidence', () => {
   const sourceMessages = [{
     role: 'system',
-    content: `<<< FUTURE_ONLY_START current=K066-12-30 target=K067-01-01 days_until=1 >>>
+    content: `<<< CURRENT_PLOT_START current=K066-12-30 target=K067-01-01 days_until=1 date_relation=future >>>
 场景标题: 修行归来
   - [EV-P2-RETURN-TEAM-01-01] order=10 role=setup | 归村人员在木叶正门完成登记。
-<<< FUTURE_ONLY_END >>>`
+<<< CURRENT_PLOT_END >>>`
   }];
-  const safe = '<audit_internal>未来隔离清单包含 SCN 与 EV-P2-RETURN-TEAM-01-01；最终正文不得泄露。</audit_internal><final>清晨的木叶仍在处理昨日留下的文书。值班忍者核对完巡逻表，把尚未盖章的卷宗放回桌角，示意来访者稍后再问。</final>';
-  const leaked = '<audit_internal>已检查未来区块，并核对当前日期、角色知识和所有结构标签。</audit_internal><final>清晨的木叶仍在处理文书。修行归来已经成为走廊里公开讨论的安排，值班忍者把归村名单递给来访者查看。</final>';
-  assert.throws(
-    () => assertNarrativeReviewEvidenceSafe(sourceMessages),
-    error => error?.code === 'REVIEW_PROTECTED_FUTURE_EVIDENCE'
-  );
-  assert.equal(detectFutureSceneLeakage({ sourceMessages, text: safe }).leaked, false);
-  assert.equal(detectFutureSceneLeakage({ sourceMessages, text: leaked }).leaked, true);
-  assert.equal(validateNarrativeReviewOutput(safe, { sourceMessages }), safe);
-  assert.throws(() => validateNarrativeReviewOutput(leaked, { sourceMessages }), /泄露未来场景/);
+  const preview = '<audit_internal>已核对 E1 中的目标日期与剧情日关系，并确认此分支允许提前推进该会面。</audit_internal><final>清晨的木叶仍在处理文书。修行归来的忍者在正门完成登记，值班人员把名单递给来访者核对。</final>';
+  const messages = buildNarrativeReviewMessages({ sourceMessages, candidateResponse: preview });
+  assert.match(messages.map(message => message.content).join('\n'), /修行归来/);
+  assert.equal(validateNarrativeReviewOutput(preview, { sourceMessages }), preview);
 });
 
 test('updater-owned tags are removed before the final response is applied', () => {

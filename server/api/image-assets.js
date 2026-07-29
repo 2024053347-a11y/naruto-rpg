@@ -4,11 +4,16 @@ import { config } from '../config.js';
 import * as db from '../db/index.js';
 import { isImageAssetId, ImageAssetRepositoryError } from '../db/image-asset-repository.js';
 import { requireAuth } from '../middleware/auth.js';
+import { createAdmissionController } from '../middleware/admission.js';
+import { asyncRoute } from '../middleware/async-route.js';
 import { inspectImageFile, ImageValidationError } from '../image/image-validation.js';
 import { parseImageAssetMultipart, MultipartUploadError } from '../image/multipart-image-upload.js';
 
 const router = Router();
 const DANGEROUS_METADATA_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
+export const imageUploadAdmissionController = createAdmissionController({
+  upload: { perUser: 1, global: config.imageAssets.uploadGlobalConcurrency }
+});
 
 function apiError(message, status = 400, code = 'INVALID_REQUEST', details = undefined) {
   return new ImageAssetRepositoryError(message, status, code, details);
@@ -112,12 +117,35 @@ function queryText(value, field) {
   return value;
 }
 
-function asyncRoute(handler) {
-  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+export function imageUploadAdmission(req, res, next) {
+  if (req.method !== 'POST' || req.path !== '/') return next();
+  const lease = imageUploadAdmissionController.tryAcquire('upload', req.user.id);
+  if (!lease.acquired) {
+    req.resume();
+    res.setHeader('Retry-After', '5');
+    const perUser = lease.reason === 'user_limit';
+    return res.status(perUser ? 429 : 503).json({
+      error: perUser ? '该用户已有图片正在上传，请稍后重试' : '图片上传服务繁忙，请稍后重试',
+      code: perUser ? 'IMAGE_UPLOAD_IN_PROGRESS' : 'IMAGE_UPLOAD_BUSY'
+    });
+  }
+
+  let released = false;
+  const release = () => {
+    if (released) return;
+    released = true;
+    res.off('finish', release);
+    res.off('close', release);
+    lease.release();
+  };
+  res.once('finish', release);
+  res.once('close', release);
+  next();
 }
 
 router.use(requireAuth);
 router.use(requireSameOriginMutation);
+router.use(imageUploadAdmission);
 // Authentication and CSRF checks happen before any request body is parsed.
 router.use(json({ limit: '256kb' }));
 

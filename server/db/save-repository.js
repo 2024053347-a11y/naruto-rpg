@@ -1,73 +1,126 @@
 // @ts-check
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { JsonStore } from './json-store.js';
 
 /**
  * @typedef {Object} SaveMeta
- * @property {string} id 存档 ID（UUID）
- * @property {string} user_id 所属用户的 Discord ID
- * @property {string} slot_name 存档槽位名称
- * @property {Record<string, any>} preview_data 前端展示用的预览元数据
- * @property {number} size_bytes 压缩前的原始 JSON 字节数
- * @property {string} created_at ISO 8601 时间戳
- * @property {string} updated_at ISO 8601 时间戳
+ * @property {string} id
+ * @property {string} user_id
+ * @property {string} slot_name
+ * @property {Record<string, any>} preview_data
+ * @property {number} size_bytes
+ * @property {number} [revision]
+ * @property {string} [blob_name]
+ * @property {number} [compressed_size_bytes]
+ * @property {string} [content_sha256]
+ * @property {string} created_at
+ * @property {string} updated_at
  */
 
-/**
- * @typedef {SaveMeta & { save_data: Buffer }} SaveRecord
- */
+/** @typedef {SaveMeta & { save_data: Buffer }} SaveRecord */
+/** @typedef {SaveMeta & { file_path: string }} SaveContent */
 
-/**
- * SaveRepository —— 云存档仓储。
- *
- * 存储模型（沿用旧版磁盘布局，保证平滑升级）：
- * - saves_index.json：{ [saveId]: SaveMeta }，仅存元数据；
- * - saves/<id>.bin：gzip 压缩后的存档二进制正文。
- *
- * 一致性约定：新增/更新时「先写 .bin、后写索引」，
- * 保证索引里出现的存档一定有对应的二进制文件。
- */
 export class SaveRepository {
   /** @type {JsonStore} */
   #index;
   /** @type {string} */
   #savesDir;
 
-  /**
-   * @param {string} indexFilePath saves_index.json 的绝对路径
-   * @param {string} savesDir 二进制存档目录的绝对路径
-   */
   constructor(indexFilePath, savesDir) {
     this.#index = new JsonStore(indexFilePath, {});
-    this.#savesDir = savesDir;
+    this.#savesDir = path.resolve(savesDir);
   }
 
-  /** @returns {Promise<void>} */
   async init() {
     await fs.mkdir(this.#savesDir, { recursive: true });
     await this.#index.ensureExists();
+    await this.#cleanupInterruptedWrites();
   }
 
-  /**
-   * 计算存档二进制文件路径，并防御路径穿越
-   * （API 层已校验 ID 格式，这里是纵深防御）。
-   * @param {string} id
-   * @returns {string}
-   */
-  #binPath(id) {
-    const resolved = path.resolve(this.#savesDir, `${id}.bin`);
-    if (!resolved.startsWith(this.#savesDir + path.sep)) {
-      throw new Error(`[DB] Illegal save id (path traversal blocked): ${id}`);
+  #legacyBlobName(id) {
+    return `${id}.bin`;
+  }
+
+  #blobPath(blobName) {
+    if (typeof blobName !== 'string'
+        || blobName.length > 180
+        || !/^[a-zA-Z0-9._-]+\.bin$/.test(blobName)) {
+      throw new Error(`[DB] Illegal save blob name: ${blobName}`);
+    }
+    const resolved = path.resolve(this.#savesDir, blobName);
+    if (!resolved.startsWith(`${this.#savesDir}${path.sep}`)) {
+      throw new Error(`[DB] Save blob path traversal blocked: ${blobName}`);
     }
     return resolved;
   }
 
-  /**
-   * 某用户的全部存档元数据，按 updated_at 降序。
-   * @param {string} userId
-   * @returns {Promise<SaveMeta[]>}
-   */
+  #pathForMeta(id, meta) {
+    return this.#blobPath(meta.blob_name || this.#legacyBlobName(id));
+  }
+
+  #revisionBlobName(id, revision) {
+    return `${id}.r${revision}.${randomUUID()}.bin`;
+  }
+
+  async #cleanupInterruptedWrites() {
+    let entries;
+    try {
+      entries = await fs.readdir(this.#savesDir, { withFileTypes: true });
+    } catch (error) {
+      if (error?.code !== 'ENOENT') console.warn('[DB] Unable to inspect save directory:', error);
+      return;
+    }
+    await Promise.all(entries.map(async (entry) => {
+      if (!entry.isFile() || !entry.name.endsWith('.tmp')) return;
+      try {
+        await fs.rm(path.join(this.#savesDir, entry.name), { force: true });
+      } catch (error) {
+        console.warn(`[DB] Unable to clean interrupted save write ${entry.name}:`, error);
+      }
+    }));
+  }
+
+  async #promoteFile(sourcePath, blobName) {
+    const finalPath = this.#blobPath(blobName);
+    const tempPath = path.join(this.#savesDir, `.${blobName}.${process.pid}.tmp`);
+    try {
+      try {
+        await fs.rename(sourcePath, tempPath);
+      } catch (error) {
+        if (error?.code !== 'EXDEV') throw error;
+        await fs.copyFile(sourcePath, tempPath, fs.constants.COPYFILE_EXCL);
+        await fs.rm(sourcePath, { force: true });
+      }
+      const handle = await fs.open(tempPath, 'r+');
+      try {
+        await handle.sync();
+      } finally {
+        await handle.close();
+      }
+      await fs.rename(tempPath, finalPath);
+      return finalPath;
+    } catch (error) {
+      await fs.rm(tempPath, { force: true }).catch(() => {});
+      throw error;
+    }
+  }
+
+  async #stageBuffer(id, buffer) {
+    const sourcePath = path.join(this.#savesDir, `.${id}.${randomUUID()}.buffer.tmp`);
+    await fs.writeFile(sourcePath, buffer, { flag: 'wx' });
+    return sourcePath;
+  }
+
+  async #removeBlob(filePath) {
+    try {
+      await fs.rm(filePath, { force: true });
+    } catch (error) {
+      console.warn(`[DB] Unable to remove obsolete save blob ${path.basename(filePath)}:`, error);
+    }
+  }
+
   async listByUser(userId) {
     const index = await this.#index.read();
     return Object.values(index)
@@ -75,10 +128,6 @@ export class SaveRepository {
       .sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at));
   }
 
-  /**
-   * @param {string} userId
-   * @returns {Promise<number>}
-   */
   async countByUser(userId) {
     const index = await this.#index.read();
     return Object.values(index).filter((save) => save.user_id === userId).length;
@@ -89,122 +138,175 @@ export class SaveRepository {
     return Object.keys(index).length;
   }
 
-  /**
-   * 仅读取元数据（不加载二进制正文），用于权限校验等轻量场景。
-   * 与旧版 getSaveById 语义对齐：索引存在但 .bin 文件缺失时视为存档不存在。
-   * @param {string} id
-   * @returns {Promise<SaveMeta | null>}
-   */
   async findMetaById(id) {
     const index = await this.#index.read();
     const meta = index[id];
     if (!meta) return null;
     try {
-      await fs.access(this.#binPath(id));
+      await fs.access(this.#pathForMeta(id, meta));
+      return meta;
     } catch {
       return null;
     }
-    return meta;
   }
 
-  /**
-   * 读取完整存档（元数据 + 二进制正文）。
-   * @param {string} id
-   * @returns {Promise<SaveRecord | null>}
-   */
-  async findById(id) {
+  async findContentById(id) {
     const index = await this.#index.read();
     const meta = index[id];
     if (!meta) return null;
+    const file_path = this.#pathForMeta(id, meta);
     try {
-      const save_data = await fs.readFile(this.#binPath(id));
-      return { ...meta, save_data };
-    } catch (err) {
-      if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') {
-        console.error(`[DB] Error reading save bin file ${id}:`, err);
-      }
+      await fs.access(file_path);
+      return { ...meta, file_path };
+    } catch {
       return null;
     }
   }
 
-  /**
-   * 新增存档。二进制写入失败时异常向上传播，索引不会被污染。
-   * @param {{ id: string, user_id: string, slot_name: string, preview_data: Record<string, any>, save_data: Buffer, size_bytes: number }} save
-   * @returns {Promise<void>}
-   */
-  async insert({ id, user_id, slot_name, preview_data, save_data, size_bytes }) {
-    await this.#index.update(async (index) => {
-      await fs.writeFile(this.#binPath(id), save_data);
-      const now = new Date().toISOString();
-      index[id] = { id, user_id, slot_name, preview_data, size_bytes, created_at: now, updated_at: now };
-      return { persist: true };
-    });
+  async findById(id) {
+    const content = await this.findContentById(id);
+    if (!content) return null;
+    try {
+      const save_data = await fs.readFile(content.file_path);
+      const { file_path: _filePath, ...meta } = content;
+      return { ...meta, save_data };
+    } catch (error) {
+      if (error?.code !== 'ENOENT') console.error(`[DB] Error reading save blob ${id}:`, error);
+      return null;
+    }
   }
 
-  /**
-   * 在同一个索引事务中检查用户槽位并新增存档。
-   * 容量不足时不会写入二进制正文，返回 false；成功时返回 true。
-   * @param {{ id: string, user_id: string, slot_name: string, preview_data: Record<string, any>, save_data: Buffer, size_bytes: number }} save
-   * @param {number} maxSlots
-   * @returns {Promise<boolean>}
-   */
-  async insertWithinUserLimit({ id, user_id, slot_name, preview_data, save_data, size_bytes }, maxSlots) {
+  async insertFileWithinUserLimit({
+    id,
+    user_id,
+    slot_name,
+    preview_data,
+    source_path,
+    size_bytes,
+    compressed_size_bytes,
+    content_sha256
+  }, maxSlots) {
     return this.#index.update(async (index) => {
       const currentCount = Object.values(index).filter((save) => save.user_id === user_id).length;
-      if (currentCount >= maxSlots) {
-        return { persist: false, result: false };
-      }
+      if (currentCount >= maxSlots) return { persist: false, result: false };
 
-      await fs.writeFile(this.#binPath(id), save_data);
+      const revision = 1;
+      const blob_name = this.#revisionBlobName(id, revision);
+      await this.#promoteFile(source_path, blob_name);
       const now = new Date().toISOString();
-      index[id] = { id, user_id, slot_name, preview_data, size_bytes, created_at: now, updated_at: now };
+      index[id] = {
+        id,
+        user_id,
+        slot_name,
+        preview_data,
+        size_bytes,
+        compressed_size_bytes,
+        content_sha256,
+        revision,
+        blob_name,
+        created_at: now,
+        updated_at: now
+      };
       return { persist: true, result: true };
     });
   }
 
-  /**
-   * 局部更新存档。ID 不存在时静默 no-op（沿用旧版语义）。
-   * 只要存档存在，updated_at 一律刷新——即便本次没有任何字段变化。
-   * @param {string} id
-   * @param {{ slot_name?: string, preview_data?: Record<string, any>, save_data?: Buffer, size_bytes?: number }} changes
-   * @returns {Promise<void>}
-   */
-  async update(id, { slot_name, preview_data, save_data, size_bytes }) {
-    await this.#index.update(async (index) => {
-      const meta = index[id];
-      if (!meta) return { persist: false };
+  async insertFile(save) {
+    const inserted = await this.insertFileWithinUserLimit(save, Number.MAX_SAFE_INTEGER);
+    if (!inserted) throw new Error('[DB] Unable to insert save');
+  }
 
-      if (save_data !== undefined) {
-        await fs.writeFile(this.#binPath(id), save_data);
+  async insert(save) {
+    const sourcePath = await this.#stageBuffer(save.id, save.save_data);
+    try {
+      await this.insertFile({
+        ...save,
+        source_path: sourcePath,
+        compressed_size_bytes: save.save_data.length,
+        content_sha256: save.content_sha256
+      });
+    } finally {
+      await fs.rm(sourcePath, { force: true }).catch(() => {});
+    }
+  }
+
+  async insertWithinUserLimit(save, maxSlots) {
+    const sourcePath = await this.#stageBuffer(save.id, save.save_data);
+    try {
+      return await this.insertFileWithinUserLimit({
+        ...save,
+        source_path: sourcePath,
+        compressed_size_bytes: save.save_data.length,
+        content_sha256: save.content_sha256
+      }, maxSlots);
+    } finally {
+      await fs.rm(sourcePath, { force: true }).catch(() => {});
+    }
+  }
+
+  async updateFile(id, {
+    slot_name,
+    preview_data,
+    source_path,
+    size_bytes,
+    compressed_size_bytes,
+    content_sha256
+  }) {
+    let obsoletePath;
+    const updated = await this.#index.update(async (index) => {
+      const meta = index[id];
+      if (!meta) return { persist: false, result: false };
+
+      if (source_path !== undefined) {
+        obsoletePath = this.#pathForMeta(id, meta);
+        const revision = (Number.isInteger(meta.revision) ? meta.revision : 0) + 1;
+        const blob_name = this.#revisionBlobName(id, revision);
+        await this.#promoteFile(source_path, blob_name);
+        meta.revision = revision;
+        meta.blob_name = blob_name;
         meta.size_bytes = size_bytes;
+        meta.compressed_size_bytes = compressed_size_bytes;
+        meta.content_sha256 = content_sha256;
       }
       if (slot_name !== undefined) meta.slot_name = slot_name;
       if (preview_data !== undefined) meta.preview_data = preview_data;
-
       meta.updated_at = new Date().toISOString();
-      return { persist: true };
+      return { persist: true, result: true };
     });
+
+    if (updated && obsoletePath) await this.#removeBlob(obsoletePath);
+    return updated;
   }
 
-  /**
-   * 删除存档：先移除索引，再清理二进制文件。
-   * .bin 缺失或删除失败不影响索引删除结果（沿用旧版语义）。
-   * @param {string} id
-   * @returns {Promise<void>}
-   */
+  async update(id, { slot_name, preview_data, save_data, size_bytes, content_sha256 }) {
+    if (save_data === undefined) {
+      await this.updateFile(id, { slot_name, preview_data });
+      return;
+    }
+    const sourcePath = await this.#stageBuffer(id, save_data);
+    try {
+      await this.updateFile(id, {
+        slot_name,
+        preview_data,
+        source_path: sourcePath,
+        size_bytes,
+        compressed_size_bytes: save_data.length,
+        content_sha256
+      });
+    } finally {
+      await fs.rm(sourcePath, { force: true }).catch(() => {});
+    }
+  }
+
   async remove(id) {
+    let blobPath;
     await this.#index.update((index) => {
-      if (!index[id]) return { persist: false };
+      const meta = index[id];
+      if (!meta) return { persist: false };
+      blobPath = this.#pathForMeta(id, meta);
       delete index[id];
       return { persist: true };
     });
-
-    try {
-      await fs.unlink(this.#binPath(id));
-    } catch (err) {
-      if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'ENOENT') {
-        console.error(`[DB] Error deleting save file ${id}:`, err);
-      }
-    }
+    if (blobPath) await this.#removeBlob(blobPath);
   }
 }

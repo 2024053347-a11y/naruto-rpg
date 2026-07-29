@@ -500,16 +500,26 @@ class InfoPanel extends HTMLElement {
     return result;
   }
 
-  _bloodlineNames(value) {
-    const names = [];
-    const add = raw => {
-      const name = String(raw || '').trim();
-      if (name && !['普通血脉', '无', '未知'].includes(name) && !names.includes(name)) names.push(name);
+  _bloodlineEntries(s) {
+    const entries = new Map();
+    const put = (rawName, data = null) => {
+      const name = String(rawName || '').trim();
+      if (!name || ['普通血脉', '无', '未知'].includes(name)) return;
+      const entry = entries.get(name) || { name };
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        const rank = data.rank ?? data['等级'];
+        const mastery = Number(data.mastery ?? data['熟练度']);
+        const description = data.description ?? data['描述'] ?? data['说明'];
+        if (entry.rank == null && rank != null && String(rank).trim() !== '') entry.rank = String(rank).trim();
+        if (entry.mastery == null && Number.isFinite(mastery)) entry.mastery = Math.round(mastery);
+        if (!entry.description && description) entry.description = String(description).trim();
+      }
+      entries.set(name, entry);
     };
     const visit = input => {
       if (!input) return;
       if (typeof input === 'string' || typeof input === 'number') {
-        add(input);
+        put(input);
         return;
       }
       if (Array.isArray(input)) {
@@ -518,16 +528,68 @@ class InfoPanel extends HTMLElement {
       }
       if (typeof input !== 'object') return;
       if (input.name || input['名称']) {
-        add(input.name || input['名称']);
+        put(input.name || input['名称'], input);
         return;
       }
       for (const [key, entry] of Object.entries(input)) {
-        if (entry && typeof entry === 'object') add(entry.name || entry['名称'] || key);
-        else add(key);
+        if (entry && typeof entry === 'object' && !Array.isArray(entry)) put(entry.name || entry['名称'] || key, entry);
+        else put(key);
       }
     };
-    visit(value);
-    return names;
+    visit(this._scanSkills(s, '血继限界'));
+    visit(s?.skills?.kekkei_genkai);
+    visit(s['技能·血继限界']);
+    return [...entries.values()];
+  }
+
+  // 每种血继有自己的查克拉底色与印记字；未收录的血继回退为「血」字绯红。
+  static BLOODLINE_THEMES = [
+    { match: ['轮回眼'], color: '#b388ff', rgb: '179,136,255', glyph: '瞳' },
+    { match: ['写轮眼', '血轮眼'], color: '#ff5252', rgb: '255,82,82', glyph: '瞳' },
+    { match: ['白眼', '净眼', '转生眼'], color: '#d6ccf0', rgb: '214,204,240', glyph: '瞳' },
+    { match: ['血龙眼'], color: '#ff6e6e', rgb: '255,110,110', glyph: '瞳' },
+    { match: ['冰遁'], color: '#80d8ff', rgb: '128,216,255', glyph: '冰' },
+    { match: ['木遁'], color: '#81c784', rgb: '129,199,132', glyph: '木' },
+    { match: ['熔遁', '溶遁'], color: '#ff8a65', rgb: '255,138,101', glyph: '熔' },
+    { match: ['灼遁'], color: '#ff7043', rgb: '255,112,67', glyph: '灼' },
+    { match: ['磁遁'], color: '#ffd740', rgb: '255,215,64', glyph: '磁' },
+    { match: ['尘遁'], color: '#cfd8dc', rgb: '207,216,220', glyph: '尘' },
+    { match: ['沸遁'], color: '#f48fb1', rgb: '244,143,177', glyph: '沸' },
+    { match: ['岚遁'], color: '#82b1ff', rgb: '130,177,255', glyph: '岚' },
+    { match: ['爆遁'], color: '#ffab40', rgb: '255,171,64', glyph: '爆' },
+    { match: ['钢遁'], color: '#b0bec5', rgb: '176,190,197', glyph: '钢' },
+    { match: ['影遁'], color: '#9575cd', rgb: '149,117,205', glyph: '影' },
+    { match: ['尸骨脉', '骨脉', '尸骨'], color: '#eceff1', rgb: '236,239,241', glyph: '骨' }
+  ];
+
+  _bloodlineTheme(name) {
+    const n = String(name || '');
+    for (const theme of InfoPanel.BLOODLINE_THEMES) {
+      if (theme.match.some(keyword => n.includes(keyword))) return theme;
+    }
+    // 未收录：瞳术统一用「瞳」印，其余取术名首字作为印记
+    const glyph = n.endsWith('眼') ? '瞳' : (n[0] || '血');
+    return { color: '#ef5350', rgb: '239,83,80', glyph };
+  }
+
+  _renderBloodlineCard(entry) {
+    const mastery = Number.isFinite(entry.mastery) ? entry.mastery : null;
+    const width = mastery === null ? 0 : Math.max(0, Math.min(100, mastery));
+    const theme = this._bloodlineTheme(entry.name);
+    return `
+      <div class="skill-card bloodline" style="--bl:${theme.color};--bl-rgb:${theme.rgb};">
+        <div class="bloodline-aura"></div>
+        <span class="bloodline-glyph">${this._esc(theme.glyph)}</span>
+        ${entry.rank ? `<span class="bloodline-rank">${this._esc(entry.rank)}</span>` : ''}
+        <div class="skill-title">${this._esc(entry.name)}</div>
+        <div class="bloodline-divider">◆</div>
+        ${mastery === null ? '' : `
+        <div class="bloodline-sync">
+          <div class="bloodline-sync-label"><span>血脉同调</span><span>${mastery}%</span></div>
+          <div class="bloodline-sync-track"><div class="bloodline-sync-fill" style="width:${width}%"></div></div>
+        </div>`}
+        ${entry.description ? `<div class="bloodline-desc">${this._esc(entry.description)}</div>` : ''}
+      </div>`;
   }
 
   _techniqueDisplayData(input = {}, fallbackName = '', fallbackType = 'jutsu') {
@@ -642,13 +704,7 @@ class InfoPanel extends HTMLElement {
     Object.assign(ju, extraNin);
     Object.assign(support, auxiliary, knowledge);
 
-    const kgNames = [
-      ...this._bloodlineNames(this._scanSkills(s, '血继限界')),
-      ...this._bloodlineNames(s?.skills?.kekkei_genkai),
-      ...this._bloodlineNames(s['技能·血继限界'])
-    ];
-    const kgText = [...new Set(kgNames)].join('、') || '普通血脉';
-    const isNormalBloodline = kgText === '普通血脉';
+    const bloodlines = this._bloodlineEntries(s);
 
     const cats = [['秘传忍术', ju, 'element', 'jutsu'], ['体术造诣', tai, null, 'taijutsu'], ['幻术解析', gen, null, 'genjutsu'], ['辅助技能', support, null, 'support']];
     const allSkills = [];
@@ -673,9 +729,12 @@ class InfoPanel extends HTMLElement {
 
     return `<div class="sec">
         <div class="sec-title" style="cursor:default;">血继限界</div>
-        <div class="skill-card bloodline ${isNormalBloodline ? 'normal' : ''}">
-          <div class="skill-title">${this._esc(kgText)}</div>
-        </div>
+        ${bloodlines.length ? `<div class="bloodline-list">${bloodlines.map(entry => this._renderBloodlineCard(entry)).join('')}</div>` : `
+        <div class="skill-card bloodline normal">
+          <span class="bloodline-glyph">脉</span>
+          <div class="skill-title">普通血脉</div>
+          <div class="bloodline-desc">未觉醒血继之力，忍道仍由自身开拓。</div>
+        </div>`}
       </div>
       <div class="sec">
         <div class="sec-title" style="cursor:default;">特殊天赋</div>
@@ -884,14 +943,12 @@ class InfoPanel extends HTMLElement {
     const bonus = this._equipBonusSummary({ equipped, weapons, armor, tools, consumables });
     return `
       <div class="sec" style="margin-bottom: 16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="eq-topbar">
           <div class="sec-title" style="margin:0;">忍具与行囊</div>
-          <div class="gold" style="font-size:13px; font-weight:bold; letter-spacing:1px; background:rgba(198,156,109,0.1); padding:4px 10px; border-radius:12px; border:1px solid rgba(198,156,109,0.3); display:flex; align-items:center; gap:6px;">
-            ${this._svg('coin')} ${ryo} 两
-          </div>
+          <div class="eq-ryo" title="当前资金">${this._svg('coin')} ${ryo} 两</div>
         </div>
       </div>
-      ${this._eqSlots(equipped, bonus)}
+      ${this._eqSlots(equipped, bonus, { weapons, armor, tools })}
       <div style="margin-top: 24px;">
         ${this._eqSection('兵器', weapons, 'weapons', equipped, 'weapon')}
         ${this._eqSection('防具', armor, 'armor', equipped, 'armor')}
@@ -945,29 +1002,27 @@ class InfoPanel extends HTMLElement {
     return `<svg class="eq-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${paths[type]||paths['weapon']}</svg>`;
   }
 
-  _eqSlots(equipped, bonus) {
+  _eqSlots(equipped, bonus, buckets = {}) {
     const slots = [
       { key: 'weapon', label: '主武器', type: 'weapon' },
       { key: 'armor', label: '战斗服', type: 'armor' },
       { key: 'accessory1', label: '挂饰一', type: 'accessory' },
       { key: 'accessory2', label: '挂饰二', type: 'accessory' }
     ];
-    let html = `<div class="sec" style="background: rgba(255,255,255,0.015); padding: 16px; border-radius: var(--r-md); box-shadow: var(--shadow-inner);">
-      <div class="sec-title" style="margin-top:0; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">战斗武装</div>`;
 
-    const bonusEntries = Object.entries(bonus);
-    if (bonusEntries.length > 0) {
-      html += `<div class="rel-stats" style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">`;
-      const lblMap = {'chakra':'查克拉上限','vitality':'生命力上限','stamina':'体力上限','spirit':'精神上限','strength':'综合实力','speed':'速度','ninjutsu':'忍术','taijutsu':'体术','genjutsu':'幻术','luck':'气运', 'attack':'攻击力', 'defense':'防御力'};
-      for (const [k, v] of bonusEntries) {
-        if (v === 0) continue;
-        const name = lblMap[k] || k;
-        html += `<span class="item-tag" style="background:rgba(235,97,63,0.1); color:#eb613f; border-color:rgba(235,97,63,0.3);">${name} ${v > 0 ? '+'+v : v}</span>`;
-      }
-      html += `</div>`;
-    }
+    const lblMap = {'chakra':'查克拉上限','vitality':'生命力上限','stamina':'体力上限','spirit':'精神上限','strength':'综合实力','speed':'速度','ninjutsu':'忍术','taijutsu':'体术','genjutsu':'幻术','luck':'气运', 'attack':'攻击力', 'defense':'防御力'};
+    const bonusPills = Object.entries(bonus)
+      .filter(([, v]) => v !== 0)
+      .map(([k, v]) => `<span class="eq-bonus-pill">${lblMap[k] || k} ${v > 0 ? '+' + v : v}</span>`)
+      .join('');
 
-    html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">`;
+    let html = `<div class="sec eq-loadout">
+      <div class="eq-loadout-head">
+        <span class="eq-loadout-title">战斗武装</span>
+        ${bonusPills}
+      </div>
+      <div class="eq-slot-grid">`;
+
     for (const slot of slots) {
       const entry = equipped[slot.key];
       if (entry) {
@@ -975,32 +1030,31 @@ class InfoPanel extends HTMLElement {
         const itemName = typeof entry === 'string' ? entry : (entry?.name || '');
         const entryCat = typeof entry === 'object' ? entry.category : null;
         let item = null;
-        // 尝试从所有可能的分类下查找该物品
+        // 优先从 _renderEq 组装好的分类桶查找(扁平键已还原成对象)，再回退整键查询
         const tryCats = entryCat ? [entryCat] : ['weapons', 'armor', 'tools'];
         const catMap = { weapons: '武器', armor: '防具', tools: '道具' };
         for (const cat of tryCats) {
-          const catCN = catMap[cat] || cat;
-          const fullKey = `物品·${catCN}·${itemName}`;
-          const found = stateManager.get(fullKey);
+          const found = buckets[cat]?.[itemName] || stateManager.get(`物品·${catMap[cat] || cat}·${itemName}`);
           if (found) { item = found; break; }
         }
         if (!item) item = { name: itemName, quality: '普通' };
         const q = (item && item.quality) || '普通';
         const qColor = this._getQualityColor(q);
         const wmark = q === '传说' ? '極' : q === '史诗' ? '稀' : '';
-        html += `<div class="eq-card" data-quality="${q}" data-slot="${slot.key}" style="display:flex; justify-content:space-between; align-items:center;">
+        html += `<div class="eq-slot filled" data-quality="${q}" data-slot="${slot.key}" style="--qc:${qColor};">
           <div class="eq-watermark">${wmark}</div>
-          <div style="display:flex; flex-direction:column; gap:6px; position:relative; z-index:2;">
-            <span style="font-size:10px; color:var(--text-tertiary); letter-spacing:1px; display:flex; align-items:center; gap:4px;">${this._svg(slot.type)} ${slot.label}</span>
-            <span style="font-size:14px; font-weight:800; color:var(--text-primary); letter-spacing:1px; font-family:var(--font-title);">${this._esc(itemName)}</span>
-            <span style="font-size:10px; color:${qColor};">${this._esc(q)}</span>
-          </div>
-          <button class="btn-sleek eq-unequip-btn" data-slot="${slot.key}" title="卸下" style="width:32px; height:32px; border-radius:10px; position:relative; z-index:2;">✕</button>
+          <span class="eq-slot-tag">${this._svg(slot.type)} ${slot.label}</span>
+          <span class="eq-slot-name">${this._esc(itemName)}</span>
+          <span class="eq-slot-quality">${this._esc(q)}</span>
+          <button class="eq-op eq-slot-unequip eq-unequip-btn" data-slot="${slot.key}" title="卸下">✕</button>
         </div>`;
       } else {
-        html += `<div class="eq-empty-slot" data-slot="${slot.key}">
-          ${this._svg(slot.type)}
-          <span>未装备</span>
+        html += `<div class="eq-slot empty" data-slot="${slot.key}">
+          <span class="eq-slot-tag">${this._svg(slot.type)} ${slot.label}</span>
+          <div class="eq-slot-void">
+            ${this._svg(slot.type)}
+            <span>未装备</span>
+          </div>
         </div>`;
       }
     }
@@ -1024,44 +1078,45 @@ class InfoPanel extends HTMLElement {
     let content = '';
     if (!list.length) {
       content = `
-        <div style="padding: 24px; text-align: center; background: rgba(255,255,255,0.015); border: 1px dashed rgba(255,255,255,0.05); border-radius: 8px;">
-          <div style="color: rgba(255,255,255,0.1); margin-bottom: 8px;">${this._svg(svgType)}</div>
-          <div style="font-size: 12px; color: var(--text-tertiary);">行囊空空如也，尚未获得此类武装</div>
+        <div class="eq-cat-empty">
+          ${this._svg(svgType)}
+          <span>行囊空空如也，尚未获得此类武装</span>
         </div>`;
     } else {
       content = `
-        <div style="display:grid; grid-template-columns:1fr; gap:12px;">
+        <div class="eq-item-list">
           ${list.map(([n,i])=> {
             const isEquipped = Object.values(equipped).some(e => {
               if (!e) return false;
               const nm = typeof e === 'string' ? e : e.name;
               return nm === n;
             });
-            const qColor = this._getQualityColor(i.quality || '普通');
-            const wmark = i.quality === '传说' ? '極' : i.quality === '史诗' ? '稀' : '';
+            const q = i.quality || '普通';
+            const qColor = this._getQualityColor(q);
+            const wmark = q === '传说' ? '極' : q === '史诗' ? '稀' : '';
+            const qty = typeof i.quantity === 'object' ? (i.quantity?.value || i.quantity?.amount || i.quantity?.count || i.quantity?.quantity || 1) : (i.quantity || 1);
             return `
-            <div class="eq-card" data-quality="${i.quality||'普通'}" style="display:flex; flex-direction:column; padding:12px 16px; gap:8px;">
+            <div class="eq-item" data-quality="${q}" style="--qc:${qColor};">
               <div class="eq-watermark">${wmark}</div>
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:2;">
-                <div style="display:flex; flex-direction:column; gap:4px;">
-                  <div style="font-size:14px; font-weight:800; font-family:var(--font-title); color:var(--text-primary); display:flex; align-items:center; gap:8px;">
-                    ${this._esc(n)}
-                    ${isEquipped ? `<span style="font-size:9px; background:var(--text-primary); color:var(--c-void); padding:2px 6px; border-radius:2px; font-weight:bold;">装备中</span>` : ''}
-                  </div>
-                  <div style="font-size:11px; color:var(--text-tertiary); display:flex; gap:12px;">
-                    <span style="color:${qColor};">${this._esc(i.quality||'普通')}</span>
-                    <span>持有: ${typeof i.quantity === 'object' ? (i.quantity?.value || i.quantity?.amount || i.quantity?.count || i.quantity?.quantity || 1) : (i.quantity || 1)}</span>
-                  </div>
+              <div class="eq-item-badge">${this._svg(svgType)}</div>
+              <div class="eq-item-main">
+                <div class="eq-item-name">
+                  ${this._esc(n)}
+                  ${isEquipped ? `<span class="eq-item-on">装备中</span>` : ''}
                 </div>
-                <div style="display:flex; gap:8px;">
-                  ${category === 'weapons' || category === 'armor' || category === 'tools' ?
-                    (isEquipped ? `<button class="btn-sleek active eq-unequip-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px;">卸下</button>`
-                    : `<button class="btn-sleek eq-equip-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px;">装备</button>`) : ''}
-                  ${category === 'consumables' ? `<button class="btn-sleek eq-use-btn" data-name="${this._escAttr(n)}" style="padding:6px 12px;">使用</button>` : ''}
-                  <button class="btn-sleek eq-discard-btn" data-name="${this._escAttr(n)}" data-cat="${category}" style="padding:6px 12px; border-color: rgba(239,83,80,0.3); color: #ef5350;" onclick="event.stopPropagation();">丢弃</button>
+                <div class="eq-item-meta">
+                  <span class="q">${this._esc(q)}</span>
+                  <span>持有 × ${qty}</span>
                 </div>
+                ${i.description ? `<div class="eq-item-desc">${this._esc(i.description)}</div>` : ''}
               </div>
-              ${i.description ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:4px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.05); position:relative; z-index:2; line-height:1.5;">${this._esc(i.description)}</div>` : ''}
+              <div class="eq-item-ops">
+                ${category === 'weapons' || category === 'armor' || category === 'tools' ?
+                  (isEquipped ? `<button class="eq-op primary eq-unequip-btn" data-name="${this._escAttr(n)}" data-cat="${category}">卸下</button>`
+                  : `<button class="eq-op eq-equip-btn" data-name="${this._escAttr(n)}" data-cat="${category}">装备</button>`) : ''}
+                ${category === 'consumables' ? `<button class="eq-op primary eq-use-btn" data-name="${this._escAttr(n)}">使用</button>` : ''}
+                <button class="eq-op danger eq-discard-btn" data-name="${this._escAttr(n)}" data-cat="${category}" onclick="event.stopPropagation();">丢弃</button>
+              </div>
             </div>`;
           }).join('')}
         </div>`;
@@ -1069,9 +1124,10 @@ class InfoPanel extends HTMLElement {
 
     return `
       <div class="sec" style="margin-bottom:24px;">
-        <div class="sec-title" style="color:var(--text-tertiary); margin-bottom:12px; display:flex; align-items:center;">
-          <span style="margin-right:8px; display:inline-flex; align-items:center;">${this._svg(svgType)}</span>
-          ${title}
+        <div class="eq-cat-head">
+          ${this._svg(svgType)}
+          <span class="eq-cat-title">${title}</span>
+          <span class="eq-cat-count">${list.length}</span>
         </div>
         ${content}
       </div>`;
@@ -1245,30 +1301,37 @@ class InfoPanel extends HTMLElement {
       .npc-modal { display: flex; flex-direction: column; gap: 24px; padding: 10px; color: var(--text-primary); }
       .npc-header {
         display: flex; gap: 20px; align-items: center; position: relative; overflow: hidden;
-        padding: 18px 18px 16px; border-radius: 12px;
-        background: radial-gradient(circle at 18% 0%, rgba(198,156,109,0.09), transparent 55%), rgba(var(--paper-rgb), 0.02);
+        padding: 20px 20px 18px; border-radius: 14px;
+        background:
+          radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--tc, #c69c6d) 10%, transparent), transparent 55%),
+          repeating-linear-gradient(-45deg, rgba(var(--paper-rgb), 0.012) 0 1px, transparent 1px 9px),
+          rgba(var(--paper-rgb), 0.02);
         border: 1px solid rgba(var(--paper-rgb), 0.05);
+        box-shadow: inset 3px 0 0 -1px color-mix(in srgb, var(--tc, #c69c6d) 60%, transparent);
       }
       .npc-header::after {
         content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
         background: linear-gradient(to right, transparent, rgba(var(--paper-rgb), 0.14), transparent);
       }
       .npc-stamp {
-        position: absolute; top: 12px; right: 16px; transform: rotate(-12deg);
-        font-family: var(--font-brush, cursive); font-size: 18px; font-weight: 900; letter-spacing: 5px;
-        color: var(--c-kokihi, #c9171e); border: 2px solid var(--c-kokihi, #c9171e); border-radius: 4px;
+        position: absolute; top: 14px; right: 18px; transform: rotate(-12deg);
+        font-family: var(--font-brush, cursive); font-size: 17px; font-weight: 900; letter-spacing: 5px;
+        color: var(--c-kokihi, #c9171e);
+        border: 2px solid currentColor; outline: 1px solid color-mix(in srgb, currentColor 35%, transparent); outline-offset: 2px;
+        border-radius: 4px;
         padding: 3px 8px 3px 12px; opacity: 0.5; pointer-events: none; line-height: 1.2;
       }
-      .npc-avatar-ring { width: 72px; height: 72px; position: relative; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 12px rgba(198,156,109,0.3)); flex-shrink: 0; }
+      .npc-avatar-ring { width: 76px; height: 76px; position: relative; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 14px color-mix(in srgb, var(--tc, #c69c6d) 35%, transparent)); flex-shrink: 0; }
       .npc-avatar-ring::before { content: ''; position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent, var(--tc, #c69c6d), transparent); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: spin 8s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
-      .npc-avatar { width: 66px; height: 66px; background: rgba(var(--ink-deep-rgb), 0.92); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: var(--font-brush, serif); color: var(--tc, #c69c6d); font-size: 32px; font-weight: bold; }
+      .npc-avatar { width: 70px; height: 70px; background: rgba(var(--ink-deep-rgb), 0.92); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: var(--font-brush, serif); color: var(--tc, #c69c6d); font-size: 34px; font-weight: bold; }
       .npc-avatar img { width:100%; height:100%; object-fit:cover; }
 
       .npc-id { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
       .npc-name-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
       .npc-name {
-        font-size: 22px; font-weight: 900; letter-spacing: 2px;
+        font-size: 24px; font-weight: 900; letter-spacing: 3px;
+        font-family: var(--font-title, serif);
         background: linear-gradient(90deg, var(--c-kin-bright) 0%, #fff 50%, var(--c-kin-bright) 100%);
         background-size: 200% auto;
         -webkit-background-clip: text; background-clip: text;
@@ -1285,7 +1348,7 @@ class InfoPanel extends HTMLElement {
         background: color-mix(in srgb, var(--tc, #a39f98) 12%, transparent);
         text-shadow: 0 0 8px var(--tc, transparent);
       }
-      .npc-sub { font-size: 11px; color: var(--text-tertiary); letter-spacing: 1px; display: flex; gap: 8px; margin-top: 6px; }
+      .npc-sub { font-size: 11px; color: var(--text-tertiary); letter-spacing: 1px; display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
       .npc-sub span {
         padding: 2px 10px; border-radius: 100px; font-size: 10px;
         border: 1px solid rgba(var(--paper-rgb), 0.1); background: rgba(var(--paper-rgb), 0.03);
@@ -1293,79 +1356,119 @@ class InfoPanel extends HTMLElement {
       }
 
       .npc-social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .npc-social-item { background: rgba(var(--paper-rgb), 0.02); padding: 12px; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); display: flex; flex-direction: column; gap: 4px; transition: background 0.2s; }
-      .npc-social-item:hover { background: rgba(var(--paper-rgb), 0.045); }
+      .npc-social-item {
+        position: relative; overflow: hidden;
+        background: rgba(var(--paper-rgb), 0.02); padding: 14px 16px; border-radius: 10px;
+        box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.05);
+        display: flex; flex-direction: column; gap: 9px;
+        transition: transform 0.25s var(--ease-out, ease), background 0.25s;
+      }
+      .npc-social-item::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.09;
+        background: radial-gradient(ellipse 110% 90% at 50% -35%, var(--sc, transparent), transparent 62%);
+      }
+      .npc-social-item:hover { background: rgba(var(--paper-rgb), 0.045); transform: translateY(-1px); }
+      .npc-social-head { display: flex; align-items: center; gap: 7px; }
+      .npc-social-head svg { width: 13px; height: 13px; color: var(--sc, var(--text-tertiary)); flex-shrink: 0; }
       .npc-social-item .social-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 2px; }
-      .npc-social-item .social-val { font-size: 18px; font-weight: 700; font-family: monospace; }
-      .npc-social-item.affection.pos .social-val { color: #81C784; }
-      .npc-social-item.affection.neg .social-val { color: #ef5350; }
-      .npc-social-item.trust .social-val { color: #42A5F5; }
-      .npc-social-item.respect .social-val { color: var(--c-kin); }
-      .social-bar { margin-top: 8px; height: 2px; border-radius: 1px; background: rgba(var(--paper-rgb), 0.07); position: relative; overflow: hidden; }
-      .social-bar-fill { position: absolute; top: 0; height: 100%; border-radius: 1px; }
+      .npc-social-item .social-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono, monospace); line-height: 1; color: var(--sc, var(--text-primary)); text-shadow: 0 0 14px color-mix(in srgb, var(--sc, transparent) 35%, transparent); }
+      .social-bar { margin-top: 2px; height: 3px; border-radius: 2px; background: rgba(0,0,0,0.45); box-shadow: inset 0 1px 1px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+      .social-bar::before { content: ''; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1px; background: rgba(var(--paper-rgb), 0.14); }
+      .social-bar-fill { position: absolute; top: 0; height: 100%; border-radius: 2px; }
 
-      .npc-section-title { font-size: 10px; font-weight: 800; letter-spacing: 4px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; text-transform: uppercase; color: rgba(198,156,109,0.55); color: color-mix(in srgb, var(--c-kin) 65%, transparent); }
-      .npc-section-title .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--paper-rgb), 0.06), transparent); }
+      .npc-section-title { font-size: 10px; font-weight: 800; letter-spacing: 4px; display: flex; align-items: center; gap: 16px; margin-bottom: 14px; text-transform: uppercase; color: rgba(198,156,109,0.55); color: color-mix(in srgb, var(--c-kin) 65%, transparent); font-family: var(--font-title, serif); }
+      .npc-section-title::before { content: ''; width: 3px; height: 11px; border-radius: 2px; background: linear-gradient(180deg, var(--c-shuiro), color-mix(in srgb, var(--c-shuiro) 30%, transparent)); flex-shrink: 0; }
+      .npc-section-title .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--paper-rgb), 0.08), transparent); }
 
       .npc-meta-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-      .npc-rank-badge { background: rgba(198,156,109,0.1); color: var(--c-kin); padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 1px; border: 1px solid rgba(198,156,109,0.2); }
-      .npc-nature-tag { background: rgba(var(--paper-rgb), 0.03); color: var(--text-secondary); padding: 4px 10px; border-radius: 4px; font-size: 10px; border: 1px solid rgba(var(--paper-rgb), 0.06); }
+      .npc-rank-badge { background: rgba(198,156,109,0.1); color: var(--c-kin-bright); padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: bold; letter-spacing: 2px; border: 1px solid rgba(198,156,109,0.28); box-shadow: 0 0 12px -4px rgba(198,156,109,0.5); }
+      .npc-nature-tag { background: rgba(var(--paper-rgb), 0.03); color: var(--text-secondary); padding: 4px 12px; border-radius: 100px; font-size: 10px; letter-spacing: 1px; border: 1px solid rgba(var(--paper-rgb), 0.08); }
 
       .npc-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-bottom: 12px; }
-      .npc-stat-card { background: rgba(var(--paper-rgb), 0.015); border-radius: 8px; padding: 12px; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); display: flex; flex-direction: column; gap: 8px; }
+      .npc-stat-card {
+        position: relative; overflow: hidden;
+        background: rgba(var(--paper-rgb), 0.015);
+        border-radius: 10px; padding: 13px;
+        box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.05);
+        display: flex; flex-direction: column; gap: 8px;
+        transition: transform 0.25s var(--ease-out, ease), background 0.25s;
+      }
+      .npc-stat-card:hover { transform: translateY(-1px); background: rgba(var(--paper-rgb), 0.035); }
       .npc-stat-head { display: flex; align-items: center; gap: 8px; }
-      .npc-stat-label { font-size: 10px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; }
-      .npc-stat-val { font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: monospace; }
-      .npc-stat-bar { width: 100%; height: 2px; background: rgba(0,0,0,0.6); overflow: hidden; border-radius: 1px; }
-      .npc-stat-fill { height: 100%; box-shadow: 0 0 8px currentColor; position: relative; overflow: hidden; }
+      .npc-stat-label { font-size: 10px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+      .npc-stat-val { font-size: 15px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono, monospace); }
+      .npc-stat-bar { width: 100%; height: 3px; background: rgba(0,0,0,0.55); overflow: hidden; border-radius: 2px; box-shadow: inset 0 1px 1px rgba(0,0,0,0.5); }
+      .npc-stat-fill { height: 100%; border-radius: 2px; box-shadow: 0 0 8px currentColor; position: relative; overflow: hidden; }
       .npc-stat-fill::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); background-size: 200% 100%; background-repeat: no-repeat; animation: npc-sheen 3.2s linear infinite; }
       @keyframes npc-sheen { from { background-position: 150% 0; } to { background-position: -150% 0; } }
 
       .npc-mastery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .npc-stat-card.npc-mastery { padding: 12px; }
+      .npc-stat-card.npc-mastery { padding: 13px; }
 
       .npc-jutsu-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-      .npc-jutsu-card { background: rgba(var(--paper-rgb), 0.015); border-radius: 8px; padding: 16px 16px 16px 20px; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); transition: all 0.2s; }
-      .npc-jutsu-card::before { content: ''; position: absolute; left: 0; top: 22%; bottom: 22%; width: 2px; border-radius: 1px; background: var(--jc, transparent); opacity: 0.85; transition: all 0.2s; }
-      .npc-jutsu-card:hover { background: rgba(var(--paper-rgb), 0.04); transform: translateY(-1px); }
-      .npc-jutsu-card:hover::before { top: 12%; bottom: 12%; box-shadow: 0 0 8px var(--jc, transparent); }
+      .npc-jutsu-card {
+        background:
+          linear-gradient(120deg, color-mix(in srgb, var(--jc, transparent) 5%, transparent), transparent 45%),
+          rgba(var(--paper-rgb), 0.015);
+        border-radius: 10px; padding: 16px 16px 16px 20px; position: relative; overflow: hidden;
+        box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.04); transition: all 0.25s var(--ease-out, ease);
+      }
+      .npc-jutsu-card::before { content: ''; position: absolute; left: 0; top: 22%; bottom: 22%; width: 2.5px; border-radius: 2px; background: var(--jc, transparent); opacity: 0.85; transition: all 0.25s; }
+      .npc-jutsu-card:hover { background: linear-gradient(120deg, color-mix(in srgb, var(--jc, transparent) 9%, transparent), transparent 50%), rgba(var(--paper-rgb), 0.04); transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.08), 0 10px 26px -12px color-mix(in srgb, var(--jc, transparent) 45%, transparent); }
+      .npc-jutsu-card:hover::before { top: 10%; bottom: 10%; box-shadow: 0 0 10px var(--jc, transparent); }
       .jutsu-bg-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.03; filter: blur(20px); pointer-events: none; }
       .jutsu-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-      .jutsu-rank { font-size: 14px; font-family: var(--font-brush, serif); font-weight: bold; text-shadow: 0 0 8px currentColor; line-height: 1; }
-      .jutsu-type { font-size: 9px; border: 1px solid rgba(var(--paper-rgb), 0.1); padding: 2px 6px; border-radius: 3px; color: var(--text-tertiary); letter-spacing: 1px; }
-      .jutsu-elem { font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 3px; color: var(--text-secondary); }
-      .jutsu-name { font-size: 14px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px; flex: 1; text-align: right; }
+      .jutsu-rank {
+        flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 14px; font-family: var(--font-brush, serif); font-weight: bold; line-height: 1;
+        background: color-mix(in srgb, currentColor 10%, transparent);
+        border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+        text-shadow: 0 0 8px currentColor;
+      }
+      .jutsu-type { font-size: 9px; border: 1px solid rgba(var(--paper-rgb), 0.1); padding: 2px 7px; border-radius: 100px; color: var(--text-tertiary); letter-spacing: 1px; }
+      .jutsu-elem { font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 7px; border-radius: 100px; color: var(--text-secondary); border: 1px solid rgba(var(--paper-rgb), 0.05); }
+      .jutsu-name { font-size: 14px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px; flex: 1; text-align: right; font-family: var(--font-title, serif); }
       .jutsu-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 16px; }
       .jutsu-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-      .jutsu-stat { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 7px 8px; border-radius: 5px; background: rgba(var(--paper-rgb), 0.025); border: 1px solid rgba(var(--paper-rgb), 0.05); }
+      .jutsu-stat { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 7px 8px; border-radius: 7px; background: rgba(var(--paper-rgb), 0.025); border: 1px solid rgba(var(--paper-rgb), 0.05); }
       .jutsu-stat-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9px; color: var(--text-tertiary); letter-spacing: 0.5px; }
       .jutsu-stat strong { color: var(--text-primary); font: 700 12px/1 var(--font-mono, monospace); }
       .jutsu-stat[data-stat="power"] strong { color: #FF8A80; }
       .jutsu-stat[data-stat="cost"] strong { color: #80DEEA; }
 
       .npc-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-      .npc-tag { font-size: 10px; color: var(--text-secondary); background: rgba(var(--paper-rgb), 0.03); padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
+      .npc-tag { font-size: 10px; color: var(--text-secondary); background: rgba(var(--paper-rgb), 0.03); border: 1px solid rgba(var(--paper-rgb), 0.07); padding: 4px 12px; border-radius: 100px; letter-spacing: 1px; }
 
-      .timeline-wrap { display: flex; flex-direction: column; gap: 16px; }
-      .timeline-node { position: relative; padding-left: 16px; border-left: 1px solid rgba(var(--paper-rgb), 0.06); }
-      .timeline-node::before { content: ''; position: absolute; left: -3px; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: rgba(var(--paper-rgb), 0.2); }
-      .tl-time { font-size: 9px; color: var(--text-tertiary); margin-bottom: 4px; letter-spacing: 1px; }
-      .tl-action { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
-      .tl-thought { font-size: 12px; color: rgba(198,156,109,0.8); line-height: 1.6; font-family: 'Georgia', 'Songti SC', serif; font-style: italic; background: linear-gradient(90deg, rgba(198,156,109,0.05), transparent); padding: 10px 12px; border-left: 2px solid rgba(198,156,109,0.3); border-radius: 0 4px 4px 0; }
+      .timeline-wrap { display: flex; flex-direction: column; gap: 4px; }
+      .timeline-node { position: relative; padding: 6px 0 14px 20px; border-left: 1px solid rgba(var(--paper-rgb), 0.07); }
+      .timeline-node:last-child { border-left-color: transparent; }
+      .timeline-node::before {
+        content: ''; position: absolute; left: -4px; top: 10px; width: 7px; height: 7px; border-radius: 50%;
+        background: var(--c-kin); box-shadow: 0 0 8px color-mix(in srgb, var(--c-kin) 60%, transparent);
+      }
+      .timeline-node:first-child::before { background: var(--c-shuiro); box-shadow: 0 0 10px color-mix(in srgb, var(--c-shuiro) 70%, transparent); }
+      .timeline-node:not(:first-child)::before { opacity: 0.45; box-shadow: none; }
+      .tl-time { display: inline-block; font-size: 9px; color: var(--text-tertiary); margin-bottom: 6px; letter-spacing: 1.5px; font-family: var(--font-mono, monospace); padding: 1px 8px; border-radius: 100px; background: rgba(var(--paper-rgb), 0.035); }
+      .tl-action { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
+      .tl-thought { font-size: 12px; color: rgba(198,156,109,0.85); line-height: 1.7; font-family: 'Georgia', 'Songti SC', serif; font-style: italic; background: linear-gradient(90deg, rgba(198,156,109,0.06), transparent); padding: 10px 14px; border-left: 2px solid rgba(198,156,109,0.35); border-radius: 0 8px 8px 0; }
 
-      .npc-grand-summary { background: linear-gradient(135deg, rgba(198,156,109,0.06), rgba(66,165,245,0.04)); border: 1px solid rgba(198,156,109,0.12); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; }
-      .npc-grand-summary::before { content: '编年'; position: absolute; top: 8px; right: 12px; font-size: 48px; font-weight: 900; opacity: 0.03; font-family: var(--font-brush, serif); letter-spacing: 8px; pointer-events: none; }
-      .npc-grand-summary .gs-label { font-size: 9px; font-weight: 800; color: rgba(198,156,109,0.6); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
-      .npc-grand-summary .gs-text { font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
+      .npc-grand-summary { background: linear-gradient(135deg, rgba(198,156,109,0.07), rgba(66,165,245,0.04)); border: 1px solid rgba(198,156,109,0.14); border-radius: 12px; padding: 18px; position: relative; overflow: hidden; }
+      .npc-grand-summary::before { content: '编年'; position: absolute; top: 4px; right: 12px; font-size: 52px; font-weight: 900; opacity: 0.04; font-family: var(--font-brush, serif); letter-spacing: 8px; pointer-events: none; }
+      .npc-grand-summary .gs-label { font-size: 9px; font-weight: 800; color: rgba(198,156,109,0.65); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
+      .npc-grand-summary .gs-text { font-size: 12px; color: var(--text-secondary); line-height: 1.9; }
 
       .npc-summary-list { display: flex; flex-direction: column; gap: 10px; }
-      .npc-summary-card { background: rgba(66,165,245,0.03); border-left: 2px solid rgba(66,165,245,0.2); border-radius: 0 6px 6px 0; padding: 10px 14px; transition: background 0.2s; }
-      .npc-summary-card:hover { background: rgba(66,165,245,0.06); }
-      .npc-summary-card .sc-time { font-size: 9px; color: rgba(66,165,245,0.5); letter-spacing: 1px; margin-bottom: 4px; }
-      .npc-summary-card .sc-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+      .npc-summary-card { background: rgba(66,165,245,0.035); border-left: 2px solid rgba(66,165,245,0.25); border-radius: 0 10px 10px 0; padding: 11px 15px; transition: all 0.2s; }
+      .npc-summary-card:hover { background: rgba(66,165,245,0.07); transform: translateX(2px); }
+      .npc-summary-card .sc-time { font-size: 9px; color: rgba(66,165,245,0.6); letter-spacing: 1px; margin-bottom: 4px; font-family: var(--font-mono, monospace); }
+      .npc-summary-card .sc-text { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
 
       @media (prefers-reduced-motion: reduce) {
         .npc-name, .npc-stat-fill::after, .npc-avatar-ring::before { animation: none; }
+      }
+      @media (max-width: 640px) {
+        .npc-social-grid { grid-template-columns: 1fr; }
       }
       </style>
     `;
@@ -1391,18 +1494,18 @@ class InfoPanel extends HTMLElement {
         </div>
 
         <div class="npc-social-grid">
-          <div class="npc-social-item affection ${(d.affection||0)>=0?'pos':'neg'}">
-            <div class="social-label">好感度</div>
+          <div class="npc-social-item affection" style="--sc:${(d.affection||0)>=0?'#81C784':'#ef5350'};">
+            <div class="npc-social-head">${icons.vitality}<span class="social-label">好感度</span></div>
             <div class="social-val">${d.affection||0}</div>
             ${socialBar(d.affection, '#81C784')}
           </div>
-          <div class="npc-social-item trust">
-            <div class="social-label">信任度</div>
+          <div class="npc-social-item trust" style="--sc:#42A5F5;">
+            <div class="npc-social-head">${icons.spirit}<span class="social-label">信任度</span></div>
             <div class="social-val">${d.trust||0}</div>
             ${socialBar(d.trust, '#42A5F5')}
           </div>
-          <div class="npc-social-item respect">
-            <div class="social-label">敬畏度</div>
+          <div class="npc-social-item respect" style="--sc:var(--c-kin-bright);">
+            <div class="npc-social-head">${icons.chakra}<span class="social-label">敬畏度</span></div>
             <div class="social-val">${d.respect||0}</div>
             ${socialBar(d.respect, 'var(--c-kin)')}
           </div>
@@ -1414,7 +1517,7 @@ class InfoPanel extends HTMLElement {
         ${jutsuHtml}
         ${this._renderGrandSummary(d.grand_summary)}
         ${this._renderSummaries(d.summaries)}
-        ${this._renderInteractionLog(d.history)}
+        ${this._renderInteractionLog(d.history, d.inner_thoughts)}
         ${(d.tags||[]).length ? `<div class="npc-tags">${d.tags.map(t=>`<span class="npc-tag">${this._esc(t)}</span>`).join('')}</div>` : ''}
       </div>
     `;
@@ -1516,32 +1619,56 @@ class InfoPanel extends HTMLElement {
       </div>`;
   }
 
-  _renderInteractionLog(historyArray) {
-    if (!Array.isArray(historyArray) || historyArray.length === 0) return '';
-    const nodes = historyArray.slice(0, 10).map(e => {
-      let summary = e.summary || '';
-      let actionHtml = '';
-      let thoughtHtml = '';
+  _renderInteractionLog(historyArray, thoughtArray = []) {
+    const history = Array.isArray(historyArray) ? historyArray : [];
+    const thoughts = Array.isArray(thoughtArray) ? thoughtArray : [];
+    if (!history.length && !thoughts.length) return '';
+    const rows = [];
+    const keyedRows = new Map();
+    const rowKey = entry => (entry?.turn !== undefined || entry?.time)
+      ? `${entry?.turn ?? ''}|${entry?.time || ''}` : '';
 
-      const tMatch = summary.match(/\[心声\]\s*([^\[]+)/);
-      const hMatch = summary.match(/\[历史\]\s*([^\[]+)/);
-
-      if (hMatch) actionHtml = `<div class="tl-action">${this._esc(hMatch[1].trim())}</div>`;
-      if (tMatch) thoughtHtml = `<div class="tl-thought">" ${this._esc(tMatch[1].trim())} "</div>`;
-
-      // Fallback if neither tag is found
-      if (!hMatch && !tMatch && summary.trim()) {
-        actionHtml = `<div class="tl-action">${this._esc(summary.trim())}</div>`;
+    history.forEach((entry, index) => {
+      const summary = String(entry?.summary || '');
+      const thoughtMatch = summary.match(/\[心声\]\s*([^\[]+)/);
+      const thought = thoughtMatch?.[1]?.trim() || '';
+      const historyMatch = summary.match(/\[历史\]\s*([^\[]+)/)?.[1]?.trim() || '';
+      const actionPrefix = thoughtMatch
+        ? summary.slice(0, thoughtMatch.index).replace(/^\[历史\]\s*/, '').trim()
+        : summary.trim();
+      const action = historyMatch || actionPrefix;
+      const row = { entry, action, thoughts: thought ? [thought] : [], order: index };
+      rows.push(row);
+      const key = rowKey(entry);
+      if (key && !keyedRows.has(key)) keyedRows.set(key, row);
+    });
+    thoughts.forEach((entry, index) => {
+      const thought = String(entry?.summary ?? entry?.content ?? '').replace(/^\[心声\]\s*/, '').trim();
+      if (!thought) return;
+      const key = rowKey(entry);
+      const existing = key ? keyedRows.get(key) : null;
+      if (existing) {
+        if (!existing.thoughts.includes(thought)) existing.thoughts.push(thought);
+        return;
       }
+      const row = { entry, action: '', thoughts: [thought], order: history.length + index };
+      rows.push(row);
+      if (key) keyedRows.set(key, row);
+    });
+    rows.sort((left, right) => {
+      const leftTurn = Number(left.entry?.turn);
+      const rightTurn = Number(right.entry?.turn);
+      if (Number.isFinite(leftTurn) && Number.isFinite(rightTurn) && leftTurn !== rightTurn) return rightTurn - leftTurn;
+      return left.order - right.order;
+    });
 
-      return `
+    const nodes = rows.slice(0, 10).map(({ entry, action, thoughts: rowThoughts }) => `
         <div class="timeline-node">
-          ${e.time ? `<div class="tl-time">${this._esc(e.time)}</div>` : ''}
-          ${actionHtml}
-          ${thoughtHtml}
+          ${entry?.time ? `<div class="tl-time">${this._esc(entry.time)}</div>` : ''}
+          ${action ? `<div class="tl-action">${this._esc(action)}</div>` : ''}
+          ${rowThoughts.map(thought => `<div class="tl-thought">" ${this._esc(thought)} "</div>`).join('')}
         </div>
-      `;
-    }).join('');
+      `).join('');
 
     return `
       <div class="npc-section">
@@ -1633,6 +1760,7 @@ class InfoPanel extends HTMLElement {
             <button class="rel-action-btn pin-btn del-hover" data-action="delete" data-rel-npc="${escAttr(n)}" title="删除羁绊">✖</button>
           </div>
           <div class="ema-head">
+            <div class="ema-avatar" aria-hidden="true">${this._esc((n || '?').slice(0, 1))}</div>
             <div class="ema-head-main">
               <div class="ema-name">${this._esc(n)}${d.pinned ? '<span class="ema-pin-mark">📌</span>' : ''}</div>
               <div class="ema-meta">

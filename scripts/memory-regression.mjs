@@ -31,6 +31,18 @@ await test('AI compression consumes one chunk and keeps the unprocessed tail', a
   assert.equal(stateManager.getSub('_memory')._pendingCompressionText, tail);
 });
 
+await test('AI compression persists plot details regardless of their target date', async () => {
+  const plotDetail = 'EV-P2-RETURN-TEAM-01-01 归村人员在木叶正门完成登记。';
+  stateManager.setSub('_memory', {
+    _pendingCompressionText: '本轮剧情记录'.repeat(600),
+    meta: { updated_at: null, sources: {} }
+  });
+  const client = { chat: async () => `${plotDetail}这是当前分支已经确认的连续性事实。`.repeat(3) };
+
+  assert.equal(await memorySystem.aiCompress(client), true);
+  assert.match(stateManager.getSub('_memory').compressed_summary, /EV-P2-RETURN-TEAM-01-01/);
+});
+
 await test('failed AI compression keeps pending source text for retry', async () => {
   const pending = '待重试内容'.repeat(100);
   stateManager.setSub('_memory', {
