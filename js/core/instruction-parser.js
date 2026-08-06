@@ -127,7 +127,17 @@ export class InstructionParser {
                   updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
                 } else {
                   const normalized = normalizeStructuredVariableUpdate(u);
-                  if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
+                  if (normalized?.key && ['=', '+', '-'].includes(normalized.op)) {
+                    if (!isKnownKey(normalized.key)) {
+                      console.warn('[InstructionParser] 未知变量，跳过:', normalized.key);
+                      continue;
+                    }
+                    updates.push({
+                      key: normalized.key,
+                      op: normalized.op,
+                      value: coerceValue(normalized.key, normalized.value)
+                    });
+                  } else if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
                     updates.push(normalized);
                   }
                 }
@@ -144,7 +154,17 @@ export class InstructionParser {
                 updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
               } else {
                 const normalized = normalizeStructuredVariableUpdate(u);
-                if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
+                if (normalized?.key && ['=', '+', '-'].includes(normalized.op)) {
+                  if (!isKnownKey(normalized.key)) {
+                    console.warn('[InstructionParser] 未知变量，跳过:', normalized.key);
+                    continue;
+                  }
+                  updates.push({
+                    key: normalized.key,
+                    op: normalized.op,
+                    value: coerceValue(normalized.key, normalized.value)
+                  });
+                } else if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
                   updates.push(normalized);
                 }
               }

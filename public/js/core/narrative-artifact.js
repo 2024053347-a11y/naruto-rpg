@@ -18,6 +18,7 @@ export const NARRATIVE_INSTRUCTION_TAGS = Object.freeze([
   'relationship',
   'event',
   'memory',
+  'state_update',
   'status_query',
   'recall',
   'image_contract',

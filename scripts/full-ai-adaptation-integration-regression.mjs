@@ -226,11 +226,133 @@ await test('secondary updater recompiles evidence with names introduced by the f
   assert.equal(evidence.worldbook_entries[0].title, '旗木卡卡西人物档案');
 });
 
+await test('strict mode rejects missing contracts and false no-change claims without another API call', async () => {
+  let apiCalls = 0;
+  let mainResponse = '集成测试忍者离开第三训练场赶到火影楼，连续施术耗去大量查克拉，并接下了一份护送任务。';
+  globalThis.generateRaw = async () => {
+    apiCalls++;
+    return mainResponse;
+  };
+
+  localStorage.setItem('naruto_api_config', JSON.stringify({
+    backend: 'tavern',
+    model: 'strict-incomplete-output-model',
+    disableStreaming: false,
+    aiCallPolicy: { strictSingleCall: true },
+    variableUpdater: { enabled: true, backend: 'inherit', model: 'blocked-updater-model' },
+    narrativeReview: { enabled: false }
+  }));
+  localStorage.setItem('naruto_agent_config', JSON.stringify({ enabled: false, mode: 'off' }));
+  localStorage.setItem('naruto_memory_config', JSON.stringify({
+    aiCompressionEnabled: false,
+    deepEnabled: false,
+    npcSummaryEnabled: false,
+    recallEnabled: false
+  }));
+  localStorage.setItem('naruto_rpg_image_settings_v1', JSON.stringify({ enabled: false }));
+
+  const [{ MessagePipeline }, { aiClient }, { stateManager }, { eventBus }, { SHINOBI_DAILY_EXAMPLE }] = await Promise.all([
+    import('../js/core/pipeline.js'),
+    import('../js/core/ai-client.js'),
+    import('../js/core/state-manager.js'),
+    import('../js/core/event-bus.js'),
+    import('../js/core/shinobi-daily.js')
+  ]);
+
+  const state = stateManager.getDefaultState();
+  state['玩家·姓名'] = '集成测试忍者';
+  state['玩家·存活'] = '是';
+  state['玩家·查克拉'] = 100;
+  state['世界·时间'] = 'K052-01-01';
+  state['世界·年代'] = 'K052';
+  state['世界·地点'] = '木叶第三训练场';
+  state['系统·回合数'] = 8;
+  stateManager.state = state;
+  stateManager._stateVersion++;
+  stateManager._apiConfigCache = null;
+  aiClient.configure({ backend: 'tavern', model: 'strict-incomplete-output-model' });
+
+  let timelineCalls = 0;
+  let completeCalls = 0;
+  let pipelineError = null;
+  const pipeline = new MessagePipeline({
+    timelineSystem: {
+      createNode: async () => {
+        timelineCalls++;
+        return { id: 'node_strict_incomplete_output' };
+      }
+    }
+  });
+  const beforeState = stateManager.snapshot();
+  const beforeHistory = structuredClone(pipeline.chatHistory);
+  const unsubscribeComplete = eventBus.on('pipeline:complete', () => { completeCalls++; });
+  const unsubscribeError = eventBus.on('pipeline:error', payload => { pipelineError = payload; });
+  let rejectedError = null;
+
+  try {
+    try {
+      await pipeline.process('赶往火影楼接取护送任务');
+    } catch (error) {
+      rejectedError = error;
+    }
+
+    assert.equal(apiCalls, 1, `strict incomplete turn emitted ${apiCalls} model requests`);
+    assert.equal(rejectedError?.code, 'STRICT_MAIN_OUTPUT_INCOMPLETE');
+    assert.match(rejectedError?.message || '', /主模型.*输出不完整/);
+    assert.match(rejectedError?.message || '', /变量|记账/);
+    assert.match(rejectedError?.message || '', /忍界日报|shinobi_daily/);
+    assert.equal(timelineCalls, 0, '不完整回合不得创建时间线节点');
+    assert.equal(completeCalls, 0, '不完整回合不得发布完成事件');
+    assert.deepEqual(stateManager.snapshot(), beforeState, '不完整回合不得修改游戏状态');
+    assert.deepEqual(pipeline.chatHistory, beforeHistory, '不完整回合不得写入聊天历史');
+    assert.equal(pipelineError?.code, 'STRICT_MAIN_OUTPUT_INCOMPLETE');
+    assert.ok(pipelineError?.missingContracts?.includes('state_update'));
+    assert.ok(pipelineError?.missingContracts?.includes('shinobi_daily'));
+    assert.match(pipelineError?.draftResponse || '', /火影楼/);
+    assert.match(pipelineError?.error || '', /主模型.*输出不完整/);
+
+    const strictDaily = structuredClone(SHINOBI_DAILY_EXAMPLE);
+    strictDaily.date = '木叶52年1月1日';
+    mainResponse = [
+      '集成测试忍者离开第三训练场赶到火影楼，连续施术耗去大量查克拉，并接下了一份护送任务。',
+      '<state_update>{"changed":false}</state_update>',
+      '<memory>{"summary":"玩家已赶到火影楼并接下护送任务。","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>',
+      `<shinobi_daily>${JSON.stringify(strictDaily)}</shinobi_daily>`
+    ].join('\n');
+    rejectedError = null;
+    pipelineError = null;
+    try {
+      await pipeline.process('赶往火影楼接取护送任务');
+    } catch (error) {
+      rejectedError = error;
+    }
+
+    assert.equal(apiCalls, 2, 'each rejected turn must issue exactly one request');
+    assert.equal(rejectedError?.code, 'STRICT_MAIN_OUTPUT_INCOMPLETE');
+    assert.match(rejectedError?.message || '', /正文已明确发生/);
+    assert.ok(rejectedError?.missingContracts?.includes('business_update'));
+    assert.equal(pipelineError?.code, 'STRICT_MAIN_OUTPUT_INCOMPLETE');
+    assert.equal(timelineCalls, 0, '虚假无变化声明不得创建时间线节点');
+    assert.equal(completeCalls, 0, '虚假无变化声明不得发布完成事件');
+    assert.deepEqual(stateManager.snapshot(), beforeState, '虚假无变化声明不得修改游戏状态');
+    assert.deepEqual(pipeline.chatHistory, beforeHistory, '虚假无变化声明不得写入聊天历史');
+  } finally {
+    unsubscribeComplete();
+    unsubscribeError();
+    delete globalThis.generateRaw;
+  }
+});
+
 await test('strict mode stays at one API request at compression, deep-cycle, NPC-summary and image thresholds', async () => {
+  const { SHINOBI_DAILY_EXAMPLE } = await import('../js/core/shinobi-daily.js');
   const generated = [];
+  const strictDaily = structuredClone(SHINOBI_DAILY_EXAMPLE);
+  strictDaily.date = '木叶52年1月1日';
   const mainResponse = [
     '训练场的风掠过木桩，集成测试忍者完成这一轮动作后停下来观察四周。',
-    '<memory>{"summary":"玩家完成本回合训练并留在原地观察，现场状态保持连续。","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>'
+    '<state_update>{"changed":false}</state_update>',
+    '<memory>{"summary":"玩家完成本回合训练并留在原地观察，现场状态保持连续。","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>',
+    `<shinobi_daily>${JSON.stringify(strictDaily)}</shinobi_daily>`
   ].join('\n');
   globalThis.generateRaw = async options => {
     generated.push(options);

@@ -1,4 +1,5 @@
 import { stateManager } from './core/state-manager.js';
+import { listPersonaProfiles, deletePersonaProfile } from './core/persona-profiles.js';
 import { aiClient, isTavernEnv } from './core/ai-client.js';
 import { eventBus } from './core/event-bus.js';
 import { MessagePipeline } from './core/pipeline.js';
@@ -756,6 +757,12 @@ class NarutoRPGApp {
           .pf-meter-fill { width: 0%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--c-kin), var(--c-kin-bright)); transition: width 0.4s ease; }
           .pf-meter-warning { font-size: 10px; color: var(--c-quality-legendary); margin-top: 5px; display: none; }
           .pf-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+          .pf-persona-list { display: grid; gap: 8px; }
+          .pf-persona-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid rgba(var(--paper-rgb), 0.06); border-radius: 8px; background: rgba(var(--paper-rgb), 0.02); }
+          .pf-persona-name { flex: 1; font-size: 13px; color: var(--c-ink, #e8e4d9); }
+          .pf-persona-time { font-size: 11px; color: var(--c-ink, #a39f98); }
+          .pf-persona-empty { color: var(--c-ink, #a39f98); font-size: 12px; padding: 6px 2px; }
+          .pf-persona-hint { color: var(--c-ink, #a39f98); font-size: 11px; margin-top: 10px; }
           .pf-btn {
             padding: 7px 10px; font-size: 11px; border-radius: 6px; cursor: pointer; letter-spacing: 1px;
             border: 1px solid rgba(var(--paper-rgb), 0.12); background: rgba(var(--paper-rgb), 0.04);
@@ -865,6 +872,13 @@ class NarutoRPGApp {
               </div>
             </div>
           </section>
+
+          <!-- 人设方案 -->
+          <section class="pf-sec" style="animation-delay: 210ms;">
+            <div class="pf-sec-title"><span>人设方案</span></div>
+            <div id="pf-persona-list" class="pf-persona-list">加载中...</div>
+            <div class="pf-persona-hint">人设长期保存在本地；切换人设请在「编写你的忍者开局」向导中选择。</div>
+          </section>
         </div>
       `,
       buttons: [
@@ -926,6 +940,8 @@ class NarutoRPGApp {
         const txt = modal.shadowRoot?.querySelector('#cloud-size-text');
         if (txt) txt.children[1].textContent = '获取失败';
       });
+
+      this._renderProfilePersonas(modal);
 
       modal.shadowRoot?.querySelector('#cb-auto-sync')?.addEventListener('change', (e) => {
         localStorage.setItem('naruto_auto_cloud_sync', e.target.checked);
@@ -1007,6 +1023,30 @@ class NarutoRPGApp {
         fileInput.click();
       });
     }, 150);
+  }
+
+  async _renderProfilePersonas(modal) {
+    const root = modal?.shadowRoot;
+    const listEl = root?.querySelector('#pf-persona-list');
+    if (!listEl) return;
+    const profiles = await listPersonaProfiles();
+    if (!profiles.length) {
+      listEl.innerHTML = '<div class="pf-persona-empty">还没有保存过的人设。在「编写你的忍者开局」向导中点击「保存当前人设」即可长期保存。</div>';
+      return;
+    }
+    listEl.innerHTML = profiles.map(profile => `
+      <div class="pf-persona-item">
+        <span class="pf-persona-name">${this._escAttr(profile.name)}</span>
+        <span class="pf-persona-time">${new Date(profile.savedAt).toLocaleString()}</span>
+        <button class="pf-btn pf-btn-sm pf-btn-danger" type="button" data-persona-delete="${this._escAttr(profile.id)}">删除</button>
+      </div>
+    `).join('');
+    listEl.querySelectorAll('[data-persona-delete]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await deletePersonaProfile(btn.dataset.personaDelete);
+        this._renderProfilePersonas(modal);
+      });
+    });
   }
 
   _openSettings(options = {}) {

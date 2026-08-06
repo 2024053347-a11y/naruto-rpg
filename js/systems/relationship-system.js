@@ -1,6 +1,7 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
 import { normalizeRelationshipInstruction, finiteRelationshipNumber } from '../data/var-schema.js';
+import { normalizeNpcIdentity } from '../data/npc-identity.js';
 import { normalizeNpcCombatStats } from './npc-balance.js';
 import {
   calculateCombatLevel,
@@ -82,11 +83,18 @@ function finiteNumberOr(value, fallback = 0) {
   return finiteRelationshipNumber(value) ?? fallback;
 }
 
+function requireNpcIdentity(value) {
+  const npc = normalizeNpcIdentity(value);
+  if (!npc) throw new TypeError('人物名称无效或不安全');
+  return npc;
+}
+
 class RelationshipSystem {
   refreshCombatLevels() {
     const relationships = stateManager.getSub('_relationships') || {};
     let changed = 0;
     for (const [name, relationship] of Object.entries(relationships)) {
+      if (normalizeNpcIdentity(name) !== name) continue;
       const card = relationship?.combat_stats;
       if (!card || typeof card !== 'object') continue;
       const level = calculateCombatLevel(
@@ -213,14 +221,15 @@ class RelationshipSystem {
   }
 
   getRelationship(npc) {
+    npc = normalizeNpcIdentity(npc);
     const all = stateManager.getSub('_relationships') || {};
-    return this._normalizeRelationship(all[npc]);
+    return this._normalizeRelationship(npc && Object.prototype.hasOwnProperty.call(all, npc) ? all[npc] : null);
   }
 
   ensureVisualProfile(npc) {
-    if (!npc) throw new TypeError('人物名称不能为空');
+    npc = requireNpcIdentity(npc);
     const all = stateManager.getSub('_relationships') || {};
-    if (!(npc in all)) throw new Error(`关系人物不存在: ${npc}`);
+    if (!Object.prototype.hasOwnProperty.call(all, npc)) throw new Error(`关系人物不存在: ${npc}`);
     const current = this._normalizeRelationship(all[npc]);
     const subjectId = current.visual_subject_id || createSubjectId();
     const profile = {
@@ -348,6 +357,7 @@ class RelationshipSystem {
   }
 
   togglePin(npc) {
+    npc = requireNpcIdentity(npc);
     const all = stateManager.getSub('_relationships') || {};
     const current = this._normalizeRelationship(all[npc]);
     current.pinned = !current.pinned;
@@ -358,12 +368,15 @@ class RelationshipSystem {
   }
 
   deleteRelationship(npc) {
+    npc = normalizeNpcIdentity(npc);
+    if (!npc) return false;
     const all = stateManager.getSub('_relationships') || {};
     const subjectId = all[npc]?.visual_subject_id || null;
     delete all[npc];
     stateManager.setSub('_relationships', all);
     if (subjectId) eventBus.emit('relationship:visual-deleted', { npc, subjectId });
     eventBus.emit('relationship:changed', { npc, relationship: null, deleted: true });
+    return true;
   }
 
   getAffectionLevel(value) {
@@ -386,6 +399,7 @@ class RelationshipSystem {
   }
 
   addRelationship(npc, initialData = {}) {
+    npc = requireNpcIdentity(npc);
     const all = stateManager.getSub('_relationships') || {};
     const data = {
       ...this._normalizeRelationship(initialData),

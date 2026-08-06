@@ -1,3 +1,5 @@
+import { normalizeNpcIdentity } from './npc-identity.js';
+
 export const VAR_SCHEMA = {
 
   '玩家·姓名':          { type: 'string',  default: '',        desc: '角色名' },
@@ -125,11 +127,12 @@ export function finiteRelationshipNumber(value) {
 export function normalizeRelationshipInstruction(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
 
-  const npc = [value.npc, value.name, value['姓名']]
+  const npcSource = [value.npc, value.name, value['姓名']]
     .find(candidate => typeof candidate === 'string' && candidate.trim());
+  const npc = normalizeNpcIdentity(npcSource);
   if (!npc) return null;
 
-  const normalized = { ...value, npc: npc.trim() };
+  const normalized = { ...value, npc };
   delete normalized.name;
   delete normalized['姓名'];
 
@@ -225,6 +228,7 @@ const KNOWN_FIELDS = ['名称', '等级', '属性', '消耗', '威力', '熟练�
 
 export function isKnownKey(key) {
   const resolved = resolveAlias(key);
+  if (typeof resolved !== 'string' || !resolved) return false;
   if (VAR_SCHEMA[resolved]) return true;
   for (const p of VAR_PATTERNS) {
     const m = resolved.match(p.pattern);
@@ -307,6 +311,26 @@ const STRUCTURED_ITEM_FIELDS = new Set([
 const STRUCTURED_SKILL_CATEGORIES = 'jutsu|taijutsu|genjutsu|support|talents|kekkei_genkai';
 const STRUCTURED_ITEM_CATEGORIES = 'weapons|armor|tools|consumables';
 const STRUCTURED_FORBIDDEN_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor']);
+const EVIDENCE_CONTAINER_HINTS = Object.freeze({
+  player: 'player.current_goal',
+  world: 'world_state.current_location',
+  attributes_and_progression: 'attributes.chakra_current 或 progression.exp',
+  skills_and_equipment: 'skills.jutsu.准确名称 或 equipment.consumables.准确名称',
+  missions: '<mission>',
+  relationships: '<relationship>',
+  combat: '<combat>',
+  map: 'world_state.map.known_locations'
+});
+const STRUCTURED_OPERATION_FROM_WRAPPER = Object.freeze({
+  set: 'set', add: 'add', sub: 'sub', '=': 'set', '+': 'add', '-': 'sub'
+});
+const EVIDENCE_CONTAINER_PATH_PREFIXES = Object.freeze({
+  player: ['player.'],
+  world: ['world_state.'],
+  attributes_and_progression: ['attributes.', 'progression.'],
+  skills_and_equipment: ['skills.', 'equipment.'],
+  map: ['world_state.map.']
+});
 
 function structuredPathIsSafe(path) {
   return typeof path === 'string'
@@ -337,6 +361,32 @@ export function normalizeStructuredVariableUpdate(update) {
   if (typeof normalized.path === 'string') normalized.path = normalized.path.trim();
   if (typeof normalized.op === 'string') normalized.op = normalized.op.trim().toLowerCase();
   if (typeof normalized.key === 'string') normalized.key = normalized.key.trim();
+  if (Object.prototype.hasOwnProperty.call(EVIDENCE_CONTAINER_HINTS, normalized.path)
+    && Object.prototype.hasOwnProperty.call(STRUCTURED_OPERATION_FROM_WRAPPER, normalized.op)) {
+    let targetKey = typeof normalized.key === 'string' ? resolveAlias(normalized.key) : '';
+    let targetValue = normalized.value;
+    const valueEntries = Object.entries(recordValue(normalized.value) || {});
+    if (targetKey && valueEntries.length) {
+      if (valueEntries.length !== 1 || resolveAlias(String(valueEntries[0][0]).trim()) !== targetKey) {
+        return normalized;
+      }
+      targetValue = valueEntries[0][1];
+    } else if (!targetKey && valueEntries.length === 1) {
+      targetKey = resolveAlias(String(valueEntries[0][0]).trim());
+      targetValue = valueEntries[0][1];
+    }
+    const allowedPrefixes = EVIDENCE_CONTAINER_PATH_PREFIXES[normalized.path] || [];
+    const targetPath = Object.entries(STRUCTURED_SCALAR_PATH_MAP)
+      .find(([path, flatKey]) => allowedPrefixes.some(prefix => path.startsWith(prefix))
+        && flatKey === targetKey)?.[0];
+    if (targetPath && isKnownKey(targetKey)) {
+      return {
+        path: targetPath,
+        op: STRUCTURED_OPERATION_FROM_WRAPPER[normalized.op],
+        value: targetValue
+      };
+    }
+  }
   return normalized;
 }
 
@@ -558,6 +608,12 @@ export function validateStructuredVariableUpdate(update) {
     return { valid: true, kind: 'item' };
   }
 
+  if (Object.prototype.hasOwnProperty.call(EVIDENCE_CONTAINER_HINTS, path)) {
+    return {
+      valid: false,
+      reason: `${path} 是当前状态的只读证据分组名，不能作为 variable.path；请改用真实 DSL 路径，例如 ${EVIDENCE_CONTAINER_HINTS[path]}`
+    };
+  }
   return { valid: false, reason: `变量路径不在允许清单中: ${path}` };
 }
 
@@ -571,6 +627,7 @@ export function getStructuredVariableContractPrompt() {
   return `【结构化变量 DSL · 唯一写入契约】
 - <variable> 内必须是严格 JSON 对象：双引号、无注释、无尾逗号。
 - op 只能使用精确小写：set, add, sub, assign, push, remove。
+- [当前状态] JSON 中的 player、world、attributes_and_progression、skills_and_equipment、missions、relationships、combat、map 都只是只读证据分组名，绝不是可写 path；不得把这些名称写入 path。
 - 文本标量只允许 set：${text.join(', ')}。
 - 数值标量允许 set/add/sub，value 必须是非负有限数字：${numeric.join(', ')}。
 - 声望：progression.reputation.* 允许 set/add/sub；删除某村声望使用 progression.reputation + remove + key。
@@ -719,7 +776,7 @@ export function generateMainVarInstructions(updaterEnabled) {
 - 任务、关系、战斗、伤势、资源、地点与时间只有实际改变时才在正文中明确表现。
 - 不为方便后台而制造变化，不写猜测数值，不从模型预训练知识擅自补全NPC能力。
 
-事实仍按“当前状态/开局契约 → 持久记忆与近期对话 → 本回合世界书 → 玩家声称 → 模型预训练知识”排序。世界书与存档高于模型常识。<reasoning> 只写可见核对结论与依据，不得写入NPC未公开秘密或审校模型私有记录。`;
+事实仍按“当前状态/开局契约 → 持久记忆与近期对话 → 本回合世界书 → 玩家声称 → 模型预训练知识”排序。世界书与存档高于模型常识。<reasoning> 只写可见核对结论与依据，不得写入NPC未公开秘密或审校模型私有记录。推理与思考内容一律使用简体中文。`;
   }
 
   return `[系统指令：变量模式]

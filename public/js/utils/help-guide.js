@@ -255,6 +255,9 @@ class HelpGuide {
         transform: scale(1.1);
         background: rgba(235, 97, 63, 1);
       }
+      body.settings-panel-open .help-guide-btn {
+        display: none;
+      }
 
       .help-modal {
         position: fixed;

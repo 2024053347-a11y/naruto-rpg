@@ -57,3 +57,9 @@ app-shell-history.txt
 /canon-rebuild-output/**/*-BATCH-*-output.json
 /canon-rebuild-output/data/canon/timeline/shards/plot/build_batch.ps1
 /canon-rebuild-output/reports/validation-report.json
+
+# 服务器运行日志
+server-*.err.log
+server-*.out.log
+server-*.stderr.log
+server-*.stdout.log

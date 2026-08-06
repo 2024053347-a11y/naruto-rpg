@@ -11,11 +11,33 @@ import {
 } from '../js/core/shinobi-daily.js';
 import { createNarrativeArtifact, renderNarrativeInstructions } from '../js/core/narrative-artifact.js';
 import {
+  MAIN_SINGLE_CALL_OUTPUT_PROMPT,
+  STRICT_MAIN_OUTPUT_INCOMPLETE,
+  assertMainOutputContract,
+  validateMainOutputContract
+} from '../js/core/main-output-contract.js';
+import { MessagePipeline } from '../js/core/pipeline.js';
+import {
   buildNarrativeReviewMessages,
   parseNarrativeReviewPreview
 } from '../js/core/narrative-review.js';
 import { buildVariableUpdaterMessages } from '../js/core/variable-updater.js';
+import {
+  DEFAULT_MAIN_PRESET,
+  DEFAULT_MAIN_PRESET_VERSION,
+  MAIN_PRESET_STORAGE_KEY,
+  invalidateMainPresetCache
+} from '../js/data/default-preset.js';
 import { DEFAULT_VARIABLE_UPDATER_PRESET } from '../js/data/variable-updater-preset.js';
+
+if (!globalThis.localStorage) {
+  const values = new Map();
+  globalThis.localStorage = {
+    getItem: key => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, String(value)),
+    removeItem: key => values.delete(key)
+  };
+}
 
 let passed = 0;
 async function test(name, fn) {
@@ -88,11 +110,191 @@ await test('invalid counts, mission order, extra fields and markup are rejected'
 });
 
 await test('daily JSON is hidden from visible and persisted narrative projections', () => {
-  const artifact = createNarrativeArtifact(`公开正文。\n${contract(SHINOBI_DAILY_EXAMPLE)}`);
+  const artifact = createNarrativeArtifact([
+    '公开正文。',
+    '<state_update>{"changed":false}</state_update>',
+    contract(SHINOBI_DAILY_EXAMPLE)
+  ].join('\n'));
   assert.equal(artifact.displayText, '公开正文。');
-  assert.deepEqual(artifact.instructions.map(item => item.tag), ['shinobi_daily']);
+  assert.deepEqual(artifact.instructions.map(item => item.tag), ['state_update', 'shinobi_daily']);
   assert.match(renderNarrativeInstructions(artifact), /naruto\.shinobi-daily\/v1/);
-  assert.doesNotMatch(artifact.displayText, /headline|任务发布所|shinobi_daily/);
+  assert.doesNotMatch(artifact.displayText, /headline|任务发布所|shinobi_daily|state_update/);
+});
+
+await test('single-call output accepts explicit changed and unchanged bookkeeping', () => {
+  const memory = '<memory>{"summary":"玩家完成检查，下一回合继续行动。","facts":[],"clues":[],"pins":[],"npc_notes":{}}</memory>';
+  const validate = source => validateMainOutputContract({
+    artifact: createNarrativeArtifact(source),
+    dailyResult: parseShinobiDailyContract(source, { required: true })
+  });
+  const unchanged = [
+    '玩家留在原地观察。',
+    '<state_update>{"changed":false}</state_update>',
+    memory,
+    contract(SHINOBI_DAILY_EXAMPLE)
+  ].join('\n');
+  const changed = [
+    '玩家抵达火影楼。',
+    '<var>世界·地点 = 火影楼</var>',
+    '<state_update>{"changed":true}</state_update>',
+    memory,
+    contract(SHINOBI_DAILY_EXAMPLE)
+  ].join('\n');
+
+  assert.equal(validate(unchanged).valid, true, validate(unchanged).errors.join('; '));
+  assert.equal(validate(unchanged).changed, false);
+  assert.equal(validate(changed).valid, true, validate(changed).errors.join('; '));
+  assert.equal(validate(changed).changed, true);
+});
+
+await test('single-call output rejects omissions, invalid updates and false bookkeeping claims', () => {
+  const memory = '<memory>{"summary":"玩家完成检查，下一回合继续行动。"}</memory>';
+  const daily = contract(SHINOBI_DAILY_EXAMPLE);
+  const validate = source => validateMainOutputContract({
+    artifact: createNarrativeArtifact(source),
+    dailyResult: parseShinobiDailyContract(source, { required: true })
+  });
+
+  const missing = validate('只有正文，没有任何结构契约。');
+  assert.equal(missing.valid, false);
+  assert.deepEqual([...missing.missingContracts].sort(), ['memory', 'shinobi_daily', 'state_update']);
+
+  const falseClaim = validate([
+    '<var>世界·地点 = 火影楼</var>',
+    '<state_update>{"changed":false}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(falseClaim.errors.join('\n'), /changed:false/);
+
+  const emptyClaim = validate([
+    '<state_update>{"changed":true}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(emptyClaim.errors.join('\n'), /没有任何变量业务标签/);
+
+  const invalidUpdate = validate([
+    '<var>这不是有效变量行</var>',
+    '<state_update>{"changed":true}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(invalidUpdate.errors.join('\n'), /未形成有效更新/);
+
+  const partiallyInvalidUpdate = validate([
+    '<var>世界·地点 = 火影楼\n这不是有效变量行</var>',
+    '<state_update>{"changed":true}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(partiallyInvalidUpdate.errors.join('\n'), /未形成有效更新/);
+
+  for (const emptyTag of ['<mission>{}</mission>', '<event>{}</event>']) {
+    const emptyBusinessUpdate = validate([
+      emptyTag,
+      '<state_update>{"changed":true}</state_update>',
+      memory,
+      daily
+    ].join('\n'));
+    assert.match(emptyBusinessUpdate.errors.join('\n'), /未形成有效更新/, emptyTag);
+  }
+
+  const contradictedByNarrative = validate([
+    '玩家离开训练场赶到火影楼，施术耗去大量查克拉，并接下了一份护送任务。',
+    '<state_update>{"changed":false}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(contradictedByNarrative.errors.join('\n'), /正文已明确发生/);
+  assert.deepEqual(
+    contradictedByNarrative.narrativeSignals.map(item => item.id).sort(),
+    ['location', 'missions', 'resources']
+  );
+
+  const partiallyCoveredNarrative = validate([
+    '玩家离开训练场赶到火影楼，施术耗去大量查克拉，并接下了一份护送任务。',
+    '<var>世界·地点 = 火影楼</var>',
+    '<state_update>{"changed":true}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.match(partiallyCoveredNarrative.errors.join('\n'), /正文变化缺少对应变量业务标签/);
+  assert.match(partiallyCoveredNarrative.errors.join('\n'), /资源数值/);
+  assert.match(partiallyCoveredNarrative.errors.join('\n'), /任务状态/);
+
+  const proposedOnly = validate([
+    '玩家没有离开训练场，也未消耗查克拉，只打算询问是否可以接取任务。',
+    '<state_update>{"changed":false}</state_update>',
+    memory,
+    daily
+  ].join('\n'));
+  assert.equal(proposedOnly.valid, true, proposedOnly.errors.join('; '));
+
+  assert.throws(
+    () => assertMainOutputContract({
+      artifact: createNarrativeArtifact('只有正文'),
+      dailyResult: parseShinobiDailyContract('只有正文', { required: true })
+    }),
+    error => error?.code === STRICT_MAIN_OUTPUT_INCOMPLETE
+      && error.missingContracts.includes('shinobi_daily')
+      && /本回合未提交/.test(error.message)
+  );
+});
+
+await test('single-call runtime prompt requires a verifiable bookkeeping acknowledgement', () => {
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /系统不会自动发起第二次请求/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<state_update>严格 JSON<\/state_update>/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /changed:false/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<memory>/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<shinobi_daily>/);
+});
+
+await test('assembled single-call prompt keeps the hard delivery checklist after custom prefill', () => {
+  const preset = structuredClone(DEFAULT_MAIN_PRESET);
+  preset.entries.push(
+    {
+      id: 'custom_bottom_marker',
+      name: '⬆️回映层⬆️',
+      enabled: true,
+      isMarker: true,
+      role: 'system',
+      activation: 'always',
+      content: ''
+    },
+    {
+      id: 'custom_reasoning_prefill',
+      name: '旧预设续写前缀',
+      enabled: true,
+      role: 'assistant',
+      activation: 'always',
+      content: '<reasoning>'
+    }
+  );
+  preset._version = DEFAULT_MAIN_PRESET_VERSION;
+  localStorage.setItem(MAIN_PRESET_STORAGE_KEY, JSON.stringify(preset));
+  invalidateMainPresetCache();
+
+  try {
+    const pipeline = new MessagePipeline({});
+    const messages = pipeline._buildPrompt('继续调查', {}, '继续调查', { updaterEnabled: false });
+    const sources = pipeline._lastPromptTrace.messageSources;
+    const prefillIndex = sources.findIndex(item => item.source === '主预设 Prefill');
+    const contractIndex = sources.findLastIndex(item => item.source === '单次主模型记账');
+    const currentUser = messages.find((message, index) => (
+      message.role === 'user' && sources[index]?.source === '本回合聚合上下文'
+    ));
+
+    assert.ok(prefillIndex >= 0, 'fixture must include a custom assistant prefill');
+    assert.ok(contractIndex > prefillIndex, 'runtime contract must override a stale custom prefill');
+    assert.equal(sources.at(-1)?.label, '最终交付复核');
+    assert.match(currentUser?.content || '', /单次交付硬约束/);
+    assert.match(messages.at(-1)?.content || '', /接近输出上限时.*缩短正文.*不得省略/);
+  } finally {
+    localStorage.removeItem(MAIN_PRESET_STORAGE_KEY);
+    localStorage.removeItem('naruto_main_preset_version');
+    invalidateMainPresetCache();
+  }
 });
 
 await test('main and secondary prompts enforce one fixed data-only renderer contract', () => {
@@ -106,6 +308,7 @@ await test('main and secondary prompts enforce one fixed data-only renderer cont
     assert.match(prompt, /仅示范结构与写法/);
   }
   assert.match(main, /完成可见正文/);
+  assert.match(main, /只有绘图契约可以紧随日报之后/);
   assert.match(secondary, /完成全部变量标签后/);
   assert.match(SHINOBI_DAILY_DELEGATION_PROMPT, /由二次变量模型独立生成/);
 });
@@ -154,15 +357,21 @@ await test('narrative review locally rejects a missing or duplicated required da
 });
 
 await test('pipeline routes ownership and persists the validated daily separately', async () => {
-  const [pipelineSource, timelineSource] = await Promise.all([
+  const [pipelineSource, timelineSource, appShellSource] = await Promise.all([
     readFile(new URL('../js/core/pipeline.js', import.meta.url), 'utf8'),
-    readFile(new URL('../js/systems/timeline-system.js', import.meta.url), 'utf8')
+    readFile(new URL('../js/systems/timeline-system.js', import.meta.url), 'utf8'),
+    readFile(new URL('../js/ui/app-shell.js', import.meta.url), 'utf8')
   ]);
   assert.match(pipelineSource, /updaterEnabled\s*\?\s*SHINOBI_DAILY_DELEGATION_PROMPT/);
   assert.match(pipelineSource, /parseShinobiDailyContract\(fullResponse, \{ required: true \}\)/);
+  assert.match(pipelineSource, /assertMainOutputContract/);
+  assert.match(pipelineSource, /MAIN_SINGLE_CALL_OUTPUT_PROMPT/);
   assert.match(pipelineSource, /onShinobiDaily/);
   assert.match(pipelineSource, /timelineNodeId:[\s\S]*shinobiDaily/);
   assert.match(timelineSource, /shinobi_daily:\s*shinobiDaily/);
+  assert.match(appShellSource, /STRICT_MAIN_OUTPUT_INCOMPLETE/);
+  assert.match(appShellSource, /回合未结算/);
+  assert.match(appShellSource, /未保存草稿/);
 });
 
 await test('modal registration retries when the module was imported before DOM globals exist', async () => {

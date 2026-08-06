@@ -67,6 +67,15 @@ await test('service worker bypasses API, auth, and non-GET requests', async () =
   assert.equal(isIntercepted('/js/app.js'), true);
 });
 
+await test('server CSP uses browser-valid local connection sources', () => {
+  const source = fs.readFileSync(new URL('../server/index.js', import.meta.url), 'utf8');
+  assert.match(source, /http:\/\/127\.0\.0\.1:\*/);
+  assert.match(source, /ws:\/\/127\.0\.0\.1:\*/);
+  assert.match(source, /http:\/\/localhost:\*/);
+  assert.match(source, /ws:\/\/localhost:\*/);
+  assert.doesNotMatch(source, /(?:http|ws):\/\/\[::1\]:\*/);
+});
+
 await test('proxy mode enforces the requested timeout', async () => {
   const originalFetch = globalThis.fetch;
   let observedSignal = null;

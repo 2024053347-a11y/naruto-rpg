@@ -41,12 +41,6 @@ export function isNarrativeReviewEnabled(mainConfig = {}) {
   return getNarrativeReviewConfig(mainConfig).enabled === true;
 }
 
-export function resolveNarrativeReviewTimeout(config = {}) {
-  if (Number(config.timeoutMs) === 0) return 999999999;
-  const parsed = Number(config.timeoutMs);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 999999999;
-}
-
 export function resolveNarrativeReviewApiConfig(mainConfig = {}) {
   const review = getNarrativeReviewConfig(mainConfig);
   return {
@@ -177,8 +171,8 @@ async function requestNarrativeReviewResult({
   });
   const generationOptions = {
     temperature: Number.isFinite(Number(review.temperature)) ? Number(review.temperature) : NARRATIVE_REVIEW_DEFAULTS.temperature,
-    max_tokens: Math.max(1024, Number(review.maxTokens) || NARRATIVE_REVIEW_DEFAULTS.maxTokens),
-    timeout: resolveNarrativeReviewTimeout(review)
+    max_tokens: Math.max(1024, Number(review.maxTokens) || NARRATIVE_REVIEW_DEFAULTS.maxTokens)
+    // 不设置超时截止：慢生成由用户手动停止。
   };
   publishTrace(messages, apiConfig, generationOptions);
   eventBus.emit('pipeline:review-started', { model: apiConfig.model });

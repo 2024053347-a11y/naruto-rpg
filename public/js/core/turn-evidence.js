@@ -9,6 +9,7 @@ import {
 } from '../systems/opening-contract.js';
 import { compileContinuityAnchors } from './continuity-ledger.js';
 import { worldbookV2Resolver } from '../data/worldbook/runtime-resolver.js';
+import { normalizeNpcIdentity } from '../data/npc-identity.js';
 
 export const EVIDENCE_AUDIENCES = Object.freeze([
   'narrator',
@@ -116,20 +117,115 @@ function nonEmptyText(value) {
 
 function candidateAliases(value) {
   return [...new Set((Array.isArray(value) ? value : [])
-    .map(nonEmptyText)
+    .map(normalizeNpcIdentity)
     .filter(alias => alias.length >= 2))];
+}
+
+function publicTextList(value) {
+  return (Array.isArray(value) ? value : []).map(nonEmptyText).filter(Boolean);
+}
+
+export function projectCharacterMemoryDeltaForUpdater(delta = null) {
+  if (!isRecord(delta)) return null;
+  const changes = {};
+  for (const [key, value] of Object.entries(delta.changes || {})) {
+    if (!isRecord(value)) continue;
+    const npcName = normalizeNpcIdentity(value.npcName || key);
+    const changeKey = normalizeNpcIdentity(key) || npcName;
+    if (!npcName || !changeKey) continue;
+    const aliases = candidateAliases(value.aliases).filter(alias => alias !== npcName);
+    const currentMood = nonEmptyText(value.currentMood);
+    const knownFactsAppend = publicTextList(value.knownFactsAppend);
+    const recentActionsAppend = (Array.isArray(value.recentActionsAppend)
+      ? value.recentActionsAppend
+      : []).map(item => {
+      if (!isRecord(item)) return null;
+      const action = nonEmptyText(item.action);
+      const dialogue = nonEmptyText(item.dialogue);
+      if (!action && !dialogue) return null;
+      const turn = Number(item.turn);
+      return {
+        ...(Number.isFinite(turn) ? { turn: Math.max(0, turn) } : {}),
+        ...(action ? { action } : {}),
+        ...(dialogue ? { dialogue } : {})
+      };
+    }).filter(Boolean);
+    const relationShift = nonEmptyText(value.relationShift);
+    changes[changeKey] = {
+      npcName,
+      ...(aliases.length ? { aliases } : {}),
+      ...(currentMood ? { currentMood } : {}),
+      ...(knownFactsAppend.length ? { knownFactsAppend } : {}),
+      ...(recentActionsAppend.length ? { recentActionsAppend } : {}),
+      ...(relationShift ? { relationShift } : {})
+    };
+  }
+  const schema = nonEmptyText(delta.schema);
+  const turn = Number(delta.turn);
+  return {
+    ...(schema ? { schema } : {}),
+    ...(Number.isFinite(turn) ? { turn: Math.max(0, turn) } : {}),
+    changes
+  };
+}
+
+export function projectUpdaterObligations(value = null) {
+  if (!isRecord(value)) return null;
+  const fixedDomains = (Array.isArray(value.fixed_domains) ? value.fixed_domains : [])
+    .map(item => {
+      if (!isRecord(item)) return null;
+      const id = nonEmptyText(item.id);
+      if (!id) return null;
+      const label = nonEmptyText(item.label);
+      return { id, ...(label ? { label } : {}) };
+    }).filter(Boolean);
+  const presentNpcs = (Array.isArray(value.present_npcs) ? value.present_npcs : [])
+    .map(item => {
+      if (!isRecord(item)) return null;
+      const npc = normalizeNpcIdentity(item.npc || item.name);
+      if (!npc) return null;
+      const aliases = candidateAliases(item.aliases).filter(alias => alias !== npc);
+      const source = nonEmptyText(item.source);
+      return {
+        npc,
+        ...(aliases.length ? { aliases } : {}),
+        ...(typeof item.existing === 'boolean' ? { existing: item.existing } : {}),
+        ...(source ? { source } : {})
+      };
+    }).filter(Boolean);
+  const activeMissions = (Array.isArray(value.active_missions) ? value.active_missions : [])
+    .map(item => {
+      if (!isRecord(item)) return null;
+      const id = nonEmptyText(item.id);
+      if (!id) return null;
+      const title = nonEmptyText(item.title || item.name);
+      const status = nonEmptyText(item.status);
+      const objective = nonEmptyText(item.objective);
+      return {
+        id,
+        ...(title ? { title } : {}),
+        ...(status ? { status } : {}),
+        ...(objective ? { objective } : {}),
+        ...(item.progress != null ? { progress: clone(item.progress) } : {})
+      };
+    }).filter(Boolean);
+  return {
+    ...(Array.isArray(value.fixed_domains) ? { fixed_domains: fixedDomains } : {}),
+    present_npcs: presentNpcs,
+    active_missions: activeMissions
+  };
 }
 
 export function buildUpdaterObligations({
   state = {}, narrativeResponse = '', evidencePacket = null, characterMemoryDelta = null
 } = {}) {
   const narrative = String(narrativeResponse || '');
-  const playerName = nonEmptyText(state?.['玩家·姓名']);
+  const playerName = normalizeNpcIdentity(state?.['玩家·姓名']);
   const relationships = isRecord(state?._relationships) ? state._relationships : {};
   const candidates = new Map();
   const sourcePriority = { worldbook: 1, plot: 2, relationship: 3, combat: 4, agent: 5 };
-  const addCandidate = (nameValue, source, aliases = [], agentThought = '') => {
-    const name = nonEmptyText(nameValue);
+  const addCandidate = (nameValue, source, aliases = []) => {
+    const name = normalizeNpcIdentity(nameValue);
     if (!name || name === playerName || name.length < 2) return;
     const normalizedAliases = candidateAliases(aliases);
     let canonicalName = name;
@@ -144,8 +240,7 @@ export function buildUpdaterObligations({
     const previous = candidates.get(canonicalName) || {
       npc: canonicalName,
       aliases: [],
-      source,
-      agent_inner_thought: ''
+      source
     };
     previous.aliases = [...new Set([
       ...previous.aliases,
@@ -153,7 +248,6 @@ export function buildUpdaterObligations({
       ...normalizedAliases
     ])];
     if ((sourcePriority[source] || 0) >= (sourcePriority[previous.source] || 0)) previous.source = source;
-    if (nonEmptyText(agentThought)) previous.agent_inner_thought = nonEmptyText(agentThought);
     candidates.set(canonicalName, previous);
   };
 
@@ -168,12 +262,19 @@ export function buildUpdaterObligations({
     const profile = entry?.character_profile;
     if (!profile) continue;
     const profileNames = candidateAliases(profile.names || []);
-    const canonical = profileNames[0] || nonEmptyText(entry.title);
-    addCandidate(canonical, 'worldbook', [...profileNames.slice(1), ...(profile.aliases || [])]);
+    const canonical = profileNames[0];
+    if (!canonical) continue;
+    addCandidate(canonical, 'worldbook', profileNames.slice(1));
   }
-  for (const [name, change] of Object.entries(characterMemoryDelta?.changes || {})) {
-    const latestThought = (change?.privateIntentAppend || []).at(-1)?.thought || '';
-    addCandidate(change?.npcName || name, 'agent', change?.aliases || [], latestThought);
+  for (const mention of evidencePacket?.character_mentions || []) {
+    const canonical = normalizeNpcIdentity(mention?.canonical_name);
+    const names = (Array.isArray(mention?.names) ? mention.names : [])
+      .map(normalizeNpcIdentity).filter(Boolean);
+    addCandidate(canonical, 'worldbook', names.filter(name => name !== canonical));
+  }
+  const publicCharacterMemoryDelta = projectCharacterMemoryDeltaForUpdater(characterMemoryDelta);
+  for (const [name, change] of Object.entries(publicCharacterMemoryDelta?.changes || {})) {
+    addCandidate(change?.npcName || name, 'agent', change?.aliases || []);
   }
 
   const presentNpcs = [];
@@ -185,8 +286,7 @@ export function buildUpdaterObligations({
       npc: candidate.npc,
       ...(candidate.aliases.length ? { aliases: clone(candidate.aliases) } : {}),
       existing: Object.prototype.hasOwnProperty.call(relationships, candidate.npc),
-      source: candidate.source,
-      ...(candidate.agent_inner_thought ? { agent_inner_thought: candidate.agent_inner_thought } : {})
+      source: candidate.source
     });
   }
 
@@ -395,11 +495,34 @@ export function buildCurrentStateEvidence(state = {}) {
   };
 }
 
-function normalizeWorldbookResult(value) {
-  if (!value) return [];
-  if (Array.isArray(value)) return clone(value);
-  if (Array.isArray(value.entries)) return clone(value.entries);
-  return [];
+function normalizeCharacterMentions(value) {
+  if (!Array.isArray(value)) return [];
+  const mentions = new Map();
+  for (const item of value) {
+    const canonicalName = normalizeNpcIdentity(item?.canonical_name);
+    if (!canonicalName) continue;
+    const names = [...new Set([
+      canonicalName,
+      ...(Array.isArray(item?.names) ? item.names.map(normalizeNpcIdentity) : [])
+    ].filter(Boolean))];
+    const entityId = nonEmptyText(item?.entity_id);
+    const key = entityId || canonicalName;
+    mentions.set(key, {
+      ...(entityId ? { entity_id: entityId } : {}),
+      canonical_name: canonicalName,
+      names
+    });
+  }
+  return [...mentions.values()];
+}
+
+function normalizeWorldbookResolution(value) {
+  if (!value) return { entries: [], character_mentions: [] };
+  if (Array.isArray(value)) return { entries: clone(value), character_mentions: [] };
+  return {
+    entries: Array.isArray(value.entries) ? clone(value.entries) : [],
+    character_mentions: normalizeCharacterMentions(value.character_mentions)
+  };
 }
 
 function worldbookVisibility(entry) {
@@ -449,6 +572,15 @@ function redactStateForNpc(currentState, entityId, npcName) {
   };
 }
 
+function redactCharacterPrivateState(currentState) {
+  const safe = clone(currentState);
+  for (const relationship of Object.values(safe?.relationships || {})) {
+    if (!relationship || typeof relationship !== 'object') continue;
+    delete relationship.inner_thoughts;
+  }
+  return safe;
+}
+
 export class TurnEvidenceCompiler {
   constructor({
     canonDatabase = CANON_DATABASE,
@@ -472,15 +604,22 @@ export class TurnEvidenceCompiler {
       .map(technique => compactTechnique(technique, learnedNames));
 
     let worldbookEntries = [];
+    let characterMentions = [];
     if (this.worldbookResolver?.resolve) {
-      worldbookEntries = normalizeWorldbookResult(this.worldbookResolver.resolve({
+      const resolution = normalizeWorldbookResolution(this.worldbookResolver.resolve({
         query: userInput,
         state,
         currentDate,
         audience: 'planner'
       }));
+      worldbookEntries = resolution.entries;
+      characterMentions = resolution.character_mentions;
     } else if (this.worldbookResolver?.search) {
-      worldbookEntries = normalizeWorldbookResult(this.worldbookResolver.search(userInput, { state, memory: state._memory || {} }));
+      const resolution = normalizeWorldbookResolution(
+        this.worldbookResolver.search(userInput, { state, memory: state._memory || {} })
+      );
+      worldbookEntries = resolution.entries;
+      characterMentions = resolution.character_mentions;
     }
 
     const resolvedNodeId = nodeId || state?._meta?.current_node_id || null;
@@ -513,9 +652,10 @@ export class TurnEvidenceCompiler {
       continuity_anchors: clone(continuity),
       _continuity_ledger: clone(continuitySource),
       worldbook_entries: worldbookEntries,
+      character_mentions: characterMentions,
       year_snapshot: relevantSnapshot(snapshotContext, state, userInput),
       current_plot: compileCurrentPlot(plotContext, state, userInput),
-      update_obligations: updateObligations ? clone(updateObligations) : null,
+      update_obligations: updateObligations ? projectUpdaterObligations(updateObligations) : null,
       technique_definitions: techniques,
       conflicts: [],
       provenance: {
@@ -593,15 +733,20 @@ export class TurnEvidenceCompiler {
       },
       current_state: isNpc
         ? redactStateForNpc(packet.current_state, entityId, npcName)
-        : clone(packet.current_state),
+        : (audience === 'updater' || isPlanner
+          ? clone(packet.current_state)
+          : redactCharacterPrivateState(packet.current_state)),
       opening_contract: openingPrompt || '',
       continuity_anchors: continuityAnchors,
       worldbook_entries: worldbookEntries,
+      ...(audience === 'updater'
+        ? { character_mentions: clone(packet.character_mentions || []) }
+        : {}),
       year_snapshot: yearSnapshot,
       current_plot: isNpc ? null : currentPlot,
       technique_definitions: clone(packet.technique_definitions || []),
       ...(audience === 'updater' && packet.update_obligations
-        ? { update_obligations: clone(packet.update_obligations) }
+        ? { update_obligations: projectUpdaterObligations(packet.update_obligations) }
         : {}),
       conflicts: clone(packet.conflicts || []),
       provenance

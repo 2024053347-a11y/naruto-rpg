@@ -4,11 +4,34 @@ import {
   migrateCustomWorldbookEntriesV1ToV2,
   toRuntimeWorldbookEntry
 } from './v2.js';
+import { normalizeNpcIdentity } from '../npc-identity.js';
 
 const DEFAULT_CUSTOM_STORAGE_KEY = 'naruto_worldbook_custom';
 
 function uniqueStrings(values) {
   return [...new Set((values || []).map(value => String(value || '').trim()).filter(Boolean))];
+}
+
+function collectCharacterMentions(candidates, query) {
+  const queryText = String(query || '').normalize('NFKC').toLocaleLowerCase('zh-CN');
+  if (!queryText) return [];
+  const mentions = new Map();
+  for (const { entry } of candidates) {
+    const profile = entry?.character_profile;
+    if (!profile) continue;
+    const names = uniqueStrings(profile.names).map(normalizeNpcIdentity).filter(Boolean);
+    const canonicalName = names[0];
+    if (!canonicalName || !names.some(name => queryText.includes(name.toLocaleLowerCase('zh-CN')))) continue;
+    const entityId = String(profile.entity_id || entry?.entity_ids?.[0] || '').trim();
+    const key = entityId || canonicalName;
+    const previous = mentions.get(key);
+    mentions.set(key, {
+      ...(entityId ? { entity_id: entityId } : {}),
+      canonical_name: previous?.canonical_name || canonicalName,
+      names: uniqueStrings([...(previous?.names || []), ...names])
+    });
+  }
+  return [...mentions.values()];
 }
 
 function tokenize(value) {
@@ -201,6 +224,8 @@ export class WorldbookV2Resolver {
       || right.score - left.score
       || left.entry.title.localeCompare(right.entry.title, 'zh-CN'));
 
+    const characterMentions = collectCharacterMentions(candidates, query);
+
     const selected = [];
     let optionalUsed = 0;
     let optionalSelected = 0;
@@ -219,6 +244,7 @@ export class WorldbookV2Resolver {
       audience,
       current_date: currentDate,
       entries: selected,
+      character_mentions: characterMentions,
       selected_ids: selected.map(entry => entry.id),
       custom_always_on_count: selected.filter(entry => entry.source?.kind === 'custom').length
     };

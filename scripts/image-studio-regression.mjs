@@ -545,6 +545,7 @@ await test('settings normalize UI aliases and reject unknown provider types', ()
     activeProviderId: 'custom-openai',
     concurrency: 99,
     allowedPrivateOrigins: ['http://192.168.1.9:8188/path', 'http://192.168.1.9:8188'],
+    allowedPublicHttpOrigins: ['http://new.fangxiaobai.store:8050/v1', 'HTTP://new.fangxiaobai.store:8050'],
     providers: {
       'custom-openai': {
         type: 'openai-compatible', apiUrl: 'https://images.example.test/v1', model: 'local-image',
@@ -556,6 +557,7 @@ await test('settings normalize UI aliases and reject unknown provider types', ()
   assert.equal(normalized.providerId, 'custom-openai');
   assert.equal(normalized.concurrency, 4);
   assert.deepEqual(normalized.allowedPrivateOrigins, ['http://192.168.1.9:8188']);
+  assert.deepEqual(normalized.allowedPublicHttpOrigins, ['http://new.fangxiaobai.store:8050']);
   assert.equal(normalized.providers['custom-openai'].type, 'openai-compatible');
   assert.equal(normalized.providers['custom-openai'].apiKeyHeader, 'Authorization');
 
@@ -681,6 +683,71 @@ await test('unapproved private-LAN image URL is rejected before any fetch is sen
     }
   );
   assert.equal(fetchCalls, 0);
+});
+
+await test('public plain-HTTP image origin is rejected unless explicitly allowlisted', async () => {
+  let fetchCalls = 0;
+  const blocked = new ImageTransport({
+    allowedPublicHttpOrigins: [],
+    async fetchImpl() {
+      fetchCalls++;
+      throw new Error('fetch must not run');
+    }
+  });
+  await assert.rejects(
+    () => blocked.json(
+      { type: 'openai-compatible', apiUrl: 'http://new.fangxiaobai.store:8050/v1' }, '/models'
+    ),
+    error => {
+      assert.equal(error.code, 'PROVIDER_POLICY');
+      assert.match(error.message, /HTTPS/);
+      return true;
+    }
+  );
+  assert.equal(fetchCalls, 0);
+
+  let allowedCalls = 0;
+  const allowed = new ImageTransport({
+    allowedPublicHttpOrigins: ['http://new.fangxiaobai.store:8050'],
+    async fetchImpl(url, init) {
+      allowedCalls++;
+      assert.equal(url, '/api/ai-proxy');
+      assert.equal(init.headers['x-target-url'], 'http://new.fangxiaobai.store:8050/v1/models');
+      assert.equal(init.headers['x-proxy-purpose'], 'models');
+      return new Response(JSON.stringify({ data: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+  await allowed.json(
+    { type: 'openai-compatible', apiUrl: 'http://new.fangxiaobai.store:8050/v1' }, '/models'
+  );
+  assert.equal(allowedCalls, 1);
+
+  // 非同源 http 仍被拒绝（白名单只对该 origin 放行）
+  let otherCalls = 0;
+  const other = new ImageTransport({
+    allowedPublicHttpOrigins: ['http://new.fangxiaobai.store:8050'],
+    async fetchImpl() { otherCalls++; throw new Error('fetch must not run'); }
+  });
+  await assert.rejects(
+    () => other.json(
+      { type: 'openai-compatible', apiUrl: 'http://other.example.test:8050/v1' }, '/models'
+    ),
+    error => error.code === 'PROVIDER_POLICY'
+  );
+  assert.equal(otherCalls, 0);
+});
+
+await test('public HTTPS image origin bypasses the plain-HTTP allowlist', async () => {
+  const transport = new ImageTransport({
+    allowedPublicHttpOrigins: [],
+    async fetchImpl() {
+      return new Response(JSON.stringify({ data: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+  // HTTPS 公网地址不要求白名单
+  await transport.json(
+    { type: 'openai-compatible', apiUrl: 'https://new.fangxiaobai.store/v1' }, '/models'
+  );
 });
 
 await test('default image transport invokes browser fetch with the global receiver', async () => {

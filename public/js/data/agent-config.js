@@ -3,7 +3,8 @@ export const AGENT_DEFAULTS = {
   mode: 'standard',
   agentModel: '',
   criticModel: '',
-  autoUpgrade: false
+  autoUpgrade: false,
+  maxConcurrency: 10
 };
 
 export function getAgentConfig() {

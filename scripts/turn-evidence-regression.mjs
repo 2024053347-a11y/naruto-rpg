@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 
 import {
   buildUpdaterObligations,
+  projectCharacterMemoryDeltaForUpdater,
   TurnEvidenceCompiler,
   renderEvidenceView
 } from '../js/core/turn-evidence.js';
@@ -62,11 +63,17 @@ test('nearest future plot is ordinary context for writer, updater and planner', 
   assert.equal(planner.current_plot?.day_id, packet.current_plot?.day_id);
 });
 
-test('updater receives bounded relationship history and private update obligations only', () => {
+test('updater receives bounded relationship history but no private agent memory', () => {
   const history = Array.from({ length: 6 }, (_, index) => ({ turn: 6 - index, summary: `互动${6 - index}` }));
   const thoughts = Array.from({ length: 7 }, (_, index) => ({ turn: 7 - index, summary: `心声${7 - index}` }));
   const updateObligations = {
-    present_npcs: [{ name: '卡卡西', existing: true, source: 'relationship', agent_inner_thought: '这次训练有进步。' }],
+    present_npcs: [{
+      npc: '卡卡西',
+      existing: true,
+      source: 'relationship',
+      agent_inner_thought: '这段 Agent 私密想法不得进入 updater。',
+      privateIntentHistory: [{ thought: '这段历史私念同样不得进入 updater。' }]
+    }],
     active_missions: [{ id: 'mission-training', title: '基础训练', status: 'active' }]
   };
   const compiler = new TurnEvidenceCompiler({ worldbookResolver: { resolve: () => [] } });
@@ -76,6 +83,12 @@ test('updater receives bounded relationship history and private update obligatio
         卡卡西: {
           role: '指导上忍', faction: '木叶', status: 'friendly', location: '第三训练场',
           history, inner_thoughts: thoughts
+        }
+      },
+      _agent_memories: {
+        卡卡西: {
+          privateIntentHistory: [{ turn: 7, thought: '绝不能让变量模型看见这段伏笔。' }],
+          privateGoals: ['隐瞒暗部任务']
         }
       },
       _missions: { active: { 'mission-training': { id: 'mission-training', title: '基础训练', status: 'active' } } }
@@ -90,8 +103,56 @@ test('updater receives bounded relationship history and private update obligatio
   assert.deepEqual(relationship.inner_thoughts.map(item => item.summary), ['心声7', '心声6', '心声5', '心声4', '心声3']);
   assert.equal(relationship.status, 'friendly');
   assert.equal(relationship.location, '第三训练场');
-  assert.deepEqual(updater.update_obligations, updateObligations);
+  assert.deepEqual(updater.update_obligations.present_npcs, [{
+    npc: '卡卡西', existing: true, source: 'relationship'
+  }]);
+  const updaterJson = JSON.stringify(updater);
+  assert.doesNotMatch(updaterJson, /agent_inner_thought|privateIntentHistory|privateGoals/);
+  assert.doesNotMatch(updaterJson, /绝不能让变量模型看见|这段 Agent 私密想法|这段历史私念/);
   assert.equal(Object.hasOwn(writer, 'update_obligations'), false);
+});
+
+test('character memory updater projection keeps observable identity and strips every private thought field', () => {
+  const projected = projectCharacterMemoryDeltaForUpdater({
+    schema: 'naruto.character-memory-delta/v1',
+    turn: 8,
+    changes: {
+      卡卡西: {
+        npcName: '旗木卡卡西',
+        aliases: ['卡卡西'],
+        currentMood: '放松',
+        knownFactsAppend: ['玩家完成了铃铛训练。'],
+        recentActionsAppend: [{
+          turn: 8,
+          action: '收起铃铛',
+          dialogue: '今天到此为止。',
+          thought: '嵌套私念也不能泄漏。'
+        }],
+        relationShift: '认可玩家的判断',
+        privateIntentAppend: [{ turn: 8, thought: '暂不公开暗部线索。' }],
+        privateIntentHistory: [{ turn: 7, thought: '继续秘密观察。' }],
+        thought: '顶层私念'
+      }
+    }
+  });
+
+  assert.deepEqual(projected, {
+    schema: 'naruto.character-memory-delta/v1',
+    turn: 8,
+    changes: {
+      卡卡西: {
+        npcName: '旗木卡卡西',
+        aliases: ['卡卡西'],
+        currentMood: '放松',
+        knownFactsAppend: ['玩家完成了铃铛训练。'],
+        recentActionsAppend: [{ turn: 8, action: '收起铃铛', dialogue: '今天到此为止。' }],
+        relationShift: '认可玩家的判断'
+      }
+    }
+  });
+  const serialized = JSON.stringify(projected);
+  assert.doesNotMatch(serialized, /privateIntentAppend|privateIntentHistory|thought/);
+  assert.doesNotMatch(serialized, /暂不公开暗部线索|继续秘密观察|嵌套私念|顶层私念/);
 });
 
 test('update obligations include only NPCs present in the accepted narrative and every active mission', () => {
@@ -120,10 +181,52 @@ test('update obligations include only NPCs present in the accepted narrative and
     }
   });
   assert.deepEqual(obligations.present_npcs.map(item => item.npc), ['旗木卡卡西', '水木']);
-  assert.equal(obligations.present_npcs.find(item => item.npc === '旗木卡卡西').agent_inner_thought, '这次测试达到了目的。');
+  const serializedObligations = JSON.stringify(obligations);
+  assert.doesNotMatch(serializedObligations, /agent_inner_thought|privateIntentAppend|privateIntentHistory|thought/);
+  assert.doesNotMatch(serializedObligations, /这次测试达到了目的|我还没有登场/);
   assert.equal(obligations.present_npcs.some(item => item.npc === '伊鲁卡'), false);
   assert.deepEqual(obligations.active_missions.map(item => item.id), ['escort', 'training']);
   assert.equal(obligations.fixed_domains.length, 8);
+});
+
+test('budget-trimmed trusted character mentions still become canonical updater obligations', () => {
+  const narrativeResponse = '宇智波佐助、春野樱与旗木卡卡西都在训练场等待。';
+  const compiler = new TurnEvidenceCompiler();
+  const packet = compiler.compile({
+    state: stateAt('木叶52年7月15日·正午'),
+    userInput: narrativeResponse
+  });
+  const updater = compiler.project(packet, { audience: 'updater' });
+  const writer = compiler.project(packet, { audience: 'writer' });
+  const obligations = buildUpdaterObligations({
+    state: stateAt('木叶52年7月15日·正午'),
+    narrativeResponse,
+    evidencePacket: updater
+  });
+
+  assert.deepEqual(
+    obligations.present_npcs.map(item => item.npc).sort((a, b) => a.localeCompare(b, 'zh-CN')),
+    ['宇智波佐助', '春野樱', '旗木卡卡西'].sort((a, b) => a.localeCompare(b, 'zh-CN'))
+  );
+  assert.equal(obligations.present_npcs.some(item => item.npc === '训练场'), false);
+  assert.equal(Object.hasOwn(updater, 'character_mentions'), true);
+  assert.equal(Object.hasOwn(writer, 'character_mentions'), false);
+});
+
+test('descriptive worldbook aliases never count as NPC identity mentions', () => {
+  const obligations = buildUpdaterObligations({
+    state: stateAt('木叶52年7月15日·正午'),
+    narrativeResponse: '医疗忍者用怪力拦住了复仇者。',
+    evidencePacket: {
+      worldbook_entries: [{
+        character_profile: {
+          names: ['春野樱'],
+          aliases: ['医疗忍者', '怪力', '复仇者']
+        }
+      }]
+    }
+  });
+  assert.deepEqual(obligations.present_npcs, []);
 });
 
 test('current plot projection selects the observable scene and keeps IDs updater-only', () => {

@@ -5,6 +5,7 @@ import * as variableUpdater from '../js/core/variable-updater.js';
 import { instructionParser } from '../js/core/instruction-parser.js';
 import { SHINOBI_DAILY_EXAMPLE } from '../js/core/shinobi-daily.js';
 import { buildCurrentStateEvidence } from '../js/core/turn-evidence.js';
+import { normalizeRelationshipInstruction } from '../js/data/var-schema.js';
 import { DEFAULT_VARIABLE_UPDATER_PRESET } from '../js/data/variable-updater-preset.js';
 
 class MemoryStorage {
@@ -128,7 +129,7 @@ await test('updater evidence preserves the explicit non-combat classification', 
   assert.equal(evidence.relationships.茶店老板.combatant, false);
 });
 
-await test('structured obligations require exact manifest coverage and executable NPC/task tags', () => {
+await test('structured obligations require fixed coverage and executable NPC/task tags', () => {
   const updateObligations = {
     present_npcs: [{ npc: '春野樱', source: 'final_narrative', agent_inner_thought: '这次配合比预想中顺利。' }],
     active_missions: [{ id: 'escort_existing', title: '护送委托' }]
@@ -171,13 +172,148 @@ await test('structured obligations require exact manifest coverage and executabl
   }
 });
 
+await test('trusted NPC obligations accept the three screenshot characters without undeclared-item errors', () => {
+  const narrativeResponse = '宇智波佐助、春野樱与旗木卡卡西都在训练场等待。';
+  const output = [
+    '<variable_thinking>三名实际登场人物均已逐项落账。</variable_thinking>',
+    obligationManifest({
+      domainUpdates: ['relationships'],
+      npcs: { 宇智波佐助: 'updated', 春野樱: 'updated', 旗木卡卡西: 'updated' }
+    }),
+    ...['宇智波佐助', '春野樱', '旗木卡卡西'].map(npc => (
+      `<relationship>${JSON.stringify({
+        npc,
+        combatant: false,
+        history: '本回合在训练场实际会面。',
+        inner_thoughts: '继续观察当前局势。'
+      })}</relationship>`
+    )),
+    '<memory>{"summary":"宇智波佐助、春野樱与旗木卡卡西均在训练场登场。"}</memory>'
+  ].join('\n');
+  const options = {
+    state: {
+      _relationships: {
+        宇智波佐助: { combatant: false },
+        春野樱: { combatant: false },
+        旗木卡卡西: { combatant: false }
+      }
+    },
+    narrativeResponse,
+    updateObligations: {
+      present_npcs: ['宇智波佐助', '春野樱', '旗木卡卡西'].map(npc => ({ npc })),
+      active_missions: []
+    }
+  };
+
+  const accepted = variableUpdater.validateVariableUpdaterOutput(output, options);
+  assert.equal(accepted.valid, true, accepted.errors.join('\n'));
+
+  const rejected = variableUpdater.validateVariableUpdaterOutput(output, {
+    ...options,
+    updateObligations: { present_npcs: [], active_missions: [] }
+  });
+  assert.equal(rejected.valid, false);
+  assert.match(rejected.errors.join('\n'), /present_npcs.*未声明义务项.*宇智波佐助/);
+});
+
+await test('undeclared relationships cannot be smuggled through narrative text or safe recovery', () => {
+  const output = [
+    '<variable_thinking>正文只有地点，没有可信人物义务。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['relationships'] }),
+    '<relationship>{"npc":"训练场","combatant":false,"history":"地点被误判为人物。","inner_thoughts":"错误身份。"}</relationship>',
+    '<memory>{"summary":"玩家抵达训练场。"}</memory>'
+  ].join('\n');
+  const options = {
+    state: { '玩家·姓名': '测试忍者', _relationships: {} },
+    narrativeResponse: '测试忍者抵达训练场。',
+    updateObligations: { present_npcs: [], active_missions: [] }
+  };
+
+  const validation = variableUpdater.validateVariableUpdaterOutput(output, options);
+  assert.equal(validation.valid, false);
+  assert.match(validation.errors.join('\n'), /训练场.*(?:未声明|义务|relationship)/i);
+
+  const recovery = variableUpdater.filterSafeVariableUpdaterOutput(output, options);
+  assert.equal(instructionParser.parse(recovery.output).relationships.length, 0);
+});
+
+await test('relationship obligations require the canonical NPC name instead of an alias key', () => {
+  const updateObligations = {
+    present_npcs: [{ npc: '旗木卡卡西', aliases: ['卡卡西'] }],
+    active_missions: []
+  };
+  const base = npc => [
+    '<variable_thinking>卡卡西本回合已登场。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['relationships'], npcs: { 旗木卡卡西: 'updated' } }),
+    `<relationship>${JSON.stringify({
+      npc,
+      combatant: false,
+      history: '完成本回合训练。',
+      inner_thoughts: '继续观察队伍。'
+    })}</relationship>`,
+    '<memory>{"summary":"卡卡西完成了训练指导。"}</memory>'
+  ].join('\n');
+  const options = {
+    state: { _relationships: { 旗木卡卡西: { combatant: false } } },
+    updateObligations
+  };
+
+  const canonical = variableUpdater.validateVariableUpdaterOutput(base('旗木卡卡西'), options);
+  assert.equal(canonical.valid, true, canonical.errors.join('\n'));
+  const alias = variableUpdater.validateVariableUpdaterOutput(base('卡卡西'), options);
+  assert.equal(alias.valid, false);
+  assert.match(alias.errors.join('\n'), /旗木卡卡西|卡卡西/);
+});
+
+await test('dangerous relationship identity keys are rejected before state mutation', async () => {
+  const dangerous = ['__proto__', 'prototype', 'constructor'];
+  for (const npc of dangerous) assert.equal(normalizeRelationshipInstruction({ npc }), null);
+
+  const [{ relationshipSystem }, { stateManager }] = await Promise.all([
+    import('../js/systems/relationship-system.js'),
+    import('../js/core/state-manager.js')
+  ]);
+  const previous = stateManager.getSub('_relationships');
+  try {
+    stateManager.setSub('_relationships', {});
+    const originalPrototype = Object.getPrototypeOf(stateManager.getSub('_relationships'));
+    for (const npc of dangerous) relationshipSystem.processInstruction({ npc, combatant: false });
+    const relationships = stateManager.getSub('_relationships');
+    assert.equal(Object.getPrototypeOf(relationships), originalPrototype);
+    for (const npc of dangerous) {
+      assert.equal(Object.prototype.hasOwnProperty.call(relationships, npc), false);
+    }
+  } finally {
+    stateManager.setSub('_relationships', previous || {});
+  }
+});
+
 await test('runtime prompt serializes update obligations and the machine-checkable manifest contract', () => {
+  const privateThought = '只有角色代理知道的暗部伏笔，变量模型绝不能看见。';
+  const rawState = {
+    '系统·回合数': 8,
+    _relationships: {},
+    _missions: { active: {} },
+    _agent_memories: {
+      春野樱: { privateIntentHistory: [{ turn: 8, thought: privateThought }] }
+    }
+  };
   const messages = variableUpdater.buildVariableUpdaterMessages(DEFAULT_VARIABLE_UPDATER_PRESET, {
-    state: { '系统·回合数': 8, _relationships: {}, _missions: { active: {} } },
-    compactState: { turn: 8 }, userInput: '与樱交谈', enrichedInput: '与樱交谈',
+    state: rawState,
+    compactState: {
+      ...buildCurrentStateEvidence(rawState),
+      _agent_memories: rawState._agent_memories,
+      privateIntentHistory: [{ thought: privateThought }]
+    },
+    userInput: '与樱交谈', enrichedInput: '与樱交谈',
     narrativeResponse: '春野樱回应了玩家。',
     updateObligations: {
-      present_npcs: [{ npc: '春野樱', source: 'final_narrative', agent_inner_thought: '我会再观察一下。' }],
+      present_npcs: [{
+        npc: '春野樱',
+        source: 'final_narrative',
+        agent_inner_thought: privateThought,
+        privateIntentHistory: [{ thought: privateThought }]
+      }],
       active_missions: [{ id: 'training', title: '基础训练' }]
     }
   });
@@ -186,8 +322,88 @@ await test('runtime prompt serializes update obligations and the machine-checkab
   assert.match(prompt, /<update_manifest>/);
   assert.match(prompt, /"fixed_domains"/);
   assert.match(prompt, /"npc":"春野樱"/);
-  assert.match(prompt, /"agent_inner_thought":"我会再观察一下。"/);
   assert.match(prompt, /"id":"training"/);
+  assert.doesNotMatch(prompt, /agent_inner_thought|privateIntentHistory/);
+  assert.doesNotMatch(prompt, new RegExp(privateThought));
+  assert.doesNotMatch(prompt, /Agent 心声存在时必须据此落账/);
+  assert.match(prompt, /world/);
+  assert.match(prompt, /attributes_and_progression/);
+  assert.match(prompt, /只读(?:证据)?分组名/);
+  assert.match(prompt, /不得.{0,30}(?:作为|写入).{0,20}path/);
+  assert.match(prompt, /canonical|规范姓名|npc.*逐字/iu);
+});
+
+await test('read-only evidence container paths produce an actionable correction', () => {
+  const output = [
+    '<variable_thinking>时间地点发生变化。</variable_thinking>',
+    obligationManifest({ domainUpdates: [] }),
+    '<variable>{"path":"world","op":"set","value":{"世界·地点":"火影楼","世界·天气":"晴"}}</variable>',
+    '<memory>{"summary":"玩家抵达火影楼。"}</memory>'
+  ].join('\n');
+  const validation = variableUpdater.validateVariableUpdaterOutput(output, {
+    updateObligations: { present_npcs: [], active_missions: [] }
+  });
+  assert.equal(validation.valid, false);
+  assert.match(validation.errors.join('\n'), /world.*只读(?:证据)?分组名/);
+  assert.match(validation.errors.join('\n'), /world_state\.current_location/);
+});
+
+await test('a single legal field inside a read-only evidence container is canonicalized locally', () => {
+  const output = [
+    '<variable_thinking>地点与查克拉变化均有正文证据。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['world', 'attributes'] }),
+    '<variable>{"path":"world","op":"set","value":{"世界·地点":"火影楼"}}</variable>',
+    '<variable>{"path":"attributes_and_progression","op":"sub","key":"属性·当前查克拉","value":5}</variable>',
+    '<memory>{"summary":"玩家抵达火影楼并消耗少量查克拉。"}</memory>'
+  ].join('\n');
+  const validation = variableUpdater.validateVariableUpdaterOutput(output, {
+    updateObligations: { present_npcs: [], active_missions: [] }
+  });
+  assert.equal(validation.valid, true, validation.errors.join('\n'));
+  assert.deepEqual(instructionParser.parse(output).variables, [
+    { path: 'world_state.current_location', op: 'set', value: '火影楼' },
+    { path: 'attributes.chakra_current', op: 'sub', value: 5 }
+  ]);
+});
+
+await test('read-only container recovery unwraps matching objects without stringifying them', () => {
+  const output = [
+    '<variable_thinking>地点发生变化。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['world'] }),
+    '<variable>{"path":"world","op":"set","key":"世界·地点","value":{"世界·地点":"火影楼"}}</variable>',
+    '<memory>{"summary":"玩家抵达火影楼。"}</memory>'
+  ].join('\n');
+  const validation = variableUpdater.validateVariableUpdaterOutput(output, {
+    updateObligations: { present_npcs: [], active_missions: [] }
+  });
+  assert.equal(validation.valid, true, validation.errors.join('\n'));
+  assert.deepEqual(instructionParser.parse(output).variables, [
+    { path: 'world_state.current_location', op: 'set', value: '火影楼' }
+  ]);
+});
+
+await test('read-only world recovery preserves calendar completeness and month consistency checks', () => {
+  const options = { updateObligations: { present_npcs: [], active_missions: [] } };
+  const incomplete = [
+    '<variable_thinking>时间发生变化。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['world'] }),
+    '<variable>{"path":"world","op":"set","value":{"世界·时间":"下午"}}</variable>',
+    '<memory>{"summary":"时间来到下午。"}</memory>'
+  ].join('\n');
+  const incompleteResult = variableUpdater.validateVariableUpdaterOutput(incomplete, options);
+  assert.equal(incompleteResult.valid, false);
+  assert.match(incompleteResult.errors.join('\n'), /完整日期|world_state\.calendar/);
+
+  const mismatch = [
+    '<variable_thinking>日期发生变化。</variable_thinking>',
+    obligationManifest({ domainUpdates: ['world'] }),
+    '<variable>{"path":"world","op":"set","value":{"世界·时间":"木叶52年7月15日·正午"}}</variable>',
+    '<variable>{"path":"world","op":"set","key":"世界·月份","value":8}</variable>',
+    '<memory>{"summary":"日期推进到七月十五日。"}</memory>'
+  ].join('\n');
+  const mismatchResult = variableUpdater.validateVariableUpdaterOutput(mismatch, options);
+  assert.equal(mismatchResult.valid, false);
+  assert.match(mismatchResult.errors.join('\n'), /表示 7 月.*写入 8/);
 });
 
 await test('safe recovery reports unmet structured obligations without discarding unrelated valid updates', () => {

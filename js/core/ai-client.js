@@ -69,36 +69,37 @@ function wrapLocalNetworkError(targetUrl, error) {
   return wrapped;
 }
 
-function createStreamAbortScope(parentSignal, timeoutMs) {
+function createRequestAbortScope(parentSignal) {
   const controller = new AbortController();
-  let timedOut = false;
-  let timeoutId = null;
   const abortFromParent = () => {
     if (controller.signal.aborted) return;
-    if (timeoutId !== null) clearTimeout(timeoutId);
     controller.abort(parentSignal?.reason);
   };
 
   if (parentSignal?.aborted) abortFromParent();
   else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
 
-  if (!controller.signal.aborted) {
-    timeoutId = setTimeout(() => {
-      if (controller.signal.aborted) return;
-      timedOut = true;
-      controller.abort();
-    }, timeoutMs);
-  }
-
   return {
     signal: controller.signal,
-    get timedOut() { return timedOut; },
-    get cancelled() { return parentSignal?.aborted === true && !timedOut; },
     dispose() {
-      if (timeoutId !== null) clearTimeout(timeoutId);
       parentSignal?.removeEventListener('abort', abortFromParent);
     }
   };
+}
+
+function resolveProxyPurpose(options = {}) {
+  return options.timeout === 0 ? 'agent' : 'generic';
+}
+
+function applyOptionalMaxTokens(body, options = {}, fallback = 4096) {
+  // Agent calls pass 0 so OpenAI-compatible providers apply their model limit.
+  if (options.max_tokens !== 0) body.max_tokens = options.max_tokens ?? fallback;
+  return body;
+}
+
+function resolveRequiredMaxTokens(options = {}, fallback = 4096) {
+  const requested = Number(options.max_tokens);
+  return Number.isFinite(requested) && requested > 0 ? requested : fallback;
 }
 
 function createCancelledError(reason) {
@@ -292,6 +293,60 @@ function createStreamPayloadError(data, label) {
   return error;
 }
 
+function contentText(value) {
+  if (typeof value === 'string') return value;
+  if (!Array.isArray(value)) return '';
+  return value.map(item => {
+    if (typeof item === 'string') return item;
+    if (item?.type === 'text' || item?.type === 'output_text') return item.text || item.content || '';
+    return '';
+  }).join('');
+}
+
+function visibleResponseText(data) {
+  const choice = data?.choices?.[0];
+  const responseOutput = Array.isArray(data?.output)
+    ? data.output.flatMap(item => item?.content || []).filter(item => (
+      item?.type === 'output_text' || item?.type === 'text'
+    )).map(item => item.text || '').join('')
+    : '';
+  return contentText(choice?.delta?.content)
+    || contentText(choice?.message?.content)
+    || contentText(choice?.text)
+    || contentText(data?.delta?.text)
+    || (data?.type === 'response.output_text.delta' ? contentText(data.delta) : '')
+    || contentText(data?.content)
+    || responseOutput;
+}
+
+// 思维链/推理内容：DeepSeek 走 reasoning_content，Claude 走 thinking 块。
+// 只在模型实际返回时输出，与正文分离，供 Agent 推演展示使用。
+function visibleReasoningText(data) {
+  const choice = data?.choices?.[0];
+  if (choice?.delta && typeof choice.delta.reasoning_content === 'string' && choice.delta.reasoning_content) {
+    return choice.delta.reasoning_content;
+  }
+  if (choice?.message && typeof choice.message.reasoning_content === 'string' && choice.message.reasoning_content) {
+    return choice.message.reasoning_content;
+  }
+  if (data?.delta?.type === 'thinking_delta' && typeof data.delta.thinking === 'string' && data.delta.thinking) {
+    return data.delta.thinking;
+  }
+  if (Array.isArray(data?.content)) {
+    return data.content
+      .filter(block => block?.type === 'thinking' && block.thinking)
+      .map(block => block.thinking)
+      .join('');
+  }
+  return '';
+}
+
+function emitReasoning(options, data) {
+  if (typeof options?.onReasoning !== 'function') return;
+  const reasoning = visibleReasoningText(data);
+  if (reasoning) options.onReasoning(reasoning);
+}
+
 export class AIAdapter {
   _fetch(url, init) {
     if (init && init.headers) {
@@ -369,11 +424,28 @@ class TavernAdapter extends AIAdapter {
     const userInput = userMsg?.content || '';
     const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
     const opts = this._buildOptions(userInput, combinedSystem, false, options);
+    const generationId = globalThis.crypto?.randomUUID?.()
+      || `naruto-request-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    opts.generation_id = generationId;
+    let rejectOnAbort;
+    const aborted = new Promise((_, reject) => { rejectOnAbort = reject; });
+    const abortGeneration = () => {
+      try {
+        const result = globalThis.stopGenerationById?.(generationId);
+        if (result && typeof result.catch === 'function') result.catch(() => {});
+      } catch { /* best-effort stop for older Tavern bridges */ }
+      rejectOnAbort(createCancelledError(options.signal?.reason));
+    };
     try {
-      const result = await globalThis.generateRaw(opts);
+      if (options.signal?.aborted) abortGeneration();
+      else options.signal?.addEventListener('abort', abortGeneration, { once: true });
+      const result = await Promise.race([Promise.resolve(globalThis.generateRaw(opts)), aborted]);
       return typeof result === 'string' ? result : (result?.content || result?.text || JSON.stringify(result));
     } catch (e) {
+      if (options.signal?.aborted || e?.isCancelled) throw createCancelledError(options.signal?.reason || e);
       throw new Error(`酒馆生成失败: ${e.message}`);
+    } finally {
+      options.signal?.removeEventListener('abort', abortGeneration);
     }
   }
 
@@ -381,7 +453,7 @@ class TavernAdapter extends AIAdapter {
     const userMsg = [...messages].reverse().find(m => m.role === 'user');
     const userInput = userMsg?.content || '';
     const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
-    const abortScope = createStreamAbortScope(options.signal, options.timeout ?? 90000);
+    const abortScope = createRequestAbortScope(options.signal);
     const generationId = globalThis.crypto?.randomUUID?.()
       || `naruto-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const EV = globalThis.iframe_events?.STREAM_TOKEN_RECEIVED_INCREMENTALLY
@@ -411,8 +483,6 @@ class TavernAdapter extends AIAdapter {
       abortHandled = true;
       stopGeneration();
       const error = createCancelledError(abortScope.signal.reason);
-      error.isTimeout = abortScope.timedOut;
-      error.isCancelled = abortScope.cancelled;
       error.partialResponse = fullContent || null;
       rejectOnAbort(error);
     };
@@ -436,8 +506,6 @@ class TavernAdapter extends AIAdapter {
     } catch (e) {
       if (abortScope.signal.aborted) {
         const cancelled = createCancelledError(abortScope.signal.reason || e);
-        cancelled.isTimeout = abortScope.timedOut;
-        cancelled.isCancelled = abortScope.cancelled;
         cancelled.partialResponse = fullContent || null;
         throw cancelled;
       }
@@ -470,7 +538,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
   }
 
   async chatDetailed(messages, options = {}) {
-    const abortScope = createStreamAbortScope(options.signal, options.timeout ?? 90000);
+    const abortScope = createRequestAbortScope(options.signal);
     try {
       const response = await this._fetch(`/api/ai-proxy`, {
         method: 'POST',
@@ -478,17 +546,17 @@ class OpenAICompatibleAdapter extends AIAdapter {
           'Content-Type': 'application/json',
           'x-target-url': `${this.apiUrl}/chat/completions`,
           'x-user-api-key': this.apiKey,
-          'x-api-key-header': 'Authorization'
+          'x-api-key-header': 'Authorization',
+          'x-proxy-purpose': resolveProxyPurpose(options)
         },
-        body: JSON.stringify({
+        body: JSON.stringify(applyOptionalMaxTokens({
           model: this.model,
           messages,
           temperature: options.temperature ?? 0.9,
-          max_tokens: options.max_tokens ?? 4096,
           top_p: options.top_p ?? 0.9,
           frequency_penalty: options.frequency_penalty ?? 0.2,
           stream: false
-        }),
+        }, options)),
         signal: abortScope.signal
       });
       if (!response.ok) {
@@ -496,6 +564,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
         throw new Error(`API Error ${response.status}: ${err}`);
       }
       const data = await response.json();
+      emitReasoning(options, data);
       return {
         text: data.choices?.[0]?.message?.content || '',
         finishReason: data.choices?.[0]?.finish_reason ?? null,
@@ -503,10 +572,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
       };
     } catch (error) {
       if (error.name === 'AbortError' || abortScope.signal.aborted) {
-        const aborted = normalizeAbortError(error, abortScope.signal);
-        aborted.isTimeout = abortScope.timedOut;
-        aborted.isCancelled = abortScope.cancelled;
-        throw aborted;
+        throw normalizeAbortError(error, abortScope.signal);
       }
       throw error;
     } finally {
@@ -518,15 +584,13 @@ class OpenAICompatibleAdapter extends AIAdapter {
     let lastError = null;
     const maxRetries = options.maxRetries ?? 2;
     const retryDelay = options.retryDelay ?? 800;
-    const timeoutMs = options.timeout ?? 90000;
-
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       if (attempt > 0) {
         await waitWithAbort(retryDelay * Math.pow(2, attempt - 1), options.signal);
         eventBus.emit('pipeline:retrying', { attempt, maxRetries });
       }
       try {
-        const abortScope = createStreamAbortScope(options.signal, timeoutMs);
+        const abortScope = createRequestAbortScope(options.signal);
 
         let fullContent = '';
         try {
@@ -537,18 +601,18 @@ class OpenAICompatibleAdapter extends AIAdapter {
               'Accept': 'text/event-stream',
               'x-target-url': `${this.apiUrl}/chat/completions`,
               'x-user-api-key': this.apiKey,
-              'x-api-key-header': 'Authorization'
+              'x-api-key-header': 'Authorization',
+              'x-proxy-purpose': resolveProxyPurpose(options)
             },
-            body: JSON.stringify({
+            body: JSON.stringify(applyOptionalMaxTokens({
               model: this.model,
               messages,
               temperature: options.temperature ?? 0.9,
-              max_tokens: options.max_tokens ?? 4096,
               top_p: options.top_p ?? 0.9,
               frequency_penalty: options.frequency_penalty ?? 0.2,
               stream: true,
               stream_options: { include_usage: true }
-            }),
+            }, options)),
             signal: abortScope.signal
           });
 
@@ -580,6 +644,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
               throw streamError;
             }
             if (data.usage && data.usage.total_tokens) lastUsage = data.usage;
+            emitReasoning(options, data);
             const content = data.choices?.[0]?.delta?.content || '';
             if (content) { fullContent += content; onChunk?.(content); }
           }, abortScope.signal);
@@ -591,6 +656,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
 
           const data = parseJsonResponse(rawText, 'AI');
           if (data.error) throw createStreamPayloadError(data, 'AI');
+          emitReasoning(options, data);
           const content = data.choices?.[0]?.message?.content || '';
           if (content) {
             onChunk?.(content);
@@ -602,8 +668,6 @@ class OpenAICompatibleAdapter extends AIAdapter {
           const partial = failure.partialResponse || fullContent || null;
           if (failure.name === 'AbortError' || abortScope.signal.aborted) {
             failure = normalizeAbortError(failure, abortScope.signal);
-            failure.isTimeout = abortScope.timedOut;
-            failure.isCancelled = abortScope.cancelled;
           }
           if (partial) failure.partialResponse = partial;
           if (failure.isCancelled) {
@@ -708,14 +772,13 @@ class ClaudeAdapter extends AIAdapter {
   }
 
   async chatDetailed(messages, options = {}) {
-    const timeoutMs = options.timeout ?? 90000;
-    const abortScope = createStreamAbortScope(options.signal, timeoutMs);
+    const abortScope = createRequestAbortScope(options.signal);
 
     try {
       const { system, messages: chatMsgs } = this._convertMessages(messages);
       const body = {
         model: this.model,
-        max_tokens: options.max_tokens ?? 4096,
+        max_tokens: resolveRequiredMaxTokens(options),
         temperature: options.temperature ?? 0.9,
         messages: chatMsgs
       };
@@ -727,6 +790,7 @@ class ClaudeAdapter extends AIAdapter {
           'x-target-url': `${this.apiUrl}/messages`,
           'x-user-api-key': this.apiKey,
           'x-api-key-header': 'x-api-key',
+          'x-proxy-purpose': resolveProxyPurpose(options),
           'anthropic-version': '2023-06-01',
           'anthropic-beta': 'prompt-caching-2024-07-31'
         },
@@ -738,6 +802,7 @@ class ClaudeAdapter extends AIAdapter {
         throw new Error(`Claude API Error ${response.status}: ${err}`);
       }
       const data = await response.json();
+      emitReasoning(options, data);
       const text = Array.isArray(data.content)
         ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
         : '';
@@ -748,10 +813,7 @@ class ClaudeAdapter extends AIAdapter {
       };
     } catch (e) {
       if (e.name === 'AbortError' || abortScope.signal.aborted) {
-        const aborted = normalizeAbortError(e, abortScope.signal);
-        aborted.isTimeout = abortScope.timedOut;
-        aborted.isCancelled = abortScope.cancelled;
-        throw aborted;
+        throw normalizeAbortError(e, abortScope.signal);
       }
       throw e;
     } finally {
@@ -763,22 +825,20 @@ class ClaudeAdapter extends AIAdapter {
     let lastError = null;
     const maxRetries = options.maxRetries ?? 2;
     const retryDelay = options.retryDelay ?? 800;
-    const timeoutMs = options.timeout ?? 90000;
-
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       if (attempt > 0) {
         await waitWithAbort(retryDelay * Math.pow(2, attempt - 1), options.signal);
         eventBus.emit('pipeline:retrying', { attempt, maxRetries });
       }
       try {
-        const abortScope = createStreamAbortScope(options.signal, timeoutMs);
+        const abortScope = createRequestAbortScope(options.signal);
 
         let fullContent = '';
         try {
           const { system, messages: chatMsgs } = this._convertMessages(messages);
           const body = {
             model: this.model,
-            max_tokens: options.max_tokens ?? 4096,
+            max_tokens: resolveRequiredMaxTokens(options),
             temperature: options.temperature ?? 0.9,
             messages: chatMsgs,
             stream: true
@@ -792,6 +852,7 @@ class ClaudeAdapter extends AIAdapter {
               'x-target-url': `${this.apiUrl}/messages`,
               'x-user-api-key': this.apiKey,
               'x-api-key-header': 'x-api-key',
+              'x-proxy-purpose': resolveProxyPurpose(options),
               'anthropic-version': '2023-06-01',
               'anthropic-beta': 'prompt-caching-2024-07-31'
             },
@@ -829,6 +890,7 @@ class ClaudeAdapter extends AIAdapter {
               lastUsage = data.message.usage;
             }
             if (data.type === 'content_block_delta') {
+              emitReasoning(options, data);
               const text = data.delta?.text || '';
               if (text) {
                 fullContent += text;
@@ -845,6 +907,7 @@ class ClaudeAdapter extends AIAdapter {
 
           const data = parseJsonResponse(rawText, 'Claude AI');
           if (data.error) throw createStreamPayloadError(data, 'Claude AI');
+          emitReasoning(options, data);
           const content = Array.isArray(data.content)
             ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
             : '';
@@ -858,8 +921,6 @@ class ClaudeAdapter extends AIAdapter {
           const partial = failure.partialResponse || fullContent || null;
           if (failure.name === 'AbortError' || abortScope.signal.aborted) {
             failure = normalizeAbortError(failure, abortScope.signal);
-            failure.isTimeout = abortScope.timedOut;
-            failure.isCancelled = abortScope.cancelled;
           }
           if (partial) failure.partialResponse = partial;
           if (failure.isCancelled) {
@@ -967,37 +1028,48 @@ export class AIClient {
     return this.adapter ? this.adapter.getModelInfo() : { name: '未配置', contextWindow: 0 };
   }
 
-  async chat(messages, options = {}) {
-    if (!this.adapter) throw new Error('AI client not configured');
-    if (this._useProxy) return this._proxyChat(messages, options, false);
-    return this.adapter.chat(messages, options);
-  }
-
-  async chatDetailed(messages, options = {}) {
-    if (!this.adapter) throw new Error('AI client not configured');
-    if (this._useProxy) return this._proxyChat(messages, options, false, undefined, true);
-    return this.adapter.chatDetailed(messages, options);
-  }
-
-  async chatStream(messages, options = {}, onChunk) {
-    if (!this.adapter) throw new Error('AI client not configured');
+  async _runCancellable(options, operation) {
     const requestController = new AbortController();
-    const callerSignal = options.signal;
+    const callerSignal = options?.signal;
     const abortFromCaller = () => requestController.abort(callerSignal?.reason);
     if (callerSignal?.aborted) abortFromCaller();
     else callerSignal?.addEventListener('abort', abortFromCaller, { once: true });
     this._abortController = requestController;
-    const requestOptions = { ...options, signal: requestController.signal };
 
     try {
-      if (this._useProxy) {
-        return await this._proxyChat(messages, requestOptions, true, onChunk);
-      }
-      return await this.adapter.chatStream(messages, requestOptions, onChunk);
+      return await operation({ ...options, signal: requestController.signal });
     } finally {
       callerSignal?.removeEventListener('abort', abortFromCaller);
       if (this._abortController === requestController) this._abortController = null;
     }
+  }
+
+  async chat(messages, options = {}) {
+    if (!this.adapter) throw new Error('AI client not configured');
+    return this._runCancellable(options, requestOptions => (
+      this._useProxy
+        ? this._proxyChat(messages, requestOptions, false)
+        : this.adapter.chat(messages, requestOptions)
+    ));
+  }
+
+  async chatDetailed(messages, options = {}) {
+    if (!this.adapter) throw new Error('AI client not configured');
+    return this._runCancellable(options, requestOptions => (
+      this._useProxy
+        ? this._proxyChat(messages, requestOptions, false, undefined, true)
+        : this.adapter.chatDetailed(messages, requestOptions)
+    ));
+  }
+
+  async chatStream(messages, options = {}, onChunk) {
+    if (!this.adapter) throw new Error('AI client not configured');
+    return this._runCancellable(options, requestOptions => {
+      if (this._useProxy) {
+        return this._proxyChat(messages, requestOptions, true, onChunk);
+      }
+      return this.adapter.chatStream(messages, requestOptions, onChunk);
+    });
   }
 
   cancel() {
@@ -1008,31 +1080,18 @@ export class AIClient {
   }
 
   // ── 代理模式：所有请求经 /api/ai-proxy 转发 ──
-  async _proxyChat(messages, options, stream, onChunk, detailed = false) {
+  async _proxyChat(messages, options, stream, onChunk, detailed = false, recoveryAttempt = false) {
     const config = this._config || {};
     const targetUrl = this._buildApiUrl();
     const apiKeyHeader = config.backend === 'claude' ? 'x-api-key' : 'Authorization';
-    const timeoutMs = Number.isFinite(options.timeout) && options.timeout > 0
-      ? options.timeout
-      : 90000;
     const requestController = new AbortController();
     const parentSignal = options.signal;
-    let timedOut = false;
-    let timeoutId = null;
     const abortFromParent = () => {
       if (requestController.signal.aborted) return;
-      if (timeoutId !== null) clearTimeout(timeoutId);
       requestController.abort(parentSignal?.reason);
     };
     if (parentSignal?.aborted) abortFromParent();
     else parentSignal?.addEventListener('abort', abortFromParent, { once: true });
-    if (!requestController.signal.aborted) {
-      timeoutId = setTimeout(() => {
-        if (requestController.signal.aborted) return;
-        timedOut = true;
-        requestController.abort();
-      }, timeoutMs);
-    }
     if (!parentSignal) this._abortController = requestController;
 
     const isClaude = config.backend === 'claude';
@@ -1041,6 +1100,7 @@ export class AIClient {
       'x-target-url': targetUrl,
       'x-user-api-key': config.apiKey || '',
       'x-api-key-header': apiKeyHeader,
+      'x-proxy-purpose': resolveProxyPurpose(options),
     };
     if (stream) headers.Accept = 'text/event-stream';
     if (isClaude) {
@@ -1055,9 +1115,10 @@ export class AIClient {
       model: config.model,
       messages: converted.messages,
       temperature: options.temperature ?? 0.9,
-      max_tokens: options.max_tokens ?? 4096,
       stream: stream || false,
     };
+    if (isClaude) body.max_tokens = resolveRequiredMaxTokens(options);
+    else applyOptionalMaxTokens(body, options);
     // Keep proxied OpenAI-compatible streaming aligned with the direct adapter.
     // Some relays do not start their SSE response unless stream_options is present.
     if (stream && !isClaude) body.stream_options = { include_usage: true };
@@ -1094,12 +1155,28 @@ export class AIClient {
             streamError.partialResponse = streamedContent || null;
             throw streamError;
           }
-          const text = event.choices?.[0]?.delta?.content || event.delta?.text || '';
+          const text = visibleResponseText(event);
           if (text) { streamedContent += text; onChunk?.(text); }
+          emitReasoning(options, event);
           if (event.type === 'message_stop') return STREAM_COMPLETE;
         }, requestController.signal);
         if (consumed.eventCount > 0) {
-          if (streamedContent) return streamedContent;
+          if (streamedContent.trim()) return streamedContent;
+          if (!recoveryAttempt) {
+            const recoveryOptions = { ...options };
+            if (Number(body.max_tokens) > 0) {
+              const requestedTokens = Number(body.max_tokens);
+              recoveryOptions.max_tokens = Math.min(16000, Math.max(4096, requestedTokens * 2));
+            }
+            const recovered = await this._proxyChat(
+              messages, recoveryOptions, false, undefined, detailed, true
+            );
+            const recoveredText = detailed ? recovered?.text : recovered;
+            if (String(recoveredText || '').trim()) {
+              onChunk?.(recoveredText);
+              return recovered;
+            }
+          }
           throw new Error('代理 AI 流已结束，但没有返回有效正文');
         }
         data = parseJsonResponse(consumed.rawText, '代理 AI');
@@ -1111,14 +1188,11 @@ export class AIClient {
       if (data.error) {
         throw createStreamPayloadError(data, '代理 AI');
       }
-      // Try to extract content from various response formats
-      const claudeText = Array.isArray(data.content)
-        ? data.content.filter(block => block?.type === 'text').map(block => block.text || '').join('')
-        : '';
-      const text = data.choices?.[0]?.message?.content
-        || claudeText
-        || data.choices?.[0]?.text
-        || '';
+      emitReasoning(options, data);
+      const text = visibleResponseText(data);
+      if (recoveryAttempt && !String(text || '').trim()) {
+        throw new Error('代理 AI 非流式恢复仍未返回有效正文');
+      }
       if (stream && text) onChunk?.(text);
       if (detailed) {
         return {
@@ -1133,22 +1207,12 @@ export class AIClient {
     } catch (e) {
       const partial = e.partialResponse || streamedContent || null;
       if (partial) e.partialResponse = partial;
-      if (timedOut) {
-        const timeoutError = new Error(`代理请求超时（${timeoutMs}ms）`);
-        timeoutError.name = 'AbortError';
-        timeoutError.isTimeout = true;
-        timeoutError.isCancelled = false;
-        timeoutError.partialResponse = partial;
-        timeoutError.cause = e;
-        throw timeoutError;
-      }
       if (e.name === 'AbortError' || requestController.signal.aborted) {
         const aborted = normalizeAbortError(e, requestController.signal);
-        aborted.isTimeout = false;
-        aborted.isCancelled = parentSignal?.aborted === true;
         aborted.partialResponse = partial;
         throw aborted;
       }
+      if (e?._proxyChatWrapped === true) throw e;
       const wrapped = new Error(`代理请求失败: ${e.message}`);
       wrapped.cause = e;
       wrapped.partialResponse = partial;
@@ -1156,9 +1220,9 @@ export class AIClient {
       wrapped.isRateLimited = e.isRateLimited;
       wrapped.isOverloaded = e.isOverloaded;
       wrapped.statusCode = e.statusCode;
+      Object.defineProperty(wrapped, '_proxyChatWrapped', { value: true });
       throw wrapped;
     } finally {
-      if (timeoutId !== null) clearTimeout(timeoutId);
       parentSignal?.removeEventListener('abort', abortFromParent);
       if (this._abortController === requestController) this._abortController = null;
     }

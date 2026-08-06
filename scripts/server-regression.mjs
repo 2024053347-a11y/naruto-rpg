@@ -128,6 +128,7 @@ const child = spawn(process.execPath, ['server/index.js'], {
     AUTH_BYPASS: 'true',
     ADMIN_KEY: 'server-regression-admin-key',
     TRUST_PROXY: '',
+    AI_PROXY_ALLOW_HTTP_TARGETS: '',
     MAX_SAVE_SLOTS: '1',
     MAX_SAVE_PREVIEW_SIZE_KB: '64',
     DATA_DIR: dataDir
@@ -203,6 +204,110 @@ try {
     assert.equal(privateDns.errorStatus, 403);
   });
 
+  await check('AI proxy plain-HTTP upstream requires explicit domain allowlist', async () => {
+    const publicAddresses = [{ address: '203.0.113.10', family: 4 }];
+    const publicLookup = async () => publicAddresses;
+
+    // 白名单命中（域名 + 端口）→ 放行 http，且仍走 DNS 校验
+    const allowed = await validateTargetUrl('http://new.fangxiaobai.store:8050/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: ['new.fangxiaobai.store:8050']
+    });
+    assert.equal(allowed.errorStatus, undefined);
+    assert.equal(allowed.url.protocol, 'http:');
+    assert.equal(allowed.url.href, 'http://new.fangxiaobai.store:8050/v1/models');
+    assert.deepEqual(allowed.addresses, publicAddresses);
+
+    // 域名命中但端口不匹配 → 拒绝
+    const wrongPort = await validateTargetUrl('http://new.fangxiaobai.store:9000/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: ['new.fangxiaobai.store:8050']
+    });
+    assert.equal(wrongPort.errorStatus, 403);
+
+    // 仅域名白名单（不带端口）→ 任意端口放行
+    const anyPort = await validateTargetUrl('http://new.fangxiaobai.store:9000/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: ['new.fangxiaobai.store']
+    });
+    assert.equal(anyPort.errorStatus, undefined);
+
+    // 未白名单 → 拒绝，且不得发起 DNS 查询
+    let lookupCalls = 0;
+    const blocked = await validateTargetUrl('http://blocked.example.test/v1/models', {
+      lookupImpl: async () => { lookupCalls++; return publicAddresses; },
+      allowHttpTargets: ['new.fangxiaobai.store:8050']
+    });
+    assert.equal(blocked.errorStatus, 403);
+    assert.equal(lookupCalls, 0);
+
+    // *. 通配子域（含 apex）
+    const wildcard = await validateTargetUrl('http://api.new.fangxiaobai.store:8050/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: ['*.new.fangxiaobai.store:8050']
+    });
+    assert.equal(wildcard.errorStatus, undefined);
+
+    // 未配置白名单（null）→ http 一律拒绝
+    const noAllowlist = await validateTargetUrl('http://new.fangxiaobai.store:8050/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: null
+    });
+    assert.equal(noAllowlist.errorStatus, 403);
+
+    // https 目标不受白名单影响
+    const httpsTarget = await validateTargetUrl('https://new.fangxiaobai.store:8050/v1/models', {
+      lookupImpl: publicLookup,
+      allowHttpTargets: null
+    });
+    assert.equal(httpsTarget.errorStatus, undefined);
+    assert.equal(httpsTarget.url.protocol, 'https:');
+  });
+
+  await check('AI proxy plain-HTTP allowlist parses domain[:port] entries', () => {
+    const resolve = serverConfigModule.resolveAiProxyAllowHttpTargets;
+    assert.equal(typeof resolve, 'function');
+    assert.equal(resolve({}), null);
+    assert.equal(resolve({ AI_PROXY_ALLOW_HTTP_TARGETS: '' }), null);
+    assert.equal(resolve({ AI_PROXY_ALLOW_HTTP_TARGETS: '  , ' }), null);
+    assert.deepEqual(resolve({ AI_PROXY_ALLOW_HTTP_TARGETS: ' new.fangxiaobai.store:8050 , *.Example.COM ' }), ['new.fangxiaobai.store:8050', '*.example.com']);
+    assert.deepEqual(resolve({ AI_PROXY_ALLOW_HTTP_TARGETS: 'a.com,a.com' }), ['a.com']);
+  });
+
+  await check('AI proxy forward proxy agent is only created when configured and cached per URL', () => {
+    const getProxyAgent = aiProxyModule.getProxyAgent;
+    assert.equal(typeof getProxyAgent, 'function');
+    // 未配置 AI_PROXY_FORWARD_URL → null（直连），与 Discord 的 PROXY_URL 无关
+    assert.equal(getProxyAgent('https:', { aiForwardUrl: '' }), null);
+    assert.equal(getProxyAgent('https:', { enabled: true, url: 'http://127.0.0.1:7890', aiForwardUrl: '' }), null);
+    assert.equal(getProxyAgent('https:', {}), null);
+    // 启用后按协议返回对应 Agent，且同一 URL 复用缓存
+    const proxyConfig = { enabled: false, url: '', aiForwardUrl: 'http://127.0.0.1:7890' };
+    const httpsAgent = getProxyAgent('https:', proxyConfig);
+    const httpAgent = getProxyAgent('http:', proxyConfig);
+    assert.ok(httpsAgent);
+    assert.ok(httpAgent);
+    assert.notEqual(httpsAgent, httpAgent);
+    assert.equal(getProxyAgent('https:', proxyConfig), httpsAgent, 'https agent must be cached');
+    assert.equal(getProxyAgent('http:', proxyConfig), httpAgent, 'http agent must be cached');
+    // 换 URL 时重新创建
+    const otherConfig = { enabled: true, url: 'http://127.0.0.1:8080', aiForwardUrl: 'http://127.0.0.1:8080' };
+    assert.notEqual(getProxyAgent('https:', otherConfig), httpsAgent);
+  });
+
+  await check('AI proxy rejects plain-HTTP targets by default', async () => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/ai-proxy`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-target-url': 'http://public.example.test/v1/models'
+      },
+      body: JSON.stringify({})
+    });
+    assert.equal(response.status, 403);
+    assert.match((await response.json()).error, /HTTPS|https/i);
+  });
+
   await check('AI proxy fake-IP defaults are environment-aware and explicitly overrideable', () => {
     assert.equal(typeof serverConfigModule.resolveAiProxyAllowFakeIpDns, 'function');
     const resolve = serverConfigModule.resolveAiProxyAllowFakeIpDns;
@@ -221,10 +326,13 @@ try {
       imageMaxResponseMb: 32
     };
     assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy(undefined, proxyConfig), {
-      purpose: 'generic', timeoutMs: 120000, maxResponseMb: 20
+      purpose: 'generic', timeoutMs: 0, maxResponseMb: 20
     });
     assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('models', proxyConfig), {
-      purpose: 'models', timeoutMs: 120000, maxResponseMb: 20
+      purpose: 'models', timeoutMs: 0, maxResponseMb: 20
+    });
+    assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('agent', proxyConfig), {
+      purpose: 'agent', timeoutMs: 0, maxResponseMb: 20
     });
     assert.deepEqual(aiProxyModule.resolveProxyPurposePolicy('image-generation', proxyConfig), {
       purpose: 'image-generation', timeoutMs: 300000, maxResponseMb: 32

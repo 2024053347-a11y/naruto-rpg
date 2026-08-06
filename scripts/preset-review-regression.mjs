@@ -25,8 +25,13 @@ import { MessagePipeline } from '../js/core/pipeline.js';
 import {
   buildVariableUpdaterMessages,
   sanitizeVariableUpdaterOutput,
-  validateVariableUpdaterOutput
+  validateVariableUpdaterOutput,
+  VARIABLE_UPDATER_COVERAGE_PROTOCOL
 } from '../js/core/variable-updater.js';
+import {
+  MAIN_SINGLE_CALL_DELIVERY_REMINDER,
+  MAIN_SINGLE_CALL_OUTPUT_PROMPT
+} from '../js/core/main-output-contract.js';
 import { instructionParser } from '../js/core/instruction-parser.js';
 import {
   generateMainVarInstructions,
@@ -68,13 +73,46 @@ test('main preset is evidence-led and contains no unresolved runtime placeholder
   assert.match(text, /世界书.*模型预训练/s);
   assert.match(text, /十几年/);
   assert.match(text, /玩家最近相关行动/);
-  assert.match(text, /证据、时间线、玩家边界、连续性、因果与变量依据/);
+  assert.match(text, /权威证据与不确定项[\s\S]*时间线、地点与场景[\s\S]*玩家意图、行动边界与判定[\s\S]*连续性状态[\s\S]*因果、结果、记账与停止点/);
   assertVisibleReasoningContract(text, 'reasoning', 'main preset');
   assert.doesNotMatch(text, /\$\{[^}]+\}/);
   assert.doesNotMatch(text, /SYSTEM INITIALIZATION|50亿美金|mainDatabase/);
   assert.match(text, /\[行动\][\s\S]*每行|每行[\s\S]*\[行动\]/, 'main preset must require clickable action options');
   assert.doesNotMatch(text, /不输出替玩家决定的固定选项列表/);
   assert.match(text, /≈卦象判定≈[\s\S]*卦象：[\s\S]*≈卦终≈/, 'main preset must provide the divination rendering contract');
+});
+
+test('main and updater prompts require complete request restatement and planning checklists', () => {
+  const mainPresetText = DEFAULT_MAIN_PRESET.entries.map(entry => entry.content).join('\n');
+  const mainRuntimeText = [MAIN_SINGLE_CALL_OUTPUT_PROMPT, MAIN_SINGLE_CALL_DELIVERY_REMINDER].join('\n');
+  for (const text of [mainPresetText, mainRuntimeText]) {
+    assert.match(text, /逐字复述/);
+    assert.match(text, /仅复述[^\n]*(?:玩家操作|玩家输入)[^\n]*不得复述[^\n]*隐藏系统/);
+    for (const item of [
+      '本轮请求原文', '任务拆解与硬约束', '权威证据与不确定项', '时间线、地点与场景',
+      '玩家意图、行动边界与判定', 'NPC动机、知识边界与关系',
+      '连续性状态', '因果、结果、记账与停止点'
+    ]) assert.ok(text.includes(item), `main checklist missing: ${item}`);
+    assert.match(text, /八项[^\n]*逐项[^\n]*(?:各写|单独)/);
+    assert.match(text, /不得使用[^\n]*(?:“略”|略)[^\n]*(?:“同上”|同上)[^\n]*(?:“其余不变”|其余不变)/);
+    assert.doesNotMatch(text, /最多\s*6\s*行|300\s*个汉字/);
+  }
+
+  const updaterText = [
+    ...DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content),
+    VARIABLE_UPDATER_COVERAGE_PROTOCOL
+  ].join('\n');
+  assert.match(updaterText, /逐字复述/);
+  assert.match(updaterText, /仅复述[^\n]*原始玩家输入[^\n]*不得复述[^\n]*隐藏系统/);
+  for (const item of [
+    '时间地点与地图', '资源与属性成长', '技能与能力', '物品、金钱与装备',
+    '任务、目标、声望与历练', '人物关系与NPC状态',
+    '战斗、伤势与世界事件', '记忆、线索、约定与待办'
+  ]) assert.ok(updaterText.includes(item), `updater checklist missing: ${item}`);
+  assert.match(updaterText, /八个固定领域[^\n]*(?:各写|单独)[^\n]*一行/);
+  assert.match(updaterText, /不得合并[^\n]*无变化/);
+  assert.match(updaterText, /不得使用[^\n]*(?:“略”|略)[^\n]*(?:“同上”|同上)[^\n]*(?:“其余不变”|其余不变)/);
+  assert.doesNotMatch(updaterText, /无变化领域可以合并|最多八行/);
 });
 
 test('all main-model rules are visible as editable preset entries', () => {
@@ -121,6 +159,8 @@ test('main preset editor exposes activation conditions and pipeline no longer in
   assert.match(editor, /data-field="activation"/);
   assert.doesNotMatch(pipeline, /generateMainVarInstructions\(updaterEnabled\)/);
   assert.match(pipeline, /variableUpdaterEnabled: updaterEnabled/);
+  assert.match(pipeline, /lastUserMessage:\s*userInput/);
+  assert.doesNotMatch(pipeline, /lastUserMessage:\s*['"]刚才的行动['"]/);
 });
 
 test('main preset migration replaces built-ins and preserves custom entries', () => {
@@ -171,7 +211,7 @@ test('variable updater uses evidence priority without asking the updater to clas
   assert.match(text, /最后一件.*remove/s);
   assert.match(text, /已有战斗卡.*禁止重复生成整张战斗卡/s);
   assert.match(text, /原创忍者.*不得伪造 JT ID/s);
-  assert.match(text, /简短差异审计/);
+  assert.match(text, /完整差异审计/);
   assert.match(text, /必须[^\n]*输出[^\n]*<variable_thinking>/);
   assert.doesNotMatch(text, /未来倒灌|受保护未来|未来事件/);
   assert.doesNotMatch(text, /NEXT_ANCHOR|protected_future/);
@@ -569,7 +609,9 @@ test('first turn requires every unresolved opening relationship to be classified
 test('agent writer prompts preserve the visible main reasoning contract', () => {
   const prompts = readFileSync(new URL('../js/core/agent-prompts.js', import.meta.url), 'utf8');
   assert.match(prompts, /WRITER:[\s\S]*<reasoning>/);
+  assert.match(prompts, /WRITER:[\s\S]*固定八项[^\n]*不得合并、改写或省略/);
   assert.match(prompts, /WRITER_POLISH:[\s\S]*保留[^\n]*<reasoning>/);
+  assert.match(prompts, /WRITER_POLISH:[\s\S]*本轮请求原文[^\n]*逐字保持不动/);
 });
 
 test('secondary updater mode gives all structured tags to the updater', () => {

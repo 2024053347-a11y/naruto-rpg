@@ -2,14 +2,16 @@ import { eventBus } from '../core/event-bus.js';
 import { ImageContractStreamFilter } from '../core/image-studio/contracts.js';
 
 const STAGES = [
-  { key: 'state_snap',       kanji: '凝', label: '界域快照' },
+  { key: 'context_search',   kanji: '索', label: '历史检索' },
+  { key: 'story_plan',       kanji: '策', label: '三日策划' },
   { key: 'brainstorm',       kanji: '灵', label: '意识风暴' },
-  { key: 'outline',          kanji: '骨', label: '脉络推演' },
+  { key: 'outline',          kanji: '景', label: '场景节拍' },
   { key: 'review_outline',   kanji: '明', label: '逻辑洞察' },
-  { key: 'character_agents', kanji: '魂', label: '灵魂注入' },
+  { key: 'character_agents', kanji: '演', label: '人物行动' },
   { key: 'writing',          kanji: '织', label: '查克拉编织' },
   { key: 'review_draft',     kanji: '炼', label: '淬火提纯' },
   { key: 'polish',           kanji: '华', label: '万象升华' },
+  { key: 'final_audit',      kanji: '审', label: '最终审计' },
   { key: 'archive',          kanji: '封', label: '记忆封印' }
 ];
 
@@ -23,6 +25,14 @@ class AgentProgress extends HTMLElement {
     this._streamText = '';
     this._streamAgent = null;
     this._streamFilter = new ImageContractStreamFilter();
+    this._runtimeLines = [];
+    this._cacheStats = null;
+    this._agents = new Map();
+    this._detailOpen = true;
+    this._agentsRenderScheduled = false;
+    this._lastAgentsRenderAt = 0;
+    this._openAgentIds = new Set();
+    this._usageAccum = { hit: 0, miss: 0 };
     this._unsubs = [];
   }
 
@@ -31,7 +41,16 @@ class AgentProgress extends HTMLElement {
     this._unsubs.push(
       eventBus.on('agent:progress', ({ stage, detail }) => this._onProgress(stage, detail)),
       eventBus.on('agent:fallback', ({ reason }) => this._onFallback(reason)),
-      eventBus.on('agent:stream', ({ agent, chunk }) => this._onStream(agent, chunk))
+      eventBus.on('agent:stream', ({ agent, chunk }) => this._onStream(agent, chunk)),
+      eventBus.on('agent:reasoning', event => this._onReasoning(event)),
+      eventBus.on('agent:character', event => this._onCharacter(event)),
+      eventBus.on('agent:runtime-event', event => this._onRuntimeEvent(event)),
+      eventBus.on('agent:context-ready', event => this._onContextReady(event)),
+      eventBus.on('agent:subagent-start', event => this._onSubagent(event, true)),
+      eventBus.on('agent:subagent-end', event => this._onSubagent(event, false)),
+      eventBus.on('agent:character-fallback', event => this._onCharacterFallback(event)),
+      eventBus.on('agent:audit', event => this._onAudit(event)),
+      eventBus.on('ai:usage', usage => this._onUsage(usage))
     );
   }
 
@@ -55,6 +74,7 @@ class AgentProgress extends HTMLElement {
     
     if (stage === 'done') {
       this._completedStages.add('archive');
+      this._renderPromptCache('本回合总缓存');
       setTimeout(() => this.remove(), 2000);
     }
     this._update();
@@ -69,6 +89,11 @@ class AgentProgress extends HTMLElement {
 
   _onStream(agent, chunk) {
     if (!chunk) return;
+    // 每个子模型的流式输出都记入推演详情（含 critic/规划 JSON，便于点开查看）
+    const entry = this._getAgent(agent);
+    entry.output += chunk;
+    if (entry.output.length > 24000) entry.output = entry.output.slice(-24000);
+    this._scheduleAgentsRender();
     // 公开的规划流可以展示；NPC 私密意图与审校记录不能伪装成正文。
     if (String(agent || '').startsWith('char-') || String(agent || '').startsWith('critic-')) return;
     if (this._streamAgent !== agent) {
@@ -86,6 +111,246 @@ class AgentProgress extends HTMLElement {
       this._streamEl.scrollTop = this._streamEl.scrollHeight;
     }
   }
+
+  _onReasoning({ agent, chunk }) {
+    if (!chunk) return;
+    const entry = this._getAgent(agent);
+    entry.reasoning += chunk;
+    if (entry.reasoning.length > 24000) entry.reasoning = entry.reasoning.slice(-24000);
+    this._scheduleAgentsRender();
+  }
+
+  _onCharacter({ npc, response }) {
+    if (!npc) return;
+    const entry = this._getAgent(`character:${npc}`);
+    const observable = response?.observable || {};
+    const lines = [
+      observable.action ? `行动：${observable.action}` : '',
+      observable.dialogue ? `台词："${observable.dialogue}"` : '',
+      observable.moodShift ? `情绪变化：${observable.moodShift}` : '',
+      observable.towardsPlayer ? `对玩家态度：${observable.towardsPlayer}` : ''
+    ].filter(Boolean);
+    entry.output = lines.join('\n') || '（无可观察行为，见审计）';
+    entry.status = response?.provenance === 'director-fallback' ? '降级' : '完成';
+    if (response?.fallbackReason) entry.fallbackReason = response.fallbackReason;
+    this._scheduleAgentsRender();
+  }
+
+  _pushRuntimeLine(line) {
+    if (!line) return;
+    this._runtimeLines.push(String(line).slice(0, 180));
+    this._runtimeLines = this._runtimeLines.slice(-4);
+    if (this._runtimeTraceEl) this._runtimeTraceEl.textContent = this._runtimeLines.join('\n');
+  }
+
+  _formatSources(sources) {
+    const safe = (Array.isArray(sources) ? sources : []).slice(0, 3)
+      .map(source => [source?.kind, source?.id].filter(Boolean).join(':'))
+      .filter(Boolean);
+    return safe.length ? ` · ${safe.join(' / ')}` : '';
+  }
+
+  _updateCache(stats) {
+    if (!stats || typeof stats !== 'object') return;
+    this._cacheStats = stats;
+    if (!this._cacheEl) return;
+    const hits = Number(stats.hits) || 0;
+    const misses = Number(stats.misses) || 0;
+    const rate = Number.isFinite(Number(stats.hitRate))
+      ? Math.round(Number(stats.hitRate) * 100)
+      : (hits + misses ? Math.round(hits / (hits + misses) * 100) : 0);
+    this._cacheEl.textContent = `缓存 ${hits}/${hits + misses} · ${rate}%`;
+  }
+
+  _onRuntimeEvent(event) {
+    this._updateCache(event?.cache);
+    const duration = Number.isFinite(event?.durationMs) ? ` · ${event.durationMs}ms` : '';
+    if (event?.type === 'tool-start') {
+      this._pushRuntimeLine(`工具 · ${event.tool || 'unknown'} · 运行中`);
+      const entry = this._getAgent(event.agent);
+      entry.tools.push(`▸ ${event.tool || 'unknown'} 运行中`);
+      this._scheduleAgentsRender();
+    } else if (event?.type === 'tool-end') {
+      this._pushRuntimeLine(`工具 · ${event.tool || 'unknown'} · ${event.success ? '完成' : '失败'}${duration}${this._formatSources(event.sources)}`);
+      const entry = this._getAgent(event.agent);
+      entry.tools.push(`${event.success ? '✔' : '✘'} ${event.tool || 'unknown'}${duration}`);
+      this._scheduleAgentsRender();
+    } else if (event?.type === 'agent-fallback') {
+      this._pushRuntimeLine(`兼容协议 · ${event.agent || 'agent'} · 已切换`);
+      const entry = this._getAgent(event.agent);
+      entry.status = '降级';
+      this._scheduleAgentsRender();
+    } else if (event?.type === 'agent-start') {
+      const entry = this._getAgent(event.agent);
+      entry.mode = event?.detail?.mode || entry.mode;
+      entry.status = '运行中';
+      entry.startedAt = entry.startedAt || performance.now();
+      this._scheduleAgentsRender();
+    } else if (event?.type === 'agent-end') {
+      this._pushRuntimeLine(`代理 · ${event.agent || 'agent'} · ${event.success ? '完成' : '失败'}${duration}`);
+      const entry = this._getAgent(event.agent);
+      entry.status = event?.success ? '完成' : '失败';
+      entry.durationMs = event?.durationMs ?? entry.durationMs;
+      entry.steps = event?.detail?.steps ?? entry.steps;
+      this._scheduleAgentsRender();
+    }
+  }
+
+  _onContextReady(event) {
+    this._updateCache(event?.cache);
+    const duration = Number.isFinite(event?.durationMs) ? ` · ${event.durationMs}ms` : '';
+    this._pushRuntimeLine(`检索 · 完成${duration}${this._formatSources(event?.sources)}`);
+  }
+
+  _onSubagent(event, started) {
+    const name = event?.npc || event?.subagent || 'subagent';
+    const suffix = started ? '运行中' : (event?.success ? '完成' : (event?.fallback ? '降级' : '失败'));
+    this._pushRuntimeLine(`子代理 · ${name} · ${suffix}`);
+  }
+
+  _onCharacterFallback(event) {
+    this._pushRuntimeLine(`角色降级 · ${event?.npc || 'unknown'} · 已记录审计`);
+  }
+
+  _onAudit(event) {
+    this._pushRuntimeLine(`审计 · ${event?.valid ? '通过' : '未通过'} · ${event?.warnings?.length || 0} 条警告`);
+  }
+
+  // 提示词 KV 缓存命中率：DeepSeek 返回 prompt_cache_hit/miss_tokens 或
+  // prompt_tokens_details.cached_tokens；原生 SDK 映射为 cache_read/miss_input_tokens。
+  // 每次 AI 调用完成即刷新，回合结束(done)再更新为回合总命中。
+  _onUsage(usage) {
+    const details = usage?.prompt_tokens_details || {};
+    const hit = Number(usage?.prompt_cache_hit_tokens) || Number(usage?.cache_read_input_tokens) || Number(details?.cached_tokens) || 0;
+    let miss = Number(usage?.prompt_cache_miss_tokens) || Number(usage?.cache_miss_input_tokens) || Number(usage?.cache_creation_input_tokens) || 0;
+    // 兼容只返回 prompt_tokens_details.cached_tokens 的旧格式：miss = 总 prompt − 命中
+    if (!miss && details?.cached_tokens != null && Number.isFinite(Number(usage?.prompt_tokens))) {
+      miss = Math.max(0, Number(usage.prompt_tokens) - Number(details.cached_tokens));
+    }
+    if (!(hit + miss)) return;
+    this._usageAccum.hit += hit;
+    this._usageAccum.miss += miss;
+    this._renderPromptCache('本回合累计');
+  }
+
+  _renderPromptCache(label) {
+    const total = this._usageAccum.hit + this._usageAccum.miss;
+    if (!total) return;
+    const rate = Math.round(this._usageAccum.hit / total * 100);
+    if (this._promptCacheEl) {
+      this._promptCacheEl.textContent = `${label} · 提示词缓存 ${this._usageAccum.hit}/${total} · ${rate}%`;
+      this._promptCacheEl.style.display = '';
+    }
+  }
+
+  _getAgent(id) {
+    const key = String(id || 'unknown');
+    let entry = this._agents.get(key);
+    if (!entry) {
+      entry = {
+        id: key,
+        label: this._agentLabel(key),
+        status: '',
+        mode: '',
+        reasoning: '',
+        output: '',
+        tools: [],
+        startedAt: performance.now(),
+        durationMs: null,
+        steps: 0,
+        fallbackReason: ''
+      };
+      this._agents.set(key, entry);
+    }
+    return entry;
+  }
+
+  _agentLabel(id) {
+    if (id.startsWith('character:')) return `角色代理 · ${id.slice(10)}`;
+    const map = {
+      'writer': '主模型 · 写作',
+      'writer-polish': '主模型 · 润色',
+      'story-planner': '三日策划',
+      'brainstormer': '意识风暴',
+      'outliner': '场景节拍',
+      'critic-realism': '审查 · 现实性',
+      'critic-character': '审查 · 角色契约',
+      'critic-contract': '审查 · 开局契约',
+      'critic-detail': '审查 · 细节',
+      'critic-style': '审查 · 风格'
+    };
+    return map[id] || id;
+  }
+
+  _scheduleAgentsRender() {
+    if (this._agentsRenderScheduled || !this._detailOpen) return;
+    this._agentsRenderScheduled = true;
+    const now = performance.now();
+    const sinceLast = now - (this._lastAgentsRenderAt || 0);
+    const delay = Math.max(0, 500 - sinceLast);
+    const flush = () => {
+      this._agentsRenderScheduled = false;
+      this._lastAgentsRenderAt = performance.now();
+      this._renderAgents();
+    };
+    // 流式时最多每 500ms 重建一次代理列表，避免频繁重渲染打断查看已展开的子代理。
+    if (delay > 0) {
+      setTimeout(flush, delay);
+    } else if (typeof globalThis.requestAnimationFrame === 'function') {
+      globalThis.requestAnimationFrame(flush);
+    } else {
+      flush();
+    }
+  }
+
+  _renderAgents() {
+    const listEl = this._detailListEl;
+    if (!listEl) return;
+    if (!this._agents.size) {
+      listEl.innerHTML = '<div class="ad-empty">暂无子模型调用</div>';
+      return;
+    }
+    const sorted = [...this._agents.values()].sort((a, b) => a.startedAt - b.startedAt);
+    listEl.innerHTML = sorted.map(entry => {
+      const open = this._openAgentIds.has(entry.id) ? ' open' : '';
+      const duration = Number.isFinite(entry.durationMs) ? ` · ${Math.round(entry.durationMs)}ms` : '';
+      const steps = entry.steps > 0 ? ` · ${entry.steps}步` : '';
+      const mode = entry.mode ? ` · ${entry.mode === 'native-tools' ? '原生工具' : '文本协议'}` : '';
+      const statusCls = entry.status === '完成' ? 'ad-ok' : (entry.status === '失败' || entry.status === '降级' ? 'ad-bad' : 'ad-run');
+      const status = entry.status || (entry.reasoning || entry.output ? '运行中' : '');
+      const fallback = entry.fallbackReason ? `<div class="ad-section"><div class="ad-section-title ad-warn">降级原因</div><pre>${this._esc(entry.fallbackReason)}</pre></div>` : '';
+      const reasoning = entry.reasoning
+        ? `<div class="ad-section"><div class="ad-section-title">思维链</div><pre>${this._esc(entry.reasoning)}</pre></div>` : '';
+      const output = entry.output
+        ? `<div class="ad-section"><div class="ad-section-title">输出</div><pre>${this._esc(entry.output)}</pre></div>` : '';
+      const tools = entry.tools.length
+        ? `<div class="ad-section"><div class="ad-section-title">工具步骤</div><pre>${this._esc(entry.tools.join('\n'))}</pre></div>` : '';
+      return `
+        <details class="agent-detail"${open} data-agent-id="${this._escAttr(entry.id)}">
+          <summary>
+            <span class="ad-status ${statusCls}"></span>
+            <span class="ad-name">${this._esc(entry.label)}</span>
+            <span class="ad-meta">${this._esc(status)}${this._esc(mode)}${this._esc(duration)}${this._esc(steps)}</span>
+          </summary>
+          <div class="ad-body">
+            ${reasoning}
+            ${output}
+            ${tools}
+            ${fallback}
+          </div>
+        </details>`;
+    }).join('');
+    listEl.querySelectorAll('.agent-detail').forEach(details => {
+      details.addEventListener('toggle', () => {
+        const id = details.dataset.agentId;
+        if (details.open) this._openAgentIds.add(id);
+        else this._openAgentIds.delete(id);
+      });
+    });
+  }
+
+  _esc(value) { return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  _escAttr(value) { return this._esc(value); }
 
   _render() {
     this.shadowRoot.innerHTML = `
@@ -270,7 +535,7 @@ class AgentProgress extends HTMLElement {
           justify-content: space-between;
           align-items: center;
           height: 56px;
-          margin: 0 20px 32px 20px;
+          margin: 0 8px 26px 8px;
         }
         .meridian-line-bg {
           position: absolute;
@@ -300,7 +565,7 @@ class AgentProgress extends HTMLElement {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          width: 56px;
+          width: 44px;
         }
         .node .circle {
           width: 10px; height: 10px;
@@ -316,7 +581,7 @@ class AgentProgress extends HTMLElement {
         }
         .node .label {
           position: absolute; top: 40px;
-          font-size: 11px; color: #a39f98; white-space: nowrap;
+          font-size: 10px; color: #a39f98; white-space: nowrap;
           opacity: 0; transform: translateY(-5px);
           transition: all 0.3s;
           letter-spacing: 1px;
@@ -368,6 +633,125 @@ class AgentProgress extends HTMLElement {
         }
         .stream-content::-webkit-scrollbar { display: none; }
 
+        .runtime-meta {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 12px;
+          margin: 0 20px 10px;
+          min-height: 46px;
+          color: rgba(232,228,217,0.62);
+          font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+          font-size: 10px;
+          line-height: 1.5;
+        }
+        .runtime-trace {
+          min-width: 0;
+          flex: 1;
+          white-space: pre-line;
+          overflow-wrap: anywhere;
+        }
+        .cache-status {
+          flex: none;
+          color: var(--c-kin, #c69c6d);
+          white-space: nowrap;
+        }
+
+        .detail-toggle {
+          position: relative;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          margin: 8px 20px 0;
+          padding: 6px 12px;
+          border: 1px solid rgba(198,156,109,0.35);
+          border-radius: 999px;
+          background: rgba(198,156,109,0.08);
+          color: var(--c-kin, #c69c6d);
+          font-family: inherit;
+          font-size: 11px;
+          letter-spacing: 1px;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s;
+        }
+        .detail-toggle:hover { background: rgba(198,156,109,0.18); border-color: rgba(198,156,109,0.6); }
+        .detail-toggle .dt-arrow { transition: transform 0.2s; }
+        .detail-panel {
+          position: relative;
+          z-index: 2;
+          margin: 6px 20px 16px;
+          border: 1px solid rgba(198,156,109,0.18);
+          border-radius: 10px;
+          background: rgba(0,0,0,0.28);
+          padding: 10px;
+          max-height: 320px;
+          overflow-y: auto;
+        }
+        .detail-panel.collapsed { display: none; }
+        .ad-empty { color: rgba(232,228,217,0.45); font-size: 11px; padding: 6px 4px; letter-spacing: 1px; }
+        .agent-detail {
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 8px;
+          background: rgba(255,255,255,0.025);
+          margin-bottom: 8px;
+          overflow: hidden;
+        }
+        .agent-detail[open] { background: rgba(255,255,255,0.05); }
+        .agent-detail > summary {
+          list-style: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 10px;
+          cursor: pointer;
+          color: rgba(232,228,217,0.85);
+          font-size: 12px;
+          user-select: none;
+        }
+        .agent-detail > summary::-webkit-details-marker { display: none; }
+        .agent-detail > summary::before { content: '▸'; color: var(--c-kin, #c69c6d); font-size: 10px; transition: transform 0.15s; }
+        .agent-detail[open] > summary::before { transform: rotate(90deg); }
+        .ad-status {
+          width: 8px; height: 8px; border-radius: 50%; flex: none;
+          background: rgba(198,156,109,0.4);
+        }
+        .ad-status.ad-ok { background: #6bc775; box-shadow: 0 0 8px #6bc775; }
+        .ad-status.ad-bad { background: #eb613f; box-shadow: 0 0 8px #eb613f; }
+        .ad-status.ad-run { background: #c69c6d; box-shadow: 0 0 8px rgba(198,156,109,0.8); animation: breath 1.4s ease-in-out infinite; }
+        .ad-name { font-weight: 700; letter-spacing: 1px; color: rgba(232,228,217,0.9); }
+        .ad-meta { margin-left: auto; font-size: 10px; color: rgba(232,228,217,0.5); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+        .ad-body { padding: 2px 10px 10px; }
+        .ad-section { margin-top: 8px; }
+        .ad-section-title { font-size: 10px; color: var(--c-kin, #c69c6d); letter-spacing: 1px; margin-bottom: 4px; }
+        .ad-section-title.ad-warn { color: #e8a44a; }
+        .agent-detail pre {
+          margin: 0;
+          white-space: pre-wrap;
+          word-break: break-word;
+          font: 11px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
+          color: rgba(232,228,217,0.75);
+          background: rgba(0,0,0,0.3);
+          border-radius: 6px;
+          padding: 8px;
+          max-height: 220px;
+          overflow-y: auto;
+          user-select: text;
+        }
+
+        @media (max-width: 720px) {
+          :host { margin: 20px 8px; padding: 24px 14px; }
+          .header { margin-bottom: 28px; }
+          .title { font-size: 13px; letter-spacing: 3px; }
+          .status { max-width: 58%; padding: 5px 8px; }
+          .node { width: 28px; }
+          .node .label { display: none; }
+          .runtime-meta { margin: 0 6px 8px; flex-wrap: wrap; }
+          .stream-portal { margin: 8px 6px 0; height: 150px; padding: 18px 12px 8px; }
+        }
+
         @keyframes slow-spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
         @keyframes slow-spin-reverse { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
         @keyframes breath { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
@@ -396,16 +780,43 @@ class AgentProgress extends HTMLElement {
         </div>
       </div>
 
+      <div class="runtime-meta">
+        <div class="runtime-trace" id="runtime-trace"></div>
+        <div class="cache-status" id="prompt-cache-status" style="display:none;"></div>
+        <div class="cache-status" id="cache-status">缓存 0/0 · 0%</div>
+      </div>
+
       <div class="stream-portal">
         <div class="stream-content" id="stream"></div>
       </div>
+
+      <button type="button" class="detail-toggle" id="detail-toggle" aria-expanded="true">
+        <span class="dt-arrow">▾</span> 子模型推演 · 点击子项查看思考与输出
+      </button>
+      <div class="detail-panel" id="detail-panel">
+        <div id="detail-list"><div class="ad-empty">暂无子模型调用</div></div>
+      </div>
     `;
-    
+
     this._stagesEl = this.shadowRoot.getElementById('stages');
     this._streamEl = this.shadowRoot.getElementById('stream');
     this._fillEl = this.shadowRoot.getElementById('meridian-fill');
     this._statusTextEl = this.shadowRoot.getElementById('status-text');
     this._statusGlowEl = this.shadowRoot.getElementById('status-glow');
+    this._runtimeTraceEl = this.shadowRoot.getElementById('runtime-trace');
+    this._cacheEl = this.shadowRoot.getElementById('cache-status');
+    this._promptCacheEl = this.shadowRoot.getElementById('prompt-cache-status');
+    this._detailToggleEl = this.shadowRoot.getElementById('detail-toggle');
+    this._detailListEl = this.shadowRoot.getElementById('detail-list');
+    this._detailPanelEl = this.shadowRoot.getElementById('detail-panel');
+    this._detailToggleEl.addEventListener('click', () => {
+      this._detailOpen = !this._detailOpen;
+      this._detailPanelEl.classList.toggle('collapsed', !this._detailOpen);
+      this._detailToggleEl.querySelector('.dt-arrow').textContent = this._detailOpen ? '▾' : '▸';
+      this._detailToggleEl.setAttribute('aria-expanded', String(this._detailOpen));
+      if (this._detailOpen) this._renderAgents();
+    });
+    this._renderAgents();
     this._update();
   }
 

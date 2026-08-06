@@ -20,6 +20,8 @@ class AppShell {
     this._recentInputIdx = -1;
     this._captureUpdates = false;
     this._lastDice = null;
+    this._agentReasoningText = '';
+    this._agentReasoningAgent = null;
   }
 
   init(container) {
@@ -253,6 +255,7 @@ class AppShell {
       this._captureUpdates = true;
       this._agentStreamAgent = null;
       this._agentStreamText = '';
+      this._agentReasoningText = '';
       this._setProcessing(true);
       if (getAgentConfig().enabled) {
         this._showAgentProgress();
@@ -282,6 +285,17 @@ class AppShell {
       this._updateStreaming(instructionParser.cleanupPartialResponse(this._agentStreamText));
     });
 
+    // Agent 主模型（writer/writer-polish）的思维链：累积并在最终消息里作为「思维链」折叠块展示
+    eventBus.on('agent:reasoning', ({ agent, chunk }) => {
+      if (agent !== 'writer' && agent !== 'writer-polish') return;
+      if (!chunk) return;
+      if (this._agentReasoningAgent !== agent) {
+        this._agentReasoningAgent = agent;
+        this._agentReasoningText = '';
+      }
+      this._agentReasoningText += chunk;
+    });
+
     eventBus.on('pipeline:cancelled', ({ partialResponse }) => {
       this._setProcessing(false);
       this._captureUpdates = false;
@@ -306,7 +320,12 @@ class AppShell {
     });
 
     eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError, timelineNodeId, shinobiDaily }) => {
-      this._finalizeMessage(cleanResponse, rawResponse, thinkContent, isPartial, hasHUD, this._lastDice, shinobiDaily);
+      // Agent 模式下把主模型（writer/writer-polish）捕获到的思维链并入最终消息的折叠块
+      const mergedThink = this._agentReasoningText
+        ? `${thinkContent || ''}\n\n## 主模型思维链\n\n${this._agentReasoningText}`
+        : thinkContent;
+      this._agentReasoningText = '';
+      this._finalizeMessage(cleanResponse, rawResponse, mergedThink, isPartial, hasHUD, this._lastDice, shinobiDaily);
       if (!isPartial && timelineNodeId) void this._mountTurnIllustration(timelineNodeId, cleanResponse);
       // Update turn display inline (method was removed)
       const turnEl = this.element.querySelector('#status-turn');
@@ -328,7 +347,15 @@ class AppShell {
       });
     });
 
-    eventBus.on('pipeline:error', ({ error, isTruncated, partialResponse, lastUserInput }) => {
+    eventBus.on('pipeline:error', ({
+      error,
+      code,
+      missingContracts,
+      draftResponse,
+      isTruncated,
+      partialResponse,
+      lastUserInput
+    }) => {
       this._setProcessing(false);
       this._captureUpdates = false;
       this._settleStreamingError();
@@ -339,7 +366,22 @@ class AppShell {
       const rawErr = String(error || '');
       let errTitle, errDetail, errHint;
 
-      if (rawErr.includes('Failed to fetch') || rawErr.includes('NetworkError')) {
+      if (code === 'STRICT_MAIN_OUTPUT_INCOMPLETE') {
+        const contractLabels = {
+          state_update: '变量记账确认',
+          business_update: '有效变量更新',
+          memory: '回合记忆',
+          shinobi_daily: '忍界日报'
+        };
+        const missing = [...new Set(Array.isArray(missingContracts) ? missingContracts : [])]
+          .map(item => contractLabels[item] || item)
+          .join('、');
+        errTitle = '【回合未结算】';
+        errDetail = `AI 回复缺少完整结构记录${missing ? `：${missing}` : ''}，本回合未写入状态、记忆或时间线。`;
+        errHint = draftResponse
+          ? '屏幕正文仅为未保存草稿。可点击下方按钮重新生成完整回合。'
+          : '可点击下方按钮重新生成完整回合。';
+      } else if (rawErr.includes('Failed to fetch') || rawErr.includes('NetworkError')) {
         errTitle = '【连接中断】';
         errDetail = '感知的查克拉连接已断开，请检查网络或 API 地址是否可达。';
         errHint = '常见原因：API 地址填写错误、后端未启动、浏览器 CORS 限制。';
@@ -1779,7 +1821,7 @@ class AppShell {
             <small id="model-status">填写地址后可读取模型</small>
           </div>
           <div class="card">
-            <api-config-form config='${this._escAttr(JSON.stringify(saved))}' show-advanced></api-config-form>
+            <api-config-form config='${this._escAttr(JSON.stringify(saved))}' show-advanced show-schemes></api-config-form>
             <div class="api-setup-security" style="margin-top: 20px;">
               ${icon('lock', 14)}
               <span>你的印记仅存储在本地，不会外传</span>

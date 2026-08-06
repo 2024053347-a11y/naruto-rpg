@@ -1,5 +1,11 @@
 import { eventBus } from '../core/event-bus.js';
 import { stateManager } from '../core/state-manager.js';
+import {
+  listPersonaProfiles,
+  getPersonaProfile,
+  savePersonaProfile,
+  deletePersonaProfile
+} from '../core/persona-profiles.js';
 import { GAME_DATA } from '../data/game-data.js';
 import { CANON_DATABASE, displayCanonTechniqueName } from '../data/canon-database.js';
 import { equipmentSystem } from '../systems/equipment-system.js';
@@ -121,6 +127,7 @@ class CharacterCreator extends HTMLElement {
       <style>${this._styles()}</style>
       <div class="creator creator--${this._variant.toLowerCase()}${this._prototype ? ' is-prototype' : ''}">
         ${this._header()}
+        ${this._personaPanel()}
         ${this._presetBanner()}
         ${this._variant === 'B' ? this._variantB() : this._variant === 'C' ? this._variantC() : this._variantA()}
         ${this._notice ? `<div class="creator-notice" role="status">${icon('check', 15)}<span>${this._esc(this._notice)}</span></div>` : ''}
@@ -128,6 +135,69 @@ class CharacterCreator extends HTMLElement {
       ${this._prototype ? this._prototypeSwitcher() : ''}
     `;
     this._bindEvents();
+    this._loadPersonaProfiles();
+  }
+
+  _personaPanel() {
+    return `
+      <div class="persona-panel">
+        <div class="persona-panel-title">${icon('user', 15)} 人设方案</div>
+        <div class="persona-row">
+          <select class="persona-select" id="persona-select">
+            <option value="">— 选择已保存人设 —</option>
+          </select>
+          <button class="ghost-btn" type="button" data-action="persona-delete">删除</button>
+        </div>
+        <div class="persona-save-row">
+          <input class="persona-name" id="persona-name" placeholder="人设名称，如「雾隐暗部·夜枭」" autocomplete="off" />
+          <button class="ghost-btn" type="button" data-action="persona-save">保存当前人设</button>
+        </div>
+        <div class="persona-hint">人设长期保存在个人中心；开局前在下拉中选中即可切换。</div>
+      </div>
+    `;
+  }
+
+  async _loadPersonaProfiles() {
+    const select = this.shadowRoot.querySelector('#persona-select');
+    if (!select) return;
+    const profiles = await listPersonaProfiles();
+    select.innerHTML = [
+      '<option value="">— 选择已保存人设 —</option>',
+      ...profiles.map(profile => `<option value="${escAttr(profile.id)}">${escAttr(profile.name)}</option>`)
+    ].join('');
+  }
+
+  async _loadPersona(id) {
+    if (!id) return;
+    const profile = await getPersonaProfile(id);
+    if (!profile) { this._loadPersonaProfiles(); return; }
+    this._draft = normalizeOpeningDraft(profile.draft || this._draft);
+    this._presetLoaded = true;
+    this._savePreset();
+    this._notice = `已切换人设「${profile.name}」。`;
+    this._render();
+  }
+
+  async _savePersona() {
+    const root = this.shadowRoot;
+    const name = root.querySelector('#persona-name')?.value.trim();
+    if (!name) { this._notice = '请先填写人设名称'; this._render(); return; }
+    await savePersonaProfile({ name, draft: this._draft });
+    const nameInput = root.querySelector('#persona-name');
+    if (nameInput) nameInput.value = '';
+    this._notice = `已保存人设「${name}」，可在个人中心查看。`;
+    this._loadPersonaProfiles();
+    this._render();
+  }
+
+  async _deletePersona() {
+    const select = this.shadowRoot.querySelector('#persona-select');
+    const id = select?.value;
+    if (!id) { this._notice = '请先选择一个人设再删除'; this._render(); return; }
+    await deletePersonaProfile(id);
+    this._notice = '人设已删除。';
+    this._loadPersonaProfiles();
+    this._render();
   }
 
   _header() {
@@ -654,6 +724,9 @@ class CharacterCreator extends HTMLElement {
       control.addEventListener('click', event => this._handleAction(event.currentTarget));
     });
 
+    const personaSelect = this.shadowRoot.querySelector('#persona-select');
+    personaSelect?.addEventListener('change', () => this._loadPersona(personaSelect.value));
+
     const techniquePicker = this.shadowRoot.querySelector('[data-technique-picker]');
     techniquePicker?.addEventListener('input', event => {
       const input = event.target.closest?.('[data-technique-query]');
@@ -705,7 +778,9 @@ class CharacterCreator extends HTMLElement {
 
   _handleAction(control) {
     const action = control.dataset.action;
-    if (!['apply-template', 'finish', 'clear-preset'].includes(action)) this._notice = '';
+    if (!['apply-template', 'finish', 'clear-preset', 'persona-save', 'persona-delete'].includes(action)) this._notice = '';
+    if (action === 'persona-save') { this._savePersona(); return; }
+    if (action === 'persona-delete') { this._deletePersona(); return; }
     if (action === 'stage') {
       this._stage = Number(control.dataset.stage) || 0;
       this._render();
@@ -951,6 +1026,13 @@ class CharacterCreator extends HTMLElement {
       .preset-banner span { display:grid; gap:2px; }
       .preset-banner strong { color:#e6dfd3; font-size:13px; }
       .preset-banner small { color:#8e8980; font-size:11px; }
+      .persona-panel { display:grid; gap:10px; padding:12px 14px; margin-bottom:14px; border:1px solid rgba(195,149,82,.28); border-radius:8px; background:rgba(195,149,82,.06); }
+      .persona-panel-title { display:flex; align-items:center; gap:8px; color:#d9b97e; font:700 12px var(--font-title,serif); letter-spacing:2px; }
+      .persona-row { display:flex; gap:8px; align-items:center; }
+      .persona-row .persona-select { flex:1; }
+      .persona-save-row { display:flex; gap:8px; align-items:center; }
+      .persona-save-row .persona-name { flex:1; }
+      .persona-hint { color:#8e8980; font-size:11px; }
       .icon-btn { width:32px; height:32px; display:grid; place-items:center; padding:0; border-radius:5px; color:#aaa39a; }
       .icon-btn:hover { border-color:rgba(255,255,255,.28); color:#fff; }
       .icon-btn.danger:hover { border-color:rgba(214,72,72,.55); color:#ee7777; background:rgba(214,72,72,.08); }

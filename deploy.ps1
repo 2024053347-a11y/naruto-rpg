@@ -56,7 +56,9 @@ $Targets = @{
     PublicUrl = 'https://www.qiwu.asia:8080/'
     VerifyUrl = 'https://www.qiwu.asia:8080/login.html'
     VerifyResolve = 'www.qiwu.asia:8080:127.0.0.1'
-    RestartBackend = $false
+    # 生产与测试站共享同一个后端（/opt/naruto-rpg + naruto-rpg.service，:3000）。
+    # 必须重启后端，否则测试站后端永远停留在旧代码（API 白名单等改动不生效）。
+    RestartBackend = $true
   }
   production = @{
     TargetDir = '/var/www/naruto-rpg'
@@ -291,36 +293,33 @@ function Assert-PackageContents {
     if ($Entries -notcontains 'ops/nginx/naruto-rpg-staging.conf') {
       throw '测试站部署包缺少 Nginx 配置'
     }
-    if ($Entries | Where-Object { $_ -like 'backend/*' }) {
-      throw '测试站部署包禁止包含后端文件'
-    }
-  } else {
-    foreach ($Required in @(
-      'backend/server/index.js',
-      'backend/package.json',
-      'backend/package-lock.json',
-      'backend/js/core/timeline-save-schema.js',
-      'backend/js/core/shinobi-daily.js',
-      'backend/js/core/narrative-artifact.js',
-      'backend/js/core/image-studio/contracts.js',
-      'backend/js/core/continuity-ledger.js',
-      'backend/js/utils/format.js',
-      'ops/systemd/naruto-rpg.service.d/limits.conf',
-      'ops/sysctl/90-naruto-rpg-memory.conf'
-    )) {
-      if ($Entries -notcontains $Required) { throw "正式站部署包缺少后端文件：$Required" }
-    }
-    $RuntimeEntries = @($Entries | Where-Object {
-      $_ -match '^backend/server/data/' -or
-      $_ -match '^backend/server/db/(?:users|favorites|saves_index|login_log)\.json$' -or
-      $_ -match '^backend/server/db/saves/' -or
-      $_ -match '^backend/server/db/.*\.(?:tmp|db|db-journal|db-wal)$'
-    })
-    if ($RuntimeEntries.Count -gt 0) {
-      throw "正式站部署包混入运行数据：$($RuntimeEntries -join ', ')"
-    }
-    Write-Output 'RUNTIME_DATA_EXCLUDED=true'
   }
+  # 生产与测试站共享同一个后端(/opt/naruto-rpg)，两种模式都必须包含后端文件。
+  foreach ($Required in @(
+    'backend/server/index.js',
+    'backend/package.json',
+    'backend/package-lock.json',
+    'backend/js/core/timeline-save-schema.js',
+    'backend/js/core/shinobi-daily.js',
+    'backend/js/core/narrative-artifact.js',
+    'backend/js/core/image-studio/contracts.js',
+    'backend/js/core/continuity-ledger.js',
+    'backend/js/utils/format.js',
+    'ops/systemd/naruto-rpg.service.d/limits.conf',
+    'ops/sysctl/90-naruto-rpg-memory.conf'
+  )) {
+    if ($Entries -notcontains $Required) { throw "部署包缺少后端文件：$Required" }
+  }
+  $RuntimeEntries = @($Entries | Where-Object {
+    $_ -match '^backend/server/data/' -or
+    $_ -match '^backend/server/db/(?:users|favorites|saves_index|login_log)\.json$' -or
+    $_ -match '^backend/server/db/saves/' -or
+    $_ -match '^backend/server/db/.*\.(?:tmp|db|db-journal|db-wal)$'
+  })
+  if ($RuntimeEntries.Count -gt 0) {
+    throw "部署包混入运行数据：$($RuntimeEntries -join ', ')"
+  }
+  Write-Output 'RUNTIME_DATA_EXCLUDED=true'
 
   Write-Output 'PACKAGE_ASSETS_OK=true'
 }
@@ -358,20 +357,21 @@ try {
   Set-PayloadCacheVersion (Join-Path $StaticDir 'login.html')
   Write-ReleaseManifest (Join-Path $StaticDir 'version.json')
 
+  # 生产与测试站共享同一个后端(/opt/naruto-rpg)，两种模式都打包后端与系统调优文件。
+  $BackendDir = Join-Path $PayloadDir 'backend'
+  New-Item -ItemType Directory -Force -Path $BackendDir | Out-Null
+  Copy-ProductionBackendSources $BackendDir
+
+  $SystemdPayloadDir = Join-Path $PayloadDir 'ops\systemd\naruto-rpg.service.d'
+  $SysctlPayloadDir = Join-Path $PayloadDir 'ops\sysctl'
+  New-Item -ItemType Directory -Force -Path $SystemdPayloadDir, $SysctlPayloadDir | Out-Null
+  Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\systemd\naruto-rpg.service.d\limits.conf') -Destination $SystemdPayloadDir -Force
+  Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\sysctl\90-naruto-rpg-memory.conf') -Destination $SysctlPayloadDir -Force
+
   if ($Mode -eq 'staging') {
     $NginxPayloadDir = Join-Path $PayloadDir 'ops\nginx'
     New-Item -ItemType Directory -Force -Path $NginxPayloadDir | Out-Null
     Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\nginx\naruto-rpg-staging.conf') -Destination $NginxPayloadDir -Force
-  } else {
-    $BackendDir = Join-Path $PayloadDir 'backend'
-    New-Item -ItemType Directory -Force -Path $BackendDir | Out-Null
-    Copy-ProductionBackendSources $BackendDir
-
-    $SystemdPayloadDir = Join-Path $PayloadDir 'ops\systemd\naruto-rpg.service.d'
-    $SysctlPayloadDir = Join-Path $PayloadDir 'ops\sysctl'
-    New-Item -ItemType Directory -Force -Path $SystemdPayloadDir, $SysctlPayloadDir | Out-Null
-    Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\systemd\naruto-rpg.service.d\limits.conf') -Destination $SystemdPayloadDir -Force
-    Copy-Item -LiteralPath (Join-Path $ProjectDir 'deploy\sysctl\90-naruto-rpg-memory.conf') -Destination $SysctlPayloadDir -Force
   }
 
   $Tar = Resolve-TarCommand

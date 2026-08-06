@@ -184,4 +184,36 @@ assert.ok(
   'empty queries must also use nested skills.kekkei_genkai state'
 );
 
+const budgetTrimmedCharacters = stateAwareResolver.resolve({
+  query: '宇智波佐助、春野樱与旗木卡卡西都在训练场等待。',
+  state: {},
+  currentDate: 'K052-07-15',
+  audience: 'planner',
+  maxEntries: 1,
+  budget: 1
+});
+const mentionedCharacterNames = new Set(
+  (budgetTrimmedCharacters.character_mentions || []).map(item => item.canonical_name)
+);
+for (const name of ['宇智波佐助', '春野樱', '旗木卡卡西']) {
+  assert.equal(mentionedCharacterNames.has(name), true, `${name} must survive prompt-budget trimming as a trusted mention`);
+}
+const selectedCharacterNames = new Set(
+  budgetTrimmedCharacters.entries.flatMap(entry => entry.character_profile?.names || [])
+);
+assert.ok(
+  ['宇智波佐助', '春野樱', '旗木卡卡西'].some(name => !selectedCharacterNames.has(name)),
+  'fixture must actually trim at least one mentioned character profile from prompt entries'
+);
+
+const descriptiveKeywords = stateAwareResolver.resolve({
+  query: '医疗忍者用怪力拦住了复仇者。',
+  state: {},
+  currentDate: 'K052-07-15',
+  audience: 'planner',
+  maxEntries: 1,
+  budget: 1
+});
+assert.deepEqual(descriptiveKeywords.character_mentions, [], 'profile aliases and keywords are not trusted identities');
+
 console.log(`worldbook-v2-regression: OK (${records.length} legacy fragments -> ${WORLD_BOOK_V2_ENTRIES.length} V2 entries, ${WORLD_BOOK_V2_MIGRATION_REPORT.removed_fragment_count} unsafe fragments isolated)`);

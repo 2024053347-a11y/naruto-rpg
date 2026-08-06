@@ -70,9 +70,10 @@ export function classifyImageEndpoint(value) {
   };
 }
 
-export function resolveImageTransport(apiUrl, { allowedPrivateOrigins = [] } = {}) {
+export function resolveImageTransport(apiUrl, { allowedPrivateOrigins = [], allowedPublicHttpOrigins = [] } = {}) {
   const endpoint = classifyImageEndpoint(apiUrl);
-  if (endpoint.public && endpoint.url.protocol !== 'https:') {
+  if (endpoint.public && endpoint.url.protocol !== 'https:'
+      && !allowedPublicHttpOrigins.includes(endpoint.origin)) {
     throw imageError('PROVIDER_POLICY', '公网图像服务必须使用 HTTPS');
   }
   if (endpoint.privateLan && !allowedPrivateOrigins.includes(endpoint.origin)) {
@@ -137,19 +138,21 @@ async function errorFromResponse(response, fallback) {
 }
 
 export class ImageTransport {
-  constructor({ fetchImpl, allowedPrivateOrigins = [] } = {}) {
+  constructor({ fetchImpl, allowedPrivateOrigins = [], allowedPublicHttpOrigins = [] } = {}) {
     const resolvedFetch = fetchImpl === undefined ? globalThis.fetch : fetchImpl;
     if (typeof resolvedFetch !== 'function') throw new Error('fetch is unavailable');
     this.fetchImpl = resolvedFetch === globalThis.fetch
       ? resolvedFetch.bind(globalThis)
       : resolvedFetch;
     this.allowedPrivateOrigins = allowedPrivateOrigins;
+    this.allowedPublicHttpOrigins = allowedPublicHttpOrigins;
   }
 
   async request(provider, path, { method = 'GET', body, headers = {}, signal, accept = 'application/json' } = {}) {
     const baseUrl = normalizeImageApiBaseUrl(provider.apiUrl, provider.type);
     const transport = resolveImageTransport(baseUrl, {
-      allowedPrivateOrigins: this.allowedPrivateOrigins
+      allowedPrivateOrigins: this.allowedPrivateOrigins,
+      allowedPublicHttpOrigins: this.allowedPublicHttpOrigins
     });
     const targetUrl = joinUrl(baseUrl, path);
     const requestHeaders = { Accept: accept, ...headers };
@@ -230,7 +233,8 @@ export class ImageTransport {
 
   async downloadUrl(url, { signal, provider } = {}) {
     const transport = resolveImageTransport(url, {
-      allowedPrivateOrigins: this.allowedPrivateOrigins
+      allowedPrivateOrigins: this.allowedPrivateOrigins,
+      allowedPublicHttpOrigins: this.allowedPublicHttpOrigins
     });
     if (transport.route === 'public-proxy') {
       return this.downloadPublicUrl(transport.url.href, { signal, provider });

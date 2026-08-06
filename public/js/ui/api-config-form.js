@@ -1,7 +1,16 @@
 import { aiClient, isTavernEnv, normalizeApiBaseUrl } from '../core/ai-client.js';
 import { eventBus } from '../core/event-bus.js';
+import { stateManager } from '../core/state-manager.js';
 import { escAttr } from '../utils/format.js';
 import { bindCustomSelects } from './custom-select.js';
+import {
+  listApiSchemes,
+  getApiScheme,
+  saveApiScheme,
+  deleteApiScheme,
+  setActiveApiScheme,
+  getActiveApiSchemeId
+} from '../core/api-schemes.js';
 
 export class ApiConfigForm extends HTMLElement {
   constructor() {
@@ -16,9 +25,11 @@ export class ApiConfigForm extends HTMLElement {
       this._config = {};
     }
     this._showAdvanced = this.hasAttribute('show-advanced');
+    this._showSchemes = this.hasAttribute('show-schemes');
     this._render();
     this._bindEvents();
     bindCustomSelects(this.shadowRoot);
+    if (this._showSchemes) this._loadSchemes();
   }
 
   _render() {
@@ -48,6 +59,10 @@ export class ApiConfigForm extends HTMLElement {
         .settings-check { display: flex; gap: 8px; align-items: center; color: #e8e4d9; font-size: 13px; }
         .settings-check input { accent-color: #c69c6d; cursor: pointer; }
         .settings-subcard { border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.15); padding: 18px; display: grid; gap: 16px; border-radius: 8px; }
+        .scheme-row { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 10px; align-items: end; }
+        .scheme-row label { margin-bottom: 0; align-self: center; }
+        .scheme-save-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: end; }
+        .scheme-panel .settings-hint { margin-top: -6px; }
         .settings-fetch {
           padding: 8px 16px; border: 1px solid rgba(198,156,109,0.3); border-radius: 4px;
           background: rgba(198,156,109,0.05); color: #c69c6d; font: 13px/1.4 'Noto Sans SC', system-ui, sans-serif;
@@ -76,6 +91,21 @@ export class ApiConfigForm extends HTMLElement {
         .simple-mode .settings-row label { font-size: 13px; }
       </style>
       <div class="settings-form ${this._showAdvanced ? '' : 'simple-mode'}" id="settings-form">
+        ${this._showSchemes ? `
+        <div class="settings-subcard scheme-panel">
+          <div class="scheme-row">
+            <label for="scheme-select">API 方案</label>
+            <select class="settings-select" id="scheme-select">
+              <option value="">— 选择已保存方案 —</option>
+            </select>
+            <button class="settings-fetch" type="button" id="scheme-delete">删除</button>
+          </div>
+          <div class="scheme-save-row">
+            <input class="settings-input" id="scheme-name" placeholder="方案名称，如「DeepSeek 主号」" autocomplete="off" />
+            <button class="settings-fetch" type="button" id="scheme-save">保存当前为方案</button>
+          </div>
+          <div class="settings-hint">选择方案立即切换为当前 AI 连接；辅助模型（二次变量/复检）保留不变。</div>
+        </div>` : ''}
         <div class="settings-row">
           <label for="settings-api-url">API 地址</label>
           <input class="settings-input" id="settings-api-url" value="${this._escAttr(config.apiUrl || 'https://api.openai.com/v1')}" placeholder="https://api.openai.com/v1" autocomplete="off" autocapitalize="off" spellcheck="false" />
@@ -194,6 +224,131 @@ export class ApiConfigForm extends HTMLElement {
     mainInput?.addEventListener('focus', () => { if (mainList?.children.length) mainList.classList.add('open'); });
     mainInput?.addEventListener('blur', () => setTimeout(() => mainList?.classList.remove('open'), 200));
 
+    // ── API 方案管理 ──
+    if (this._showSchemes) {
+      const schemeSelect = this.shadowRoot.querySelector('#scheme-select');
+      const schemeSave = this.shadowRoot.querySelector('#scheme-save');
+      const schemeDelete = this.shadowRoot.querySelector('#scheme-delete');
+      schemeSelect?.addEventListener('change', () => this._applyScheme(schemeSelect.value));
+      schemeSave?.addEventListener('click', () => this._saveScheme());
+      schemeDelete?.addEventListener('click', () => this._deleteScheme());
+      schemeSelect?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') this._applyScheme(schemeSelect.value);
+      });
+    }
+  }
+
+  async _loadSchemes() {
+    const select = this.shadowRoot.querySelector('#scheme-select');
+    if (!select) return;
+    const schemes = await listApiSchemes();
+    const active = getActiveApiSchemeId();
+    const current = select.value;
+    const currentStillExists = schemes.some(scheme => scheme.id === current);
+    const selectedId = currentStillExists
+      ? current
+      : (schemes.some(scheme => scheme.id === active) ? active : '');
+    select.innerHTML = [
+      '<option value="">— 选择已保存方案 —</option>',
+      ...schemes.map(scheme => {
+        const label = `${scheme.name} · ${scheme.backend}${scheme.model ? ' / ' + scheme.model : ''}`;
+        return `<option value="${this._escAttr(scheme.id)}" ${scheme.id === selectedId ? 'selected' : ''}>${this._escAttr(label)}</option>`;
+      })
+    ].join('');
+  }
+
+  async _applyScheme(id) {
+    if (!id) return;
+    const scheme = await getApiScheme(id);
+    if (!scheme) {
+      this._loadSchemes();
+      return;
+    }
+    this.setValues(scheme);
+    const current = stateManager.getAPIConfig?.() || {};
+    const config = {
+      backend: scheme.backend,
+      apiUrl: scheme.apiUrl,
+      apiKey: scheme.apiKey || '',
+      model: scheme.model,
+      disableStreaming: Boolean(scheme.disableStreaming),
+      variableUpdater: current.variableUpdater,
+      narrativeReview: current.narrativeReview,
+      aiCallPolicy: current.aiCallPolicy
+    };
+    try {
+      if (typeof stateManager.saveAPIConfig === 'function') {
+        await stateManager.saveAPIConfig(config);
+      }
+      aiClient.configure(config);
+      setActiveApiScheme(id);
+      eventBus.emit('settings:changed', { section: 'connection', apiConfig: config });
+      eventBus.emit('app:toast', `已切换到方案「${scheme.name}」`);
+    } catch (error) {
+      eventBus.emit('app:toast', `切换方案失败：${error?.message || '未知错误'}`);
+    }
+  }
+
+  async _saveScheme() {
+    const root = this.shadowRoot;
+    const select = root.querySelector('#scheme-select');
+    const name = root.querySelector('#scheme-name')?.value.trim();
+    if (!name) {
+      eventBus.emit('app:toast', '请先填写方案名称');
+      return;
+    }
+    const config = this.getConfig(true);
+    if (!config) {
+      eventBus.emit('app:toast', '请先填写完整的 API 地址和模型名称');
+      return;
+    }
+    // 下拉中已选中的方案 → 原地更新(保留原 id)；未选中 → 新建。
+    const selectedId = select?.value || '';
+    const id = await saveApiScheme({
+      id: selectedId || undefined,
+      name,
+      apiUrl: config.apiUrl,
+      apiKey: config.apiKey,
+      model: config.model,
+      backend: config.backend,
+      disableStreaming: config.disableStreaming
+    });
+    if (!id) {
+      eventBus.emit('app:toast', '方案保存失败');
+      return;
+    }
+    const nameInput = root.querySelector('#scheme-name');
+    if (nameInput) nameInput.value = '';
+    setActiveApiScheme(id);
+    await this._loadSchemes();
+    eventBus.emit('app:toast', selectedId ? `已更新方案「${name}」` : `已保存方案「${name}」`);
+  }
+
+  async _deleteScheme() {
+    const select = this.shadowRoot.querySelector('#scheme-select');
+    const id = select?.value;
+    if (!id) {
+      eventBus.emit('app:toast', '请先选择一个方案再删除');
+      return;
+    }
+    await deleteApiScheme(id);
+    await this._loadSchemes();
+    eventBus.emit('app:toast', '方案已删除');
+  }
+
+  /** 用方案（或任意主连接配置）回填表单字段，不触发整树重渲染。 */
+  setValues(config = {}) {
+    const root = this.shadowRoot;
+    const url = root.querySelector('#settings-api-url');
+    const key = root.querySelector('#settings-api-key');
+    const model = root.querySelector('#settings-api-model');
+    const backend = root.querySelector('#settings-api-backend');
+    const streaming = root.querySelector('#settings-disable-streaming');
+    if (url) url.value = config.apiUrl || '';
+    if (key) key.value = config.apiKey || '';
+    if (model) model.value = config.model || '';
+    if (backend) backend.value = config.backend || 'openai';
+    if (streaming) streaming.checked = Boolean(config.disableStreaming);
   }
 
   getConfig(allowEmptyModel = false) {

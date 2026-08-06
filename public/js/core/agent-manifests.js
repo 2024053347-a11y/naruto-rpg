@@ -15,6 +15,14 @@ export const AGENT_MANIFESTS = {
     maxContextChars: 8000,
     systemPromptKey: 'OUTLINER'
   },
+  'story-planner': {
+    stateFields: ['世界·地点', '世界·时间', '世界·年代', '世界·活跃事件', '_missions', '_relationships', '_combat'],
+    includeHistory: true,
+    historyTurns: 3,
+    includePreset: false,
+    maxContextChars: 8000,
+    systemPromptKey: 'STORY_PLANNER'
+  },
   'critic-realism': {
     stateFields: ['世界·地点', '世界·时间', '世界·年代', '世界·天气', '世界·已探索区域', '世界·活跃事件', '世界·月份', '玩家·忍阶', '玩家·所属村', '玩家·查克拉属性', '属性·查克拉', '属性·当前查克拉', '属性·生命力', '属性·当前生命力', '属性·精神力', '属性·当前精神力', '属性·体力', '属性·当前体力', '属性·速度', '属性·幸运', '_relationships', '_missions', '_memory.recent_summary'],
     includeHistory: false,
@@ -70,18 +78,13 @@ export const AGENT_MANIFESTS = {
     includePreset: false,
     maxContextChars: 2000,
     systemPromptKey: 'CHARACTER_AGENT'
+  },
+  'continuity-updater': {
+    stateFields: ['玩家·姓名', '玩家·当前目标', '世界·地点', '世界·时间', '世界·年代', '_missions', '_relationships', '_agent_memories', '进度·金钱', '进度·称号', '进度·经验'],
+    includeHistory: false,
+    historyTurns: 0,
+    includePreset: false,
+    maxContextChars: 12000,
+    systemPromptKey: 'CONTINUITY_UPDATER'
   }
-};
-
-export const AGENT_TIMEOUTS = {
-  brainstormer: 20000,
-  outliner: 35000,
-  'critic-realism': 20000,
-  'critic-character': 20000,
-  'critic-detail': 20000,
-  'critic-style': 20000,
-  writer: 90000,
-  'writer-polish': 90000,
-  character: 25000,
-  pipeline_total: 240000
 };

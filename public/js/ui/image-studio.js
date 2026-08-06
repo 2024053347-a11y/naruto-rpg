@@ -463,6 +463,7 @@ export class ImageStudioSettings extends ImageStudioElement {
           </div>
           <div class="is-warning" style="margin-top:12px;">浏览器不会接收或上传模型权重。NovelAI 的测试连接只校验配置，Token 会在首次生成时验证；ComfyUI 仅接受 API 格式工作流 JSON。局域网地址首次连接可能需要浏览器授权。</div>
           <div class="is-grid" style="margin-top:12px;"><label>局域网直连白名单</label><input type="text" name="allowedPrivateOrigins" value="${attr((s.allowedPrivateOrigins || []).join(', '))}" placeholder="例如 http://192.168.1.20:8188（逗号分隔）"></div>
+          <div class="is-grid" style="margin-top:12px;"><label>公网明文 HTTP 白名单</label><input type="text" name="allowedPublicHttpOrigins" value="${attr((s.allowedPublicHttpOrigins || []).join(', '))}" placeholder="例如 http://new.fangxiaobai.store:8050（逗号分隔）"><span class="is-note">仅对公网但未启用 HTTPS 的自建中转放行 http；需与服务端 .env 的 AI_PROXY_ALLOW_HTTP_TARGETS 一致。</span></div>
         </section>
         <section class="is-section">
           <div class="is-section-head"><div><h4>图像世界书</h4><p class="is-note">全局层提供统一画风，存档覆盖层优先补充当前角色与服装细节。支持原生与 SillyTavern JSON。</p></div></div>
@@ -502,6 +503,7 @@ export class ImageStudioSettings extends ImageStudioElement {
       turnMode: value('turnMode'), promptMode: value('promptMode'), activeProviderId: value('activeProviderId'),
       autoEviction: checked('autoEviction'),
       allowedPrivateOrigins: value('allowedPrivateOrigins').split(/[,，\n]/).map(item => item.trim()).filter(Boolean),
+      allowedPublicHttpOrigins: value('allowedPublicHttpOrigins').split(/[,，\n]/).map(item => item.trim()).filter(Boolean),
       separatePromptModel: {
         ...previous.separatePromptModel, apiUrl: value('prompt.apiUrl').trim(), apiKey: value('prompt.apiKey'),
         model: value('prompt.model').trim(), temperature: clamp(value('prompt.temperature'), 0, 2, .25)

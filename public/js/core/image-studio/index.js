@@ -168,6 +168,7 @@ export class ImageStudio {
     await this.store.ready();
     this.runtimeSettings = await this._decryptSettings(this.settingsStore.load());
     this.adapters.transport.allowedPrivateOrigins = this.runtimeSettings.allowedPrivateOrigins;
+    this.adapters.transport.allowedPublicHttpOrigins = this.runtimeSettings.allowedPublicHttpOrigins;
     const jobs = await this.store.getAll('jobs');
     for (const job of jobs) {
       if (!ACTIVE_STATES.has(job.state)) continue;
@@ -255,6 +256,7 @@ export class ImageStudio {
       case 'configure': {
         const settings = await this._saveSettings(command.settings || command.patch || {});
         this.adapters.transport.allowedPrivateOrigins = settings.allowedPrivateOrigins;
+        this.adapters.transport.allowedPublicHttpOrigins = settings.allowedPublicHttpOrigins;
         this._emit({ type: 'settings.changed', settings: toPublicSettings(settings) });
         return toPublicSettings(settings);
       }

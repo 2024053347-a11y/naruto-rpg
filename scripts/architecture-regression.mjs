@@ -103,11 +103,19 @@ await test('storage migration preserves user preferences', async () => {
   assert.equal(values.has('naruto_timeline_summary'), false);
 });
 
-await test('variable updater timeout reaches the real AI request', () => {
+await test('variable updater no longer applies an AI timeout deadline', () => {
   const updaterSource = fs.readFileSync(new URL('../js/core/variable-updater.js', import.meta.url), 'utf8');
   const pipelineSource = fs.readFileSync(new URL('../js/core/pipeline.js', import.meta.url), 'utf8');
-  assert.match(updaterSource, /timeout:\s*resolveVariableUpdaterTimeout/);
+  assert.doesNotMatch(updaterSource, /resolveVariableUpdaterTimeout|timeout:\s*resolveVariableUpdaterTimeout/);
   assert.doesNotMatch(pipelineSource, /secondaryWithTimeout|__SECONDARY_TIMEOUT__/);
+});
+
+await test('native writer keeps volatile constraints after the history prefix', () => {
+  const source = fs.readFileSync(new URL('../js/core/agent-pipeline.js', import.meta.url), 'utf8');
+  // 稳定前缀(继承的系统消息 + 非 system 历史)必须在易变约束之前。
+  assert.match(source, /message\.role !== 'system'\)[\s\S]{0,200}\{ role: 'system', content: constraint \}/);
+  // 约束不得再插在历史之前(旧顺序)。
+  assert.doesNotMatch(source, /content: constraint \},\s*\{ role: 'system', content: npcAuthorityConstraint \},\s*\.\.\.inheritedMessages\.filter\(message => message\.role !== 'system'\)/);
 });
 
 await test('EventBus has an awaited single-handler command seam', async () => {

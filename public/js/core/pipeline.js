@@ -52,6 +52,7 @@ import { resolveAICallPolicy } from './ai-call-policy.js';
 import { beginTurnCommit } from './turn-commit.js';
 import {
   buildUpdaterObligations,
+  projectCharacterMemoryDeltaForUpdater,
   TurnEvidenceCompiler,
   renderEvidenceView
 } from './turn-evidence.js';
@@ -60,7 +61,13 @@ import {
   renderNarrativeInstructions,
   toPersistedNarrative
 } from './narrative-artifact.js';
+import {
+  MAIN_SINGLE_CALL_DELIVERY_REMINDER,
+  MAIN_SINGLE_CALL_OUTPUT_PROMPT,
+  assertMainOutputContract
+} from './main-output-contract.js';
 import { buildContinuityDelta } from './continuity-delta.js';
+import { toWriterCharacterDecision } from './agent-contracts.js';
 
 const imageSettingsStore = new ImageSettingsStore();
 
@@ -156,6 +163,9 @@ class MessagePipeline {
     this._npcSummaryInFlight = new Set();
     this._onPresetEdited = () => { this._staticSystemPrompt = null; };
     eventBus.on('preset:edited', this._onPresetEdited);
+    eventBus.on('timeline:branch-switched', () => this._agentContextBroker?.invalidate());
+    eventBus.on('timeline:jumped', () => this._agentContextBroker?.invalidate());
+    eventBus.on('state:restored', () => this._agentContextBroker?.invalidate());
   }
 
   cancel() {
@@ -263,6 +273,9 @@ class MessagePipeline {
       let fullResponse = '';
       let shinobiDaily = null;
       let pendingCharacterMemoryDelta = null;
+      let pendingStoryPlan = null;
+      let agentAudit = null;
+      let agentEvidenceRefs = [];
       const reviewEnabled = callPolicy.features.narrativeReview
         && isNarrativeReviewEnabled(mainConfig);
       const generationOptions = {
@@ -301,7 +314,10 @@ class MessagePipeline {
         return response || streamed;
       };
 
+      let agentModeActivated = false;
+      let agentSelfUpdater = false;
       if (callPolicy.features.agents && state['玩家·姓名']) {
+        agentModeActivated = true;
         this._agentPipeline = new AgentPipeline({
           pipeline: this,
           memorySystem: this.memorySystem
@@ -312,20 +328,26 @@ class MessagePipeline {
         };
 
         const activeAgentPipeline = this._agentPipeline;
-        const agentResult = await activeAgentPipeline.execute(state, userInput, onProgress, messages);
-        if (agentResult) {
+        try {
+          const agentResult = await activeAgentPipeline.execute(state, userInput, onProgress, messages);
+          if (!String(agentResult || '').trim()) {
+            const error = new Error('Agent 未返回有效正文，本回合已中止');
+            error.code = 'AGENT_PIPELINE_EMPTY_RESULT';
+            throw error;
+          }
           pendingCharacterMemoryDelta = activeAgentPipeline.consumePendingCharacterMemoryDelta?.() || null;
-        } else {
-          activeAgentPipeline.discardPendingCharacterMemoryDelta?.();
-        }
-        this._agentPipeline = null;
-
-        if (agentResult) {
+          pendingStoryPlan = activeAgentPipeline.consumePendingStoryPlan?.() || null;
+          agentAudit = activeAgentPipeline.getLastAgentAudit?.() || null;
+          agentEvidenceRefs = activeAgentPipeline.getLastEvidenceRefs?.() || [];
           fullResponse = agentResult;
-          // Agent 模式通过 agent:stream 事件实时流式推送正文,不再一次性 emit
-          // pipeline:complete 处理最终 markdown 渲染和归档
-        } else {
-          fullResponse = await generateDirect();
+          agentSelfUpdater = activeAgentPipeline.didAgentProduceUpdaterTags?.() || false;
+          // Agent 模式通过 agent:stream 事件实时流式推送正文。
+        } catch (error) {
+          activeAgentPipeline.discardPendingCharacterMemoryDelta?.();
+          activeAgentPipeline.discardPendingStoryPlan?.();
+          throw error;
+        } finally {
+          if (this._agentPipeline === activeAgentPipeline) this._agentPipeline = null;
         }
       } else {
         fullResponse = await generateDirect();
@@ -339,7 +361,9 @@ class MessagePipeline {
       // 只保留主叙事模型本回合显式输出的可展示推演摘要。
       // 它通过完成事件交给 UI，但不会进入正文、聊天历史或时间线存档。
       const currentTurnThinkContent = instructionParser.extractThinkContent(fullResponse);
-      let acceptedArtifact = createNarrativeArtifact(fullResponse);
+      let acceptedArtifact = createNarrativeArtifact(fullResponse, {
+        evidenceRefs: agentEvidenceRefs
+      });
       if (reviewEnabled) {
         if (this._cancelled) {
           this.isProcessing = false;
@@ -350,7 +374,8 @@ class MessagePipeline {
           mainConfig,
           state,
           userInput,
-          candidateArtifact: acceptedArtifact
+          candidateArtifact: acceptedArtifact,
+          agentAudit
         });
         fullResponse = [
           acceptedArtifact.displayText,
@@ -377,15 +402,14 @@ class MessagePipeline {
       }
 
       // 调用策略在回合开始时冻结，避免生成职责与提交职责在中途切换。
-      const updaterEnabledTurn = callPolicy.features.variableUpdater;
-      if (updaterEnabledTurn) fullResponse = this._stripUpdaterOwnedTags(fullResponse);
+      // Agent 模式无条件启用二次变量更新：writer 只出正文，标签由后续二次模型产出。
+      // 若 agent 已用连续性更新代理产出标签(agentSelfUpdater)，则不剥离、由 createNarrativeArtifact 直接应用。
+      const updaterEnabledTurn = callPolicy.features.variableUpdater || agentModeActivated;
+      let mainDailyResult = null;
+      if (updaterEnabledTurn && !agentSelfUpdater) fullResponse = this._stripUpdaterOwnedTags(fullResponse);
       else {
-        const dailyResult = parseShinobiDailyContract(fullResponse, { required: true });
-        if (dailyResult.valid) shinobiDaily = dailyResult.daily;
-        else {
-          console.warn('[Pipeline] Invalid main-model shinobi daily ignored:', dailyResult.errors.join('; '));
-          eventBus.emit('pipeline:warning', { warning: `忍界日报格式校验失败，已隐藏本期日报：${dailyResult.errors.join('；')}` });
-        }
+        mainDailyResult = parseShinobiDailyContract(fullResponse, { required: true });
+        if (mainDailyResult.valid) shinobiDaily = mainDailyResult.daily;
       }
 
       acceptedArtifact = createNarrativeArtifact(fullResponse, {
@@ -394,11 +418,30 @@ class MessagePipeline {
       const instructionText = renderNarrativeInstructions(acceptedArtifact);
       const displayResponse = toPersistedNarrative(acceptedArtifact).replace(/极其|共犯/g, '');
       const instructions = instructionParser.parse(instructionText);
+      if (!updaterEnabledTurn) {
+        assertMainOutputContract({
+          artifact: acceptedArtifact,
+          dailyResult: mainDailyResult,
+          playerName: state['玩家·姓名'],
+          draftResponse: displayResponse
+        });
+      }
+      const obligationState = stateManager.get();
+      const obligationEvidence = updaterEnabledTurn
+        ? this._compileUpdaterEvidence({
+          state: obligationState,
+          userInput,
+          narrativeResponse: displayResponse
+        })
+        : this._lastTurnEvidencePacket;
+      const updaterCharacterMemoryDelta = projectCharacterMemoryDeltaForUpdater(
+        pendingCharacterMemoryDelta
+      );
       const updateObligations = buildUpdaterObligations({
-        state: stateManager.get(),
+        state: obligationState,
         narrativeResponse: displayResponse,
-        evidencePacket: this._lastTurnEvidencePacket,
-        characterMemoryDelta: pendingCharacterMemoryDelta
+        evidencePacket: obligationEvidence,
+        characterMemoryDelta: updaterCharacterMemoryDelta
       });
       pendingCharacterMemoryDelta = filterCharacterMemoryDelta(
         pendingCharacterMemoryDelta,
@@ -414,6 +457,18 @@ class MessagePipeline {
           pendingCharacterMemoryDelta
         );
         stateManager.setSub('_agent_memories', mergedAgentMemories);
+      }
+      if (pendingStoryPlan) stateManager.setSub('_agent_story_plan', pendingStoryPlan);
+      if (agentAudit) {
+        stateManager.setSub('_agent_last_audit', {
+          schema: agentAudit.schema,
+          valid: agentAudit.valid,
+          errors: [...(agentAudit.errors || [])],
+          warnings: [...(agentAudit.warnings || [])].slice(0, 20),
+          checks: agentAudit.checks,
+          evidenceRefs: [...(agentAudit.evidenceRefs || [])].slice(0, 120),
+          auditedAt: agentAudit.auditedAt || Date.now()
+        });
       }
       let finalMemorySummary = null;
 
@@ -431,8 +486,9 @@ class MessagePipeline {
         if (mergedMem.summary) finalMemorySummary = mergedMem.summary;
         this._applyMemoryUpdate(mergedMem, userInput, displayResponse);
         memoryRecorded = true;
-      } else if (!updaterEnabledTurn) {
-        // 二次模型未启用才走本地兜底；启用时等待二次模型的 <memory> 详细小结
+      } else if (!updaterEnabledTurn || agentSelfUpdater) {
+        // 二次模型未启用，或 agent 自带了更新但未产出 <memory> 标签时，走本地兜底，
+        // 保证回合记忆总是被记录(否则提交审计会因记忆缺失而整回合失败)。
         this._rememberRecentTurn(userInput, displayResponse);
         memoryRecorded = true;
       }
@@ -446,7 +502,9 @@ class MessagePipeline {
 
       // B-13: 等待 secondary updater 完成后再创建 timeline 节点
       let secondarySuccess = false;
-      let shouldRunSecondary = updaterEnabledTurn;
+      let secondaryDegraded = false;
+      // 若 agent 已自行产出更新标签，则不再运行主流水线二次变量系统。
+      let shouldRunSecondary = updaterEnabledTurn && !agentSelfUpdater;
       let retryCount = 0;
       const maxRetries = 2;
       let secondaryInstructions = null;
@@ -490,6 +548,7 @@ class MessagePipeline {
             applySecondaryResponse(additionalResponse);
             secondarySuccess = true;
           } else {
+            secondaryDegraded = true;
             secondarySuccess = true; // Disabled or missing config
           }
         } catch (err) {
@@ -528,6 +587,7 @@ class MessagePipeline {
             continue;
           }
           if (decision.action === 'apply-safe' && candidateRecovery?.output) {
+            secondaryDegraded = true;
             const keptCount = candidateRecovery.keptOperationCount ?? candidateRecovery.appliedCount ?? 0;
             const droppedCount = candidateRecovery.droppedOperationCount ?? candidateRecovery.droppedCount ?? 0;
             const recoveryNote = `【二次变量降级】已按你的选择安全保留 ${keptCount} 项可执行更新，丢弃 ${droppedCount} 项无效标签。`;
@@ -541,6 +601,7 @@ class MessagePipeline {
               eventBus.emit('pipeline:warning', { warning: `二次变量降级恢复失败，已跳过：${recoveryError?.message || '未知错误'}` });
             }
           } else if (decision.action === 'skip') {
+            secondaryDegraded = true;
             if (err?.shinobiDaily) shinobiDaily = err.shinobiDaily;
             eventBus.emit('pipeline:warning', { warning: '已跳过本回合二次变量更新，正文将正常提交。' });
           }
@@ -559,6 +620,31 @@ class MessagePipeline {
       if (shouldRunSecondary && !memoryRecorded) {
         this._rememberRecentTurn(userInput, displayResponse);
         memoryRecorded = true;
+      }
+
+      if (agentAudit) {
+        const commitAudit = this._buildAgentCommitAudit({
+          agentAudit,
+          displayResponse,
+          // agent 自带标签时按“主模型变量结构”审计（标签在 primaryInstructions 中）。
+          updaterEnabled: updaterEnabledTurn && !agentSelfUpdater,
+          primaryInstructions: instructions,
+          secondaryInstructions,
+          secondarySuccess,
+          secondaryDegraded,
+          memoryRecorded,
+          shinobiDaily,
+          storyPlan: stateManager.getSub('_agent_story_plan')
+        });
+        stateManager.setSub('_agent_last_audit', commitAudit);
+        eventBus.emit('agent:commit-audit', commitAudit);
+        if (!commitAudit.valid) {
+          turnCommit.rollback();
+          const auditError = new Error(`Agent 提交前系统审计失败：${commitAudit.errors.join('；')}`);
+          auditError.code = 'AGENT_TURN_SYSTEM_AUDIT_FAILED';
+          auditError.details = commitAudit;
+          throw auditError;
+        }
       }
 
       const currentTurn = stateManager.get('系统·回合数') || 1;
@@ -725,13 +811,23 @@ class MessagePipeline {
 
       eventBus.emit('pipeline:error', {
         error: errorMessage,
+        code: error?.code || '',
+        details: error?.details || null,
+        missingContracts: error?.missingContracts || [],
+        draftResponse: error?.draftResponse || '',
         isTruncated,
         partialResponse: partial,
         lastUserInput: this._lastUserInput
       });
 
       if (hasPartialContent && isTruncated) return { partialResponse: partial };
-      throw new Error(errorMessage);
+      if (errorMessage === error?.message) throw error;
+      const surfacedError = new Error(errorMessage);
+      surfacedError.cause = error;
+      if (error?.code) surfacedError.code = error.code;
+      if (error?.details) surfacedError.details = error.details;
+      if (error?.missingContracts) surfacedError.missingContracts = error.missingContracts;
+      throw surfacedError;
     }
   }
 
@@ -812,6 +908,72 @@ class MessagePipeline {
     return output ? { output, shinobiDaily } : null;
   }
 
+  _buildAgentCommitAudit({
+    agentAudit,
+    displayResponse,
+    updaterEnabled,
+    primaryInstructions,
+    secondaryInstructions,
+    secondarySuccess,
+    secondaryDegraded,
+    memoryRecorded,
+    shinobiDaily,
+    storyPlan
+  }) {
+    const errors = [];
+    const warnings = [...(agentAudit?.warnings || [])];
+    const narrativePresent = Boolean(String(displayResponse || '').trim());
+    const variableStagePresent = updaterEnabled
+      ? Boolean(secondaryInstructions)
+      : Boolean(primaryInstructions);
+    const dailyPresent = Boolean(shinobiDaily);
+    const storyPlanPresent = Boolean(storyPlan?.schema === 'naruto.story-arc-plan/v1'
+      && Array.isArray(storyPlan.days) && storyPlan.days.length === 3);
+
+    if (!agentAudit?.valid) errors.push('正文与角色来源审计未通过');
+    if (!narrativePresent) errors.push('缺少可见正文');
+    if (!memoryRecorded) errors.push('回合记忆尚未更新');
+    if (!storyPlanPresent) errors.push('三日条件故事计划未写入待提交状态');
+    if (updaterEnabled && !secondarySuccess) errors.push('二次变量阶段未完成');
+    if (!variableStagePresent) {
+      const message = updaterEnabled ? '二次变量输出未形成可解析结构' : '主模型变量结构缺失';
+      if (secondaryDegraded) warnings.push(message);
+      else errors.push(message);
+    }
+    if (!dailyPresent) {
+      const message = '忍界日报未形成可提交数据';
+      // 日报是增补项：正文有效时缺失只记警告，不因日报缺失让整回合失败。
+      if (secondaryDegraded || narrativePresent) warnings.push(message);
+      else errors.push(message);
+    }
+    if (secondaryDegraded) warnings.push('变量阶段按用户选择或兼容策略降级');
+    for (const decision of agentAudit?.envelope?.characterDecisions || []) {
+      const privateThought = String(decision?.private?.thought || '').trim();
+      if (privateThought.length >= 8 && String(displayResponse || '').includes(privateThought)) {
+        errors.push(`最终正文泄露 ${decision.npc || 'NPC'} 的角色代理私有想法`);
+      }
+    }
+
+    return Object.freeze({
+      schema: 'naruto.agent-commit-audit/v1',
+      valid: errors.length === 0,
+      errors: Object.freeze([...new Set(errors)]),
+      warnings: Object.freeze([...new Set(warnings)].slice(0, 40)),
+      checks: Object.freeze({
+        narrative: narrativePresent,
+        preset: agentAudit?.checks?.preset !== false,
+        npcProvenance: agentAudit?.checks?.npcProvenance === true,
+        variables: variableStagePresent,
+        memory: Boolean(memoryRecorded),
+        shinobiDaily: dailyPresent,
+        storyPlan: storyPlanPresent,
+        atomicCommitPending: true
+      }),
+      evidenceRefs: Object.freeze([...(agentAudit?.evidenceRefs || [])].slice(0, 120)),
+      auditedAt: Date.now()
+    });
+  }
+
   getTurnEvidenceView(audience = 'writer', { state = null, userInput = '', entityId = null, npcName = '' } = {}) {
     this._turnEvidenceCompiler ||= new TurnEvidenceCompiler();
     const currentState = state || stateManager.get();
@@ -823,7 +985,7 @@ class MessagePipeline {
     return view;
   }
 
-  async _resolveNarrativeReview({ mainConfig, state, userInput, candidateArtifact }) {
+  async _resolveNarrativeReview({ mainConfig, state, userInput, candidateArtifact, agentAudit = null }) {
     const reviewerEvidence = this.getTurnEvidenceView('reviewer', { state, userInput });
     const sourceMessages = [
       {
@@ -835,6 +997,15 @@ class MessagePipeline {
         content: `[玩家本回合原始操作 · 仅表示意图或声称]\n${String(userInput || '')}`
       }
     ];
+    const characterDecisions = agentAudit?.envelope?.characterDecisions || [];
+    if (characterDecisions.length) {
+      sourceMessages.push({
+        role: 'system',
+        content: `[命名 NPC 的角色代理决定 · 仅可观察投影]\n${JSON.stringify(
+          characterDecisions.map(toWriterCharacterDecision)
+        )}\n复检器只能润色这些决定的呈现，不得为 NPC 新增或替换未经角色代理支持的行动与台词。`
+      });
+    }
     let transaction = null;
     let feedback = '';
     const transactionId = `turn-review:${state?._meta?.current_node_id || 'root'}:${state?.['系统·回合数'] || 0}`;
@@ -882,7 +1053,7 @@ class MessagePipeline {
     let cleaned = String(text || '');
     for (const tag of [
       'var', 'variable', 'var_thinking', 'variable_thinking', 'update_manifest',
-      'combat', 'mission', 'relationship', 'memory', 'event', 'shinobi_daily'
+      'combat', 'mission', 'relationship', 'memory', 'state_update', 'event', 'shinobi_daily'
     ]) {
       cleaned = cleaned.replace(new RegExp(`<${tag}(?:\\s+[^>]*)?>[\\s\\S]*?(?:<\\/${tag}>|$)`, 'gi'), '');
     }
@@ -1394,9 +1565,15 @@ class MessagePipeline {
     const ctxParts = [enrichedInput];
     injections.push({ name: '预处理输入与骰子', content: enrichedInput });
 
-    const finalUserContent = `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${userInput}`;
+    const finalUserContent = [
+      `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${userInput}`,
+      !updaterEnabled ? MAIN_SINGLE_CALL_DELIVERY_REMINDER : ''
+    ].filter(Boolean).join('\n\n');
     this._lastFullUserContent = finalUserContent;
     injections.push({ name: '玩家本轮原始输入', content: userInput });
+    if (!updaterEnabled) {
+      injections.push({ name: '单次交付硬提醒', content: MAIN_SINGLE_CALL_DELIVERY_REMINDER });
+    }
     appendMessage({ role: 'user', content: finalUserContent }, '本回合聚合上下文', '玩家请求');
 
     if (Number(state['进度·突破待处理']) > 0) {
@@ -1411,8 +1588,19 @@ class MessagePipeline {
       bottom.forEach((message, index) => appendMessage(message, '主预设 Bottom', `条目 ${index + 1}`));
     }
 
+    // Imported prefills may carry stale output formats. Immutable runtime
+    // contracts follow them so the current ownership rules remain final.
+    if (prefill) {
+      appendMessage(prefill, '主预设 Prefill', '助手续写前缀');
+    }
+
     const compactContract = formatOpeningContractPrompt(openingContract, { compact: true });
     if (compactContract) appendMessage({ role: 'system', content: compactContract }, '开局契约', '末尾重申');
+
+    if (!updaterEnabled) {
+      appendMessage({ role: 'system', content: MAIN_SINGLE_CALL_OUTPUT_PROMPT }, '单次主模型记账', '固定完整性契约');
+      injections.push({ name: '单次主模型结构化记账确认', content: MAIN_SINGLE_CALL_OUTPUT_PROMPT });
+    }
 
     const shinobiDailyPrompt = updaterEnabled
       ? SHINOBI_DAILY_DELEGATION_PROMPT
@@ -1426,9 +1614,12 @@ class MessagePipeline {
       injections.push({ name: '文生图隐藏契约规则', content: IMAGE_CONTRACT_PROMPT });
     }
 
-    // Assistant prefill goes last — forces AI to continue from this format
-    if (prefill) {
-      appendMessage(prefill, '主预设 Prefill', '助手续写前缀');
+    if (!updaterEnabled) {
+      appendMessage(
+        { role: 'system', content: MAIN_SINGLE_CALL_DELIVERY_REMINDER },
+        '单次主模型记账',
+        '最终交付复核'
+      );
     }
 
     this._lastPromptTrace = { messageSources, injections };
@@ -1445,7 +1636,7 @@ class MessagePipeline {
       const context = {
         playerName: state['玩家·姓名'] || '玩家',
         charName: state['玩家·姓名'] || '',
-        lastUserMessage: '刚才的行动',
+        lastUserMessage: userInput,
         lastChatMessage: '刚才的剧情',
         variableUpdaterEnabled: updaterEnabled
       };

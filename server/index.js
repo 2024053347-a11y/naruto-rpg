@@ -76,8 +76,8 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       connectSrc: [
         "'self'", "https:", "wss:",
-        "http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*",
-        "ws://127.0.0.1:*", "ws://localhost:*", "ws://[::1]:*",
+        "http://127.0.0.1:*", "http://localhost:*",
+        "ws://127.0.0.1:*", "ws://localhost:*",
         ...config.imageAssets.connectSources
       ],
       mediaSrc: ["'self'", "https:", "http:"],

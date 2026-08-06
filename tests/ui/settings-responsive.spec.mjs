@@ -8,6 +8,21 @@ const VIEWPORTS = [
   { width: 360, height: 800 }
 ];
 
+test('global help control yields to the settings action bar', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('naruto_seen_welcome', 'true'));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tests/fixtures/settings-panel-harness.html?mode=creator');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+  await page.evaluate(() => import('/js/utils/help-guide.js'));
+
+  await expect(page.locator('body')).toHaveClass(/settings-panel-open/);
+  await expect(page.locator('#help-guide-btn')).toBeHidden();
+
+  await page.locator('settings-panel').evaluate(element => element.remove());
+  await expect(page.locator('body')).not.toHaveClass(/settings-panel-open/);
+  await expect(page.locator('#help-guide-btn')).toBeVisible();
+});
+
 test('player settings keeps its navigation, content and actions inside supported viewports', async ({ page }) => {
   await mkdir('.codex-tmp/settings-visual', { recursive: true });
 

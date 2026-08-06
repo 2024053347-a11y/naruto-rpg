@@ -118,17 +118,17 @@ await test('AI admission rejects without queueing and releases exactly once', ()
   assert.equal(controller.snapshot('text').active, 0);
 });
 
-await test('AI admission policies enforce text 3/16 and image 1/4', () => {
+await test('AI admission policies enforce text 10/32 and image 1/4', () => {
   const controller = createAdmissionController({
-    text: { perUser: 3, global: 16 },
+    text: { perUser: 10, global: 32 },
     image: { perUser: 1, global: 4 }
   });
-  const textLeases = Array.from({ length: 3 }, () => controller.tryAcquire('text', 'player'));
+  const textLeases = Array.from({ length: 10 }, () => controller.tryAcquire('text', 'player'));
   assert.equal(textLeases.every(lease => lease.acquired), true);
   assert.equal(controller.tryAcquire('text', 'player').reason, 'user_limit');
   textLeases.forEach(lease => lease.release());
 
-  const globalText = Array.from({ length: 16 }, (_, index) => controller.tryAcquire('text', `u${index}`));
+  const globalText = Array.from({ length: 32 }, (_, index) => controller.tryAcquire('text', `u${index}`));
   assert.equal(globalText.every(lease => lease.acquired), true);
   assert.equal(controller.tryAcquire('text', 'overflow').reason, 'global_limit');
   globalText.forEach(lease => lease.release());

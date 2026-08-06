@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import { lookup } from 'node:dns/promises';
 import { BlockList, isIP } from 'node:net';
+import { request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import { HttpProxyAgent } from 'http-proxy-agent';
 import { requireAuth } from '../middleware/auth.js';
 import { asyncRoute } from '../middleware/async-route.js';
 import {
@@ -21,8 +24,8 @@ router.use(asyncRoute((req, res, next) => (
 )));
 
 export const aiProxyAdmissionController = createAdmissionController({
-  text: { perUser: 3, global: 16 },
-  image: { perUser: 1, global: 4 }
+  text: { perUser: config.admission.textPerUser, global: config.admission.textGlobal },
+  image: { perUser: config.admission.imagePerUser, global: config.admission.imageGlobal }
 });
 
 export function resolveAdmissionCategory(rawPurpose) {
@@ -110,6 +113,34 @@ function isFakeIpAddress(address) {
 }
 
 /**
+ * 判断是否允许对指定「域名:端口」使用明文 HTTP 上游。
+ * 白名单条目：example.com（任意端口）、example.com:8050（精确端口）、
+ * *.example.com（含 apex 的任意子域，可带端口）。未配置白名单时一律拒绝。
+ */
+function isHttpTargetAllowed(hostname, port, allowHttpTargets) {
+  if (!allowHttpTargets || allowHttpTargets.length === 0) return false;
+  const host = String(hostname).replace(/^\[|\]$/g, '').toLowerCase();
+  const numericPort = port ? Number(port) : null;
+  for (const entry of allowHttpTargets) {
+    const wildcard = entry.startsWith('*.');
+    let entryName = wildcard ? entry.slice(2) : entry;
+    let entryPort = null;
+    const colonIndex = entryName.lastIndexOf(':');
+    if (colonIndex !== -1 && /^\d+$/.test(entryName.slice(colonIndex + 1))) {
+      entryPort = Number(entryName.slice(colonIndex + 1));
+      entryName = entryName.slice(0, colonIndex);
+    }
+    entryName = entryName.replace(/^\[|\]$/g, '').toLowerCase();
+    const hostMatches = wildcard
+      ? host === entryName || host.endsWith(`.${entryName}`)
+      : host === entryName;
+    const portMatches = entryPort === null || numericPort === entryPort;
+    if (hostMatches && portMatches) return true;
+  }
+  return false;
+}
+
+/**
  * 校验目标 URL：必须是合法的 HTTPS 公网地址。
  * @param {string} targetUrl
  * @returns {Promise<{url?: URL, addresses?: Array<{address: string, family: number}>, errorStatus?: number, errorBody?: {error: string}}>}
@@ -139,7 +170,8 @@ async function awaitWithAbort(promise, signal) {
 async function validateTargetUrl(targetUrl, {
   signal,
   lookupImpl = lookup,
-  allowFakeIpDns = config.proxy.allowFakeIpDns
+  allowFakeIpDns = config.proxy.allowFakeIpDns,
+  allowHttpTargets = config.proxy.allowHttpTargets
 } = {}) {
   let parsed;
   try {
@@ -147,13 +179,18 @@ async function validateTargetUrl(targetUrl, {
   } catch {
     return { errorStatus: 400, errorBody: { error: '无效的目标 URL' } };
   }
-  if (parsed.protocol !== 'https:') {
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
     return { errorStatus: 403, errorBody: { error: '仅允许 HTTPS 目标' } };
   }
   const hostname = parsed.hostname.replace(/^\[|\]$/g, '');
   if (/^\d+$/.test(hostname) || hostname.toLowerCase() === 'localhost' || isPrivateAddress(hostname)) {
     console.warn(`[AI PROXY] Blocked internal target: ${targetUrl}`);
     return { errorStatus: 403, errorBody: { error: '禁止代理到内网地址' } };
+  }
+  // 明文 HTTP 仅对显式白名单域名放行，其余一律保持 HTTPS-only
+  if (parsed.protocol === 'http:' && !isHttpTargetAllowed(parsed.hostname, parsed.port, allowHttpTargets)) {
+    console.warn(`[AI PROXY] Blocked plain-HTTP target outside allowlist: ${targetUrl}`);
+    return { errorStatus: 403, errorBody: { error: '仅允许 HTTPS 目标' } };
   }
   try {
     if (signal?.aborted) throw createAbortError(signal.reason);
@@ -172,23 +209,53 @@ async function validateTargetUrl(targetUrl, {
   }
 }
 
+/**
+ * 正向代理 Agent 缓存（按 AI_PROXY_FORWARD_URL 惰性创建，可跨请求复用）。
+ * 仅当 proxyConfig.aiForwardUrl 非空时返回；否则返回 null（保持直连）。
+ * 与 Discord 专用的 PROXY_URL 无关，互不干扰。
+ */
+let proxyAgents = null;
+export function getProxyAgent(protocol, proxyConfig = config.proxy) {
+  const forwardUrl = proxyConfig.aiForwardUrl;
+  if (!forwardUrl) return null;
+  if (!proxyAgents || proxyAgents.url !== forwardUrl) {
+    proxyAgents = {
+      url: forwardUrl,
+      https: new HttpsProxyAgent(forwardUrl),
+      http: new HttpProxyAgent(forwardUrl)
+    };
+  }
+  return protocol === 'http:' ? proxyAgents.http : proxyAgents.https;
+}
+
 function requestUpstream(url, { method, headers, body, signal }, addresses) {
-  const pinned = addresses.map(item => ({ address: item.address, family: item.family }));
-  const pinnedLookup = (_hostname, options, callback) => {
-    const opts = typeof options === 'number' ? { family: options } : (options || {});
-    const candidates = opts.family ? pinned.filter(item => item.family === opts.family) : pinned;
-    if (!candidates.length) {
-      const error = new Error('No validated address matches the requested family');
-      error.code = 'EAI_ADDRFAMILY';
-      callback(error);
-      return;
-    }
-    if (opts.all) callback(null, candidates);
-    else callback(null, candidates[0].address, candidates[0].family);
-  };
+  const agent = getProxyAgent(url.protocol);
+  const requestOptions = { method, headers, signal };
+  if (agent) {
+    // 走正向代理：连接与 DNS 由代理负责（目标域名已在 validateTargetUrl 校验过）。
+    // 国内服务器访问被墙的 AI 上游（如 image.novelai.net）时依赖此路径。
+    requestOptions.agent = agent;
+  } else {
+    // 直连：固定到已校验的公网地址，防止 DNS rebinding / 内网地址逃逸。
+    const pinned = addresses.map(item => ({ address: item.address, family: item.family }));
+    requestOptions.lookup = (_hostname, options, callback) => {
+      const opts = typeof options === 'number' ? { family: options } : (options || {});
+      const candidates = opts.family ? pinned.filter(item => item.family === opts.family) : pinned;
+      if (!candidates.length) {
+        const error = new Error('No validated address matches the requested family');
+        error.code = 'EAI_ADDRFAMILY';
+        callback(error);
+        return;
+      }
+      if (opts.all) callback(null, candidates);
+      else callback(null, candidates[0].address, candidates[0].family);
+    };
+  }
 
   return new Promise((resolve, reject) => {
-    const upstreamRequest = httpsRequest(url, { method, headers, signal, lookup: pinnedLookup }, resolve);
+    // 白名单命中的 http: 目标走明文请求，其余 https: 目标维持 TLS
+    const request = url.protocol === 'http:' ? httpRequest : httpsRequest;
+    const upstreamRequest = request(url, requestOptions, resolve);
     upstreamRequest.on('error', reject);
     if (body) upstreamRequest.write(body);
     upstreamRequest.end();
@@ -238,7 +305,7 @@ export async function forwardStreamingResponse(upstreamResponse, res, {
   await forwardBoundedResponse(upstreamResponse, res, { signal, maxResponseBytes });
 }
 
-const PROXY_PURPOSES = new Set(['generic', 'models', 'image-generation', 'image-download']);
+const PROXY_PURPOSES = new Set(['generic', 'models', 'agent', 'image-generation', 'image-download']);
 
 export function resolveProxyPurposePolicy(rawPurpose, proxyConfig = config.proxy) {
   const purpose = String(rawPurpose || 'generic').trim().toLowerCase();
@@ -246,7 +313,9 @@ export function resolveProxyPurposePolicy(rawPurpose, proxyConfig = config.proxy
   const imagePurpose = purpose === 'image-generation' || purpose === 'image-download';
   return {
     purpose,
-    timeoutMs: imagePurpose ? proxyConfig.imageTimeoutMs : proxyConfig.timeoutMs,
+    // 文本 AI（generic/models/agent）不再设置上游截止时间：慢生成由用户手动停止。
+    // 仅文生图用途保留可配置超时。
+    timeoutMs: imagePurpose ? proxyConfig.imageTimeoutMs : 0,
     maxResponseMb: imagePurpose ? proxyConfig.imageMaxResponseMb : proxyConfig.maxResponseMb
   };
 }
@@ -282,10 +351,12 @@ router.all('/', asyncRoute(async (req, res) => {
   // 客户端中途断开时立即中止上游请求，避免继续为已放弃的生成计费/占用连接
   const upstreamAbort = new AbortController();
   let upstreamTimedOut = false;
-  const upstreamTimeout = setTimeout(() => {
-    upstreamTimedOut = true;
-    upstreamAbort.abort();
-  }, proxyPolicy.timeoutMs);
+  const upstreamTimeout = proxyPolicy.timeoutMs > 0
+    ? setTimeout(() => {
+        upstreamTimedOut = true;
+        upstreamAbort.abort();
+      }, proxyPolicy.timeoutMs)
+    : null;
   const abortForDisconnectedClient = () => {
     if (!res.writableEnded && !upstreamAbort.signal.aborted) upstreamAbort.abort();
   };
@@ -414,7 +485,7 @@ router.all('/', asyncRoute(async (req, res) => {
     }
     res.status(502).json({ error: `AI 代理请求上游失败: ${error.message} ${error.cause ? error.cause.message : ''}`.trim() });
   } finally {
-    clearTimeout(upstreamTimeout);
+    if (upstreamTimeout !== null) clearTimeout(upstreamTimeout);
     res.off('close', abortForDisconnectedClient);
     req.off('aborted', abortForDisconnectedClient);
   }

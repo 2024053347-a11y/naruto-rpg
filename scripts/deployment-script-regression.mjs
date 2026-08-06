@@ -243,7 +243,9 @@ assert.match(
 const stagingTarget = extractBracedBlock(deployScript, /\bstaging\s*=\s*@\{/i, 'staging target');
 assert.match(stagingTarget, /TargetDir\s*=\s*['"]\/var\/www\/naruto-rpg-staging['"]/i);
 assert.match(stagingTarget, /PublicUrl\s*=\s*['"]https:\/\/www\.qiwu\.asia:8080\/['"]/i);
-assert.match(stagingTarget, /RestartBackend\s*=\s*\$false/i);
+// 生产与测试站共享同一个后端（/opt/naruto-rpg + naruto-rpg.service），
+// 测试站部署必须一并重启后端，否则后端改动（如 AI 代理白名单）不生效。
+assert.match(stagingTarget, /RestartBackend\s*=\s*\$true/i);
 assert.doesNotMatch(stagingTarget, /TargetDir\s*=\s*['"]\/var\/www\/naruto-rpg['"]/i);
 
 assert.equal(

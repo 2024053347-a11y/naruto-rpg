@@ -214,7 +214,7 @@ export function parseShinobiDailyContract(text, { required = false } = {}) {
 export function buildShinobiDailyPrompt({ producer = 'main' } = {}) {
   const placement = producer === 'secondary'
     ? '完成全部变量标签后，在输出末尾追加日报契约。'
-    : '完成可见正文和当前模式允许的机器标签后，在输出末尾追加日报契约。';
+    : '完成可见正文和变量、记忆标签后追加日报契约；若本回合另有 <image_contract>，只有绘图契约可以紧随日报之后。';
   return `【忍界日报结构契约 · 固定前端数据源】
 ${placement}
 - 必须输出且只能输出一次 <shinobi_daily>严格 JSON</shinobi_daily>；禁止代码围栏、注释、HTML、Markdown 和标签属性。

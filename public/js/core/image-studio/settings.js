@@ -34,6 +34,7 @@ export const DEFAULT_IMAGE_SETTINGS = Object.freeze({
   concurrency: 1,
   autoEviction: false,
   allowedPrivateOrigins: [],
+  allowedPublicHttpOrigins: [],
   providers: {
     'openai-compatible': {
       type: 'openai-compatible',
@@ -119,6 +120,12 @@ export function normalizeImageSettings(input = {}) {
     autoEviction: source.autoEviction === true,
     allowedPrivateOrigins: [...new Set((Array.isArray(source.allowedPrivateOrigins)
       ? source.allowedPrivateOrigins : []).map(value => {
+        try { return new URL(String(value)).origin; } catch { return ''; }
+      }).filter(Boolean))],
+    // 公网明文 HTTP 白名单：允许显式声明的公网地址走 http://（与 AI 代理的
+    // AI_PROXY_ALLOW_HTTP_TARGETS 服务端白名单对应，需在两端同时放行）。
+    allowedPublicHttpOrigins: [...new Set((Array.isArray(source.allowedPublicHttpOrigins)
+      ? source.allowedPublicHttpOrigins : []).map(value => {
         try { return new URL(String(value)).origin; } catch { return ''; }
       }).filter(Boolean))],
     providers: {}

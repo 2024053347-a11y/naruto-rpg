@@ -107,9 +107,16 @@ class SettingsPanel extends HTMLElement {
     document.removeEventListener('keydown', this._onKeyDown);
     this._editorObserver?.disconnect();
     clearTimeout(this._toastTimer);
+    queueMicrotask(() => {
+      document.body?.classList.toggle(
+        'settings-panel-open',
+        Boolean(document.querySelector('settings-panel'))
+      );
+    });
   }
 
   connectedCallback() {
+    document.body?.classList.add('settings-panel-open');
     this._mode = this.getAttribute('mode') === 'creator' ? 'creator' : 'player';
     this._settings = mergeSettings(stateManager.getSub('_ui').settings);
     this._activeSection = this._activeSection || this.getAttribute('section') || 'appearance';
@@ -250,7 +257,7 @@ class SettingsPanel extends HTMLElement {
                     <span class="owner-badge">唯一配置入口</span>
                   </div>
                   <p class="setting-note">正文生成使用此连接。创作者工作台中的辅助模型默认继承这里的地址、密钥与模型。</p>
-                  <api-config-form config='${escAttr(JSON.stringify(apiConfig))}' show-advanced></api-config-form>
+                  <api-config-form config='${escAttr(JSON.stringify(apiConfig))}' show-advanced show-schemes></api-config-form>
                 </section>
               </div>
 
@@ -289,6 +296,8 @@ class SettingsPanel extends HTMLElement {
                        </select>
                        <label>战斗自动升级完整模式</label>
                        <input type="checkbox" name="agentAutoUpgrade" ${getAgentConfig().autoUpgrade !== false ? 'checked' : ''}>
+                       <label class="config-label-sub">并发上限 (1-10)</label>
+                       <input type="number" name="agentMaxConcurrency" min="1" max="10" step="1" value="${Number(getAgentConfig().maxConcurrency) || 10}" title="同时进行的 AI 请求数上限。并发高会让回合更快但更易触发上游限流，4090 走代理时可保持 10。">
                        <label class="config-label-sub">Agent 模型 (留空=主模型)</label>
                        <div class="inline-field">
                          <input type="text" name="agentModel" value="${getAgentConfig().agentModel || ''}" placeholder="留空使用主模型" list="settings-agent-datalist">
@@ -332,8 +341,6 @@ class SettingsPanel extends HTMLElement {
                      <input type="number" name="narrativeReviewTemperature" min="0" max="2" step="0.05" value="${apiConfig.narrativeReview?.temperature ?? 0.25}">
                      <label>Max Tokens</label>
                      <input type="number" name="narrativeReviewMaxTokens" min="1024" max="65536" step="1024" value="${apiConfig.narrativeReview?.maxTokens ?? 16384}">
-                     <label>超时（毫秒）</label>
-                     <input type="number" name="narrativeReviewTimeout" min="0" step="1000" value="${apiConfig.narrativeReview?.timeoutMs ?? 0}" title="0 表示不限制">
                      <label>流式接收复检预览</label>
                      <input type="checkbox" name="narrativeReviewStreaming" ${apiConfig.narrativeReview?.streaming !== false ? 'checked' : ''}>
                    </div>
@@ -370,8 +377,6 @@ class SettingsPanel extends HTMLElement {
                       <input type="number" name="varUpdaterTemperature" min="0" max="2" step="0.05" value="${apiConfig.variableUpdater?.temperature ?? VARIABLE_UPDATER_DEFAULT_TEMPERATURE}">
                       <label>Max Tokens</label>
                       <input type="number" name="varUpdaterMaxTokens" min="256" max="32768" step="256" value="${apiConfig.variableUpdater?.maxTokens ?? 8192}">
-                      <label>超时（毫秒）</label>
-                      <input type="number" name="varUpdaterTimeout" min="0" step="1000" value="${apiConfig.variableUpdater?.timeoutMs ?? 120000}" title="0 表示不限制">
                       <label>流式传输</label>
                       <input type="checkbox" name="varUpdaterStreaming" ${apiConfig.variableUpdater?.streaming !== false ? 'checked' : ''}>
                     </div>
@@ -1141,12 +1146,16 @@ class SettingsPanel extends HTMLElement {
 
   _saveAgentConfig() {
     const root = this.shadowRoot;
+    const rawConcurrency = Number(root.querySelector('[name="agentMaxConcurrency"]')?.value);
     saveAgentConfig({
       enabled: root.querySelector('[name="agentEnabled"]')?.checked ?? false,
       mode: root.querySelector('[name="agentMode"]')?.value || 'standard',
       autoUpgrade: root.querySelector('[name="agentAutoUpgrade"]')?.checked ?? true,
       agentModel: (root.querySelector('[name="agentModel"]')?.value || '').trim(),
-      criticModel: (root.querySelector('[name="criticModel"]')?.value || '').trim()
+      criticModel: (root.querySelector('[name="criticModel"]')?.value || '').trim(),
+      maxConcurrency: Number.isFinite(rawConcurrency)
+        ? Math.max(1, Math.min(10, Math.trunc(rawConcurrency)))
+        : 10
     });
   }
 
@@ -1165,7 +1174,6 @@ class SettingsPanel extends HTMLElement {
       model,
       temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : VARIABLE_UPDATER_DEFAULT_TEMPERATURE,
       maxTokens: Math.max(256, Number(root.querySelector('[name="varUpdaterMaxTokens"]')?.value) || 8192),
-      timeoutMs: Math.max(0, Number(root.querySelector('[name="varUpdaterTimeout"]')?.value) || 0),
       streaming: root.querySelector('[name="varUpdaterStreaming"]')?.checked ?? true
     });
   }
@@ -1181,7 +1189,6 @@ class SettingsPanel extends HTMLElement {
       model: (root.querySelector('[name="narrativeReviewModel"]')?.value || '').trim(),
       temperature: Number.isFinite(temperature) ? Math.max(0, Math.min(2, temperature)) : 0.25,
       maxTokens: Math.max(1024, Number(root.querySelector('[name="narrativeReviewMaxTokens"]')?.value) || 16384),
-      timeoutMs: Math.max(0, Number(root.querySelector('[name="narrativeReviewTimeout"]')?.value) || 0),
       streaming: root.querySelector('[name="narrativeReviewStreaming"]')?.checked ?? true
     });
   }

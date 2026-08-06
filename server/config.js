@@ -56,6 +56,24 @@ export function resolveAiProxyAllowFakeIpDns(env = process.env) {
   return String(env.NODE_ENV || 'development').trim().toLowerCase() !== 'production';
 }
 
+/**
+ * AI 代理明文 HTTP 上游白名单：逗号分隔的「域名[:端口]」列表，如
+ *   new.fangxiaobai.store:8050,*.example.com
+ * 仅白名单命中的域名允许 http:// 目标，其余上游仍强制 HTTPS。
+ * 条目支持：example.com（任意端口）、example.com:8050（精确端口）、
+ * *.example.com（含 apex 的任意子域，可带端口）。返回 null 表示未配置，
+ * 保持旧行为：一律拒绝明文 HTTP 目标。
+ */
+export function resolveAiProxyAllowHttpTargets(env = process.env) {
+  const entries = [...new Set(
+    String(env.AI_PROXY_ALLOW_HTTP_TARGETS ?? '')
+      .split(',')
+      .map(item => item.trim().toLowerCase())
+      .filter(Boolean)
+  )];
+  return entries.length ? entries : null;
+}
+
 /** 应用全局配置（deepFreeze 防止运行期被意外篡改） */
 export const config = deepFreeze({
   port: toPositiveInt(process.env.PORT, 3000),
@@ -104,11 +122,24 @@ export const config = deepFreeze({
   proxy: {
     enabled: process.env.PROXY_ENABLED === 'true',
     url: process.env.PROXY_URL || '',
+    // AI 代理专属正向代理（Clash/Mihomo 等 HTTP CONNECT 代理，如 http://127.0.0.1:7890）。
+    // 与 PROXY_URL（Discord 专用）互不干扰；留空 = AI 代理直连。
+    aiForwardUrl: String(process.env.AI_PROXY_FORWARD_URL || '').trim(),
     allowFakeIpDns: resolveAiProxyAllowFakeIpDns(process.env),
-    timeoutMs: toPositiveInt(process.env.AI_PROXY_TIMEOUT_MS, 120000),
+    // 明文 HTTP 上游白名单（默认 null = 禁止）；见 resolveAiProxyAllowHttpTargets
+    allowHttpTargets: resolveAiProxyAllowHttpTargets(process.env),
+    // 文本 AI 不再施加上游超时（由用户手动停止）；AI_PROXY_TIMEOUT_MS 已停用。
     maxResponseMb: toPositiveInt(process.env.AI_PROXY_MAX_RESPONSE_MB, 20),
     imageTimeoutMs: toPositiveInt(process.env.IMAGE_PROXY_TIMEOUT_MS, 300000),
     imageMaxResponseMb: toPositiveInt(process.env.IMAGE_PROXY_MAX_RESPONSE_MB, 32)
+  },
+  // AI 代理并发闸门：文本（主叙事 + Agent 协作）默认每用户同时 10 个、全局 32 个；
+  // 图像生成独立计数。Agent 完整模式单回合峰值依赖该额度，调低会立刻引发 429。
+  admission: {
+    textPerUser: toPositiveInt(process.env.AI_PROXY_ADMISSION_TEXT_PER_USER, 10),
+    textGlobal: toPositiveInt(process.env.AI_PROXY_ADMISSION_TEXT_GLOBAL, 32),
+    imagePerUser: toPositiveInt(process.env.AI_PROXY_ADMISSION_IMAGE_PER_USER, 1),
+    imageGlobal: toPositiveInt(process.env.AI_PROXY_ADMISSION_IMAGE_GLOBAL, 4)
   }
 });
 

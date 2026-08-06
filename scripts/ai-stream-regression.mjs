@@ -251,21 +251,16 @@ async function probePartialTransportFailure(backend) {
   }
 }
 
-async function probePartialTimeout(backend) {
+async function probeTimeoutIsIgnored(backend) {
   const originalFetch = globalThis.fetch;
   const originalLocation = globalThis.location;
   globalThis.location = { hostname: 'localhost' };
   const controlled = createControlledResponse();
-  globalThis.fetch = async (_url, init) => {
-    init?.signal?.addEventListener('abort', () => {
-      controlled.fail(init.signal.reason || abortError('timed out'));
-    }, { once: true });
-    return controlled.response;
-  };
+  globalThis.fetch = async () => controlled.response;
 
   let streamPromise;
   try {
-    const runtime = await import(`../js/core/ai-client.js?partial-timeout-${backend}-${Date.now()}-${Math.random()}`);
+    const runtime = await import(`../js/core/ai-client.js?no-timeout-${backend}-${Date.now()}-${Math.random()}`);
     const client = new runtime.AIClient();
     client.configure({
       backend,
@@ -287,11 +282,17 @@ async function probePartialTimeout(backend) {
       }
     );
     controlled.send(`data:${JSON.stringify(streamEvent(backend, '甲'))}\n\n`);
-    await expectBeforeClose(firstChunk, `${backend} token before timeout`);
+    await expectBeforeClose(firstChunk, `${backend} token before close`);
 
-    const error = await expectRejectedBefore(streamPromise, `${backend} partial timeout`);
-    assert.equal(error.isTimeout, true);
-    assert.equal(error.partialResponse, '甲');
+    // 超时选项必须被忽略：等待远超 timeout 后，流仍保持打开、未被自动中止。
+    await new Promise(resolve => setTimeout(resolve, 80));
+    assert.deepEqual(chunks, ['甲'], 'content must stay intact while the stream is not auto-aborted');
+    assert.equal(controlled.cancelCount, 0, 'stream must not be cancelled by a timeout deadline');
+
+    // 只有连接关闭（或手动取消）才会结束流，且返回完整正文、无 isTimeout。
+    controlled.close();
+    const text = await streamPromise;
+    assert.equal(text, '甲');
     assert.deepEqual(chunks, ['甲']);
   } finally {
     controlled.close();
@@ -319,7 +320,7 @@ for (const backend of ['openai', 'claude']) {
 
   await test(`${backend} SSE errors reject and preserve visible partial content`, () => probeDirectSseError(backend));
   await test(`${backend} does not retry after emitting a partial stream`, () => probePartialTransportFailure(backend));
-  await test(`${backend} partial timeout rejects instead of committing truncated text`, () => probePartialTimeout(backend));
+  await test(`${backend} timeout option does not auto-abort the stream (manual stop only)`, () => probeTimeoutIsIgnored(backend));
 }
 
 await test('SSE parser handles split UTF-8 bytes and a split mixed line boundary', async () => {
@@ -663,6 +664,126 @@ await test('proxy mode remains same-origin on custom deployment hosts and sniffs
   } finally {
     controlled.close();
     await streamPromise?.catch(() => {});
+    globalThis.fetch = originalFetch;
+    if (originalLocation === undefined) delete globalThis.location;
+    else globalThis.location = originalLocation;
+  }
+});
+
+await test('timeout zero keeps an agent stream alive until the model finishes', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLocation = globalThis.location;
+  globalThis.location = { hostname: 'custom.example' };
+  const controlled = createControlledResponse();
+  let requestSignal = null;
+  let requestHeaders = null;
+  let requestBody = null;
+  globalThis.fetch = async (_url, init) => {
+    requestSignal = init?.signal || null;
+    requestHeaders = new Headers(init?.headers || {});
+    requestBody = JSON.parse(init?.body || '{}');
+    return controlled.response;
+  };
+
+  let streamPromise;
+  let streamOutcome;
+  try {
+    const runtime = await import(`../js/core/ai-client.js?agent-no-timeout-${Date.now()}-${Math.random()}`);
+    const client = new runtime.AIClient();
+    client.configure({
+      backend: 'openai', apiUrl: 'https://provider.example/v1', apiKey: 'redacted',
+      model: 'stream-probe', useProxy: false
+    });
+    const chunks = [];
+    streamPromise = client.chatStream(
+      [{ role: 'user', content: 'probe' }],
+      { timeout: 0, max_tokens: 0, maxRetries: 0 },
+      chunk => chunks.push(chunk)
+    );
+    streamOutcome = streamPromise.then(
+      value => ({ value, error: null }),
+      error => ({ value: null, error })
+    );
+
+    await new Promise(resolve => setTimeout(resolve, 30));
+    assert.equal(requestSignal?.aborted, false, 'timeout: 0 must not schedule an immediate abort');
+    assert.equal(requestHeaders?.get('x-proxy-purpose'), 'agent');
+    assert.equal('max_tokens' in requestBody, false, 'Agent requests must omit the provider output cap');
+    controlled.send(`data:${JSON.stringify(streamEvent('openai', '完整'))}\n\n`);
+    controlled.send('data:[DONE]\n\n');
+    controlled.close();
+    const outcome = await streamOutcome;
+    if (outcome.error) throw outcome.error;
+    assert.equal(outcome.value, '完整');
+    assert.deepEqual(chunks, ['完整']);
+  } finally {
+    controlled.close();
+    await streamPromise?.catch(() => {});
+    globalThis.fetch = originalFetch;
+    if (originalLocation === undefined) delete globalThis.location;
+    else globalThis.location = originalLocation;
+  }
+});
+
+await test('proxy stream without visible content recovers once with a non-stream response', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLocation = globalThis.location;
+  globalThis.location = { hostname: 'custom.example' };
+  const requests = [];
+  globalThis.fetch = async (url, init) => {
+    requests.push({
+      url: String(url),
+      headers: init?.headers || {},
+      body: JSON.parse(init?.body || '{}')
+    });
+    if (requests.length === 1) {
+      const streamBody = [
+        `data:${JSON.stringify({ choices: [{ delta: { reasoning_content: '内部推理' } }] })}`,
+        `data:${JSON.stringify({ choices: [], usage: { prompt_tokens: 8, completion_tokens: 4 } })}`,
+        'data:[DONE]',
+        ''
+      ].join('\n\n');
+      return new Response(streamBody, {
+        headers: { 'Content-Type': 'text/event-stream' }
+      });
+    }
+    return new Response(JSON.stringify({
+      choices: [{ message: { content: '恢复后的代理正文' }, finish_reason: 'stop' }],
+      usage: { prompt_tokens: 8, completion_tokens: 6 }
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  };
+
+  try {
+    const runtime = await import(`../js/core/ai-client.js?proxy-empty-stream-recovery-${Date.now()}-${Math.random()}`);
+    const client = new runtime.AIClient();
+    client.configure({
+      backend: 'openai',
+      apiUrl: 'https://provider.example/v1',
+      apiKey: 'redacted',
+      model: 'stream-probe',
+      useProxy: true
+    });
+
+    const chunks = [];
+    const result = await client.chatStream(
+      [{ role: 'user', content: 'probe' }],
+      { timeout: 0, max_tokens: 0 },
+      chunk => chunks.push(chunk)
+    );
+
+    assert.equal(result, '恢复后的代理正文');
+    assert.deepEqual(chunks, ['恢复后的代理正文']);
+    assert.equal(requests.length, 2, 'empty visible streams should trigger exactly one recovery request');
+    assert.deepEqual(requests.map(request => request.url), ['/api/ai-proxy', '/api/ai-proxy']);
+    assert.equal(requests[0].body.stream, true);
+    assert.equal('max_tokens' in requests[0].body, false);
+    assert.deepEqual(requests[0].body.stream_options, { include_usage: true });
+    assert.equal(requests[1].body.stream, false);
+    assert.equal('max_tokens' in requests[1].body, false);
+    assert.equal('stream_options' in requests[1].body, false);
+  } finally {
     globalThis.fetch = originalFetch;
     if (originalLocation === undefined) delete globalThis.location;
     else globalThis.location = originalLocation;
