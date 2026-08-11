@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import { asyncRoute } from '../middleware/async-route.js';
 import * as db from '../db/index.js';
+import { musicStreamHandler } from './music-stream.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -56,6 +57,7 @@ async function removeFavorite(req, res) {
 }
 
 // `/favorites` 是已发布前端使用的路径；根路径保留给旧版客户端。
+router.get('/stream', asyncRoute(musicStreamHandler));
 router.get(['/', '/favorites'], asyncRoute(listFavorites));
 router.put(['/', '/favorites'], asyncRoute(replaceFavorites));
 router.post(['/', '/favorites'], asyncRoute(addFavorite));

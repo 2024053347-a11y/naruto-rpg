@@ -45,6 +45,15 @@ class InfoPanel extends HTMLElement {
     this._renderPending = false;
   }
 
+  openTab(tab = 'attributes') {
+    const allowed = new Set(['attributes', 'skills', 'equipment', 'missions', 'relations']);
+    if (!allowed.has(tab)) throw new TypeError('不支持的角色面板分区');
+    this._navigationTab = tab;
+    this._tab = tab;
+    if (this.isConnected) this.render();
+    return { opened: true, area: 'info-panel', tab };
+  }
+
   _scheduleRender() {
     if (this._renderPending) return;
     this._renderPending = true;
@@ -60,7 +69,7 @@ class InfoPanel extends HTMLElement {
     const scrollTop = contentEl ? contentEl.scrollTop : 0;
 
     const s = stateManager.get();
-    const tab = stateManager.getSub('_ui').panel_tab || this._tab;
+    const tab = this._navigationTab || stateManager.getSub('_ui').panel_tab || this._tab;
     const appEl = document.getElementById('app') || document.body;
     const isMobile = (() => {
       try { return parent.window.innerWidth <= 768; } catch(e) { return window.innerWidth <= 768; }
@@ -98,6 +107,7 @@ class InfoPanel extends HTMLElement {
 
     this.shadowRoot.querySelectorAll('.tab').forEach(t=>{
       t.addEventListener('click',()=>{
+        this._navigationTab = null;
         this._tab=t.dataset.t;
         const updatedUi = { ...stateManager.getSub('_ui'), panel_tab: this._tab };
         stateManager.update([{ key: '_ui.panel_tab', op: '=', value: this._tab }]);

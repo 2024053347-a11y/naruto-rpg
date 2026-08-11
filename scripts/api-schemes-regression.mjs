@@ -108,6 +108,23 @@ await test('delete removes the scheme and clears the active marker when it was a
   assert.equal(await deleteApiScheme(id), false, 're-deleting an unknown id is a no-op');
 });
 
+await test('delete wins over an in-flight encrypted update', async () => {
+  freshStorage();
+  const id = await saveApiScheme({ name: 'A', apiUrl: 'https://a/v1', apiKey: 'old-key', model: 'm1', backend: 'openai' });
+  const updating = saveApiScheme({
+    id,
+    name: 'B',
+    apiUrl: 'https://b/v1',
+    apiKey: 'new-key',
+    model: 'm2',
+    backend: 'openai'
+  });
+  const deleting = deleteApiScheme(id);
+
+  await Promise.all([updating, deleting]);
+  assert.deepEqual(await listApiSchemes(), [], 'a late encrypted update must not resurrect a deleted scheme');
+});
+
 await test('active marker survives across list/get round-trips', async () => {
   freshStorage();
   const a = await saveApiScheme({ name: 'A', apiUrl: 'https://a/v1', apiKey: '', model: 'm', backend: 'openai' });

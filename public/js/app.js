@@ -5,6 +5,10 @@ import { eventBus } from './core/event-bus.js';
 import { MessagePipeline } from './core/pipeline.js';
 import { timelineSystem } from './systems/timeline-system.js';
 import { combatSystem } from './systems/combat-system.js';
+import {
+  buildCombatPlayerActionMessage,
+  combatPlayerActionDefinition
+} from './systems/combat-action.js';
 import { missionSystem } from './systems/mission-system.js';
 import { relationshipSystem } from './systems/relationship-system.js';
 import { memorySystem } from './systems/memory-system.js';
@@ -14,7 +18,6 @@ import { worldStateSystem } from './systems/world-state-system.js';
 import { errorHandler } from './utils/error-handler.js';
 import { loadingIndicator } from './utils/loading-indicator.js';
 import { swNotifier } from './utils/sw-notifier.js';
-import { helpGuide } from './utils/help-guide.js';
 import { resolveOpeningContract } from './systems/opening-contract.js';
 import { buildOpeningPrompt } from './systems/opening-prompt.js';
 import { migrateStorage } from './core/storage-migrations.js';
@@ -40,13 +43,23 @@ import './ui/variable-updater-preset-editor.js';
 import './ui/agent-progress.js';
 import './ui/map-modal.js';
 import './ui/image-studio.js';
+import './ui/lingxi-companion.js';
 import SettingsPanel, { applyLocalSettings } from './ui/settings-panel.js';
+import { musicPlayback } from './core/music-playback.js';
+import {
+  bindMusicFloatingPlayer,
+  controlMusicWithFloatingPlayer,
+  openMusicWithFloatingPlayer
+} from './ui/music-floating-player.js';
 
 class NarutoRPGApp {
   constructor() {
     this.pipeline = null;
     this._state = 'init';
     this._settingsTransition = Promise.resolve();
+    this._profileModal = null;
+    this._musicGestureCleanup = null;
+    this._musicPlayerStateCleanup = null;
   }
 
   async init() {
@@ -58,7 +71,13 @@ class NarutoRPGApp {
       return;
     }
 
+    this._musicGestureCleanup ||= musicPlayback.bindUserGestureUnlock(document);
+    this._musicPlayerStateCleanup ||= bindMusicFloatingPlayer(musicPlayback);
+
     appShell.init(container);
+    if (!container.querySelector('lingxi-companion')) {
+      container.appendChild(document.createElement('lingxi-companion'));
+    }
     atmosphereManager.init();
     
     let dbOk = false;
@@ -191,11 +210,9 @@ class NarutoRPGApp {
     eventBus.on('user:submit', ({ text, accept }) => this._handleUserInput(text, accept));
     eventBus.on('user:input', (text) => this._handleUserInput(text));
 
-    eventBus.on('combat:player-action', ({ action }) => {
-      if (this.pipeline?.isProcessing) return;
-      const msg = this._buildCombatActionMessage(action);
-      if (msg) eventBus.emit('user:input', msg);
-    });
+    eventBus.on('combat:player-action', ({ action }) => this._submitCombatAction(action));
+    eventBus.on('app:execute-combat-action', ({ action }) => this._submitCombatAction(action));
+    eventBus.on('app:execute-player-action', ({ text }) => this._submitPlayerAction(text));
 
     eventBus.on('pipeline:cancel', () => {
       this.pipeline?.cancel();
@@ -413,9 +430,33 @@ class NarutoRPGApp {
       });
     });
 
-    eventBus.on('app:open-profile', () => {
-      this._openProfilePanel();
+    eventBus.on('app:music-state', () => {
+      return musicPlayback.getState();
     });
+
+    eventBus.on('app:music-open', (options = {}) => {
+      const payload = options && typeof options === 'object' && !Array.isArray(options) ? options : {};
+      return openMusicWithFloatingPlayer(payload, { playback: musicPlayback });
+    });
+
+    eventBus.on('app:music-control', ({ action } = {}) => {
+      return controlMusicWithFloatingPlayer(action, { playback: musicPlayback });
+    });
+
+    eventBus.on('app:open-profile', (options = {}) => this._openProfilePanel({
+      loadRemote: options?.loadRemote !== false
+    }));
+
+    eventBus.on('app:open-info-panel', (options = {}) => {
+      const tab = options && typeof options.tab === 'string' ? options.tab : 'attributes';
+      return appShell.openInfoPanel(tab);
+    });
+
+    eventBus.on('app:open-timeline', () => appShell.openTimeline());
+
+    eventBus.on('app:open-map', () => appShell.openMap());
+
+    eventBus.on('app:execute-timeline-action', options => this._executeTimelineAction(options));
 
     eventBus.on('app:open-api-settings', () => this._openSettings({ mode: 'player', section: 'connection' }));
   }
@@ -568,19 +609,18 @@ class NarutoRPGApp {
   _registerServiceWorker() {
     if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
 
-    navigator.serviceWorker.register('./sw.js').then((registration) => {
-      // 检测 SW 更新，发现新版本时立即应用
-      registration.addEventListener('updatefound', () => {
-        const newWorker = registration.installing;
-        if (!newWorker) return;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // 新 SW 已就绪，通知用户刷新
-            console.log('[SW] New version available, reloading...');
-            window.location.reload();
-          }
-        });
-      });
+    const hadController = Boolean(navigator.serviceWorker.controller);
+    let reloadStarted = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || reloadStarted) return;
+      reloadStarted = true;
+      console.log('[SW] New version activated, reloading...');
+      window.location.reload();
+    }, { once: true });
+
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then((registration) => {
+      registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+      return registration.update();
     }).catch((error) => {
       console.warn('[NarutoRPG] Service worker registration failed:', error.message);
     });
@@ -628,9 +668,10 @@ class NarutoRPGApp {
     });
   }
 
-  _openProfilePanel() {
+  _openProfilePanel({ loadRemote = true } = {}) {
     const Modal = customElements.get('game-modal');
     if (!Modal) return;
+    if (this._profileModal?.isConnected) return this._profileModal;
     const state = stateManager.get();
     const player = state.player || {};
     const attrs = state.attributes || {};
@@ -651,6 +692,7 @@ class NarutoRPGApp {
     const spiritPct = pctOf(attrs.spirit_current, attrs.spirit);
 
     const modal = new Modal();
+    this._profileModal = modal;
     (document.getElementById('app') || document.body).appendChild(modal);
     modal.show({
       title: '个人中心 · 忍道卷轴',
@@ -846,7 +888,7 @@ class NarutoRPGApp {
               <div>
                 <div class="pf-meter-text" id="cloud-size-text">
                   <span>云端容量 (最高 200MB)</span>
-                  <span>加载中...</span>
+                  <span>${loadRemote ? '加载中...' : '未自动连接'}</span>
                 </div>
                 <div class="pf-meter"><div class="pf-meter-fill" id="cloud-size-bar"></div></div>
                 <div class="pf-meter-warning" id="cloud-size-warning">容量即将耗尽，请及时清理或精简冗余记忆。</div>
@@ -881,6 +923,9 @@ class NarutoRPGApp {
           </section>
         </div>
       `,
+      onDismiss: () => {
+        if (this._profileModal === modal) this._profileModal = null;
+      },
       buttons: [
         { label: '关闭', primary: true, close: true }
       ]
@@ -888,22 +933,24 @@ class NarutoRPGApp {
 
     setTimeout(() => {
       // Discord 头像异步填充（加载失败自动回退为「忍」字印）
-      authClient.checkAuth().then(user => {
-        const url = authClient.getAvatarUrl(user, 128);
-        const av = modal.shadowRoot?.querySelector('#pf-avatar');
-        if (url && av) {
-          const img = document.createElement('img');
-          img.className = 'pf-avatar-img';
-          img.alt = '';
-          img.decoding = 'async';
-          img.onerror = () => img.remove();
-          img.src = url;
-          av.appendChild(img);
-        }
-      }).catch(() => {});
+      if (loadRemote) {
+        authClient.checkAuth().then(user => {
+          const url = authClient.getAvatarUrl(user, 128);
+          const av = modal.shadowRoot?.querySelector('#pf-avatar');
+          if (url && av) {
+            const img = document.createElement('img');
+            img.className = 'pf-avatar-img';
+            img.alt = '';
+            img.decoding = 'async';
+            img.onerror = () => img.remove();
+            img.src = url;
+            av.appendChild(img);
+          }
+        }).catch(() => {});
+      }
 
       // Fetch cloud save size asynchronously
-      cloudSave.listSaves().then(saves => {
+      if (loadRemote) cloudSave.listSaves().then(saves => {
         let sizeBytes = 0;
         let saveId = null;
         if (saves && saves.length > 0) {
@@ -1023,6 +1070,7 @@ class NarutoRPGApp {
         fileInput.click();
       });
     }, 150);
+    return modal;
   }
 
   async _renderProfilePersonas(modal) {
@@ -1209,14 +1257,111 @@ class NarutoRPGApp {
     });
   }
   _buildCombatActionMessage(action) {
-    switch (action) {
-      case '体术攻击': return '我使用体术向敌人发起近身攻击！';
-      case '忍术攻击': return '我准备使用忍术攻击敌人。';
-      case '使用道具': return '我从忍具袋中取出道具。';
-      case '防御': return '我摆出防御态势，准备格挡下一次攻击。';
-      case '撤退': return '我决定暂时撤退，寻找有利时机。';
-      default: return `我选择: ${action}`;
+    return buildCombatPlayerActionMessage(action);
+  }
+
+  async _submitCombatAction(action) {
+    const definition = combatPlayerActionDefinition(action);
+    if (!definition) return { accepted: false, code: 'COMBAT_ACTION_INVALID' };
+    if (!stateManager.getSub('_combat')?.is_active) {
+      return { accepted: false, code: 'COMBAT_NOT_ACTIVE' };
     }
+    if (this.pipeline?.isProcessing) {
+      return { accepted: false, code: 'PIPELINE_BUSY' };
+    }
+    const beforeNodeId = stateManager.getSub('_meta')?.current_node_id || null;
+    const accepted = await this._handleUserInput(definition.message);
+    return {
+      accepted: accepted === true,
+      action: definition.action,
+      label: definition.label,
+      beforeNodeId,
+      nodeId: stateManager.getSub('_meta')?.current_node_id || null
+    };
+  }
+
+  async _submitPlayerAction(text) {
+    const playerAction = String(text || '').replace(/\u0000/g, '').trim().slice(0, 4000);
+    if (!playerAction) return { accepted: false, code: 'PLAYER_ACTION_INVALID' };
+    if (stateManager.getSub('_combat')?.is_active) {
+      return { accepted: false, code: 'COMBAT_ACTION_REQUIRED' };
+    }
+    if (this.pipeline?.isProcessing) {
+      return { accepted: false, code: 'PIPELINE_BUSY' };
+    }
+    const beforeNodeId = stateManager.getSub('_meta')?.current_node_id || null;
+    const accepted = await this._handleUserInput(playerAction, () => {
+      appShell._addUserMessage?.(playerAction);
+    });
+    const nodeId = stateManager.getSub('_meta')?.current_node_id || null;
+    return {
+      accepted: accepted === true && Boolean(nodeId) && nodeId !== beforeNodeId,
+      text: playerAction,
+      beforeNodeId,
+      nodeId,
+      ...(accepted === true && nodeId === beforeNodeId ? { code: 'PIPELINE_NO_COMMIT' } : {})
+    };
+  }
+
+  async _syncTimelinePresentation(fallback = '时间线状态已更新。') {
+    const node = await timelineSystem.getCurrentNode();
+    if (node) {
+      const history = await timelineSystem._reconstructChatHistory(node);
+      this.pipeline?.setHistory(history);
+      appShell.renderSinglePage(node.clean_response || node.ai_response_summary || fallback, { timelineNodeId: node.id });
+    }
+    return node;
+  }
+
+  async _executeTimelineAction(options = {}) {
+    const action = String(options?.action || '').trim();
+    const nodeId = String(options?.nodeId || '').trim();
+    const branchId = String(options?.branchId || '').trim();
+    if (!['jump', 'rewind', 'reroll_branch', 'reroll_replace', 'switch_branch', 'promote_branch', 'delete_branch'].includes(action)) {
+      return { applied: false, code: 'TIMELINE_ACTION_INVALID' };
+    }
+
+    if (action === 'jump') {
+      await timelineSystem.jumpToNode(nodeId);
+      const node = await this._syncTimelinePresentation('已跳转到选定回合。');
+      return { applied: true, action, nodeId: node?.id || nodeId };
+    }
+    if (action === 'rewind') {
+      const result = await timelineSystem.pruneForward(nodeId);
+      const node = await this._syncTimelinePresentation('时间线已逆转。');
+      return { applied: true, action, nodeId: node?.id || nodeId, pruned: Math.max(0, Number(result?.pruned) || 0) };
+    }
+    if (action === 'switch_branch') {
+      await timelineSystem.switchBranch(branchId);
+      const node = await this._syncTimelinePresentation('已切换时间线分支。');
+      return { applied: true, action, branchId, nodeId: node?.id || null };
+    }
+    if (action === 'promote_branch') {
+      await timelineSystem.promoteBranchToMain(branchId);
+      const node = await this._syncTimelinePresentation('时间线收束完成，新的主线已确立。');
+      return { applied: true, action, branchId, nodeId: node?.id || null };
+    }
+    if (action === 'delete_branch') {
+      await timelineSystem.deleteBranch(branchId);
+      const node = await this._syncTimelinePresentation('时间线分支已剪除。');
+      return { applied: true, action, branchId, nodeId: node?.id || null };
+    }
+
+    if (this.pipeline?.isProcessing) return { applied: false, code: 'PIPELINE_BUSY' };
+    const mode = action === 'reroll_replace' ? 'replace' : 'branch';
+    const prepared = await timelineSystem.prepareReroll(nodeId, { mode });
+    this.pipeline?.setHistory(prepared.history);
+    const actionLabel = mode === 'replace' ? '重新推衍' : '平行重推衍';
+    this._sendSystemMessage(`正在${actionLabel}：${prepared.playerInput}`);
+    await this.pipeline.process(prepared.playerInput);
+    const node = await timelineSystem.getCurrentNode();
+    return {
+      applied: Boolean(node?.id && node.id !== prepared.parentNodeId),
+      action,
+      nodeId: node?.id || null,
+      parentNodeId: prepared.parentNodeId,
+      pruned: prepared.pruned
+    };
   }
 }
 

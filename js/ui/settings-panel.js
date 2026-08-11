@@ -22,6 +22,8 @@ import { openImageGallery } from './image-studio.js';
 import './api-config-form.js';
 import { settingsConfigGateway } from './settings-config-gateway.js';
 import { icon } from '../utils/icons.js';
+import { musicService } from '../core/music-service.js';
+import { musicPlayback } from '../core/music-playback.js';
 
 const callPolicyImageSettingsStore = new ImageSettingsStore();
 const SUPPORT_AFDIAN_URL = 'https://www.ifdian.net/a/2608_1?utm_source=copylink&utm_medium=link';
@@ -60,7 +62,7 @@ const FONT_PRESETS = {
 };
 
 const DEFAULT_SETTINGS = stateManager.getDefaultState()._ui.settings;
-const localAudio = { bgm: null, ambient: null };
+const localAudio = musicPlayback;
 const PLAYER_SECTION_ORDER = Object.freeze(['appearance', 'gameplay', 'connection', 'media']);
 const PLAYER_SECTION_FIELDS = Object.freeze({
   appearance: Object.freeze(['themePreset', 'fontPreset', 'fontFamily', 'fontSize', 'lineHeight', 'chatMaxWidth', 'paragraphIndent', 'aiCardStyle', 'textColor', 'accentColor', 'goldColor', 'backgroundColor', 'backgroundImage', 'backgroundOpacity']),
@@ -119,6 +121,7 @@ class SettingsPanel extends HTMLElement {
     document.body?.classList.add('settings-panel-open');
     this._mode = this.getAttribute('mode') === 'creator' ? 'creator' : 'player';
     this._settings = mergeSettings(stateManager.getSub('_ui').settings);
+    this._nowPlayingSong = localAudio.currentTrack || this._nowPlayingSong || null;
     this._activeSection = this._activeSection || this.getAttribute('section') || 'appearance';
     this._activeTool = this._activeTool || this.getAttribute('tool') || 'pipeline';
     this._dirtySections = this._dirtySections || new Set();
@@ -283,7 +286,7 @@ class SettingsPanel extends HTMLElement {
                    <h3>Agent 高质量正文模式</h3>
                    <div class="config-card">
                      <p class="config-card-note">
-                       开启后每回合由多个AI Agent协作生成：大纲→审查→写作→审查→润色。<br>
+                       开启后每回合由多个AI Agent协作生成：场景节拍→详细写作大纲→终审→正文定稿→变量结算。<br>
                        完整模式增加头脑风暴和角色代理。建议战斗/重要场景开启，日常关闭。
                      </p>
                      <div class="grid config-card-grid">
@@ -1359,6 +1362,104 @@ class SettingsPanel extends HTMLElement {
     return 'system';
   }
 
+  _musicTrackSummary(track = localAudio.currentTrack || this._nowPlayingSong) {
+    if (!track) return null;
+    return {
+      id: track.mid || track.url_id || track.id || '',
+      name: track.name || track.title || track.song || '未知曲目',
+      artist: Array.isArray(track.artist) ? track.artist.join(' / ') : (track.artist || track.singer || '')
+    };
+  }
+
+  getMusicPlayerState(status = '') {
+    const audio = localAudio.bgm;
+    return {
+      status: status || localAudio.status || (audio ? (audio.paused ? 'paused' : 'playing') : 'idle'),
+      track: this._musicTrackSummary(),
+      enabled: Boolean(this._get('musicEnabled')),
+      paused: audio ? Boolean(audio.paused) : true,
+      volume: Number.parseInt(this._get('musicVolume'), 10) || 0
+    };
+  }
+
+  async openMusic({ query = '', tracks = [], track = null, autoplay = false, reveal = true } = {}) {
+    if (reveal) this.open({ section: 'media', anchor: 'music-library' });
+    const input = this.shadowRoot.querySelector('[name="musicSearch"]');
+    if (input && query) input.value = String(query).slice(0, 160);
+    const normalizedTracks = (Array.isArray(tracks) ? tracks : []).map(item => {
+      try { return musicService.rememberTrack(item); } catch { return null; }
+    }).filter(Boolean);
+    let selected = null;
+    if (track) {
+      try { selected = musicService.rememberTrack(track); } catch { selected = null; }
+    }
+    if (selected && !normalizedTracks.some(item => item.id === selected.id)) normalizedTracks.unshift(selected);
+    if (normalizedTracks.length) this._searchCache = normalizedTracks.slice(0, 20);
+    this._activeTab = 'search';
+    this.shadowRoot.querySelectorAll('.music-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === 'search');
+    });
+    this._renderMusicList(this._searchCache || [], 'search');
+    if (!selected) return this.getMusicPlayerState();
+    this._preparedMusicTrack = selected;
+    if (autoplay) return this._playSong(selected);
+    if (!localAudio.bgm) {
+      localAudio.currentTrack = selected;
+      localAudio.status = 'ready';
+      this._nowPlayingSong = selected;
+      const nowEl = this.shadowRoot.querySelector('#music-now');
+      const artistEl = this.shadowRoot.querySelector('#music-playing-artist');
+      if (nowEl) nowEl.textContent = `♪ 已准备：${selected.name}`;
+      if (artistEl) artistEl.textContent = selected.artist || '';
+    }
+    return {
+      ...this.getMusicPlayerState(),
+      preparedTrack: this._musicTrackSummary(selected)
+    };
+  }
+
+  _getAdjacentMusicTrack(direction) {
+    const favorites = this._getFavorites();
+    const list = favorites.length ? favorites : (this._searchCache || []);
+    if (!list.length) return null;
+    const current = localAudio.currentTrack || this._nowPlayingSong;
+    const currentId = current?.url_id || current?.mid || current?.id;
+    const currentIndex = list.findIndex(item => (item.url_id || item.mid || item.id) === currentId);
+    if (direction === 'previous') {
+      return list[currentIndex > 0 ? currentIndex - 1 : list.length - 1] || null;
+    }
+    return list[currentIndex >= 0 && currentIndex + 1 < list.length ? currentIndex + 1 : 0] || null;
+  }
+
+  async controlMusic(action) {
+    if (action === 'next' || action === 'previous') {
+      const nextTrack = this._getAdjacentMusicTrack(action);
+      if (!nextTrack) return this.getMusicPlayerState('empty-queue');
+      return this._playSong(nextTrack);
+    }
+    const audio = localAudio.bgm;
+    if (!audio) {
+      const prepared = this._preparedMusicTrack || localAudio.currentTrack;
+      if ((action === 'play' || action === 'toggle') && prepared) return this._playSong(prepared);
+      return this.getMusicPlayerState('no-track');
+    }
+    const shouldPlay = action === 'play' || (action === 'toggle' && audio.paused);
+    if (!shouldPlay) {
+      audio.pause();
+      localAudio.status = 'paused';
+      this._syncPlayBtn();
+      return this.getMusicPlayerState();
+    }
+    try {
+      await audio.play();
+      localAudio.status = 'playing';
+    } catch {
+      localAudio.status = 'blocked';
+    }
+    this._syncPlayBtn();
+    return this.getMusicPlayerState();
+  }
+
   async _searchMusic() {
     const query = this._get('musicSearch').trim();
     if (!query) return GameModal.alert({ title: '提示', message: '请输入搜索关键词' });
@@ -1367,16 +1468,13 @@ class SettingsPanel extends HTMLElement {
     const list = this.shadowRoot.querySelector('#music-result-list');
     list.innerHTML = '<div class="music-empty-hint">正在结印搜索中...</div>';
     try {
-      const url = `https://api.vkeys.cn/v2/music/tencent/search/song?word=${encodeURIComponent(query)}`;
-      const response = await fetch(url);
-      if (!response.ok) { list.innerHTML = `<div class="music-empty-hint">搜索失败: HTTP ${response.status}</div>`; return; }
-      const res = await response.json();
+      const tracks = await musicService.search(query, { limit: 20 });
       list.innerHTML = '';
-      if (!res || res.code !== 200 || !res.data || !res.data.length) {
+      if (!tracks.length) {
         list.innerHTML = '<div class="music-empty-hint">未找到相关音乐，换个关键词试试</div>';
         return;
       }
-      this._searchCache = res.data.slice(0, 20);
+      this._searchCache = tracks;
       this._renderMusicList(this._searchCache, 'search');
     } catch (e) { list.innerHTML = `<div class="music-empty-hint">搜索失败: ${esc(e.message)}</div>`; }
   }
@@ -1515,46 +1613,61 @@ class SettingsPanel extends HTMLElement {
   }
 
   async _playSong(song) {
-    if (!this._get('musicEnabled')) return;
-    const name = song.name || song.title || song.song || '?';
-    const artist = Array.isArray(song.artist) ? song.artist.join(' / ') : (song.artist || song.singer || '');
-    this._nowPlayingSong = song;
+    if (!this._get('musicEnabled')) return this.getMusicPlayerState('disabled');
+    let track;
+    try {
+      track = musicService.rememberTrack(song);
+    } catch {
+      return this.getMusicPlayerState('invalid-track');
+    }
+    const loadToken = (this._musicLoadToken || 0) + 1;
+    this._musicLoadToken = loadToken;
+    const name = track.name;
+    const artist = track.artist || '';
+    this._nowPlayingSong = track;
     this._nowPlaying = name;
+    localAudio.currentTrack = track;
+    localAudio.status = 'resolving';
     const nowEl = this.shadowRoot.querySelector('#music-now');
     const artistEl = this.shadowRoot.querySelector('#music-playing-artist');
     if (nowEl) nowEl.textContent = '♪ 加载中...';
     if (artistEl) artistEl.textContent = '';
 
     let playUrl = '';
-    let fetchError = '';
     try {
-      const key = song.mid || song.url_id || song.id || '';
-      if (!key) throw new Error('缺少歌曲标识');
-      const urlRes = await fetch(`https://api.vkeys.cn/v2/music/tencent?mid=${key}`);
-      if (!urlRes.ok) throw new Error(`API 返回 ${urlRes.status}`);
-      const urlJson = await urlRes.json();
-      playUrl = (urlJson && urlJson.data && urlJson.data.url) || '';
-      if (!playUrl) throw new Error(urlJson?.msg || urlJson?.message || '无播放地址');
+      playUrl = await musicService.resolveStreamUrl(track);
     } catch (e) {
-      fetchError = e.message || '未知错误';
-      if (nowEl) nowEl.textContent = `解析失败: ${fetchError}`;
+      if (this._musicLoadToken !== loadToken) return this.getMusicPlayerState('superseded');
+      localAudio.status = 'error';
+      if (nowEl) nowEl.textContent = `解析失败: ${e.message || '未知错误'}`;
       if (artistEl) artistEl.textContent = '';
-      return;
+      return this.getMusicPlayerState();
     }
+    if (this._musicLoadToken !== loadToken) return this.getMusicPlayerState('superseded');
 
     localAudio.bgm?.pause();
     const audio = new Audio(playUrl);
     audio.volume = (parseInt(this._get('musicVolume')) || 45) / 100;
     this._lyrics = [];
+    localAudio.bgm = audio;
+    localAudio.currentTrack = track;
+    localAudio.status = 'loading';
 
     audio.addEventListener('canplay', async () => {
+      if (localAudio.bgm !== audio) return;
       if (nowEl) nowEl.textContent = `♪ ${name}`;
       if (artistEl) artistEl.textContent = artist;
-      audio.play().catch(() => {});
+      try {
+        await audio.play();
+        localAudio.status = 'playing';
+      } catch {
+        localAudio.status = 'blocked';
+        if (nowEl) nowEl.textContent = `♪ ${name}（点击播放）`;
+      }
       this._syncPlayBtn();
       this._updateLyricsWindow(name, artist);
-      await this._fetchMetingLyrics(song);
-    });
+      await this._fetchMetingLyrics(track);
+    }, { once: true });
 
     audio.addEventListener('timeupdate', () => {
       const idx = this._findLyricIndex(audio.currentTime);
@@ -1562,10 +1675,17 @@ class SettingsPanel extends HTMLElement {
       this._updateLyricsWindow(active || name, artist);
     });
 
-    audio.addEventListener('pause', () => this._syncPlayBtn());
-    audio.addEventListener('play', () => this._syncPlayBtn());
+    audio.addEventListener('pause', () => {
+      if (localAudio.bgm === audio && localAudio.status !== 'blocked') localAudio.status = 'paused';
+      this._syncPlayBtn();
+    });
+    audio.addEventListener('play', () => {
+      if (localAudio.bgm === audio) localAudio.status = 'playing';
+      this._syncPlayBtn();
+    });
     audio.addEventListener('ended', () => {
-      this._syncPlaylist(song);
+      localAudio.status = 'ended';
+      this._syncPlaylist(track);
       this._syncPlayBtn();
       const loop = this._getLoop();
       const shuffle = this._getShuffle();
@@ -1576,13 +1696,14 @@ class SettingsPanel extends HTMLElement {
     audio.addEventListener('error', () => {
       const codes = { 1: '加载中止', 2: '网络错误', 3: '解码失败', 4: '格式不支持' };
       const errMsg = codes[audio.error?.code] || audio.error?.message || '未知错误';
+      localAudio.status = 'error';
       if (nowEl) nowEl.textContent = `播放失败: ${errMsg}`;
       this._playNextQueued();
     });
 
-    localAudio.bgm = audio;
     this._syncAudio();
-    this._syncPlaylist(song);
+    this._syncPlaylist(track);
+    return this.getMusicPlayerState();
   }
 
   _syncPlaylist(song) {
@@ -1671,17 +1792,20 @@ class SettingsPanel extends HTMLElement {
   }
 
   _updateLyricsWindow(text, sub) {
-    const el = this._lyricEl;
+    let el = this._lyricEl;
     if (this._lyricsHidden) { if (el) el.style.display = 'none'; return; }
     if (!el) {
-      const div = document.createElement('div');
-      div.id = 'naruto-desktop-lyrics'; div.className = 'desktop-lyrics';
-      (document.getElementById('app') || document.body).appendChild(div);
-      this._buildLyricControls(div); this._makeDraggable(div);
-      this._lyricEl = div;
-      this._lyricTextEl = div.querySelector('.lyric-text');
-      this._lyricSliderEl = div.querySelector('.lyric-slider');
-      this._lyricTimeEl = div.querySelector('.lyric-time');
+      el = document.getElementById('naruto-desktop-lyrics');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'naruto-desktop-lyrics'; el.className = 'desktop-lyrics';
+        (document.getElementById('app') || document.body).appendChild(el);
+        this._buildLyricControls(el); this._makeDraggable(el);
+      }
+      this._lyricEl = el;
+      this._lyricTextEl = el.querySelector('.lyric-text');
+      this._lyricSliderEl = el.querySelector('.lyric-slider');
+      this._lyricTimeEl = el.querySelector('.lyric-time');
     } else if (el.style.display !== 'block') {
       el.style.display = 'block';
     }
@@ -1690,6 +1814,8 @@ class SettingsPanel extends HTMLElement {
     if (textChanged) {
       this._lastLyricLine = text;
       if (this._lyricTextEl) this._lyricTextEl.textContent = text || '🎵 忍者手记';
+      const artistElement = el.querySelector('.music-floating-artist');
+      if (artistElement) artistElement.textContent = sub || '';
     }
 
     const audio = localAudio.bgm;
@@ -1794,9 +1920,11 @@ class SettingsPanel extends HTMLElement {
   }
 
   _togglePlay(btn) {
-    if (!localAudio.bgm) return;
-    if (localAudio.bgm.paused) { localAudio.bgm.play().catch(() => {}); btn.innerHTML = this._getSvgIcon('pause'); }
-    else { localAudio.bgm.pause(); btn.innerHTML = this._getSvgIcon('play'); }
+    this.controlMusic('toggle').then(() => {
+      if (btn) btn.innerHTML = localAudio.bgm && !localAudio.bgm.paused
+        ? this._getSvgIcon('pause')
+        : this._getSvgIcon('play');
+    });
   }
 
   _syncPlayBtn() {
@@ -1902,6 +2030,8 @@ class SettingsPanel extends HTMLElement {
       localAudio.bgm.load();
       localAudio.bgm = null;
     }
+    localAudio.currentTrack = null;
+    localAudio.status = 'idle';
     if (localAudio.ambient) {
       localAudio.ambient.pause();
       localAudio.ambient.src = '';

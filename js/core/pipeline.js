@@ -4,7 +4,7 @@ import { instructionParser } from './instruction-parser.js';
 import { eventBus } from './event-bus.js';
 import { ALLOWED_TAGS } from '../data/var-schema.js';
 import { getMemoryConfig } from '../data/memory-config.js';
-import { getMainPreset, resolvePresetMacros } from '../data/default-preset.js';
+import { getMainPreset, normalizePresetActivation, resolvePresetMacros } from '../data/default-preset.js';
 import { formatGameTime } from '../utils/format.js';
 import { GAME_DATA } from '../data/game-data.js';
 import {
@@ -71,6 +71,33 @@ import { toWriterCharacterDecision } from './agent-contracts.js';
 
 const imageSettingsStore = new ImageSettingsStore();
 
+const UPDATER_ENABLED_OWNERSHIP_PATTERN = /(?:变量模型开启时|后台(?:独立|二次)?变量(?:更新)?模型(?:已)?启用|由(?:后台|二次)变量模型(?:独立)?(?:生成|负责))/u;
+const UPDATER_DISABLED_OWNERSHIP_PATTERN = /(?:变量模型关闭时|后台变量模型(?:未启用|已关闭)|严格只调用一次主模型|没有后台变量模型补写)/u;
+const REASONING_CHECKLIST_MARKERS = Object.freeze([
+  '1. 本轮请求原文：',
+  '2. 任务拆解与硬约束：',
+  '3. 权威证据与不确定项：',
+  '4. 时间线、地点与场景：',
+  '5. 玩家意图、行动边界与判定：',
+  '6. NPC动机、知识边界与关系：',
+  '7. 连续性状态：',
+  '8. 因果、结果、记账与停止点：'
+]);
+
+function containsFullReasoningChecklist(content) {
+  const text = String(content || '');
+  return text.includes('<reasoning>')
+    && REASONING_CHECKLIST_MARKERS.every(marker => text.includes(marker));
+}
+
+function conflictsWithEffectiveUpdaterMode(entry, updaterEnabled) {
+  if (normalizePresetActivation(entry?.activation) !== 'always') return false;
+  const content = String(entry?.content || '');
+  return updaterEnabled
+    ? UPDATER_DISABLED_OWNERSHIP_PATTERN.test(content)
+    : UPDATER_ENABLED_OWNERSHIP_PATTERN.test(content);
+}
+
 function filterCharacterMemoryDelta(delta, presentNpcs = []) {
   if (!delta?.changes || typeof delta.changes !== 'object') return delta || null;
   const allowed = new Set((presentNpcs || []).flatMap(item => [item?.npc, ...(item?.aliases || [])])
@@ -85,6 +112,7 @@ const IMAGE_CONTRACT_PROMPT = `【隐藏绘图契约】
 当且仅当你完成本回合全部正文和运行时结构标签后，再追加一个 <image_contract version="1"> 标签。标签内容必须是严格 JSON，不得使用 Markdown 代码围栏，不得在正文中提及它。
 JSON 格式：
 {"schema":"naruto.visual-contract/v1","purpose":"turn_illustration","scene":{"summary":"最值得定格的单一画面","location":"地点","action":"动作与环境","mood":"氛围"},"shot":{"framing":"景别","viewpoint":"视角","composition":"构图","lighting":"光线"},"subjects":[{"id":"稳定角色ID（未知可留空）","name":"姓名","appearance":"仅写已知外观","pose":"姿态","expression":"表情"}],"style":{"positive":["画面风格"],"negative":["应避免的元素"]},"continuity":{"keep":["必须保持的已知特征"],"avoid":["不得出现的错误或剧透"]}}
+绘图契约内所有文本字段（scene 的 summary/location/action/mood、shot、subjects 的外观姿态表情、style.positive/negative、continuity.keep/avoid）一律用英文书写，优先采用动漫常见的英文标签词汇；正文叙事仍用中文，二者互不影响。
 不得把未公开秘密、NPC心声或推理过程写入绘图契约。`;
 
 const PLAYER_SKILL_TYPES = new Set(['jutsu', 'taijutsu', 'genjutsu', 'support']);
@@ -145,6 +173,16 @@ function parsePathPlayerSkillWrite(update) {
   const parsed = splitSkillField(rest.slice(separator + 1), '.');
   const assignedField = update.op === 'assign' && PLAYER_SKILL_FIELDS.get(String(update.key || ''));
   return parsed.name ? { ...parsed, field: assignedField || parsed.field, type } : null;
+}
+
+export function commitGeneratedStoryPlan(manager, storyPlan) {
+  if (!storyPlan) return false;
+  if (typeof manager?.setSub !== 'function') {
+    throw new TypeError('Story plan commit requires stateManager.setSub()');
+  }
+  manager.setSub('_agent_story_plan', storyPlan);
+  manager.setSub('_agent_story_plan_invalidated', false);
+  return true;
 }
 
 class MessagePipeline {
@@ -267,7 +305,8 @@ class MessagePipeline {
       eventBus.emit('pipeline:call-policy', callPolicy);
 
       const messages = this._buildPrompt(enrichedInput, state, userInput, {
-        updaterEnabled: callPolicy.features.variableUpdater
+        updaterEnabled: callPolicy.features.variableUpdater,
+        strictSingleCall: callPolicy.strictSingleCall
       });
 
       let fullResponse = '';
@@ -402,7 +441,8 @@ class MessagePipeline {
       }
 
       // 调用策略在回合开始时冻结，避免生成职责与提交职责在中途切换。
-      // Agent 模式无条件启用二次变量更新：writer 只出正文，标签由后续二次模型产出。
+      // Agent 模式无条件启用二次变量更新：writing-outline 先产出详纲，
+      // final-writer 只有在详纲终审通过后才出正文，标签由后续二次模型产出。
       // 若 agent 已用连续性更新代理产出标签(agentSelfUpdater)，则不剥离、由 createNarrativeArtifact 直接应用。
       const updaterEnabledTurn = callPolicy.features.variableUpdater || agentModeActivated;
       let mainDailyResult = null;
@@ -458,7 +498,7 @@ class MessagePipeline {
         );
         stateManager.setSub('_agent_memories', mergedAgentMemories);
       }
-      if (pendingStoryPlan) stateManager.setSub('_agent_story_plan', pendingStoryPlan);
+      commitGeneratedStoryPlan(stateManager, pendingStoryPlan);
       if (agentAudit) {
         stateManager.setSub('_agent_last_audit', {
           schema: agentAudit.schema,
@@ -762,7 +802,7 @@ class MessagePipeline {
         timelineEnabled: Boolean(this.timelineSystem)
       });
       eventBus.emit('pipeline:complete', {
-        rawResponse: displayResponse,
+        rawResponse: fullResponse,
         cleanResponse,
         thinkContent,
         hasHUD,
@@ -774,7 +814,7 @@ class MessagePipeline {
       });
 
       this.isProcessing = false;
-      return { cleanResponse, rawResponse: displayResponse, hasHUD, instructions, shinobiDaily, timelineNodeId: timelineNode?.id || null };
+      return { cleanResponse, rawResponse: fullResponse, hasHUD, instructions, shinobiDaily, timelineNodeId: timelineNode?.id || null };
 
     } catch (error) {
       this.isProcessing = false;
@@ -1537,6 +1577,7 @@ class MessagePipeline {
     const updaterEnabled = typeof options.updaterEnabled === 'boolean'
       ? options.updaterEnabled
       : stateManager.getAPIConfig()?.variableUpdater?.enabled === true;
+    const strictSingleCall = options.strictSingleCall === true;
     this._turnEvidenceCompiler ||= new TurnEvidenceCompiler();
     const evidencePacket = this._turnEvidenceCompiler.compile({ state, userInput });
     const writerEvidence = this._turnEvidenceCompiler.project(evidencePacket, {
@@ -1566,14 +1607,10 @@ class MessagePipeline {
     injections.push({ name: '预处理输入与骰子', content: enrichedInput });
 
     const finalUserContent = [
-      `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${userInput}`,
-      !updaterEnabled ? MAIN_SINGLE_CALL_DELIVERY_REMINDER : ''
+      `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${userInput}`
     ].filter(Boolean).join('\n\n');
     this._lastFullUserContent = finalUserContent;
     injections.push({ name: '玩家本轮原始输入', content: userInput });
-    if (!updaterEnabled) {
-      injections.push({ name: '单次交付硬提醒', content: MAIN_SINGLE_CALL_DELIVERY_REMINDER });
-    }
     appendMessage({ role: 'user', content: finalUserContent }, '本回合聚合上下文', '玩家请求');
 
     if (Number(state['进度·突破待处理']) > 0) {
@@ -1609,7 +1646,7 @@ class MessagePipeline {
     injections.push({ name: '忍界日报结构契约', content: shinobiDailyPrompt });
 
     const imageSettings = imageSettingsStore.load();
-    if (imageSettings.enabled && imageSettings.promptMode === 'main-contract') {
+    if (!strictSingleCall && imageSettings.enabled && imageSettings.promptMode === 'main-contract') {
       appendMessage({ role: 'system', content: IMAGE_CONTRACT_PROMPT }, '文生图', '隐藏绘图契约');
       injections.push({ name: '文生图隐藏契约规则', content: IMAGE_CONTRACT_PROMPT });
     }
@@ -1665,6 +1702,19 @@ class MessagePipeline {
       const bottomRaw = [];
 
       for (const entry of allResolved) {
+        // The immutable runtime contract owns the eight-item reasoning block
+        // in strict mode. Drop duplicate full copies from built-in, custom, or
+        // imported presets so weak models reserve space for the required tail.
+        if (!updaterEnabled && containsFullReasoningChecklist(entry.content)) {
+          if (entry.id !== 'main_builtin_review_evidence') {
+            console.warn(`[Preset] Skipped duplicate reasoning checklist in strict mode: ${entry.name || entry.id || 'unnamed'}`);
+          }
+          continue;
+        }
+        if (conflictsWithEffectiveUpdaterMode(entry, updaterEnabled)) {
+          console.warn(`[Preset] Skipped always-on ownership rule conflicting with updater=${updaterEnabled}: ${entry.name || entry.id || 'unnamed'}`);
+          continue;
+        }
         const role = entry.role === 'assistant' ? 'assistant' : (entry.role === 'user' ? 'user' : 'system');
         let content = entry.content;
 
@@ -1743,7 +1793,9 @@ class MessagePipeline {
     const config = stateManager.getAPIConfig?.() || {};
     return {
       temperature: config.temperature ?? 0.9,
-      max_tokens: config.max_tokens ?? 8192,
+      // 0 means "omit max_tokens" for OpenAI-compatible adapters (including DeepSeek).
+      // Providers that require the field apply their own model-side default in AIClient.
+      max_tokens: 0,
       top_p: config.top_p ?? 0.9,
       top_k: config.top_k ?? 200,
       frequency_penalty: config.frequency_penalty ?? 0.2,

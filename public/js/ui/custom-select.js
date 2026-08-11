@@ -1,3 +1,10 @@
+const REFRESH_EVENT = 'neo-select:refresh';
+
+export function refreshCustomSelect(select) {
+  if (!select?.dispatchEvent) return;
+  select.dispatchEvent(new Event(REFRESH_EVENT));
+}
+
 export function bindCustomSelects(root) {
   // 1. Inject styles if not present
   const styleId = 'neo-wafu-select-style';
@@ -131,8 +138,6 @@ export function bindCustomSelects(root) {
     wrapper.appendChild(trigger);
     wrapper.appendChild(dropdown);
 
-    let isOpen = false;
-
     const renderOptions = () => {
       dropdown.innerHTML = '';
       let selectedText = '';
@@ -167,7 +172,6 @@ export function bindCustomSelects(root) {
     const openDropdown = () => {
       renderOptions();
       wrapper.classList.add('open');
-      isOpen = true;
       
       // Calculate position so it doesn't overflow
       const rect = wrapper.getBoundingClientRect();
@@ -183,14 +187,13 @@ export function bindCustomSelects(root) {
 
     const closeDropdown = () => {
       wrapper.classList.remove('open');
-      isOpen = false;
     };
 
     renderOptions();
 
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (isOpen) {
+      if (wrapper.classList.contains('open')) {
         closeDropdown();
       } else {
         root.querySelectorAll('.ns-select-wrapper.open').forEach(el => {
@@ -200,15 +203,11 @@ export function bindCustomSelects(root) {
       }
     });
 
-    select.addEventListener('change', () => {
-      const selectedOption = select.options[select.selectedIndex];
-      if (selectedOption) {
-        trigger.textContent = selectedOption.text;
-      }
-    });
+    select.addEventListener('change', renderOptions);
+    select.addEventListener(REFRESH_EVENT, renderOptions);
 
     document.addEventListener('click', (e) => {
-      if (isOpen && !wrapper.contains(e.target)) {
+      if (wrapper.classList.contains('open') && !wrapper.contains(e.target)) {
         const path = e.composedPath ? e.composedPath() : [e.target];
         if (!path.includes(wrapper)) {
           closeDropdown();

@@ -323,6 +323,57 @@ for (const backend of ['openai', 'claude']) {
   await test(`${backend} timeout option does not auto-abort the stream (manual stop only)`, () => probeTimeoutIsIgnored(backend));
 }
 
+await test('OpenAI-compatible requests place every system contract before chat turns', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLocation = globalThis.location;
+  globalThis.location = { hostname: 'custom.example' };
+  const requestBodies = [];
+  globalThis.fetch = async (_url, init) => {
+    requestBodies.push(JSON.parse(init?.body || '{}'));
+    return new Response(JSON.stringify({
+      choices: [{ message: { content: '完成' }, finish_reason: 'stop' }]
+    }), { headers: { 'Content-Type': 'application/json' } });
+  };
+
+  try {
+    const runtime = await import(`../js/core/ai-client.js?system-order-${Date.now()}-${Math.random()}`);
+    const input = [
+      { role: 'system', content: '基础规则' },
+      { role: 'user', content: '上一轮' },
+      { role: 'assistant', content: '上一轮回复' },
+      { role: 'system', content: '回合证据' },
+      { role: 'user', content: '本轮操作' },
+      { role: 'assistant', content: '<reasoning>' },
+      { role: 'system', content: '最终结构契约' }
+    ];
+
+    const expected = [
+      { role: 'system', content: '基础规则\n\n回合证据\n\n最终结构契约' },
+      { role: 'user', content: '上一轮' },
+      { role: 'assistant', content: '上一轮回复' },
+      { role: 'user', content: '本轮操作' },
+      { role: 'assistant', content: '<reasoning>' }
+    ];
+    for (const useProxy of [false, true]) {
+      const client = new runtime.AIClient();
+      client.configure({
+        backend: 'openai',
+        apiUrl: 'https://provider.example/v1',
+        apiKey: 'redacted',
+        model: 'order-probe',
+        useProxy
+      });
+      assert.equal(await client.chat(input, { max_tokens: 0 }), '完成');
+      assert.deepEqual(requestBodies.at(-1)?.messages, expected);
+    }
+    assert.equal(requestBodies.length, 2);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalLocation === undefined) delete globalThis.location;
+    else globalThis.location = originalLocation;
+  }
+});
+
 await test('SSE parser handles split UTF-8 bytes and a split mixed line boundary', async () => {
   const originalFetch = globalThis.fetch;
   const originalLocation = globalThis.location;
@@ -1191,7 +1242,7 @@ await test('hidden reasoning keeps a visible safe streaming status', async () =>
   assert.equal(instructionParser.cleanupPartialResponse('<thinking>不可展示的审校内容'), '');
   const source = fs.readFileSync(new URL('../js/ui/app-shell.js', import.meta.url), 'utf8');
   assert.match(source, /流式连接正常 · 正在回映与校验/);
-  assert.match(source, /草稿完成 · 正在复检最终正文/);
+  assert.match(source, /终稿完成 · 正在复检最终正文/);
   assert.doesNotMatch(source, /content\.textContent\s*=\s*(?:text|response)/);
 });
 

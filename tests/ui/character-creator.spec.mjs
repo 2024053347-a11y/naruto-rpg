@@ -99,3 +99,31 @@ test('a canon technique can be searched and added once while custom creation rem
   expect(names).toContain('自创·风火轮');
   expect(pageErrors).toEqual([]);
 });
+
+test('saved personas can be switched by draft content and the selected one can be deleted', async ({ page }) => {
+  const { creator, pageErrors } = await openCreator(page);
+  const select = creator.locator('#persona-select');
+
+  await creator.locator('[data-action="stage"][data-stage="1"]').click();
+  await creator.locator('[data-path="identity.name"]').fill('夜枭');
+  await creator.locator('#persona-name').fill('雾隐暗部·夜枭');
+  await creator.locator('[data-action="persona-save"]').click();
+  await expect(select.locator('option')).toHaveCount(2);
+  const nightOwlId = await select.locator('option').nth(1).getAttribute('value');
+
+  await creator.locator('[data-path="identity.name"]').fill('白狐');
+  await creator.locator('#persona-name').fill('木叶暗号部·白狐');
+  await creator.locator('[data-action="persona-save"]').click();
+  await expect(select.locator('option')).toHaveCount(3);
+
+  expect(nightOwlId).toBeTruthy();
+  await select.selectOption(nightOwlId);
+  await expect(select).toHaveValue(nightOwlId);
+  await expect(creator.locator('[data-path="identity.name"]')).toHaveValue('夜枭');
+
+  await creator.locator('[data-action="persona-delete"]').click();
+  await expect(select.locator('option')).toHaveCount(2);
+  await expect(select.locator('option').nth(1)).toContainText('木叶暗号部·白狐');
+  await expect(select).toHaveValue('');
+  expect(pageErrors).toEqual([]);
+});

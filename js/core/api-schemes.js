@@ -80,14 +80,16 @@ export async function getApiScheme(id) {
  * @returns {Promise<string|null>} 方案 id；未知 id 更新返回 null。
  */
 export async function saveApiScheme({ id, name, apiUrl, apiKey, model, backend, disableStreaming } = {}) {
-  const schemes = readSchemes();
   const createdAt = Date.now();
+  const encryptedKey = apiKey !== undefined ? await encryptApiKey(apiKey) : undefined;
+  // Keep the storage read/write section synchronous so a completed delete cannot
+  // be overwritten by a save that was still waiting for key encryption.
+  const schemes = readSchemes();
 
   if (id) {
     const index = schemes.findIndex(item => item.id === id);
     if (index === -1) return null;
     const existing = schemes[index];
-    const encryptedKey = apiKey !== undefined ? await encryptApiKey(apiKey) : existing.apiKey;
     schemes[index] = {
       ...existing,
       name: String(name ?? existing.name ?? '未命名方案'),
@@ -95,7 +97,7 @@ export async function saveApiScheme({ id, name, apiUrl, apiKey, model, backend, 
       model: String(model ?? existing.model ?? ''),
       backend: String(backend ?? existing.backend ?? 'openai'),
       disableStreaming: Boolean(disableStreaming ?? existing.disableStreaming),
-      apiKey: encryptedKey
+      apiKey: encryptedKey !== undefined ? encryptedKey : existing.apiKey
     };
     writeSchemes(schemes);
     return id;
@@ -108,7 +110,7 @@ export async function saveApiScheme({ id, name, apiUrl, apiKey, model, backend, 
     model: String(model || ''),
     backend: String(backend || 'openai'),
     disableStreaming: Boolean(disableStreaming),
-    apiKey: await encryptApiKey(apiKey || ''),
+    apiKey: encryptedKey || '',
     createdAt
   };
   schemes.push(scheme);

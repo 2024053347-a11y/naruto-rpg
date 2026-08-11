@@ -125,7 +125,7 @@ class HelpGuide {
           <h3>🎯 Agent 高质量模式</h3>
           <p>在设置中开启后，AI 会经过多次推理生成更优质内容：</p>
           <ul>
-            <li><strong>标准模式</strong>：大纲→审查→写作→润色（+4次调用）</li>
+            <li><strong>标准模式</strong>：场景节拍→详细写作大纲→终审→正文定稿→变量结算</li>
             <li><strong>完整模式</strong>：头脑风暴→多重审查→细节打磨（+7~10次调用）</li>
           </ul>
 

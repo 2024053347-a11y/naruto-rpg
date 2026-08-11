@@ -544,7 +544,7 @@ test('secondary updater receives the complete day instead of a 1000/2000 charact
 test('editable presets expose V2 lifecycle and unchanged JT authority', () => {
   const main = DEFAULT_MAIN_PRESET.entries.map(entry => entry.content).join('\n');
   const updater = DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content).join('\n');
-  assert.match(DEFAULT_MAIN_PRESET_VERSION, /complete-reasoning-v14/);
+  assert.match(DEFAULT_MAIN_PRESET_VERSION, /single-call-contract-v16/);
   assert.equal(DEFAULT_VARIABLE_UPDATER_PRESET_VERSION, 15);
   for (const text of [main, updater]) {
     assert.match(text, /DAY-\{HIST\|P1\|P2\|BOR\}-\*/);
@@ -559,6 +559,9 @@ test('editable presets expose V2 lifecycle and unchanged JT authority', () => {
   assert.match(main, /不等于本回合必须演完一天/);
   assert.match(main, /每回合.*<memory>/s);
   assert.match(main, /(?:必须|需要|请).*输出[^\n]*<reasoning>/);
+  assert.match(main, /<state_update>\{"changed":true\}<\/state_update>/);
+  assert.match(main, /<state_update>\{"changed":false\}<\/state_update>/);
+  assert.match(main, /<reasoning> 内禁止出现任何机器标签/);
   assert.match(updater, /reschedule_to/);
   assert.match(updater, /known_users[\s\S]*不证明任何角色当前掌握/);
   assert.match(updater, /数据库未命中[\s\S]*不得伪造 JT-\*/);

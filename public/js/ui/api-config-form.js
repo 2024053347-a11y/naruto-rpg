@@ -2,7 +2,7 @@ import { aiClient, isTavernEnv, normalizeApiBaseUrl } from '../core/ai-client.js
 import { eventBus } from '../core/event-bus.js';
 import { stateManager } from '../core/state-manager.js';
 import { escAttr } from '../utils/format.js';
-import { bindCustomSelects } from './custom-select.js';
+import { bindCustomSelects, refreshCustomSelect } from './custom-select.js';
 import {
   listApiSchemes,
   getApiScheme,
@@ -16,6 +16,7 @@ export class ApiConfigForm extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this._schemeRequestVersion = 0;
   }
 
   connectedCallback() {
@@ -239,9 +240,11 @@ export class ApiConfigForm extends HTMLElement {
   }
 
   async _loadSchemes() {
+    const requestVersion = this._schemeRequestVersion;
     const select = this.shadowRoot.querySelector('#scheme-select');
     if (!select) return;
     const schemes = await listApiSchemes();
+    if (requestVersion !== this._schemeRequestVersion) return;
     const active = getActiveApiSchemeId();
     const current = select.value;
     const currentStillExists = schemes.some(scheme => scheme.id === current);
@@ -255,16 +258,36 @@ export class ApiConfigForm extends HTMLElement {
         return `<option value="${this._escAttr(scheme.id)}" ${scheme.id === selectedId ? 'selected' : ''}>${this._escAttr(label)}</option>`;
       })
     ].join('');
+    select.value = selectedId;
+    refreshCustomSelect(select);
+    const selectedSummary = schemes.find(scheme => scheme.id === selectedId) || null;
+    this._syncSchemeControls(selectedSummary);
+    if (!selectedSummary) return;
+
+    const selectedScheme = await getApiScheme(selectedId);
+    if (requestVersion !== this._schemeRequestVersion || select.value !== selectedId) return;
+    if (!selectedScheme) {
+      this._loadSchemes();
+      return;
+    }
+    this.setValues(selectedScheme);
+    this._syncSchemeControls(selectedScheme);
   }
 
   async _applyScheme(id) {
-    if (!id) return;
+    const requestVersion = ++this._schemeRequestVersion;
+    if (!id) {
+      this._syncSchemeControls(null);
+      return;
+    }
     const scheme = await getApiScheme(id);
+    if (requestVersion !== this._schemeRequestVersion) return;
     if (!scheme) {
       this._loadSchemes();
       return;
     }
     this.setValues(scheme);
+    this._syncSchemeControls(scheme);
     const current = stateManager.getAPIConfig?.() || {};
     const config = {
       backend: scheme.backend,
@@ -280,16 +303,19 @@ export class ApiConfigForm extends HTMLElement {
       if (typeof stateManager.saveAPIConfig === 'function') {
         await stateManager.saveAPIConfig(config);
       }
+      if (requestVersion !== this._schemeRequestVersion) return;
       aiClient.configure(config);
       setActiveApiScheme(id);
       eventBus.emit('settings:changed', { section: 'connection', apiConfig: config });
       eventBus.emit('app:toast', `已切换到方案「${scheme.name}」`);
     } catch (error) {
+      if (requestVersion !== this._schemeRequestVersion) return;
       eventBus.emit('app:toast', `切换方案失败：${error?.message || '未知错误'}`);
     }
   }
 
   async _saveScheme() {
+    this._schemeRequestVersion++;
     const root = this.shadowRoot;
     const select = root.querySelector('#scheme-select');
     const name = root.querySelector('#scheme-name')?.value.trim();
@@ -325,6 +351,7 @@ export class ApiConfigForm extends HTMLElement {
   }
 
   async _deleteScheme() {
+    this._schemeRequestVersion++;
     const select = this.shadowRoot.querySelector('#scheme-select');
     const id = select?.value;
     if (!id) {
@@ -334,6 +361,16 @@ export class ApiConfigForm extends HTMLElement {
     await deleteApiScheme(id);
     await this._loadSchemes();
     eventBus.emit('app:toast', '方案已删除');
+  }
+
+  _syncSchemeControls(scheme) {
+    const selected = Boolean(scheme?.id);
+    const nameInput = this.shadowRoot.querySelector('#scheme-name');
+    const saveButton = this.shadowRoot.querySelector('#scheme-save');
+    const deleteButton = this.shadowRoot.querySelector('#scheme-delete');
+    if (nameInput) nameInput.value = selected ? String(scheme.name || '') : '';
+    if (saveButton) saveButton.textContent = selected ? '更新当前方案' : '保存当前为方案';
+    if (deleteButton) deleteButton.disabled = !selected;
   }
 
   /** 用方案（或任意主连接配置）回填表单字段，不触发整树重渲染。 */
@@ -347,7 +384,10 @@ export class ApiConfigForm extends HTMLElement {
     if (url) url.value = config.apiUrl || '';
     if (key) key.value = config.apiKey || '';
     if (model) model.value = config.model || '';
-    if (backend) backend.value = config.backend || 'openai';
+    if (backend) {
+      backend.value = config.backend || 'openai';
+      refreshCustomSelect(backend);
+    }
     if (streaming) streaming.checked = Boolean(config.disableStreaming);
   }
 

@@ -27,6 +27,7 @@ await test('character creator uses attribute escaping for dynamic input values',
 await test('service worker bypasses API, auth, and non-GET requests', async () => {
   const listeners = {};
   const cached = [];
+  const workerFetchCalls = [];
   const context = {
     URL,
     Response,
@@ -35,6 +36,7 @@ await test('service worker bypasses API, auth, and non-GET requests', async () =
     self: {
       addEventListener: (type, listener) => { listeners[type] = listener; },
       skipWaiting() {},
+      location: new URL('https://game.test/sw.js'),
       clients: { claim() {}, async matchAll() { return []; } }
     },
     caches: {
@@ -45,26 +47,37 @@ await test('service worker bypasses API, auth, and non-GET requests', async () =
         return { async put(request) { cached.push(new URL(request.url).pathname); } };
       }
     },
-    async fetch() {
+    async fetch(request, options) {
+      workerFetchCalls.push({ request, options });
       return { status: 200, type: 'basic', clone() { return this; } };
     }
   };
   const source = fs.readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
   vm.runInNewContext(source, context);
 
-  function isIntercepted(path, method = 'GET') {
+  function dispatchFetch(path, method = 'GET', overrides = {}) {
     let responsePromise;
     listeners.fetch({
-      request: { url: `https://game.test${path}`, method },
+      request: {
+        url: `https://game.test${path}`,
+        method,
+        mode: 'cors',
+        destination: '',
+        ...overrides
+      },
+      waitUntil() {},
       respondWith(value) { responsePromise = value; }
     });
-    return Boolean(responsePromise);
+    return responsePromise;
   }
 
-  assert.equal(isIntercepted('/api/music/favorites'), false);
-  assert.equal(isIntercepted('/auth/me'), false);
-  assert.equal(isIntercepted('/auth/logout', 'POST'), false);
-  assert.equal(isIntercepted('/js/app.js'), true);
+  assert.equal(Boolean(dispatchFetch('/api/music/favorites')), false);
+  assert.equal(Boolean(dispatchFetch('/auth/me')), false);
+  assert.equal(Boolean(dispatchFetch('/auth/logout', 'POST')), false);
+  assert.equal(Boolean(dispatchFetch('/js/app.js', 'GET', { destination: 'script' })), true);
+  await Promise.resolve();
+  assert.equal(workerFetchCalls.length, 1);
+  assert.equal(workerFetchCalls[0].options?.cache, 'no-store');
 });
 
 await test('server CSP uses browser-valid local connection sources', () => {
@@ -76,7 +89,7 @@ await test('server CSP uses browser-valid local connection sources', () => {
   assert.doesNotMatch(source, /(?:http|ws):\/\/\[::1\]:\*/);
 });
 
-await test('proxy mode enforces the requested timeout', async () => {
+await test('proxy mode leaves text generation running until manual cancellation', async () => {
   const originalFetch = globalThis.fetch;
   let observedSignal = null;
   globalThis.fetch = (_url, init) => {
@@ -104,14 +117,15 @@ await test('proxy mode enforces the requested timeout', async () => {
     ]);
 
     assert.ok(observedSignal, 'proxy fetch should receive an AbortSignal');
-    assert.notEqual(outcome, 'still-pending', 'proxy request ignored timeout');
-    assert.match(String(outcome), /abort|timeout|超时/i);
+    assert.equal(outcome, 'still-pending', 'text proxy should not impose a client timeout');
+    assert.equal(observedSignal.aborted, false, 'text proxy should remain cancellable but not auto-aborted');
+    client.cancel();
   } finally {
     globalThis.fetch = originalFetch;
   }
 });
 
-await test('direct OpenAI and Claude streams time out while waiting for body chunks', async () => {
+await test('direct OpenAI and Claude streams wait for body chunks until manual cancellation', async () => {
   const originalFetch = globalThis.fetch;
 
   try {
@@ -163,9 +177,8 @@ await test('direct OpenAI and Claude streams time out while waiting for body chu
       client.cancel();
       await streamResult;
       assert.ok(observedSignal, `${backend} fetch should receive an AbortSignal`);
-      assert.notEqual(outcome, 'still-pending', `${backend} timeout stopped at response headers`);
-      assert.equal(observedSignal.aborted, true, `${backend} timeout should abort the active stream read`);
-      assert.match(String(outcome), /abort|timeout|超时/i);
+      assert.equal(outcome, 'still-pending', `${backend} stream should not auto-time out`);
+      assert.equal(observedSignal.aborted, true, `${backend} manual cancellation should abort the active stream read`);
     }
   } finally {
     globalThis.fetch = originalFetch;

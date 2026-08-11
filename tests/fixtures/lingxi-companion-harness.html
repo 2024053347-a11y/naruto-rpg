@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ling Xi companion harness</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <style>
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+    #app { position: relative; }
+    .app-panel { position: absolute; top: var(--topbar-h); right: 0; bottom: var(--statusbar-h); display: block; }
+    .chat-input-area {
+      position: fixed !important;
+      right: calc(var(--panel-w) + 20px) !important;
+      bottom: calc(var(--statusbar-h) + 8px) !important;
+      left: 180px !important;
+      width: auto !important;
+      height: 72px;
+      padding: 0 !important;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.04) !important;
+      pointer-events: auto !important;
+    }
+    .app-statusbar { background: #090d12; }
+    @media (max-width: 1180px) {
+      .app-panel { display: none; }
+      .chat-input-area { right: 90px !important; left: 90px !important; }
+    }
+    @media (max-width: 768px) {
+      .chat-input-area { right: 12px !important; left: 12px !important; height: 68px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-panel"></div>
+    <div class="chat-input-area" aria-label="主剧情输入区"></div>
+    <footer class="app-statusbar"><span>木叶隐村</span><span>第 7 回合</span></footer>
+  </div>
+  <script type="module">
+    const [{ LingXiCompanion }, { eventBus }] = await Promise.all([
+      import('../../js/ui/lingxi-companion.js'),
+      import('../../js/core/event-bus.js')
+    ]);
+
+    const history = [{
+      role: 'assistant',
+      content: '风声已经替灵希记下这里的脉络。'
+    }];
+    const approvals = [];
+    const discarded = [];
+    const proposals = new Map();
+    let pending = null;
+    let sendStarted = false;
+    let holdSend = false;
+    let releaseSend = null;
+    let holdAfterFirstDelta = false;
+    let releaseAfterFirstDelta = null;
+    const initialMessage = () => ({ role: 'assistant', content: '新的卷轴已经展开。' });
+    const controller = {
+      getHistory: () => structuredClone(history),
+      startNewConversation() {
+        const ids = new Set(proposals.keys());
+        if (pending?.id) ids.add(pending.id);
+        for (const id of ids) {
+          proposals.delete(id);
+          discarded.push(id);
+          eventBus.emit('lingxi:proposal-discarded', { proposalId: id });
+        }
+        pending = null;
+        history.splice(0, history.length, initialMessage());
+        eventBus.emit('lingxi:history-cleared', { reason: 'new-conversation' });
+        return this.getHistory();
+      },
+      clearHistory() {
+        return this.startNewConversation();
+      },
+      async listApiChoices() {
+        return [
+          { id: 'main', label: '跟随主 API', model: 'main-model' },
+          { id: 'scheme-lingxi', label: '灵希专用', model: 'cute-model' }
+        ];
+      },
+      getSelectedApiChoice() { return this.selectedApiChoice || 'main'; },
+      setSelectedApiChoice(id) {
+        this.selectedApiChoice = String(id || 'main');
+        return this.selectedApiChoice;
+      },
+      async send(text, { onEvent } = {}) {
+        sendStarted = true;
+        history.push({ role: 'user', content: String(text) });
+        const emit = event => onEvent?.({ timestamp: Date.now(), ...event });
+        emit({ type: 'context-search-start' });
+        if (holdSend) {
+          await new Promise(resolve => { releaseSend = resolve; });
+          releaseSend = null;
+        }
+        await new Promise(resolve => setTimeout(resolve, 45));
+        emit({ type: 'context-search-end', success: true, durationMs: 45 });
+        emit({ type: 'agent-start', detail: { mode: 'native-tools' } });
+        emit({ type: 'tool-start', tool: 'inspect_variable' });
+        await new Promise(resolve => setTimeout(resolve, 70));
+        emit({ type: 'tool-end', tool: 'inspect_variable', success: true, durationMs: 70 });
+        emit({ type: 'text-delta', detail: { delta: '找到啦，' } });
+        if (holdAfterFirstDelta) {
+          await new Promise(resolve => { releaseAfterFirstDelta = resolve; });
+          releaseAfterFirstDelta = null;
+        }
+        await new Promise(resolve => setTimeout(resolve, 55));
+        emit({ type: 'text-delta', detail: { delta: '**查克拉状态正常** (｡\u2022\u0300\u1d17-)\u2727' } });
+        emit({ type: 'agent-end', success: true, durationMs: 170 });
+        const content = /^yes$/i.test(String(text)) && pending
+          ? '聊天中的 yes 不能授权，请使用独立审批框。'
+          : '找到啦，**查克拉状态正常** (｡\u2022\u0300\u1d17-)\u2727';
+        const message = {
+          role: 'assistant',
+          content,
+          activity: [
+            { type: 'context-search-end', success: true, durationMs: 45 },
+            { type: 'tool-end', tool: 'inspect_variable', success: true, durationMs: 70 },
+            { type: 'agent-end', success: true, durationMs: 170 }
+          ]
+        };
+        history.push(message);
+        return { message, proposal: pending, mode: 'harness' };
+      },
+      async approveProposal(event, payload) {
+        if (!event.isTrusted) throw Object.assign(new Error('需要可信界面事件'), { code: 'LINGXI_TRUSTED_UI_REQUIRED' });
+        approvals.push(structuredClone(payload));
+        const applied = proposals.get(payload.proposalId) || null;
+        proposals.delete(payload.proposalId);
+        if (pending?.id === payload.proposalId) pending = null;
+        if (applied?.tool === 'apply_ui_settings') {
+          return {
+            proposalId: payload.proposalId,
+            tool: applied.tool,
+            summary: '字体大小设置已经应用好啦。'
+          };
+        }
+        return {
+          proposalId: payload.proposalId,
+          checkpoint: { nodeId: 'node_lingxi_8', previousNodeId: 'node_7' }
+        };
+      },
+      discardProposal(id) {
+        discarded.push(id);
+        proposals.delete(id);
+        if (pending?.id === id) pending = null;
+        eventBus.emit('lingxi:proposal-discarded', { proposalId: id });
+        return true;
+      }
+    };
+
+    const companion = new LingXiCompanion();
+    companion.controller = controller;
+    document.getElementById('app').appendChild(companion);
+
+    window.__LINGXI_HARNESS__ = {
+      companion,
+      approvals,
+      discarded,
+      history,
+      getPendingProposal: () => structuredClone(pending),
+      getProposalCount: () => proposals.size,
+      getSendStarted: () => sendStarted,
+      setSendHold(value) {
+        holdSend = Boolean(value);
+      },
+      releaseSend() {
+        releaseSend?.();
+      },
+      setStreamHold(value) {
+        holdAfterFirstDelta = Boolean(value);
+      },
+      releaseStream() {
+        releaseAfterFirstDelta?.();
+      },
+      seedHistory() {
+        history.push(
+          { role: 'user', content: '请记住这条测试上下文。' },
+          { role: 'assistant', content: '好的，我会保留这条上下文。' }
+        );
+        eventBus.emit('lingxi:history-cleared', { reason: 'seed-history' });
+      },
+      stageProposal() {
+        pending = {
+          id: 'lingxi_action_test',
+          expiresAt: Date.now() + 90_000,
+          context: {
+            timelineImpact: {
+              schema: 'naruto.lingxi-timeline-impact/v1',
+              operation: 'create-maintenance-checkpoint',
+              parentNodeId: 'node_7',
+              activeBranchId: 'branch_main',
+              createsIfBranch: false,
+              createsTurn: false,
+              updatesNode: true,
+              branchName: null
+            }
+          },
+          diff: [{ path: '/属性·当前查克拉', operation: 'replace', before: 40, after: 78 }]
+        };
+        proposals.set(pending.id, structuredClone(pending));
+        eventBus.emit('lingxi:proposal-staged', { proposal: structuredClone(pending) });
+      },
+      stageSettingsProposal() {
+        pending = {
+          id: 'lingxi_settings_test',
+          tool: 'apply_ui_settings',
+          expiresAt: Date.now() + 90_000,
+          context: {
+            actionImpact: {
+              schema: 'naruto.lingxi-action-impact/v1',
+              kind: 'settings',
+              summary: '保存 1 项界面设置',
+              details: ['fontSize: 16 -> 18']
+            }
+          },
+          diff: [{ path: '/_ui/settings/fontSize', operation: 'replace', before: 16, after: 18 }]
+        };
+        proposals.set(pending.id, structuredClone(pending));
+        eventBus.emit('lingxi:proposal-staged', { proposal: structuredClone(pending) });
+      },
+      stageTimelineProposal() {
+        pending = {
+          id: 'lingxi_timeline_test',
+          tool: 'perform_timeline_action',
+          expiresAt: Date.now() + 90_000,
+          context: {
+            actionImpact: {
+              schema: 'naruto.lingxi-action-impact/v1',
+              kind: 'timeline',
+              summary: '永久逆转到节点 node_4',
+              details: ['将永久删除后续 3 个节点。', '会恢复目标节点的完整存档。']
+            }
+          },
+          diff: [{
+            path: '/timeline/descendants',
+            operation: 'remove',
+            before: { targetNodeId: 'node_4', deleteCount: 3 },
+            after: { targetNodeId: 'node_4', deleteCount: 0 }
+          }]
+        };
+        proposals.set(pending.id, structuredClone(pending));
+        eventBus.emit('lingxi:proposal-staged', { proposal: structuredClone(pending) });
+      },
+      pushMarkdown() {
+        history.push({
+          role: 'assistant',
+          content: '### 小结\n**已经检查好啦**\n\n- 查克拉正常\n- 没有修改存档'
+        });
+        eventBus.emit('lingxi:history-cleared');
+      }
+    };
+    window.__LINGXI_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

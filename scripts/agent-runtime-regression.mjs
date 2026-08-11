@@ -12,7 +12,7 @@ globalThis.customElements ||= { get: () => null };
 
 const [
   { AgentRunner },
-  { AgentPipeline },
+  { AgentPipeline, AGENT_PIPELINE_REVISION, normalizeWritingOutlineResult },
   agentManifestModule,
   { MessagePipeline },
   { aiClient },
@@ -283,11 +283,34 @@ function validSceneBrief(participants = ['测试忍者']) {
   };
 }
 
-await test('final output is reviewed even when the draft is not polished', async () => {
+function validWritingOutline(decisionRefs = []) {
+  return {
+    schema: 'naruto.writing-outline/v1',
+    beats: [{
+      id: 1,
+      sourceBeatId: '1',
+      scene: '空旷的街道仍保持安静',
+      narrativeGoal: '承接玩家输入并给出世界回应',
+      participants: ['测试忍者'],
+      decisionRefs,
+      environmentBeats: ['风吹动屋檐下的纸灯'],
+      continuityChecks: ['保持当前日期与地点'],
+      variableEvidence: [],
+      playerBoundary: '不替测试忍者追加动作或台词',
+      stopPoint: '在新的可回应局势出现时停下'
+    }],
+    estimatedLength: 1200,
+    variableEvidence: [],
+    finalChecks: ['终稿必须把下一步交还玩家']
+  };
+}
+
+await test('writing stays an outline until final review, then prose and variables are produced in order', async () => {
   const hostPipeline = { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) };
   const pipeline = new AgentPipeline({ pipeline: hostPipeline, memorySystem: null });
   const plan = validStoryPlan();
-  let finalReviewCalls = 0;
+  const writingOutline = validWritingOutline();
+  const order = [];
   pipeline.contextBroker.preflight = async () => ({
     domains: { dialogue: { items: [] }, world: { items: [] } },
     sources: [],
@@ -296,21 +319,49 @@ await test('final output is reviewed even when the draft is not polished', async
   });
   pipeline._generateOutline = async () => ({ beats: [{ id: 1, scene: '空旷的街道', participants: [] }] });
   pipeline._reviewOutline = async () => new Map();
-  pipeline._writeDraft = async () => '测试正文';
-  pipeline._reviewDraft = async () => new Map();
-  pipeline._reviewFinalOutput = async () => {
-    finalReviewCalls++;
-    return new Map();
+  pipeline._writeWritingOutline = async () => {
+    order.push('writing-outline');
+    return writingOutline;
   };
-  pipeline._auditFinalOutput = () => ({
-    schema: 'naruto.agent-audit/v1',
-    valid: true,
-    errors: [],
-    warnings: [],
-    checks: {},
-    auditedAt: Date.now(),
-    evidenceRefs: []
-  });
+  pipeline._reviewWritingOutline = async (_state, candidate, { final }) => {
+    assert.strictEqual(candidate, writingOutline);
+    order.push(final ? 'final-outline-review' : 'outline-review');
+    return new Map([[
+      final ? 'final-preset-and-character' : 'writing-outline-quality',
+      { success: true, data: { approved: true, issues: [], summary: '通过' } }
+    ]]);
+  };
+  pipeline._reviewWithSearch = async () => null;
+  let auditCalls = 0;
+  pipeline._auditFinalOutput = ({ finalText, rejectPlanningArtifact = false }) => {
+    auditCalls++;
+    if (auditCalls === 1) {
+      assert.equal(JSON.parse(finalText).schema, 'naruto.writing-outline/v1');
+      assert.equal(rejectPlanningArtifact, false, 'outline audit must accept the planning artifact');
+    } else {
+      assert.equal(finalText, 'FINAL_PROSE_SENTINEL');
+      assert.equal(rejectPlanningArtifact, true, 'final narrative audit must reject planning artifacts');
+    }
+    return {
+      schema: 'naruto.agent-audit/v1',
+      valid: true,
+      errors: [],
+      warnings: [],
+      checks: {},
+      auditedAt: Date.now(),
+      evidenceRefs: []
+    };
+  };
+  pipeline._writeFinalText = async (_state, _input, _scene, _storyPlan, candidate) => {
+    assert.strictEqual(candidate, writingOutline);
+    order.push('final-writer');
+    return 'FINAL_PROSE_SENTINEL';
+  };
+  pipeline._appendContinuityUpdates = async (_state, _input, candidate) => {
+    assert.equal(candidate, 'FINAL_PROSE_SENTINEL');
+    order.push('variables');
+    return `${candidate}\n<var path="进度·金钱">1</var>`;
+  };
 
   const output = await pipeline._run({
     '玩家·姓名': '测试忍者',
@@ -321,11 +372,20 @@ await test('final output is reviewed even when the draft is not polished', async
     _agent_story_plan: plan,
     _relationships: {}
   }, '继续', () => {}, false, false, []);
-  assert.equal(output, '测试正文');
-  assert.equal(finalReviewCalls, 1);
+  assert.deepEqual(order, [
+    'writing-outline',
+    'outline-review',
+    'final-outline-review',
+    'final-writer',
+    'variables'
+  ]);
+  assert.doesNotMatch(output, /空旷的街道仍保持安静/);
+  assert.match(output, /FINAL_PROSE_SENTINEL/);
+  assert.match(output, /<var/);
+  assert.equal(auditCalls, 2, 'outline and final narrative must each be audited once');
 });
 
-await test('character batch failure aborts before the writer stage', async () => {
+await test('character batch failure aborts before the writing-outline stage', async () => {
   const hostPipeline = { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) };
   const pipeline = new AgentPipeline({ pipeline: hostPipeline, memorySystem: null });
   let writerCalls = 0;
@@ -340,9 +400,9 @@ await test('character batch failure aborts before the writer stage', async () =>
   });
   pipeline._reviewOutline = async () => new Map();
   pipeline._runCharacterAgents = async () => { throw new Error('character batch failed'); };
-  pipeline._writeDraft = async () => {
+  pipeline._writeWritingOutline = async () => {
     writerCalls++;
-    return '不应生成的正文';
+    return validWritingOutline();
   };
   pipeline._reviewDraft = async () => new Map();
   pipeline._reviewFinalOutput = async () => new Map();
@@ -368,7 +428,7 @@ await test('character batch failure aborts before the writer stage', async () =>
 
   assert.ok(outcome instanceof Error, 'character batch failure must reject the turn');
   assert.match(outcome.message, /character batch failed/);
-  assert.equal(writerCalls, 0, 'writer must not run without complete character decisions');
+  assert.equal(writerCalls, 0, 'writing-outline must not run without complete character decisions');
 });
 
 await test('character agents use bounded concurrency and preserve NPC order', async () => {
@@ -498,6 +558,77 @@ await test('agent messages keep a stable prefix before volatile evidence', async
   assert.equal(roles[roles.length - 1], 'user', 'task prompt must remain last');
 });
 
+await test('planning writer cannot inherit prose delivery instructions before final review', () => {
+  const runner = new AgentRunner({
+    pipeline: {
+      getHistory: () => [],
+      getTurnEvidenceView: () => ({ current_state: {}, evidence: [] })
+    }
+  });
+  const mainMessages = [{
+    role: 'system',
+    content: 'MAIN_PROSE_CONTRACT_SENTINEL：输出 900-1500 字完整正文。'
+  }];
+  const outlineMessages = runner._buildMessages(
+    'writer-outline',
+    agentManifestModule.AGENT_MANIFESTS['writer-outline'],
+    {
+      state: { '玩家·姓名': '测试忍者' },
+      userInput: '继续',
+      taskPrompt: '只生成结构化详细写作大纲。',
+      extraContext: {
+        outline: { beats: [{ id: 1, scene: '街道' }] },
+        _pipeline: runner._pipeline,
+        _inheritFromMainPipeline: true,
+        _mainMessages: mainMessages
+      }
+    }
+  );
+  const outlinePrompt = outlineMessages.map(message => message.content).join('\n');
+  assert.doesNotMatch(outlinePrompt, /MAIN_PROSE_CONTRACT_SENTINEL/);
+  assert.doesNotMatch(outlinePrompt, /900-1500/);
+  assert.match(outlinePrompt, /只生成结构化详细写作大纲/);
+
+  const finalMessages = runner._buildMessages(
+    'final-writer',
+    agentManifestModule.AGENT_MANIFESTS['final-writer'],
+    {
+      state: { '玩家·姓名': '测试忍者' },
+      userInput: '继续',
+      taskPrompt: '生成最终正文。',
+      extraContext: {
+        writingOutline: validWritingOutline(),
+        _pipeline: runner._pipeline,
+        _inheritFromMainPipeline: true,
+        _mainMessages: mainMessages
+      }
+    }
+  );
+  const finalPrompt = finalMessages.map(message => message.content).join('\n');
+  assert.match(finalPrompt, /MAIN_PROSE_CONTRACT_SENTINEL/);
+  assert.match(finalPrompt, /已通过终审的详细写作大纲/);
+  assert.match(finalPrompt, /900-1500/);
+});
+
+await test('writing outline contract rejects prose fields and missing CharacterDecision refs', () => {
+  assert.throws(() => normalizeWritingOutlineResult({
+    ...validWritingOutline(['decision:卡卡西']),
+    beats: [{ ...validWritingOutline(['decision:卡卡西']).beats[0], action: '卡卡西抬手。' }]
+  }, { decisionIds: ['decision:卡卡西'] }), /prose\/action fields/);
+
+  assert.throws(() => normalizeWritingOutlineResult(
+    validWritingOutline(),
+    { decisionIds: ['decision:卡卡西'] }
+  ), /omits CharacterDecision/);
+
+  const accepted = normalizeWritingOutlineResult(
+    validWritingOutline(['decision:卡卡西']),
+    { decisionIds: ['decision:卡卡西'] }
+  );
+  assert.equal(accepted.schema, 'naruto.writing-outline/v1');
+  assert.deepEqual(accepted.beats[0].decisionRefs, ['decision:卡卡西']);
+});
+
 await test('agent writer defers variable tags to the secondary updater', () => {
   const runner = new AgentRunner();
   const constraint = runner._buildWriterConstraint({}, {});
@@ -536,6 +667,72 @@ await test('critic-search error findings fail the final audit', () => {
   );
 });
 
+await test('outline audit accepts the planning artifact while final narrative audit rejects it', () => {
+  const pipeline = new AgentPipeline({
+    pipeline: { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) },
+    memorySystem: null
+  });
+  const reviews = new Map([[
+    'final-preset-and-character',
+    { success: true, data: { approved: true, issues: [], suggestions: [] } }
+  ]]);
+  const common = {
+    state: { '玩家·姓名': '测试忍者', _meta: { active_branch: 'branch_main' } },
+    sceneBrief: validSceneBrief(),
+    storyPlan: validStoryPlan(),
+    involvedNPCs: [],
+    reviews
+  };
+  const outlineText = JSON.stringify(validWritingOutline());
+
+  const outlineAudit = pipeline._auditFinalOutput({
+    ...common,
+    finalText: outlineText
+  });
+  assert.equal(outlineAudit.valid, true, JSON.stringify(outlineAudit.errors));
+  assert.equal(
+    outlineAudit.errors.some(error => /planning outline/.test(error)),
+    false,
+    JSON.stringify(outlineAudit.errors)
+  );
+
+  const finalAudit = pipeline._auditFinalOutput({
+    ...common,
+    finalText: outlineText,
+    rejectPlanningArtifact: true
+  });
+  assert.equal(finalAudit.valid, false, 'final narrative audit must reject an outline payload');
+  assert.ok(
+    finalAudit.errors.some(error => /planning outline/.test(error)),
+    JSON.stringify(finalAudit.errors)
+  );
+});
+
+await test('search reviewer receives serialized writing-outline JSON instead of object coercion', async () => {
+  const pipeline = new AgentPipeline({
+    pipeline: { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) },
+    memorySystem: null
+  });
+  let reviewPrompt = '';
+  pipeline._createToolRuntime = () => ({
+    runAgent: async ({ messages }) => {
+      reviewPrompt = messages[0]?.content || '';
+      return { output: { approved: true, issues: [], summary: '通过' } };
+    }
+  });
+  pipeline._releaseToolRuntime = () => {};
+
+  const result = await pipeline._reviewWithSearch(
+    { '玩家·姓名': '测试忍者' },
+    '继续',
+    validWritingOutline(),
+    { outline: true }
+  );
+  assert.equal(result.success, true);
+  assert.match(reviewPrompt, /"schema":"naruto\.writing-outline\/v1"/);
+  assert.doesNotMatch(reviewPrompt, /\[object Object\]/);
+});
+
 await test('continuity updater tags are appended and mark agent-self-update', async () => {
   const pipeline = new AgentPipeline({
     pipeline: { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) },
@@ -558,18 +755,19 @@ await test('stage cache persists across pipeline instances and clears on success
   });
   const state = { '系统·回合数': 1, _meta: { active_branch: 'branch_main' } };
   const userInput = '继续';
+  assert.match(AGENT_PIPELINE_REVISION, /writing-outline/);
 
   const p1 = mkPipeline();
   const { entry } = p1._beginStageCache(state, userInput);
   p1._storeStage(entry, 'story_plan', { storyPlan: { days: [{ dayOffset: 0 }, { dayOffset: 1 }, { dayOffset: 2 }] } });
-  p1._storeStage(entry, 'writing', { draft: '已写好的正文草稿' });
+  p1._storeStage(entry, 'writing_outline', { writingOutline: validWritingOutline() });
 
   // 新实例(模拟重试)能读回同一缓存 → 从失败阶段续跑，复用上方正确环节。
   const p2 = mkPipeline();
   const restored = p2._beginStageCache(state, userInput);
   assert.ok(restored.entry.complete.has('story_plan'), 'story_plan must be cached');
-  assert.ok(restored.entry.complete.has('writing'), 'writing must be cached');
-  assert.equal(restored.entry.data.draft, '已写好的正文草稿');
+  assert.ok(restored.entry.complete.has('writing_outline'), 'writing outline must be cached');
+  assert.equal(restored.entry.data.writingOutline.schema, 'naruto.writing-outline/v1');
   assert.equal(restored.entry.data.storyPlan.days.length, 3);
 
   // 完整成功 → 清缓存。

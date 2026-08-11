@@ -489,7 +489,12 @@ await test('strict mode stays at one API request at compression, deep-cycle, NPC
     const result = await pipeline.process('继续完成训练并观察指导上忍');
     await new Promise(resolve => setTimeout(resolve, 0));
     assert.match(result.cleanResponse, /训练场/);
+    assert.doesNotMatch(result.cleanResponse, /<state_update>|<memory>|<shinobi_daily>/);
+    assert.match(result.rawResponse, /<state_update>/);
+    assert.match(result.rawResponse, /<memory>/);
+    assert.match(result.rawResponse, /<shinobi_daily>/);
     assert.equal(generated.length, 1, `strict turn emitted ${generated.length} model requests`);
+    assert.equal(mainGenerationOptions?.max_tokens, 0);
     assert.equal(mainGenerationOptions?.maxRetries, 0);
     assert.equal(mainGenerationOptions?.strictSingleRequest, true);
     assert.equal(secondaryUpdaterCalls, 0, 'secondary updater must stay paused');

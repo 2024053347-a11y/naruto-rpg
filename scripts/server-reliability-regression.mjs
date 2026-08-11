@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { Readable, Writable } from 'node:stream';
 
-import { forwardBoundedResponse } from '../server/api/ai-proxy.js';
+import { forwardBoundedResponse, requestUpstreamWithRetry } from '../server/api/ai-proxy.js';
 import { imageUploadAdmission } from '../server/api/image-assets.js';
 import {
   DISCORD_FETCH_TIMEOUT_MS,
@@ -191,6 +191,145 @@ await test('non-stream AI responses use a bounded backpressure-aware pipeline', 
 
   const source = await fs.readFile(new URL('../server/api/ai-proxy.js', import.meta.url), 'utf8');
   assert.doesNotMatch(source, /Buffer\.concat\(chunks\)/);
+});
+
+await test('AI proxy upstream retry recovers from 429 using Retry-After', async () => {
+  let calls = 0;
+  const timestamps = [];
+  const doRequest = async () => {
+    calls++;
+    timestamps.push(Date.now());
+    if (calls === 1) {
+      return { statusCode: 429, headers: { 'retry-after': '1' }, destroy() {} };
+    }
+    return { statusCode: 200, headers: { 'content-type': 'application/json' }, destroy() {} };
+  };
+
+  const response = await requestUpstreamWithRetry(doRequest, {
+    maxAttempts: 2, maxPerRetryMs: 20000, maxTotalRetryMs: 45000
+  });
+
+  assert.equal(calls, 2);
+  assert.equal(response.statusCode, 200);
+  // 允许 850ms 而非 900ms：繁忙 CI 上 setTimeout 有抖动
+  const elapsed = timestamps[1] - timestamps[0];
+  assert.ok(elapsed >= 850, `expected >= 850ms wait (Retry-After: 1s), got ${elapsed}`);
+});
+
+await test('AI proxy upstream retry exhausts and forwards final 429', async () => {
+  let calls = 0;
+  const doRequest = async () => {
+    calls++;
+    return {
+      statusCode: 429,
+      headers: { 'retry-after': '60', 'content-type': 'application/json' },
+      destroy() {}
+    };
+  };
+
+  const response = await requestUpstreamWithRetry(doRequest, {
+    maxAttempts: 2, maxPerRetryMs: 100, maxTotalRetryMs: 500
+  });
+
+  assert.equal(calls, 3); // 1 首次 + 2 重试 = 耗尽
+  assert.equal(response.statusCode, 429);
+  assert.equal(response.headers['retry-after'], '60');
+});
+
+await test('AI proxy upstream retry stops when total budget is exhausted', async () => {
+  let calls = 0;
+  const doRequest = async () => {
+    calls++;
+    return {
+      statusCode: 429,
+      headers: { 'retry-after': '10' },
+      destroy() {}
+    };
+  };
+
+  const response = await requestUpstreamWithRetry(doRequest, {
+    // 允许 2 次额外重试，但预算只够一次 10s 等待
+    maxAttempts: 2, maxPerRetryMs: 20000, maxTotalRetryMs: 5000
+  });
+
+  // 首次 429：wait=10s 截断到 per-retry=20s，但累计预算 5s < 10s → 停止
+  assert.equal(calls, 1);
+  assert.equal(response.statusCode, 429);
+});
+
+await test('AI proxy upstream retry aborts wait on client disconnect', async () => {
+  const controller = new AbortController();
+  let calls = 0;
+  const doRequest = async () => {
+    calls++;
+    return {
+      statusCode: 429,
+      headers: { 'retry-after': '30' },
+      destroy() {}
+    };
+  };
+
+  // 首次等待期间中止
+  setTimeout(() => controller.abort(), 100);
+  const start = Date.now();
+
+  await assert.rejects(
+    requestUpstreamWithRetry(doRequest, {
+      signal: controller.signal,
+      maxAttempts: 2, maxPerRetryMs: 20000, maxTotalRetryMs: 45000
+    }),
+    error => error.name === 'AbortError'
+  );
+
+  assert.equal(calls, 1);
+  assert.ok(Date.now() - start < 2000, 'should abort quickly, not wait for Retry-After');
+});
+
+await test('AI proxy upstream retry honours Retry-After as HTTP-date', async () => {
+  let calls = 0;
+  const timestamps = [];
+  const doRequest = async () => {
+    calls++;
+    timestamps.push(Date.now());
+    if (calls === 1) {
+      // Retry-After 用 HTTP-date：从现在起 1 秒
+      const future = new Date(Date.now() + 1000).toUTCString();
+      return { statusCode: 429, headers: { 'retry-after': future }, destroy() {} };
+    }
+    return { statusCode: 200, headers: {}, destroy() {} };
+  };
+
+  const response = await requestUpstreamWithRetry(doRequest, {
+    maxAttempts: 2, maxPerRetryMs: 20000, maxTotalRetryMs: 45000
+  });
+
+  assert.equal(calls, 2);
+  assert.equal(response.statusCode, 200);
+  const elapsed = timestamps[1] - timestamps[0];
+  assert.ok(elapsed >= 700, `expected >= 700ms wait (HTTP-date ~1s), got ${elapsed}`);
+});
+
+await test('AI proxy upstream retry uses exponential backoff when Retry-After is absent', async () => {
+  let calls = 0;
+  const timestamps = [];
+  const doRequest = async () => {
+    calls++;
+    timestamps.push(Date.now());
+    if (calls >= 3) {
+      return { statusCode: 200, headers: {}, destroy() {} };
+    }
+    return { statusCode: 429, headers: {}, destroy() {} };
+  };
+
+  const response = await requestUpstreamWithRetry(doRequest, {
+    maxAttempts: 3, maxPerRetryMs: 20000, maxTotalRetryMs: 45000
+  });
+
+  assert.equal(calls, 3);
+  assert.equal(response.statusCode, 200);
+  // 2^1=2s, 2^2=4s → 共约 6s
+  const totalElapsed = timestamps[2] - timestamps[0];
+  assert.ok(totalElapsed >= 5500, `expected >= 5500ms total (2s + 4s backoff), got ${totalElapsed}`);
 });
 
 await test('Discord JSON limits reject declared and streamed oversized bodies', async () => {

@@ -4,6 +4,24 @@ export const isTavernEnv = typeof globalThis !== 'undefined' && typeof globalThi
 // 浏览器版默认可使用同源代理；酒馆 iframe 没有本项目服务端，必须直连酒馆桥接 API。
 const USE_PROXY = typeof location !== 'undefined' && !isTavernEnv;
 
+export function normalizeOpenAIMessageOrder(messages = []) {
+  const systemParts = [];
+  const turns = [];
+  for (const message of Array.isArray(messages) ? messages : []) {
+    if (message?.role !== 'system') {
+      turns.push(message);
+      continue;
+    }
+    const content = typeof message.content === 'string'
+      ? message.content
+      : JSON.stringify(message.content ?? '');
+    if (content) systemParts.push(content);
+  }
+  return systemParts.length
+    ? [{ role: 'system', content: systemParts.join('\n\n') }, ...turns]
+    : turns;
+}
+
 function withLocalProtocol(value) {
   const raw = String(value || '').trim();
   if (!raw || /^[a-z][a-z\d+.-]*:\/\//i.test(raw)) return raw;
@@ -551,7 +569,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
         },
         body: JSON.stringify(applyOptionalMaxTokens({
           model: this.model,
-          messages,
+          messages: normalizeOpenAIMessageOrder(messages),
           temperature: options.temperature ?? 0.9,
           top_p: options.top_p ?? 0.9,
           frequency_penalty: options.frequency_penalty ?? 0.2,
@@ -606,7 +624,7 @@ class OpenAICompatibleAdapter extends AIAdapter {
             },
             body: JSON.stringify(applyOptionalMaxTokens({
               model: this.model,
-              messages,
+              messages: normalizeOpenAIMessageOrder(messages),
               temperature: options.temperature ?? 0.9,
               top_p: options.top_p ?? 0.9,
               frequency_penalty: options.frequency_penalty ?? 0.2,
@@ -1110,7 +1128,7 @@ export class AIClient {
 
     const converted = isClaude && typeof this.adapter?._convertMessages === 'function'
       ? this.adapter._convertMessages(messages)
-      : { messages };
+      : { messages: normalizeOpenAIMessageOrder(messages) };
     const body = {
       model: config.model,
       messages: converted.messages,

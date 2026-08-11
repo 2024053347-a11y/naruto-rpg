@@ -88,3 +88,26 @@ export const AGENT_MANIFESTS = {
     systemPromptKey: 'CONTINUITY_UPDATER'
   }
 };
+
+// The planning writer must not inherit the main preset's prose contract.
+// The final writer intentionally reuses the existing writer context only after
+// the structured outline has passed its final review.
+AGENT_MANIFESTS['writer-outline'] = {
+  ...AGENT_MANIFESTS.writer,
+  includePreset: false,
+  includeHistory: false,
+  historyTurns: 0,
+  systemPromptKey: 'WRITER_OUTLINE'
+};
+
+AGENT_MANIFESTS['critic-writing-outline'] = {
+  ...AGENT_MANIFESTS['critic-realism'],
+  includeHistory: false,
+  historyTurns: 0,
+  systemPromptKey: 'CRITIC_WRITING_OUTLINE'
+};
+
+AGENT_MANIFESTS['final-writer'] = {
+  ...AGENT_MANIFESTS.writer,
+  systemPromptKey: 'WRITER'
+};

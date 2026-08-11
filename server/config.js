@@ -131,7 +131,18 @@ export const config = deepFreeze({
     // 文本 AI 不再施加上游超时（由用户手动停止）；AI_PROXY_TIMEOUT_MS 已停用。
     maxResponseMb: toPositiveInt(process.env.AI_PROXY_MAX_RESPONSE_MB, 20),
     imageTimeoutMs: toPositiveInt(process.env.IMAGE_PROXY_TIMEOUT_MS, 300000),
-    imageMaxResponseMb: toPositiveInt(process.env.IMAGE_PROXY_MAX_RESPONSE_MB, 32)
+    imageMaxResponseMb: toPositiveInt(process.env.IMAGE_PROXY_MAX_RESPONSE_MB, 32),
+    // 上游 429 限流自动重试：提供方（OpenAI/DeepSeek/中转站）每分钟请求/令牌
+    // 窗口耗尽时返回 429，灵希/Agent 多步工具调用会稳定踩中。服务端在转发前
+    // 等待（优先尊重上游 Retry-After，截断到 maxPerRetryMs）后重新发起同一请求。
+    upstreamRetry: {
+      // 首次请求之外的重试次数（总请求数 = 1 + 该值）
+      maxAttempts: toPositiveInt(process.env.AI_PROXY_RETRY_MAX_ATTEMPTS, 2),
+      // 单次等待上限（毫秒）：尊重上游 Retry-After，但截断过长等待
+      maxPerRetryMs: toPositiveInt(process.env.AI_PROXY_RETRY_MAX_PER_RETRY_MS, 30000),
+      // 所有重试的累计等待预算（毫秒）
+      maxTotalRetryMs: toPositiveInt(process.env.AI_PROXY_RETRY_TOTAL_BUDGET_MS, 60000)
+    }
   },
   // AI 代理并发闸门：文本（主叙事 + Agent 协作）默认每用户同时 10 个、全局 32 个；
   // 图像生成独立计数。Agent 完整模式单回合峰值依赖该额度，调低会立刻引发 429。

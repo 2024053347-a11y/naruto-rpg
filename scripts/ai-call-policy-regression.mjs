@@ -4,6 +4,12 @@ import {
   formatAICallEstimate,
   resolveAICallPolicy
 } from '../js/core/ai-call-policy.js';
+import {
+  DEFAULT_MAIN_PRESET,
+  DEFAULT_MAIN_PRESET_VERSION,
+  MAIN_PRESET_STORAGE_KEY,
+  invalidateMainPresetCache
+} from '../js/data/default-preset.js';
 import { MEMORY_CONFIG_DEFAULTS } from '../js/data/memory-config.js';
 import { MessagePipeline } from '../js/core/pipeline.js';
 import { AIClient } from '../js/core/ai-client.js';
@@ -102,6 +108,117 @@ test('single-call main prompt still owns state and memory XML tags', () => {
   assert.match(prompt, /后台变量模型未启用/);
   assert.match(prompt, /<memory>/);
   assert.match(prompt, /<variable>/);
+});
+
+test('strict mode keeps the effective prompt identical when the paused updater setting differs', () => {
+  const enabledPolicy = resolveAICallPolicy({
+    apiConfig: { aiCallPolicy: { strictSingleCall: true }, variableUpdater: { enabled: true } }
+  });
+  const disabledPolicy = resolveAICallPolicy({
+    apiConfig: { aiCallPolicy: { strictSingleCall: true }, variableUpdater: { enabled: false } }
+  });
+  assert.equal(enabledPolicy.features.variableUpdater, false);
+  assert.equal(disabledPolicy.features.variableUpdater, false);
+
+  const enabledPipeline = new MessagePipeline({});
+  const disabledPipeline = new MessagePipeline({});
+  const enabledMessages = enabledPipeline._buildPrompt('继续', {}, '继续', {
+    updaterEnabled: enabledPolicy.features.variableUpdater
+  });
+  const disabledMessages = disabledPipeline._buildPrompt('继续', {}, '继续', {
+    updaterEnabled: disabledPolicy.features.variableUpdater
+  });
+  assert.deepEqual(enabledMessages, disabledMessages);
+});
+
+test('single-call prompt has no contradictory updater branch', () => {
+  const pipeline = new MessagePipeline({});
+  const messages = pipeline._buildPrompt('继续', {}, '继续', { updaterEnabled: false });
+  const prompt = messages.map(message => String(message.content || '')).join('\n');
+  assert.doesNotMatch(prompt, /后台独立变量更新模型已启用/);
+  assert.doesNotMatch(prompt, /变量模型开启时不输出任何变量结构标签或日报/);
+  assert.doesNotMatch(prompt, /主模型不得输出任何结构标签/);
+  assert.match(prompt, /本回合没有后台变量模型补写/);
+  assert.equal(
+    (prompt.match(/【主模型请求复述与构思核对表】/g) || []).length,
+    1,
+    'the immutable reasoning checklist must only be injected once'
+  );
+  for (const marker of [
+    '1. 本轮请求原文：',
+    '2. 任务拆解与硬约束：',
+    '3. 权威证据与不确定项：',
+    '4. 时间线、地点与场景：',
+    '5. 玩家意图、行动边界与判定：',
+    '6. NPC动机、知识边界与关系：',
+    '7. 连续性状态：',
+    '8. 因果、结果、记账与停止点：'
+  ]) assert.equal(prompt.split(marker).length - 1, 1, `duplicate reasoning checklist marker: ${marker}`);
+});
+
+test('unknown preset activation cannot bypass strict ownership isolation', () => {
+  const preset = structuredClone(DEFAULT_MAIN_PRESET);
+  preset._version = DEFAULT_MAIN_PRESET_VERSION;
+  preset.entries.push({
+    id: 'custom_unknown_activation',
+    name: '未知生效模式的旧职责规则',
+    enabled: true,
+    role: 'system',
+    activation: 'variable_updater_on',
+    content: '变量模型开启时主模型不得输出结构标签；变量模型关闭时主模型必须输出 <memory> 和 <shinobi_daily>。'
+  });
+  localStorage.setItem(MAIN_PRESET_STORAGE_KEY, JSON.stringify(preset));
+  invalidateMainPresetCache();
+  try {
+    const prompt = new MessagePipeline({})._buildPrompt('继续', {}, '继续', { updaterEnabled: false })
+      .map(message => String(message.content || '')).join('\n');
+    assert.doesNotMatch(prompt, /未知生效模式的旧职责规则/);
+  } finally {
+    localStorage.removeItem(MAIN_PRESET_STORAGE_KEY);
+    localStorage.removeItem('naruto_main_preset_version');
+    invalidateMainPresetCache();
+  }
+});
+
+test('strict single-call skips optional image output contract', () => {
+  const pipelineSource = readFileSync(new URL('../js/core/pipeline.js', import.meta.url), 'utf8');
+  assert.match(
+    pipelineSource,
+    /if \(!strictSingleCall && imageSettings\.enabled && imageSettings\.promptMode === 'main-contract'\)/,
+    'optional image contract must be gated off for strict single-call turns'
+  );
+});
+
+test('legacy always-on custom ownership rules are isolated by the effective mode', () => {
+  const preset = structuredClone(DEFAULT_MAIN_PRESET);
+  preset._version = DEFAULT_MAIN_PRESET_VERSION;
+  preset.entries.push({
+    id: 'custom_legacy_ownership_rule',
+    name: '旧双分支职责规则',
+    enabled: true,
+    role: 'system',
+    activation: 'always',
+    content: '变量模型开启时主模型不得输出结构标签；变量模型关闭时主模型必须输出 <memory> 和 <shinobi_daily>。'
+  });
+  localStorage.setItem(MAIN_PRESET_STORAGE_KEY, JSON.stringify(preset));
+  invalidateMainPresetCache();
+  try {
+    const pipeline = new MessagePipeline({});
+    const prompt = pipeline._buildPrompt('继续', {}, '继续', { updaterEnabled: false })
+      .map(message => String(message.content || '')).join('\n');
+    assert.doesNotMatch(prompt, /旧双分支职责规则/);
+    assert.doesNotMatch(prompt, /变量模型开启时主模型不得输出结构标签/);
+    assert.match(prompt, /本回合没有后台变量模型补写/);
+  } finally {
+    localStorage.removeItem(MAIN_PRESET_STORAGE_KEY);
+    localStorage.removeItem('naruto_main_preset_version');
+    invalidateMainPresetCache();
+  }
+});
+
+test('main generation options omit the provider output cap', () => {
+  const pipeline = new MessagePipeline({});
+  assert.equal(pipeline._getGenerationOptions().max_tokens, 0);
 });
 
 test('pipeline, transport and image integration enforce the strict boundary', () => {

@@ -12,6 +12,13 @@ const server = app.listen(port, '127.0.0.1', () => {
   console.log(`UI test server listening on http://127.0.0.1:${port}`);
 });
 
-const close = () => server.close(() => process.exit(0));
+let closing = false;
+const close = () => {
+  if (closing) return;
+  closing = true;
+  server.close(() => process.exit(0));
+  server.closeAllConnections?.();
+  setTimeout(() => process.exit(0), 1000).unref();
+};
 process.on('SIGINT', close);
 process.on('SIGTERM', close);

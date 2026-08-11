@@ -18,7 +18,7 @@ const stagingNginx = read('deploy/nginx/naruto-rpg-staging.conf');
 const systemdLimits = read('deploy/systemd/naruto-rpg.service.d/limits.conf');
 const memorySysctl = read('deploy/sysctl/90-naruto-rpg-memory.conf');
 
-assert.equal(packageJson.version, '3.0.0', 'production release metadata must identify v3');
+assert.equal(packageJson.version, '3.5.0', 'production release metadata must identify v3.5');
 
 function extractBracedBlock(source, startPattern, label) {
   const match = startPattern.exec(source);
@@ -273,6 +273,16 @@ for (const [name, block] of [['root', rootLocation], ['index', indexLocation]]) 
 }
 assert.match(stagingNginx, /error_page\s+401\s+=\s+@staging_login;[\s\S]*location\s+@staging_login[\s\S]*return\s+302\s+\/login\.html;/i);
 assert.match(stagingNginx, /error_page\s+403\s+=\s+@staging_banned;[\s\S]*location\s+@staging_banned[\s\S]*return\s+302\s+\/login\.html\?error=banned;/i);
+assert.match(
+  stagingNginx,
+  /location\s+~\*\s+\\\.\(js\|mjs\|css\)\$\s*\{[\s\S]{0,240}expires\s+off;[\s\S]{0,240}Cache-Control\s+'no-cache, must-revalidate'\s+always;/i,
+  'staging code assets must revalidate after every deployment'
+);
+assert.match(
+  stagingNginx,
+  /location\s*=\s*\/sw\.js\s*\{[\s\S]{0,240}Cache-Control\s+'no-cache, no-store, must-revalidate'\s+always;/i,
+  'staging service worker must never be served from HTTP cache'
+);
 assert.match(deployScript, /--dump-header[\s\S]{0,800}location:\s+\$\(\$Target\.VerifyUrl\)[\s\S]{0,400}x-staging:\s+true/i);
 
 if (process.platform === 'win32') {

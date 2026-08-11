@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ling Xi navigation harness</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <style>
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    const [{ appShell }, { stateManager }] = await Promise.all([
+      import('../../js/ui/app-shell.js'),
+      import('../../js/core/state-manager.js'),
+      import('../../js/ui/panel.js'),
+      import('../../js/ui/map-modal.js')
+    ]);
+
+    appShell.init(document.getElementById('app'));
+
+    window.__LINGXI_NAVIGATION__ = {
+      openInfo(tab) { return appShell.openInfoPanel(tab); },
+      openTimeline() { return appShell.openTimeline(); },
+      openMap() { return appShell.openMap(); },
+      snapshot() {
+        const panel = document.querySelector('#app-panel');
+        const sidebar = document.querySelector('#app-sidebar');
+        const info = document.querySelector('info-panel');
+        return {
+          persistedTab: stateManager.getSub('_ui').panel_tab,
+          visibleTab: info?.shadowRoot?.querySelector('.tab.on')?.dataset.t || null,
+          panelOpen: panel?.classList.contains('panel-open') || false,
+          panelCollapsed: panel?.classList.contains('app-panel--collapsed') || false,
+          panelHidden: panel?.getAttribute('aria-hidden'),
+          timelineCollapsed: sidebar?.classList.contains('app-sidebar--collapsed') || false,
+          timelineHidden: sidebar?.getAttribute('aria-hidden'),
+          mapCount: document.querySelectorAll('map-modal').length
+        };
+      }
+    };
+    window.__LINGXI_NAVIGATION_READY__ = true;
+  </script>
+</body>
+</html>

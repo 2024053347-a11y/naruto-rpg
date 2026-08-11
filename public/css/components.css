@@ -328,9 +328,10 @@
   position: fixed; bottom: 12vh; left: 50%; transform: translateX(-50%); z-index: 99999;
   padding: 24px 48px; background: rgba(var(--ink-deep-rgb), 0.75); backdrop-filter: var(--blur-xl); -webkit-backdrop-filter: var(--blur-xl);
   border: 1px solid var(--border-subtle); border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg); text-align: center; min-width: 480px;
+  box-shadow: var(--shadow-lg); text-align: center; min-width: 480px; max-width: calc(100vw - 24px);
   transition: all 0.3s var(--ease-out);
 }
+.desktop-lyrics[hidden] { display: none !important; }
 .desktop-lyrics.dragging {
   transition: none;
   backdrop-filter: none;
@@ -374,11 +375,14 @@
 .desktop-lyrics.minimized .lyric-slider-wrap,
 .desktop-lyrics.minimized .lyric-time,
 .desktop-lyrics.minimized .lyric-controls { display: none; }
-.desktop-lyrics.minimized { padding: 8px 16px; min-width: 0; background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.desktop-lyrics.minimized { width: min(360px, calc(100vw - 24px)); padding: 8px 16px; min-width: 0; background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
 .desktop-lyrics.minimized:hover { background: rgba(var(--ink-deep-rgb), 0.4); border-color: var(--border-subtle); backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm); }
-.desktop-lyrics.minimized .lyric-text { font-size: 20px; text-shadow: 0 1px 8px rgba(0,0,0,1); }
+.desktop-lyrics.minimized .lyric-text { overflow: hidden; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0,0,0,1); cursor: grab; }
+.desktop-lyrics.dragging .lyric-text { cursor: grabbing; }
 .desktop-lyrics.minimized .lyric-header { display: none; margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
 .desktop-lyrics.minimized:hover .lyric-header { display: flex; }
+.music-floating-artist { margin-top: 5px; overflow: hidden; color: var(--text-tertiary); font-size: var(--text-xs); white-space: nowrap; text-overflow: ellipsis; letter-spacing: 0; }
+.desktop-lyrics.minimized .music-floating-artist { display: none; }
 .lyric-btn {
   background: none; border: none; padding: 8px; cursor: pointer; color: var(--text-secondary);
   border-radius: 50%; transition: all 0.2s;
@@ -402,6 +406,9 @@
   .api-setup-form { margin: 0 auto; }
 }
 @media (max-width: 480px) {
+  .desktop-lyrics { min-width: 0; width: calc(100vw - 24px); padding: 18px 20px; }
+  .desktop-lyrics.minimized { width: calc(100vw - 24px); padding: 8px 12px; }
+  .desktop-lyrics.minimized .lyric-text { font-size: 17px; }
   .card, .glass-card, .creator-card { padding: var(--sp-4); }
   .api-setup { padding: var(--sp-6) var(--sp-4); }
   .btn { padding: 8px 16px; font-size: var(--text-xs); }

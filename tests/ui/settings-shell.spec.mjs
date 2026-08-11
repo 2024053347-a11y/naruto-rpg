@@ -28,6 +28,133 @@ test('player settings exposes five focused pages and one AI connection owner', a
   expect(pageErrors).toEqual([]);
 });
 
+test('API schemes visibly stay selected, update in place and can be deleted', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/tests/fixtures/settings-panel-harness.html');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+
+  const settings = page.locator('settings-panel');
+  await settings.locator('[data-section="connection"]').click();
+  const form = settings.locator('api-config-form');
+  const select = form.locator('#scheme-select');
+  const trigger = form.locator('.scheme-row .ns-select-trigger');
+
+  await form.locator('#settings-api-url').fill('https://one.example/v1');
+  await form.locator('#settings-api-key').fill('reload-secret');
+  await form.locator('#settings-api-model').fill('model-one');
+  const backendSelect = form.locator('#settings-api-backend').locator('..');
+  await backendSelect.locator('.ns-select-trigger').click();
+  await backendSelect.locator('.ns-select-option').filter({ hasText: 'DeepSeek' }).click();
+  await form.locator('#settings-disable-streaming').setChecked(true);
+  await form.locator('#scheme-name').fill('主方案');
+  await form.locator('#scheme-save').click();
+  await expect(select.locator('option')).toHaveCount(2);
+
+  const schemeId = await select.locator('option').nth(1).getAttribute('value');
+  expect(schemeId).toBeTruthy();
+  await expect(select).toHaveValue(schemeId);
+  await expect(trigger).toContainText('主方案');
+  await expect(form.locator('#scheme-name')).toHaveValue('主方案');
+  await expect(form.locator('#settings-api-url')).toHaveValue('https://one.example/v1');
+  await expect(form.locator('#settings-api-key')).toHaveValue('reload-secret');
+  await expect(form.locator('#settings-api-model')).toHaveValue('model-one');
+  await expect(form.locator('#settings-api-backend')).toHaveValue('deepseek');
+  await expect(form.locator('#settings-disable-streaming')).toBeChecked();
+  await expect(form.locator('#scheme-save')).toHaveText('更新当前方案');
+
+  await page.reload();
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+  await settings.locator('[data-section="connection"]').click();
+  await expect(select).toHaveValue(schemeId);
+  await expect(trigger).toContainText('主方案');
+  await expect(form.locator('#scheme-name')).toHaveValue('主方案');
+  await expect(form.locator('#settings-api-url')).toHaveValue('https://one.example/v1');
+  await expect(form.locator('#settings-api-key')).toHaveValue('reload-secret');
+  await expect(form.locator('#settings-api-model')).toHaveValue('model-one');
+  await expect(form.locator('#settings-api-backend')).toHaveValue('deepseek');
+  await expect(form.locator('#settings-disable-streaming')).toBeChecked();
+
+  await form.locator('#settings-api-url').fill('https://two.example/v1');
+  await form.locator('#settings-api-model').fill('model-two');
+  await form.locator('#scheme-name').fill('主方案·更新');
+  await form.locator('#scheme-save').click();
+  await expect(select.locator('option')).toHaveCount(2);
+  await expect(select.locator('option').nth(1)).toContainText('主方案·更新');
+  await expect(trigger).toContainText('主方案·更新');
+
+  const stored = await page.evaluate(async id => {
+    const { getApiScheme } = await import('/js/core/api-schemes.js');
+    return getApiScheme(id);
+  }, schemeId);
+  expect(stored).toMatchObject({
+    id: schemeId,
+    name: '主方案·更新',
+    apiUrl: 'https://two.example/v1',
+    apiKey: 'reload-secret',
+    model: 'model-two',
+    backend: 'deepseek',
+    disableStreaming: true
+  });
+
+  await form.locator('#scheme-delete').click();
+  await expect(select.locator('option')).toHaveCount(1);
+  await expect(select).toHaveValue('');
+  await expect(trigger).toContainText('选择已保存方案');
+  await expect(form.locator('#scheme-name')).toHaveValue('');
+  await expect(form.locator('#scheme-delete')).toBeDisabled();
+  expect(pageErrors).toEqual([]);
+});
+
+test('deleting a scheme invalidates an in-flight encrypted scheme selection', async ({ page }) => {
+  await page.goto('/tests/fixtures/settings-panel-harness.html');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+
+  const settings = page.locator('settings-panel');
+  await settings.locator('[data-section="connection"]').click();
+  const form = settings.locator('api-config-form');
+  await form.locator('#settings-api-url').fill('https://race.example/v1');
+  await form.locator('#settings-api-key').fill('secret-for-race');
+  await form.locator('#settings-api-model').fill('race-model');
+  await form.locator('#scheme-name').fill('竞态方案');
+  await form.locator('#scheme-save').click();
+  await expect(form.locator('#scheme-select option')).toHaveCount(2);
+
+  const outcome = await form.evaluate(async host => {
+    const select = host.shadowRoot.querySelector('#scheme-select');
+    const id = select.value;
+    await Promise.all([host._applyScheme(id), host._deleteScheme()]);
+    const { getActiveApiSchemeId, listApiSchemes } = await import('/js/core/api-schemes.js');
+    return {
+      activeId: getActiveApiSchemeId(),
+      schemes: await listApiSchemes(),
+      selectedId: select.value,
+      name: host.shadowRoot.querySelector('#scheme-name').value
+    };
+  });
+
+  expect(outcome).toEqual({ activeId: null, schemes: [], selectedId: '', name: '' });
+});
+
+test('custom selects reopen immediately after another select was opened', async ({ page }) => {
+  await page.goto('/tests/fixtures/settings-panel-harness.html');
+  await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);
+
+  const settings = page.locator('settings-panel');
+  await settings.locator('[data-section="connection"]').click();
+  const wrappers = settings.locator('api-config-form .ns-select-wrapper');
+  await expect(wrappers).toHaveCount(2);
+
+  await wrappers.nth(0).locator('.ns-select-trigger').click();
+  await expect(wrappers.nth(0)).toHaveClass(/open/);
+  await wrappers.nth(1).locator('.ns-select-trigger').click();
+  await expect(wrappers.nth(0)).not.toHaveClass(/open/);
+  await expect(wrappers.nth(1)).toHaveClass(/open/);
+  await wrappers.nth(0).locator('.ns-select-trigger').click();
+  await expect(wrappers.nth(0)).toHaveClass(/open/);
+  await expect(wrappers.nth(1)).not.toHaveClass(/open/);
+});
+
 test('project support stays optional and exposes safe Afdian and WeChat methods', async ({ page }) => {
   await page.goto('/tests/fixtures/settings-panel-harness.html');
   await page.waitForFunction(() => window.__SETTINGS_HARNESS_READY__ === true);

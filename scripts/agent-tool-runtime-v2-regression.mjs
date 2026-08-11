@@ -36,6 +36,7 @@ const { AgentToolRuntime, toPublicAgentEvent } = runtimeModule;
 const { AgentPipeline } = pipelineModule;
 const { MessagePipeline } = messagePipelineModule;
 const { resolveAgentSystemPrompt } = runnerModule;
+const { createToolResultBudget } = await import('../js/core/tool-result-budget.js');
 
 const failures = [];
 let passed = 0;
@@ -50,6 +51,21 @@ async function test(name, fn) {
     console.error(`FAIL ${name}: ${error.stack || error.message}`);
   }
 }
+
+await test('tool-result budget preserves useful medium results and bounds later oversized results', () => {
+  const budget = createToolResultBudget({
+    maxSteps: 3,
+    toolResultMaxChars: 8_000,
+    toolResultTotalChars: 16_000
+  });
+  const medium = { content: '中'.repeat(5_000) };
+  assert.equal(budget.limit(medium, { tool: 'lookup' }), medium);
+  const oversized = budget.limit({ content: '大'.repeat(30_000) }, { tool: 'lookup' });
+  assert.equal(oversized.truncated, true);
+  assert.equal(oversized.reason, 'tool_result_budget');
+  assert.ok(JSON.stringify(oversized).length <= 8_000);
+  assert.ok(budget.usedChars <= 16_000);
+});
 
 function sampleBrief() {
   return assertSceneBrief({
@@ -191,6 +207,7 @@ await test('context cache is stable and planner cannot see NPC private state', a
 await test('text-tool fallback always preflights before model calls and executes observations', async () => {
   const order = [];
   const requestOptions = [];
+  const requestMessages = [];
   const responses = [
     JSON.stringify({ tool: 'search_world_history', input: { query: '训练场' } }),
     JSON.stringify({ final: JSON.stringify({ accepted: true }) })
@@ -213,9 +230,10 @@ await test('text-tool fallback always preflights before model calls and executes
     configure() {},
     isConfigured: () => true,
     cancel() {},
-    async chat(_messages, options) {
+    async chat(messages, options) {
       order.push('chat');
       requestOptions.push(options);
+      requestMessages.push(structuredClone(messages));
       return responses.shift();
     }
   };
@@ -242,8 +260,69 @@ await test('text-tool fallback always preflights before model calls and executes
   assert.deepEqual(order, ['preflight', 'chat', 'tool', 'chat']);
   assert.deepEqual(requestOptions.map(options => options.timeout), [0, 0]);
   assert.deepEqual(requestOptions.map(options => options.max_tokens), [0, 0]);
+  const toolEnvelope = JSON.parse(requestMessages[1].at(-1).content);
+  assert.deepEqual(toolEnvelope.output, { items: [{ summary: '训练场仍然开放' }], sources: [] });
   assert.deepEqual(result.output, { accepted: true });
   assert.equal(result.mode, 'text-tool-protocol');
+});
+
+await test('text-tool protocol keeps repeated large tool results within a parseable per-turn budget', async () => {
+  const requestMessages = [];
+  const responses = [
+    JSON.stringify({ tool: 'large_lookup', input: { sequence: 1 } }),
+    JSON.stringify({ tool: 'large_lookup', input: { sequence: 2 } }),
+    JSON.stringify({ final: '完成' })
+  ];
+  const contextBroker = {
+    async preflight() {
+      return {
+        schema: AGENT_CONTEXT_SCHEMA,
+        query: '检查大结果',
+        domains: { character: { items: [] }, dialogue: { items: [] }, world: { items: [] } },
+        items: [], sources: [], durationMs: 1, cache: { hits: 0, misses: 3 }
+      };
+    },
+    getCacheStats: () => ({ hits: 0, misses: 3 })
+  };
+  const client = {
+    configure() {},
+    isConfigured: () => true,
+    cancel() {},
+    async chat(messages) {
+      requestMessages.push(structuredClone(messages));
+      return responses.shift();
+    }
+  };
+  const runtime = new AgentToolRuntime({ contextBroker, clientFactory: () => client });
+  runtime.configure({ backend: 'custom', model: 'text-only-model' });
+  const result = await runtime.runAgent({
+    definition: { id: 'large-result-test', instructions: 'Use the lookup twice.' },
+    messages: [{ role: 'user', content: '检查大结果' }],
+    tools: {
+      large_lookup: {
+        description: 'Returns a deliberately large result',
+        inputSchema: { type: 'object' },
+        execute: async input => ({ sequence: input.sequence, content: '大'.repeat(30_000) })
+      }
+    },
+    state: {},
+    userInput: '检查大结果',
+    forceTextProtocol: true,
+    budget: { maxSteps: 3, toolResultMaxChars: 8_000, toolResultTotalChars: 16_000 }
+  });
+
+  const envelopes = requestMessages.at(-1)
+    .filter(message => message.role === 'user')
+    .map(message => {
+      try { return JSON.parse(message.content); } catch { return null; }
+    })
+    .filter(message => message?.tool_result === 'large_lookup');
+  assert.equal(envelopes.length, 2);
+  assert.ok(envelopes.every(envelope => envelope.output?.truncated === true));
+  assert.ok(envelopes.every(envelope => envelope.output?.reason === 'tool_result_budget'));
+  assert.ok(envelopes.every(envelope => JSON.stringify(envelope.output).length <= 8_000));
+  assert.ok(envelopes.reduce((sum, envelope) => sum + JSON.stringify(envelope.output).length, 0) <= 16_000);
+  assert.equal(result.text, '完成');
 });
 
 for (const [caseName, nativeText] of [
@@ -428,6 +507,122 @@ await test('bundled AI SDK performs a native tool loop through the same-origin p
     assert.ok(requests.every(request => !('max_completion_tokens' in request.body)));
     assert.equal(requests[0].body.tools[0].function.name, 'search_world_history');
     assert.ok(requests[1].body.messages.some(message => message.role === 'tool'));
+    assert.match(JSON.stringify(requests[1].body.messages), /训练场开放/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+await test('bundled AI SDK truncates a large native tool result before the next model step', async () => {
+  const originalFetch = globalThis.fetch;
+  const requests = [];
+  globalThis.fetch = async (_url, init = {}) => {
+    const body = JSON.parse(String(init.body || '{}'));
+    requests.push(body);
+    const first = requests.length === 1;
+    const payload = first
+      ? {
+          id: 'chatcmpl-large-tool', object: 'chat.completion', created: 1, model: 'native-model',
+          choices: [{
+            index: 0,
+            message: {
+              role: 'assistant', content: null,
+              tool_calls: [{
+                id: 'call-large', type: 'function',
+                function: { name: 'large_lookup', arguments: '{}' }
+              }]
+            },
+            finish_reason: 'tool_calls'
+          }],
+          usage: { prompt_tokens: 10, completion_tokens: 4, total_tokens: 14 }
+        }
+      : {
+          id: 'chatcmpl-large-final', object: 'chat.completion', created: 2, model: 'native-model',
+          choices: [{ index: 0, message: { role: 'assistant', content: '完成' }, finish_reason: 'stop' }],
+          usage: { prompt_tokens: 18, completion_tokens: 2, total_tokens: 20 }
+        };
+    return new Response(JSON.stringify(payload), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  };
+  try {
+    const result = await globalThis.NarutoAgentSDK.runAgent({
+      config: {
+        backend: 'custom', apiUrl: 'https://provider.example/v1',
+        apiKey: 'test-secret', model: 'native-model'
+      },
+      definition: { id: 'native-large-result-test', instructions: 'Use the supplied tool.' },
+      messages: [{ role: 'user', content: '检查大结果。' }],
+      tools: {
+        large_lookup: {
+          description: 'Returns a deliberately large result',
+          inputSchema: { type: 'object', properties: {} },
+          execute: async () => ({ content: '大'.repeat(30_000) })
+        }
+      },
+      budget: { maxSteps: 2, toolResultMaxChars: 1_000, toolResultTotalChars: 2_000 }
+    });
+    const toolMessages = requests[1].messages.filter(message => message.role === 'tool');
+    const serialized = JSON.stringify(toolMessages);
+    assert.equal(result.text, '完成');
+    assert.match(serialized, /tool_result_budget/);
+    assert.equal(serialized.includes('大'.repeat(5_000)), false);
+    assert.ok(serialized.length < 2_000);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+await test('bundled AI SDK streams text deltas when streaming is explicitly enabled', async () => {
+  const originalFetch = globalThis.fetch;
+  const deltas = [];
+  let requestBody = null;
+  globalThis.fetch = async (url, init = {}) => {
+    assert.equal(String(url), '/api/ai-proxy');
+    requestBody = JSON.parse(String(init.body || '{}'));
+    const chunks = [
+      {
+        id: 'chatcmpl-stream', object: 'chat.completion.chunk', created: 1, model: 'stream-model',
+        choices: [{ index: 0, delta: { role: 'assistant', content: '' }, finish_reason: null }]
+      },
+      {
+        id: 'chatcmpl-stream', object: 'chat.completion.chunk', created: 1, model: 'stream-model',
+        choices: [{ index: 0, delta: { content: '找到啦，' }, finish_reason: null }]
+      },
+      {
+        id: 'chatcmpl-stream', object: 'chat.completion.chunk', created: 1, model: 'stream-model',
+        choices: [{ index: 0, delta: { content: '查克拉正常' }, finish_reason: null }]
+      },
+      {
+        id: 'chatcmpl-stream', object: 'chat.completion.chunk', created: 1, model: 'stream-model',
+        choices: [{ index: 0, delta: {}, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 8, completion_tokens: 6, total_tokens: 14 }
+      }
+    ];
+    const body = `${chunks.map(chunk => `data: ${JSON.stringify(chunk)}\n\n`).join('')}data: [DONE]\n\n`;
+    return new Response(body, {
+      status: 200,
+      headers: { 'Content-Type': 'text/event-stream' }
+    });
+  };
+  try {
+    const result = await globalThis.NarutoAgentSDK.runAgent({
+      config: {
+        backend: 'custom', apiUrl: 'https://provider.example/v1', apiKey: 'stream-secret',
+        model: 'stream-model', disableStreaming: false
+      },
+      definition: { id: 'stream-test', instructions: 'Reply briefly.' },
+      messages: [{ role: 'user', content: '检查查克拉。' }],
+      tools: {},
+      budget: { maxSteps: 2, maxOutputTokens: 256 },
+      onEvent: event => {
+        if (event.type === 'text-delta') deltas.push(event.delta);
+      }
+    });
+    assert.equal(requestBody.stream, true);
+    assert.equal(result.text, '找到啦，查克拉正常');
+    assert.deepEqual(deltas, ['找到啦，', '查克拉正常']);
   } finally {
     globalThis.fetch = originalFetch;
   }

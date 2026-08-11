@@ -16,7 +16,7 @@ globalThis.customElements = {
   }
 };
 
-const [{ stateManager }, { relationshipSystem }, { imageStudio }, { CANON_DATABASE }, { appShell }, { instructionParser }, { MessagePipeline }] = await Promise.all([
+const [{ stateManager }, { relationshipSystem }, { imageStudio }, { CANON_DATABASE }, { appShell }, { instructionParser }, { MessagePipeline }, { eventBus }] = await Promise.all([
   import('../js/core/state-manager.js'),
   import('../js/systems/relationship-system.js'),
   import('../js/core/image-studio/index.js'),
@@ -24,6 +24,7 @@ const [{ stateManager }, { relationshipSystem }, { imageStudio }, { CANON_DATABA
   import('../js/ui/app-shell.js'),
   import('../js/core/instruction-parser.js'),
   import('../js/core/pipeline.js'),
+  import('../js/core/event-bus.js'),
   import('../js/ui/panel.js')
 ]);
 
@@ -48,6 +49,13 @@ try {
   assert.match(missionUpdateHtml, /护送测试委托/);
   assert.match(missionUpdateHtml, /已接取/);
   assert.doesNotMatch(missionUpdateHtml, /vu-edit-btn/);
+
+  appShell._captureStateChange({
+    key: 'skills.jutsu.测试术.mastery',
+    value: 12
+  });
+  assert.equal(appShell._turnUpdates.length, 2, 'structured path writes should be visible in the turn update panel');
+  assert.match(appShell._buildVarUpdatePanel(appShell._turnUpdates), /skills\.jutsu\.测试术\.mastery/);
 
   stateManager.state._relationships = {};
   const emptyHtml = panel._renderTab('relations', {});

@@ -161,7 +161,10 @@ class AgentRunner {
   }
 
   _getClient(agentType) {
-    const critics = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer'];
+    const critics = [
+      'critic-realism', 'critic-character', 'critic-detail', 'critic-style',
+      'critic-writing-outline', 'brainstormer'
+    ];
     return critics.includes(agentType) ? this._criticClient : this._mainClient;
   }
 
@@ -221,7 +224,10 @@ class AgentRunner {
       }
     };
 
-    const isCritic = ['critic-realism', 'critic-character', 'critic-detail', 'critic-style', 'brainstormer'].includes(agentType);
+    const isCritic = [
+      'critic-realism', 'critic-character', 'critic-detail', 'critic-style',
+      'critic-writing-outline', 'brainstormer'
+    ].includes(agentType);
     const traceMessages = agentType === 'character'
       ? messages.map((message, index) => ({
           role: message.role,
@@ -287,7 +293,7 @@ class AgentRunner {
 
   _buildMessages(agentType, manifest, { state, userInput, taskPrompt, extraContext }) {
     // ══ Writer/Polish 继承主 Pipeline 模式 ══
-    if ((agentType === 'writer' || agentType === 'writer-polish') && extraContext._inheritFromMainPipeline && extraContext._mainMessages) {
+    if ((agentType === 'writer' || agentType === 'writer-polish' || agentType === 'final-writer') && extraContext._inheritFromMainPipeline && extraContext._mainMessages) {
       const baseMessages = extraContext._mainMessages;
       const constraint = this._buildWriterConstraint(extraContext, state);
       const persona = resolveAgentSystemPrompt(manifest.systemPromptKey);
@@ -385,6 +391,7 @@ class AgentRunner {
     if (extraContext.storyPlan) userContent += `[三日条件故事计划]\n${JSON.stringify(extraContext.storyPlan)}\n\n`;
     if (extraContext.contextPacket) userContent += `[已检索历史]\n${JSON.stringify(extraContext.contextPacket)}\n\n`;
     if (extraContext.outline) userContent += `[叙事大纲]\n${JSON.stringify(extraContext.outline)}\n\n`;
+    if (extraContext.writingOutline) userContent += `[详细写作大纲]\n${JSON.stringify(extraContext.writingOutline)}\n\n`;
     if (extraContext.reviews) userContent += `[审查建议]\n${JSON.stringify(extraContext.reviews)}\n\n`;
     if (extraContext.draft) userContent += `[初稿正文]\n${extraContext.draft}\n\n`;
     if (extraContext.characterInputs?.length) userContent += `[角色代理素材]\n${JSON.stringify(extraContext.characterInputs)}\n\n`;
@@ -427,12 +434,29 @@ class AgentRunner {
     }
     
     // 1. 大纲结构化展示（不用裸JSON）
-    if (extraContext.outline?.beats) {
-      constraint += '## 叙事大纲\n';
-      for (const beat of extraContext.outline.beats) {
+    const approvedOutline = extraContext.writingOutline || extraContext.outline;
+    if (approvedOutline?.beats) {
+      constraint += extraContext.writingOutline
+        ? '## 已通过终审的详细写作大纲\n'
+        : '## 叙事大纲\n';
+      for (const beat of approvedOutline.beats) {
         constraint += `\n### Beat ${beat.id}: ${beat.summary || ''}\n`;
         if (beat.scene) constraint += `场景: ${beat.scene}\n`;
         if (beat.tension) constraint += `张力: ${beat.tension}\n`;
+        if (beat.narrativeGoal) constraint += `叙事目标: ${beat.narrativeGoal}\n`;
+        if (beat.participants?.length) constraint += `参与者: ${beat.participants.join('、')}\n`;
+        if (beat.decisionRefs?.length) constraint += `角色决定来源: ${beat.decisionRefs.join('、')}\n`;
+        if (beat.environmentBeats?.length) {
+          constraint += '环境反馈:\n' + beat.environmentBeats.map(item => `- ${formatConstraintItem(item)}`).join('\n') + '\n';
+        }
+        if (beat.continuityChecks?.length) {
+          constraint += '连续性核对:\n' + beat.continuityChecks.map(item => `- ${formatConstraintItem(item)}`).join('\n') + '\n';
+        }
+        if (beat.variableEvidence?.length) {
+          constraint += '记账依据:\n' + beat.variableEvidence.map(item => `- ${formatConstraintItem(item)}`).join('\n') + '\n';
+        }
+        if (beat.playerBoundary) constraint += `玩家边界: ${beat.playerBoundary}\n`;
+        if (beat.stopPoint) constraint += `停止点: ${beat.stopPoint}\n`;
         const beatActions = Array.isArray(beat.actions)
           ? beat.actions
           : (beat.action ? [beat.action] : []);
@@ -447,6 +471,17 @@ class AgentRunner {
         }
       }
       constraint += '\n';
+    }
+
+    if (extraContext.writingOutline?.variableEvidence?.length) {
+      constraint += '## 跨节拍记账依据\n'
+        + extraContext.writingOutline.variableEvidence.map(item => `- ${formatConstraintItem(item)}`).join('\n')
+        + '\n\n';
+    }
+    if (extraContext.writingOutline?.finalChecks?.length) {
+      constraint += '## 终稿核对条件\n'
+        + extraContext.writingOutline.finalChecks.map(item => `- ${formatConstraintItem(item)}`).join('\n')
+        + '\n\n';
     }
 
     // 2. 审查建议（结构化列出）
@@ -600,7 +635,7 @@ class AgentRunner {
     if (braceMatch) { try { return JSON.parse(braceMatch[1]); } catch {} }
 
     // Critic Agent 专用：修复常见 JSON 错误
-    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner') {
+    if (agentType.startsWith('critic-') || agentType === 'brainstormer' || agentType === 'outliner' || agentType === 'writer-outline') {
       try {
         let fixed = text;
         // 去掉尾随逗号
@@ -616,7 +651,7 @@ class AgentRunner {
     }
 
     // Writer 类型返回原文
-    const writerTypes = ['writer', 'writer-polish'];
+    const writerTypes = ['writer', 'writer-polish', 'final-writer'];
     if (writerTypes.includes(agentType)) return { _raw: text };
 
     // Critic/Outliner/Brainstormer 返回安全默认值
@@ -629,6 +664,9 @@ class AgentRunner {
     }
     if (agentType === 'outliner') {
       return { beats: [], estimatedLength: 800, variableSummary: 'JSON解析失败' };
+    }
+    if (agentType === 'writer-outline') {
+      return { beats: [], estimatedLength: 1200, variableEvidence: [], finalChecks: [] };
     }
     return { _raw: text };
   }

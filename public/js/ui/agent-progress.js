@@ -8,10 +8,12 @@ const STAGES = [
   { key: 'outline',          kanji: '景', label: '场景节拍' },
   { key: 'review_outline',   kanji: '明', label: '逻辑洞察' },
   { key: 'character_agents', kanji: '演', label: '人物行动' },
-  { key: 'writing',          kanji: '织', label: '查克拉编织' },
-  { key: 'review_draft',     kanji: '炼', label: '淬火提纯' },
-  { key: 'polish',           kanji: '华', label: '万象升华' },
-  { key: 'final_audit',      kanji: '审', label: '最终审计' },
+  { key: 'writing',          kanji: '织', label: '详纲编织' },
+  { key: 'review_draft',     kanji: '炼', label: '详纲校验' },
+  { key: 'polish',           kanji: '修', label: '详纲修订' },
+  { key: 'final_audit',      kanji: '审', label: '详纲终审' },
+  { key: 'final_write',      kanji: '文', label: '正文定稿' },
+  { key: 'continuity_updater', kanji: '账', label: '变量结算' },
   { key: 'archive',          kanji: '封', label: '记忆封印' }
 ];
 
@@ -268,7 +270,9 @@ class AgentProgress extends HTMLElement {
   _agentLabel(id) {
     if (id.startsWith('character:')) return `角色代理 · ${id.slice(10)}`;
     const map = {
-      'writer': '主模型 · 写作',
+      'writer-outline': '主模型 · 详细写作大纲',
+      'final-writer': '主模型 · 最终正文',
+      'writer': '主模型 · 旧版写作',
       'writer-polish': '主模型 · 润色',
       'story-planner': '三日策划',
       'brainstormer': '意识风暴',
@@ -277,7 +281,10 @@ class AgentProgress extends HTMLElement {
       'critic-character': '审查 · 角色契约',
       'critic-contract': '审查 · 开局契约',
       'critic-detail': '审查 · 细节',
-      'critic-style': '审查 · 风格'
+      'critic-style': '审查 · 风格',
+      'critic-writing-outline': '审查 · 详细写作大纲',
+      'critic-writing-outline-final': '终审 · 详细写作大纲',
+      'critic-outline-search': '终审 · 历史检索'
     };
     return map[id] || id;
   }

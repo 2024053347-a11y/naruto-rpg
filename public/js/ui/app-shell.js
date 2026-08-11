@@ -123,11 +123,7 @@ class AppShell {
     this.element.querySelector('#btn-mobile').addEventListener('click', () => this._toggleMobileView());
     this.element.querySelector('#btn-zen').addEventListener('click', () => this._toggleZenMode());
     this.element.querySelector('#btn-fullscreen').addEventListener('click', () => this._toggleFullscreen());
-    this.element.querySelector('#btn-map').addEventListener('click', () => {
-      if (!document.querySelector('map-modal')) {
-        (this.element ? (this.element.closest('#app') || document.body) : document.body).appendChild(document.createElement('map-modal'));
-      }
-    });
+    this.element.querySelector('#btn-map').addEventListener('click', () => this.openMap());
     this.element.querySelector('#btn-settings').addEventListener('click', () => {
       eventBus.emit('app:open-settings');
     });
@@ -213,6 +209,11 @@ class AppShell {
     eventBus.on('state:batch-changed', (e) => {
       if (this._captureUpdates && e.updates && e.updates.length) this._turnUpdates.push(...e.updates);
     });
+    eventBus.on('state:changed', ({ key, value, deleted, batched }) => {
+      // Flat update() writes are already represented by state:batch-changed.
+      // Capture direct structured-path writes, which do not emit that event.
+      this._captureStateChange({ key, value, deleted, batched });
+    });
     eventBus.on('relationship:changed', ({ npc, relationship }) => {
       if (this._captureUpdates) {
         if (relationship.history && relationship.history.length > 0) {
@@ -267,16 +268,15 @@ class AppShell {
     });
 
     eventBus.on('pipeline:review-started', () => {
-      this._updateStreaming('', '草稿完成 · 正在复检最终正文…');
+      this._updateStreaming('', '终稿完成 · 正在复检最终正文…');
     });
 
-    // Agent 模式：仅 writer/writer-polish 阶段的流式片段作为正文实时显示
-    // （outline/critic 等中间阶段是 JSON，不进正文）
+    // Agent 模式：终审前的 writer-outline/critic 流只进入代理详情；
+    // 只有终审通过后启动的 final-writer 可以进入正文流。
     eventBus.on('agent:stream', ({ agent, chunk }) => {
       if (isNarrativeReviewEnabled(stateManager.getAPIConfig() || {})) return;
-      if (agent !== 'writer' && agent !== 'writer-polish') return;
+      if (agent !== 'final-writer') return;
       if (!chunk) return;
-      // writer-polish 会重写正文，切换阶段时重置累积
       if (this._agentStreamAgent !== agent) {
         this._agentStreamAgent = agent;
         this._agentStreamText = '';
@@ -285,9 +285,9 @@ class AppShell {
       this._updateStreaming(instructionParser.cleanupPartialResponse(this._agentStreamText));
     });
 
-    // Agent 主模型（writer/writer-polish）的思维链：累积并在最终消息里作为「思维链」折叠块展示
+    // 仅收集终审后 final-writer 的推演摘要；详纲和审查过程留在代理详情中。
     eventBus.on('agent:reasoning', ({ agent, chunk }) => {
-      if (agent !== 'writer' && agent !== 'writer-polish') return;
+      if (agent !== 'final-writer') return;
       if (!chunk) return;
       if (this._agentReasoningAgent !== agent) {
         this._agentReasoningAgent = agent;
@@ -320,7 +320,7 @@ class AppShell {
     });
 
     eventBus.on('pipeline:complete', ({ rawResponse, cleanResponse, thinkContent, turnCount, hasHUD, isPartial, timelineError, timelineNodeId, shinobiDaily }) => {
-      // Agent 模式下把主模型（writer/writer-polish）捕获到的思维链并入最终消息的折叠块
+      // Agent 模式下把 final-writer 捕获到的推演摘要并入最终消息折叠块。
       const mergedThink = this._agentReasoningText
         ? `${thinkContent || ''}\n\n## 主模型思维链\n\n${this._agentReasoningText}`
         : thinkContent;
@@ -396,7 +396,7 @@ class AppShell {
       } else if (rawErr.includes('timeout') || rawErr.includes('超时') || rawErr.includes('AbortError')) {
         errTitle = '【生成超时】';
         errDetail = 'AI 响应时间过长，可能是模型负载过高或生成量过大。';
-        errHint = '可尝试：1. 减少 max_tokens  2. 换用更快的模型  3. 稍后重试';
+        errHint = '可尝试：1. 缩短本回合正文目标  2. 换用更快的模型  3. 稍后重试';
       } else if (isTruncated) {
         errTitle = '【生成截断】';
         errDetail = `已收到 ${partialResponse?.length || 0} 字后中断，回复不完整。`;
@@ -588,6 +588,16 @@ class AppShell {
       op: '=',
       value: detail,
       _readOnly: true
+    });
+  }
+
+  _captureStateChange({ key, value, deleted = false, batched = false } = {}) {
+    if (!this._captureUpdates || batched || !key || String(key).startsWith('_')) return;
+    this._turnUpdates ||= [];
+    this._turnUpdates.push({
+      key,
+      op: deleted ? '-' : '=',
+      value: deleted ? undefined : value
     });
   }
 
@@ -1625,6 +1635,43 @@ class AppShell {
     this._toggleRightPanel('info');
   }
 
+  openInfoPanel(tab = 'attributes') {
+    const panel = this.element?.querySelector('#info-panel');
+    if (!panel) return { opened: false, area: 'info-panel', tab };
+    const result = typeof panel.openTab === 'function'
+      ? panel.openTab(tab)
+      : { opened: true, area: 'info-panel', tab };
+    this._setRightPanelMode('info');
+    const appRoot = this.element.closest('#app') || document.body;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+      || appRoot.classList.contains('is-mobile-forced');
+    this._openRightPanel(isMobile);
+    return result;
+  }
+
+  openTimeline() {
+    const sidebar = this.element?.querySelector('#app-sidebar');
+    if (!sidebar) return { opened: false, area: 'timeline' };
+    const appRoot = this.element.closest('#app') || document.body;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+      || appRoot.classList.contains('is-mobile-forced');
+    sidebar.classList.remove('app-sidebar--collapsed');
+    sidebar.setAttribute('aria-hidden', 'false');
+    this.element.querySelector('#btn-timeline')?.setAttribute('aria-pressed', 'true');
+    if (isMobile) this._closeRightPanel();
+    this._syncMobileScrim();
+    return { opened: true, area: 'timeline' };
+  }
+
+  openMap() {
+    let map = document.querySelector('map-modal');
+    if (!map) {
+      map = document.createElement('map-modal');
+      (this.element ? (this.element.closest('#app') || document.body) : document.body).appendChild(map);
+    }
+    return { opened: Boolean(map?.isConnected), area: 'map' };
+  }
+
   async _toggleDeveloperPanel() {
     if (!customElements.get('developer-panel')) {
       try { await import('./developer-panel.js'); }
@@ -1664,6 +1711,7 @@ class AppShell {
     const panel = this.element?.querySelector('#app-panel');
     if (!panel) return;
     panel.classList.remove('app-panel--collapsed');
+    panel.setAttribute('aria-hidden', 'false');
     if (isMobile) {
       panel.classList.add('panel-open');
       const sidebar = this.element.querySelector('#app-sidebar');
@@ -1683,6 +1731,7 @@ class AppShell {
     if (!panel) return;
     panel.classList.remove('panel-open');
     panel.classList.add('app-panel--collapsed');
+    panel.setAttribute('aria-hidden', 'true');
     this._syncRightPanelButtons();
     this._syncMobileScrim();
   }

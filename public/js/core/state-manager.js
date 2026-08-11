@@ -461,7 +461,7 @@ class StateManager {
 
     for (const v of applied) {
       eventBus.emit('state:changed', {
-        key: v.key, value: this.state[v.key], oldValue: oldValues[v.key]
+        key: v.key, value: this.state[v.key], oldValue: oldValues[v.key], batched: true
       });
     }
     this._notifySubscribers(applied);

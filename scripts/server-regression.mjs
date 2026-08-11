@@ -365,6 +365,20 @@ try {
     assert.ok(Array.isArray((await response.json()).favorites));
   });
 
+  await check('music stream route rejects invalid track ids before outbound work', async () => {
+    const response = await fetch(`http://127.0.0.1:${port}/api/music/stream?mid=${encodeURIComponent('../metadata')}`);
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /曲目标识/);
+
+    const removedProvider = await fetch(`http://127.0.0.1:${port}/api/music/stream?provider=kuwo&id=5757486`);
+    assert.equal(removedProvider.status, 400);
+    assert.match((await removedProvider.json()).error, /音乐来源/);
+
+    const invalidProvider = await fetch(`http://127.0.0.1:${port}/api/music/stream?provider=custom&id=123`);
+    assert.equal(invalidProvider.status, 400);
+    assert.match((await invalidProvider.json()).error, /音乐来源/);
+  });
+
   await check('malformed JSON returns 400', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/ai-proxy`, {
       method: 'POST',

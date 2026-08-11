@@ -1,4 +1,4 @@
-export const DEFAULT_MAIN_PRESET_VERSION = '20260804-complete-reasoning-v14';
+export const DEFAULT_MAIN_PRESET_VERSION = '20260811-single-call-contract-v16';
 export const MAIN_PRESET_STORAGE_KEY = 'naruto_main_preset';
 export const MAIN_PRESET_BACKUP_PREFIX = 'naruto_main_preset_backup_';
 
@@ -7,6 +7,14 @@ export const PRESET_ACTIVATIONS = Object.freeze({
   variable_updater_enabled: '变量模型开启时',
   variable_updater_disabled: '变量模型关闭时'
 });
+
+// Unknown activation values come from older Tavern/custom imports. Treat them
+// as the explicit legacy default instead of letting them bypass mode guards.
+export function normalizePresetActivation(value) {
+  return Object.prototype.hasOwnProperty.call(PRESET_ACTIVATIONS, value)
+    ? value
+    : 'always';
+}
 
 export const DEFAULT_MAIN_PRESET = {
   name: '忍者手记 · 完整证据链叙事 v3',
@@ -202,9 +210,9 @@ export const DEFAULT_MAIN_PRESET = {
 5. 玩家意图、行动边界与判定：区分已完成动作、尝试、主张和预设成功，说明是否需要卦象判定及玩家不可被代写的部分。
 6. NPC动机、知识边界与关系：逐个核对实际在场NPC的独立动机、可知信息、态度依据、关系连续性和可观察回应。
 7. 连续性状态：逐类核对人物状态、伤势、资源、物品、忍术、任务、线索、承诺与已发生历史，不得凭空复原或重置。
-8. 因果、结果、记账与停止点：写清玩家行动 -> 世界回应 -> 直接结果 -> 状态变化的局部因果，并列出正文需明确呈现的记账依据和交还玩家选择的位置。
+8. 因果、结果、记账与停止点：只用自然语言写清玩家行动 -> 世界回应 -> 直接结果 -> 状态变化的局部因果，并列出正文需明确呈现的记账事实和交还玩家选择的位置；不得写标签名、尖括号或 JSON。
 
-禁止省略任何一项，也不得使用“略”“同上”“其余不变”“无需考虑”等代替核对；某项确实没有变化时，仍须写出核对对象、依据和“无变化”结论。不得写入NPC未公开秘密、证据编号和审校模型私有记录；不得写入未提供的隐藏系统内容，也不得用猜测补全事实。关闭 </reasoning> 后再开始剧情正文，正文不得再次复述这段核对表。`
+禁止省略任何一项，也不得使用“略”“同上”“其余不变”“无需考虑”等代替核对；某项确实没有变化时，仍须写出核对对象、依据和“无变化”结论。不得写入NPC未公开秘密、证据编号和审校模型私有记录；不得写入未提供的隐藏系统内容，也不得用猜测补全事实。<reasoning> 内禁止出现、引用、规划或示范任何机器标签，包括 <var>、<variable>、<combat>、<mission>、<relationship>、<event>、<state_update>、<memory> 和 <shinobi_daily>。关闭 </reasoning> 后再开始剧情正文，所有机器标签只能放在正文结束之后。`
     },
     {
       id: 'main_builtin_review_candidate', name: '15 · 内部校验：因果、角色与连续性', enabled: true, role: 'system', activation: 'always',
@@ -218,7 +226,7 @@ export const DEFAULT_MAIN_PRESET = {
     },
     {
       id: 'main_builtin_review_fix', name: '16 · 内部校验：最终提交边界', enabled: true, role: 'system', activation: 'always',
-      content: `关闭 </reasoning> 前，在“因果、结果、记账与停止点”项完成最终复检：日期未越界、历史已承接、项目证据高于预训练知识、玩家未被代行、NPC私密信息未泄露、正文计划与本回合结构标签一致。发现缺项时先补全对应固定项，再开始正文。
+      content: `关闭 </reasoning> 前，在“因果、结果、记账与停止点”项完成最终复检：日期未越界、历史已承接、项目证据高于预训练知识、玩家未被代行、NPC私密信息未泄露、正文计划与本回合需要记账的事实一致。这里只能用自然语言核对，不得写出、引用或示范任何机器标签。发现缺项时先补全对应固定项，再开始正文。
 
 只为正文中已经发生的结果生成结构标签，不为填表制造成长、关系、物品、忍术、任务、时间或事件。除规定的 <reasoning> 外，不得输出内部审计、自我评价或其他思考标签。`
     },
@@ -286,13 +294,26 @@ export const DEFAULT_MAIN_PRESET = {
 已有NPC战斗卡只输出真实增量，不重建整卡。最终正文中新实际登场的有名人物必须建档并明确分类：非战斗人员写 combatant:false；战斗人员写 combatant:true 和 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}。没有可靠属性或招式证据时保留空数组，禁止凭预训练知识添加招牌忍术；若提供忍术，每条必须完整包含 name/rank/element/resource_type/cost/power/mastery/description/type。`
     },
     {
-      id: 'main_builtin_output', name: '22 · 最终输出顺序', enabled: true, role: 'system', activation: 'always',
+      id: 'main_builtin_output', name: '22 · 最终输出顺序：变量模型关闭', enabled: true, role: 'system', activation: 'variable_updater_disabled',
       content: `最终回复顺序固定为：
 一、一个包含固定八项、不得合并或省略的 <reasoning>...</reasoning> 请求复述与构思核对表。
 二、经过核对的沉浸式剧情正文，以 900-1500 个汉字为目标并停在自然交互点。
-三、变量模型关闭时，在同一回复末尾输出本回合必要业务标签、唯一 <state_update> 记账确认、唯一 <memory> 和唯一 <shinobi_daily>；变量模型开启时不输出任何变量结构标签或日报。
+三、正文末尾依次输出本回合必要业务标签（没有实际变化时可为零个）、唯一 <state_update>、唯一 <memory> 和唯一 <shinobi_daily>。
 
-开始写正文前先为完整结构化尾部预留空间；接近输出上限时缩短推演和正文，绝不能省略或截断结构标签。只允许规定的 <reasoning> 作为主模型推演容器；不得输出 <thinking>、<think>、<analysis>、内部审计、证据账本、候选草稿、伪JSON对话框架、系统初始化确认、作者寒暄、未解析模板变量、代码围栏或额外解释。变量模型开启时正文后不得输出任何结构标签；变量模型关闭时按对应可编辑条目和固定运行时契约在本次主模型回复内完成记账。`
+<reasoning> 内禁止出现任何机器标签。正文结束后，<state_update> 必须从以下两行中二选一原样输出，不能省略、重复或改写：
+<state_update>{"changed":true}</state_update>
+<state_update>{"changed":false}</state_update>
+
+开始写正文前先为结构化尾部预留空间；接近输出上限时缩短正文中的非必要描写，绝不能省略或截断尾部标签。只允许规定的 <reasoning> 作为主模型核对容器；不得输出 <thinking>、<think>、<analysis>、内部审计、证据账本、候选草稿、伪JSON对话框架、系统初始化确认、作者寒暄、未解析模板变量、代码围栏或额外解释。`
+    },
+    {
+      id: 'main_builtin_output_updater', name: '23 · 最终输出顺序：变量模型开启', enabled: true, role: 'system', activation: 'variable_updater_enabled',
+      content: `最终回复顺序固定为：
+一、一个包含固定八项、不得合并或省略的 <reasoning>...</reasoning> 请求复述与构思核对表。
+二、经过核对的沉浸式剧情正文，以 900-1500 个汉字为目标并停在自然交互点。
+三、正文结束后立即停止；本回合不输出变量、记忆、状态确认、日报或其他结构标签，这些内容由后台变量模型独立完成。
+
+开始写正文前只为固定八项和正文预留空间；不得输出 <var>、<variable>、<combat>、<mission>、<relationship>、<event>、<state_update>、<memory> 或 <shinobi_daily>，也不得输出 <thinking>、<think>、<analysis>、内部审计、候选草稿、代码围栏或额外解释。`
     }
   ]
 };
@@ -302,7 +323,7 @@ function clone(value) {
 }
 
 function activationMatches(entry, context) {
-  const activation = entry?.activation || 'always';
+  const activation = normalizePresetActivation(entry?.activation);
   if (activation === 'variable_updater_enabled') return context.variableUpdaterEnabled === true;
   if (activation === 'variable_updater_disabled') return context.variableUpdaterEnabled !== true;
   return true;

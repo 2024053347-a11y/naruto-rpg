@@ -1,6 +1,7 @@
 import { ToolLoopAgent, jsonSchema, stepCountIs, tool } from 'ai';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createToolResultBudget } from '../../js/core/tool-result-budget.js';
 
 export const version = 'naruto-agent-sdk/v1';
 
@@ -76,7 +77,7 @@ function safeEvent(callback, event) {
   try { callback?.(event); } catch { /* progress listeners cannot fail the agent */ }
 }
 
-function compileTools(definitions = {}, onEvent, trace, useAnthropicCache = false) {
+function compileTools(definitions = {}, onEvent, trace, resultBudget, useAnthropicCache = false) {
   const names = Object.keys(definitions).sort();
   return Object.fromEntries(names.map((name, index) => {
     const definition = definitions[name] || {};
@@ -104,16 +105,20 @@ function compileTools(definitions = {}, onEvent, trace, useAnthropicCache = fals
           };
           trace.push(event);
           safeEvent(onEvent, event);
-          return output;
+          return resultBudget.limit(output, { tool: name });
         } catch (error) {
+          const message = String(error?.message || error);
           const event = {
             type: 'tool-end', callId, tool: name, success: false,
             durationMs: Math.round(performance.now() - startedAt),
-            error: String(error?.message || error)
+            error: message
           };
           trace.push(event);
           safeEvent(onEvent, event);
-          throw error;
+          return {
+            ok: false,
+            error: resultBudget.limit({ message }, { tool: name })
+          };
         }
       }
     })];
@@ -126,7 +131,9 @@ export async function runAgent({
   if (!config.model) throw new Error('Agent model is not configured');
   const trace = [];
   const useAnthropicCache = ['claude', 'anthropic'].includes(String(config.backend || '').toLowerCase());
-  const compiledTools = compileTools(tools, onEvent, trace, useAnthropicCache);
+  const maxSteps = Math.min(20, Math.max(1, Number(budget.maxSteps) || 8));
+  const resultBudget = createToolResultBudget({ ...budget, maxSteps });
+  const compiledTools = compileTools(tools, onEvent, trace, resultBudget, useAnthropicCache);
   const orderedTools = Object.keys(compiledTools).sort();
   const startedAt = performance.now();
   const agent = new ToolLoopAgent({
@@ -144,7 +151,7 @@ export async function runAgent({
     allowSystemInMessages: true,
     tools: compiledTools,
     toolOrder: orderedTools,
-    stopWhen: stepCountIs(Math.min(20, Math.max(1, Number(budget.maxSteps) || 8))),
+    stopWhen: stepCountIs(maxSteps),
     temperature: Number.isFinite(budget.temperature) ? budget.temperature : 0.5,
     ...(!useAnthropicCache ? {
       topP: Number.isFinite(budget.topP) ? budget.topP : 0.9
@@ -152,7 +159,7 @@ export async function runAgent({
   });
   safeEvent(onEvent, { type: 'agent-start', agent: definition.id || 'naruto-agent' });
   try {
-    const result = await agent.generate({
+    const callOptions = {
       messages,
       abortSignal: signal,
       onStepStart: event => safeEvent(onEvent, {
@@ -163,22 +170,55 @@ export async function runAgent({
         finishReason: event?.finishReason || null,
         toolCallCount: event?.toolCalls?.length || 0
       })
-    });
+    };
+    let text = '';
+    let finishReason = null;
+    let usage = null;
+    let stepList = [];
+
+    // Persisted API configs always normalize this flag. Bare SDK callers keep
+    // the legacy generate() path unless streaming was explicitly enabled.
+    if (config.disableStreaming !== false) {
+      const result = await agent.generate(callOptions);
+      text = result.text || '';
+      finishReason = result.finishReason || null;
+      usage = result.totalUsage || result.usage || null;
+      stepList = Array.isArray(result.steps) ? result.steps : [];
+    } else {
+      const result = await agent.stream(callOptions);
+      for await (const delta of result.textStream) {
+        const chunk = String(delta || '');
+        if (!chunk) continue;
+        text += chunk;
+        safeEvent(onEvent, { type: 'text-delta', delta: chunk });
+      }
+      const resolved = await Promise.all([
+        result.text,
+        result.finishReason,
+        result.totalUsage || result.usage,
+        result.steps
+      ]);
+      // Do not overwrite the accumulated stream text. Some SDK results only
+      // expose the final step's text, which would truncate the full reply.
+      if (!text) text = resolved[0] || '';
+      finishReason = resolved[1] || null;
+      usage = resolved[2] || null;
+      stepList = Array.isArray(resolved[3]) ? resolved[3] : [];
+    }
     const finalEvent = {
       type: 'agent-end', agent: definition.id || 'naruto-agent', success: true,
       durationMs: Math.round(performance.now() - startedAt)
     };
     trace.push(finalEvent);
     safeEvent(onEvent, finalEvent);
-    const stepList = Array.isArray(result.steps) ? result.steps : [];
     const reasoning = stepList
       .map(step => (step && step.reasoningText ? String(step.reasoningText) : ''))
       .filter(Boolean)
       .join('\n');
     return {
-      text: result.text || '',
-      finishReason: result.finishReason || null,
-      usage: result.totalUsage || result.usage || null,
+      text,
+      finishReason,
+      usage,
       steps: stepList.length,
       reasoning,
       trace

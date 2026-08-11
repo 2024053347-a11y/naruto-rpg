@@ -26,6 +26,7 @@ async function withTimelineDb(seed, fn, { failReplace = false, failCreate = fals
     timeline_branches: new Map((seed.branches || []).map(item => [item.id, clone(item)])),
     timeline_meta: new Map((seed.meta || []).map(item => [item.key, clone(item)]))
   };
+  const stats = { mutationCount: 0 };
   const methods = [
     'initDB', 'dbGet', 'dbGetAll', 'dbPut', 'dbDelete', 'dbClear',
     'dbReplaceTimeline', 'dbCommitTimeline', 'dbMutateTimeline'
@@ -61,6 +62,7 @@ async function withTimelineDb(seed, fn, { failReplace = false, failCreate = fals
   let mutationQueue = Promise.resolve();
   stateManager.dbMutateTimeline = (mutator, { nodeKeys = null, branchKeys = null } = {}) => {
     const execute = async () => {
+      stats.mutationCount += 1;
       const next = Object.fromEntries(
         Object.entries(stores).map(([name, values]) => [
           name,
@@ -102,7 +104,7 @@ async function withTimelineDb(seed, fn, { failReplace = false, failCreate = fals
   timelineSystem._maybeArchive = async () => 0;
   stateManager.reset();
   try {
-    return await fn(stores);
+    return await fn(stores, stats);
   } finally {
     for (const [name, method] of Object.entries(originals)) stateManager[name] = method;
     timelineSystem._maybeArchive = originalMaybeArchive;
@@ -140,6 +142,63 @@ const mainBranch = {
 const rootMeta = {
   key: 'root', value: { root_id: 'node_root', current_id: 'node_root', active_branch: 'branch_main', total_nodes: 1 }
 };
+
+function legacyMaintenanceSave({ scalarTag = false, withLaterTurn = false } = {}) {
+  const maintenanceId = 'node_legacy_maintenance';
+  const laterId = 'node_after_maintenance';
+  const maintenance = {
+    ...rootNode,
+    id: maintenanceId,
+    parent_id: rootNode.id,
+    children_ids: withLaterTurn ? [laterId] : [],
+    turn_number: 0,
+    depth: 1,
+    state_snapshot: snapshot('legacy-approved'),
+    summary: '灵希维护 · 属性·当前查克拉',
+    tags: scalarTag ? '灵希维护' : ['灵希维护'],
+    is_checkpoint: true,
+    maintenance: {
+      ...(scalarTag ? {} : { type: 'lingxi-variable-maintenance' }),
+      label: '属性·当前查克拉',
+      proposal_id: 'proposal_legacy_import',
+      previous_node_id: rootNode.id,
+      reason: '旧存档变量修复',
+      created_at: 1700000000000
+    }
+  };
+  const later = {
+    ...rootNode,
+    id: laterId,
+    parent_id: maintenanceId,
+    children_ids: [],
+    turn_number: 1,
+    depth: 2,
+    state_snapshot: snapshot('later-turn'),
+    summary: '维护后的正常剧情'
+  };
+  const nodes = [
+    { ...rootNode, children_ids: [maintenanceId] },
+    maintenance,
+    ...(withLaterTurn ? [later] : [])
+  ];
+  const currentId = withLaterTurn ? laterId : maintenanceId;
+  return {
+    nodes,
+    branches: [{
+      ...mainBranch,
+      head_node_id: currentId,
+      node_count: nodes.length
+    }],
+    meta: {
+      key: 'root',
+      value: {
+        ...rootMeta.value,
+        current_id: currentId,
+        total_nodes: nodes.length
+      }
+    }
+  };
+}
 
 await test('overwrite import failure leaves the previous timeline untouched', async () => {
   await withTimelineDb({ nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] }, async stores => {
@@ -400,6 +459,300 @@ await test('createNode failure leaves no partially written timeline data', async
     assert.equal(stores.timeline_branches.get('branch_main').head_node_id, 'node_root');
     assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
   }, { failCreate: true });
+});
+
+await test('createNode rejects legacy maintenance metadata without creating a turn', async () => {
+  await withTimelineDb({ nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] }, async stores => {
+    stateManager.setSub('_meta', { current_node_id: 'node_root', active_branch: 'branch_main' });
+    timelineSystem._pendingBranchFrom = 'node_root';
+    await assert.rejects(() => timelineSystem.createNode({
+      turnNumber: 1,
+      playerInput: '',
+      aiResponse: '',
+      stateSnapshot: snapshot('legacy-maintenance'),
+      chatHistory: [],
+      maintenance: {
+        type: 'lingxi-variable-maintenance',
+        label: '属性·当前查克拉',
+        previous_node_id: 'node_root'
+      },
+      expectedMaintenanceImpact: {
+        schema: 'naruto.lingxi-timeline-impact/v1',
+        operation: 'create-maintenance-checkpoint',
+        parentNodeId: 'node_root',
+        activeBranchId: 'branch_main',
+        createsIfBranch: false,
+        createsTurn: false,
+        updatesNode: true,
+        branchName: null
+      }
+    }), /createMaintenanceCheckpoint/);
+    assert.deepEqual([...stores.timeline_nodes.keys()], ['node_root']);
+    assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+    assert.equal(stores.timeline_meta.get('root').value.total_nodes, 1);
+    assert.equal(timelineSystem._pendingBranchFrom, 'node_root');
+  });
+});
+
+await test('Ling Xi maintenance attaches its snapshot and metadata to the current turn without creating a node', async () => {
+  await withTimelineDb(
+    { nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] },
+    async (stores, stats) => {
+      stateManager.setSub('_meta', { current_node_id: 'node_root', active_branch: 'branch_main' });
+      const approvedSnapshot = snapshot('lingxi-approved');
+      const expectedImpact = await timelineSystem.previewMaintenanceCheckpoint();
+      assert.deepEqual(expectedImpact, {
+        schema: 'naruto.lingxi-timeline-impact/v1',
+        operation: 'create-maintenance-checkpoint',
+        parentNodeId: 'node_root',
+        activeBranchId: 'branch_main',
+        createsIfBranch: false,
+        createsTurn: false,
+        updatesNode: true,
+        branchName: null
+      });
+      const updatedNode = await timelineSystem.createMaintenanceCheckpoint({
+        label: '属性·当前查克拉',
+        reason: '修复当前查克拉',
+        proposalId: 'proposal_atomic',
+        stateSnapshot: approvedSnapshot,
+        expectedImpact
+      });
+
+      assert.equal(stats.mutationCount, 1);
+      assert.equal(updatedNode.id, 'node_root');
+      assert.equal(stores.timeline_nodes.size, 1);
+      assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+      assert.equal(stores.timeline_branches.get('branch_main').head_node_id, 'node_root');
+      assert.equal(stores.timeline_branches.get('branch_main').node_count, 1);
+      assert.deepEqual(stores.timeline_nodes.get('node_root').children_ids, []);
+      const persisted = stores.timeline_nodes.get('node_root');
+      assert.equal(persisted.state_snapshot.marker, 'lingxi-approved');
+      assert.notEqual(persisted.is_checkpoint, true);
+      assert.equal(Array.isArray(persisted.tags) && persisted.tags.includes('灵希维护'), false);
+      assert.equal(persisted.maintenance_history.length, 1);
+      assert.equal(persisted.maintenance.type, 'lingxi-variable-maintenance');
+      assert.equal(persisted.maintenance.label, '属性·当前查克拉');
+      assert.equal(persisted.maintenance.proposal_id, 'proposal_atomic');
+      assert.equal(persisted.maintenance.previous_node_id, 'node_root');
+      assert.equal(persisted.maintenance.reason, '修复当前查克拉');
+      assert.equal(persisted.maintenance.before_state_snapshot.marker, 'root');
+      assert.equal(persisted.maintenance_history[0].created_at, persisted.maintenance.created_at);
+    }
+  );
+});
+
+await test('Ling Xi maintenance never creates an IF branch, even when a pending branch is armed', async () => {
+  const parent = { ...rootNode, children_ids: ['node_existing'], summary: '已经发生的未来' };
+  const existing = {
+    ...rootNode,
+    id: 'node_existing',
+    parent_id: 'node_root',
+    children_ids: [],
+    depth: 1,
+    turn_number: 2,
+    summary: '原有后续'
+  };
+  const branch = { ...mainBranch, head_node_id: 'node_existing', node_count: 2 };
+  const meta = {
+    key: 'root',
+    value: { ...rootMeta.value, current_id: 'node_root', active_branch: 'branch_main', total_nodes: 2 }
+  };
+  await withTimelineDb({ nodes: [parent, existing], branches: [branch], meta: [meta] }, async stores => {
+    stateManager.setSub('_meta', { current_node_id: 'node_root', active_branch: 'branch_main' });
+    timelineSystem._pendingBranchFrom = 'node_root';
+    const expectedImpact = await timelineSystem.previewMaintenanceCheckpoint();
+    assert.equal(expectedImpact.createsIfBranch, false);
+    assert.equal(expectedImpact.createsTurn, false);
+    assert.equal(expectedImpact.updatesNode, true);
+    assert.equal(expectedImpact.branchName, null);
+
+    await assert.rejects(
+      () => timelineSystem.createMaintenanceCheckpoint({
+        proposalId: 'proposal_stale_impact',
+        stateSnapshot: snapshot('stale-impact'),
+        expectedImpact: { ...expectedImpact, createsIfBranch: true, createsTurn: true, updatesNode: false, branchName: 'IF线·错误影响' }
+      }),
+      error => error?.code === 'LINGXI_PROPOSAL_STALE'
+    );
+    assert.equal(stores.timeline_nodes.size, 2);
+    assert.equal(stores.timeline_branches.size, 1);
+    assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+
+    const updatedNode = await timelineSystem.createMaintenanceCheckpoint({
+      proposalId: 'proposal_exact_impact',
+      stateSnapshot: snapshot('exact-impact'),
+      expectedImpact
+    });
+    assert.equal(updatedNode.id, 'node_root');
+    assert.equal(stores.timeline_nodes.size, 2);
+    assert.equal(stores.timeline_branches.size, 1);
+    assert.equal(stores.timeline_branches.get('branch_main').head_node_id, 'node_existing');
+    assert.equal(stores.timeline_branches.get('branch_main').node_count, 2);
+    assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+    assert.equal(stores.timeline_meta.get('root').value.active_branch, 'branch_main');
+    assert.equal(stores.timeline_nodes.get('node_root').state_snapshot.marker, 'exact-impact');
+    // A pending branch represents a user's later narrative choice. Maintenance
+    // must leave it armed so the next real turn can still create that branch.
+    assert.equal(timelineSystem._pendingBranchFrom, 'node_root');
+  });
+});
+
+await test('init folds legacy Ling Xi maintenance nodes into their modified turn', async () => {
+  const legacyMaintenance = {
+    ...rootNode,
+    id: 'node_legacy_maintenance',
+    parent_id: 'node_root',
+    children_ids: ['node_after_maintenance'],
+    turn_number: 0,
+    state_snapshot: snapshot('legacy-approved'),
+    summary: '灵希维护 · 属性·当前查克拉',
+    tags: ['灵希维护'],
+    is_checkpoint: true,
+    maintenance: {
+      type: 'lingxi-variable-maintenance',
+      label: '属性·当前查克拉',
+      proposal_id: 'proposal_legacy',
+      previous_node_id: 'node_root',
+      reason: '旧存档变量修复',
+      created_at: 1700000000000
+    }
+  };
+  const laterTurn = {
+    ...rootNode,
+    id: 'node_after_maintenance',
+    parent_id: legacyMaintenance.id,
+    children_ids: [],
+    depth: 2,
+    turn_number: 1,
+    state_snapshot: snapshot('later-turn'),
+    summary: '维护后的正常剧情'
+  };
+  const parent = { ...rootNode, children_ids: [legacyMaintenance.id] };
+  const branch = {
+    ...mainBranch,
+    head_node_id: laterTurn.id,
+    node_count: 3
+  };
+  const meta = {
+    ...rootMeta,
+    value: {
+      ...rootMeta.value,
+      current_id: legacyMaintenance.id,
+      total_nodes: 3
+    }
+  };
+
+  await withTimelineDb(
+    { nodes: [parent, legacyMaintenance, laterTurn], branches: [branch], meta: [meta] },
+    async stores => {
+      await timelineSystem.init();
+
+      assert.deepEqual([...stores.timeline_nodes.keys()].sort(), ['node_after_maintenance', 'node_root']);
+      const migratedRoot = stores.timeline_nodes.get('node_root');
+      const migratedLater = stores.timeline_nodes.get('node_after_maintenance');
+      assert.deepEqual(migratedRoot.children_ids, ['node_after_maintenance']);
+      assert.equal(migratedLater.parent_id, 'node_root');
+      assert.equal(migratedLater.depth, 1);
+      assert.equal(migratedRoot.state_snapshot.marker, 'legacy-approved');
+      assert.equal(migratedRoot.maintenance_history.length, 1);
+      assert.equal(migratedRoot.maintenance_history[0].migrated_from_node_id, legacyMaintenance.id);
+      assert.equal(migratedRoot.maintenance_history[0].previous_node_id, 'node_root');
+      assert.equal(migratedRoot.maintenance_history[0].before_state_snapshot.marker, 'root');
+      assert.equal(migratedRoot.maintenance.proposal_id, 'proposal_legacy');
+      assert.equal(Boolean(migratedRoot.tags?.includes('灵希维护')), false);
+
+      assert.equal(stores.timeline_branches.get('branch_main').head_node_id, laterTurn.id);
+      assert.equal(stores.timeline_branches.get('branch_main').node_count, 2);
+      assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+      assert.equal(stores.timeline_meta.get('root').value.total_nodes, 2);
+      assert.equal(stateManager.getSub('_meta').current_node_id, 'node_root');
+      assert.equal(stateManager.getSub('_meta').active_branch, 'branch_main');
+    }
+  );
+});
+
+await test('overwrite import folds scalar-tagged legacy maintenance before restoring runtime state', async () => {
+  await withTimelineDb({ nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] }, async stores => {
+    timelineSystem._initialized = true;
+    stateManager.restore(snapshot('runtime-before-legacy-import'));
+
+    const importedCurrent = await timelineSystem.importTimeline(
+      legacyMaintenanceSave({ scalarTag: true })
+    );
+
+    assert.equal(importedCurrent.id, rootNode.id);
+    assert.deepEqual([...stores.timeline_nodes.keys()], [rootNode.id]);
+    const migratedRoot = stores.timeline_nodes.get(rootNode.id);
+    assert.equal(migratedRoot.state_snapshot.marker, 'legacy-approved');
+    assert.equal(migratedRoot.maintenance_history.length, 1);
+    assert.equal(migratedRoot.maintenance_history[0].label, '属性·当前查克拉');
+    assert.equal(stores.timeline_branches.get('branch_main').head_node_id, rootNode.id);
+    assert.equal(stores.timeline_branches.get('branch_main').node_count, 1);
+    assert.equal(stores.timeline_meta.get('root').value.current_id, rootNode.id);
+    assert.equal(stores.timeline_meta.get('root').value.total_nodes, 1);
+    assert.equal(stateManager.snapshot().marker, 'legacy-approved');
+    assert.equal(stateManager.getSub('_meta').current_node_id, rootNode.id);
+  });
+});
+
+await test('merge import folds legacy maintenance before exposing the imported branch', async () => {
+  await withTimelineDb({ nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] }, async stores => {
+    timelineSystem._initialized = true;
+    stateManager.setSub('_meta', { current_node_id: rootNode.id, active_branch: 'branch_main' });
+
+    const importedRoot = await timelineSystem.importTimeline(
+      legacyMaintenanceSave({ withLaterTurn: true }),
+      { mode: 'merge' }
+    );
+
+    assert.ok(importedRoot);
+    assert.notEqual(importedRoot.id, rootNode.id);
+    assert.equal(stores.timeline_nodes.size, 3);
+    const attachedRoot = stores.timeline_nodes.get(importedRoot.id);
+    assert.equal(attachedRoot.parent_id, rootNode.id);
+    assert.equal(attachedRoot.state_snapshot.marker, 'legacy-approved');
+    assert.equal(attachedRoot.maintenance_history.length, 1);
+    const importedLater = [...stores.timeline_nodes.values()]
+      .find(node => node.summary === '维护后的正常剧情');
+    assert.equal(importedLater.parent_id, attachedRoot.id);
+    assert.equal(importedLater.depth, attachedRoot.depth + 1);
+    assert.equal([...stores.timeline_nodes.values()].some(node => (
+      (Array.isArray(node.tags) && node.tags.includes('灵希维护'))
+      || node.tags === '灵希维护'
+    )), false);
+    const importedBranch = [...stores.timeline_branches.values()]
+      .find(branch => branch.id !== 'branch_main');
+    assert.equal(importedBranch.node_count, 2);
+    assert.equal(stores.timeline_meta.get('root').value.current_id, rootNode.id);
+    assert.equal(stores.timeline_meta.get('root').value.total_nodes, 3);
+  });
+});
+
+await test('Ling Xi maintenance transaction failure leaves graph and live node unchanged', async () => {
+  await withTimelineDb(
+    { nodes: [rootNode], branches: [mainBranch], meta: [rootMeta] },
+    async stores => {
+      stateManager.setSub('_meta', { current_node_id: 'node_root', active_branch: 'branch_main' });
+      await assert.rejects(
+        () => timelineSystem.createMaintenanceCheckpoint({
+          label: '属性·当前查克拉',
+          reason: '故障注入',
+          proposalId: 'proposal_failed',
+          stateSnapshot: snapshot('must-not-persist')
+        }),
+        /synthetic create transaction failure/
+      );
+      assert.deepEqual([...stores.timeline_nodes.keys()], ['node_root']);
+      assert.deepEqual(stores.timeline_nodes.get('node_root').children_ids, []);
+      assert.equal(stores.timeline_branches.get('branch_main').head_node_id, 'node_root');
+      assert.equal(stores.timeline_branches.get('branch_main').node_count, 1);
+      assert.equal(stores.timeline_meta.get('root').value.current_id, 'node_root');
+      assert.equal(stores.timeline_meta.get('root').value.total_nodes, 1);
+      assert.equal(stateManager.getSub('_meta').current_node_id, 'node_root');
+    },
+    { failCreate: true }
+  );
 });
 
 await test('concurrent appends use compare-and-swap and preserve timeline counters', async () => {
@@ -1016,8 +1369,61 @@ await test('timeline navigator safely renders untrusted node and branch fields',
     assert.match(navigator.shadowRoot.innerHTML, /data-id="node&quot; onmouseover=&quot;alert\(1\)"/);
     assert.match(navigator.shadowRoot.innerHTML, /data-id="branch&quot; onfocus=&quot;alert\(2\)"/);
     assert.doesNotMatch(navigator.shadowRoot.innerHTML, /<img\s+src=x|color:red;position:fixed;inset:0/i);
-    assert.match(navigator.shadowRoot.innerHTML, /&lt;img src=x onerror=alert\(3\)&gt;/);
+    // The compact timeline deliberately truncates untrusted turn labels
+    // before escaping them; assert the escaped prefix rather than requiring
+    // the full payload to be rendered into a fixed-width card.
+    assert.match(navigator.shadowRoot.innerHTML, /&lt;img src=x onerror=a\.\.\./);
     assert.match(navigator.shadowRoot.innerHTML, /color:#eb613f/);
+  } finally {
+    if (previousHTMLElement === undefined) delete globalThis.HTMLElement;
+    else globalThis.HTMLElement = previousHTMLElement;
+    if (previousCustomElements === undefined) delete globalThis.customElements;
+    else globalThis.customElements = previousCustomElements;
+  }
+});
+
+await test('timeline navigator keeps turns with attached Ling Xi maintenance visible', async () => {
+  const previousHTMLElement = globalThis.HTMLElement;
+  const previousCustomElements = globalThis.customElements;
+  class FakeHTMLElement {
+    attachShadow() {
+      this.shadowRoot = {
+        innerHTML: '',
+        querySelector: () => null,
+        querySelectorAll: () => []
+      };
+      return this.shadowRoot;
+    }
+  }
+  globalThis.HTMLElement = FakeHTMLElement;
+  globalThis.customElements = { define() {}, get() { return undefined; } };
+  try {
+    const { default: TimelineNavigator } = await import(`../js/ui/timeline-navigator.js?attached-maintenance=${Date.now()}`);
+    const navigator = new TimelineNavigator();
+    const nodeId = 'node_attached_maintenance';
+    const maintenance = {
+      type: 'lingxi-variable-maintenance',
+      label: '属性·当前查克拉',
+      reason: '修复当前查克拉',
+      previous_node_id: nodeId,
+      created_at: 1700000000000
+    };
+    navigator._nodes = [{
+      ...rootNode,
+      id: nodeId,
+      summary: '任务结束后返回木叶',
+      maintenance,
+      maintenance_history: [maintenance]
+    }];
+    navigator._branches = [{ ...mainBranch, head_node_id: nodeId }];
+    navigator._selectedId = nodeId;
+
+    assert.equal(navigator._isMaintenanceNode(navigator._nodes[0]), false);
+    assert.equal(navigator._storyNodeId(nodeId), nodeId);
+    navigator._render();
+    assert.match(navigator.shadowRoot.innerHTML, /任务结束后返回木叶/);
+    assert.match(navigator.shadowRoot.innerHTML, /有维护记录/);
+    assert.match(navigator.shadowRoot.innerHTML, /本回合存档变更/);
   } finally {
     if (previousHTMLElement === undefined) delete globalThis.HTMLElement;
     else globalThis.HTMLElement = previousHTMLElement;
@@ -1167,6 +1573,82 @@ await test('image state slice sync sanitizes bytes/base64 and rejects unsafe or 
     assert.equal(stale.status, 'stale');
     assert.equal(stale.currentNodeId, 'node_root');
     assert.deepEqual(stores.timeline_nodes.get(currentNode.id).state_snapshot, snapshotBeforeStaleWrite);
+  });
+});
+
+await test('current timeline node persists story state with node, branch, and before-value CAS', async () => {
+  const beforeStory = {
+    direction: null,
+    plan: { id: 'old-plan', branchId: 'branch_main' },
+    invalidated: false
+  };
+  const currentNode = {
+    ...rootNode,
+    id: 'node_story_state',
+    state_snapshot: {
+      ...snapshot('story-before'),
+      _story_direction: beforeStory.direction,
+      _agent_story_plan: beforeStory.plan,
+      _agent_story_plan_invalidated: beforeStory.invalidated
+    }
+  };
+  const currentMeta = {
+    ...rootMeta,
+    value: { ...rootMeta.value, current_id: currentNode.id, active_branch: 'branch_main', total_nodes: 2 }
+  };
+  await withTimelineDb({ nodes: [rootNode, currentNode], branches: [mainBranch], meta: [currentMeta] }, async stores => {
+    stateManager.setSub('_meta', { current_node_id: currentNode.id, active_branch: 'branch_main' });
+    const afterStory = {
+      direction: {
+        branchId: 'branch_main',
+        direction: '先调查失踪案，再决定是否卷入大战',
+        goals: ['保护同伴'],
+        avoid: ['强制背叛'],
+        updatedAt: '2026-08-07T12:00:00.000Z'
+      },
+      plan: null,
+      invalidated: true
+    };
+
+    const result = await timelineSystem.persistCurrentStoryState({
+      expectedNodeId: currentNode.id,
+      expectedBranchId: 'branch_main',
+      before: beforeStory,
+      after: afterStory
+    });
+    assert.equal(result.status, 'updated');
+    const persisted = stores.timeline_nodes.get(currentNode.id).state_snapshot;
+    assert.deepEqual(persisted._story_direction, afterStory.direction);
+    assert.equal(persisted._agent_story_plan, null);
+    assert.equal(persisted._agent_story_plan_invalidated, true);
+    assert.equal(persisted.marker, 'story-before');
+
+    persisted._story_direction = { branchId: 'branch_main', direction: '并发更新' };
+    stores.timeline_nodes.get(currentNode.id).state_snapshot = persisted;
+    await assert.rejects(
+      () => timelineSystem.persistCurrentStoryState({
+        expectedNodeId: currentNode.id,
+        expectedBranchId: 'branch_main',
+        before: afterStory,
+        after: { ...afterStory, invalidated: false }
+      }),
+      error => error?.code === 'LINGXI_PROPOSAL_STALE'
+    );
+    assert.equal(
+      stores.timeline_nodes.get(currentNode.id).state_snapshot._story_direction.direction,
+      '并发更新'
+    );
+
+    stores.timeline_meta.set('root', clone(rootMeta));
+    await assert.rejects(
+      () => timelineSystem.persistCurrentStoryState({
+        expectedNodeId: currentNode.id,
+        expectedBranchId: 'branch_main',
+        before: afterStory,
+        after: { ...afterStory, invalidated: false }
+      }),
+      error => error?.code === 'LINGXI_PROPOSAL_STALE'
+    );
   });
 });
 

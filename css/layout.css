@@ -702,6 +702,14 @@ body.immersive-fullscreen .app-panel.app-panel--collapsed { opacity: 0; width: 0
 body.immersive-fullscreen .chat-messages { padding-top: var(--sp-8); }
 body.immersive-fullscreen[data-bg-mode="image"] { background-attachment: initial; }
 
+@media (max-height: 520px) {
+  body.lingxi-companion-open .sw-toast {
+    opacity: 0 !important;
+    visibility: hidden;
+    pointer-events: none !important;
+  }
+}
+
 /* ── Background Modes ──── */
 :root {
   --default-bg-image: url("../img/bg-home-pc.png");
@@ -770,6 +778,19 @@ body[data-bg-mode="image"] {
   .mobile-scrim.is-visible { opacity: 1; pointer-events: auto; }
 
   body[data-bg-mode="image"] { background-attachment: scroll; }
+
+  /* 手机端灵希使用完整工具面板，主剧情输入暂时让出触控区域。 */
+  body.lingxi-companion-open .chat-input-area {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.lingxi-companion-open .sw-toast {
+    opacity: 0 !important;
+    visibility: hidden;
+    pointer-events: none !important;
+  }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

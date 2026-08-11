@@ -2,6 +2,7 @@ import '../vendor/agent-sdk.js';
 import { AIClient, isTavernEnv } from './ai-client.js';
 import { eventBus } from './event-bus.js';
 import { AGENT_CONTEXT_SCHEMA, agentContextBroker } from './agent-context-broker.js';
+import { createToolResultBudget } from './tool-result-budget.js';
 
 export const AGENT_EVENT_SCHEMA = 'naruto.agent-event/v1';
 export const TEXT_TOOL_PROTOCOL = 'naruto.text-tool/v1';
@@ -15,6 +16,10 @@ function clone(value) {
 
 function text(value, max = 4000) {
   return String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
+}
+
+function streamText(value, max = 4000) {
+  return String(value ?? '').replace(/\u0000/g, '').slice(0, max);
 }
 
 function redact(value, depth = 0) {
@@ -93,6 +98,11 @@ export function toPublicAgentEvent(event = {}) {
     agent: text(event.agent, 100),
     tool: text(event.tool, 100),
     subagent: text(event.subagent, 100),
+    callId: text(event.callId, 160),
+    step: Number.isInteger(event.step) ? Math.max(0, event.step) : null,
+    finishReason: text(event.finishReason, 80),
+    toolCallCount: Number.isInteger(event.toolCallCount) ? Math.max(0, event.toolCallCount) : null,
+    delta: event.type === 'text-delta' ? streamText(event.delta, 12000) : '',
     success: typeof event.success === 'boolean' ? event.success : null,
     durationMs: Number.isFinite(event.durationMs) ? Math.max(0, Math.round(event.durationMs)) : null,
     sources: clone(event.sources || []),
@@ -214,7 +224,7 @@ export class AgentToolRuntime {
 
   _emit(event, onEvent) {
     const publicEvent = toPublicAgentEvent(event);
-    this._trace.push(publicEvent);
+    if (publicEvent.type !== 'text-delta') this._trace.push(publicEvent);
     eventBus.emit('agent:runtime-event', publicEvent);
     try { onEvent?.(publicEvent); } catch { /* UI listeners do not own runtime */ }
     return publicEvent;
@@ -289,14 +299,11 @@ export class AgentToolRuntime {
             budget,
             signal: runtimeSignal,
             onEvent: event => {
-              if (event.type === 'tool-start' || event.type === 'tool-end') {
+              if (['step-start', 'step-end', 'tool-start', 'tool-end', 'text-delta'].includes(event.type)) {
                 this._emit({ ...event, agent: definition.id }, onEvent);
               }
             }
           });
-          if (nativeResult?.reasoning) {
-            eventBus.emit('agent:reasoning', { agent: definition.id, chunk: nativeResult.reasoning });
-          }
           result = {
             text: nativeResult.text,
             finishReason: nativeResult.finishReason,
@@ -415,23 +422,35 @@ export class AgentToolRuntime {
     if (!client.isConfigured()) throw new Error('Agent AI client not configured');
     this._activeClient = client;
     this._emit({ type: 'agent-start', agent: definition.id, detail: { mode: 'plain-chat' } }, onEvent);
-    const text = await client.chat([
+    this._emit({ type: 'step-start', agent: definition.id, step: 0 }, onEvent);
+    const chatMessages = [
       { role: 'system', content: String(definition.instructions || definition.systemPrompt || '') },
       ...messages
-    ], {
+    ];
+    const requestOptions = {
       signal,
       timeout: 0,
       max_tokens: Number(budget.maxOutputTokens) || 2048,
       temperature: Number.isFinite(budget.temperature) ? budget.temperature : 0.4,
       top_p: Number.isFinite(budget.topP) ? budget.topP : 0.9,
       maxRetries: 0
-    });
-    this._emit({ type: 'agent-end', agent: definition.id, success: true, detail: { mode: 'plain-chat' } }, onEvent);
-    return { text: String(text || ''), mode: 'plain-chat', steps: 1, usage: null, reasoning: '' };
+    };
+    const response = this.config.disableStreaming === true || typeof client.chatStream !== 'function'
+      ? await client.chat(chatMessages, requestOptions)
+      : await client.chatStream(chatMessages, requestOptions, chunk => {
+          const delta = streamText(chunk, 12000);
+          if (delta) this._emit({ type: 'text-delta', agent: definition.id, delta }, onEvent);
+        });
+    this._emit({
+      type: 'step-end', agent: definition.id, step: 0, success: true,
+      finishReason: 'stop', toolCallCount: 0
+    }, onEvent);
+    return { text: String(response || ''), mode: 'plain-chat', steps: 1, usage: null, reasoning: '' };
   }
 
   async _runTextProtocol({ definition, messages, tools, outputSchema, budget, signal, onEvent }) {
     const maxSteps = Math.min(20, Math.max(1, Number(budget.maxSteps) || 8));
+    const toolResultBudget = createToolResultBudget({ ...budget, maxSteps });
     const client = this.clientFactory();
     client.configure(this.config);
     if (!client.isConfigured()) throw new Error('Agent AI client not configured');
@@ -445,6 +464,7 @@ export class AgentToolRuntime {
     this._emit({ type: 'agent-start', agent: definition.id, detail: { mode: 'text-tool-protocol' } }, onEvent);
     for (let step = 0; step < maxSteps; step++) {
       if (signal.aborted) throw signal.reason || new Error('Agent runtime aborted');
+      this._emit({ type: 'step-start', agent: definition.id, step }, onEvent);
       const messagesForCall = isTavernEnv
         ? [
             {
@@ -471,7 +491,6 @@ export class AgentToolRuntime {
         maxRetries: 0,
         onReasoning: chunk => {
           reasoningParts.push(chunk);
-          eventBus.emit('agent:reasoning', { agent: definition.id, chunk });
         }
       });
       const raw = resultText(response);
@@ -483,11 +502,19 @@ export class AgentToolRuntime {
       }
       protocolMessages.push({ role: 'assistant', content: JSON.stringify(command) });
       if (Object.prototype.hasOwnProperty.call(command, 'final')) {
+        this._emit({
+          type: 'step-end', agent: definition.id, step, success: true,
+          finishReason: 'stop', toolCallCount: 0
+        }, onEvent);
         const final = typeof command.final === 'string' ? command.final : JSON.stringify(command.final);
         return { text: final, mode: 'text-tool-protocol', steps: step + 1, usage: null, reasoning: reasoningParts.join('') };
       }
       const toolName = text(command.tool, 100);
       if (outputSchema && !toolName && structuredOutput(command, outputSchema)) {
+        this._emit({
+          type: 'step-end', agent: definition.id, step, success: true,
+          finishReason: 'stop', toolCallCount: 0
+        }, onEvent);
         return {
           text: JSON.stringify(command),
           mode: 'text-tool-protocol',
@@ -498,29 +525,43 @@ export class AgentToolRuntime {
       }
       const definitionForTool = tools[toolName];
       if (!definitionForTool?.execute) throw new Error(`Unknown or unavailable tool: ${toolName || '(empty)'}`);
+      this._emit({
+        type: 'step-end', agent: definition.id, step, success: true,
+        finishReason: 'tool-calls', toolCallCount: 1
+      }, onEvent);
       const toolStartedAt = performance.now();
-      this._emit({ type: 'tool-start', agent: definition.id, tool: toolName }, onEvent);
+      const callId = globalThis.crypto?.randomUUID?.()
+        || `tool-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      this._emit({ type: 'tool-start', agent: definition.id, tool: toolName, callId }, onEvent);
       try {
         const output = await definitionForTool.execute(command.input || {});
         this._emit({
-          type: 'tool-end', agent: definition.id, tool: toolName, success: true,
+          type: 'tool-end', agent: definition.id, tool: toolName, callId, success: true,
           durationMs: performance.now() - toolStartedAt,
           sources: output?.sources || [],
           cache: output?.cache || null
         }, onEvent);
         protocolMessages.push({
           role: 'user',
-          content: JSON.stringify({ protocol: TEXT_TOOL_PROTOCOL, tool_result: toolName, output })
+          content: JSON.stringify({
+            protocol: TEXT_TOOL_PROTOCOL,
+            tool_result: toolName,
+            output: toolResultBudget.limit(output, { tool: toolName })
+          })
         });
       } catch (error) {
         this._emit({
-          type: 'tool-end', agent: definition.id, tool: toolName, success: false,
+          type: 'tool-end', agent: definition.id, tool: toolName, callId, success: false,
           durationMs: performance.now() - toolStartedAt,
           error: error.message
         }, onEvent);
         protocolMessages.push({
           role: 'user',
-          content: JSON.stringify({ protocol: TEXT_TOOL_PROTOCOL, tool_result: toolName, error: error.message })
+          content: JSON.stringify({
+            protocol: TEXT_TOOL_PROTOCOL,
+            tool_result: toolName,
+            error: toolResultBudget.limit({ message: error.message }, { tool: toolName })
+          })
         });
       }
     }

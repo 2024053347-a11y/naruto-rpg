@@ -1,32 +1,53 @@
-import { stateManager } from '../core/state-manager.js';
-import { eventBus } from '../core/event-bus.js';
+import { stateManager as defaultStateManager } from '../core/state-manager.js';
+import { eventBus as defaultEventBus } from '../core/event-bus.js';
 import { normalizeMissionStatus } from '../data/instruction-contract.js';
 
-class MissionSystem {
-  processInstruction(missionData) {
+export class MissionSystem {
+  constructor({
+    stateManager = defaultStateManager,
+    eventBus = defaultEventBus,
+    clock = Date.now
+  } = {}) {
+    this.stateManager = stateManager;
+    this.eventBus = eventBus;
+    this.clock = clock;
+  }
+
+  createSimulation({ stateManager, eventBus, clock = this.clock } = {}) {
+    return new MissionSystem({ stateManager, eventBus, clock });
+  }
+
+  processInstruction(missionData, { now = this.clock() } = {}) {
     if (!missionData || typeof missionData !== 'object') {
       console.warn('[MissionSystem] Invalid mission instruction:', typeof missionData);
       return;
     }
     missionData = this._normalizeInstruction(missionData);
-
-    if (missionData.status === 'completed') {
-      this._completeMission(missionData);
-    } else if (missionData.status === 'active') {
-      this._addMission(missionData);
-    } else if (missionData.status === 'progress') {
-      this._updateMissionProgress(missionData);
-    } else if (missionData.status === 'failed') {
-      this._failMission(missionData);
-    } else if (missionData.status === 'abandoned') {
-      this._abandonMission(missionData);
+    const timestamp = Number(now);
+    if (!Number.isFinite(timestamp)) {
+      console.warn('[MissionSystem] Invalid mission timestamp:', now);
+      return;
     }
 
-    eventBus.emit('mission:updated', missionData);
+    let result = null;
+    if (missionData.status === 'completed') {
+      result = this._completeMission(missionData, timestamp);
+    } else if (missionData.status === 'active') {
+      result = this._addMission(missionData, timestamp);
+    } else if (missionData.status === 'progress') {
+      result = this._updateMissionProgress(missionData, timestamp);
+    } else if (missionData.status === 'failed') {
+      result = this._failMission(missionData, timestamp);
+    } else if (missionData.status === 'abandoned') {
+      result = this._abandonMission(missionData, timestamp);
+    }
+
+    this.eventBus.emit('mission:updated', missionData);
+    return result;
   }
 
-  _completeMission(data) {
-    const missions = stateManager.getSub('_missions') || {};
+  _completeMission(data, now = this.clock()) {
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
     let mission = active[data.id] || data;
 
@@ -38,7 +59,7 @@ class MissionSystem {
       console.warn('[MissionSystem] _completeMission called without valid mission id');
       return null;
     }
-    mission = { ...mission, ...data, status: 'completed', completed_at: Date.now() };
+    mission = { ...mission, ...data, status: 'completed', completed_at: now };
     const completed = missions.completed || {};
     completed[missionId] = mission;
     missions.completed = completed;
@@ -48,25 +69,25 @@ class MissionSystem {
     const rankKey = this._rankKey(mission.rank);
     if (rankKey) stats[rankKey] = (stats[rankKey] || 0) + 1;
     missions.stats = stats;
-    stateManager.setSub('_missions', missions);
+    this.stateManager.setSub('_missions', missions);
 
-    stateManager.update([{ key: '进度·已完成任务', op: '+', value: 1 }]);
+    this.stateManager.update([{ key: '进度·已完成任务', op: '+', value: 1 }]);
 
     const expReward = data.exp_reward ?? data.reward?.exp ?? mission.reward_exp ?? 0;
     const ryoReward = data.ryo_reward ?? data.reward?.ryo ?? mission.reward_ryo ?? 0;
     if (expReward) {
-      stateManager.update([{ key: '进度·经验', op: '+', value: expReward }]);
+      this.stateManager.update([{ key: '进度·经验', op: '+', value: expReward }]);
     }
     if (ryoReward) {
-      stateManager.update([{ key: '进度·金钱', op: '+', value: ryoReward }]);
+      this.stateManager.update([{ key: '进度·金钱', op: '+', value: ryoReward }]);
     }
 
-    eventBus.emit('mission:completed', mission);
+    this.eventBus.emit('mission:completed', mission);
     return mission;
   }
 
-  _addMission(data) {
-    const missions = stateManager.getSub('_missions') || {};
+  _addMission(data, now = this.clock()) {
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
 
     const existing = data.id ? active[data.id] : null;
@@ -117,16 +138,16 @@ class MissionSystem {
         id: existing.id,
         status: 'active',
         created_at: existing.created_at,
-        updated_at: Date.now()
+        updated_at: now
       };
       active[existing.id] = updated;
       missions.active = active;
-      stateManager.setSub('_missions', missions);
-      eventBus.emit('mission:updated-active', updated);
+      this.stateManager.setSub('_missions', missions);
+      this.eventBus.emit('mission:updated-active', updated);
       return updated;
     }
 
-    const missionId = data.id || `mission_${Date.now()}`;
+    const missionId = data.id || `mission_${now}`;
 
     const mission = {
       id: missionId,
@@ -144,19 +165,19 @@ class MissionSystem {
       clues: data.clues || [],
       progress: data.progress || { current_step: 0, total_steps: data.steps?.length || 0, steps: data.steps || [] },
       status: 'active',
-      created_at: Date.now()
+      created_at: now
     };
 
     active[mission.id] = mission;
     missions.active = active;
-    stateManager.setSub('_missions', missions);
+    this.stateManager.setSub('_missions', missions);
 
-    eventBus.emit('mission:added', mission);
+    this.eventBus.emit('mission:added', mission);
     return mission;
   }
 
-  _updateMissionProgress(data) {
-    const missions = stateManager.getSub('_missions') || {};
+  _updateMissionProgress(data, now = this.clock()) {
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
     const mission = active[data.id];
     if (!mission) return null;
@@ -165,7 +186,7 @@ class MissionSystem {
       ...mission,
       ...data,
       status: 'active',
-      updated_at: Date.now()
+      updated_at: now
     };
     if (data.progress && typeof data.progress === 'object') {
       updated.progress = { ...(mission.progress || {}), ...data.progress };
@@ -176,18 +197,18 @@ class MissionSystem {
     }
     active[data.id] = updated;
     missions.active = active;
-    stateManager.setSub('_missions', missions);
-    eventBus.emit('mission:progress', updated);
+    this.stateManager.setSub('_missions', missions);
+    this.eventBus.emit('mission:progress', updated);
     return updated;
   }
 
-  _failMission(data) {
-    const missions = stateManager.getSub('_missions') || {};
+  _failMission(data, now = this.clock()) {
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
     let mission = active[data.id];
     delete active[data.id];
     if (!mission) mission = data;
-    mission = { ...mission, ...data, status: 'failed', failed_at: Date.now() };
+    mission = { ...mission, ...data, status: 'failed', failed_at: now };
 
     missions.active = active;
     const failed = missions.failed || {};
@@ -197,21 +218,21 @@ class MissionSystem {
     const stats = missions.stats || { total_done: 0, total_failed: 0, d_rank: 0, c_rank: 0, b_rank: 0, a_rank: 0, s_rank: 0 };
     stats.total_failed = (stats.total_failed || 0) + 1;
     missions.stats = stats;
-    stateManager.setSub('_missions', missions);
+    this.stateManager.setSub('_missions', missions);
 
-    eventBus.emit('mission:failed', mission);
+    this.eventBus.emit('mission:failed', mission);
     return mission;
   }
 
-  _abandonMission(data) {
-    const missions = stateManager.getSub('_missions') || {};
+  _abandonMission(data, now = this.clock()) {
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
     const mission = active[data.id];
     if (!mission) return null;
     delete active[data.id];
     missions.active = active;
 
-    const abandoned = { ...mission, ...data, status: 'abandoned', abandoned_at: Date.now() };
+    const abandoned = { ...mission, ...data, status: 'abandoned', abandoned_at: now };
     const failed = missions.failed || {};
     failed[abandoned.id] = abandoned;
     missions.failed = failed;
@@ -219,32 +240,32 @@ class MissionSystem {
     const stats = missions.stats || { total_done: 0, total_failed: 0, total_abandoned: 0, d_rank: 0, c_rank: 0, b_rank: 0, a_rank: 0, s_rank: 0 };
     stats.total_abandoned = (stats.total_abandoned || 0) + 1;
     missions.stats = stats;
-    stateManager.setSub('_missions', missions);
+    this.stateManager.setSub('_missions', missions);
 
-    eventBus.emit('mission:abandoned', abandoned);
+    this.eventBus.emit('mission:abandoned', abandoned);
     return abandoned;
   }
 
   getActiveMissions() {
-    const missions = stateManager.getSub('_missions') || {};
+    const missions = this.stateManager.getSub('_missions') || {};
     const active = missions.active || {};
     return Object.values(active);
   }
 
   getCompletedMissions() {
-    const missions = stateManager.getSub('_missions') || {};
+    const missions = this.stateManager.getSub('_missions') || {};
     const completed = missions.completed || {};
     return Object.values(completed);
   }
 
   getAvailableMissions() {
-    const missions = stateManager.getSub('_missions') || {};
+    const missions = this.stateManager.getSub('_missions') || {};
     const available = missions.available || {};
     return Object.values(available);
   }
 
   getMissionStats() {
-    const missions = stateManager.getSub('_missions') || {};
+    const missions = this.stateManager.getSub('_missions') || {};
     return missions.stats || { total_done: 0, d_rank: 0, c_rank: 0, b_rank: 0, a_rank: 0, s_rank: 0 };
   }
 

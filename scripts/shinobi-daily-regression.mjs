@@ -244,8 +244,11 @@ await test('single-call output rejects omissions, invalid updates and false book
 
 await test('single-call runtime prompt requires a verifiable bookkeeping acknowledgement', () => {
   assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /系统不会自动发起第二次请求/);
-  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<state_update>严格 JSON<\/state_update>/);
-  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /changed:false/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<reasoning> 内禁止出现、引用、规划或示范任何机器标签/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<state_update>\{"changed":true\}<\/state_update>/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<state_update>\{"changed":false\}<\/state_update>/);
+  assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /两行只能二选一/);
+  assert.doesNotMatch(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<state_update>严格 JSON<\/state_update>/);
   assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<memory>/);
   assert.match(MAIN_SINGLE_CALL_OUTPUT_PROMPT, /<shinobi_daily>/);
 });
@@ -288,8 +291,13 @@ await test('assembled single-call prompt keeps the hard delivery checklist after
     assert.ok(prefillIndex >= 0, 'fixture must include a custom assistant prefill');
     assert.ok(contractIndex > prefillIndex, 'runtime contract must override a stale custom prefill');
     assert.equal(sources.at(-1)?.label, '最终交付复核');
-    assert.match(currentUser?.content || '', /单次交付硬约束/);
+    assert.doesNotMatch(currentUser?.content || '', /单次交付硬约束/);
+    const finalContract = messages.at(-1)?.content || '';
+    assert.match(finalContract, /单次交付最后检查/);
     assert.match(messages.at(-1)?.content || '', /接近输出上限时.*缩短正文.*不得省略/);
+    assert.match(finalContract, /<state_update>\{"changed":true\}<\/state_update>/);
+    assert.match(finalContract, /<state_update>\{"changed":false\}<\/state_update>/);
+    assert.match(finalContract, /<reasoning> 内不得出现任何机器标签/);
   } finally {
     localStorage.removeItem(MAIN_PRESET_STORAGE_KEY);
     localStorage.removeItem('naruto_main_preset_version');

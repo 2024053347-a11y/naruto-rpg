@@ -703,6 +703,8 @@ test('pipeline uses an explicit manual review-preview transaction before commit'
 test('agent draft streaming is hidden while two-stage review is enabled', () => {
   const source = readFileSync(new URL('../js/ui/app-shell.js', import.meta.url), 'utf8');
   assert.match(source, /agent:stream[\s\S]*isNarrativeReviewEnabled[\s\S]*return;/);
+  assert.match(source, /agent !== 'final-writer'/);
+  assert.doesNotMatch(source, /agent !== 'writer' && agent !== 'writer-polish'/);
 });
 
 console.log(`PASS ${passed} preset and narrative-review regression checks.`);

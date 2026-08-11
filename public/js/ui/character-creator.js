@@ -90,6 +90,7 @@ class CharacterCreator extends HTMLElement {
     this._techniqueClass = '';
     this._techniquePage = 1;
     this._techniquePageSize = TECHNIQUE_PAGE_SIZES[0];
+    this._selectedPersonaId = '';
     this._draft = createOpeningDraft();
     if (!this._prototype) this._loadPreset();
     this._onPrototypeKey = (event) => this._handlePrototypeKey(event);
@@ -158,19 +159,32 @@ class CharacterCreator extends HTMLElement {
   }
 
   async _loadPersonaProfiles() {
+    const profiles = await listPersonaProfiles();
     const select = this.shadowRoot.querySelector('#persona-select');
     if (!select) return;
-    const profiles = await listPersonaProfiles();
+    const selectedId = profiles.some(profile => profile.id === this._selectedPersonaId)
+      ? this._selectedPersonaId
+      : '';
+    this._selectedPersonaId = selectedId;
     select.innerHTML = [
       '<option value="">— 选择已保存人设 —</option>',
       ...profiles.map(profile => `<option value="${escAttr(profile.id)}">${escAttr(profile.name)}</option>`)
     ].join('');
+    select.value = selectedId;
   }
 
   async _loadPersona(id) {
-    if (!id) return;
+    if (!id) {
+      this._selectedPersonaId = '';
+      return;
+    }
     const profile = await getPersonaProfile(id);
-    if (!profile) { this._loadPersonaProfiles(); return; }
+    if (!profile) {
+      this._selectedPersonaId = '';
+      this._loadPersonaProfiles();
+      return;
+    }
+    this._selectedPersonaId = id;
     this._draft = normalizeOpeningDraft(profile.draft || this._draft);
     this._presetLoaded = true;
     this._savePreset();
@@ -182,11 +196,10 @@ class CharacterCreator extends HTMLElement {
     const root = this.shadowRoot;
     const name = root.querySelector('#persona-name')?.value.trim();
     if (!name) { this._notice = '请先填写人设名称'; this._render(); return; }
-    await savePersonaProfile({ name, draft: this._draft });
-    const nameInput = root.querySelector('#persona-name');
-    if (nameInput) nameInput.value = '';
+    const id = await savePersonaProfile({ name, draft: this._draft });
+    if (!id) { this._notice = '人设保存失败，请重试'; this._render(); return; }
+    this._selectedPersonaId = id;
     this._notice = `已保存人设「${name}」，可在个人中心查看。`;
-    this._loadPersonaProfiles();
     this._render();
   }
 
@@ -194,9 +207,9 @@ class CharacterCreator extends HTMLElement {
     const select = this.shadowRoot.querySelector('#persona-select');
     const id = select?.value;
     if (!id) { this._notice = '请先选择一个人设再删除'; this._render(); return; }
-    await deletePersonaProfile(id);
-    this._notice = '人设已删除。';
-    this._loadPersonaProfiles();
+    const deleted = await deletePersonaProfile(id);
+    this._selectedPersonaId = '';
+    this._notice = deleted ? '人设已删除。' : '未找到要删除的人设。';
     this._render();
   }
 

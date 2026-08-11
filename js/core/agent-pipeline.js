@@ -17,6 +17,7 @@ import { createNarrativeArtifact } from './narrative-artifact.js';
 import { CANON_DATABASE, normalizeCanonDate } from '../data/canon-database.js';
 
 export const CHARACTER_MEMORY_DELTA_SCHEMA = 'naruto.character-memory-delta/v1';
+export const AGENT_PIPELINE_REVISION = 'writing-outline-before-final-v1';
 
 // 阶段断点续跑缓存：键 = branch|回合|输入哈希；值 = { complete, data }。
 // 回合失败时保留缓存，用户重试时复用上方已完成阶段，从失败阶段直接续跑。
@@ -81,6 +82,115 @@ function normalizeOutlineResult(result) {
   };
 }
 
+const WRITING_OUTLINE_FORBIDDEN_KEYS = new Set([
+  'action', 'actions', 'dialogue', 'prose', 'body', 'paragraph', 'paragraphs',
+  'narrativeText', 'finalText', 'reasoning', 'outcome', 'result'
+]);
+
+function findForbiddenWritingOutlineKeys(value, path = '$', findings = []) {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => findForbiddenWritingOutlineKeys(item, `${path}[${index}]`, findings));
+    return findings;
+  }
+  if (!value || typeof value !== 'object') return findings;
+  for (const [key, nested] of Object.entries(value)) {
+    if (WRITING_OUTLINE_FORBIDDEN_KEYS.has(key)) findings.push(`${path}.${key}`);
+    findForbiddenWritingOutlineKeys(nested, `${path}.${key}`, findings);
+  }
+  return findings;
+}
+
+function normalizeWritingOutlineList(value, maxItems = 24, maxChars = 600) {
+  return [...new Set((Array.isArray(value) ? value : [])
+    .map(item => cleanMemoryText(item, maxChars))
+    .filter(Boolean))].slice(0, maxItems);
+}
+
+export function normalizeWritingOutlineResult(result, { decisionIds = [] } = {}) {
+  if (!result || typeof result !== 'object' || Array.isArray(result)) {
+    throw new Error('Writing outline must be a structured object');
+  }
+  const forbidden = findForbiddenWritingOutlineKeys(result);
+  if (forbidden.length) {
+    throw new Error(`Writing outline contains prose/action fields: ${forbidden.join(', ')}`);
+  }
+
+  const allowedDecisionIds = new Set(normalizeWritingOutlineList(decisionIds, 80, 180));
+  const source = Array.isArray(result.beats)
+    ? result.beats.filter(beat => beat && typeof beat === 'object' && !Array.isArray(beat))
+    : [];
+  const beats = source.slice(0, 8).map((beat, index) => ({
+    id: index + 1,
+    sourceBeatId: cleanMemoryText(beat.sourceBeatId ?? beat.source_beat_id ?? beat.id ?? index + 1, 80),
+    scene: cleanMemoryText(beat.scene, 1200),
+    narrativeGoal: cleanMemoryText(beat.narrativeGoal ?? beat.narrative_goal, 800),
+    participants: normalizeWritingOutlineList(beat.participants, 32, 80),
+    decisionRefs: normalizeWritingOutlineList(beat.decisionRefs ?? beat.decision_refs, 80, 180),
+    environmentBeats: normalizeWritingOutlineList(
+      beat.environmentBeats ?? beat.environment_beats,
+      16,
+      600
+    ),
+    continuityChecks: normalizeWritingOutlineList(
+      beat.continuityChecks ?? beat.continuity_checks,
+      20,
+      700
+    ),
+    variableEvidence: normalizeWritingOutlineList(
+      beat.variableEvidence ?? beat.variable_evidence,
+      20,
+      700
+    ),
+    playerBoundary: cleanMemoryText(beat.playerBoundary ?? beat.player_boundary, 800),
+    stopPoint: cleanMemoryText(beat.stopPoint ?? beat.stop_point, 800)
+  })).filter(beat => beat.scene && beat.narrativeGoal);
+
+  if (!beats.length) throw new Error('Writing outline contains no usable beats');
+  const invalidRefs = [...new Set(beats.flatMap(beat => beat.decisionRefs))]
+    .filter(id => !allowedDecisionIds.has(id));
+  if (invalidRefs.length) {
+    throw new Error(`Writing outline references unknown CharacterDecision ids: ${invalidRefs.join(', ')}`);
+  }
+  const referenced = new Set(beats.flatMap(beat => beat.decisionRefs));
+  const missingRefs = [...allowedDecisionIds].filter(id => !referenced.has(id));
+  if (missingRefs.length) {
+    throw new Error(`Writing outline omits CharacterDecision ids: ${missingRefs.join(', ')}`);
+  }
+  const incomplete = beats
+    .filter(beat => !beat.playerBoundary || !beat.stopPoint)
+    .map(beat => beat.id);
+  if (incomplete.length) {
+    throw new Error(`Writing outline beats require playerBoundary and stopPoint: ${incomplete.join(', ')}`);
+  }
+
+  return Object.freeze({
+    schema: 'naruto.writing-outline/v1',
+    beats: Object.freeze(beats.map(beat => Object.freeze(beat))),
+    estimatedLength: Math.min(2000, Math.max(600, Number(result.estimatedLength) || 1200)),
+    variableEvidence: Object.freeze(normalizeWritingOutlineList(
+      result.variableEvidence ?? result.variable_evidence,
+      32,
+      700
+    )),
+    finalChecks: Object.freeze(normalizeWritingOutlineList(
+      result.finalChecks ?? result.final_checks,
+      32,
+      700
+    ))
+  });
+}
+
+function isWritingOutlineText(value) {
+  try {
+    const parsed = JSON.parse(String(value || '').trim());
+    return Boolean(parsed && typeof parsed === 'object'
+      && parsed.schema === 'naruto.writing-outline/v1'
+      && Array.isArray(parsed.beats));
+  } catch {
+    return false;
+  }
+}
+
 function cleanMemoryText(value, max = 600) {
   return String(value || '').trim().slice(0, max);
 }
@@ -90,6 +200,91 @@ function currentStoryDate(state) {
   const normalized = normalizeCanonDate(raw);
   if (normalized) return normalized;
   return raw.match(/^.*?日/)?.[0] || raw;
+}
+
+function activeStoryBranch(state) {
+  return cleanMemoryText(
+    state?._meta?.active_branch || state?.['系统·当前分支'] || 'branch_main',
+    160
+  ) || 'branch_main';
+}
+
+function normalizeStoryDirectionList(value) {
+  const source = Array.isArray(value)
+    ? value
+    : (typeof value === 'string' ? value.split(/[\r\n,，;；]+/) : []);
+  return [...new Set(source
+    .map(item => cleanMemoryText(item, 300))
+    .filter(Boolean))].slice(0, 12);
+}
+
+function storyDirectionSource(raw, branchId) {
+  if (!raw || typeof raw !== 'object') return null;
+  if (Array.isArray(raw)) {
+    return raw.find(item => (
+      item && typeof item === 'object'
+      && cleanMemoryText(item.branchId ?? item.branch_id, 160) === branchId
+    )) || null;
+  }
+
+  const nested = raw.byBranch || raw.branches || raw.directions;
+  if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+    return nested[branchId] && typeof nested[branchId] === 'object'
+      ? nested[branchId]
+      : null;
+  }
+  if (raw[branchId] && typeof raw[branchId] === 'object') return raw[branchId];
+
+  const boundBranch = cleanMemoryText(raw.branchId ?? raw.branch_id, 160);
+  return boundBranch === branchId ? raw : null;
+}
+
+function normalizeStoryDirection(state) {
+  const branchId = activeStoryBranch(state);
+  const source = storyDirectionSource(state?._story_direction, branchId);
+  if (!source) return null;
+  const direction = cleanMemoryText(
+    source.direction ?? source.summary ?? source.preference ?? source.intent,
+    1200
+  );
+  const goals = normalizeStoryDirectionList(source.goals ?? source.targets);
+  const avoid = normalizeStoryDirectionList(
+    source.avoid ?? source.avoidances ?? source.exclusions
+  );
+  if (!direction && !goals.length && !avoid.length) return null;
+  return {
+    branchId,
+    direction,
+    goals,
+    avoid,
+    updatedAt: cleanMemoryText(source.updatedAt ?? source.updated_at, 120)
+  };
+}
+
+function storyDirectionFingerprint(direction) {
+  if (!direction) return 'none';
+  return hashAgentInput(JSON.stringify({
+    branchId: direction.branchId,
+    direction: direction.direction,
+    goals: direction.goals,
+    avoid: direction.avoid,
+    updatedAt: direction.updatedAt
+  }));
+}
+
+function storyDirectionPrompt(direction) {
+  if (!direction) return '';
+  return [
+    '[用户已批准的剧情方向偏好]',
+    JSON.stringify(direction),
+    '以上内容只是对未来可能走向的可撤销偏好，不是已经发生的剧情，也不是角色命令。',
+    '可在条件自然成立时提高相关机会的权重，并避开 avoid 项；不得因此强迫玩家或 NPC 行动、决定、说话或得到预定结果。'
+  ].join('\n');
+}
+
+function storyPlanDirectionFingerprint(plan) {
+  const match = cleanMemoryText(plan?.id, 160).match(/:sd-([^:]+)$/);
+  return match?.[1] || null;
 }
 
 export function buildCharacterMemoryDelta(characterInputs = [], { turn = 0 } = {}) {
@@ -208,8 +403,26 @@ class AgentPipeline {
     this._activeToolRuntimes.clear();
   }
 
+  _getStoryDirection(state) {
+    return normalizeStoryDirection(state);
+  }
+
+  _storyDirectionFingerprint(state) {
+    return storyDirectionFingerprint(this._getStoryDirection(state));
+  }
+
+  _storyPlanId(state) {
+    const branchHash = hashAgentInput(activeStoryBranch(state));
+    const turn = Math.max(0, Number(state?.['系统·回合数']) || 0);
+    return `story-plan:${branchHash}:${turn}:sd-${this._storyDirectionFingerprint(state)}`;
+  }
+
   _stageCacheKey(state, userInput) {
-    return `${state?._meta?.active_branch || 'branch_main'}|${state?.['系统·回合数'] || 0}|${hashAgentInput(userInput)}`;
+    const promptFingerprint = hashAgentInput([
+      resolveAgentSystemPrompt('WRITER_OUTLINE'),
+      resolveAgentSystemPrompt('WRITER')
+    ].join('\n'));
+    return `${AGENT_PIPELINE_REVISION}|${activeStoryBranch(state)}|${state?.['系统·回合数'] || 0}|${hashAgentInput(userInput)}|story-direction:${this._storyDirectionFingerprint(state)}|prompts:${promptFingerprint}`;
   }
 
   // 开始阶段缓存：获取(或新建)本回合的缓存条目，并同步 _stageCacheKeyRef。
@@ -281,7 +494,7 @@ class AgentPipeline {
     let outlineReviews = null;
     let reviewedOutline = null;
     let characterInputs = [];
-    let draft = null;
+    let writingOutline = null;
     if (cached.complete.has('story_plan')) storyPlan = cached.data.storyPlan;
     if (cached.complete.has('brainstorm')) selectedDirection = cached.data.selectedDirection;
     if (cached.complete.has('outline')) outline = cached.data.outline;
@@ -291,7 +504,7 @@ class AgentPipeline {
       reviewedOutline = cached.data.reviewedOutline;
     }
     if (cached.complete.has('character_agents')) characterInputs = cached.data.characterInputs;
-    if (cached.complete.has('writing')) draft = cached.data.draft;
+    if (cached.complete.has('writing_outline')) writingOutline = cached.data.writingOutline;
 
     // ── Stage 1: 强制历史检索 + 无行动场景简报 ──
     onProgress('context_search', '检索人物、对话与世界历史...');
@@ -426,73 +639,101 @@ class AgentPipeline {
       this._checkAbort();
     }
 
-    // ── Stage 7: 正文写作（只使用角色代理的可观察决定） ──
+    if (writingOutline) {
+      try {
+        writingOutline = normalizeWritingOutlineResult(writingOutline, {
+          decisionIds: characterInputs.map(item => item.decisionId).filter(Boolean)
+        });
+      } catch (error) {
+        // A cached outline from an older schema must never reach final-writer.
+        cached.complete.delete('writing_outline');
+        writingOutline = null;
+        console.warn('[AgentPipeline] Discarding incompatible cached writing outline:', error.message);
+      }
+    }
+
+    // ── Stage 7: 详细写作大纲（终审前禁止生成正文） ──
     this._currentStage = 'writing';
     const t5 = Date.now();
-    if (!cached.complete.has('writing')) {
-      onProgress('writing', '正文写作中...');
-      draft = await this._writeDraft(
+    if (!cached.complete.has('writing_outline')) {
+      onProgress('writing', '编织详细写作大纲...');
+      writingOutline = await this._writeWritingOutline(
         state,
         userInput,
         sceneBrief,
         storyPlan,
         reviewedOutline,
         outlineReviews,
-        characterInputs,
-        mainMessages
+        characterInputs
       );
-      this._storeStage(cached, 'writing', { draft });
+      this._storeStage(cached, 'writing_outline', { writingOutline });
     }
     timings.writing = Date.now() - t5;
     this._checkAbort();
-    eventBus.emit('agent:draft', { draft: typeof draft === 'string' ? draft.slice(0, 200) : '' });
+    eventBus.emit('agent:writing-outline', { outline: cloneJson(writingOutline) });
 
-    // ── Stage 8: 细节 + 风格审查（并行） ──
+    // ── Stage 8: 详细写作大纲审查（仍然禁止生成正文） ──
     this._currentStage = 'review_draft';
     const t6 = Date.now();
-    onProgress('review_draft', '审查正文质量...');
-    let draftReviews;
+    onProgress('review_draft', '审查详细写作大纲...');
+    let outlineDraftReviews;
     try {
-      draftReviews = await this._reviewDraft(state, draft, isFullMode);
+      outlineDraftReviews = await this._reviewWritingOutline(state, writingOutline, {
+        final: false,
+        isFullMode
+      });
       timings.review_draft = Date.now() - t6;
     } catch (err) {
-      console.warn('[AgentPipeline] Draft review failed, skipping:', err.message);
-      draftReviews = new Map();
+      console.warn('[AgentPipeline] Writing outline review failed, skipping:', err.message);
+      outlineDraftReviews = new Map();
       timings.review_draft = Date.now() - t6;
     }
     this._checkAbort();
 
-    // ── Stage 9: 最终润色（放宽阈值：score<8 或 suggestions>=2） ──
+    // ── Stage 9: 按意见修订详细写作大纲 ──
     this._currentStage = 'polish';
-    let finalText = draft;
-    if (this._hasSignificantSuggestions(draftReviews)) {
+    if (this._hasSignificantSuggestions(outlineDraftReviews)) {
       const t7 = Date.now();
-      onProgress('polish', '最终润色中...');
+      onProgress('polish', '按审查意见修订写作大纲...');
       try {
-        finalText = await this._polishDraft(state, userInput, draft, draftReviews, mainMessages);
+        const feedback = this._collectFinalIssues(outlineDraftReviews);
+        writingOutline = await this._writeWritingOutline(
+          state,
+          userInput,
+          sceneBrief,
+          storyPlan,
+          reviewedOutline,
+          outlineDraftReviews,
+          characterInputs,
+          { feedback }
+        );
+        this._storeStage(cached, 'writing_outline', { writingOutline });
         timings.polish = Date.now() - t7;
       } catch (err) {
-        console.warn('[AgentPipeline] Polish failed, using raw draft:', err.message);
+        console.warn('[AgentPipeline] Writing outline revision failed, using reviewed outline:', err.message);
         timings.polish = Date.now() - t7;
       }
     }
     this._checkAbort();
 
-    // ── Stage 10: 润色后复审 + 完整性审计 ──
+    // ── Stage 10: 详纲最终审查与完整性审计 ──
     this._currentStage = 'final_audit';
     const auditStartedAt = Date.now();
-    onProgress('final_audit', '审查正文、角色来源与系统更新契约...');
-    let finalReviews = await this._reviewFinalOutput(state, finalText);
-    // 可搜索的剧情合理性审查（时间/记忆一致性），结果并入终审。
-    const searchReview = await this._reviewWithSearch(state, userInput, finalText);
+    onProgress('final_audit', '终审详细写作大纲、角色来源与连续性...');
+    let finalReviews = await this._reviewFinalWritingOutline(state, writingOutline);
+    // 可搜索的剧情合理性审查（时间/记忆一致性），结果并入详纲终审。
+    const searchReview = await this._reviewWithSearch(
+      state,
+      userInput,
+      writingOutline,
+      { outline: true }
+    );
     if (searchReview) finalReviews.set('critic-search', searchReview);
 
-    // 先审计当前正文：审查没问题(审计通过)直接跳过修复，省去多余调用。
-    // 仅当审计不通过(存在错误级问题)时才做一轮修复重写并复审；
-    // 修复/复审任何一步失败都降级回原稿与原评审，绝不卡死回合。
+    // 先审计详纲；只有终审通过后才允许调用 final-writer。
     let agentAudit = this._auditFinalOutput({
       state,
-      finalText,
+      finalText: JSON.stringify(writingOutline),
       sceneBrief,
       storyPlan,
       involvedNPCs,
@@ -502,17 +743,32 @@ class AgentPipeline {
       const finalIssues = this._collectFinalIssues(finalReviews);
       if (finalIssues.length) {
         try {
-          const repaired = await this._repairFinalText(state, userInput, finalText, finalIssues, mainMessages);
-          if (repaired && repaired !== finalText) {
-            onProgress('final_audit', '按审查意见修复正文并复审...');
-            finalText = repaired;
-            const repairedReviews = await this._reviewFinalOutput(state, finalText);
-            const repairedSearch = await this._reviewWithSearch(state, userInput, finalText);
+          const repaired = await this._writeWritingOutline(
+            state,
+            userInput,
+            sceneBrief,
+            storyPlan,
+            reviewedOutline,
+            finalReviews,
+            characterInputs,
+            { feedback: finalIssues }
+          );
+          if (repaired) {
+            onProgress('final_audit', '按终审意见修订详纲并复审...');
+            writingOutline = repaired;
+            this._storeStage(cached, 'writing_outline', { writingOutline });
+            const repairedReviews = await this._reviewFinalWritingOutline(state, writingOutline);
+            const repairedSearch = await this._reviewWithSearch(
+              state,
+              userInput,
+              writingOutline,
+              { outline: true }
+            );
             if (repairedSearch) repairedReviews.set('critic-search', repairedSearch);
             finalReviews = repairedReviews;
             agentAudit = this._auditFinalOutput({
               state,
-              finalText,
+              finalText: JSON.stringify(writingOutline),
               sceneBrief,
               storyPlan,
               involvedNPCs,
@@ -524,9 +780,54 @@ class AgentPipeline {
         }
       }
     }
-    this._lastAgentAudit = agentAudit;
     timings.final_audit = Date.now() - auditStartedAt;
     eventBus.emit('agent:audit', {
+      phase: 'writing-outline',
+      schema: agentAudit.schema,
+      valid: agentAudit.valid,
+      errors: [...agentAudit.errors],
+      warnings: [...agentAudit.warnings],
+      checks: agentAudit.checks,
+      auditedAt: agentAudit.auditedAt
+    });
+    if (!agentAudit.valid) {
+      const error = new Error(`Agent 写作大纲终审失败: ${agentAudit.errors.join('；')}`);
+      error.code = 'AGENT_FINAL_AUDIT_FAILED';
+      throw error;
+    }
+    this._checkAbort();
+
+    // ── Stage 11: 终审通过后单次生成正文 ──
+    this._currentStage = 'final_write';
+    const finalWriteStartedAt = Date.now();
+    onProgress('final_write', '详纲终审通过，生成最终正文...');
+    let finalText = await this._writeFinalText(
+      state,
+      userInput,
+      sceneBrief,
+      storyPlan,
+      writingOutline,
+      finalReviews,
+      characterInputs,
+      mainMessages
+    );
+    timings.final_write = Date.now() - finalWriteStartedAt;
+    this._checkAbort();
+
+    // 正文生成后只做确定性完整性校验，不再把未经审查的正文交给另一个润色模型。
+    this._lastAgentAudit = this._auditFinalOutput({
+      state,
+      finalText,
+      sceneBrief,
+      storyPlan,
+      involvedNPCs,
+      reviews: finalReviews,
+      // The planning-artifact guard applies to the final narrative only.
+      // The preceding audit intentionally receives the structured outline.
+      rejectPlanningArtifact: true
+    });
+    eventBus.emit('agent:audit', {
+      phase: 'final-narrative',
       schema: this._lastAgentAudit.schema,
       valid: this._lastAgentAudit.valid,
       errors: [...this._lastAgentAudit.errors],
@@ -535,20 +836,20 @@ class AgentPipeline {
       auditedAt: this._lastAgentAudit.auditedAt
     });
     if (!this._lastAgentAudit.valid) {
-      const error = new Error(`Agent 最终审计失败: ${this._lastAgentAudit.errors.join('；')}`);
-      error.code = 'AGENT_FINAL_AUDIT_FAILED';
+      const error = new Error(`Agent 最终正文校验失败: ${this._lastAgentAudit.errors.join('；')}`);
+      error.code = 'AGENT_FINAL_OUTPUT_INVALID';
       throw error;
     }
-    this._checkAbort();
 
-    // ── Stage 11: 连续性更新代理(记忆/变量/历史)，替代主流水线二次变量系统 ──
-    // 审计通过后才运行；产出的 <var>/<relationship>/<memory> 标签追加到正文末尾，
+    // ── Stage 12: 连续性更新代理(记忆/变量/历史)，替代主流水线二次变量系统 ──
+    // 终稿校验通过后才运行；产出的 <var>/<relationship>/<memory> 标签追加到正文末尾，
     // 由主流水线 createNarrativeArtifact + _applyInstructions 统一应用。
     this._currentStage = 'continuity_updater';
+    onProgress('continuity_updater', '根据最终正文生成变量与连续性更新...');
     this._agentSelfUpdater = false;
     finalText = await this._appendContinuityUpdates(state, userInput, finalText, involvedNPCs, sceneBrief);
 
-    // ── Stage 12: 只建立待提交记忆增量 ──
+    // ── Stage 13: 只建立待提交记忆增量 ──
     this._currentStage = 'archive';
     const t8 = Date.now();
     onProgress('archive', '归档记忆...');
@@ -569,44 +870,14 @@ class AgentPipeline {
     eventBus.emit('agent:pipeline-complete', { timings, mode: isFullMode ? 'full' : 'standard' });
     console.log('[AgentPipeline] Timings:', timings);
 
-    // 校验最终正文有可见内容；为空(模型被截断/只输出了推理)时做一次强制正文降级重写。
     if (!String(createNarrativeArtifact(finalText).displayText || '').trim()) {
-      console.warn('[AgentPipeline] Final text has no visible body; forcing a body retry...');
-      try {
-        const fallback = await this._writeVisibleBodyFallback(state, userInput, finalText, mainMessages);
-        if (fallback && String(createNarrativeArtifact(fallback).displayText || '').trim()) {
-          finalText = fallback;
-        }
-      } catch (error) {
-        console.warn('[AgentPipeline] Forced body retry failed:', error?.message);
-      }
-    }
-    if (!String(createNarrativeArtifact(finalText).displayText || '').trim()) {
-      const error = new Error('Agent 正文为空(模型可能被截断或只输出了推理)，本回合已中止，请重试');
+      const error = new Error('Agent 正文为空(终审后 final-writer 可能被截断)，本回合已中止，请重试');
       error.code = 'AGENT_EMPTY_BODY';
       throw error;
     }
 
     onProgress('done', '生成完成');
     return finalText;
-  }
-
-  // 最终正文无可见内容时的降级重写：强制输出完整正文，不要求先输出推理。
-  async _writeVisibleBodyFallback(state, userInput, draft, mainMessages) {
-    const result = await this.runner.run('writer', {
-      state,
-      userInput,
-      taskPrompt: '立即输出完整可读的剧情正文。正文至少 300 字，直接写场景、动作与对话；必须先完成正文主体，再考虑是否输出任何标签。',
-      extraContext: {
-        draft,
-        _inheritFromMainPipeline: true,
-        _mainMessages: mainMessages,
-        reviews: []
-      },
-      options: { temperature: 0.85, max_tokens: 8192 },
-      onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'writer', chunk })
-    });
-    return typeof result === 'string' ? result : (result?._raw || null);
   }
 
   _createToolRuntime() {
@@ -697,12 +968,17 @@ class AgentPipeline {
   _shouldRefreshStoryPlan(state, userInput, plan) {
     if (!plan) return true;
     try { assertStoryArcPlan(plan); } catch { return true; }
-    const branchId = state?._meta?.active_branch || 'branch_main';
+    const branchId = activeStoryBranch(state);
     const currentDate = currentStoryDate(state);
     if (plan.branchId !== branchId) return true;
     if (currentDate && plan.startDate && plan.startDate !== currentDate) return true;
     if (!Array.isArray(plan.days) || plan.days.length !== 3) return true;
     if (state?._agent_story_plan_invalidated === true) return true;
+    const currentDirection = this._getStoryDirection(state);
+    const currentDirectionFingerprint = storyDirectionFingerprint(currentDirection);
+    const plannedDirectionFingerprint = storyPlanDirectionFingerprint(plan);
+    if (currentDirection && plannedDirectionFingerprint !== currentDirectionFingerprint) return true;
+    if (!currentDirection && plannedDirectionFingerprint && plannedDirectionFingerprint !== 'none') return true;
     if (/(?:改走|改变计划|拒绝|放弃|背叛|逃离|杀死|另一路线|切换分支)/.test(String(userInput || ''))) {
       return true;
     }
@@ -714,22 +990,33 @@ class AgentPipeline {
   _fallbackStoryPlan(state, sceneBrief, reason = '') {
     const date = currentStoryDate(state) || '当前日期';
     const pressure = sceneBrief.tensions[0] || `若局势继续发展，${sceneBrief.location}的现有矛盾可能升级`;
+    const storyDirection = this._getStoryDirection(state);
+    const preference = storyDirection?.direction || storyDirection?.goals?.[0] || '';
+    const avoidance = storyDirection?.avoid?.length
+      ? `若推进会触及用户希望避开的内容（${storyDirection.avoid.join('、')}），该推进失效并应重新规划`
+      : '';
     return assertStoryArcPlan({
-      branchId: state?._meta?.active_branch || 'branch_main',
+      id: this._storyPlanId(state),
+      branchId: activeStoryBranch(state),
       basedOnNodeId: state?._meta?.current_node_id || '',
       startDate: date,
-      premise: `围绕${sceneBrief.location}当前局势保持开放推进${reason ? `（规划代理降级：${reason}）` : ''}`,
+      premise: `围绕${sceneBrief.location}当前局势保持开放推进${preference ? `，将“${preference}”作为可撤销的未来倾向而非既成事实` : ''}${reason ? `（规划代理降级：${reason}）` : ''}`,
       days: [0, 1, 2].map(dayOffset => ({
         dayOffset,
         date: dayOffset === 0 ? date : `当前日期后第${dayOffset}日`,
         pressures: [dayOffset === 0 ? pressure : '若前一日矛盾未解决，相关势力会调整应对方式'],
-        opportunities: ['若玩家主动调查或交涉，可获得新的分支信息'],
+        opportunities: [preference
+          ? `若玩家与相关角色各自的选择自然形成条件，可出现接近“${preference}”的探索机会`
+          : '若玩家主动调查或交涉，可获得新的分支信息'],
         triggers: ['玩家选择继续接触当前人物、地点或事件时'],
-        invalidationConditions: ['玩家离开当前故事线、关键前提改变或切换时间线分支时']
+        invalidationConditions: [
+          '玩家离开当前故事线、关键前提改变或切换时间线分支时',
+          ...(avoidance ? [avoidance] : [])
+        ]
       })),
       refreshTriggers: ['日期变化', '重大分歧', '切换分支']
     }, {
-      branchId: state?._meta?.active_branch || 'branch_main',
+      branchId: activeStoryBranch(state),
       nodeId: state?._meta?.current_node_id || '',
       startDate: date,
       turn: state?.['系统·回合数'] || 0
@@ -737,6 +1024,8 @@ class AgentPipeline {
   }
 
   async _generateStoryPlan(state, userInput, sceneBrief, preflight) {
+    const storyDirection = this._getStoryDirection(state);
+    const directionContext = storyDirectionPrompt(storyDirection);
     const runtime = this._createToolRuntime();
     const tools = createNarrativeAgentTools({
       contextBroker: this.contextBroker,
@@ -755,7 +1044,7 @@ class AgentPipeline {
         },
         messages: [{
           role: 'user',
-          content: `根据无行动场景简报与已检索历史，设计从当前日期开始的三日条件故事线。\n${JSON.stringify(sceneBrief)}`
+          content: `根据无行动场景简报与已检索历史，设计从当前日期开始的三日条件故事线。\n${JSON.stringify(sceneBrief)}${directionContext ? `\n\n${directionContext}` : ''}`
         }],
         tools,
         outputSchema: { type: 'object' },
@@ -775,9 +1064,10 @@ class AgentPipeline {
         rawPlan = await this.runner.run('story-planner', {
           state,
           userInput,
-          taskPrompt: '输出从当前日期开始的三日条件故事线；不得强迫玩家或 NPC 行动。',
+          taskPrompt: `输出从当前日期开始的三日条件故事线；不得强迫玩家或 NPC 行动。${directionContext ? `\n\n${directionContext}` : ''}`,
           extraContext: {
             sceneBrief,
+            storyDirection,
             contextPacket: {
               sources: preflight?.sources || [],
               cache: preflight?.cache || null,
@@ -797,12 +1087,13 @@ class AgentPipeline {
     try {
       return assertStoryArcPlan({
         ...rawPlan,
-        branchId: state?._meta?.active_branch || 'branch_main',
+        id: this._storyPlanId(state),
+        branchId: activeStoryBranch(state),
         basedOnNodeId: state?._meta?.current_node_id || '',
         startDate: currentStoryDate(state),
         createdAt: Date.now()
       }, {
-        branchId: state?._meta?.active_branch || 'branch_main',
+        branchId: activeStoryBranch(state),
         nodeId: state?._meta?.current_node_id || '',
         startDate: currentStoryDate(state),
         turn: state?.['系统·回合数'] || 0
@@ -834,10 +1125,16 @@ class AgentPipeline {
   // ── Stage Implementations ──
 
   async _brainstorm(state, userInput) {
+    const storyDirection = this._getStoryDirection(state);
+    const directionContext = storyDirectionPrompt(storyDirection);
     const rawResult = await this.runner.run('brainstormer', {
       state,
       userInput,
-      taskPrompt: '请根据当前状态和玩家输入，提出 3-5 条剧情走向候选。',
+      taskPrompt: `请根据当前状态和玩家输入，提出 3-5 条剧情走向候选。${directionContext ? `\n\n${directionContext}` : ''}`,
+      extraContext: {
+        storyDirection,
+        _pipeline: this.pipeline
+      },
       options: { temperature: 0.9, max_tokens: 1024 },
       onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'brainstormer', chunk })
     });
@@ -859,6 +1156,8 @@ class AgentPipeline {
     preflight = null,
     feedback = []
   } = {}) {
+    const storyDirection = this._getStoryDirection(state);
+    const directionContext = storyDirectionPrompt(storyDirection);
     const hint = direction
       ? `\n\n[选定的剧情走向] ${direction.direction}\n理由: ${direction.reason}`
       : '';
@@ -869,10 +1168,11 @@ class AgentPipeline {
     const rawResult = await this.runner.run('outliner', {
       state,
       userInput,
-      taskPrompt: `请根据当前状态生成无行动场景节拍。禁止替玩家或任何 NPC 决定行动、台词和结果。${hint}${feedbackText}`,
+      taskPrompt: `请根据当前状态生成无行动场景节拍。禁止替玩家或任何 NPC 决定行动、台词和结果。${hint}${directionContext ? `\n\n${directionContext}` : ''}${feedbackText}`,
       extraContext: {
         sceneBrief,
         storyPlan,
+        storyDirection,
         contextPacket: preflight ? {
           sources: preflight.sources,
           cache: preflight.cache
@@ -979,7 +1279,59 @@ class AgentPipeline {
     return merged;
   }
 
-  async _writeDraft(
+  async _writeWritingOutline(
+    state,
+    userInput,
+    sceneBrief,
+    storyPlan,
+    outline,
+    reviews,
+    characterInputs,
+    { feedback = [] } = {}
+  ) {
+    const reviewSummary = reviews instanceof Map
+      ? [...reviews.entries()].map(([agent, result]) => ({
+          agent,
+          success: result?.success === true,
+          ...(result?.data && typeof result.data === 'object' ? result.data : {}),
+          ...(result?.error ? { error: cleanMemoryText(result.error, 500) } : {})
+        }))
+      : [];
+    const boundedFeedback = (Array.isArray(feedback) ? feedback : [])
+      .slice(0, 12)
+      .map(item => ({
+        severity: item?.severity === 'error' ? 'error' : 'warning',
+        dimension: cleanMemoryText(item?.dimension || item?.from, 80),
+        description: cleanMemoryText(item?.description, 300),
+        suggestion: cleanMemoryText(item?.suggestion, 300)
+      }));
+    const result = await this.runner.run('writer-outline', {
+      state,
+      userInput,
+      taskPrompt: [
+        '把已审查场景节拍和 CharacterDecision 组织成结构化详细写作大纲。',
+        '只输出约定 JSON；不得输出剧情正文、连续段落、Markdown、推理块或变量标签。',
+        boundedFeedback.length
+          ? `必须修复这些审查意见：${JSON.stringify(boundedFeedback)}`
+          : ''
+      ].filter(Boolean).join('\n'),
+      extraContext: {
+        sceneBrief,
+        storyPlan,
+        outline,
+        reviews: reviewSummary,
+        characterInputs: characterInputs.length > 0 ? characterInputs : undefined,
+        _pipeline: this.pipeline
+      },
+      options: { temperature: 0.45, max_tokens: 4096 },
+      onChunk: chunk => eventBus.emit('agent:stream', { agent: 'writer-outline', chunk })
+    });
+    return normalizeWritingOutlineResult(result, {
+      decisionIds: characterInputs.map(item => item.decisionId).filter(Boolean)
+    });
+  }
+
+  async _writeFinalText(
     state,
     userInput,
     sceneBrief,
@@ -1001,7 +1353,7 @@ class AgentPipeline {
     const writerExtraContext = {
       sceneBrief,
       storyPlan,
-      outline,
+      writingOutline: outline,
       reviews: reviewSummary,
       characterInputs: characterInputs.length > 0 ? characterInputs : undefined,
       _pipeline: this.pipeline,
@@ -1043,7 +1395,7 @@ class AgentPipeline {
       const constraint = this.runner._buildWriterConstraint(writerExtraContext, state);
       const inheritedMessages = Array.isArray(mainMessages) ? mainMessages : [];
       const result = await runtime.runAgent({
-        definition: { id: 'writer', instructions: resolveAgentSystemPrompt('WRITER') },
+        definition: { id: 'final-writer', instructions: resolveAgentSystemPrompt('WRITER') },
         messages: [
           // 稳定前缀在前：继承的系统消息 + 对话历史(非 system)。
           // 易变约束(场景/大纲/审查/角色决策)放历史之后，避免打断缓存前缀。
@@ -1053,7 +1405,7 @@ class AgentPipeline {
           { role: 'system', content: npcAuthorityConstraint },
           {
             role: 'user',
-            content: `基于场景事实与角色代理决定写出本回合完整正文。必须保留主系统要求的全部结构标签。\n${npcAuthorityConstraint}`
+            content: `详细写作大纲已经通过最终审查。现在才生成本回合完整正文；严格按详纲和 CharacterDecision 写作，不得再改变剧情结构。变量与记忆标签由后续连续性更新器负责。\n${npcAuthorityConstraint}`
           }
         ],
         tools,
@@ -1063,31 +1415,55 @@ class AgentPipeline {
         audience: 'writer'
       });
       if (result.text?.trim()) {
-        eventBus.emit('agent:stream', { agent: 'writer', chunk: result.text });
+        eventBus.emit('agent:stream', { agent: 'final-writer', chunk: result.text });
         return result.text;
       }
-      throw new Error('Tool writer returned empty text');
+      throw new Error('Tool final-writer returned empty text');
     } catch (error) {
       if (this._aborted) throw error;
-      console.warn('[AgentPipeline] Tool writer failed; using compatibility writer:', error.message);
+      console.warn('[AgentPipeline] Tool final-writer failed; using compatibility writer:', error.message);
       eventBus.emit('agent:writer-fallback', { reason: error.message });
     } finally {
       this._releaseToolRuntime(runtime);
     }
 
-    const result = await this.runner.run('writer', {
+    const result = await this.runner.run('final-writer', {
       state,
       userInput,
-      taskPrompt: `请基于审核后的大纲和审查建议，写出高质量叙事正文。\n${npcAuthorityConstraint}`,
+      taskPrompt: `详细写作大纲已通过最终审查。现在输出一次最终叙事正文；不得改变详纲结构，变量与记忆标签交给后续连续性更新器。\n${npcAuthorityConstraint}`,
       extraContext: writerExtraContext,
       options: { temperature: 0.85, max_tokens: 8192 },
-      onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'writer', chunk })
+      onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'final-writer', chunk })
     });
 
     if (typeof result === 'string') return result;
     if (result?._raw) return result._raw;
     if (result?.text) return result.text;
-    throw new Error('Writer 未能生成有效正文');
+    throw new Error('Final writer 未能生成有效正文');
+  }
+
+  async _reviewWritingOutline(state, writingOutline, { final = false, isFullMode = false } = {}) {
+    const taskPrompt = final
+      ? '最终审查这份详细写作大纲。必须核对玩家主权、CharacterDecision 来源、世界连续性、局部因果、记账依据与停止点；不要生成正文。'
+      : `审查这份详细写作大纲能否在终审后一次生成可靠正文。${isFullMode ? '同时检查战斗空间、感官与环境提示是否充分，但不要撰写这些内容。' : ''}`;
+    return this.runner.runParallel([{
+      type: 'critic-writing-outline',
+      key: final ? 'final-preset-and-character' : 'writing-outline-quality',
+      params: {
+        state,
+        taskPrompt,
+        extraContext: { writingOutline, _pipeline: this.pipeline },
+        options: { temperature: 0.15, max_tokens: 1600 },
+        onChunk: chunk => eventBus.emit('agent:stream', {
+          agent: final ? 'critic-writing-outline-final' : 'critic-writing-outline',
+          chunk
+        })
+      }
+    }]);
+  }
+
+  async _reviewFinalWritingOutline(state, writingOutline) {
+    return this._reviewWritingOutline(state, writingOutline, { final: true });
   }
 
   async _reviewDraft(state, draft, isFullMode) {
@@ -1275,7 +1651,10 @@ class AgentPipeline {
 
   // 可搜索的剧情合理性审查：用检索工具核对最终正文的时间/记忆一致性。
   // 失败降级为 warning，不中断回合。
-  async _reviewWithSearch(state, userInput, finalText) {
+  async _reviewWithSearch(state, userInput, finalText, { outline = false } = {}) {
+    const reviewTarget = outline && finalText && typeof finalText === 'object'
+      ? JSON.stringify(finalText)
+      : String(finalText || '');
     const runtime = this._createToolRuntime();
     const tools = createNarrativeAgentTools({
       contextBroker: this.contextBroker,
@@ -1286,12 +1665,14 @@ class AgentPipeline {
     try {
       const result = await runtime.runAgent({
         definition: {
-          id: 'critic-search',
-          instructions: resolveAgentSystemPrompt('CRITIC_SEARCH')
+          id: outline ? 'critic-outline-search' : 'critic-search',
+          instructions: resolveAgentSystemPrompt(outline ? 'CRITIC_OUTLINE_SEARCH' : 'CRITIC_SEARCH')
         },
         messages: [{
           role: 'user',
-          content: `审查以下最终正文的剧情合理性，重点核对时间与记忆一致性。必要时使用检索工具核实，不要仅凭正文或预训练知识臆断。\n\n${String(finalText || '').slice(0, 12000)}`
+          content: outline
+            ? `审查以下最终写作大纲的时间、记忆与世界书一致性。必要时使用检索工具核实，不要生成正文或泄露私有信息。\n\n${reviewTarget.slice(0, 12000)}`
+            : `审查以下最终正文的剧情合理性，重点核对时间与记忆一致性。必要时使用检索工具核实，不要仅凭正文或预训练知识臆断。\n\n${reviewTarget.slice(0, 12000)}`
         }],
         tools,
         outputSchema: { type: 'object' },
@@ -1464,7 +1845,15 @@ class AgentPipeline {
     return [...mentioned];
   }
 
-  _auditFinalOutput({ state, finalText, sceneBrief, storyPlan, involvedNPCs, reviews }) {
+  _auditFinalOutput({
+    state,
+    finalText,
+    sceneBrief,
+    storyPlan,
+    involvedNPCs,
+    reviews,
+    rejectPlanningArtifact = false
+  }) {
     const evidenceRefs = [
       ...sceneBrief.evidenceRefs,
       ...this._characterDecisions.map(decision => decision.id)
@@ -1581,6 +1970,9 @@ class AgentPipeline {
       presetCompliant
     });
     const errors = [...base.errors];
+    if (rejectPlanningArtifact && isWritingOutlineText(finalText)) {
+      errors.push('final-writer returned the planning outline instead of visible narrative');
+    }
     for (const finding of modelFindings) {
       if (finding.severity === 'error') {
         errors.push(`${finding.reviewer}: ${finding.description || finding.suggestion || finding.rule || '最终审查发现严重问题'}`);

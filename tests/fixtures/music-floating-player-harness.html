@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Music floating player harness</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <style>
+    html, body, #app { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #070a0e; }
+  </style>
+</head>
+<body class="lingxi-companion-open">
+  <main id="app"></main>
+  <script type="module">
+    const [{ eventBus }, { showCompactMusicPlayer }] = await Promise.all([
+      import('../../js/core/event-bus.js'),
+      import('../../js/ui/music-floating-player.js')
+    ]);
+
+    let state = {
+      status: 'playing',
+      paused: false,
+      volume: 45,
+      track: {
+        id: 'track-001',
+        name: '青鸟 - 测试长标题版本',
+        artist: '生物股长',
+        provider: 'tencent'
+      }
+    };
+    eventBus.on('app:music-control', ({ action }) => {
+      if (action === 'toggle') {
+        state = { ...state, status: state.status === 'playing' ? 'paused' : 'playing', paused: !state.paused };
+      }
+      return state;
+    });
+
+    showCompactMusicPlayer(state);
+    window.__MUSIC_FLOATING_PLAYER__ = {
+      state: () => state,
+      show: next => showCompactMusicPlayer(next || state)
+    };
+    window.__MUSIC_FLOATING_PLAYER_READY__ = true;
+  </script>
+</body>
+</html>

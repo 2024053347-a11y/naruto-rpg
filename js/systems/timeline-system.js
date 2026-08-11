@@ -18,6 +18,104 @@ import { formatGameTime, generateId, generateNodeId, truncate, getNextBranchColo
 const ARCHIVE_THRESHOLD = 100;
 const ARCHIVE_ANCESTOR_KEEP = 20;
 const IMAGE_STATE_SNAPSHOT_SLICES = new Set(['_relationships', '_image_worldbook_overlay']);
+export const LINGXI_TIMELINE_IMPACT_SCHEMA = 'naruto.lingxi-timeline-impact/v1';
+
+function persistenceValuesEqual(left, right) {
+  if (Object.is(left, right)) return true;
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left)
+      && Array.isArray(right)
+      && left.length === right.length
+      && left.every((value, index) => persistenceValuesEqual(value, right[index]));
+  }
+  const leftKeys = Object.keys(left).sort();
+  const rightKeys = Object.keys(right).sort();
+  return leftKeys.length === rightKeys.length
+    && leftKeys.every((key, index) => (
+      key === rightKeys[index] && persistenceValuesEqual(left[key], right[key])
+    ));
+}
+
+function compareTimelinePosition(left, right) {
+  return (Number(left?.depth) || 0) - (Number(right?.depth) || 0)
+    || (Number(left?.turn_number) || 0) - (Number(right?.turn_number) || 0)
+    || (Number(left?.created_at || left?.real_timestamp) || 0)
+      - (Number(right?.created_at || right?.real_timestamp) || 0)
+    || String(left?.id || '').localeCompare(String(right?.id || ''));
+}
+
+function latestTimelineNode(nodes = []) {
+  return [...nodes].sort(compareTimelinePosition).at(-1) || null;
+}
+
+function remapNodeRuntimeBranch(node, branchId) {
+  const next = { ...node, branch_id: branchId };
+  if (!node?.state_snapshot || typeof node.state_snapshot !== 'object' || Array.isArray(node.state_snapshot)) {
+    return next;
+  }
+  const snapshot = deepClone(node.state_snapshot);
+  snapshot._meta = snapshot._meta && typeof snapshot._meta === 'object' && !Array.isArray(snapshot._meta)
+    ? snapshot._meta
+    : {};
+  snapshot._meta.current_node_id = node.id;
+  snapshot._meta.active_branch = branchId;
+  for (const key of ['_story_direction', '_agent_story_plan']) {
+    if (!snapshot[key] || typeof snapshot[key] !== 'object' || Array.isArray(snapshot[key])) continue;
+    if (snapshot[key].branchId === node.branch_id) snapshot[key].branchId = branchId;
+  }
+  next.state_snapshot = snapshot;
+  return next;
+}
+
+function timelineStoryState(snapshot = {}) {
+  return {
+    direction: deepClone(snapshot?._story_direction ?? null),
+    plan: deepClone(snapshot?._agent_story_plan ?? null),
+    invalidated: snapshot?._agent_story_plan_invalidated === true
+  };
+}
+
+function staleStoryPersistence(message, details = null) {
+  const error = new Error(message);
+  error.code = 'LINGXI_PROPOSAL_STALE';
+  if (details) error.details = details;
+  return error;
+}
+
+function maintenanceTimelineImpact(parentNode, activeBranchId) {
+  const parentNodeId = String(parentNode?.id || '');
+  const branchId = String(activeBranchId || 'branch_main');
+  return {
+    schema: LINGXI_TIMELINE_IMPACT_SCHEMA,
+    operation: 'create-maintenance-checkpoint',
+    parentNodeId,
+    activeBranchId: branchId,
+    createsIfBranch: false,
+    createsTurn: false,
+    updatesNode: true,
+    branchName: null
+  };
+}
+
+function assertMaintenanceTimelineImpact(expected, actual) {
+  const valid = expected
+    && typeof expected === 'object'
+    && !Array.isArray(expected)
+    && expected.schema === actual.schema
+    && expected.operation === actual.operation
+    && expected.parentNodeId === actual.parentNodeId
+    && expected.activeBranchId === actual.activeBranchId
+    && expected.createsIfBranch === actual.createsIfBranch
+    && expected.createsTurn === actual.createsTurn
+    && expected.updatesNode === actual.updatesNode
+    && expected.branchName === actual.branchName;
+  if (valid) return;
+  const error = new Error('时间线影响已变化，原批准提案不再适用');
+  error.code = 'LINGXI_PROPOSAL_STALE';
+  error.details = { expected, actual };
+  throw error;
+}
 
 function buildIllustrationMedia(nodeId, imageContract = null) {
   return {
@@ -46,6 +144,7 @@ class TimelineSystem {
     if (this._initialized) return;
     await stateManager.initDB();
     await this._sanitizeStoredTimelineNodes();
+    await this._migrateLegacyMaintenanceNodes();
     const meta = await stateManager.dbGet('timeline_meta', 'root');
     if (meta) {
       const metaState = stateManager.getSub('_meta') || {};
@@ -126,7 +225,25 @@ class TimelineSystem {
     return node;
   }
 
-  async createNode({ turnNumber, playerInput, aiResponse, cleanResponse, stateSnapshot, chatHistory = [], memorySummary = null, imageContract = null, shinobiDaily = null, continuityDelta = [] }) {
+  async createNode({
+    turnNumber,
+    playerInput,
+    aiResponse,
+    cleanResponse,
+    stateSnapshot,
+    chatHistory = [],
+    memorySummary = null,
+    imageContract = null,
+    shinobiDaily = null,
+    continuityDelta = [],
+    maintenance = null,
+    expectedMaintenanceImpact = null
+  }) {
+    if (maintenance !== null || expectedMaintenanceImpact !== null) {
+      const error = new Error('createNode 不接受维护写入，请使用 createMaintenanceCheckpoint');
+      error.code = 'TIMELINE_MAINTENANCE_REQUIRES_ATTACHMENT';
+      throw error;
+    }
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     const activeBranch = meta.active_branch;
@@ -164,7 +281,11 @@ class TimelineSystem {
         continuity_revision: snapshot._continuity.revision,
         chat_history_delta: delta,
         chat_history: null,
-        summary: summary, tags: [], is_checkpoint: true, created_at: createdAt, accessed_count: 0,
+        summary: summary,
+        tags: [],
+        is_checkpoint: true,
+        created_at: createdAt,
+        accessed_count: 0,
         archived: false, archived_at: null
       };
       const branch = { id: 'branch_main', name: '主线', color: '#eb613f', description: '默认时间线', created_at: Date.now(), diverged_from: null, diverged_at_turn: null, head_node_id: nodeId, node_count: 1, is_active: true };
@@ -330,6 +451,173 @@ class TimelineSystem {
     return node;
   }
 
+  async createMaintenanceCheckpoint({
+    label = '变量维护',
+    reason = '',
+    proposalId = '',
+    stateSnapshot = null,
+    expectedImpact = null
+  } = {}) {
+    const meta = stateManager.getSub('_meta') || {};
+    const previousNodeId = meta.current_node_id;
+    if (!previousNodeId) throw new Error('当前没有可作为维护检查点父级的时间线节点');
+    const expectedBranchId = String(meta.active_branch || 'branch_main');
+
+    const safeLabel = truncate(String(label || '变量维护').replace(/[<>]/g, ''), 80);
+    const safeReason = truncate(String(reason || '').replace(/[<>]/g, ''), 300);
+    const createdAt = Date.now();
+    const sourceSnapshot = stateSnapshot || stateManager.snapshot();
+    if (!sourceSnapshot || typeof sourceSnapshot !== 'object' || Array.isArray(sourceSnapshot)) {
+      throw new TypeError('灵希维护需要有效的状态快照');
+    }
+    // Sanitize before opening the transaction. The transaction mutator must
+    // remain synchronous and must never persist live object references.
+    const approvedSnapshot = sanitizeTimelineSnapshot(sourceSnapshot);
+    const maintenance = {
+      type: 'lingxi-variable-maintenance',
+      label: safeLabel,
+      proposal_id: truncate(String(proposalId || ''), 240),
+      previous_node_id: previousNodeId,
+      reason: safeReason,
+      created_at: createdAt
+    };
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, meta: storedMeta }) => {
+      if (!storedMeta?.value
+        || storedMeta.value.current_id !== previousNodeId
+        || storedMeta.value.active_branch !== expectedBranchId) {
+        const error = new Error('当前时间线节点或分支已经变化，维护提案已过期');
+        error.code = 'LINGXI_PROPOSAL_STALE';
+        error.details = {
+          expectedNodeId: previousNodeId,
+          currentNodeId: storedMeta?.value?.current_id || null,
+          expectedBranchId,
+          currentBranchId: storedMeta?.value?.active_branch || null
+        };
+        throw error;
+      }
+      const node = nodes.find(candidate => candidate?.id === previousNodeId);
+      if (!node || node.branch_id !== expectedBranchId) {
+        const error = new Error('当前时间线节点不存在或不属于活动分支，维护提案已过期');
+        error.code = 'LINGXI_PROPOSAL_STALE';
+        throw error;
+      }
+      const actualImpact = maintenanceTimelineImpact(node, expectedBranchId);
+      if (expectedImpact !== null) assertMaintenanceTimelineImpact(expectedImpact, actualImpact);
+
+      const beforeSnapshot = node.state_snapshot && typeof node.state_snapshot === 'object'
+        ? deepClone(node.state_snapshot)
+        : null;
+      let nextSnapshot = this._buildNodeSnapshot(approvedSnapshot, node.id, node.branch_id);
+
+      // A variable maintenance must not silently remove continuity events
+      // already committed to the current turn. Preserve the existing ledger
+      // when a caller supplies a partial snapshot; reject destructive changes.
+      const previousLedger = beforeSnapshot?._continuity;
+      if (previousLedger && !nextSnapshot._continuity) {
+        nextSnapshot._continuity = deepClone(previousLedger);
+      }
+      let appendedContinuity = [];
+      if (Number.isInteger(previousLedger?.revision)
+        && Number.isInteger(nextSnapshot._continuity?.revision)
+        && nextSnapshot._continuity.revision < previousLedger.revision) {
+        const stale = new Error('灵希维护提交的连续性账本版本过旧');
+        stale.code = 'LINGXI_PROPOSAL_STALE';
+        throw stale;
+      }
+      try {
+        const prepared = this._prepareContinuitySnapshot(nextSnapshot, {
+          parentNode: node,
+          nodeId: node.id,
+          branchId: node.branch_id,
+          turnNumber: node.turn_number,
+          gameTime: nextSnapshot?.['世界·时间'] || node.game_time || '',
+          recordedAt: createdAt,
+          continuityDelta: []
+        });
+        nextSnapshot = prepared.snapshot;
+        appendedContinuity = prepared.delta;
+      } catch (error) {
+        const stale = new Error(`灵希维护不能覆盖当前回合的连续性账本: ${error.message}`);
+        stale.code = 'LINGXI_PROPOSAL_STALE';
+        stale.cause = error;
+        throw stale;
+      }
+      const existingDelta = Array.isArray(node.continuity_delta)
+        ? deepClone(node.continuity_delta)
+        : [];
+      const existingEventIds = new Set(existingDelta.map(event => event?.event_id).filter(Boolean));
+      const continuityDelta = existingDelta.concat(
+        appendedContinuity.filter(event => event?.event_id && !existingEventIds.has(event.event_id))
+      );
+
+      const existingHistory = Array.isArray(node.maintenance_history)
+        ? node.maintenance_history.map(item => sanitizeTimelinePersistenceValue(item, `timeline_node.${node.id}.maintenance_history`))
+        : [];
+      const maintenanceRecord = sanitizeTimelinePersistenceValue({
+        ...maintenance,
+        before_state_snapshot: beforeSnapshot
+          ? sanitizeTimelineSnapshot(beforeSnapshot)
+          : null
+      }, `timeline_node.${node.id}.maintenance`);
+      const updatedNode = {
+        ...node,
+        state_snapshot: nextSnapshot,
+        continuity_delta: continuityDelta,
+        continuity_revision: Number.isInteger(nextSnapshot._continuity?.revision)
+          ? nextSnapshot._continuity.revision
+          : node.continuity_revision,
+        maintenance_history: [...existingHistory, maintenanceRecord],
+        maintenance: maintenanceRecord
+      };
+      return {
+        nodes: [updatedNode],
+        result: { node: updatedNode, maintenance: maintenanceRecord, previousNodeId }
+      };
+    }, { nodeKeys: [previousNodeId], branchKeys: [] });
+
+    const node = mutation.node;
+    this._nodeCache.set(node.id, node);
+    this._commitLiveContinuity(node);
+    this._cacheTreeSummary();
+    eventBus.emit('timeline:node-updated', node);
+    eventBus.emit('timeline:maintenance-attached', {
+      node,
+      previousNodeId,
+      proposalId: maintenance.proposal_id,
+      maintenance: mutation.maintenance
+    });
+    // Compatibility event for integrations that still use the old name. It
+    // deliberately carries the existing node and never represents a new turn.
+    eventBus.emit('timeline:maintenance-checkpoint', {
+      node,
+      previousNodeId,
+      proposalId: maintenance.proposal_id,
+      attached: true
+    });
+    return node;
+  }
+
+  async previewMaintenanceCheckpoint() {
+    const meta = stateManager.getSub('_meta') || {};
+    const parentNodeId = meta.current_node_id;
+    const activeBranchId = meta.active_branch || 'branch_main';
+    if (!parentNodeId) throw new Error('当前没有可作为维护检查点父级的时间线节点');
+
+    const [parentNode, storedMeta] = await Promise.all([
+      stateManager.dbGet('timeline_nodes', parentNodeId),
+      stateManager.dbGet('timeline_meta', 'root')
+    ]);
+    if (!parentNode) throw new Error(`当前时间线父节点不存在: ${parentNodeId}`);
+    if (!storedMeta?.value
+      || storedMeta.value.current_id !== parentNodeId
+      || storedMeta.value.active_branch !== activeBranchId) {
+      const error = new Error('时间线状态与持久化元数据不一致，不能创建维护提案');
+      error.code = 'LINGXI_PROPOSAL_STALE';
+      throw error;
+    }
+    return maintenanceTimelineImpact(parentNode, activeBranchId);
+  }
+
   async setIllustrationContract(nodeId, imageContract) {
     const updatedNode = await stateManager.dbMutateTimeline(({ nodes }) => {
       const node = nodes.find(candidate => candidate?.id === nodeId);
@@ -455,6 +743,73 @@ class TimelineSystem {
     return { status: 'updated', nodeId, slices: requested };
   }
 
+  async persistCurrentStoryState({
+    expectedNodeId,
+    expectedBranchId,
+    before,
+    after
+  } = {}) {
+    const nodeId = String(expectedNodeId || '').trim();
+    const branchId = String(expectedBranchId || '').trim();
+    if (!nodeId || !branchId) throw new TypeError('剧情方向持久化需要当前节点和分支');
+    if (!before || typeof before !== 'object' || Array.isArray(before)
+      || !after || typeof after !== 'object' || Array.isArray(after)) {
+      throw new TypeError('剧情方向持久化需要 before/after 对象');
+    }
+    if (typeof before.invalidated !== 'boolean' || typeof after.invalidated !== 'boolean') {
+      throw new TypeError('剧情规划失效标记必须是布尔值');
+    }
+
+    const expectedBefore = {
+      direction: sanitizeTimelinePersistenceValue(before.direction ?? null, 'story_state.before.direction'),
+      plan: sanitizeTimelinePersistenceValue(before.plan ?? null, 'story_state.before.plan'),
+      invalidated: before.invalidated
+    };
+    const approvedAfter = {
+      direction: sanitizeTimelinePersistenceValue(after.direction ?? null, 'story_state.after.direction'),
+      plan: sanitizeTimelinePersistenceValue(after.plan ?? null, 'story_state.after.plan'),
+      invalidated: after.invalidated
+    };
+
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, meta }) => {
+      if (!meta?.value
+        || meta.value.current_id !== nodeId
+        || meta.value.active_branch !== branchId) {
+        throw staleStoryPersistence('当前时间线节点或分支已经变化，剧情方向未持久化', {
+          expectedNodeId: nodeId,
+          currentNodeId: meta?.value?.current_id || null,
+          expectedBranchId: branchId,
+          currentBranchId: meta?.value?.active_branch || null
+        });
+      }
+      const node = nodes.find(candidate => candidate?.id === nodeId);
+      if (!node || node.branch_id !== branchId) {
+        throw staleStoryPersistence('当前时间线节点不存在或不属于已批准分支');
+      }
+      if (!node.state_snapshot || typeof node.state_snapshot !== 'object'
+        || Array.isArray(node.state_snapshot)) {
+        throw staleStoryPersistence('当前时间线节点没有可更新的状态快照');
+      }
+      const storedBefore = timelineStoryState(node.state_snapshot);
+      if (!persistenceValuesEqual(storedBefore, expectedBefore)) {
+        throw staleStoryPersistence('时间线中的剧情方向已被其他提交更新，本次批准内容未覆盖它');
+      }
+      const stateSnapshot = deepClone(node.state_snapshot);
+      stateSnapshot._story_direction = approvedAfter.direction;
+      stateSnapshot._agent_story_plan = approvedAfter.plan;
+      stateSnapshot._agent_story_plan_invalidated = approvedAfter.invalidated;
+      const updatedNode = { ...node, state_snapshot: stateSnapshot };
+      return {
+        nodes: [updatedNode],
+        result: { status: 'updated', nodeId, branchId, node: updatedNode }
+      };
+    }, { nodeKeys: [nodeId], branchKeys: [] });
+
+    this._nodeCache.set(nodeId, mutation.node);
+    eventBus.emit('timeline:story-state-synced', { nodeId, branchId });
+    return { status: 'updated', nodeId, branchId };
+  }
+
   async _commitInitialTimeline(node, branch, metaEntry) {
     return await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
       if (meta || nodes.length > 0 || branches.length > 0) {
@@ -480,84 +835,506 @@ class TimelineSystem {
     return updatedNodes.length;
   }
 
-  async pruneForward(targetNodeId) {
-    const targetNode = await stateManager.dbGet('timeline_nodes', targetNodeId);
-    if (!targetNode) throw new Error('目标节点不存在');
-    const preparedRestore = this._prepareNodeRestore(targetNode);
+  /**
+   * Older builds represented a Ling Xi variable write as a real checkpoint
+   * node.  Fold those nodes back into the turn they modified so loading an
+   * existing save cannot manufacture an extra turn or branch.  The mutation
+   * is deliberately idempotent: attached nodes have maintenance_history and
+   * are ignored on subsequent initialisations.
+   */
+  async _migrateLegacyMaintenanceNodes() {
+    const migration = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
+      if (!meta?.value || !Array.isArray(nodes) || nodes.length === 0) {
+        return { result: { migrated: 0, removedNodeIds: [], removedBranchIds: [] } };
+      }
 
-    const meta = stateManager.getSub('_meta') || {};
-    const currentId = meta.current_node_id;
+      const nodeById = new Map(nodes.filter(node => node?.id).map(node => [node.id, node]));
+      const hasMaintenanceMarker = node => {
+        if (!node || !node.id) return false;
+        // A node produced by the new implementation is a normal turn with an
+        // attached history. Do not mistake it for a legacy checkpoint.
+        if (Array.isArray(node.maintenance_history) && node.maintenance_history.length > 0) {
+          return false;
+        }
+        const tagged = (Array.isArray(node.tags) && node.tags.includes('灵希维护'))
+          || node.tags === '灵希维护';
+        const typed = node.maintenance?.type === 'lingxi-variable-maintenance';
+        if (!tagged && !typed) return false;
+        // Keep deliberately marked, old checkpoint nodes eligible. Some saves
+        // lost the tag but retained the maintenance object, hence both tests.
+        return Boolean(node.is_checkpoint || typed || tagged);
+      };
+      const legacyIds = new Set(nodes.filter(hasMaintenanceMarker).map(node => node.id));
+      if (legacyIds.size === 0) {
+        return { result: { migrated: 0, removedNodeIds: [], removedBranchIds: [] } };
+      }
 
-    const allNodes = await stateManager.dbGetAll('timeline_nodes');
-    const descendantIds = new Set();
-    const collectDescendants = (nodeId) => {
-      const node = allNodes.find(n => n.id === nodeId);
-      if (!node || !Array.isArray(node.children_ids)) return;
-      for (const childId of node.children_ids) {
-        if (!descendantIds.has(childId)) {
-          descendantIds.add(childId);
-          collectDescendants(childId);
+      const targetMemo = new Map();
+      const resolving = new Set();
+      const resolveTarget = nodeId => {
+        if (!nodeId) return null;
+        if (targetMemo.has(nodeId)) return targetMemo.get(nodeId);
+        const node = nodeById.get(nodeId);
+        if (!node) return null;
+        if (!legacyIds.has(nodeId)) {
+          targetMemo.set(nodeId, node);
+          return node;
+        }
+        if (resolving.has(nodeId)) return null;
+        resolving.add(nodeId);
+        const candidates = [
+          node.maintenance?.previous_node_id,
+          node.parent_id
+        ].filter((candidate, index, list) => candidate && list.indexOf(candidate) === index && candidate !== nodeId);
+        let target = null;
+        for (const candidate of candidates) {
+          target = resolveTarget(candidate);
+          if (target) break;
+        }
+        resolving.delete(nodeId);
+        targetMemo.set(nodeId, target || null);
+        return target || null;
+      };
+
+      // A malformed orphan cannot safely be removed. Leave it intact and
+      // migrate all well-formed legacy checkpoints in the same transaction.
+      const removableIds = new Set();
+      const targetByLegacyId = new Map();
+      for (const legacyId of legacyIds) {
+        const target = resolveTarget(legacyId);
+        if (!target || legacyIds.has(target.id)) continue;
+        removableIds.add(legacyId);
+        targetByLegacyId.set(legacyId, target.id);
+      }
+      if (removableIds.size === 0) {
+        return { result: { migrated: 0, removedNodeIds: [], removedBranchIds: [] } };
+      }
+
+      const originalParentById = new Map(nodes.map(node => [node.id, node.parent_id || null]));
+      const originalOrder = new Map();
+      for (const parent of nodes) {
+        if (!Array.isArray(parent.children_ids)) continue;
+        parent.children_ids.forEach((childId, index) => {
+          originalOrder.set(`${parent.id}:${childId}`, index);
+        });
+      }
+
+      const retainedNodes = nodes
+        .filter(node => !removableIds.has(node.id))
+        .map(node => deepClone(node));
+      const retainedById = new Map(retainedNodes.map(node => [node.id, node]));
+      const targetUpdates = new Map();
+      const recordsByTarget = new Map();
+      const continuityByTarget = new Map();
+      const legacyNodes = nodes
+        .filter(node => removableIds.has(node.id))
+        .sort((left, right) => (
+          (Number(left.created_at || left.real_timestamp || 0) - Number(right.created_at || right.real_timestamp || 0))
+          || String(left.id).localeCompare(String(right.id))
+        ));
+
+      const safeHistory = node => (Array.isArray(node?.maintenance_history)
+        ? node.maintenance_history
+          .map(item => sanitizeTimelinePersistenceValue(item, `timeline_node.${node.id}.maintenance_history`))
+          .filter(Boolean)
+        : []);
+      const maintenanceLabel = (source, record) => {
+        const raw = record?.label || '';
+        if (raw) return truncate(String(raw).replace(/[<>]/g, ''), 80);
+        const summary = String(source?.summary || source?.ai_response_summary || '').trim();
+        return truncate(summary.replace(/^灵希维护\s*[·:：\-]?\s*/u, '') || '变量维护', 80);
+      };
+
+      for (const source of legacyNodes) {
+        const targetId = targetByLegacyId.get(source.id);
+        const target = retainedById.get(targetId);
+        if (!target) continue;
+        const raw = source.maintenance && typeof source.maintenance === 'object'
+          ? source.maintenance
+          : {};
+        const before = raw.before_state_snapshot && typeof raw.before_state_snapshot === 'object'
+          ? raw.before_state_snapshot
+          : (nodeById.get(originalParentById.get(source.id))?.state_snapshot || target.state_snapshot || null);
+        const record = sanitizeTimelinePersistenceValue({
+          type: 'lingxi-variable-maintenance',
+          label: maintenanceLabel(source, raw),
+          reason: truncate(String(raw.reason || '').replace(/[<>]/g, ''), 300),
+          proposal_id: truncate(String(raw.proposal_id || raw.proposalId || ''), 240),
+          created_at: Number.isFinite(Number(raw.created_at))
+            ? Number(raw.created_at)
+            : Number(source.created_at || source.real_timestamp || Date.now()),
+          previous_node_id: target.id,
+          before_state_snapshot: before ? sanitizeTimelineSnapshot(before) : null,
+          migrated_from_node_id: source.id
+        }, `timeline_node.${target.id}.maintenance_history`);
+        if (!recordsByTarget.has(target.id)) recordsByTarget.set(target.id, []);
+        recordsByTarget.get(target.id).push(record);
+        if (Array.isArray(source.continuity_delta) && source.continuity_delta.length > 0) {
+          if (!continuityByTarget.has(target.id)) continuityByTarget.set(target.id, []);
+          continuityByTarget.get(target.id).push(...deepClone(source.continuity_delta));
+        }
+
+        // The approved maintenance snapshot is authoritative for the turn it
+        // modified. Use the latest source in chronological order when several
+        // old maintenance nodes target the same turn.
+        if (source.state_snapshot && typeof source.state_snapshot === 'object') {
+          const nextSnapshot = this._buildNodeSnapshot(source.state_snapshot, target.id, target.branch_id);
+          const previousLedger = target.state_snapshot?._continuity;
+          if (previousLedger && !nextSnapshot._continuity) {
+            nextSnapshot._continuity = deepClone(previousLedger);
+          }
+          targetUpdates.set(target.id, {
+            state_snapshot: nextSnapshot,
+            continuity_revision: Number.isInteger(nextSnapshot._continuity?.revision)
+              ? nextSnapshot._continuity.revision
+              : target.continuity_revision
+          });
         }
       }
-    };
-    if (Array.isArray(targetNode.children_ids)) {
-      for (const childId of targetNode.children_ids) {
-        descendantIds.add(childId);
-        collectDescendants(childId);
+
+      for (const target of retainedNodes) {
+        const records = recordsByTarget.get(target.id);
+        const update = targetUpdates.get(target.id);
+        if (!records && !update) continue;
+        const priorHistory = safeHistory(target);
+        const known = new Set(priorHistory.map(item => [
+          item.migrated_from_node_id,
+          item.proposal_id,
+          item.created_at
+        ].filter(Boolean).join('|')));
+        const mergedHistory = [...priorHistory];
+        for (const record of records || []) {
+          const identity = [record.migrated_from_node_id, record.proposal_id, record.created_at]
+            .filter(Boolean).join('|');
+          if (!identity || !known.has(identity)) {
+            mergedHistory.push(record);
+            if (identity) known.add(identity);
+          }
+        }
+        const latest = mergedHistory.at(-1) || null;
+        const existingDelta = Array.isArray(target.continuity_delta)
+          ? deepClone(target.continuity_delta)
+          : [];
+        const eventIds = new Set(existingDelta.map(event => event?.event_id).filter(Boolean));
+        for (const event of continuityByTarget.get(target.id) || []) {
+          if (!event?.event_id || eventIds.has(event.event_id)) continue;
+          existingDelta.push(event);
+          eventIds.add(event.event_id);
+        }
+        existingDelta.sort((left, right) => (left?.sequence || 0) - (right?.sequence || 0));
+        Object.assign(target, update || {}, {
+          continuity_delta: existingDelta,
+          maintenance_history: mergedHistory,
+          ...(latest ? { maintenance: latest } : {})
+        });
+        // Attached maintenance is metadata on a regular turn; retaining the
+        // old visual tag would make the navigator render it as a checkpoint.
+        if (Array.isArray(target.tags)) {
+          target.tags = target.tags.filter(tag => tag !== '灵希维护');
+        } else if (target.tags === '灵希维护') {
+          target.tags = [];
+        }
       }
-    }
 
-    if (descendantIds.size === 0 && targetNodeId === currentId) {
-      stateManager.commitPreparedRestore(preparedRestore);
-      return { pruned: 0, restored: true };
-    }
+      // Continuity events may retain the removed checkpoint as their source
+      // node. Remap those references in every surviving snapshot and delta so
+      // later history searches never point at a node that no longer exists.
+      for (const node of retainedNodes) {
+        if (node.state_snapshot?._continuity) {
+          node.state_snapshot._continuity = remapContinuityLedger(
+            node.state_snapshot._continuity,
+            { nodeIds: targetByLegacyId }
+          );
+          node.continuity_revision = node.state_snapshot._continuity.revision;
+        }
+        if (Array.isArray(node.continuity_delta)) {
+          node.continuity_delta = remapContinuityDelta(node.continuity_delta, {
+            nodeIds: targetByLegacyId
+          });
+        }
+        const snapshotMeta = node.state_snapshot?._meta;
+        if (snapshotMeta?.current_node_id && removableIds.has(snapshotMeta.current_node_id)) {
+          snapshotMeta.current_node_id = targetByLegacyId.get(snapshotMeta.current_node_id) || node.id;
+        }
+      }
 
-    const prunedCount = descendantIds.size;
-    for (const id of descendantIds) {
-      await stateManager.dbDelete('timeline_nodes', id);
-      this._nodeCache.delete(id);
-    }
-    if (descendantIds.size) {
-      eventBus.emit('timeline:nodes-deleted', { nodeIds: [...descendantIds], reason: 'prune' });
-    }
+      // Rebuild parent/child links after removing checkpoint nodes. This also
+      // repairs saves where a later normal turn was accidentally parented to a
+      // maintenance node.
+      for (const node of retainedNodes) {
+        const oldParent = originalParentById.get(node.id);
+        if (oldParent && removableIds.has(oldParent)) {
+          node.parent_id = targetByLegacyId.get(oldParent) || null;
+        }
+        node.children_ids = [];
+      }
+      const retainedOriginalParent = new Map(
+        retainedNodes.map(node => [node.id, originalParentById.get(node.id) || null])
+      );
+      for (const child of retainedNodes) {
+        const parent = child.parent_id ? retainedById.get(child.parent_id) : null;
+        if (!parent) continue;
+        parent.children_ids.push(child.id);
+      }
+      for (const parent of retainedNodes) {
+        parent.children_ids.sort((leftId, rightId) => {
+          const left = retainedById.get(leftId);
+          const right = retainedById.get(rightId);
+          const leftOldParent = retainedOriginalParent.get(leftId);
+          const rightOldParent = retainedOriginalParent.get(rightId);
+          const leftOrder = originalOrder.get(`${leftOldParent}:${leftId}`) ?? Number.MAX_SAFE_INTEGER;
+          const rightOrder = originalOrder.get(`${rightOldParent}:${rightId}`) ?? Number.MAX_SAFE_INTEGER;
+          return (leftOrder - rightOrder)
+            || ((left?.turn_number || 0) - (right?.turn_number || 0))
+            || ((left?.created_at || 0) - (right?.created_at || 0))
+            || String(leftId).localeCompare(String(rightId));
+        });
+      }
 
-    targetNode.children_ids = [];
-    await stateManager.dbPut('timeline_nodes', targetNode);
+      // Recompute depths from the unique root. Removing a checkpoint reduces
+      // every descendant depth by one without touching turn numbers.
+      const root = retainedNodes.find(node => node.parent_id == null)
+        || retainedNodes.slice().sort((left, right) => (left.depth || 0) - (right.depth || 0))[0];
+      if (root) {
+        const queue = [{ node: root, depth: 0 }];
+        const visited = new Set();
+        while (queue.length) {
+          const { node, depth } = queue.shift();
+          if (!node || visited.has(node.id)) continue;
+          visited.add(node.id);
+          node.depth = depth;
+          for (const childId of node.children_ids || []) {
+            const child = retainedById.get(childId);
+            if (child) queue.push({ node: child, depth: depth + 1 });
+          }
+        }
+      }
 
-    const branch = await stateManager.dbGet('timeline_branches', targetNode.branch_id || 'branch_main');
-    if (branch) {
-      branch.head_node_id = targetNodeId;
-      branch.node_count = Math.max(0, (branch.node_count || 0) - prunedCount);
-      await stateManager.dbPut('timeline_branches', branch);
-    }
+      const removedBranchIds = new Set();
+      const currentBefore = meta.value.current_id;
+      let currentId = removableIds.has(currentBefore)
+        ? targetByLegacyId.get(currentBefore)
+        : currentBefore;
+      if (!retainedById.has(currentId)) currentId = root?.id || retainedNodes[0]?.id || null;
+      const currentNode = retainedById.get(currentId);
+      let activeBranchId = currentNode?.branch_id || meta.value.active_branch || 'branch_main';
+      const updatedBranches = [];
+      for (const branch of branches) {
+        const members = retainedNodes.filter(node => node.branch_id === branch.id);
+        if (members.length === 0 && branch.id !== 'branch_main') {
+          removedBranchIds.add(branch.id);
+          continue;
+        }
+        const memberIds = new Set(members.map(node => node.id));
+        const tips = members.filter(node => !members.some(candidate => memberIds.has(candidate.id)
+          && candidate.parent_id === node.id));
+        tips.sort((left, right) => (
+          ((left.turn_number || 0) - (right.turn_number || 0))
+          || ((left.depth || 0) - (right.depth || 0))
+          || ((left.created_at || 0) - (right.created_at || 0))
+          || String(left.id).localeCompare(String(right.id))
+        ));
+        const oldDiverged = branch.diverged_from;
+        const divergedFrom = removableIds.has(oldDiverged)
+          ? targetByLegacyId.get(oldDiverged)
+          : oldDiverged;
+        updatedBranches.push({
+          ...branch,
+          head_node_id: tips.at(-1)?.id || members.at(-1)?.id || branch.head_node_id,
+          node_count: members.length,
+          diverged_from: divergedFrom || null,
+          diverged_at_turn: divergedFrom
+            ? (retainedById.get(divergedFrom)?.turn_number ?? branch.diverged_at_turn ?? null)
+            : branch.diverged_at_turn ?? null,
+          is_active: branch.id === activeBranchId
+        });
+      }
+      if (!updatedBranches.some(branch => branch.id === activeBranchId)) {
+        activeBranchId = currentNode?.branch_id || 'branch_main';
+        for (const branch of updatedBranches) branch.is_active = branch.id === activeBranchId;
+      }
+      const rootId = root?.id || meta.value.root_id;
+      const updatedMeta = {
+        ...meta,
+        value: {
+          ...meta.value,
+          root_id: rootId,
+          current_id: currentId,
+          active_branch: activeBranchId,
+          total_nodes: retainedNodes.length
+        }
+      };
 
-    const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
-    if (metaEntry) {
-      metaEntry.value.current_id = targetNodeId;
-      metaEntry.value.total_nodes = Math.max(0, (metaEntry.value.total_nodes || 0) - prunedCount);
-      await stateManager.dbPut('timeline_meta', metaEntry);
-    }
-
-    stateManager.commitPreparedRestore(preparedRestore);
-
-    const metaState = stateManager.getSub('_meta') || {};
-    metaState.current_node_id = targetNodeId;
-    metaState.active_branch = targetNode.branch_id || 'branch_main';
-    stateManager.setSub('_meta', metaState);
-    this._pendingBranchFrom = null;
-
-    targetNode.accessed_count = (targetNode.accessed_count || 0) + 1;
-    await stateManager.dbPut('timeline_nodes', targetNode);
-
-    this._cacheTreeSummary();
-    eventBus.emit('timeline:jumped', {
-      fromNodeId: currentId,
-      toNodeId: targetNodeId,
-      branchId: targetNode.branch_id || 'branch_main',
-      pruned: prunedCount
+      return {
+        deleteNodeIds: [...removableIds],
+        deleteBranchIds: [...removedBranchIds],
+        nodes: retainedNodes,
+        branches: updatedBranches,
+        meta: updatedMeta,
+        result: {
+          migrated: removableIds.size,
+          removedNodeIds: [...removableIds],
+          removedBranchIds: [...removedBranchIds],
+          currentId,
+          activeBranchId,
+          updatedNodes: retainedNodes.filter(node => recordsByTarget.has(node.id)).map(node => node.id),
+          targetByLegacyId: Object.fromEntries(targetByLegacyId)
+        }
+      };
     });
 
-    return { pruned: prunedCount, node: targetNode };
+    if (!migration?.migrated) {
+      return migration || { migrated: 0, removedNodeIds: [], removedBranchIds: [] };
+    }
+    for (const nodeId of migration.removedNodeIds || []) this._nodeCache.delete(nodeId);
+    for (const node of await stateManager.dbGetAll('timeline_nodes')) this._nodeCache.set(node.id, node);
+    if (migration.currentId) {
+      const metaState = stateManager.getSub('_meta') || {};
+      metaState.current_node_id = migration.currentId;
+      metaState.active_branch = migration.activeBranchId || metaState.active_branch || 'branch_main';
+      stateManager.setSub('_meta', metaState);
+    }
+    if (this._pendingBranchFrom && migration.targetByLegacyId?.[this._pendingBranchFrom]) {
+      this._pendingBranchFrom = migration.targetByLegacyId[this._pendingBranchFrom];
+    }
+    this._cacheTreeSummary();
+    eventBus.emit('timeline:maintenance-migrated', migration);
+    return migration;
+  }
+
+  async prepareReroll(targetNodeId, { mode = 'branch' } = {}) {
+    if (!['branch', 'replace'].includes(mode)) throw new TypeError('重推衍模式必须是 branch 或 replace');
+    const targetNode = await stateManager.dbGet('timeline_nodes', targetNodeId);
+    if (!targetNode) throw new Error('重推衍目标节点不存在');
+    if (!targetNode.parent_id) throw new Error('初始节点无法快速重推衍');
+    if (!String(targetNode.player_input || '').trim()) throw new Error('该节点缺少玩家输入，无法重推衍');
+
+    await this.jumpToNode(targetNode.parent_id);
+    let pruned = 0;
+    if (mode === 'replace') {
+      const result = await this.pruneForward(targetNode.parent_id);
+      pruned = Math.max(0, Number(result?.pruned) || 0);
+      this._pendingBranchFrom = null;
+    } else {
+      this._pendingBranchFrom = targetNode.parent_id;
+    }
+
+    const parentNode = await this.getCurrentNode();
+    const history = await this._reconstructChatHistory(parentNode);
+    return {
+      mode,
+      targetNodeId: targetNode.id,
+      parentNodeId: targetNode.parent_id,
+      playerInput: targetNode.player_input,
+      pruned,
+      history
+    };
+  }
+
+  async pruneForward(targetNodeId) {
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
+      if (!meta?.value) throw new Error('时间线元数据不存在，无法逆转');
+      const byId = new Map(nodes.map(node => [node.id, node]));
+      const targetNode = byId.get(targetNodeId);
+      if (!targetNode) throw new Error('目标节点不存在');
+      if (!Array.isArray(targetNode.children_ids)) throw new Error('目标节点 children_ids 无效');
+      const preparedRestore = this._prepareNodeRestore(targetNode);
+      const descendantIds = new Set();
+      const pending = [...targetNode.children_ids];
+      while (pending.length) {
+        const nodeId = pending.pop();
+        if (!nodeId || descendantIds.has(nodeId)) continue;
+        const node = byId.get(nodeId);
+        if (!node) throw new Error(`时间线子节点不存在: ${nodeId}`);
+        descendantIds.add(nodeId);
+        if (!Array.isArray(node.children_ids)) throw new Error(`节点 ${nodeId} children_ids 无效`);
+        pending.push(...node.children_ids);
+      }
+
+      const retainedNodes = nodes
+        .filter(node => !descendantIds.has(node.id))
+        .map(node => node.id === targetNodeId
+          ? { ...node, children_ids: [], accessed_count: (node.accessed_count || 0) + 1 }
+          : node);
+      const retainedById = new Map(retainedNodes.map(node => [node.id, node]));
+      const deletedBranchIds = [];
+      const updatedBranches = [];
+      for (const branch of branches) {
+        const originalBranchNodes = nodes.filter(node => node.branch_id === branch.id);
+        if (!originalBranchNodes.length) throw new Error(`分支 ${branch.id} 没有节点，无法安全逆转`);
+        const branchNodes = retainedNodes.filter(node => node.branch_id === branch.id);
+        if (!branchNodes.length) {
+          deletedBranchIds.push(branch.id);
+          continue;
+        }
+        const retainedHead = retainedById.get(branch.head_node_id);
+        const head = retainedHead?.branch_id === branch.id ? retainedHead : latestTimelineNode(branchNodes);
+        updatedBranches.push({
+          ...branch,
+          head_node_id: head.id,
+          node_count: branchNodes.length,
+          is_active: branch.id === targetNode.branch_id
+        });
+      }
+      if (deletedBranchIds.includes(targetNode.branch_id)
+        || !updatedBranches.some(branch => branch.id === targetNode.branch_id)) {
+        throw new Error('目标节点所属分支无法保留');
+      }
+      const updatedMeta = {
+        ...meta,
+        value: {
+          ...meta.value,
+          current_id: targetNodeId,
+          active_branch: targetNode.branch_id,
+          total_nodes: retainedNodes.length
+        }
+      };
+      return {
+        deleteNodeIds: [...descendantIds],
+        deleteBranchIds: deletedBranchIds,
+        nodes: retainedNodes.filter(node => node.id === targetNodeId),
+        branches: updatedBranches,
+        meta: updatedMeta,
+        result: {
+          node: retainedById.get(targetNodeId),
+          preparedRestore,
+          previousCurrentId: meta.value.current_id,
+          prunedNodeIds: [...descendantIds],
+          deletedBranchIds
+        }
+      };
+    });
+
+    stateManager.commitPreparedRestore(mutation.preparedRestore);
+    const metaState = stateManager.getSub('_meta') || {};
+    metaState.current_node_id = targetNodeId;
+    metaState.active_branch = mutation.node.branch_id;
+    stateManager.setSub('_meta', metaState);
+    this._pendingBranchFrom = null;
+    for (const nodeId of mutation.prunedNodeIds) this._nodeCache.delete(nodeId);
+    this._nodeCache.set(mutation.node.id, mutation.node);
+
+    if (mutation.prunedNodeIds.length) {
+      eventBus.emit('timeline:nodes-deleted', { nodeIds: mutation.prunedNodeIds, reason: 'prune' });
+    }
+    for (const branchId of mutation.deletedBranchIds) {
+      eventBus.emit('timeline:branch-deleted', { branchId, reason: 'prune' });
+    }
+    this._cacheTreeSummary();
+    eventBus.emit('timeline:jumped', {
+      fromNodeId: mutation.previousCurrentId,
+      toNodeId: targetNodeId,
+      branchId: mutation.node.branch_id,
+      pruned: mutation.prunedNodeIds.length
+    });
+
+    return {
+      pruned: mutation.prunedNodeIds.length,
+      prunedNodeIds: mutation.prunedNodeIds,
+      deletedBranchIds: mutation.deletedBranchIds,
+      node: mutation.node,
+      restored: true
+    };
   }
 
   async jumpToNode(targetNodeId) {
@@ -1080,10 +1857,28 @@ class TimelineSystem {
     }
 
     const { nodes: migratedNodes, branches: normalizedBranches, meta: metaEntry } = normalized;
-    const currentId = metaEntry.value.current_id;
-    const activeBranch = metaEntry.value.active_branch;
-    const currentNode = migratedNodes.find(node => node.id === currentId);
-    const preparedRestore = this._prepareImportedState(currentNode, migratedNodes);
+    const importedCurrentId = metaEntry.value.current_id;
+    const importedCurrentNode = migratedNodes.find(node => node.id === importedCurrentId);
+    // Validate and prepare the runtime restore before replacing IndexedDB so a
+    // malformed snapshot cannot destroy the timeline that is already loaded.
+    const preparedRestore = this._prepareImportedState(importedCurrentNode, migratedNodes);
+
+    await stateManager.dbReplaceTimeline({
+      nodes: migratedNodes,
+      branches: normalizedBranches,
+      meta: metaEntry
+    });
+    await this._migrateLegacyMaintenanceNodes();
+
+    const [committedNodes, committedBranches, committedMetaEntry] = await Promise.all([
+      stateManager.dbGetAll('timeline_nodes'),
+      stateManager.dbGetAll('timeline_branches'),
+      stateManager.dbGet('timeline_meta', 'root')
+    ]);
+    const currentId = committedMetaEntry?.value?.current_id;
+    const activeBranch = committedMetaEntry?.value?.active_branch || 'branch_main';
+    const currentNode = committedNodes.find(node => node.id === currentId);
+    if (!currentNode) throw new Error('导入迁移后的当前时间线节点不存在');
     const preparedMeta = preparedRestore.state._meta && typeof preparedRestore.state._meta === 'object'
       && !Array.isArray(preparedRestore.state._meta)
       ? preparedRestore.state._meta
@@ -1093,18 +1888,19 @@ class TimelineSystem {
       current_node_id: currentId,
       active_branch: activeBranch
     };
-
-    await stateManager.dbReplaceTimeline({
-      nodes: migratedNodes,
-      branches: normalizedBranches,
-      meta: metaEntry
-    });
     stateManager.commitPreparedRestore(preparedRestore);
 
     this._pendingBranchFrom = null;
     this._initialized = true;
+    this._nodeCache.clear();
+    for (const node of committedNodes) this._nodeCache.set(node.id, node);
     this._cacheTreeSummary();
-    eventBus.emit('timeline:imported', { node: currentNode, nodes: migratedNodes, branches: incomingBranches, mode: 'overwrite' });
+    eventBus.emit('timeline:imported', {
+      node: currentNode,
+      nodes: committedNodes,
+      branches: committedBranches,
+      mode: 'overwrite'
+    });
     this._maybeArchive().catch(() => {});
     return currentNode;
   }
@@ -1164,6 +1960,17 @@ class TimelineSystem {
       const importedRootTurn = Number.isInteger(importedRootOriginal.turn_number) ? importedRootOriginal.turn_number : 0;
       const turnOffset = attachmentTurn + 1 - importedRootTurn;
       const incomingNodeById = new Map(incomingNodes.map(node => [node.id, node]));
+      const remapMaintenanceRecord = record => {
+        if (!record || typeof record !== 'object' || Array.isArray(record)) return record;
+        const remapped = deepClone(record);
+        if (remapped.previous_node_id && nodeIdMap.has(remapped.previous_node_id)) {
+          remapped.previous_node_id = nodeIdMap.get(remapped.previous_node_id);
+        }
+        if (remapped.migrated_from_node_id && nodeIdMap.has(remapped.migrated_from_node_id)) {
+          remapped.migrated_from_node_id = nodeIdMap.get(remapped.migrated_from_node_id);
+        }
+        return remapped;
+      };
       const relativeDepth = node => {
         let depth = 0;
         let cursor = node;
@@ -1214,7 +2021,13 @@ class TimelineSystem {
             nodeIds: nodeIdMap,
             branchIds: branchIdMap,
             eventIds: eventIdMap
-          })
+          }),
+          ...(node.maintenance && typeof node.maintenance === 'object'
+            ? { maintenance: remapMaintenanceRecord(node.maintenance) }
+            : {}),
+          ...(Array.isArray(node.maintenance_history)
+            ? { maintenance_history: node.maintenance_history.map(remapMaintenanceRecord) }
+            : {})
         };
       });
       const migratedNodeById = new Map(migratedIncoming.map(node => [node.id, node]));
@@ -1266,10 +2079,25 @@ class TimelineSystem {
         result: { root: migratedIncoming.find(node => node.id === importedRootId), nodes: migratedIncoming, branches: remappedBranches }
       };
     });
+    const maintenanceMigration = await this._migrateLegacyMaintenanceNodes();
+    const committedRootId = maintenanceMigration?.targetByLegacyId?.[imported.root.id]
+      || imported.root.id;
+    const [committedRoot, committedNodes, committedBranches] = await Promise.all([
+      stateManager.dbGet('timeline_nodes', committedRootId),
+      stateManager.dbGetAll('timeline_nodes'),
+      stateManager.dbGetAll('timeline_branches')
+    ]);
+    if (!committedRoot) throw new Error('合并导入迁移后的根节点不存在');
+    this._nodeCache.clear();
+    for (const node of committedNodes) this._nodeCache.set(node.id, node);
     this._cacheTreeSummary();
-    eventBus.emit('timeline:imported', { nodes: imported.nodes, branches: imported.branches, mode: 'merge' });
+    eventBus.emit('timeline:imported', {
+      nodes: committedNodes,
+      branches: committedBranches,
+      mode: 'merge'
+    });
     this._maybeArchive().catch(() => {});
-    return imported.root;
+    return committedRoot;
   }
 
   _getImportedRestorePlan(currentNode, allNodes) {
@@ -1305,129 +2133,306 @@ class TimelineSystem {
   }
 
   async promoteBranchToMain(branchId) {
-    if (branchId === 'branch_main') return;
+    if (branchId === 'branch_main') return { promoted: false, reason: 'already-main' };
+    const demotedBranchId = generateId('branch_alt');
+    const changedAt = Date.now();
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
+      if (!meta?.value) throw new Error('时间线元数据不存在，无法升格分支');
+      const targetBranch = branches.find(branch => branch.id === branchId);
+      const mainBranch = branches.find(branch => branch.id === 'branch_main');
+      if (!targetBranch) throw new Error('分支不存在');
+      if (!mainBranch) throw new Error('主线分支不存在');
+      if (branches.some(branch => branch.id === demotedBranchId)) {
+        throw new Error('降格分支 ID 冲突，请重试');
+      }
+      const byId = new Map(nodes.map(node => [node.id, node]));
+      const targetNodes = nodes.filter(node => node.branch_id === branchId).sort(compareTimelinePosition);
+      if (!targetNodes.length) throw new Error('目标分支没有节点，无法升格');
+      const firstTargetNode = targetNodes[0];
+      const divergenceId = targetBranch.diverged_from || firstTargetNode.parent_id;
+      const divergenceNode = byId.get(divergenceId);
+      if (!divergenceNode || divergenceNode.branch_id !== 'branch_main') {
+        throw new Error('只有直接从主线分歧的 IF 分支可以升格');
+      }
 
-    const branches = await stateManager.dbGetAll('timeline_branches');
-    const targetBranch = branches.find(b => b.id === branchId);
-    if (!targetBranch) throw new Error('Branch not found');
+      const descendantIds = new Set();
+      const pending = [...(Array.isArray(divergenceNode.children_ids) ? divergenceNode.children_ids : [])];
+      while (pending.length) {
+        const nodeId = pending.pop();
+        if (!nodeId || descendantIds.has(nodeId)) continue;
+        const node = byId.get(nodeId);
+        if (!node) throw new Error(`时间线子节点不存在: ${nodeId}`);
+        descendantIds.add(nodeId);
+        if (!Array.isArray(node.children_ids)) throw new Error(`节点 ${nodeId} children_ids 无效`);
+        pending.push(...node.children_ids);
+      }
+      const demotedIds = new Set(nodes
+        .filter(node => node.branch_id === 'branch_main' && descendantIds.has(node.id))
+        .map(node => node.id));
+      const targetIds = new Set(targetNodes.map(node => node.id));
+      const updatedNodes = nodes.map(node => {
+        if (targetIds.has(node.id)) return remapNodeRuntimeBranch(node, 'branch_main');
+        if (demotedIds.has(node.id)) return remapNodeRuntimeBranch(node, demotedBranchId);
+        return node;
+      });
+      const updatedById = new Map(updatedNodes.map(node => [node.id, node]));
+      const currentNode = updatedById.get(meta.value.current_id);
+      if (!currentNode) throw new Error('当前时间线节点不存在，无法升格分支');
+      const activeBranchId = currentNode.branch_id;
+      const allMainNodes = updatedNodes.filter(node => node.branch_id === 'branch_main');
+      const promotedHead = updatedById.get(targetBranch.head_node_id);
+      if (!promotedHead || promotedHead.branch_id !== 'branch_main') {
+        throw new Error('升格分支头节点无效');
+      }
 
-    const nodes = await stateManager.dbGetAll('timeline_nodes');
+      const updatedBranches = branches
+        .filter(branch => branch.id !== branchId)
+        .map(branch => branch.id === 'branch_main'
+          ? {
+              ...branch,
+              head_node_id: promotedHead.id,
+              node_count: allMainNodes.length,
+              is_active: activeBranchId === 'branch_main'
+            }
+          : { ...branch, is_active: branch.id === activeBranchId });
+      let demotedBranch = null;
+      if (demotedIds.size) {
+        const demotedNodes = updatedNodes.filter(node => demotedIds.has(node.id));
+        const demotedHead = latestTimelineNode(demotedNodes);
+        demotedBranch = {
+          id: demotedBranchId,
+          name: `原主线 (自第 ${firstTargetNode.turn_number} 回)`,
+          color: '#A9A9A9',
+          description: `原主线分支，自第 ${firstTargetNode.turn_number} 回起降格为IF线`,
+          created_at: changedAt,
+          diverged_from: divergenceNode.id,
+          diverged_at_turn: divergenceNode.turn_number,
+          head_node_id: demotedHead.id,
+          node_count: demotedNodes.length,
+          is_active: activeBranchId === demotedBranchId
+        };
+        updatedBranches.push(demotedBranch);
+      }
+      if (!updatedBranches.some(branch => branch.id === activeBranchId)) {
+        throw new Error('升格后当前节点所属分支不存在');
+      }
+      const updatedMeta = {
+        ...meta,
+        value: {
+          ...meta.value,
+          active_branch: activeBranchId,
+          total_nodes: updatedNodes.length
+        }
+      };
+      return {
+        deleteBranchIds: [branchId],
+        nodes: updatedNodes.filter(node => targetIds.has(node.id) || demotedIds.has(node.id)),
+        branches: updatedBranches,
+        meta: updatedMeta,
+        result: {
+          promotedNodeIds: [...targetIds],
+          demotedNodeIds: [...demotedIds],
+          demotedBranch,
+          currentNodeId: currentNode.id,
+          previousActiveBranchId: meta.value.active_branch,
+          activeBranchId,
+          updatedNodes: updatedNodes.filter(node => targetIds.has(node.id) || demotedIds.has(node.id))
+        }
+      };
+    });
 
-    const targetNodes = nodes.filter(n => n.branch_id === branchId);
-    if (targetNodes.length === 0) return;
-
-    targetNodes.sort((a, b) => a.turn_number - b.turn_number);
-    const firstIFNode = targetNodes[0];
-
-    const mainNodesToDemote = nodes.filter(n => n.branch_id === 'branch_main' && n.turn_number >= firstIFNode.turn_number);
-
-    const newIFBranchId = 'branch_alt_' + Date.now();
-    const newIFBranch = {
-      id: newIFBranchId,
-      name: '原主线 (自第 ' + firstIFNode.turn_number + ' 回)',
-      color: '#A9A9A9',
-      description: `原主线分支，自第 ${firstIFNode.turn_number} 回起降格为IF线`,
-      created_at: Date.now(),
-      diverged_from: firstIFNode.parent_id,
-      diverged_at_turn: firstIFNode.turn_number - 1,
-      head_node_id: mainNodesToDemote.length ? mainNodesToDemote[mainNodesToDemote.length - 1].id : firstIFNode.parent_id,
-      node_count: mainNodesToDemote.length,
-      is_active: false
-    };
-
-    await stateManager.dbPut('timeline_branches', newIFBranch);
-
-    for (const node of mainNodesToDemote) {
-      node.branch_id = newIFBranchId;
-      await stateManager.dbPut('timeline_nodes', node);
-      this._nodeCache.set(node.id, node);
+    for (const node of mutation.updatedNodes) this._nodeCache.set(node.id, node);
+    const metaState = stateManager.getSub('_meta') || {};
+    metaState.current_node_id = mutation.currentNodeId;
+    metaState.active_branch = mutation.activeBranchId;
+    stateManager.setSub('_meta', metaState);
+    for (const key of ['_story_direction', '_agent_story_plan']) {
+      const value = stateManager.getSub(key);
+      if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+      if (value.branchId === mutation.previousActiveBranchId) {
+        stateManager.setSub(key, { ...value, branchId: mutation.activeBranchId });
+      }
     }
-
-    for (const node of targetNodes) {
-      node.branch_id = 'branch_main';
-      await stateManager.dbPut('timeline_nodes', node);
-      this._nodeCache.set(node.id, node);
-    }
-
-    await stateManager.dbDelete('timeline_branches', branchId);
-
-    const mainBranch = await stateManager.dbGet('timeline_branches', 'branch_main');
-    if (mainBranch) {
-      const allMainNodes = (await stateManager.dbGetAll('timeline_nodes')).filter(n => n.branch_id === 'branch_main');
-      allMainNodes.sort((a, b) => a.turn_number - b.turn_number);
-      mainBranch.head_node_id = allMainNodes.length ? allMainNodes[allMainNodes.length - 1].id : mainBranch.head_node_id;
-      mainBranch.node_count = allMainNodes.length;
-      await stateManager.dbPut('timeline_branches', mainBranch);
-    }
-
-    const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
-    if (metaEntry?.value?.active_branch === branchId) {
-       await stateManager.dbPut('timeline_meta', { key: 'root', value: { ...(metaEntry?.value || {}), active_branch: 'branch_main' } });
-       const metaState = stateManager.getSub('_meta') || {};
-       metaState.active_branch = 'branch_main';
-       stateManager.setSub('_meta', metaState);
-    }
-    const activeBranch = metaEntry?.value?.active_branch === branchId
-      ? 'branch_main'
-      : (metaEntry?.value?.active_branch || 'branch_main');
-    await this._setActiveBranchFlags(activeBranch);
-
     this._cacheTreeSummary();
-    eventBus.emit('timeline:branch-promoted', { oldBranchId: branchId, newMainBranchId: 'branch_main' });
+    eventBus.emit('timeline:branch-promoted', {
+      oldBranchId: branchId,
+      newMainBranchId: 'branch_main',
+      demotedBranchId: mutation.demotedBranch?.id || null
+    });
+    if (mutation.previousActiveBranchId !== mutation.activeBranchId) {
+      eventBus.emit('timeline:branch-switched', {
+        from: mutation.previousActiveBranchId,
+        to: mutation.activeBranchId,
+        reason: 'promotion'
+      });
+    }
+    return {
+      promoted: true,
+      branchId,
+      promotedNodeIds: mutation.promotedNodeIds,
+      demotedNodeIds: mutation.demotedNodeIds,
+      demotedBranchId: mutation.demotedBranch?.id || null,
+      currentNodeId: mutation.currentNodeId,
+      activeBranchId: mutation.activeBranchId
+    };
   }
 
   async deleteBranch(branchId) {
     if (branchId === 'branch_main') throw new Error('Cannot delete main branch');
-    const nodes = await stateManager.dbGetAll('timeline_nodes');
-    const nodesToDelete = nodes.filter(n => n.branch_id === branchId);
-    const deletedIds = new Set(nodesToDelete.map(node => node.id));
+    const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
+      if (!meta?.value) throw new Error('时间线元数据不存在，无法删除分支');
+      if (!branches.some(branch => branch.id === branchId)) throw new Error('分支不存在');
+      const byId = new Map(nodes.map(node => [node.id, node]));
+      const deleteIds = new Set(nodes.filter(node => node.branch_id === branchId).map(node => node.id));
+      if (!deleteIds.size) throw new Error('目标分支没有节点，无法安全删除');
 
-    for (const node of nodes) {
-      if (deletedIds.has(node.id) || !Array.isArray(node.children_ids)) continue;
-      const children = node.children_ids.filter(id => !deletedIds.has(id));
-      if (children.length === node.children_ids.length) continue;
-      node.children_ids = children;
-      await stateManager.dbPut('timeline_nodes', node);
-      this._nodeCache.set(node.id, node);
-    }
+      let changed = true;
+      while (changed) {
+        changed = false;
+        const pending = [...deleteIds];
+        while (pending.length) {
+          const node = byId.get(pending.pop());
+          if (!node) continue;
+          if (!Array.isArray(node.children_ids)) throw new Error(`节点 ${node.id} children_ids 无效`);
+          for (const childId of node.children_ids) {
+            if (!byId.has(childId)) throw new Error(`时间线子节点不存在: ${childId}`);
+            if (deleteIds.has(childId)) continue;
+            deleteIds.add(childId);
+            pending.push(childId);
+            changed = true;
+          }
+        }
+        for (const branch of branches) {
+          if (branch.id === 'branch_main' || !deleteIds.has(branch.diverged_from)) continue;
+          for (const node of nodes) {
+            if (node.branch_id !== branch.id || deleteIds.has(node.id)) continue;
+            deleteIds.add(node.id);
+            changed = true;
+          }
+        }
+      }
 
-    for (const node of nodesToDelete) {
-      await stateManager.dbDelete('timeline_nodes', node.id);
-      this._nodeCache.delete(node.id);
-    }
-    if (nodesToDelete.length) {
+      const deletedBranchIds = new Set([branchId]);
+      for (const branch of branches) {
+        const branchNodes = nodes.filter(node => node.branch_id === branch.id);
+        if (branchNodes.some(node => deleteIds.has(node.id))) {
+          if (branch.id === 'branch_main') {
+            throw new Error('分支删除将影响主线节点，操作已拒绝');
+          }
+          for (const node of branchNodes) deleteIds.add(node.id);
+          deletedBranchIds.add(branch.id);
+        }
+      }
+
+      const retainedNodes = nodes
+        .filter(node => !deleteIds.has(node.id))
+        .map(node => ({
+          ...node,
+          children_ids: Array.isArray(node.children_ids)
+            ? node.children_ids.filter(childId => !deleteIds.has(childId))
+            : []
+        }));
+      const retainedById = new Map(retainedNodes.map(node => [node.id, node]));
+      let currentNodeId = meta.value.current_id;
+      let preparedRestore = null;
+      if (deleteIds.has(currentNodeId)) {
+        let cursor = byId.get(currentNodeId);
+        const visited = new Set();
+        while (cursor && deleteIds.has(cursor.id)) {
+          if (visited.has(cursor.id)) throw new Error('时间线父节点关系包含环，无法删除分支');
+          visited.add(cursor.id);
+          cursor = cursor.parent_id ? byId.get(cursor.parent_id) : null;
+        }
+        if (!cursor || !retainedById.has(cursor.id)) {
+          throw new Error('删除分支后没有可恢复的父节点');
+        }
+        preparedRestore = this._prepareNodeRestore(cursor);
+        currentNodeId = cursor.id;
+      }
+      const currentNode = retainedById.get(currentNodeId);
+      if (!currentNode) throw new Error('删除分支后的当前节点不存在');
+      const activeBranchId = currentNode.branch_id;
+      const retainedBranches = [];
+      for (const branch of branches) {
+        if (deletedBranchIds.has(branch.id)) continue;
+        const branchNodes = retainedNodes.filter(node => node.branch_id === branch.id);
+        if (!branchNodes.length) throw new Error(`保留分支 ${branch.id} 没有节点`);
+        const retainedHead = retainedById.get(branch.head_node_id);
+        const head = retainedHead?.branch_id === branch.id ? retainedHead : latestTimelineNode(branchNodes);
+        retainedBranches.push({
+          ...branch,
+          head_node_id: head.id,
+          node_count: branchNodes.length,
+          is_active: branch.id === activeBranchId
+        });
+      }
+      if (!retainedBranches.some(branch => branch.id === activeBranchId)) {
+        throw new Error('删除分支后当前节点所属分支不存在');
+      }
+      const updatedMeta = {
+        ...meta,
+        value: {
+          ...meta.value,
+          current_id: currentNodeId,
+          active_branch: activeBranchId,
+          total_nodes: retainedNodes.length
+        }
+      };
+      const updatedNodes = retainedNodes.filter(node => {
+        const previous = byId.get(node.id);
+        return !persistenceValuesEqual(previous?.children_ids, node.children_ids);
+      });
+      return {
+        deleteNodeIds: [...deleteIds],
+        deleteBranchIds: [...deletedBranchIds],
+        nodes: updatedNodes,
+        branches: retainedBranches,
+        meta: updatedMeta,
+        result: {
+          activeBranchId,
+          currentNodeId,
+          deletedNodeIds: [...deleteIds],
+          deletedBranchIds: [...deletedBranchIds],
+          preparedRestore,
+          previousCurrentId: meta.value.current_id,
+          updatedNodes
+        }
+      };
+    });
+
+    if (mutation.preparedRestore) stateManager.commitPreparedRestore(mutation.preparedRestore);
+    const metaState = stateManager.getSub('_meta') || {};
+    metaState.current_node_id = mutation.currentNodeId;
+    metaState.active_branch = mutation.activeBranchId;
+    stateManager.setSub('_meta', metaState);
+    for (const nodeId of mutation.deletedNodeIds) this._nodeCache.delete(nodeId);
+    for (const node of mutation.updatedNodes) this._nodeCache.set(node.id, node);
+    if (mutation.deletedNodeIds.length) {
       eventBus.emit('timeline:nodes-deleted', {
-        nodeIds: nodesToDelete.map(node => node.id),
+        nodeIds: mutation.deletedNodeIds,
         reason: 'branch-delete'
       });
     }
-    await stateManager.dbDelete('timeline_branches', branchId);
-
-    const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
-    if (metaEntry) {
-      metaEntry.value.total_nodes = Math.max(0, nodes.length - nodesToDelete.length);
-      await stateManager.dbPut('timeline_meta', metaEntry);
+    if (mutation.previousCurrentId !== mutation.currentNodeId) {
+      eventBus.emit('timeline:jumped', {
+        fromNodeId: mutation.previousCurrentId,
+        toNodeId: mutation.currentNodeId,
+        branchId: mutation.activeBranchId,
+        reason: 'branch-delete'
+      });
     }
-
-    const meta = stateManager.getSub('_meta') || {};
-    const currentId = meta.current_node_id;
-    if (nodesToDelete.some(n => n.id === currentId)) {
-      const firstNode = nodesToDelete.sort((a, b) => a.turn_number - b.turn_number)[0];
-      if (firstNode && firstNode.parent_id) {
-        try {
-          await this.jumpToNode(firstNode.parent_id);
-        } catch (err) {
-          console.warn('[Timeline] jumpToNode failed during branch deletion:', err.message);
-          await this.emergencyReset();
-          throw new Error('分支删除后无法跳转到父节点，已执行紧急重置');
-        }
-      } else {
-        await this.emergencyReset();
-      }
-    } else {
-      this._cacheTreeSummary();
-      eventBus.emit('timeline:branch-deleted', { branchId });
-    }
+    this._cacheTreeSummary();
+    eventBus.emit('timeline:branch-deleted', {
+      branchId,
+      deletedBranchIds: mutation.deletedBranchIds
+    });
+    return {
+      deletedNodes: mutation.deletedNodeIds.length,
+      deletedNodeIds: mutation.deletedNodeIds,
+      deletedBranchIds: mutation.deletedBranchIds,
+      currentNodeId: mutation.currentNodeId,
+      activeBranchId: mutation.activeBranchId
+    };
   }
 
   async emergencyReset() {

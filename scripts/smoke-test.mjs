@@ -39,9 +39,10 @@ if (index) {
 const sw = readText('sw.js');
 if (sw) {
   assertIncludes(sw, '/v1/chat/completions', 'service worker bypasses chat API');
-  assertIncludes(sw, "url.pathname.includes('/api/')", 'service worker bypasses every API route');
-  assertIncludes(sw, "url.pathname.includes('/auth/')", 'service worker bypasses auth routes');
-  assertIncludes(sw, "event.request.method !== 'GET'", 'service worker bypasses non-GET requests');
+  assertIncludes(sw, "url.pathname.startsWith('/api/')", 'service worker bypasses every API route');
+  assertIncludes(sw, "url.pathname.startsWith('/auth/')", 'service worker bypasses auth routes');
+  assertIncludes(sw, "request.method !== 'GET'", 'service worker bypasses non-GET requests');
+  assertIncludes(sw, "{ cache: 'no-store' }", 'service worker bypasses stale HTTP cache for code');
   assertIncludes(sw, 'cache.put(event.request', 'service worker caches successful app requests');
   if (sw.includes("'/index.html'")) fail('service worker should not cache root-absolute index path');
 }
