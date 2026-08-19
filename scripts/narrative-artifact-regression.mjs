@@ -65,6 +65,14 @@ await test('only the narrow display projection is safe to persist', () => {
   assert.doesNotMatch(persisted, /永不入库|机器记忆|analysis|memory/);
 });
 
+await test('update manifest is a hidden machine instruction, never visible prose', () => {
+  const raw = '<final>公开正文</final><update_manifest>{"domains":{},"present_npcs":{},"active_missions":{}}</update_manifest>';
+  const artifact = createNarrativeArtifact(raw);
+  assert.equal(artifact.displayText, '公开正文');
+  assert.deepEqual(artifact.instructions.map(block => block.tag), ['update_manifest']);
+  assert.match(renderNarrativeInstructions(artifact), /<update_manifest>/);
+});
+
 await test('private aliases, private attributes and malformed tails never reach display', () => {
   const raw = `公开第一句。
 <model_private_notes>隐藏备注</model_private_notes>

@@ -1,6 +1,7 @@
 import { stateManager as defaultStateManager } from '../../state-manager.js';
 import { eventBus as defaultEventBus } from '../../event-bus.js';
 import { timelineSystem as defaultTimelineSystem } from '../../../systems/timeline-system.js';
+import { listingTimelineNode } from '../../timeline-node-codec.js';
 import {
   LingXiActionError,
   canonicalStringify,
@@ -156,7 +157,7 @@ export class TimelineActionAdapter {
     ]);
     const state = this.manager.snapshot();
     const raw = {
-      nodes: clone(Array.isArray(nodes) ? nodes : []),
+      nodes: clone((Array.isArray(nodes) ? nodes : []).map(listingTimelineNode)),
       branches: clone(Array.isArray(branches) ? branches : []),
       current: {
         nodeId: String(state?._meta?.current_node_id || state?.['系统·当前节点'] || ''),

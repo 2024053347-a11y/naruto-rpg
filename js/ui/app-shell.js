@@ -3,11 +3,16 @@ import { stateManager } from '../core/state-manager.js';
 import { icon } from '../utils/icons.js';
 import { escHtml, escAttr, formatGameTime } from '../utils/format.js';
 import { getAgentConfig } from '../data/agent-config.js';
+import { getMainPreset } from '../data/default-preset.js';
 import { instructionParser } from '../core/instruction-parser.js';
 import { isNarrativeReviewEnabled } from '../core/narrative-review.js';
+import { buildPresetPresentation } from '../core/preset-regex-runtime.js';
+import { inspectImportedPresetOutputProfile } from '../core/main-preset-compatibility.js';
+import { readImportedPresetDebugLog } from '../core/imported-preset-debug-log.js';
 import { imageStudio } from '../core/image-studio/index.js';
 import { TIMELINE_FILE_ACCEPT } from '../core/timeline-file-codec.js';
 import { mountTurnIllustration } from './image-studio.js';
+import { mountPresetOutputSandbox } from './preset-output-sandbox.js';
 import { createShinobiDailyTrigger } from './shinobi-daily-modal.js';
 import { atmosphereManager } from './atmosphere-manager.js';
 
@@ -22,6 +27,7 @@ class AppShell {
     this._lastDice = null;
     this._agentReasoningText = '';
     this._agentReasoningAgent = null;
+    this._lastSubmittedInput = '';
   }
 
   init(container) {
@@ -364,9 +370,14 @@ class AppShell {
 
       const safeInput = lastUserInput ? this._escAttr(lastUserInput) : '';
       const rawErr = String(error || '');
+      const hasImportedPresetDebug = code === 'IMPORTED_PRESET_OUTPUT_INCOMPLETE';
       let errTitle, errDetail, errHint;
 
-      if (code === 'STRICT_MAIN_OUTPUT_INCOMPLETE') {
+      if (hasImportedPresetDebug) {
+        errTitle = '【导入预设输出未通过校验】';
+        errDetail = '已截获本次 AI 返回的完整原始回复；本回合未写入状态、记忆、聊天历史或时间线。';
+        errHint = '点击“复制完整 AI 回复”，或打开 F12 控制台搜索 [ImportedPresetDebug] 查看原文与适配阶段。';
+      } else if (code === 'STRICT_MAIN_OUTPUT_INCOMPLETE') {
         const contractLabels = {
           state_update: '变量记账确认',
           business_update: '有效变量更新',
@@ -420,12 +431,17 @@ class AppShell {
         </div>
         <div style="font-size:12px;color:#a39f98;line-height:1.6;margin-bottom:4px;">${this._esc(errDetail)}</div>
         <div style="font-size:11px;color:rgba(163,159,152,0.5);line-height:1.5;">${this._esc(errHint)}</div>
-        ${safeInput ? `
+        ${(safeInput || hasImportedPresetDebug) ? `
         <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed rgba(239,83,80,0.12);">
+          ${hasImportedPresetDebug ? `
+          <button class="preset-debug-copy-btn" type="button" style="background:rgba(235,97,63,0.12);border:1px solid rgba(235,97,63,0.35);color:#eb613f;padding:5px 14px;border-radius:5px;font-size:12px;cursor:pointer;">
+            复制完整 AI 回复
+          </button>` : ''}
+          ${safeInput ? `
           <button class="retry-btn" data-retry="${safeInput}" style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.35);color:#ef5350;padding:5px 14px;border-radius:5px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/></svg>
             重新结印 (重试)
-          </button>
+          </button>` : ''}
         </div>` : `
         <div style="font-size:11px;color:rgba(163,159,152,0.4);margin-top:8px;">请重新输入行动继续。</div>
         `}
@@ -435,6 +451,21 @@ class AppShell {
         const retryText = retryBtn.dataset.retry;
         errDiv.remove();
         if (retryText) eventBus.emit('user:input', retryText);
+      });
+      const debugCopyBtn = errDiv.querySelector('.preset-debug-copy-btn');
+      debugCopyBtn?.addEventListener('click', async () => {
+        const rawResponse = String(readImportedPresetDebugLog()?.rawResponse || '');
+        if (!rawResponse) {
+          this._showToast('本次完整 AI 回复日志已失效，请重新生成后再复制。');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(rawResponse);
+          this._showToast('已复制本次完整 AI 原始回复');
+        } catch (copyError) {
+          console.warn('[ImportedPresetDebug] Clipboard copy failed:', copyError?.message);
+          this._showToast('自动复制失败，请在 F12 控制台执行 copy(window.__NARUTO_PRESET_DEBUG__.rawResponse)');
+        }
       });
       container.appendChild(errDiv);
       this._scroll();
@@ -471,6 +502,7 @@ class AppShell {
     eventBus.on('timeline:branch-created', () => this._updateBranchIndicator());
     eventBus.on('timeline:branch-switched', () => this._updateBranchIndicator());
     eventBus.on('timeline:jumped', () => {
+      this._updateStatusBar();
       this._updateBranchIndicator();
       atmosphereManager.flash('rgba(232, 228, 217, 0.5)', 400);
     });
@@ -632,6 +664,7 @@ class AppShell {
     const accept = () => {
       if (accepted) return;
       accepted = true;
+      this._lastSubmittedInput = finalText;
       textarea.value = '';
       textarea.placeholder = '提笔写下你的决断...';
       this._resizeInput();
@@ -902,6 +935,125 @@ class AppShell {
     if (trigger) content.appendChild(trigger);
   }
 
+  _buildPresetPresentation(rawText, cleanText) {
+    try {
+      const preset = getMainPreset();
+      const compatibilityProfile = inspectImportedPresetOutputProfile(preset);
+      const playerName = stateManager.get('玩家·姓名') || '玩家';
+      return buildPresetPresentation(rawText, cleanText, preset?.regexScripts || [], {
+        structuredFallback: true,
+        adapterId: compatibilityProfile.adapterId,
+        macroContext: {
+          playerName,
+          charName: playerName,
+          lastUserMessage: this._lastSubmittedInput || ''
+        }
+      });
+    } catch (error) {
+      console.warn('[AppShell] 预设输出美化失败，已回退到安全正文:', error.message);
+      return { kind: 'markdown', text: String(cleanText || ''), warnings: [] };
+    }
+  }
+
+  _fillPresetAction(action, { append = false } = {}) {
+    const input = this.element?.querySelector('#chat-input');
+    const text = String(action || '').trim();
+    if (!input || !text) return;
+    const current = String(input.value || '');
+    input.value = append && current.trim() ? `${current.replace(/\s+$/, '')}\n${text}` : text;
+    this._resizeInput();
+    input.focus({ preventScroll: true });
+    input.setSelectionRange?.(input.value.length, input.value.length);
+  }
+
+  _appendPresetHostActions(container, actions) {
+    const normalized = [];
+    const seen = new Set();
+    for (const item of Array.isArray(actions) ? actions.slice(0, 32) : []) {
+      const action = String(typeof item === 'string'
+        ? item
+        : (item?.action ?? item?.text ?? item?.value ?? item?.label ?? '')).trim().slice(0, 1000);
+      if (!action || seen.has(action)) continue;
+      seen.add(action);
+      normalized.push({
+        action,
+        label: String(typeof item === 'object' && item?.label ? item.label : action).trim().slice(0, 200),
+        append: Boolean(typeof item === 'object' && item?.append)
+      });
+    }
+    if (!container || normalized.length === 0) return;
+    const group = document.createElement('div');
+    group.className = 'preset-output-host-actions';
+    group.setAttribute('aria-label', '可选行动');
+    for (const item of normalized) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'preset-output-host-action';
+      button.textContent = item.label || item.action;
+      button.addEventListener('click', event => {
+        this._fillPresetAction(item.action, { append: item.append || event.shiftKey === true });
+      });
+      group.appendChild(button);
+    }
+    container.appendChild(group);
+  }
+
+  _renderPresetPresentation(container, presentation, cleanText) {
+    if (presentation?.kind === 'sandbox') {
+      try {
+        mountPresetOutputSandbox(container, presentation.source, {
+          onAction: (action, options) => this._fillPresetAction(action, options)
+        });
+        this._appendPresetHostActions(container, presentation.actions);
+        return;
+      } catch (error) {
+        console.warn('[AppShell] 预设沙箱展示失败，已回退到安全正文:', error.message);
+      }
+    }
+    if (presentation?.kind === 'structured') {
+      container.replaceChildren();
+      if (presentation.text) {
+        const main = document.createElement('div');
+        main.className = 'preset-output-structured-main';
+        main.innerHTML = this._renderMarkdown(String(presentation.text));
+        container.appendChild(main);
+      }
+      for (const block of Array.isArray(presentation.blocks) ? presentation.blocks : []) {
+        const section = document.createElement('section');
+        section.className = `preset-output-structured-block preset-output-structured-block--${block.kind || 'status'}`;
+        if (block.label) {
+          const label = document.createElement('div');
+          label.className = 'preset-output-structured-label';
+          label.textContent = String(block.label);
+          section.appendChild(label);
+        }
+        const body = document.createElement('div');
+        body.className = 'preset-output-structured-body';
+        section.appendChild(body);
+        if (block.kind === 'sandbox') {
+          try {
+            mountPresetOutputSandbox(body, block.source, {
+              onAction: (action, options) => this._fillPresetAction(action, options)
+            });
+          } catch (error) {
+            console.warn('[AppShell] 结构化预设沙箱展示失败:', error.message);
+            body.innerHTML = this._renderMarkdown(String(block.fallbackText || ''));
+          }
+        } else {
+          body.innerHTML = this._renderMarkdown(String(block.text || ''));
+        }
+        this._appendPresetHostActions(section, block.actions);
+        container.appendChild(section);
+      }
+      this._appendPresetHostActions(container, presentation.actions);
+      return;
+    }
+    const text = presentation?.kind === 'markdown'
+      ? presentation.text
+      : (presentation?.fallbackText || cleanText || '');
+    container.innerHTML = this._renderMarkdown(String(text || ''));
+  }
+
   async _mountStoredShinobiDaily(nodeId) {
     try {
       const node = await stateManager.dbGet('timeline_nodes', nodeId);
@@ -914,7 +1066,7 @@ class AppShell {
     }
   }
 
-  _finalizeMessage(text, _rawText, thinkContent, isPartial = false, hasHUD = false, dice = null, shinobiDaily = null) {
+  _finalizeMessage(text, rawText, thinkContent, isPartial = false, hasHUD = false, dice = null, shinobiDaily = null) {
     if (!this._streamingEl) {
       this._updateStreaming(text);
     }
@@ -954,7 +1106,13 @@ class AppShell {
         contentEl.parentElement.insertBefore(thinkBlock, contentEl);
       }
 
-      contentEl.innerHTML = this._renderMarkdown(text);
+      // rawText 只在当前回合的瞬时展示分支中使用。历史与时间线仍只持久化 text（clean_response）。
+      const presentation = this._buildPresetPresentation(rawText, text);
+      contentEl.innerHTML = '';
+      const presentationHost = document.createElement('div');
+      presentationHost.className = 'preset-output-presentation';
+      contentEl.appendChild(presentationHost);
+      this._renderPresetPresentation(presentationHost, presentation, text);
 
       // Build the variable update panel — shown when there ARE actual changes
       // (regardless of hasHUD, so secondary updater changes also display)
@@ -994,6 +1152,7 @@ class AppShell {
         msgs.appendChild(wrap);
       }
     }
+    this._scroll();
   }
 
   _buildVarUpdatePanel(updates) {
@@ -1565,8 +1724,8 @@ class AppShell {
   }
 
   _scroll() {
-    const msgs = this.element.querySelector('#chat-messages');
-    if (msgs) requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
+    const scroller = this.element.querySelector('.chat-container');
+    if (scroller) requestAnimationFrame(() => { scroller.scrollTop = scroller.scrollHeight; });
   }
 
   /* 网页全屏：用 CSS 把 #app 撑满视口，隐藏顶栏/状态栏/侧栏（不依赖浏览器 Fullscreen API） */

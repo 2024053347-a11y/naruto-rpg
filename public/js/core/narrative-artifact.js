@@ -18,6 +18,7 @@ export const NARRATIVE_INSTRUCTION_TAGS = Object.freeze([
   'relationship',
   'event',
   'memory',
+  'update_manifest',
   'state_update',
   'status_query',
   'recall',
@@ -81,10 +82,10 @@ const DISPLAY_WRAPPER_TAGS = Object.freeze([
   '正文'
 ]);
 
-const SENSITIVE_NAME_PATTERN = /(?:think|reason|analysis|audit|review[_-]?note|critic|critique|private|secret|hidden|internal|scratch|backstage|planner[_-]?private)/i;
+const SENSITIVE_NAME_PATTERN = /(?:think|reason|analysis|planning|audit|review[_-]?note|critic|critique|private|secret|hidden|internal|scratch|backstage|planner[_-]?private|(?:^|[_:-])driver(?:$|[_:-]))/i;
 const PRIVATE_ATTRIBUTE_PATTERN = /\b(?:visibility|audience|scope|access)\s*=\s*(?:["']\s*)?(?:private|secret|hidden|internal|backstage)\b/i;
 const EVIDENCE_ID_PATTERN = /\b(?:E\d+|(?:EV|SCN|DAY)-(?:HIST|P\d+|BOR|[A-Z0-9]+)(?:-[A-Z0-9]+)*|(?:WB|JT|MEM|NODE)-[A-Z0-9._:/-]+)\b/gi;
-const GENERIC_PAIRED_TAG_PATTERN = /<([A-Za-z_][\w.\-:]*)([^>]*)>([\s\S]*?)<\/\1\s*>/gi;
+const GENERIC_PAIRED_TAG_PATTERN = /<([A-Za-z_][\w.\-:]*~?)([^>]*)>([\s\S]*?)<\/\1\s*>/gi;
 
 function asText(value) {
   if (value == null) return '';
@@ -161,7 +162,7 @@ function collectSensitiveBlocks(text) {
   // unmatched openings here as well as in the display sanitizer so nested
   // machine instructions cannot escape through a malformed private tail.
   const sensitiveStack = [];
-  const tagToken = /<(\/)?([A-Za-z_][\w.\-:]*)([^>]*)>/g;
+  const tagToken = /<(\/)?([A-Za-z_][\w.\-:]*~?)([^>]*)>/g;
   while ((match = tagToken.exec(text)) !== null) {
     const closing = Boolean(match[1]);
     const tag = match[2].toLowerCase();
@@ -231,7 +232,7 @@ function containsSensitiveMarkup(value) {
   const text = String(value || '');
   if (!text) return false;
   if (collectSensitiveBlocks(text).length) return true;
-  const openTag = /<([A-Za-z_][\w.\-:]*)([^>]*)>/g;
+  const openTag = /<([A-Za-z_][\w.\-:]*~?)([^>]*)>/g;
   let match;
   while ((match = openTag.exec(text)) !== null) {
     if (SENSITIVE_NAME_PATTERN.test(match[1]) || PRIVATE_ATTRIBUTE_PATTERN.test(match[2] || '')) return true;
@@ -280,7 +281,7 @@ function stripSensitiveGenericTags(text, { streaming = false } = {}) {
     });
     pass++;
   }
-  const open = /<([A-Za-z_][\w.\-:]*)([^>]*)>/g;
+  const open = /<([A-Za-z_][\w.\-:]*~?)([^>]*)>/g;
   let match;
   let cutoff = -1;
   while ((match = open.exec(value)) !== null) {
@@ -334,7 +335,7 @@ export function sanitizeNarrativeDisplayText(input, { streaming = false } = {}) 
 
   // Drop any remaining XML-like wrappers while retaining ordinary prose.
   value = value
-    .replace(/<\/?[A-Za-z_][\w.\-:]*(?:\s+[^>]*)?\s*\/?>/g, '')
+    .replace(/<\/?[A-Za-z_][\w.\-:]*~?(?:\s+[^>]*)?\s*\/?>/g, '')
     .replace(/<\/?正文(?:\s+[^>]*)?\s*>/g, '');
   return cleanWhitespace(value);
 }

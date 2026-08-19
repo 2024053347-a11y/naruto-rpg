@@ -531,20 +531,20 @@ class SettingsPanel extends HTMLElement {
                     <div><span class="eyebrow">LOCAL TIMELINE</span><h3>存档与空间</h3></div>
                     <span class="owner-badge">本地时间线</span>
                   </div>
-                  <p class="setting-note">自动归档会清理旧节点的重复聊天记录，同时保留完整状态快照以支持回溯。压缩导出不删减任何存档数据。</p>
+                  <p class="setting-note">超过 20 回后，最近 20 层保持可即时点开；更早的回合会 gzip 压缩存进浏览器。点进这些回合时会自动解压，跳转、检查点、导出导入和 IF 线都会保留。</p>
                   <div class="storage-tool">
                     <label class="archive-toggle-row">
                       <span class="storage-tool-icon">${icon('database', 18)}</span>
                       <span class="storage-toggle-copy">
-                        <strong>自动归档老节点</strong>
-                        <span>单个分支超过 100 个节点时，保留最近 20 个祖先和检查点</span>
+                        <strong>自动压缩旧回合</strong>
+                        <span>最近 20 层保持明文，更早的回合 gzip 压缩，点进去再解压</span>
                       </span>
                       <input type="checkbox" name="autoArchive">
                     </label>
                     <div class="storage-status" id="storage-info" role="status" aria-live="polite">等待统计...</div>
                     <div class="storage-actions">
                       <button class="btn ghost" type="button" data-action="check-storage" title="刷新存档空间统计">${icon('database', 15)}<span>刷新统计</span></button>
-                      <button class="btn ghost" type="button" data-action="manual-archive" title="立即归档旧时间线节点">${icon('timeline', 15)}<span>立即归档</span></button>
+                      <button class="btn ghost" type="button" data-action="manual-archive" title="立即压缩旧时间线回合">${icon('timeline', 15)}<span>立即压缩</span></button>
                       <button class="btn primary" type="button" data-action="export-save" title="导出无损 gzip 压缩存档">${icon('export', 15)}<span>压缩导出</span></button>
                       <button class="btn ghost" type="button" data-action="export-save-json" title="导出未压缩的普通 JSON 存档">${icon('file-text', 15)}<span>普通 JSON</span></button>
                     </div>
@@ -565,7 +565,7 @@ class SettingsPanel extends HTMLElement {
                       <span>${icon('timeline', 14)}持续维护</span>
                     </div>
                     <p class="support-lead">忍者手记是一款由个人独立开发并持续维护的开源 RPG 项目。</p>
-                    <p>项目从最初的创意开始，经历了玩法设计、系统开发、测试优化以及持续迭代。目前已经拥有近1000 注册用户，每天都有新玩家进入游戏体验。</p>
+                    <p>项目从最初的创意开始，经历了玩法设计、系统开发、测试优化以及持续迭代。目前已经拥有约 1700 名注册用户，每天都有新玩家进入游戏体验。</p>
                     <p>作为一个个人开发项目，忍者手记的运行和成长离不开持续投入。服务器维护、开发工具、测试环境以及新内容制作，都需要投入时间与资源。</p>
                   </div>
                   <div class="support-impact">
@@ -918,7 +918,8 @@ class SettingsPanel extends HTMLElement {
       const stats = await timelineSystem.getStorageStats();
       const kb = Math.round(stats.estimatedBytes / 1024);
       const mb = (stats.estimatedBytes / 1024 / 1024).toFixed(2);
-      const text = `节点 ${stats.totalNodes} (活跃 ${stats.activeCount} / 归档 ${stats.archivedCount}) · ${kb >= 1024 ? mb + ' MB' : kb + ' KB'}`;
+      const compressed = Number.isFinite(stats.compressedCount) ? stats.compressedCount : stats.archivedCount;
+      const text = `节点 ${stats.totalNodes} (可即时点开 ${stats.activeCount} / 已压缩 ${compressed}) · ${kb >= 1024 ? mb + ' MB' : kb + ' KB'}`;
       if (info) info.textContent = text;
     } catch (e) {
       if (info) info.textContent = '查询失败: ' + e.message;
@@ -929,9 +930,9 @@ class SettingsPanel extends HTMLElement {
 
   async _manualArchive(button = null) {
     const confirmed = await customElements.get('game-modal').confirm({
-      title: '立即归档',
-      message: '将归档所有分支中 20 个最近祖先之外的旧节点，并保留状态快照以支持旧回合跳转。继续?',
-      okLabel: '确认归档',
+      title: '立即压缩旧回合',
+      message: '将把最近 20 层以外的旧回合压缩为 gzip 存入浏览器。点进这些回合时会自动解压，跳转、检查点、导出导入和 IF 线都会保留。继续?',
+      okLabel: '确认压缩',
       cancelLabel: '取消'
     });
     if (!confirmed) return;
@@ -943,7 +944,7 @@ class SettingsPanel extends HTMLElement {
         await this._checkStorage();
         return;
       }
-      this._showToast(`已归档 ${result.archived || 0} 个节点`);
+      this._showToast(`已压缩 ${result.compressed || result.archived || 0} 个旧回合`);
       await this._checkStorage();
     } catch (error) {
       this._showToast(`归档失败：${error?.message || '未知错误'}`);

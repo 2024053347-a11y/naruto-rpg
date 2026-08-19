@@ -848,9 +848,7 @@ await test('commit audit verifies actual variable, memory, daily and story-plan 
   });
   assert.equal(invalid.valid, false);
   assert.match(invalid.errors.join('\n'), /二次变量输出/);
-  // 正文有效时，缺失日报只记警告，不因日报缺失让整回合失败。
-  assert.doesNotMatch(invalid.errors.join('\n'), /忍界日报/);
-  assert.match(invalid.warnings.join('\n'), /忍界日报/);
+  assert.match(invalid.errors.join('\n'), /忍界日报/);
 });
 
 console.log(`\nagent-tool-runtime-v2-regression: ${passed} passed, ${failures.length} failed`);

@@ -144,6 +144,11 @@ test('single-call prompt has no contradictory updater branch', () => {
     1,
     'the immutable reasoning checklist must only be injected once'
   );
+  const checklistPrompt = messages
+    .find(message => String(message.content || '').includes('【主模型请求复述与构思核对表】'))?.content || '';
+  const examplePrompt = messages
+    .find(message => String(message.content || '').includes('【单次主模型完整无变化示例'))?.content || '';
+  assert.ok(examplePrompt, 'the single-call request must include one labelled full example');
   for (const marker of [
     '1. 本轮请求原文：',
     '2. 任务拆解与硬约束：',
@@ -153,7 +158,11 @@ test('single-call prompt has no contradictory updater branch', () => {
     '6. NPC动机、知识边界与关系：',
     '7. 连续性状态：',
     '8. 因果、结果、记账与停止点：'
-  ]) assert.equal(prompt.split(marker).length - 1, 1, `duplicate reasoning checklist marker: ${marker}`);
+  ]) {
+    assert.equal(checklistPrompt.split(marker).length - 1, 1, `contract checklist marker mismatch: ${marker}`);
+    assert.equal(examplePrompt.split(marker).length - 1, 1, `example checklist marker mismatch: ${marker}`);
+    assert.equal(prompt.split(marker).length - 1, 2, `unexpected reasoning checklist marker count: ${marker}`);
+  }
 });
 
 test('unknown preset activation cannot bypass strict ownership isolation', () => {

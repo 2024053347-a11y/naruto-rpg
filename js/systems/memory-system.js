@@ -57,6 +57,7 @@ class MemorySystem {
     eventBus.on('mission:completed', mission => this.recordMissionCompleted(mission));
     eventBus.on('mission:abandoned', mission => this.recordMissionAbandoned(mission));
     eventBus.on('relationship:changed', data => this.recordRelationshipChange(data));
+    eventBus.on('relationship:renamed', data => this.handleRelationshipRename(data));
   }
 
   /* ────────── 别名表 ────────── */
@@ -79,6 +80,10 @@ class MemorySystem {
     const rels = stateManager.getSub('_relationships') || {};
     for (const [name, rel] of Object.entries(rels)) {
       if (!map.has(name)) map.set(name, name);
+      for (const alias of (Array.isArray(rel?.aliases) ? rel.aliases : [])) {
+        const normalized = String(alias || '').trim();
+        if (normalized && !map.has(normalized)) map.set(normalized, name);
+      }
       const role = rel.role || rel.忍阶 || '';
       if (role && !map.has(role)) map.set(role, name);
     }
@@ -961,6 +966,15 @@ class MemorySystem {
       npc_notes: { [npc]: note },
       facts: Math.abs(Number(relationship.affection) || 0) >= 60 ? [`${npc}与玩家关系显著: ${note}`] : []
     }, { source: 'relationship' });
+  }
+
+  handleRelationshipRename({ oldNpc, npc } = {}) {
+    if (!oldNpc || !npc || oldNpc === npc) return;
+    this._aliasCache = null;
+    this._aliasCacheVer = -1;
+    this._pendingRecall = this._pendingRecall.map(entry => (
+      entry?.entity === oldNpc ? { ...entry, entity: npc } : entry
+    ));
   }
 
   /* ────────── 格式工具 (不变) ────────── */

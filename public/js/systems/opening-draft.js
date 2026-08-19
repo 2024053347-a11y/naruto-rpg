@@ -630,7 +630,7 @@ export function buildOpeningState(input, baseState = {}) {
     '世界·时间': `木叶${year}年${month}月${day}日·清晨`,
     '世界·月份': month,
     '世界·天气': '晴',
-    '系统·回合数': 1,
+    '系统·回合数': 0,
     '系统·当前节点': null,
     '系统·当前分支': 'branch_main'
   });
@@ -694,7 +694,8 @@ export function buildOpeningState(input, baseState = {}) {
 
 export function collectOpeningStateRepairs(state = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) return [];
-  const turn = Number(state['系统·回合数'] ?? state?._meta?.turn_count ?? 1);
+  const turn = Number(state['系统·回合数'] ?? state?._meta?.turn_count ?? 0);
+  if (state?._meta?.current_node_id) return [];
   if (Number.isFinite(turn) && turn > 1) return [];
 
   const contract = state._opening_contract;

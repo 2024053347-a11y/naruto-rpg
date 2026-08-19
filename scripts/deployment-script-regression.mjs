@@ -12,6 +12,9 @@ const stagingBat = read('部署测试站.bat');
 const productionBat = read('部署正式站.bat');
 const deployScript = read('deploy.ps1');
 const bashDeployScript = read('deploy-v3.sh');
+const wslDeployScript = read('deploy-wsl.sh');
+const wslConfigExample = read('deploy.local.example.env');
+const gitignore = read('.gitignore');
 const deployBytes = readFileSync(path.join(root, 'deploy.ps1'));
 const packageJson = JSON.parse(read('package.json'));
 const stagingNginx = read('deploy/nginx/naruto-rpg-staging.conf');
@@ -284,6 +287,94 @@ assert.match(
   'staging service worker must never be served from HTTP cache'
 );
 assert.match(deployScript, /--dump-header[\s\S]{0,800}location:\s+\$\(\$Target\.VerifyUrl\)[\s\S]{0,400}x-staging:\s+true/i);
+
+assert.match(wslDeployScript, /^#!\/usr\/bin\/env bash\n/);
+assert.match(wslDeployScript, /set -Eeuo pipefail/);
+assert.match(wslDeployScript, /MODE="\$\{MODE:-staging\}"/, 'WSL deployer must default to staging');
+assert.match(wslDeployScript, /TARGET_DIR='\/var\/www\/naruto-rpg-staging'/);
+assert.match(wslDeployScript, /PUBLIC_URL='https:\/\/www\.qiwu\.asia:8080\/'/);
+assert.match(wslDeployScript, /TARGET_DIR='\/var\/www\/naruto-rpg'/);
+assert.match(wslDeployScript, /PUBLIC_URL='https:\/\/www\.qiwu\.asia\/'/);
+assert.match(wslDeployScript, /BUILD_TASK='build:deploy'/);
+assert.match(wslDeployScript, /BUILD_TASK='build'/);
+assert.match(
+  wslDeployScript,
+  /MODE" == production[\s\S]{0,160}DRY_RUN" == false[\s\S]{0,160}CONFIRM_PRODUCTION" == false[\s\S]{0,160}--confirm-production/,
+  'WSL production deployment must require an explicit confirmation flag before packaging'
+);
+assert.match(wslDeployScript, /mktemp -d/, 'WSL deployer must package in a unique temporary directory');
+assert.match(wslDeployScript, /trap cleanup_local EXIT/);
+assert.match(wslDeployScript, /trap 'exit 130' INT/, 'WSL deployer must stop immediately after Ctrl-C');
+assert.match(
+  wslDeployScript,
+  /generate-version\.mjs"[\s\S]{0,160}--out "\$STATIC_DIR\/version\.json"[\s\S]{0,160}--environment "\$MODE"/,
+  'WSL dry-run must generate its manifest only inside the temporary payload'
+);
+assert.doesNotMatch(
+  wslDeployScript,
+  /--out "?\$PROJECT_DIR\/public\/version\.json"?/,
+  'WSL packaging must not write deployment metadata back into public/'
+);
+for (const requiredPath of [
+  'js/core/timeline-save-schema.js',
+  'js/core/shinobi-daily.js',
+  'js/core/narrative-artifact.js',
+  'js/core/image-studio/contracts.js',
+  'js/core/continuity-ledger.js',
+  'js/utils/format.js',
+  'deploy/nginx/naruto-rpg-staging.conf',
+  'deploy/systemd/naruto-rpg.service.d/limits.conf',
+  'deploy/sysctl/90-naruto-rpg-memory.conf'
+]) {
+  assert.ok(wslDeployScript.includes(requiredPath), `WSL deployment must package ${requiredPath}`);
+}
+assert.match(wslDeployScript, /server\/data/, 'WSL package must explicitly reject server/data');
+assert.match(wslDeployScript, /server\/db\/saves/, 'WSL package must explicitly reject server/db/saves');
+assert.match(wslDeployScript, /sha256sum -c/, 'WSL deployment must verify the uploaded archive');
+assert.match(wslDeployScript, /upload_command\+=\(-O\)/, 'WSL upload must have a legacy SCP fallback');
+assert.match(wslDeployScript, /retry_remote "执行远端部署"[\s\S]{0,180}ssh/);
+assert.match(wslDeployScript, /127\.0\.0\.1:3000\/health\/ready/);
+assert.match(wslDeployScript, /--dump-header[\s\S]{0,700}x-staging: true/i);
+assert.doesNotMatch(wslDeployScript, /curl\s+-[^\r\n;]*k/, 'WSL TLS verification must not disable certificates');
+assert.match(wslDeployScript, /DEPLOY_OK=%s/);
+assert.match(wslConfigExample, /^NARUTO_DEPLOY_SERVER=/m);
+assert.match(wslConfigExample, /^NARUTO_DEPLOY_SSH_KEY=/m);
+assert.match(gitignore, /^\/deploy\.local\.env$/m, 'WSL local deployment config must be ignored');
+
+if (process.platform !== 'win32') {
+  const invokeWsl = args => spawnSync('bash', [path.join(root, 'deploy-wsl.sh'), ...args], {
+    cwd: root,
+    encoding: 'utf8',
+    timeout: 60_000,
+    maxBuffer: 4 * 1024 * 1024
+  });
+  const syntax = spawnSync('bash', ['-n', path.join(root, 'deploy-wsl.sh')], {
+    cwd: root,
+    encoding: 'utf8',
+    timeout: 10_000
+  });
+  assert.equal(syntax.status, 0, syntax.stderr || syntax.stdout);
+
+  const workspaceFiles = ['public/version.json', 'public/index.html', 'public/login.html']
+    .map(file => path.join(root, file));
+  const workspaceBefore = workspaceFiles.map(artifactFingerprint);
+  for (const mode of ['staging', 'production']) {
+    const dryRun = invokeWsl([mode, '--dry-run', '--skip-build']);
+    assert.equal(dryRun.status, 0, dryRun.stderr || dryRun.stdout);
+    assert.match(dryRun.stdout, new RegExp(`DRY_RUN_OK=${mode}`));
+    assert.match(dryRun.stdout, /PACKAGE_ASSETS_OK=true/);
+    assert.match(dryRun.stdout, /RUNTIME_DATA_EXCLUDED=true/);
+  }
+  assert.deepEqual(
+    workspaceFiles.map(artifactFingerprint),
+    workspaceBefore,
+    'WSL dry-runs must leave public deployment metadata and HTML untouched'
+  );
+
+  const refusedProduction = invokeWsl(['production', '--skip-build']);
+  assert.notEqual(refusedProduction.status, 0, 'WSL production must be refused without explicit confirmation');
+  assert.match(`${refusedProduction.stdout}\n${refusedProduction.stderr}`, /--confirm-production|正式站部署已拒绝/);
+}
 
 if (process.platform === 'win32') {
   const powershell = `${process.env.SystemRoot || 'C:\\Windows'}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;

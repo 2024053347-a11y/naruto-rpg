@@ -41,14 +41,17 @@ function activeByFact(ledger) {
   return map;
 }
 
-function makeEvent({ type, subject, predicate, before, after, importance = 2, evidenceRefs = [] }, priorFacts) {
-  const previousId = priorFacts.get(`${subject}\u0000${predicate}`);
+function makeEvent({
+  type, subject, predicate, before, after, importance = 2, evidenceRefs = [],
+  operation = '', priorSubject = ''
+}, priorFacts) {
+  const previousId = priorFacts.get(`${priorSubject || subject}\u0000${predicate}`);
   return {
     type,
     subject_id: subject,
     predicate,
     value: {
-      operation: after === undefined ? 'remove' : (before === undefined ? 'add' : 'replace'),
+      operation: operation || (after === undefined ? 'remove' : (before === undefined ? 'add' : 'replace')),
       before: compact(before),
       after: after === undefined ? null : compact(after)
     },
@@ -62,6 +65,43 @@ function makeEvent({ type, subject, predicate, before, after, importance = 2, ev
     ],
     ...(previousId ? { supersedes: [previousId] } : {})
   };
+}
+
+function relationshipRenamePairs(beforeRelationships, afterRelationships) {
+  const beforeNames = Object.keys(beforeRelationships);
+  const afterNames = Object.keys(afterRelationships);
+  const beforeSet = new Set(beforeNames);
+  const afterSet = new Set(afterNames);
+  const removedNames = beforeNames.filter(name => !afterSet.has(name)).sort();
+  const addedNames = afterNames.filter(name => !beforeSet.has(name)).sort();
+  const removedSet = new Set(removedNames);
+  const candidates = [];
+
+  for (const newName of addedNames) {
+    const aliases = Array.isArray(afterRelationships[newName]?.aliases)
+      ? afterRelationships[newName].aliases
+        .filter(alias => typeof alias === 'string')
+        .map(alias => alias.trim())
+        .filter(Boolean)
+      : [];
+    for (const oldName of new Set(aliases)) {
+      if (removedSet.has(oldName)) candidates.push([oldName, newName]);
+    }
+  }
+
+  const oldCounts = new Map();
+  const newCounts = new Map();
+  for (const [oldName, newName] of candidates) {
+    oldCounts.set(oldName, (oldCounts.get(oldName) || 0) + 1);
+    newCounts.set(newName, (newCounts.get(newName) || 0) + 1);
+  }
+  return candidates
+    .filter(([oldName, newName]) => oldCounts.get(oldName) === 1 && newCounts.get(newName) === 1)
+    .sort(([leftOld, leftNew], [rightOld, rightNew]) => {
+      const left = `${leftOld}\u0000${leftNew}`;
+      const right = `${rightOld}\u0000${rightNew}`;
+      return left < right ? -1 : (left > right ? 1 : 0);
+    });
 }
 
 function flatType(key) {
@@ -132,16 +172,28 @@ export function buildContinuityDelta({
 
   const beforeRelationships = beforeState?._relationships || {};
   const afterRelationships = afterState?._relationships || {};
+  const renamePairs = relationshipRenamePairs(beforeRelationships, afterRelationships);
+  const renamedFrom = new Map(renamePairs);
+  const renamedTo = new Map(renamePairs.map(([oldName, newName]) => [newName, oldName]));
+  for (const [oldName, newName] of renamePairs) {
+    events.push(makeEvent({
+      type: 'relationship', subject: `npc:${newName}`, predicate: '关系.姓名',
+      before: oldName, after: newName, operation: 'rename', importance: 4,
+      priorSubject: `npc:${oldName}`, evidenceRefs: refs
+    }, priorFacts));
+  }
   const relationshipNames = new Set([...Object.keys(beforeRelationships), ...Object.keys(afterRelationships)]);
   for (const name of [...relationshipNames].sort()) {
+    if (renamedFrom.has(name)) continue;
+    const oldName = renamedTo.get(name) || name;
     for (const field of RELATIONSHIP_FIELDS) {
-      const before = beforeRelationships[name]?.[field];
+      const before = beforeRelationships[oldName]?.[field];
       const after = afterRelationships[name]?.[field];
       if (equal(before, after)) continue;
       events.push(makeEvent({
         type: 'relationship', subject: `npc:${name}`, predicate: `关系.${field}`,
         before, after, importance: ['promises', 'debts', 'known_secrets'].includes(field) ? 4 : 3,
-        evidenceRefs: refs
+        priorSubject: oldName === name ? '' : `npc:${oldName}`, evidenceRefs: refs
       }, priorFacts));
     }
   }

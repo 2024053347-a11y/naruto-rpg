@@ -65,7 +65,9 @@ if (pipeline) {
 
 const prompts = readText('js/data/prompts.js');
 if (prompts) {
-  assertIncludes(prompts, 'export const FEW_SHOT_EXAMPLES = []', 'conflicting legacy few-shot examples are disabled');
+  assertIncludes(prompts, 'MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE', 'main single-call prompt has a maintained example');
+  assertIncludes(prompts, 'VARIABLE_UPDATER_MIXED_EXAMPLE', 'variable updater prompt has a maintained mixed example');
+  assertIncludes(prompts, 'SHINOBI_DAILY_EXAMPLE', 'prompt examples reuse the canonical daily fixture');
 }
 
 const mainPreset = readText('js/data/default-preset.js');

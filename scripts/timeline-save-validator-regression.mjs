@@ -114,6 +114,15 @@ test('timeline import validation accepts a valid persisted shinobi daily', () =>
   assert.deepEqual(inspectTimelineSave(save), { valid: true, errors: [] });
 });
 
+test('timeline import validation rejects locally gzipped node payloads', () => {
+  const save = createWideSave(1);
+  save.nodes[0].payload_encoding = 'gzip-json-v1';
+  save.nodes[0].payload = new Uint8Array([1, 2, 3]);
+  const result = inspectTimelineSave(save);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join('; '), /gzip 载荷/);
+});
+
 test('timeline import validation rejects an invalid persisted shinobi daily', () => {
   const save = createWideSave(1);
   save.nodes[0].shinobi_daily = structuredClone(SHINOBI_DAILY_EXAMPLE);

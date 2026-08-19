@@ -417,14 +417,52 @@ class TavernAdapter extends AIAdapter {
   getModelInfo() { return { name: this.model, contextWindow: 128000 }; }
   validateConfig() { return true; }
 
-  _buildOptions(userInput, combinedSystem, stream, options = {}) {
+  _compilePrompt(messages = []) {
+    const normalized = (Array.isArray(messages) ? messages : [])
+      .filter(message => ['system', 'user', 'assistant'].includes(message?.role))
+      .map(message => ({
+        role: message.role,
+        content: typeof message.content === 'string'
+          ? message.content
+          : JSON.stringify(message.content ?? '')
+      }))
+      .filter(message => message.content.length > 0);
+    const lastUserIndex = normalized.map(message => message.role).lastIndexOf('user');
+    const simpleUserRequest = lastUserIndex === normalized.length - 1
+      && normalized.every((message, index) => index === lastUserIndex || message.role === 'system');
+
+    if (simpleUserRequest) {
+      return {
+        userInput: normalized[lastUserIndex]?.content || '',
+        orderedPrompts: [
+          {
+            role: 'system',
+            content: normalized
+              .filter(message => message.role === 'system')
+              .map(message => message.content)
+              .join('\n\n')
+          },
+          'world_info_before'
+        ]
+      };
+    }
+
+    // generateRaw accepts custom role objects in ordered_prompts. Supplying the
+    // whole transcript is the only way to retain imported preset depth/bottom
+    // prompts and a final assistant continuation. user_input stays empty so the
+    // bridge does not append a second user turn after that assistant prefill.
+    return {
+      userInput: '',
+      orderedPrompts: normalized
+    };
+  }
+
+  _buildOptions(messages, stream, options = {}) {
+    const prompt = this._compilePrompt(messages);
     const opts = {
-      user_input: userInput,
+      user_input: prompt.userInput,
       should_stream: stream,
-      ordered_prompts: [
-        { role: 'system', content: combinedSystem },
-        'world_info_before',
-      ],
+      ordered_prompts: prompt.orderedPrompts,
     };
     if (Number.isFinite(options.max_tokens) && options.max_tokens > 0) {
       opts.max_tokens = options.max_tokens;
@@ -438,10 +476,7 @@ class TavernAdapter extends AIAdapter {
   }
 
   async chat(messages, options = {}) {
-    const userMsg = [...messages].reverse().find(m => m.role === 'user');
-    const userInput = userMsg?.content || '';
-    const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
-    const opts = this._buildOptions(userInput, combinedSystem, false, options);
+    const opts = this._buildOptions(messages, false, options);
     const generationId = globalThis.crypto?.randomUUID?.()
       || `naruto-request-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     opts.generation_id = generationId;
@@ -468,9 +503,6 @@ class TavernAdapter extends AIAdapter {
   }
 
   async chatStream(messages, options = {}, onChunk) {
-    const userMsg = [...messages].reverse().find(m => m.role === 'user');
-    const userInput = userMsg?.content || '';
-    const combinedSystem = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
     const abortScope = createRequestAbortScope(options.signal);
     const generationId = globalThis.crypto?.randomUUID?.()
       || `naruto-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -484,7 +516,7 @@ class TavernAdapter extends AIAdapter {
     };
     const eo = globalThis.eventOn;
     const removeListener = globalThis.eventRemoveListener;
-    const opts = this._buildOptions(userInput, combinedSystem, true, options);
+    const opts = this._buildOptions(messages, true, options);
     opts.generation_id = generationId;
     let unsubscribe = null;
     let rejectOnAbort;

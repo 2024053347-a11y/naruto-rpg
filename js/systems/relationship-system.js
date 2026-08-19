@@ -89,6 +89,126 @@ function requireNpcIdentity(value) {
   return npc;
 }
 
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function uniqueValues(values) {
+  const seen = new Set();
+  return values.filter(value => {
+    let key;
+    try { key = JSON.stringify(value); } catch { key = String(value); }
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function mergeScopedValue(existing, incoming) {
+  if (existing === undefined) return incoming;
+  if (incoming === undefined) return existing;
+  if (typeof existing === 'string' && typeof incoming === 'string') {
+    if (!existing) return incoming;
+    if (!incoming || existing === incoming) return existing;
+    return `${existing}\n${incoming}`;
+  }
+  if (Array.isArray(existing) || Array.isArray(incoming)) {
+    const left = Array.isArray(existing) ? existing : [existing];
+    const right = Array.isArray(incoming) ? incoming : [incoming];
+    return uniqueValues([...left, ...right]);
+  }
+  if (record(existing) === existing && record(incoming) === incoming) {
+    return { ...existing, ...incoming };
+  }
+  return incoming;
+}
+
+function moveScopedKeys(value, renameMap, merge = mergeScopedValue) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return value;
+  const next = { ...value };
+  for (const [oldNpc, newNpc] of renameMap) {
+    if (!hasOwn(next, oldNpc)) continue;
+    const source = next[oldNpc];
+    const target = next[newNpc];
+    delete next[oldNpc];
+    next[newNpc] = merge(target, source, newNpc);
+  }
+  return next;
+}
+
+function renameNpcNotePrefixes(value, renameMap) {
+  if (typeof value !== 'string' || !value || !renameMap.size) return value;
+  return value.split(/(\r?\n)/).map(part => {
+    if (/^\r?\n$/.test(part)) return part;
+    const separator = part.match(/^([^:\uff1a]+?)(\s*[:\uff1a]\s*)/u);
+    if (!separator) return part;
+    const replacement = renameMap.get(separator[1]);
+    return replacement ? replacement + part.slice(separator[1].length) : part;
+  }).join('');
+}
+
+function migrateMemoryNpcNames(value, renameMap) {
+  const memory = record(value) === value ? { ...value } : {};
+  if (typeof memory.npc_notes === 'string') {
+    memory.npc_notes = renameNpcNotePrefixes(memory.npc_notes, renameMap);
+  } else if (memory.npc_notes && typeof memory.npc_notes === 'object' && !Array.isArray(memory.npc_notes)) {
+    memory.npc_notes = moveScopedKeys(memory.npc_notes, renameMap);
+  }
+
+  const history = memory.relationship_history;
+  if (typeof history === 'string' && history.trim()) {
+    try {
+      const parsed = JSON.parse(history);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        memory.relationship_history = JSON.stringify(moveScopedKeys(parsed, renameMap));
+      }
+    } catch {
+      console.warn('[RelationshipSystem] relationship_history is not valid JSON; kept unchanged during NPC rename');
+    }
+  } else if (history && typeof history === 'object' && !Array.isArray(history)) {
+    memory.relationship_history = moveScopedKeys(history, renameMap);
+  }
+  return memory;
+}
+
+function mergeAgentMemory(existing, incoming, newNpc) {
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return incoming;
+  const target = existing && typeof existing === 'object' && !Array.isArray(existing) ? existing : {};
+  const next = { ...target, ...incoming, npcName: newNpc };
+  for (const field of ['privateGoals', 'knownFacts', 'recentActions', 'privateIntentHistory']) {
+    const left = Array.isArray(target[field]) ? target[field] : [];
+    const right = Array.isArray(incoming[field]) ? incoming[field] : [];
+    if (left.length || right.length) next[field] = uniqueValues([...left, ...right]);
+  }
+  if (target.relationToPlayer || incoming.relationToPlayer) {
+    next.relationToPlayer = {
+      ...record(target.relationToPlayer),
+      ...record(incoming.relationToPlayer)
+    };
+  }
+  return next;
+}
+
+function migrateCombatNpcNames(value, renameMap) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return value;
+  const combat = { ...value };
+  for (const field of ['enemy_name', 'enemyName']) {
+    if (renameMap.has(combat[field])) combat[field] = renameMap.get(combat[field]);
+  }
+  if (Array.isArray(combat.enemies)) {
+    combat.enemies = combat.enemies.map(enemy => {
+      if (typeof enemy === 'string') return renameMap.get(enemy) || enemy;
+      if (!enemy || typeof enemy !== 'object' || Array.isArray(enemy)) return enemy;
+      const next = { ...enemy };
+      for (const field of ['name', 'npcName', 'enemy_name', 'enemyName']) {
+        if (renameMap.has(next[field])) next[field] = renameMap.get(next[field]);
+      }
+      return next;
+    });
+  }
+  return combat;
+}
+
 class RelationshipSystem {
   refreshCombatLevels() {
     const relationships = stateManager.getSub('_relationships') || {};
@@ -113,23 +233,164 @@ class RelationshipSystem {
   }
 
   processInstruction(data) {
-    const normalizedData = normalizeRelationshipInstruction(data);
-    if (!normalizedData) {
-      console.warn('[RelationshipSystem] Invalid relationship instruction:', typeof data);
-      return;
+    return this.processInstructions([data])[0];
+  }
+
+  processInstructions(items) {
+    const normalized = [];
+    for (const item of Array.isArray(items) ? items : [items]) {
+      const data = normalizeRelationshipInstruction(item);
+      if (!data) {
+        console.warn('[RelationshipSystem] Invalid relationship instruction:', typeof item);
+        continue;
+      }
+      normalized.push(data);
     }
-    data = normalizedData;
-    if (data.op === 'delete') {
-      this.deleteRelationship(data.npc);
-      return;
-    }
+    if (!normalized.length) return [];
 
     const all = stateManager.getSub('_relationships') || {};
-    const isNewNpc = !Object.prototype.hasOwnProperty.call(all, data.npc);
-    const current = this._normalizeRelationship(all[data.npc]);
+    const renameMap = new Map();
+    const renameEndpoints = new Map();
+    const preflightErrors = [];
+    for (const data of normalized) {
+      if (data.op !== undefined && !['rename', 'delete'].includes(data.op)) {
+        preflightErrors.push(`人物 ${data.npc} 的关系操作 ${data.op} 不受支持`);
+      }
+      if (hasOwn(data, 'new_npc') && data.op !== 'rename') {
+        preflightErrors.push(`人物 ${data.npc} 只有在 rename 时才能提供 new_npc`);
+      }
+      if (data.op !== 'rename') continue;
+
+      const oldNpc = data.npc;
+      const newNpc = normalizeNpcIdentity(data.new_npc);
+      if (!newNpc) {
+        preflightErrors.push(`人物 ${oldNpc} 的 rename 缺少有效 new_npc`);
+        continue;
+      }
+      if (newNpc === oldNpc) preflightErrors.push(`人物 ${oldNpc} 的新旧姓名不能相同`);
+      if (!hasOwn(all, oldNpc)) preflightErrors.push(`改名源人物不存在: ${oldNpc}`);
+      if (newNpc !== oldNpc && hasOwn(all, newNpc)) preflightErrors.push(`改名目标已存在: ${newNpc}`);
+      for (const [existingName, relationship] of Object.entries(all)) {
+        if (existingName === oldNpc) continue;
+        if ((Array.isArray(relationship?.aliases) ? relationship.aliases : [])
+          .some(alias => normalizeNpcIdentity(alias) === newNpc)) {
+          preflightErrors.push(`改名目标 ${newNpc} 已被 ${existingName} 用作别名`);
+          break;
+        }
+      }
+      for (const endpoint of [oldNpc, newNpc]) {
+        if (renameEndpoints.has(endpoint)) {
+          preflightErrors.push(`改名端点冲突: ${endpoint}`);
+        } else {
+          renameEndpoints.set(endpoint, `${oldNpc}->${newNpc}`);
+        }
+      }
+      renameMap.set(oldNpc, newNpc);
+    }
+    for (const data of normalized) {
+      if (data.op !== 'rename' && renameEndpoints.has(data.npc)) {
+        preflightErrors.push(`人物 ${data.npc} 参与改名时不得另行输出关系指令`);
+      }
+    }
+    if (preflightErrors.length) {
+      console.warn('[RelationshipSystem] Relationship batch rejected:', [...new Set(preflightErrors)].join('; '));
+      return [];
+    }
+
     const turn = stateManager.get('系统·回合数') || 0;
     const calStr = stateManager.get('世界·时间');
     const now = typeof calStr === 'string' ? calStr : this._formatCalendar(calStr);
+    const results = [];
+    const eventActions = [];
+
+    for (const originalData of normalized) {
+      if (originalData.op === 'delete') {
+        const subjectId = all[originalData.npc]?.visual_subject_id || null;
+        delete all[originalData.npc];
+        results.push(undefined);
+        eventActions.push({ type: 'delete', npc: originalData.npc, subjectId });
+        continue;
+      }
+
+      let data = originalData;
+      let npc = data.npc;
+      let isNewNpc = !hasOwn(all, npc);
+      let renamedFrom = null;
+      if (data.op === 'rename') {
+        renamedFrom = npc;
+        npc = data.new_npc;
+        const source = this._normalizeRelationship(all[renamedFrom]);
+        delete all[renamedFrom];
+
+        const aliases = Array.isArray(source.aliases) ? source.aliases : [];
+        source.aliases = [...new Set([
+          ...aliases.map(normalizeNpcIdentity).filter(Boolean).filter(alias => alias !== npc),
+          renamedFrom
+        ])];
+        // These are structured identity mirrors used by older saves/importers,
+        // not historical prose. Keep them aligned with the canonical map key.
+        for (const field of ['name', 'npc', '姓名', 'display_name']) {
+          if (hasOwn(source, field)) source[field] = npc;
+        }
+        if (source.visual_profile && typeof source.visual_profile === 'object' && !Array.isArray(source.visual_profile)) {
+          source.visual_profile = { ...source.visual_profile, display_name: npc };
+        }
+        all[npc] = source;
+        data = { ...data, npc };
+        delete data.op;
+        delete data.new_npc;
+        isNewNpc = false;
+      }
+
+      const current = this._applyRelationshipData(data, all, { npc, isNewNpc, turn, now });
+      results.push(current);
+      if (renamedFrom) {
+        eventActions.push({ type: 'rename', oldNpc: renamedFrom, newNpc: npc });
+      } else {
+        eventActions.push({ type: 'change', npc });
+      }
+    }
+
+    const changes = { _relationships: all };
+    if (renameMap.size) {
+      changes._memory = migrateMemoryNpcNames(stateManager.getSub('_memory'), renameMap);
+      changes._agent_memories = moveScopedKeys(
+        stateManager.getSub('_agent_memories') || {},
+        renameMap,
+        mergeAgentMemory
+      );
+      changes._combat = migrateCombatNpcNames(stateManager.getSub('_combat'), renameMap);
+    }
+    stateManager.setSubBatch(changes);
+
+    for (const action of eventActions) {
+      if (action.type === 'rename') {
+        const relationship = all[action.newNpc];
+        eventBus.emit('relationship:renamed', {
+          oldNpc: action.oldNpc,
+          newNpc: action.newNpc,
+          npc: action.newNpc,
+          relationship
+        });
+        eventBus.emit('relationship:changed', {
+          npc: action.newNpc,
+          relationship,
+          renamedFrom: action.oldNpc
+        });
+      } else if (action.type === 'delete') {
+        if (action.subjectId) {
+          eventBus.emit('relationship:visual-deleted', { npc: action.npc, subjectId: action.subjectId });
+        }
+        eventBus.emit('relationship:changed', { npc: action.npc, relationship: null, deleted: true });
+      } else {
+        eventBus.emit('relationship:changed', { npc: action.npc, relationship: all[action.npc] });
+      }
+    }
+    return results;
+  }
+
+  _applyRelationshipData(data, all, { npc = data.npc, isNewNpc = !hasOwn(all, npc), turn, now } = {}) {
+    const current = this._normalizeRelationship(all[npc]);
 
     // A delta is authoritative when both forms are present. An absolute score
     // only initializes a brand-new NPC: models frequently echo the relationship
@@ -205,9 +466,7 @@ class RelationshipSystem {
     current.trust = Math.max(-100, Math.min(100, current.trust || 0));
     current.respect = Math.max(-100, Math.min(100, current.respect || 0));
 
-    all[data.npc] = current;
-    stateManager.setSub('_relationships', all);
-    eventBus.emit('relationship:changed', { npc: data.npc, relationship: current });
+    all[npc] = current;
     return current;
   }
 

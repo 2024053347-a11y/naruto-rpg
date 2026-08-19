@@ -96,7 +96,7 @@ export const GROWTH_RULES = {
 };
 
 export const NPC_TEMPLATE_FIELDS = [
-  'npc', 'name', '姓名', 'affection', 'trust', 'respect',
+  'npc', 'name', '姓名', 'op', 'new_npc', 'new_name', '新姓名', 'affection', 'trust', 'respect',
   '查克拉', '查克拉上限', '生命力', '生命力上限',
   '体力', '体力上限', '速度', '精神力', '精神力上限',
   '忍术造诣', '体术造诣', '幻术造诣',
@@ -112,6 +112,16 @@ const RELATIONSHIP_DELTA_ALIASES = {
   respect_change: 'respect_delta'
 };
 const RELATIONSHIP_SCORE_FIELDS = ['affection', 'trust', 'respect'];
+const RELATIONSHIP_OPERATION_ALIASES = Object.freeze({
+  rename: 'rename',
+  '重命名': 'rename',
+  '改名': 'rename',
+  delete: 'delete',
+  '删除': 'delete'
+});
+const RELATIONSHIP_RENAME_TARGET_FIELDS = Object.freeze([
+  'new_npc', 'new_name', 'rename_to', '新姓名', '新名字', '新名称'
+]);
 
 export function finiteRelationshipNumber(value) {
   if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
@@ -135,6 +145,22 @@ export function normalizeRelationshipInstruction(value) {
   const normalized = { ...value, npc };
   delete normalized.name;
   delete normalized['姓名'];
+
+  const rawOperation = typeof value.op === 'string'
+    ? value.op.normalize('NFKC').trim()
+    : (typeof value.operation === 'string' ? value.operation.normalize('NFKC').trim() : '');
+  delete normalized.operation;
+  if (rawOperation) normalized.op = RELATIONSHIP_OPERATION_ALIASES[rawOperation.toLowerCase()]
+    || RELATIONSHIP_OPERATION_ALIASES[rawOperation]
+    || rawOperation.toLowerCase();
+
+  const renameTargetSource = RELATIONSHIP_RENAME_TARGET_FIELDS
+    .map(field => value[field])
+    .find(candidate => candidate !== undefined && candidate !== null);
+  for (const field of RELATIONSHIP_RENAME_TARGET_FIELDS) delete normalized[field];
+  if (renameTargetSource !== undefined) {
+    normalized.new_npc = normalizeNpcIdentity(renameTargetSource);
+  }
 
   for (const field of RELATIONSHIP_SCORE_FIELDS) {
     if (!Object.prototype.hasOwnProperty.call(value, field)) continue;
@@ -843,18 +869,19 @@ ${getBriefPromptRef()}
 【地点变更规则——每次移动必须同步更新坐标】：
 仅改 世界·地点 会导致地图无法定位。同时必须用 <variable> 标签更新 known_locations：
 <variable>{"updates":[
-  {"path":"world_state.current_location","op":"set","value":"新地点名"},
-  {"path":"world_state.map.known_locations","op":"assign","key":"新地点名","value":{"x":坐标数字,"y":坐标数字,"desc":"一句话简介","tier":"village|town|landmark|wilderness|hideout|dungeon"}},
-  {"path":"world_state.map.explored_regions","op":"push","value":"区域名"}
+  {"path":"world_state.current_location","op":"set","value":"木叶·第三训练场"},
+  {"path":"world_state.map.known_locations","op":"assign","key":"木叶·第三训练场","value":{"x":36,"y":42,"desc":"木叶村内供忍者进行基础训练的林间场地","tier":"village"}},
+  {"path":"world_state.map.explored_regions","op":"push","value":"木叶村东区"}
 ]}</variable>
 （首次探索才 push explored_regions，已知区域只需前两条）
 
 【关系/记忆/任务/战斗】必须使用 JSON 标签，禁止用 <var> 平键：
-- 关系变化 → <relationship>{"npc":"...","affection_change":2,"trust_change":3,...}</relationship>
-- 记忆摘要 → <memory>{"summary":"...","facts":[],"clues":[],"pins":[],"remove_pins":[],"npc_notes":{}}</memory>
-- 任务 status 只允许 active|progress|completed|failed|abandoned；新任务 → <mission>{"id":"稳定ID","status":"active","title":"明确任务名","rank":"D|C|B|A|S","objective":"明确目标"}</mission>；已有任务只写真实变化
-- 开战 → <combat state="start">{"enemy_name":"姓名","enemy_rank":"忍阶"}</combat>；行动与结束必须使用对应 state 所需的非空字段
-- 普通事件 → <event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"事实"}</event>；结束状态使用 completed|resolved|ended|failed|cancelled
+- 关系变化 → <relationship>{"npc":"海野伊鲁卡","affection_change":2,"trust_change":3,"reason":"玩家按约定完成基础训练"}</relationship>
+- 已有关系人物改名 → <relationship>{"op":"rename","npc":"旧姓名","new_npc":"新姓名","reason":"正文明确确认的身份更正或真名揭示"}</relationship>。npc 必须逐字使用当前关系档案键，new_npc 必须是尚未占用的安全姓名；本地会原子迁移完整档案，禁止用 delete + 新建冒充改名。
+- 记忆摘要 → <memory>{"summary":"玩家按约定完成基础训练，下一步等待老师安排。","facts":["基础训练已经完成"],"clues":[],"pins":["等待下一项训练安排"],"remove_pins":[],"npc_notes":{"海野伊鲁卡":"确认玩家已掌握基础要领"}}</memory>
+- 任务 status 只允许 active|progress|completed|failed|abandoned；新任务 → <mission>{"id":"M-寻找走失忍猫","status":"active","title":"寻找走失忍猫","rank":"D","objective":"在木叶东区找到并安全带回忍猫"}</mission>；已有任务只写真实变化
+- 开战 → <combat state="start">{"enemy_name":"山贼首领","enemy_rank":"下忍"}</combat>；行动与结束必须使用对应 state 所需的非空字段
+- 普通事件 → <event>{"id":"EV-EAST-GATE-ALARM","status":"triggered","description":"木叶东门因发现可疑踪迹提高警戒"}</event>；结束状态使用 completed|resolved|ended|failed|cancelled
 - 无论本回合有无其他变更，末尾必须输出一条 <memory>，只记录本回合已发生事实、直接结果和下一轮待承接事项。
 
 【严禁】日常闲聊/赶路/观察不得增加 进度·经验。训练+10~20，战斗+15~25，任务+10~30。
@@ -862,17 +889,19 @@ ${getBriefPromptRef()}
 【生命警戒】属性·当前生命力 是HP。非战斗负伤不得随意扣除；归零即角色死亡。属性·当前体力只是体术资源，归零不会死亡。
 单回合技能熟练度提升不超过+8。
 
-【NPC战斗卡 — 首次完整建档与增量更新】
+【NPC关系与战斗卡 — 宽松增量更新】
 - 已有NPC战斗卡：直接复用当前状态提供的数值、战力等级和忍术，只输出本回合真实变化，禁止重新估值、补全或重建整张卡。
-- 最终正文首次实际登场的有名人物必须输出 <relationship> 并明确 combatant。平民、纯文职或无战斗能力者写 combatant:false，不生成战斗卡。
-- 战斗型忍者写 combatant:true，并提供 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}；没有可靠属性或招式证据时保留空数组，不得猜测。若提供忍术，每条必须完整包含 name/rank/element/resource_type/cost/power/mastery/description/type，且不得伪造 JT 数据库ID。本地按忍阶补齐六项属性与三系造诣。
+- 最终正文首次实际登场的有名人物应输出 <relationship>。只写有可靠依据的字段；combatant、history、inner_thoughts、rank、chakra_nature 和 jutsu 均可暂时省略，不得因资料不全而删除格式正确的关系写入。
+- 只有正文明确确认人物规范姓名发生变化时才使用 op:"rename"；昵称、称呼、伪装或不确定身份不得改名。改名标签可同时携带本回合其他关系增量，但同回合不得再用旧名或新名单独输出第二条关系标签。
+- 已确认平民、纯文职或无战斗能力者时可写 combatant:false，不生成战斗卡；无法确认时省略该字段。
+- 已确认战斗型忍者时写 combatant:true，战斗资料可用 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}} 渐进补全。已提供字段必须类型正确；若提供忍术条目，至少包含 name，其余字段可待有证据时补写，且不得伪造 JT 数据库ID。本地按可用忍阶补齐六项属性与三系造诣。
 - 本地系统会将六项最终属性和三系造诣限制在忍阶基准内，并用与玩家相同的综合公式自动计算战力等级。所有当前资源不得超过上限；后续整卡信息不得把受伤或消耗后的当前值恢复到上限。
 - 招式记录名称、等级、属性、熟练度、描述、类型、消耗资源与单次消耗。具体点数以数据库中该招式的 cost 为唯一依据，禁止根据等级重算；忍术扣查克拉、幻术扣精神力、体术扣体力，支援术按其消耗资源字段。玩家与NPC完全相同。
 
 【战斗资源唯一结算】
-- 开战：<combat state="start">{"enemy_name":"姓名","enemy_rank":"忍阶"}</combat>
-- 玩家行动：<combat state="player_turn">{"actor":"player","action_name":"准确技能名","action_rank":"C","action_type":"忍术|幻术|体术|支援","resource_type":"查克拉|精神力|体力","damage_to_enemy":数值,"log":"结果"}</combat>
-- NPC行动：<combat state="enemy_turn">{"actor":"enemy","action_name":"准确技能名","action_rank":"C","action_type":"忍术|幻术|体术|支援","resource_type":"查克拉|精神力|体力","damage_to_player":数值,"log":"结果"}</combat>
+- 开战：<combat state="start">{"enemy_name":"山贼首领","enemy_rank":"下忍"}</combat>
+- 玩家行动：<combat state="player_turn">{"actor":"player","action_name":"火遁·豪火球之术","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_enemy":24,"log":"火球命中并迫使敌人后退"}</combat>
+- NPC行动：<combat state="enemy_turn">{"actor":"enemy","action_name":"木叶旋风","action_rank":"C","action_type":"体术","resource_type":"体力","damage_to_player":16,"log":"踢击擦中玩家肩部"}</combat>
 - 玩家与NPC都由本地战斗系统按已存招式的 resource_type/cost 各结算一次；资源不足则招式失败且不造成伤害。写入 <combat> 后，禁止再用 <var>/<variable> 重复扣除任何施术资源。`;
 }
 

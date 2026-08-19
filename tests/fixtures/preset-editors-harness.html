@@ -13,7 +13,9 @@
 <body>
   <div id="app"></div>
   <script type="module">
-    const editorType = new URLSearchParams(location.search).get('editor') || 'main';
+    const query = new URLSearchParams(location.search);
+    const editorType = query.get('editor') || 'main';
+    const preserveStorage = query.get('preserve') === '1';
     const entries = Array.from({ length: 60 }, (_, index) => ({
       id: `fixture_${index + 1}`,
       name: `Fixture preset entry ${String(index + 1).padStart(2, '0')}`,
@@ -25,20 +27,24 @@
 
     if (editorType === 'variable') {
       const { DEFAULT_VARIABLE_UPDATER_PRESET_VERSION } = await import('../../js/data/variable-updater-preset.js');
-      localStorage.setItem('naruto_variable_updater_preset', JSON.stringify({
-        name: 'Variable updater fixture',
-        version: DEFAULT_VARIABLE_UPDATER_PRESET_VERSION,
-        entries
-      }));
+      if (!preserveStorage || !localStorage.getItem('naruto_variable_updater_preset')) {
+        localStorage.setItem('naruto_variable_updater_preset', JSON.stringify({
+          name: 'Variable updater fixture',
+          version: DEFAULT_VARIABLE_UPDATER_PRESET_VERSION,
+          entries
+        }));
+      }
       await import('../../js/ui/variable-updater-preset-editor.js');
       document.querySelector('#app').append(document.createElement('variable-updater-preset-editor'));
     } else {
       const { DEFAULT_MAIN_PRESET_VERSION } = await import('../../js/data/default-preset.js');
-      localStorage.setItem('naruto_main_preset', JSON.stringify({
-        name: 'Main preset fixture',
-        _version: DEFAULT_MAIN_PRESET_VERSION,
-        entries
-      }));
+      if (!preserveStorage || !localStorage.getItem('naruto_main_preset')) {
+        localStorage.setItem('naruto_main_preset', JSON.stringify({
+          name: 'Main preset fixture',
+          _version: DEFAULT_MAIN_PRESET_VERSION,
+          entries
+        }));
+      }
       await import('../../js/ui/main-preset-editor.js');
       document.querySelector('#app').append(document.createElement('main-preset-editor'));
     }

@@ -3,6 +3,7 @@ import { eventBus } from '../core/event-bus.js';
 import {
   assertTimelineSave,
   findForbiddenTimelineMedia,
+  sanitizeTimelineNode,
   sanitizeTimelinePersistenceValue,
   sanitizeTimelineSnapshot
 } from '../core/timeline-save-schema.js';
@@ -13,10 +14,17 @@ import {
   remapContinuityLedger
 } from '../core/continuity-ledger.js';
 import { encodeTimelineSave } from '../core/timeline-file-codec.js';
+import {
+  TIMELINE_HOT_WINDOW,
+  collectHotNodeIds,
+  compressTimelineNode,
+  decompressTimelineNode,
+  estimateTimelineNodeBytes,
+  isCompressedTimelineNode
+} from '../core/timeline-node-codec.js';
 import { formatGameTime, generateId, generateNodeId, truncate, getNextBranchColor, deepClone } from '../utils/format.js';
 
-const ARCHIVE_THRESHOLD = 100;
-const ARCHIVE_ANCESTOR_KEEP = 20;
+const ARCHIVE_ANCESTOR_KEEP = TIMELINE_HOT_WINDOW;
 const IMAGE_STATE_SNAPSHOT_SLICES = new Set(['_relationships', '_image_worldbook_overlay']);
 export const LINGXI_TIMELINE_IMPACT_SCHEMA = 'naruto.lingxi-timeline-impact/v1';
 
@@ -138,6 +146,7 @@ class TimelineSystem {
     this._nodeCache = new Map();
     this._pendingBranchFrom = null;
     this._archiveRunning = false;
+    this._archiveQueue = Promise.resolve();
   }
 
   async init() {
@@ -145,6 +154,7 @@ class TimelineSystem {
     await stateManager.initDB();
     await this._sanitizeStoredTimelineNodes();
     await this._migrateLegacyMaintenanceNodes();
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
     const meta = await stateManager.dbGet('timeline_meta', 'root');
     if (meta) {
       const metaState = stateManager.getSub('_meta') || {};
@@ -247,7 +257,9 @@ class TimelineSystem {
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     const activeBranch = meta.active_branch;
-    const turnCount = turnNumber !== undefined ? turnNumber : Math.max(1, (stateManager.get('系统·回合数') || 0) - 1);
+    const turnCount = turnNumber !== undefined
+      ? turnNumber
+      : Math.max(1, Number(stateManager.get('系统·回合数')) || 1);
 
     if (!currentId) {
       const nodeId = generateNodeId(turnCount);
@@ -311,6 +323,7 @@ class TimelineSystem {
     const newBranchId = shouldCreateBranch ? generateId('branch') : null;
     const expectedBranchId = activeBranch || 'branch_main';
     const createdAt = Date.now();
+    await this._hydratePersistedNode(currentId);
     const transactionResult = await stateManager.dbMutateTimeline(({ nodes, branches, meta: storedMetaEntry }) => {
       if (!storedMetaEntry?.value) throw new Error('时间线元数据不存在，无法追加节点');
       const parentNode = nodes.find(candidate => candidate.id === currentId);
@@ -472,6 +485,7 @@ class TimelineSystem {
     }
     // Sanitize before opening the transaction. The transaction mutator must
     // remain synchronous and must never persist live object references.
+    await this._hydratePersistedNode(previousNodeId);
     const approvedSnapshot = sanitizeTimelineSnapshot(sourceSnapshot);
     const maintenance = {
       type: 'lingxi-variable-maintenance',
@@ -710,6 +724,7 @@ class TimelineSystem {
       key,
       sanitizeTimelinePersistenceValue(stateManager.getSub(key), `state_snapshot.${key}`)
     ]));
+    await this._hydratePersistedNode(nodeId);
 
     const mutation = await stateManager.dbMutateTimeline(({ nodes, meta }) => {
       if (meta?.value?.current_id !== nodeId) {
@@ -770,6 +785,7 @@ class TimelineSystem {
       plan: sanitizeTimelinePersistenceValue(after.plan ?? null, 'story_state.after.plan'),
       invalidated: after.invalidated
     };
+    await this._hydratePersistedNode(nodeId);
 
     const mutation = await stateManager.dbMutateTimeline(({ nodes, meta }) => {
       if (!meta?.value
@@ -827,8 +843,9 @@ class TimelineSystem {
   async _sanitizeStoredTimelineNodes() {
     const updatedNodes = await stateManager.dbMutateTimeline(({ nodes }) => {
       const updates = nodes
-        .filter(node => findForbiddenTimelineMedia(node, `timeline_node.${node?.id || 'unknown'}`))
-        .map(node => sanitizeTimelinePersistenceValue(node, `timeline_node.${node?.id || 'unknown'}`));
+        .filter(node => !isCompressedTimelineNode(node)
+          && findForbiddenTimelineMedia(node, `timeline_node.${node?.id || 'unknown'}`))
+        .map(node => sanitizeTimelineNode(node, `timeline_node.${node?.id || 'unknown'}`));
       return { nodes: updates, result: updates };
     }, { branchKeys: [] });
     for (const node of updatedNodes) this._nodeCache.set(node.id, node);
@@ -1232,6 +1249,8 @@ class TimelineSystem {
   }
 
   async pruneForward(targetNodeId) {
+    const hydrated = await this._hydratePersistedNode(targetNodeId);
+    if (!hydrated) throw new Error('目标节点不存在');
     const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
       if (!meta?.value) throw new Error('时间线元数据不存在，无法逆转');
       const byId = new Map(nodes.map(node => [node.id, node]));
@@ -1327,6 +1346,7 @@ class TimelineSystem {
       branchId: mutation.node.branch_id,
       pruned: mutation.prunedNodeIds.length
     });
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
 
     return {
       pruned: mutation.prunedNodeIds.length,
@@ -1345,7 +1365,7 @@ class TimelineSystem {
       return;
     }
 
-    const targetNode = await stateManager.dbGet('timeline_nodes', targetNodeId);
+    const targetNode = await this._hydratePersistedNode(targetNodeId);
     if (!targetNode) throw new Error('目标节点不存在');
     const preparedRestore = this._prepareNodeRestore(targetNode);
     stateManager.commitPreparedRestore(preparedRestore);
@@ -1357,6 +1377,8 @@ class TimelineSystem {
     this._pendingBranchFrom = targetNode.children_ids?.length ? targetNodeId : null;
 
     targetNode.accessed_count = (targetNode.accessed_count || 0) + 1;
+    targetNode.archived = false;
+    targetNode.archived_at = null;
     await stateManager.dbPut('timeline_nodes', targetNode);
 
     const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
@@ -1374,6 +1396,7 @@ class TimelineSystem {
       branchId: targetNode.branch_id || 'branch_main',
       willBranchOnNextInput: Boolean(this._pendingBranchFrom)
     });
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
 
     return targetNode;
   }
@@ -1390,7 +1413,7 @@ class TimelineSystem {
     const meta = stateManager.getSub('_meta') || {};
     const currentId = meta.current_node_id;
     if (!currentId) return null;
-    return await stateManager.dbGet('timeline_nodes', currentId);
+    return await this._hydratePersistedNode(currentId);
   }
 
   async getActiveBranch() {
@@ -1411,7 +1434,7 @@ class TimelineSystem {
     let headNode = null;
     let preparedRestore = null;
     if (branch.head_node_id) {
-      headNode = await stateManager.dbGet('timeline_nodes', branch.head_node_id);
+      headNode = await this._hydratePersistedNode(branch.head_node_id);
       if (!headNode) throw new Error('分支头节点不存在');
       preparedRestore = this._prepareNodeRestore(headNode);
     }
@@ -1433,6 +1456,7 @@ class TimelineSystem {
 
     this._cacheTreeSummary();
     eventBus.emit('timeline:branch-switched', { from: oldBranchId, to: branchId });
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
   }
 
   async _setActiveBranchFlags(branchId) {
@@ -1469,86 +1493,94 @@ class TimelineSystem {
     return chain.slice(-80);
   }
 
-  async _getBranchNodes(branchId) {
-    const all = await stateManager.dbGetAll('timeline_nodes');
-    return all.filter(n => n.branch_id === branchId);
+  _enqueueArchive(work) {
+    const run = this._archiveQueue.then(async () => {
+      this._archiveRunning = true;
+      try {
+        return await work();
+      } finally {
+        this._archiveRunning = false;
+      }
+    });
+    this._archiveQueue = run.then(() => {}, () => {});
+    return run;
   }
 
   async _maybeArchive() {
-    if (this._archiveRunning) return;
     const ui = stateManager.getSub('_ui') || {};
     const settings = ui.settings || {};
     if (settings?.autoArchive === false) return;
-    this._archiveRunning = true;
-    try {
-      const branches = await this.getAllBranches();
-      for (const branch of branches) {
-        const nodes = await this._getBranchNodes(branch.id);
-        if (nodes.length <= ARCHIVE_THRESHOLD) continue;
-
-        const headId = branch.head_node_id;
-        const retainIds = new Set();
-        let cursor = await stateManager.dbGet('timeline_nodes', headId);
-        for (let i = 0; i < ARCHIVE_ANCESTOR_KEEP && cursor; i++) {
-          retainIds.add(cursor.id);
-          cursor = cursor.parent_id ? await stateManager.dbGet('timeline_nodes', cursor.parent_id) : null;
+    return this._enqueueArchive(async () => {
+      try {
+        const result = await this._compressColdNodes();
+        if ((result.archived || 0) > 0 || (result.compressed || 0) > 0) {
+          eventBus.emit('timeline:archived', result);
         }
-        for (const n of nodes) if (n.is_checkpoint) retainIds.add(n.id);
-
-        let archivedCount = 0;
-        for (const n of nodes) {
-          if (retainIds.has(n.id) || n.archived) continue;
-          n.chat_history_delta = null;
-          n.chat_history = null;
-          n.archived = true;
-          n.archived_at = Date.now();
-          await stateManager.dbPut('timeline_nodes', n);
-          this._nodeCache.delete(n.id);
-          archivedCount++;
-        }
-        if (archivedCount > 0) {
-          eventBus.emit('timeline:archived', { branchId: branch.id, count: archivedCount });
-        }
+        return result;
+      } catch (err) {
+        console.warn('[Timeline] archive failed:', err.message);
+        return { archived: 0, compressed: 0, expanded: 0, error: err.message };
       }
-    } catch (err) {
-      console.warn('[Timeline] archive failed:', err.message);
-    } finally {
-      this._archiveRunning = false;
-    }
+    });
   }
 
   async manualArchive() {
-    if (this._archiveRunning) return { running: true };
-    this._archiveRunning = true;
-    let total = 0;
-    try {
-      const branches = await this.getAllBranches();
-      for (const branch of branches) {
-        const nodes = await this._getBranchNodes(branch.id);
-        const headId = branch.head_node_id;
-        const retainIds = new Set();
-        let cursor = await stateManager.dbGet('timeline_nodes', headId);
-        for (let i = 0; i < ARCHIVE_ANCESTOR_KEEP && cursor; i++) {
-          retainIds.add(cursor.id);
-          cursor = cursor.parent_id ? await stateManager.dbGet('timeline_nodes', cursor.parent_id) : null;
-        }
-        for (const n of nodes) if (n.is_checkpoint) retainIds.add(n.id);
-        for (const n of nodes) {
-          if (retainIds.has(n.id) || n.archived) continue;
-          n.chat_history_delta = null;
-          n.chat_history = null;
-          n.archived = true;
-          n.archived_at = Date.now();
-          await stateManager.dbPut('timeline_nodes', n);
-          this._nodeCache.delete(n.id);
-          total++;
-        }
-      }
-      eventBus.emit('timeline:archived', { manual: true, count: total });
-    } finally {
-      this._archiveRunning = false;
+    return this._enqueueArchive(async () => {
+      const result = await this._compressColdNodes();
+      eventBus.emit('timeline:archived', { manual: true, ...result });
+      return result;
+    });
+  }
+
+  async _compressColdNodes() {
+    const nodes = await stateManager.dbGetAll('timeline_nodes');
+    if (!nodes.length) return { archived: 0, compressed: 0, expanded: 0 };
+    const meta = await stateManager.dbGet('timeline_meta', 'root');
+    const currentId = meta?.value?.current_id
+      || stateManager.getSub('_meta')?.current_node_id
+      || null;
+    const hotIds = collectHotNodeIds(nodes, currentId, ARCHIVE_ANCESTOR_KEEP);
+    if (hotIds.size === 0) {
+      return { archived: 0, compressed: 0, expanded: 0 };
     }
-    return { archived: total };
+    let archived = 0;
+    let compressed = 0;
+    let expanded = 0;
+    for (const node of nodes) {
+      const shouldBeHot = hotIds.has(node.id);
+      if (shouldBeHot) {
+        if (isCompressedTimelineNode(node)) {
+          const logical = await decompressTimelineNode(node);
+          logical.archived = false;
+          logical.archived_at = null;
+          await stateManager.dbPut('timeline_nodes', logical);
+          this._nodeCache.set(logical.id, logical);
+          expanded++;
+          continue;
+        }
+        if (node.archived) {
+          const next = { ...node, archived: false, archived_at: null };
+          await stateManager.dbPut('timeline_nodes', next);
+          this._nodeCache.set(next.id, next);
+        }
+        continue;
+      }
+
+      let next = node;
+      if (!isCompressedTimelineNode(node)) {
+        next = await compressTimelineNode(node);
+        if (isCompressedTimelineNode(next)) compressed++;
+      }
+      if (!next.archived) {
+        next = { ...next, archived: true, archived_at: next.archived_at || Date.now() };
+        archived++;
+      }
+      if (next !== node) {
+        await stateManager.dbPut('timeline_nodes', sanitizeTimelineNode(next, `timeline_node.${next.id || 'unknown'}`));
+        this._nodeCache.delete(next.id);
+      }
+    }
+    return { archived, compressed, expanded };
   }
 
   async getStorageStats() {
@@ -1556,26 +1588,76 @@ class TimelineSystem {
     let totalBytes = 0;
     let archivedCount = 0;
     let activeCount = 0;
+    let compressedCount = 0;
     for (const n of nodes) {
-      try {
-        totalBytes += JSON.stringify(n).length;
-      } catch { /* ignore circular */ }
+      totalBytes += estimateTimelineNodeBytes(n);
+      if (isCompressedTimelineNode(n)) compressedCount++;
       if (n.archived) archivedCount++; else activeCount++;
     }
-    return { totalNodes: nodes.length, archivedCount, activeCount, estimatedBytes: totalBytes };
+    return {
+      totalNodes: nodes.length,
+      archivedCount,
+      activeCount,
+      compressedCount,
+      estimatedBytes: totalBytes
+    };
   }
 
   async _replayStateFromAncestor(targetNode) {
-    stateManager.commitPreparedRestore(this._prepareNodeRestore(targetNode));
+    const node = isCompressedTimelineNode(targetNode)
+      ? await decompressTimelineNode(targetNode)
+      : targetNode;
+    stateManager.commitPreparedRestore(this._prepareNodeRestore(node));
     return 0;
   }
 
+  async _hydrateNode(node) {
+    if (!isCompressedTimelineNode(node)) return node;
+    return decompressTimelineNode(node);
+  }
+
+  async _hydratePersistedNode(nodeId) {
+    const node = await stateManager.dbGet('timeline_nodes', nodeId);
+    if (!node) return null;
+    if (!isCompressedTimelineNode(node)) return node;
+    const logical = await decompressTimelineNode(node);
+    logical.archived = false;
+    logical.archived_at = null;
+    await stateManager.dbPut('timeline_nodes', logical);
+    this._nodeCache.set(logical.id, logical);
+    return logical;
+  }
+
+  async _hydrateAllCompressedNodes() {
+    const nodes = await stateManager.dbGetAll('timeline_nodes');
+    for (const node of nodes) {
+      if (!isCompressedTimelineNode(node)) continue;
+      const logical = await decompressTimelineNode(node);
+      await stateManager.dbPut('timeline_nodes', logical);
+      this._nodeCache.set(logical.id, logical);
+    }
+  }
+
+  _alignSnapshotTurnCount(snapshot, turnNumber) {
+    const turn = Number(turnNumber);
+    if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) return snapshot;
+    if (!Number.isInteger(turn) || turn < 0) return snapshot;
+    snapshot['系统·回合数'] = turn;
+    if (snapshot._meta && typeof snapshot._meta === 'object' && !Array.isArray(snapshot._meta)) {
+      snapshot._meta.turn_count = turn;
+    }
+    return snapshot;
+  }
+
   _prepareNodeRestore(node) {
+    if (isCompressedTimelineNode(node)) {
+      throw new Error(`节点 ${node?.id || 'unknown'} 仍处于压缩状态，恢复前需要先解压`);
+    }
     const snapshot = node?.state_snapshot;
     if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
       throw new Error(`节点 ${node?.id || 'unknown'} 缺少完整状态快照，无法精确恢复`);
     }
-    return stateManager.prepareRestore(snapshot);
+    return stateManager.prepareRestore(this._alignSnapshotTurnCount(deepClone(snapshot), node.turn_number));
   }
 
   _buildNodeSnapshot(stateSnapshot, nodeId, branchId) {
@@ -1665,13 +1747,17 @@ class TimelineSystem {
       '_image_worldbook_overlay'
     ]);
     const allNodes = await this.getAllNodes();
+    const logicalNodes = await Promise.all(allNodes.map(node => this._hydrateNode(node)));
     const branches = await this.getAllBranches();
     const metaEntry = await stateManager.dbGet('timeline_meta', 'root');
 
     const nodes = includeArchive
-      ? allNodes.map(n => { const { memory_snapshot, ...rest } = n; return rest; })
-      : allNodes.map(n => {
-          const { memory_snapshot, chat_history, ...rest } = n;
+      ? logicalNodes.map(n => {
+          const { memory_snapshot, payload, payload_encoding, payload_bytes, ...rest } = n;
+          return rest;
+        })
+      : logicalNodes.map(n => {
+          const { memory_snapshot, chat_history, payload, payload_encoding, payload_bytes, ...rest } = n;
           if (n.archived) {
             return { ...rest, archived: true };
           }
@@ -1906,6 +1992,7 @@ class TimelineSystem {
   }
 
   async _importMerge(incomingNodes, incomingBranches, incomingMeta) {
+    await this._hydrateAllCompressedNodes();
     const imported = await stateManager.dbMutateTimeline(({ nodes: existingNodes, branches: existingBranches, meta: existingMeta }) => {
       if (!existingMeta?.value) throw new Error('当前时间线元数据不存在，无法合并导入');
       const attachmentNode = existingNodes.find(node => node.id === existingMeta.value.current_id);
@@ -1994,9 +2081,9 @@ class TimelineSystem {
           snapshot._meta.current_node_id = id;
           snapshot._meta.active_branch = branchId;
           if (snapshot._version !== '4.0' && snapshot._version !== '5.0') {
-            snapshot._meta.turn_count = turnNumber + 1;
+            snapshot._meta.turn_count = turnNumber;
           } else {
-            snapshot['系统·回合数'] = turnNumber + 1;
+            snapshot['系统·回合数'] = turnNumber;
           }
           if (snapshot._continuity) {
             snapshot._continuity = remapContinuityLedger(snapshot._continuity, {
@@ -2120,7 +2207,7 @@ class TimelineSystem {
     if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
       throw new Error(`导入状态恢复失败: 当前节点 ${currentNode.id} 缺少有效状态快照，无法精确恢复`);
     }
-    return { snapshot };
+    return { snapshot: this._alignSnapshotTurnCount(deepClone(snapshot), currentNode.turn_number) };
   }
 
   _prepareImportedState(currentNode, allNodes) {
@@ -2134,6 +2221,7 @@ class TimelineSystem {
 
   async promoteBranchToMain(branchId) {
     if (branchId === 'branch_main') return { promoted: false, reason: 'already-main' };
+    await this._hydrateAllCompressedNodes();
     const demotedBranchId = generateId('branch_alt');
     const changedAt = Date.now();
     const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
@@ -2266,6 +2354,7 @@ class TimelineSystem {
         reason: 'promotion'
       });
     }
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
     return {
       promoted: true,
       branchId,
@@ -2279,6 +2368,7 @@ class TimelineSystem {
 
   async deleteBranch(branchId) {
     if (branchId === 'branch_main') throw new Error('Cannot delete main branch');
+    await this._hydrateAllCompressedNodes();
     const mutation = await stateManager.dbMutateTimeline(({ nodes, branches, meta }) => {
       if (!meta?.value) throw new Error('时间线元数据不存在，无法删除分支');
       if (!branches.some(branch => branch.id === branchId)) throw new Error('分支不存在');
@@ -2426,6 +2516,7 @@ class TimelineSystem {
       branchId,
       deletedBranchIds: mutation.deletedBranchIds
     });
+    this._maybeArchive().catch(err => console.warn('[Timeline] archive failed:', err.message));
     return {
       deletedNodes: mutation.deletedNodeIds.length,
       deletedNodeIds: mutation.deletedNodeIds,

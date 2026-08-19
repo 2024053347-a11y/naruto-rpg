@@ -21,7 +21,7 @@ function baseState() {
     _meta: { current_node_id: 'node_7', active_branch: 'branch_main' },
     _combat: { is_active: false },
     '系统·回合数': 7,
-    '玩家·是否死亡': false,
+    '玩家·存活': '是',
     '世界·地点': '木叶隐村'
   };
 }
@@ -136,6 +136,16 @@ await test('combat, missing timelines, role spoofing, and rejected pipeline call
   const noNodeAdapter = new PlayerActionAdapter({ stateManager: noNodeManager, executePlayerAction: async () => ({ accepted: true }) });
   await assert.rejects(
     () => noNodeAdapter.stage({ text: '我出发。', reason: '尚未开局' }),
+    errorCode('LINGXI_PLAYER_ACTION_UNAVAILABLE')
+  );
+
+  const deadManager = new MemoryManager({ ...baseState(), '玩家·存活': '否' });
+  const deadAdapter = new PlayerActionAdapter({
+    stateManager: deadManager,
+    executePlayerAction: async () => ({ accepted: true })
+  });
+  await assert.rejects(
+    () => deadAdapter.stage({ text: '我爬起来继续走。', reason: '角色已倒下' }),
     errorCode('LINGXI_PLAYER_ACTION_UNAVAILABLE')
   );
 

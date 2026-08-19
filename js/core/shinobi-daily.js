@@ -211,7 +211,7 @@ export function parseShinobiDailyContract(text, { required = false } = {}) {
   return { ...result, raw };
 }
 
-export function buildShinobiDailyPrompt({ producer = 'main' } = {}) {
+export function buildShinobiDailyPrompt({ producer = 'main', includeExample = true } = {}) {
   const placement = producer === 'secondary'
     ? '完成全部变量标签后，在输出末尾追加日报契约。'
     : '完成可见正文和变量、记忆标签后追加日报契约；若本回合另有 <image_contract>，只有绘图契约可以紧随日报之后。';
@@ -224,10 +224,10 @@ ${placement}
 - 头条和要闻只能陈述当前安全证据及最终正文已经公开成立的事实。证据不足时写克制的政务、交通、天气或民生通告，不得把传闻写成定论。
 - 任务布告只是报纸公开栏，不得把它们写入玩家任务状态；等级、风险、报酬与受理状态必须相互合理。
 - 引语必须有可核验公开来源；没有可靠人物原话时，使用明确署名的机构守则或无人物归属的忍者箴言，禁止伪造名人名言。
-- date 必须符合当前游戏时间；issue 使用“第 N 号”的阿拉伯数字格式。所有文字应简洁、客观、无现代网络梗。
+- date 必须符合当前游戏时间；issue 使用“第 N 号”的阿拉伯数字格式。所有文字应简洁、客观、无现代网络梗。${includeExample ? `
 
 【规范示例 · 仅示范结构与写法，绝不可复制其中事实到当期】
-<shinobi_daily>${JSON.stringify(SHINOBI_DAILY_EXAMPLE)}</shinobi_daily>`;
+<shinobi_daily>${JSON.stringify(SHINOBI_DAILY_EXAMPLE)}</shinobi_daily>` : ''}`;
 }
 
 export const SHINOBI_DAILY_DELEGATION_PROMPT = `【忍界日报职责边界】

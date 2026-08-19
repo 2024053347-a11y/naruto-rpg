@@ -1,5 +1,6 @@
 import { stateManager } from '../core/state-manager.js';
 import { eventBus } from '../core/event-bus.js';
+import { isCompressedTimelineNode } from '../core/timeline-node-codec.js';
 import { formatGameTime, truncate, escHtml, escAttr } from '../utils/format.js';
 import { icon } from '../utils/icons.js';
 import { timelineStyles } from '../../css/components/timeline-navigator.css.js';
@@ -197,6 +198,7 @@ class TimelineNavigator extends HTMLElement {
             <span class="node-chapter">第 ${this._esc(turn)} 回</span>
             <span class="node-statuses">
               ${current ? '<span class="node-status current-status">当前</span>' : ''}
+              ${isCompressedTimelineNode(node) ? '<span class="node-status compressed-status">已压缩</span>' : ''}
               ${records.length ? `<span class="node-status maintenance-status">${icon('database', 11)}有维护记录${records.length > 1 ? ` · ${records.length}` : ''}</span>` : ''}
             </span>
           </span>

@@ -114,6 +114,10 @@
           color: var(--c-shuiro); border-color: rgba(235,97,63,0.32);
           background: rgba(235,97,63,0.08);
         }
+        .compressed-status {
+          color: #8fa4b8; border-color: rgba(143,164,184,0.28);
+          background: rgba(143,164,184,0.08);
+        }
         .maintenance-status {
           display: inline-flex; align-items: center; gap: 4px;
           color: #c9b893; border-color: rgba(198,156,109,0.22);

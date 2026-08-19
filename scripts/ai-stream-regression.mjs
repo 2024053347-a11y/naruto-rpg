@@ -1064,6 +1064,54 @@ await test('saved Tavern transport settings migrate away from the HTTP proxy', a
   }
 });
 
+await test('Tavern generateRaw preserves cross-role ordering and final assistant prefill', async () => {
+  const originals = {
+    location: globalThis.location,
+    generate: globalThis.generate,
+    generateRaw: globalThis.generateRaw
+  };
+  globalThis.location = { hostname: 'tavern.example' };
+  globalThis.generate = () => {};
+  const calls = [];
+  globalThis.generateRaw = async options => {
+    calls.push(options);
+    return 'continuation';
+  };
+
+  try {
+    const runtime = await import(`../js/core/ai-client.js?tavern-ordered-${Date.now()}-${Math.random()}`);
+    const client = new runtime.AIClient();
+    client.configure({ backend: 'tavern', model: 'tavern-default' });
+    const messages = [
+      { role: 'system', content: 'TOP' },
+      { role: 'user', content: 'HISTORY_USER' },
+      { role: 'assistant', content: 'HISTORY_ASSISTANT' },
+      { role: 'user', content: 'CURRENT_USER' },
+      { role: 'system', content: 'BOTTOM_CONTRACT' },
+      { role: 'assistant', content: 'PREFILL\n<konatan_planning~>日本語：' }
+    ];
+    assert.equal(await client.chat(messages), 'continuation');
+    assert.equal(calls[0].user_input, '');
+    assert.deepEqual(calls[0].ordered_prompts, messages);
+    assert.deepEqual(calls[0].ordered_prompts.at(-1), messages.at(-1));
+    assert.equal(calls[0].ordered_prompts.includes('world_info_before'), false);
+
+    await client.chat([
+      { role: 'system', content: 'SUMMARY_SYSTEM' },
+      { role: 'user', content: 'SUMMARY_USER' }
+    ]);
+    assert.equal(calls[1].user_input, 'SUMMARY_USER');
+    assert.deepEqual(calls[1].ordered_prompts, [
+      { role: 'system', content: 'SUMMARY_SYSTEM' },
+      'world_info_before'
+    ]);
+  } finally {
+    if (originals.location === undefined) delete globalThis.location; else globalThis.location = originals.location;
+    if (originals.generate === undefined) delete globalThis.generate; else globalThis.generate = originals.generate;
+    if (originals.generateRaw === undefined) delete globalThis.generateRaw; else globalThis.generateRaw = originals.generateRaw;
+  }
+});
+
 await test('Tavern routing ignores stale proxy intent, streams incrementally, and removes its listener', async () => {
   const originals = {
     fetch: globalThis.fetch,

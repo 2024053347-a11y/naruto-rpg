@@ -24,11 +24,18 @@ const version = pkg.version;
 const now = new Date();
 const buildId = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
+const buildIdx = process.argv.indexOf('--build');
+const environmentIdx = process.argv.indexOf('--environment');
+const requestedBuild = buildIdx !== -1 ? String(process.argv[buildIdx + 1] || '').trim() : '';
+const requestedEnvironment = environmentIdx !== -1
+  ? String(process.argv[environmentIdx + 1] || '').trim()
+  : '';
+
 const manifest = {
   version,
-  build: `v${version}-${buildId}`,
+  build: requestedBuild || `v${version}-${buildId}`,
   deployed_at: now.toISOString(),
-  environment: process.env.DEPLOY_ENV || 'production'
+  environment: requestedEnvironment || process.env.DEPLOY_ENV || 'production'
 };
 
 const json = JSON.stringify(manifest, null, 2);

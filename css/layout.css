@@ -220,6 +220,31 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-title); font-weight: var(--fw-b
   font-family: var(--font-body); font-size: var(--chat-font-size); line-height: var(--chat-line-height);
   color: var(--text-primary); padding: var(--sp-4) 0; letter-spacing: var(--tracking-normal);
 }
+.preset-output-presentation { width: 100%; min-width: 0; overflow-x: hidden; }
+.preset-output-presentation > .preset-output-sandbox { display: block; width: 100%; max-width: 100%; }
+.preset-output-structured-main + .preset-output-structured-block { margin-top: var(--sp-6); }
+.preset-output-structured-block {
+  margin: var(--sp-4) 0; padding: var(--sp-4) var(--sp-5);
+  background: rgba(var(--paper-rgb), 0.025); border: 1px solid var(--border-hairline);
+  border-radius: var(--r-md);
+}
+.preset-output-structured-label {
+  margin-bottom: var(--sp-3); color: var(--c-kin); font-family: var(--font-title);
+  font-size: var(--text-xs); letter-spacing: 2px;
+}
+.preset-output-structured-body > :last-child,
+.preset-output-structured-body > p:last-child { margin-bottom: 0; }
+.preset-output-host-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-4); }
+.preset-output-host-action {
+  padding: 8px 14px; color: var(--text-secondary); background: rgba(var(--paper-rgb), 0.035);
+  border: 1px solid var(--border-subtle); border-radius: var(--r-md); cursor: pointer;
+  font-family: var(--font-title); font-size: var(--text-xs); letter-spacing: 1px;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
+}
+.preset-output-host-action:hover {
+  color: var(--text-primary); border-color: var(--border-default); background: rgba(var(--paper-rgb), 0.065);
+}
+.is-processing .preset-output-host-action { pointer-events: none; opacity: 0.35; }
 
 /* ── 对话框风格 (aiCardStyle，设置面板可选) ──── */
 /* 朱印侧线 (默认)：左侧一道渐隐朱线，如短册题签 */

@@ -46,6 +46,18 @@ function obligationManifest({ domainUpdates = [], npcs = {}, missions = {} } = {
   return `<update_manifest>${JSON.stringify({ domains, present_npcs: npcs, active_missions: missions })}</update_manifest>`;
 }
 
+function completeVariableThinking(userInput = '继续', conclusion = '各领域均已逐项核对。') {
+  return `<variable_thinking>请求复述：${userInput}
+1. 时间地点与地图：旧值 -> 最终正文事实 -> 新值；已核对。
+2. 资源与属性成长：旧值 -> 最终正文事实 -> 新值；已核对。
+3. 技能与能力：旧值 -> 最终正文事实 -> 新值；已核对。
+4. 物品、金钱与装备：旧值 -> 最终正文事实 -> 新值；已核对。
+5. 任务、目标、声望与历练：旧值 -> 最终正文事实 -> 新值；已核对。
+6. 人物关系与NPC状态：旧值 -> 最终正文事实 -> 新值；已核对。
+7. 战斗、伤势与世界事件：旧值 -> 最终正文事实 -> 新值；已核对。
+8. 记忆、线索、约定与待办：旧值 -> 最终正文事实 -> 新值；${conclusion}</variable_thinking>`;
+}
+
 async function prepareRecoveryPipeline(playerName) {
   globalThis.generateRaw = async () => '训练结束后，玩家收好忍具，准备离开第三训练场。';
   localStorage.setItem('naruto_api_config', JSON.stringify({
@@ -129,13 +141,13 @@ await test('updater evidence preserves the explicit non-combat classification', 
   assert.equal(evidence.relationships.茶店老板.combatant, false);
 });
 
-await test('structured obligations require fixed coverage and executable NPC/task tags', () => {
+await test('structured obligations keep NPC completeness advisory while preserving field type checks', () => {
   const updateObligations = {
     present_npcs: [{ npc: '春野樱', source: 'final_narrative', agent_inner_thought: '这次配合比预想中顺利。' }],
     active_missions: [{ id: 'escort_existing', title: '护送委托' }]
   };
   const valid = variableUpdater.sanitizeVariableUpdaterOutput([
-    '<variable_thinking>关系与任务已逐项核对。</variable_thinking>',
+    completeVariableThinking('与春野樱继续护送任务'),
     obligationManifest({
       domainUpdates: ['relationships'],
       npcs: { 春野樱: 'updated' },
@@ -153,15 +165,19 @@ await test('structured obligations require fixed coverage and executable NPC/tas
   };
   assert.equal(variableUpdater.validateVariableUpdaterOutput(valid, options).valid, true);
 
+  const missingThought = variableUpdater.validateVariableUpdaterOutput(
+    valid.replace(',"inner_thoughts":"这次配合比预想中顺利。"', ''),
+    options
+  );
+  assert.equal(missingThought.valid, true, missingThought.errors.join('\n'));
+
   for (const [label, output, pattern] of [
-    ['missing relationship', valid.replace(/<relationship>[\s\S]*?<\/relationship>\n?/, ''), /春野樱.*relationship/i],
-    ['missing thought', valid.replace(',"inner_thoughts":"这次配合比预想中顺利。"', ''), /春野樱.*inner_thoughts/i],
+    ['missing relationship', valid.replace(/<relationship>[\s\S]*?<\/relationship>\n?/, ''), /relationships|relationship|人物关系/i],
+    ['missing mission tag', valid.replace('"escort_existing":"unchanged"', '"escort_existing":"updated"'), /escort_existing.*mission/i],
     ['non-string history', valid.replace('"history":"共同完成训练。"', '"history":123'), /春野樱.*history/i],
     ['non-string thought', valid.replace('"inner_thoughts":"这次配合比预想中顺利。"', '"inner_thoughts":456'), /春野樱.*inner_thoughts/i],
     ['object history', valid.replace('"history":"共同完成训练。"', '"history":{"summary":"错误结构"}'), /春野樱.*history/i],
     ['array thought', valid.replace('"inner_thoughts":"这次配合比预想中顺利。"', '"inner_thoughts":["错误结构"]'), /春野樱.*inner_thoughts/i],
-    ['missing mission tag', valid
-      .replace('"escort_existing":"unchanged"', '"escort_existing":"updated"'), /escort_existing.*mission/i],
     ['progress without note', valid
       .replace('"escort_existing":"unchanged"', '"escort_existing":"updated"')
       .replace('<memory>', '<mission>{"id":"escort_existing","status":"progress","progress":{"current_step":2}}</mission>\n<memory>'), /escort_existing.*progress\.note/i]
@@ -172,10 +188,10 @@ await test('structured obligations require fixed coverage and executable NPC/tas
   }
 });
 
-await test('trusted NPC obligations accept the three screenshot characters without undeclared-item errors', () => {
+await test('well-formed relationships are accepted even when the NPC evidence list is incomplete', () => {
   const narrativeResponse = '宇智波佐助、春野樱与旗木卡卡西都在训练场等待。';
   const output = [
-    '<variable_thinking>三名实际登场人物均已逐项落账。</variable_thinking>',
+    completeVariableThinking('观察训练场内的三名忍者'),
     obligationManifest({
       domainUpdates: ['relationships'],
       npcs: { 宇智波佐助: 'updated', 春野樱: 'updated', 旗木卡卡西: 'updated' }
@@ -208,17 +224,17 @@ await test('trusted NPC obligations accept the three screenshot characters witho
   const accepted = variableUpdater.validateVariableUpdaterOutput(output, options);
   assert.equal(accepted.valid, true, accepted.errors.join('\n'));
 
-  const rejected = variableUpdater.validateVariableUpdaterOutput(output, {
+  const acceptedWithoutEvidence = variableUpdater.validateVariableUpdaterOutput(output, {
     ...options,
     updateObligations: { present_npcs: [], active_missions: [] }
   });
-  assert.equal(rejected.valid, false);
-  assert.match(rejected.errors.join('\n'), /present_npcs.*未声明义务项.*宇智波佐助/);
+  assert.equal(acceptedWithoutEvidence.valid, true, acceptedWithoutEvidence.errors.join('\n'));
+  assert.doesNotMatch(acceptedWithoutEvidence.errors.join('\n'), /未声明义务项|可信人物义务/);
 });
 
-await test('undeclared relationships cannot be smuggled through narrative text or safe recovery', () => {
+await test('well-formed undeclared relationships survive validation and safe recovery', () => {
   const output = [
-    '<variable_thinking>正文只有地点，没有可信人物义务。</variable_thinking>',
+    completeVariableThinking('抵达训练场'),
     obligationManifest({ domainUpdates: ['relationships'] }),
     '<relationship>{"npc":"训练场","combatant":false,"history":"地点被误判为人物。","inner_thoughts":"错误身份。"}</relationship>',
     '<memory>{"summary":"玩家抵达训练场。"}</memory>'
@@ -230,20 +246,19 @@ await test('undeclared relationships cannot be smuggled through narrative text o
   };
 
   const validation = variableUpdater.validateVariableUpdaterOutput(output, options);
-  assert.equal(validation.valid, false);
-  assert.match(validation.errors.join('\n'), /训练场.*(?:未声明|义务|relationship)/i);
+  assert.equal(validation.valid, true, validation.errors.join('\n'));
 
   const recovery = variableUpdater.filterSafeVariableUpdaterOutput(output, options);
-  assert.equal(instructionParser.parse(recovery.output).relationships.length, 0);
+  assert.equal(instructionParser.parse(recovery.output).relationships.length, 1);
 });
 
-await test('relationship obligations require the canonical NPC name instead of an alias key', () => {
+await test('relationship obligation aliases do not block a well-formed write', () => {
   const updateObligations = {
     present_npcs: [{ npc: '旗木卡卡西', aliases: ['卡卡西'] }],
     active_missions: []
   };
   const base = npc => [
-    '<variable_thinking>卡卡西本回合已登场。</variable_thinking>',
+    completeVariableThinking('接受卡卡西的训练指导'),
     obligationManifest({ domainUpdates: ['relationships'], npcs: { 旗木卡卡西: 'updated' } }),
     `<relationship>${JSON.stringify({
       npc,
@@ -261,8 +276,25 @@ await test('relationship obligations require the canonical NPC name instead of a
   const canonical = variableUpdater.validateVariableUpdaterOutput(base('旗木卡卡西'), options);
   assert.equal(canonical.valid, true, canonical.errors.join('\n'));
   const alias = variableUpdater.validateVariableUpdaterOutput(base('卡卡西'), options);
-  assert.equal(alias.valid, false);
-  assert.match(alias.errors.join('\n'), /旗木卡卡西|卡卡西/);
+  assert.equal(alias.valid, true, alias.errors.join('\n'));
+});
+
+await test('a new NPC delta does not require speculative combat classification', () => {
+  const output = [
+    completeVariableThinking('与路边旅人交换情报'),
+    obligationManifest({ domainUpdates: ['relationships'] }),
+    '<relationship>{"npc":"新认识的旅人","trust_change":1,"history":"在路边交换了情报。"}</relationship>',
+    '<memory>{"summary":"玩家与一名旅人交换情报。"}</memory>'
+  ].join('\n');
+  const options = {
+    state: { '系统·回合数': 8, _relationships: {} },
+    updateObligations: { present_npcs: [], active_missions: [] }
+  };
+
+  const validation = variableUpdater.validateVariableUpdaterOutput(output, options);
+  assert.equal(validation.valid, true, validation.errors.join('\n'));
+  const recovery = variableUpdater.filterSafeVariableUpdaterOutput(output, options);
+  assert.equal(instructionParser.parse(recovery.output).relationships.length, 1);
 });
 
 await test('dangerous relationship identity keys are rejected before state mutation', async () => {
@@ -285,6 +317,289 @@ await test('dangerous relationship identity keys are rejected before state mutat
     }
   } finally {
     stateManager.setSub('_relationships', previous || {});
+  }
+});
+
+await test('relationship rename aliases normalize into one executable contract', () => {
+  const normalized = normalizeRelationshipInstruction({
+    operation: '改名',
+    姓名: '  无名暗部  ',
+    新姓名: '  天藏  ',
+    affection_delta: '2',
+    reason: '本人公开确认真名。'
+  });
+  assert.deepEqual(normalized, {
+    op: 'rename',
+    npc: '无名暗部',
+    new_npc: '天藏',
+    affection_change: 2,
+    reason: '本人公开确认真名。'
+  });
+
+  const parsed = instructionParser.parse(
+    '<relationship>{"operation":"重命名","name":"无名暗部","new_name":"天藏","trust_delta":3}</relationship>'
+  );
+  assert.deepEqual(parsed.relationships, [{
+    op: 'rename', npc: '无名暗部', new_npc: '天藏', trust_change: 3
+  }]);
+});
+
+await test('relationship rename validation rejects unsafe, occupied, and conflicting endpoints', () => {
+  const state = {
+    _relationships: {
+      无名暗部: { combatant: true, aliases: ['暗部甲'] },
+      临时队长: { combatant: true, aliases: ['大和'] }
+    }
+  };
+  const output = relationshipTags => [
+    manifest().replace('variable=1', 'variable=0').replace('relationship=0', `relationship=${relationshipTags.length}`),
+    ...relationshipTags.map(value => `<relationship>${JSON.stringify(value)}</relationship>`),
+    '<memory>{"summary":"核对人物身份变更。"}</memory>'
+  ].join('\n');
+
+  const valid = variableUpdater.validateVariableUpdaterOutput(output([{
+    op: 'rename', npc: '无名暗部', new_npc: '天藏', trust_change: 2,
+    reason: '本人公开确认真名。'
+  }]), { state });
+  assert.equal(valid.valid, true, valid.errors.join('\n'));
+
+  for (const [label, relationships, pattern] of [
+    ['missing source', [{ op: 'rename', npc: '不存在的人', new_npc: '天藏' }], /源人物不存在/],
+    ['same name', [{ op: 'rename', npc: '无名暗部', new_npc: '无名暗部' }], /新旧姓名不能相同/],
+    ['occupied key', [{ op: 'rename', npc: '无名暗部', new_npc: '临时队长' }], /目标姓名已存在/],
+    ['occupied alias', [{ op: 'rename', npc: '无名暗部', new_npc: '大和' }], /用作别名/],
+    ['unsafe target', [{ op: 'rename', npc: '无名暗部', new_npc: '__proto__' }], /有效且安全/],
+    ['duplicate target', [
+      { op: 'rename', npc: '无名暗部', new_npc: '天藏' },
+      { op: 'rename', npc: '临时队长', new_npc: '天藏' }
+    ], /端点冲突/],
+    ['mixed old delta', [
+      { op: 'rename', npc: '无名暗部', new_npc: '天藏' },
+      { npc: '无名暗部', trust_change: 1 }
+    ], /其他关系增量必须合并/],
+    ['mixed new delta', [
+      { op: 'rename', npc: '无名暗部', new_npc: '天藏' },
+      { npc: '天藏', trust_change: 1 }
+    ], /其他关系增量必须合并/]
+  ]) {
+    const result = variableUpdater.validateVariableUpdaterOutput(output(relationships), { state });
+    assert.equal(result.valid, false, label);
+    assert.match(result.errors.join('\n'), pattern, label);
+  }
+});
+
+await test('safe recovery drops a conflicting rename batch but keeps unrelated writes', () => {
+  const state = {
+    _relationships: {
+      无名暗部: { combatant: true },
+      临时队长: { combatant: true },
+      茶店老板: { combatant: false }
+    }
+  };
+  const output = [
+    manifest().replace('relationship=0', 'relationship=3'),
+    '<variable>{"key":"进度·经验","op":"+","value":3}</variable>',
+    '<relationship>{"op":"rename","npc":"无名暗部","new_npc":"天藏"}</relationship>',
+    '<relationship>{"op":"rename","npc":"临时队长","new_npc":"天藏"}</relationship>',
+    '<relationship>{"npc":"茶店老板","trust_change":1}</relationship>',
+    '<memory>{"summary":"只保留可独立执行的训练与交谈记录。"}</memory>'
+  ].join('\n');
+  const recovered = variableUpdater.filterSafeVariableUpdaterOutput(output, { state });
+  const parsed = instructionParser.parse(recovered.output);
+  assert.equal(parsed.variables.length, 1);
+  assert.deepEqual(parsed.relationships, [{ npc: '茶店老板', trust_change: 1 }]);
+  assert.match(recovered.errors.join('\n'), /端点冲突/);
+  assert.equal(recovered.droppedOperationCount >= 2, true);
+});
+
+await test('runtime rename atomically migrates the full NPC identity graph without visual deletion', async () => {
+  const [{ relationshipSystem }, { stateManager }, { eventBus }] = await Promise.all([
+    import('../js/systems/relationship-system.js'),
+    import('../js/core/state-manager.js'),
+    import('../js/core/event-bus.js')
+  ]);
+  const previousState = stateManager.snapshot();
+  const state = stateManager.getDefaultState();
+  state['系统·回合数'] = 12;
+  state['世界·时间'] = 'K052-04-03';
+  state['玩家·忍阶'] = '中忍';
+  state['玩家·难度'] = '标准';
+  const portraitBinding = {
+    selected_asset_id: 'portrait-asset-7',
+    version_group_id: 'portrait:subject-anbu-7',
+    binding_revision: 4,
+    last_job_id: 'portrait-job-4',
+    updated_at: 1700000000000
+  };
+  state._relationships = {
+    无名暗部: {
+      name: '无名暗部', npc: '无名暗部', 姓名: '无名暗部', display_name: '无名暗部',
+      aliases: ['暗部甲', '天藏'],
+      affection: 26, trust: 41, respect: 55,
+      role: '暗部忍者', faction: '木叶', status: 'ally', location: '木叶任务大厅',
+      info: '以代号行动。', pinned: true, summary_turn_counter: 6,
+      history: [{ turn: 11, time: 'K052-04-02', summary: '无名暗部完成了上轮交接。' }],
+      inner_thoughts: [{ turn: 11, time: 'K052-04-02', summary: '仍需保持警惕。' }],
+      tags: ['木叶', '暗部'], known_secrets: ['封印室暗号'],
+      promises: ['护送玩家返回村内'], debts: ['欠玩家一次情报'],
+      summaries: [{ from_turn: 1, to_turn: 10, text: '以代号与玩家共同行动。' }],
+      grand_summary: '无名暗部曾长期隐藏真实姓名。',
+      combatant: true,
+      combat_stats: {
+        忍阶: '中忍', 查克拉上限: 180, 查克拉: 73,
+        生命力上限: 260, 生命力: 211,
+        体力上限: 220, 体力: 144, 速度: 76,
+        精神力上限: 170, 精神力: 99, 幸运: 21,
+        忍术造诣: 61, 体术造诣: 58, 幻术造诣: 49,
+        查克拉属性: ['水', '土'],
+        忍术: [{ 名称: '水遁·水乱波', 等级: 'C', 属性: '水', 消耗资源: '查克拉', 消耗: 22, 威力: 34, 熟练度: 62, 描述: '喷出水流冲击目标。', 类型: '忍术' }],
+        custom_combat_marker: { preserve: true }
+      },
+      visual_subject_id: 'subject-anbu-7',
+      visual_profile: {
+        subject_id: 'subject-anbu-7', display_name: '无名暗部',
+        canonical_description: '无名暗部的既有外观描述保持不变。',
+        locked_traits: ['棕色短发', '木叶护额'], current_appearance: '身着暗部制服',
+        identity_seed: 7788, seed_by_renderer: { local: 17 }, revision: 9,
+        reference_assets: ['reference-1']
+      },
+      portrait_binding: portraitBinding,
+      profile_revision: 13,
+      portrait_assets: [{ id: 'portrait-asset-7', url: 'asset://portrait-7' }],
+      custom_profile_payload: { nested: ['必须保留'] }
+    },
+    临时队长: { combatant: false, affection: 3, aliases: [] }
+  };
+  state._memory = {
+    ...state._memory,
+    facts: '正文曾把无名暗部称为可靠的同伴。',
+    npc_notes: [
+      '无名暗部: [T11] 约定任务结束后说明身份',
+      '无名暗部甲: 这个相似前缀不能被误改',
+      '其他人: 正文中提到无名暗部，但这不是键前缀'
+    ].join('\n'),
+    relationship_history: JSON.stringify({
+      无名暗部: { summary: '无名暗部以旧身份参与过三次任务。', count: 3 },
+      其他人: { summary: '无关记录。', count: 1 }
+    })
+  };
+  state._agent_memories = {
+    无名暗部: {
+      npcName: '无名暗部', privateGoals: ['继续调查'], knownFacts: ['玩家守约'],
+      recentActions: ['完成交接'], privateIntentHistory: [{ turn: 11, thought: '暂不公开其他秘密。' }],
+      relationToPlayer: { trust: 41 }, opaque: { keep: 'yes' }
+    },
+    其他人: { npcName: '其他人', knownFacts: ['无关'] }
+  };
+  state._combat = {
+    is_active: true, enemy_name: '无名暗部', enemyName: '无名暗部',
+    enemies: [
+      '无名暗部',
+      { name: '无名暗部', npcName: '无名暗部', enemy_name: '无名暗部', enemyName: '无名暗部', hp: 88 },
+      { name: '其他人', hp: 70 }
+    ],
+    log: ['无名暗部在此前回合使用了水遁。']
+  };
+  stateManager.state = state;
+  stateManager._stateVersion++;
+
+  const events = { renamed: [], changed: [], visualChanged: [], visualDeleted: [], atomic: [] };
+  const offs = [
+    eventBus.on('relationship:renamed', payload => events.renamed.push(structuredClone(payload))),
+    eventBus.on('relationship:changed', payload => events.changed.push(structuredClone(payload))),
+    eventBus.on('relationship:visual-changed', payload => events.visualChanged.push(structuredClone(payload))),
+    eventBus.on('relationship:visual-deleted', payload => events.visualDeleted.push(structuredClone(payload))),
+    eventBus.on('state:changed', ({ batched }) => {
+      if (!batched || events.atomic.length) return;
+      const snapshot = stateManager.snapshot();
+      events.atomic.push({
+        relationship: Boolean(snapshot._relationships.天藏) && !snapshot._relationships.无名暗部,
+        memory: snapshot._memory.npc_notes.startsWith('天藏:'),
+        agent: Boolean(snapshot._agent_memories.天藏) && !snapshot._agent_memories.无名暗部,
+        combat: snapshot._combat.enemy_name === '天藏'
+      });
+    })
+  ];
+
+  try {
+    const [renamed] = relationshipSystem.processInstructions([{
+      op: 'rename', npc: '无名暗部', new_npc: '天藏',
+      trust_change: 4, history: '天藏公开确认了自己的规范姓名。',
+      reason: '本人摘下面具并明确确认真名。'
+    }]);
+    assert.ok(renamed);
+    const committed = stateManager.snapshot();
+    assert.equal(committed._relationships.无名暗部, undefined);
+    const card = committed._relationships.天藏;
+    assert.ok(card);
+    assert.equal(card.name, '天藏');
+    assert.equal(card.npc, '天藏');
+    assert.equal(card.姓名, '天藏');
+    assert.equal(card.display_name, '天藏');
+    assert.deepEqual(card.aliases, ['暗部甲', '无名暗部']);
+    assert.equal(card.affection, 26);
+    assert.equal(card.trust, 45);
+    assert.equal(card.respect, 55);
+    assert.equal(card.pinned, true);
+    assert.equal(card.summary_turn_counter, 7);
+    assert.equal(card.history[0].summary, '天藏公开确认了自己的规范姓名。');
+    assert.equal(card.history[1].summary, '无名暗部完成了上轮交接。');
+    assert.equal(card.grand_summary, '无名暗部曾长期隐藏真实姓名。');
+    assert.deepEqual(card.summaries, [{ from_turn: 1, to_turn: 10, text: '以代号与玩家共同行动。' }]);
+    assert.deepEqual(card.custom_profile_payload, { nested: ['必须保留'] });
+    assert.equal(card.combat_stats.查克拉, 73);
+    assert.equal(card.combat_stats.生命力, 211);
+    assert.deepEqual(card.combat_stats.custom_combat_marker, { preserve: true });
+    assert.equal(card.visual_subject_id, 'subject-anbu-7');
+    assert.equal(card.visual_profile.display_name, '天藏');
+    assert.equal(card.visual_profile.canonical_description, '无名暗部的既有外观描述保持不变。');
+    assert.deepEqual(card.visual_profile.reference_assets, ['reference-1']);
+    assert.equal(card.visual_profile.revision, 9);
+    assert.deepEqual(card.portrait_binding, portraitBinding);
+    assert.equal(card.profile_revision, 13);
+    assert.deepEqual(card.portrait_assets, [{ id: 'portrait-asset-7', url: 'asset://portrait-7' }]);
+
+    assert.match(committed._memory.npc_notes, /^天藏: \[T11\]/);
+    assert.match(committed._memory.npc_notes, /^无名暗部甲:/m);
+    assert.match(committed._memory.npc_notes, /^其他人: 正文中提到无名暗部/m);
+    assert.equal(committed._memory.facts, '正文曾把无名暗部称为可靠的同伴。');
+    const relationshipHistory = JSON.parse(committed._memory.relationship_history);
+    assert.equal(relationshipHistory.无名暗部, undefined);
+    assert.equal(relationshipHistory.天藏.summary, '无名暗部以旧身份参与过三次任务。');
+    assert.equal(committed._agent_memories.无名暗部, undefined);
+    assert.equal(committed._agent_memories.天藏.npcName, '天藏');
+    assert.deepEqual(committed._agent_memories.天藏.opaque, { keep: 'yes' });
+    assert.equal(committed._combat.enemy_name, '天藏');
+    assert.equal(committed._combat.enemyName, '天藏');
+    assert.equal(committed._combat.enemies[0], '天藏');
+    assert.equal(committed._combat.enemies[1].name, '天藏');
+    assert.equal(committed._combat.enemies[1].npcName, '天藏');
+    assert.equal(committed._combat.enemies[1].enemy_name, '天藏');
+    assert.equal(committed._combat.enemies[1].enemyName, '天藏');
+    assert.deepEqual(committed._combat.log, ['无名暗部在此前回合使用了水遁。']);
+
+    assert.deepEqual(events.atomic, [{ relationship: true, memory: true, agent: true, combat: true }]);
+    assert.equal(events.renamed.length, 1);
+    assert.equal(events.renamed[0].oldNpc, '无名暗部');
+    assert.equal(events.renamed[0].newNpc, '天藏');
+    assert.equal(events.changed.length, 1);
+    assert.equal(events.changed[0].npc, '天藏');
+    assert.equal(events.visualChanged.length, 0);
+    assert.equal(events.visualDeleted.length, 0);
+
+    const beforeConflict = stateManager.snapshot();
+    const eventCountBeforeConflict = events.renamed.length + events.changed.length;
+    const rejected = relationshipSystem.processInstructions([
+      { op: 'rename', npc: '天藏', new_npc: '木遁忍者' },
+      { op: 'rename', npc: '临时队长', new_npc: '木遁忍者' }
+    ]);
+    assert.deepEqual(rejected, []);
+    assert.deepEqual(stateManager.snapshot(), beforeConflict, 'conflicting rename batch must not partially mutate state');
+    assert.equal(events.renamed.length + events.changed.length, eventCountBeforeConflict);
+  } finally {
+    for (const off of offs) off();
+    stateManager.state = previousState;
+    stateManager._stateVersion++;
   }
 });
 
@@ -333,6 +648,89 @@ await test('runtime prompt serializes update obligations and the machine-checkab
   assert.match(prompt, /canonical|规范姓名|npc.*逐字/iu);
 });
 
+await test('manifest omissions, domain mismatches, and active mission contradictions are hard errors', () => {
+  const updateObligations = {
+    present_npcs: [{ npc: '春野樱' }],
+    active_missions: [{ id: 'training', title: '基础训练' }]
+  };
+  const base = [
+    completeVariableThinking('与春野樱继续训练'),
+    obligationManifest({
+      domainUpdates: ['attributes', 'relationships'],
+      npcs: { 春野樱: 'updated' },
+      missions: { training: 'unchanged' }
+    }),
+    '<variable>{"path":"progression.exp","op":"add","value":2}</variable>',
+    '<relationship>{"npc":"春野樱","history":"共同完成训练。"}</relationship>',
+    '<memory>{"summary":"玩家与春野樱完成训练。"}</memory>'
+  ];
+  const options = {
+    state: {
+      _relationships: { 春野樱: { combatant: false } },
+      _missions: { active: { training: { id: 'training', title: '基础训练' } } }
+    },
+    updateObligations
+  };
+  assert.equal(variableUpdater.validateVariableUpdaterOutput(base.join('\n'), options).valid, true);
+
+  const cases = [
+    base.join('\n').replace('"skills":"unchanged",', ''),
+    base.join('\n').replace('"attributes":"updated"', '"attributes":"unchanged"'),
+    base.join('\n').replace('"春野樱":"updated"', ''),
+    base.join('\n').replace('"training":"unchanged"', ''),
+    base.join('\n').replace('"training":"unchanged"', '"training":"updated"'),
+    base.join('\n').replace(
+      '<memory>{"summary":"玩家与春野樱完成训练。"}</memory>',
+      '<mission>{"id":"training","status":"progress","progress":{"note":"继续训练"}}</mission>\n<memory>{"summary":"玩家与春野樱完成训练。"}</memory>'
+    )
+  ];
+  for (const output of cases) {
+    const validation = variableUpdater.validateVariableUpdaterOutput(output, options);
+    assert.equal(validation.valid, false, `expected manifest failure:\n${output}\n${validation.warnings.join('\n')}`);
+  }
+});
+
+await test('runtime obligations require request restatement and all eight audit headings in order', () => {
+  const valid = [
+    completeVariableThinking('继续训练'),
+    obligationManifest(),
+    '<memory>{"summary":"本回合没有状态变化。"}</memory>'
+  ].join('\n');
+  const options = { updateObligations: { present_npcs: [], active_missions: [] } };
+  assert.equal(variableUpdater.validateVariableUpdaterOutput(valid, options).valid, true);
+
+  for (const invalid of [
+    valid.replace('请求复述：继续训练\n', ''),
+    valid.replace('3. 技能与能力：旧值 -> 最终正文事实 -> 新值；已核对。\n', ''),
+    valid.replace(
+      '2. 资源与属性成长：旧值 -> 最终正文事实 -> 新值；已核对。\n3. 技能与能力：旧值 -> 最终正文事实 -> 新值；已核对。',
+      '3. 技能与能力：旧值 -> 最终正文事实 -> 新值；已核对。\n2. 资源与属性成长：旧值 -> 最终正文事实 -> 新值；已核对。'
+    )
+  ]) {
+    const validation = variableUpdater.validateVariableUpdaterOutput(invalid, options);
+    assert.equal(validation.valid, false, validation.errors.join('\n'));
+  }
+});
+
+await test('NPC techniques require only name while supplied optional fields keep strict types', () => {
+  const wrap = technique => [
+    '<variable_thinking>只记录有依据的忍术字段。</variable_thinking>',
+    `<relationship>${JSON.stringify({
+      npc: '雾隐追忍', combatant: true, combat_stats: { jutsu: [technique] }
+    })}</relationship>`,
+    '<memory>{"summary":"雾隐追忍展示了一项忍术。"}</memory>'
+  ].join('\n');
+  const partial = variableUpdater.validateVariableUpdaterOutput(wrap({ name: '水遁·水乱波' }), {
+    state: { _relationships: {} }
+  });
+  assert.equal(partial.valid, true, partial.errors.join('\n'));
+  assert.match(partial.warnings.join('\n'), /rank|element|cost|尚未补全/);
+  assert.equal(variableUpdater.validateVariableUpdaterOutput(wrap({}), { state: { _relationships: {} } }).valid, false);
+  assert.equal(variableUpdater.validateVariableUpdaterOutput(wrap({ name: '水遁·水乱波', cost: '十八' }), {
+    state: { _relationships: {} }
+  }).valid, false);
+});
+
 await test('read-only evidence container paths produce an actionable correction', () => {
   const output = [
     '<variable_thinking>时间地点发生变化。</variable_thinking>',
@@ -350,7 +748,7 @@ await test('read-only evidence container paths produce an actionable correction'
 
 await test('a single legal field inside a read-only evidence container is canonicalized locally', () => {
   const output = [
-    '<variable_thinking>地点与查克拉变化均有正文证据。</variable_thinking>',
+    completeVariableThinking('前往火影楼并使用查克拉'),
     obligationManifest({ domainUpdates: ['world', 'attributes'] }),
     '<variable>{"path":"world","op":"set","value":{"世界·地点":"火影楼"}}</variable>',
     '<variable>{"path":"attributes_and_progression","op":"sub","key":"属性·当前查克拉","value":5}</variable>',
@@ -368,7 +766,7 @@ await test('a single legal field inside a read-only evidence container is canoni
 
 await test('read-only container recovery unwraps matching objects without stringifying them', () => {
   const output = [
-    '<variable_thinking>地点发生变化。</variable_thinking>',
+    completeVariableThinking('前往火影楼'),
     obligationManifest({ domainUpdates: ['world'] }),
     '<variable>{"path":"world","op":"set","key":"世界·地点","value":{"世界·地点":"火影楼"}}</variable>',
     '<memory>{"summary":"玩家抵达火影楼。"}</memory>'
@@ -572,6 +970,70 @@ await test('pipeline keeps distinct relationship deltas for the same NPC while d
   assert.deepEqual(routed, [affection, trust]);
 });
 
+await test('pipeline routes one complete relationship batch when the runtime supports it', async () => {
+  const { MessagePipeline } = await import('../js/core/pipeline.js');
+  const batches = [];
+  const fallback = [];
+  const pipeline = new MessagePipeline({
+    relationshipSystem: {
+      processInstructions: relationships => batches.push(structuredClone(relationships)),
+      processInstruction: relationship => fallback.push(relationship)
+    }
+  });
+  const rename = { op: 'rename', npc: '无名暗部', new_npc: '天藏', trust_change: 2 };
+  const unrelated = { npc: '茶店老板', affection_change: 1 };
+  pipeline._applyInstructions({
+    variables: [], combats: [], missions: [], events: [], memories: [],
+    relationships: [rename, unrelated],
+    relationship: rename
+  }, true);
+  assert.deepEqual(batches, [[rename, unrelated]]);
+  assert.deepEqual(fallback, []);
+});
+
+await test('pipeline commits an undeclared well-formed relationship without retry or recovery UI', async () => {
+  const { MessagePipeline, eventBus } = await prepareRecoveryPipeline('宽松人物写入测试者');
+  const secondaryOutput = [
+    completeVariableThinking('结束训练'),
+    obligationManifest({ domainUpdates: ['relationships'] }),
+    '<relationship>{"npc":"清单外旅人","trust_change":1,"history":"在路边交换了情报。"}</relationship>',
+    '<memory>{"summary":"玩家完成训练；一名旅人的关系增量已记录。"}</memory>',
+    `<shinobi_daily>${JSON.stringify(SHINOBI_DAILY_EXAMPLE)}</shinobi_daily>`
+  ].join('\n');
+  const routed = [];
+  let mainCalls = 0;
+  let updaterCalls = 0;
+  let recoveryRequests = 0;
+  globalThis.generateRaw = async options => {
+    if (options?.custom_api?.model === 'recovery-updater') {
+      updaterCalls++;
+      return secondaryOutput;
+    }
+    mainCalls++;
+    return '训练结束后，玩家收好忍具，准备离开第三训练场。';
+  };
+  const offRecovery = eventBus.on('pipeline:variable-recovery-decision', () => {
+    recoveryRequests++;
+    return { action: 'skip' };
+  });
+  const pipeline = new MessagePipeline({
+    relationshipSystem: { processInstruction: relationship => routed.push(relationship) }
+  });
+
+  try {
+    await pipeline.process('结束训练');
+    assert.equal(mainCalls, 1);
+    assert.equal(updaterCalls, 1, 'valid relationship must not trigger a consistency retry');
+    assert.equal(recoveryRequests, 0, 'valid relationship must not open recovery UI');
+    assert.equal(routed.length, 1);
+    assert.equal(routed[0].npc, '清单外旅人');
+    assert.equal(routed[0].trust_change, 1);
+  } finally {
+    offRecovery();
+    delete globalThis.generateRaw;
+  }
+});
+
 await test('secondary updates keep current changes while recording a later plot plan', async () => {
   const { MessagePipeline, stateManager } = await prepareRecoveryPipeline('未来约定测试者');
   const futurePlan = '三日后在火影楼接受边境护送任务';
@@ -619,6 +1081,7 @@ await test('runtime prompt forces a domain-by-domain diff even for legacy custom
     narrativeResponse: '训练结束，玩家获得经验，并约定三日后领取任务。'
   });
   const prompt = messages.map(message => message.content).join('\n');
+  assert.match(prompt, /\[原始玩家输入\][\s\S]*结束训练/);
   assert.match(prompt, /系统强制反漏更协议/);
   assert.match(prompt, /领域：旧值 -> 最终正文事实 -> 新值/);
   assert.match(prompt, /已被接受、下达或确认的计划、约定、目标和期限[\s\S]*任务或 memory 待办/);

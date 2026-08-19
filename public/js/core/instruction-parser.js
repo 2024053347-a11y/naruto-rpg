@@ -118,56 +118,11 @@ export class InstructionParser {
             
             // Format A: The old {"updates": [...]} format
             if (data.updates && Array.isArray(data.updates)) {
-              for (const u of data.updates) {
-                if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                  if (!isKnownKey(u.key)) {
-                    console.warn('[InstructionParser] 未知变量，跳过:', u.key);
-                    continue;
-                  }
-                  updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
-                } else {
-                  const normalized = normalizeStructuredVariableUpdate(u);
-                  if (normalized?.key && ['=', '+', '-'].includes(normalized.op)) {
-                    if (!isKnownKey(normalized.key)) {
-                      console.warn('[InstructionParser] 未知变量，跳过:', normalized.key);
-                      continue;
-                    }
-                    updates.push({
-                      key: normalized.key,
-                      op: normalized.op,
-                      value: coerceValue(normalized.key, normalized.value)
-                    });
-                  } else if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
-                    updates.push(normalized);
-                  }
-                }
-              }
+              for (const u of data.updates) this._pushParsedVariableUpdate(updates, u);
             } 
             // Format B: The new single object format: {"path":"...", "op":"...", "value":...}
             else {
-              const u = data;
-              if (u.key && u.op && ['=', '+', '-'].includes(u.op)) {
-                if (!isKnownKey(u.key)) {
-                  console.warn('[InstructionParser] 未知变量，跳过:', u.key);
-                  continue;
-                }
-                updates.push({ key: u.key, op: u.op, value: coerceValue(u.key, u.value) });
-              } else {
-                const normalized = normalizeStructuredVariableUpdate(u);
-                if (normalized?.key && ['=', '+', '-'].includes(normalized.op)) {
-                  if (!isKnownKey(normalized.key)) {
-                    console.warn('[InstructionParser] 未知变量，跳过:', normalized.key);
-                    continue;
-                  }
-                  updates.push({
-                    key: normalized.key,
-                    op: normalized.op,
-                    value: coerceValue(normalized.key, normalized.value)
-                  });
-                } else if (normalized?.path && normalized?.op && ['set','add','sub','assign','push','remove'].includes(normalized.op)) {
-                  updates.push(normalized);
-                }
-              }
+              this._pushParsedVariableUpdate(updates, data);
             }
           } catch (innerE) {
             console.warn('[InstructionParser] 单个变量JSON解析错误:', innerE);
@@ -179,6 +134,36 @@ export class InstructionParser {
     }
 
     return updates;
+  }
+
+  _pushParsedVariableUpdate(updates, raw) {
+    if (!raw || typeof raw !== 'object') return;
+    if (raw.key && raw.op && ['=', '+', '-'].includes(raw.op)) {
+      const key = resolveAlias(raw.key);
+      if (!isKnownKey(key)) {
+        console.warn('[InstructionParser] 未知变量，跳过:', raw.key, '(resolved:', key, ')');
+        return;
+      }
+      updates.push({ key, op: raw.op, value: coerceValue(key, raw.value) });
+      return;
+    }
+    const normalized = normalizeStructuredVariableUpdate(raw);
+    if (normalized?.key && ['=', '+', '-'].includes(normalized.op)) {
+      const key = resolveAlias(normalized.key);
+      if (!isKnownKey(key)) {
+        console.warn('[InstructionParser] 未知变量，跳过:', normalized.key, '(resolved:', key, ')');
+        return;
+      }
+      updates.push({
+        key,
+        op: normalized.op,
+        value: coerceValue(key, normalized.value)
+      });
+      return;
+    }
+    if (normalized?.path && normalized?.op && ['set', 'add', 'sub', 'assign', 'push', 'remove'].includes(normalized.op)) {
+      updates.push(normalized);
+    }
   }
 
   extractCombatState(text) {
@@ -269,14 +254,43 @@ export class InstructionParser {
       .trim();
   }
 
-  extractThinkContent(text) {
+  extractThinkContent(text, preferredTags = []) {
     if (!text) return '';
+
+    const extractFirst = tags => {
+      const seen = new Set();
+      for (const value of tags) {
+        const tag = String(value || '').trim();
+        const key = tag.toLowerCase();
+        if (!tag || seen.has(key)) continue;
+        seen.add(key);
+        const escaped = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const match = String(text).match(new RegExp(
+          `<\\s*${escaped}(?=[\\s>])[^>]*>([\\s\\S]*?)<\\s*\\/\\s*${escaped}\\s*>`,
+          'i'
+        ));
+        if (match) return { matched: true, content: match[1].trim() };
+      }
+      return { matched: false, content: '' };
+    };
+
+    const preferred = extractFirst(Array.isArray(preferredTags) ? preferredTags : []);
+    if (preferred.matched) return preferred.content;
+
+    const legacy = extractFirst([
+      'think',
+      'thinking',
+      'reasoning',
+      '思维链',
+      'anthropic_thinking',
+      'anthropic_think',
+      'deepseek_thinking',
+      'analysis'
+    ]);
+    if (legacy.matched) return legacy.content;
+
     let think = '';
-    for (const tag of ['think', 'thinking', 'reasoning', '思维链', 'anthropic_thinking', 'anthropic_think', 'deepseek_thinking', 'analysis']) {
-      const m = text.match(new RegExp(`<${tag}>[\\s\\S]*?<\\/${tag}>`, 'i'));
-      if (m) { think = m[0].replace(new RegExp(`</?${tag}>`, 'gi'), '').trim(); break; }
-    }
-    if (!think && text.includes('[回映结束]')) {
+    if (text.includes('[回映结束]')) {
       const parts = text.split('[回映结束]');
       if (parts.length > 1) think = parts[0].trim();
     }

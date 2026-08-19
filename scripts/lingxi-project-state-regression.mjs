@@ -163,6 +163,25 @@ await test('timeline and save reads are filtered, bounded and credential-redacte
   assert.equal(JSON.stringify(withArchive).includes(LEAKED_KEY), false);
 });
 
+await test('gzip-compressed archived turns remain visible in timeline inspection', async () => {
+  const manager = createManager();
+  const originalGetAll = manager.dbGetAll.bind(manager);
+  manager.dbGetAll = async store => {
+    const records = await originalGetAll(store);
+    if (store !== 'timeline_nodes') return records;
+    return records.map(node => node.id === 'node-old'
+      ? { ...node, payload_encoding: 'gzip-json-v1', payload: new Uint8Array([1, 2, 3]) }
+      : node);
+  };
+  const tools = createTools(manager);
+  const timeline = await tools.inspect_project_state.execute({ section: 'timeline', limit: 40 });
+  assert.equal(timeline.nodes.length, 2);
+  const old = timeline.nodes.find(node => node.id === 'node-old');
+  assert.equal(old.archived, true);
+  assert.equal(old.compressed, true);
+  assert.equal(old.summary, '队伍启程');
+});
+
 await test('project-state inspection does not mutate the save', async () => {
   const manager = createManager();
   const before = clone(manager.state);

@@ -359,7 +359,7 @@ test('player gameplay restores archive controls, storage stats and both export f
   await expect(settings.locator('#storage-info')).toContainText('2.50 MB');
 
   await settings.locator('[data-action="manual-archive"]').click();
-  await page.locator('game-modal').getByRole('button', { name: '确认归档', exact: true }).click();
+  await page.locator('game-modal').getByRole('button', { name: '确认压缩', exact: true }).click();
   await expect.poll(() => page.evaluate(() => window.__ARCHIVE_RUNS__)).toBe(1);
   await expect.poll(() => page.evaluate(() => window.__ARCHIVE_STATS_CALLS__)).toBeGreaterThanOrEqual(2);
 

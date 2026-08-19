@@ -2,7 +2,7 @@ import { stateManager } from './state-manager.js';
 import { AIClient, aiClient } from './ai-client.js';
 import { instructionParser } from './instruction-parser.js';
 import { eventBus } from './event-bus.js';
-import { ALLOWED_TAGS } from '../data/var-schema.js';
+import { ALLOWED_TAGS, generateMainVarInstructions } from '../data/var-schema.js';
 import { getMemoryConfig } from '../data/memory-config.js';
 import { getMainPreset, normalizePresetActivation, resolvePresetMacros } from '../data/default-preset.js';
 import { formatGameTime } from '../utils/format.js';
@@ -13,6 +13,7 @@ import {
   toCanonicalStateSkill
 } from '../data/canon-database.js';
 import { AgentPipeline, mergeCharacterMemoryDelta } from './agent-pipeline.js';
+import { getAgentConfig } from '../data/agent-config.js';
 import { runVariableUpdater } from './variable-updater.js';
 import {
   applyNarrativeReview,
@@ -68,6 +69,26 @@ import {
 } from './main-output-contract.js';
 import { buildContinuityDelta } from './continuity-delta.js';
 import { toWriterCharacterDecision } from './agent-contracts.js';
+import {
+  IMPORTED_PRESET_SINGLE_CALL_NO_CHANGE_EXAMPLE,
+  MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE
+} from '../data/prompts.js';
+import { applyPresetPromptRegex } from './preset-regex-runtime.js';
+import { readLoadedBuild } from '../utils/build-version.js';
+import {
+  clearImportedPresetDebugLog,
+  recordImportedPresetDebugFailure
+} from './imported-preset-debug-log.js';
+import {
+  IMPORTED_PRESET_OUTPUT_INCOMPLETE,
+  IMPORTED_PRESET_SINGLE_CALL_DELIVERY_REMINDER,
+  assertImportedPresetOutputEnvelope,
+  attachImportedAssistantPrefill,
+  buildImportedPresetModePrompt,
+  buildImportedPresetOutputCompatibilityPrompt,
+  inspectImportedPresetOutputProfile,
+  repairImportedPresetOutputEnvelope
+} from './main-preset-compatibility.js';
 
 const imageSettingsStore = new ImageSettingsStore();
 
@@ -96,6 +117,53 @@ function conflictsWithEffectiveUpdaterMode(entry, updaterEnabled) {
   return updaterEnabled
     ? UPDATER_DISABLED_OWNERSHIP_PATTERN.test(content)
     : UPDATER_ENABLED_OWNERSHIP_PATTERN.test(content);
+}
+
+function normalizeTavernPosition(entry) {
+  const position = String(entry?.tavernPosition || '').trim().toLowerCase().replace(/[\s_]+/g, '-');
+  const absolute = Number(entry?.sourceMeta?.injectionPosition) === 1;
+  if (absolute || ['absolute', 'depth', 'in-chat', 'inchat'].includes(position)) return 'depth';
+  if (['bottom', 'after-history', 'afterhistory'].includes(position)) return 'bottom';
+  return 'top';
+}
+
+function normalizeTavernDepth(entry) {
+  const value = entry?.tavernDepth ?? entry?.sourceMeta?.injectionDepth;
+  const depth = Number(value);
+  return Number.isInteger(depth) && depth >= 0 ? depth : 0;
+}
+
+function normalizeTavernOrder(entry, fallback = 0) {
+  const value = entry?.tavernOrder ?? entry?.sourceMeta?.injectionOrder;
+  const order = Number(value);
+  return Number.isFinite(order) ? order : fallback;
+}
+
+function injectPresetDepthMessages(conversation, injections) {
+  const base = Array.isArray(conversation) ? conversation : [];
+  if (!Array.isArray(injections) || injections.length === 0) return [...base];
+
+  const slots = new Map();
+  for (const injection of injections) {
+    const depth = normalizeTavernDepth(injection.entry);
+    const anchor = Math.max(0, base.length - Math.min(depth, base.length));
+    if (!slots.has(anchor)) slots.set(anchor, []);
+    slots.get(anchor).push(injection);
+  }
+  for (const slot of slots.values()) {
+    slot.sort((left, right) => (
+      normalizeTavernOrder(left.entry, left.sourceOrder)
+      - normalizeTavernOrder(right.entry, right.sourceOrder)
+      || left.sourceOrder - right.sourceOrder
+    ));
+  }
+
+  const merged = [];
+  for (let index = 0; index <= base.length; index++) {
+    if (slots.has(index)) merged.push(...slots.get(index));
+    if (index < base.length) merged.push(base[index]);
+  }
+  return merged;
 }
 
 function filterCharacterMemoryDelta(delta, presentNpcs = []) {
@@ -198,8 +266,17 @@ class MessagePipeline {
     this.chatHistory = [];
     this.isProcessing = false;
     this._cancelled = false;
+    this._lastImportedPresetProfile = inspectImportedPresetOutputProfile(null);
+    this._lastImportedPresetRevision = '';
+    this._lastAssistantPrefill = '';
     this._npcSummaryInFlight = new Set();
-    this._onPresetEdited = () => { this._staticSystemPrompt = null; };
+    this._onPresetEdited = () => {
+      this._staticSystemPrompt = null;
+      this._lastImportedPresetProfile = inspectImportedPresetOutputProfile(null);
+      this._lastImportedPresetRevision = '';
+      this._lastAssistantPrefill = '';
+      this._lastPromptTrace = null;
+    };
     eventBus.on('preset:edited', this._onPresetEdited);
     eventBus.on('timeline:branch-switched', () => this._agentContextBroker?.invalidate());
     eventBus.on('timeline:jumped', () => this._agentContextBroker?.invalidate());
@@ -265,6 +342,11 @@ class MessagePipeline {
     this._cancelled = false;
     this._lastUserInput = userInput;
     let turnCommit = null;
+    let modelRawResponse = '';
+    let importedProjectedResponse = '';
+    let importedValidationResponse = '';
+    let importedValidationStage = '';
+    clearImportedPresetDebugLog();
     stateManager.resetLevelUpGuard();
     this.knowledgeBase?.invalidateCache?.();
     eventBus.emit('pipeline:processing', { userInput });
@@ -304,10 +386,21 @@ class MessagePipeline {
       this._activeCallPolicy = callPolicy;
       eventBus.emit('pipeline:call-policy', callPolicy);
 
+      // Agent turns always delegate variables, memory and the daily report to
+      // their continuity updater.  Freeze that ownership before constructing
+      // the main prompt so the writer and commit path cannot disagree.
+      const agentWillRun = callPolicy.features.agents && Boolean(state['玩家·姓名']);
+      const updaterOwnedTurn = callPolicy.features.variableUpdater || agentWillRun;
+
       const messages = this._buildPrompt(enrichedInput, state, userInput, {
-        updaterEnabled: callPolicy.features.variableUpdater,
+        updaterEnabled: updaterOwnedTurn,
         strictSingleCall: callPolicy.strictSingleCall
       });
+      const importedPresetProfile = this._lastImportedPresetProfile;
+      const importedAssistantPrefill = this._lastAssistantPrefill;
+      const projectImportedResponse = response => importedPresetProfile?.active
+        ? attachImportedAssistantPrefill(response, importedAssistantPrefill)
+        : String(response || '');
 
       let fullResponse = '';
       let shinobiDaily = null;
@@ -315,8 +408,18 @@ class MessagePipeline {
       let pendingStoryPlan = null;
       let agentAudit = null;
       let agentEvidenceRefs = [];
-      const reviewEnabled = callPolicy.features.narrativeReview
+      const reviewRequested = callPolicy.features.narrativeReview
         && isNarrativeReviewEnabled(mainConfig);
+      // NarrativeReview intentionally reconstructs a safe display artifact and
+      // therefore cannot preserve arbitrary imported XML/regex envelopes.  Keep
+      // the imported response intact; its deterministic contract validators
+      // still run before any state is committed.
+      const reviewEnabled = reviewRequested && !importedPresetProfile?.active;
+      if (reviewRequested && importedPresetProfile?.active) {
+        eventBus.emit('pipeline:warning', {
+          warning: '当前回合使用用户导入预设；为保留其原生输出 wrapper 与正则展示，已跳过正文二次复检。'
+        });
+      }
       const generationOptions = {
         ...this._getGenerationOptions(),
         ...callPolicy.mainGenerationOptions
@@ -341,21 +444,24 @@ class MessagePipeline {
           directTracePublished = true;
         }
         if (reviewEnabled || mainConfig.disableStreaming) {
-          const response = await aiClient.chat(messages, generationOptions);
+          modelRawResponse = String(await aiClient.chat(messages, generationOptions) || '');
+          const response = projectImportedResponse(modelRawResponse);
           if (!reviewEnabled) eventBus.emit('pipeline:chunk', { chunk: response, response });
-          return response;
+          return modelRawResponse;
         }
         let streamed = '';
         const response = await aiClient.chatStream(messages, generationOptions, chunk => {
           streamed += chunk;
-          eventBus.emit('pipeline:chunk', { chunk, response: streamed });
+          const projected = projectImportedResponse(streamed);
+          eventBus.emit('pipeline:chunk', { chunk, response: projected });
         });
-        return response || streamed;
+        modelRawResponse = String(response || streamed || '');
+        return modelRawResponse;
       };
 
       let agentModeActivated = false;
       let agentSelfUpdater = false;
-      if (callPolicy.features.agents && state['玩家·姓名']) {
+      if (agentWillRun) {
         agentModeActivated = true;
         this._agentPipeline = new AgentPipeline({
           pipeline: this,
@@ -378,7 +484,8 @@ class MessagePipeline {
           pendingStoryPlan = activeAgentPipeline.consumePendingStoryPlan?.() || null;
           agentAudit = activeAgentPipeline.getLastAgentAudit?.() || null;
           agentEvidenceRefs = activeAgentPipeline.getLastEvidenceRefs?.() || [];
-          fullResponse = agentResult;
+          modelRawResponse = String(agentResult || '');
+          fullResponse = modelRawResponse;
           agentSelfUpdater = activeAgentPipeline.didAgentProduceUpdaterTags?.() || false;
           // Agent 模式通过 agent:stream 事件实时流式推送正文。
         } catch (error) {
@@ -392,14 +499,28 @@ class MessagePipeline {
         fullResponse = await generateDirect();
       }
 
+      fullResponse = projectImportedResponse(fullResponse);
+      importedProjectedResponse = fullResponse;
+
       if (!fullResponse) {
         this.isProcessing = false;
         throw new Error('AI 未返回有效回复');
       }
 
+      importedValidationStage = 'initial-envelope';
+      importedValidationResponse = fullResponse;
+      fullResponse = repairImportedPresetOutputEnvelope(fullResponse, importedPresetProfile);
+      importedValidationResponse = fullResponse;
+      assertImportedPresetOutputEnvelope(fullResponse, importedPresetProfile, {
+        draftResponse: instructionParser.cleanupResponse(fullResponse)
+      });
+
       // 只保留主叙事模型本回合显式输出的可展示推演摘要。
       // 它通过完成事件交给 UI，但不会进入正文、聊天历史或时间线存档。
-      const currentTurnThinkContent = instructionParser.extractThinkContent(fullResponse);
+      const currentTurnThinkContent = instructionParser.extractThinkContent(
+        fullResponse,
+        importedPresetProfile?.privateWrappers
+      );
       let acceptedArtifact = createNarrativeArtifact(fullResponse, {
         evidenceRefs: agentEvidenceRefs
       });
@@ -444,13 +565,25 @@ class MessagePipeline {
       // Agent 模式无条件启用二次变量更新：writing-outline 先产出详纲，
       // final-writer 只有在详纲终审通过后才出正文，标签由后续二次模型产出。
       // 若 agent 已用连续性更新代理产出标签(agentSelfUpdater)，则不剥离、由 createNarrativeArtifact 直接应用。
-      const updaterEnabledTurn = callPolicy.features.variableUpdater || agentModeActivated;
+      const updaterEnabledTurn = updaterOwnedTurn;
       let mainDailyResult = null;
       if (updaterEnabledTurn && !agentSelfUpdater) fullResponse = this._stripUpdaterOwnedTags(fullResponse);
       else {
         mainDailyResult = parseShinobiDailyContract(fullResponse, { required: true });
         if (mainDailyResult.valid) shinobiDaily = mainDailyResult.daily;
       }
+
+      // Image-contract extraction and updater-tag stripping both rewrite the
+      // response.  Revalidate imported single-root/wrapper contracts after
+      // those rewrites so a truncated updater tag cannot consume the preset's
+      // closing envelope and then reach the commit boundary unnoticed.
+      importedValidationStage = 'post-machine-processing';
+      importedValidationResponse = fullResponse;
+      fullResponse = repairImportedPresetOutputEnvelope(fullResponse, importedPresetProfile);
+      importedValidationResponse = fullResponse;
+      assertImportedPresetOutputEnvelope(fullResponse, importedPresetProfile, {
+        draftResponse: instructionParser.cleanupResponse(fullResponse)
+      });
 
       acceptedArtifact = createNarrativeArtifact(fullResponse, {
         evidenceRefs: acceptedArtifact.evidenceRefs
@@ -579,7 +712,8 @@ class MessagePipeline {
           narrativeResponse: displayResponse,
           updateObligations,
           correctionInstruction: secondaryCorrectionInstruction,
-          repairCandidate: secondaryRepairCandidate
+          repairCandidate: secondaryRepairCandidate,
+          forceEnabled: agentModeActivated
         });
 
         try {
@@ -687,9 +821,10 @@ class MessagePipeline {
         }
       }
 
-      const currentTurn = stateManager.get('系统·回合数') || 1;
+      const previousTurn = Math.max(0, Number(stateManager.get('系统·回合数')) || 0);
+      const currentTurn = previousTurn + 1;
       stateManager.update([
-        { key: '系统·回合数', op: '+', value: 1 }
+        { key: '系统·回合数', op: '=', value: currentTurn }
       ]);
       let timelineNode = null;
       if (this.timelineSystem) {
@@ -834,14 +969,46 @@ class MessagePipeline {
         return { cancelled: true, partialResponse };
       }
 
-      const rawPartial = error?.partialResponse || '';
+      const rawPartial = error?.partialResponse
+        ? (this._lastImportedPresetProfile?.active
+            ? attachImportedAssistantPrefill(error.partialResponse, this._lastAssistantPrefill)
+            : error.partialResponse)
+        : '';
       const partial = rawPartial ? instructionParser.cleanupPartialResponse(rawPartial) : null;
       const isTruncated = Boolean(rawPartial);
       const errorMessage = isTruncated
         ? `生成被截断（安全正文 ${partial?.length || 0} 字），请检查网络后重试。`
         : (error.message || 'AI 生成失败');
 
-      console.warn('[Pipeline] Error:', error.message, { partialLength: partial?.length, isTruncated });
+      const buildDiagnostic = globalThis.__NARUTO_BUILD_DIAGNOSTIC__ || {};
+      const importedPresetDiagnostic = {
+        build: String(buildDiagnostic.loadedBuild || readLoadedBuild() || 'dev'),
+        latestBuild: String(buildDiagnostic.latestBuild || ''),
+        staleBuild: Boolean(buildDiagnostic.stale),
+        adapterId: String(this._lastImportedPresetProfile?.adapterId || 'fallback'),
+        presetRevision: String(this._lastImportedPresetRevision || ''),
+        structureErrors: Array.isArray(error?.details?.errors) ? [...error.details.errors] : [],
+        debugLogAvailable: false,
+        debugLogStage: ''
+      };
+      if (error?.code === IMPORTED_PRESET_OUTPUT_INCOMPLETE
+        && this._lastImportedPresetProfile?.active) {
+        const debugRecord = recordImportedPresetDebugFailure({
+          ...importedPresetDiagnostic,
+          stage: importedValidationStage || 'envelope-validation',
+          error,
+          rawResponse: modelRawResponse,
+          projectedResponse: importedProjectedResponse,
+          validationResponse: importedValidationResponse
+        });
+        importedPresetDiagnostic.debugLogAvailable = Boolean(debugRecord);
+        importedPresetDiagnostic.debugLogStage = String(debugRecord?.stage || '');
+      }
+      console.warn('[Pipeline] Error:', error.message, {
+        partialLength: partial?.length,
+        isTruncated,
+        ...importedPresetDiagnostic
+      });
 
       const hasPartialContent = partial && partial.trim().length > 50;
       if (hasPartialContent) {
@@ -852,7 +1019,9 @@ class MessagePipeline {
       eventBus.emit('pipeline:error', {
         error: errorMessage,
         code: error?.code || '',
-        details: error?.details || null,
+        details: error?.details
+          ? { ...error.details, importedPresetDiagnostic }
+          : { importedPresetDiagnostic },
         missingContracts: error?.missingContracts || [],
         draftResponse: error?.draftResponse || '',
         isTruncated,
@@ -872,13 +1041,19 @@ class MessagePipeline {
   }
 
   _displayPartialResponse(partial) {
-    const cleanResponse = instructionParser.cleanupPartialResponse(partial);
+    const projectedPartial = this._lastImportedPresetProfile?.active
+      ? attachImportedAssistantPrefill(partial, this._lastAssistantPrefill)
+      : partial;
+    const cleanResponse = instructionParser.cleanupPartialResponse(projectedPartial);
     const instructions = instructionParser.parse('');
     eventBus.emit('pipeline:complete', {
       rawResponse: cleanResponse,
       cleanResponse,
       thinkContent: this._buildTurnVerificationSummary({
-        mainReasoning: instructionParser.extractThinkContent(partial),
+        mainReasoning: instructionParser.extractThinkContent(
+          projectedPartial,
+          this._lastImportedPresetProfile?.privateWrappers
+        ),
         primaryInstructions: instructions,
         updaterEnabled: false,
         committed: false,
@@ -917,7 +1092,7 @@ class MessagePipeline {
 
   async _runSecondaryVariableUpdate({
     userInput, enrichedInput, state, narrativeResponse, updateObligations = null,
-    correctionInstruction = '', repairCandidate = ''
+    correctionInstruction = '', repairCandidate = '', forceEnabled = false
   }) {
     const currentState = stateManager.get() || state || {};
     const updaterEvidence = this._compileUpdaterEvidence({
@@ -929,8 +1104,27 @@ class MessagePipeline {
     });
     const evidenceContext = renderEvidenceView({ ...updaterEvidence, opening_contract: '' }, { stage: 'variable-updater' });
     let shinobiDaily = null;
+    const configuredMain = stateManager.getAPIConfig() || {};
+    const configuredUpdater = configuredMain.variableUpdater || {};
+    const mainConfig = forceEnabled && configuredMain.variableUpdater?.enabled !== true
+      ? {
+          ...configuredMain,
+          variableUpdater: {
+            enabled: true,
+            // Agent continuity fallback uses the main provider/account.  An
+            // updater that is currently disabled may retain stale credentials
+            // and a stale provider/model from an older setup; none of those
+            // transport fields are safe to revive implicitly.
+            backend: 'inherit',
+            model: getAgentConfig().agentModel || configuredMain.model || '',
+            temperature: configuredUpdater.temperature,
+            maxTokens: configuredUpdater.maxTokens,
+            streaming: configuredUpdater.streaming
+          }
+        }
+      : configuredMain;
     const output = await runVariableUpdater({
-      mainConfig: stateManager.getAPIConfig() || {},
+      mainConfig,
       userInput,
       enrichedInput,
       state: currentState,
@@ -981,10 +1175,7 @@ class MessagePipeline {
       else errors.push(message);
     }
     if (!dailyPresent) {
-      const message = '忍界日报未形成可提交数据';
-      // 日报是增补项：正文有效时缺失只记警告，不因日报缺失让整回合失败。
-      if (secondaryDegraded || narrativePresent) warnings.push(message);
-      else errors.push(message);
+      errors.push('忍界日报未形成可提交数据');
     }
     if (secondaryDegraded) warnings.push('变量阶段按用户选择或兼容策略降级');
     for (const decision of agentAudit?.envelope?.characterDecisions || []) {
@@ -1358,7 +1549,11 @@ class MessagePipeline {
       }
     }
 
-    for (const rel of relationships) this.relationshipSystem?.processInstruction(rel);
+    if (relationships.length && typeof this.relationshipSystem?.processInstructions === 'function') {
+      this.relationshipSystem.processInstructions(relationships);
+    } else {
+      for (const rel of relationships) this.relationshipSystem?.processInstruction(rel);
+    }
     for (const combat of combats) this.combatSystem?.processInstruction(combat);
     for (const mission of missions) this.missionSystem?.processInstruction(mission);
     for (const event of events) this.worldStateSystem?.triggerEvent(event);
@@ -1593,25 +1788,90 @@ class MessagePipeline {
       appendMessage({ role: 'system', content: openingContractPrompt }, '开局契约', '完整约束');
     }
 
-    const { top, bottom, prefill } = this._buildMainPresetMessages(state, userInput, updaterEnabled);
+    const {
+      top,
+      bottom,
+      depth: depthPresetMessages,
+      prefill,
+      regexScripts,
+      sourceFormat,
+      compatibilityProfile
+    } = this._buildMainPresetMessages(state, userInput, updaterEnabled);
+    this._lastImportedPresetProfile = compatibilityProfile;
+    try {
+      this._lastImportedPresetRevision = String(localStorage.getItem('naruto_main_preset_version') || '');
+    } catch {
+      this._lastImportedPresetRevision = '';
+    }
+    const presetRegexContext = {
+      playerName: state['玩家·姓名'] || '玩家',
+      charName: state['玩家·姓名'] || '',
+      lastUserMessage: userInput
+    };
+    const presetRegexTrace = { appliedScripts: [], warnings: [], scriptTrace: [] };
+    const projectPromptCopy = (content, placement, depth) => {
+      if (!Array.isArray(regexScripts) || regexScripts.length === 0) return String(content || '');
+      const result = applyPresetPromptRegex(content, regexScripts, {
+        placement,
+        depth,
+        macroContext: presetRegexContext
+      });
+      presetRegexTrace.appliedScripts.push(...result.appliedScripts);
+      presetRegexTrace.warnings.push(...result.warnings);
+      presetRegexTrace.scriptTrace.push(...(result.scriptTrace || []));
+      return result.text;
+    };
+    const projectedPrefill = prefill
+      ? { ...prefill, content: projectPromptCopy(prefill.content, 2, 0) }
+      : null;
+    this._lastAssistantPrefill = compatibilityProfile?.active
+      ? String(projectedPrefill?.content || '')
+      : '';
     if (top.length > 0) {
       top.forEach((message, index) => appendMessage(message, '主预设 Top', `条目 ${index + 1}`));
     }
 
-    this.chatHistory.forEach((message, index) => appendMessage(message, '对话历史', `消息 ${index + 1}`));
-
-    appendMessage({ role: 'system', content: writerEvidenceText }, '统一回合证据', 'writer 投影');
-    injections.push({ name: '统一回合证据 · writer', content: writerEvidenceText });
-
     const ctxParts = [enrichedInput];
     injections.push({ name: '预处理输入与骰子', content: enrichedInput });
 
+    const promptUserInput = projectPromptCopy(userInput, 1, 0);
     const finalUserContent = [
-      `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${userInput}`
+      `${ctxParts.join('\n\n')}\n\n[玩家操作]\n${promptUserInput}`
     ].filter(Boolean).join('\n\n');
     this._lastFullUserContent = finalUserContent;
     injections.push({ name: '玩家本轮原始输入', content: userInput });
-    appendMessage({ role: 'user', content: finalUserContent }, '本回合聚合上下文', '玩家请求');
+
+    const historyLength = this.chatHistory.length;
+    const conversation = this.chatHistory.map((message, index) => {
+      const role = message?.role;
+      const placement = role === 'user' ? 1 : (role === 'assistant' ? 2 : null);
+      const depth = historyLength - index;
+      const projected = placement === null
+        ? String(message?.content || '')
+        : projectPromptCopy(message?.content, placement, depth);
+      return {
+        message: { ...message, content: projected },
+        source: '对话历史',
+        label: `消息 ${index + 1}`,
+        sourceOrder: index
+      };
+    });
+    conversation.push({
+      message: { role: 'user', content: finalUserContent },
+      source: '本回合聚合上下文',
+      label: '玩家请求',
+      currentUser: true,
+      sourceOrder: historyLength
+    });
+
+    const assembledConversation = injectPresetDepthMessages(conversation, depthPresetMessages);
+    for (const row of assembledConversation) {
+      if (row.currentUser) {
+        appendMessage({ role: 'system', content: writerEvidenceText }, '统一回合证据', 'writer 投影');
+        injections.push({ name: '统一回合证据 · writer', content: writerEvidenceText });
+      }
+      appendMessage(row.message, row.source || '主预设 Depth', row.label || '深度注入');
+    }
 
     if (Number(state['进度·突破待处理']) > 0) {
       const btContent = updaterEnabled
@@ -1625,23 +1885,49 @@ class MessagePipeline {
       bottom.forEach((message, index) => appendMessage(message, '主预设 Bottom', `条目 ${index + 1}`));
     }
 
-    // Imported prefills may carry stale output formats. Immutable runtime
-    // contracts follow them so the current ownership rules remain final.
-    if (prefill) {
-      appendMessage(prefill, '主预设 Prefill', '助手续写前缀');
+    // Preserve the established native-preset ordering. Imported replacement
+    // presets use true assistant continuation semantics and are appended only
+    // after the runtime bridge below.
+    if (projectedPrefill && !compatibilityProfile?.active) {
+      appendMessage(projectedPrefill, '主预设 Prefill', '助手续写前缀');
     }
 
     const compactContract = formatOpeningContractPrompt(openingContract, { compact: true });
     if (compactContract) appendMessage({ role: 'system', content: compactContract }, '开局契约', '末尾重申');
 
+    if (compatibilityProfile?.active) {
+      const modePrompt = buildImportedPresetModePrompt({
+        updaterEnabled,
+        profile: compatibilityProfile
+      });
+      appendMessage(
+        { role: 'system', content: modePrompt },
+        '用户导入预设',
+        updaterEnabled ? '后续变量模型职责桥接' : '单模型职责桥接'
+      );
+      injections.push({ name: '用户导入预设 · 项目最小运行条目', content: modePrompt });
+    }
+
     if (!updaterEnabled) {
-      appendMessage({ role: 'system', content: MAIN_SINGLE_CALL_OUTPUT_PROMPT }, '单次主模型记账', '固定完整性契约');
-      injections.push({ name: '单次主模型结构化记账确认', content: MAIN_SINGLE_CALL_OUTPUT_PROMPT });
+      const outputPrompt = compatibilityProfile?.active
+        ? generateMainVarInstructions(false)
+        : MAIN_SINGLE_CALL_OUTPUT_PROMPT;
+      appendMessage({ role: 'system', content: outputPrompt }, '单次主模型记账', '固定完整性契约');
+      injections.push({ name: '单次主模型结构化记账确认', content: outputPrompt });
+      const noChangeExample = compatibilityProfile?.active
+        ? IMPORTED_PRESET_SINGLE_CALL_NO_CHANGE_EXAMPLE
+        : MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE;
+      const exampleTitle = compatibilityProfile?.active
+        ? '【单次主模型无变化示例 · 仅示范项目机器尾部，禁止复制示例事实或替换预设 wrapper】'
+        : '【单次主模型完整无变化示例 · 仅示范输出结构，禁止复制示例事实】';
+      const examplePrompt = `${exampleTitle}\n${noChangeExample}`;
+      appendMessage({ role: 'system', content: examplePrompt }, '单次主模型记账', '完整无变化示例');
+      injections.push({ name: '单次主模型完整无变化示例', content: examplePrompt });
     }
 
     const shinobiDailyPrompt = updaterEnabled
       ? SHINOBI_DAILY_DELEGATION_PROMPT
-      : buildShinobiDailyPrompt({ producer: 'main' });
+      : buildShinobiDailyPrompt({ producer: 'main', includeExample: false });
     appendMessage({ role: 'system', content: shinobiDailyPrompt }, '忍界日报', updaterEnabled ? '委托二次变量生成' : '固定结构契约');
     injections.push({ name: '忍界日报结构契约', content: shinobiDailyPrompt });
 
@@ -1652,14 +1938,47 @@ class MessagePipeline {
     }
 
     if (!updaterEnabled) {
+      const deliveryReminder = compatibilityProfile?.active
+        ? IMPORTED_PRESET_SINGLE_CALL_DELIVERY_REMINDER
+        : MAIN_SINGLE_CALL_DELIVERY_REMINDER;
       appendMessage(
-        { role: 'system', content: MAIN_SINGLE_CALL_DELIVERY_REMINDER },
+        { role: 'system', content: deliveryReminder },
         '单次主模型记账',
         '最终交付复核'
       );
     }
 
-    this._lastPromptTrace = { messageSources, injections };
+    if (compatibilityProfile?.active) {
+      const compatibilityPrompt = buildImportedPresetOutputCompatibilityPrompt(compatibilityProfile);
+      appendMessage(
+        { role: 'system', content: compatibilityPrompt },
+        '外部主预设',
+        '展示 wrapper 与机器尾部兼容'
+      );
+      injections.push({
+        name: '用户导入预设输出展示兼容',
+        content: compatibilityPrompt
+      });
+    }
+
+    // Assistant prefill must remain the final conversational turn.  System
+    // contracts above it are hoisted by direct providers, while Tavern/Agent
+    // adapters can continue the exact imported prefix without reordering.
+    if (projectedPrefill && compatibilityProfile?.active) {
+      appendMessage(projectedPrefill, '主预设 Prefill', '助手续写前缀');
+    }
+
+    this._lastPromptTrace = {
+      messageSources,
+      injections,
+      presetRegex: {
+        appliedScripts: [...new Set(presetRegexTrace.appliedScripts)],
+        warnings: [...new Set(presetRegexTrace.warnings)],
+        scriptTrace: presetRegexTrace.scriptTrace
+      },
+      importedPresetProfile: compatibilityProfile,
+      sourceFormat
+    };
     return messages;
   }
 
@@ -1667,41 +1986,90 @@ class MessagePipeline {
     try {
       const preset = getMainPreset();
       if (!preset || !Array.isArray(preset.entries) || preset.entries.length === 0) {
-        return { top: [], bottom: [], prefill: null };
+        return {
+          top: [], bottom: [], depth: [], prefill: null, regexScripts: [], sourceFormat: '',
+          compatibilityProfile: inspectImportedPresetOutputProfile(null)
+        };
       }
 
+      const lastChatMessage = [...this.chatHistory]
+        .reverse()
+        .find(message => typeof message?.content === 'string' && message.content.trim())?.content || '';
       const context = {
         playerName: state['玩家·姓名'] || '玩家',
         charName: state['玩家·姓名'] || '',
         lastUserMessage: userInput,
-        lastChatMessage: '刚才的剧情',
+        lastChatMessage,
         variableUpdaterEnabled: updaterEnabled
       };
 
-      // Find the split marker: "⬆️回映层⬆️" — everything after it goes to bottom/prefill
-      let splitIndex = -1;
-      for (let i = 0; i < preset.entries.length; i++) {
-        const e = preset.entries[i];
-        if (e.isMarker && e.name && e.name.includes('回映层') && e.name.includes('⬆️')) {
-          splitIndex = i;
-        }
+      const explicitPrefillMarker = Symbol('importedAssistantPrefill');
+      const entriesToResolve = [...preset.entries];
+      if (typeof preset.assistantPrefill === 'string' && preset.assistantPrefill.trim()) {
+        entriesToResolve.push({
+          id: '__naruto_imported_assistant_prefill__',
+          name: '预设 assistant_prefill',
+          enabled: true,
+          role: 'assistant',
+          activation: 'always',
+          content: preset.assistantPrefill,
+          tavernPosition: 'prefill',
+          [explicitPrefillMarker]: true
+        });
       }
-
-      const bottomIds = new Set();
-      if (splitIndex >= 0) {
-        for (let i = splitIndex + 1; i < preset.entries.length; i++) {
-          bottomIds.add(preset.entries[i].id);
-        }
-      }
-
-      const allResolved = resolvePresetMacros(preset.entries, context);
+      // Resolve the explicit assistant prefill in the same variable-macro pass as
+      // the ordered entries so {{getvar::...}} observes preceding setvar calls.
+      const allResolved = resolvePresetMacros(entriesToResolve, context);
 
       const enableCoT = stateManager.getAPIConfig()?.enableVariableCoT !== false;
-
+      const sourceFormat = String(preset._sourceFormat || '').toLowerCase();
+      const legacyBottomIds = new Set();
+      // Native presets historically used this editor marker to declare the
+      // assistant prefill area. Keep that fallback for existing user presets;
+      // imported Tavern presets use their compiled tavernPosition metadata.
+      if (sourceFormat !== 'sillytavern') {
+        let legacySplitIndex = -1;
+        for (let index = 0; index < preset.entries.length; index++) {
+          const entry = preset.entries[index];
+          if (entry?.isMarker && String(entry.name || '').includes('回映层')) legacySplitIndex = index;
+        }
+        if (legacySplitIndex >= 0) {
+          for (let index = legacySplitIndex + 1; index < preset.entries.length; index++) {
+            if (preset.entries[index]?.id) legacyBottomIds.add(preset.entries[index].id);
+          }
+        }
+      }
       const top = [];
       const bottomRaw = [];
+      const depth = [];
+      let explicitPrefillContent = '';
 
-      for (const entry of allResolved) {
+      const sanitizeEntryContent = rawContent => {
+        let content = String(rawContent || '');
+        // The secondary updater owns project machine tags. Imported display and
+        // planning wrappers remain untouched so their prompt/output regexes can
+        // still recognize the model response.
+        if (updaterEnabled) {
+          content = content
+            .replace(/<var_thinking>[\s\S]*?<\/var_thinking>\s*/g, '')
+            .replace(/<var>[\s\S]*?<\/var>/g, '')
+            .replace(/<status_query\s*\/>/g, '')
+            .replace(/<var>\s*\$\{[^}]*\}\s*<\/var>/g, '')
+            .replace(/<var>\s*Handmade[\s\S]*?<\/var>/g, '')
+            .replace(/【关四：账册核签[\s\S]*?审议结论：\[通过\] \/ \[补充：___\]/g, '')
+            .replace(/• 历练exp[\s\S]*?必须包含[\s\S]*?战斗数值/g, '')
+            .replace(/<memory>[\s\S]*?<\/memory>/g, '')
+            .replace(/<variable_thinking>[\s\S]*?<\/variable_thinking>/g, '')
+            .replace(/<update_manifest>[\s\S]*?<\/update_manifest>/g, '');
+        }
+        if (!enableCoT) {
+          content = content.replace(/<var_thinking>[\s\S]*?<\/var_thinking>\s*/g, '');
+        }
+        return content;
+      };
+
+      for (let index = 0; index < allResolved.length; index++) {
+        const entry = allResolved[index];
         // The immutable runtime contract owns the eight-item reasoning block
         // in strict mode. Drop duplicate full copies from built-in, custom, or
         // imported presets so weak models reserve space for the required tail.
@@ -1716,76 +2084,67 @@ class MessagePipeline {
           continue;
         }
         const role = entry.role === 'assistant' ? 'assistant' : (entry.role === 'user' ? 'user' : 'system');
-        let content = entry.content;
-
-        // When secondary variable updater is enabled, strip ALL variable-related instructions
-        // from preset entries so the main model focuses purely on narrative
-        if (updaterEnabled) {
-          // Remove <var_thinking> blocks
-          content = content.replace(/<var_thinking>[\s\S]*?<\/var_thinking>\s*/g, '');
-          // Remove <var> blocks
-          content = content.replace(/<var>[\s\S]*?<\/var>/g, '');
-          // Remove <status_query /> tags
-          content = content.replace(/<status_query\s*\/>/g, '');
-          // Remove the output format template that tells AI to output var/status_query
-          content = content.replace(/<var>\s*\$\{[^}]*\}\s*<\/var>/g, '');
-          content = content.replace(/<var>\s*Handmade[\s\S]*?<\/var>/g, '');
-          // Remove 账册核签 section (关四 — this is the variable audit)
-          content = content.replace(/【关四：账册核签[\s\S]*?审议结论：\[通过\] \/ \[补充：___\]/g, '');
-          // Remove variable-related lines from 议事大纲
-          content = content.replace(/• 历练exp[\s\S]*?必须包含[\s\S]*?战斗数值/g, '');
-          // Remove <memory> blocks — secondary updater handles memory
-          content = content.replace(/<memory>[\s\S]*?<\/memory>/g, '');
+        const content = sanitizeEntryContent(entry.content);
+        if (!content.trim()) continue;
+        if (entry[explicitPrefillMarker] === true) {
+          explicitPrefillContent = content;
+          continue;
         }
 
-        if (!enableCoT) {
-           content = content.replace(/<var_thinking>[\s\S]*?<\/var_thinking>\s*/g, '');
-        }
-
-        const msg = { role, content };
-
-        if (bottomIds.has(entry.id)) {
-          bottomRaw.push(msg);
+        const message = { role, content };
+        const sourceOrder = Number.isFinite(Number(entry.sourceOrder)) ? Number(entry.sourceOrder) : index;
+        const record = { message, entry, sourceOrder };
+        const position = legacyBottomIds.has(entry.id) ? 'bottom' : normalizeTavernPosition(entry);
+        if (position === 'depth') {
+          depth.push({
+            ...record,
+            source: '主预设 Depth',
+            label: `${entry.name || entry.id || `条目 ${index + 1}`} @ ${normalizeTavernDepth(entry)}`
+          });
+        } else if (position === 'bottom') {
+          bottomRaw.push(record);
         } else {
-          top.push(msg);
-        }
-      }
-
-      // When updater is enabled, also strip variable tags from the prefill (assistant prefill)
-      // and from bottom entries to prevent the AI from echoing the format
-      if (updaterEnabled) {
-        for (const msg of bottomRaw) {
-          msg.content = msg.content
-            .replace(/<var>[\s\S]*?<\/var>/g, '')
-            .replace(/<status_query\s*\/>/g, '')
-            .replace(/<variable_thinking>[\s\S]*?<\/variable_thinking>/g, '')
-            .replace(/<memory>[\s\S]*?<\/memory>/g, '');
+          top.push(message);
         }
       }
 
       // Extract the last assistant message from bottom as prefill
-      let prefill = null;
+      let orderedPrefillContent = '';
       for (let i = bottomRaw.length - 1; i >= 0; i--) {
-        if (bottomRaw[i].role === 'assistant') {
-          prefill = bottomRaw.splice(i, 1)[0];
+        if (bottomRaw[i].message.role === 'assistant') {
+          orderedPrefillContent = bottomRaw.splice(i, 1)[0].message.content;
           break;
         }
       }
 
-      // Strip variable tags from prefill too
-      if (prefill && updaterEnabled) {
-        prefill.content = prefill.content
-          .replace(/<var>[\s\S]*?<\/var>/g, '')
-          .replace(/<status_query\s*\/>/g, '')
-          .replace(/<variable_thinking>[\s\S]*?<\/variable_thinking>/g, '')
-          .replace(/<memory>[\s\S]*?<\/memory>/g, '');
-      }
+      const prefillParts = [orderedPrefillContent, explicitPrefillContent]
+        .filter((content, index, values) => content && values.indexOf(content) === index);
+      const prefill = prefillParts.length
+        ? { role: 'assistant', content: prefillParts.join('\n') }
+        : null;
+      const bottom = bottomRaw.map(record => record.message);
+      const compatibilityProfile = inspectImportedPresetOutputProfile({
+        ...preset,
+        entries: allResolved,
+        assistantPrefill: prefill?.content || ''
+      });
 
-      console.log(`[Preset] Split: ${top.length} top, ${bottomRaw.length} bottom, prefill=${!!prefill}, updater=${updaterEnabled}`);
-      return { top, bottom: bottomRaw, prefill };
+      console.log(`[Preset] Split: ${top.length} top, ${bottom.length} bottom, ${depth.length} depth, prefill=${!!prefill}, updater=${updaterEnabled}`);
+      return {
+        top,
+        bottom,
+        depth,
+        prefill,
+        regexScripts: Array.isArray(preset.regexScripts) ? preset.regexScripts : [],
+        sourceFormat: String(preset._sourceFormat || ''),
+        compatibilityProfile
+      };
     } catch (e) {
       console.warn('[Pipeline] Main preset loading failed:', e.message);
-      return { top: [], bottom: [], prefill: null };
+      return {
+        top: [], bottom: [], depth: [], prefill: null, regexScripts: [], sourceFormat: '',
+        compatibilityProfile: inspectImportedPresetOutputProfile(null)
+      };
     }
   }
 

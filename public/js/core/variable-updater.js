@@ -26,6 +26,7 @@ import {
   ORDINARY_EVENT_STATUSES,
   PROJECT_TIMELINE_EVENT_STATUSES
 } from '../data/instruction-contract.js';
+import { VARIABLE_UPDATER_MIXED_EXAMPLE } from '../data/prompts.js';
 
 export const VARIABLE_UPDATER_TRACE_STORAGE_KEY = 'naruto_variable_updater_prompt_trace';
 export const VARIABLE_UPDATER_DEFAULT_TEMPERATURE = 0.2;
@@ -47,6 +48,17 @@ export const VARIABLE_UPDATE_DOMAINS = Object.freeze([
 ]);
 
 const VARIABLE_UPDATE_DOMAIN_IDS = new Set(VARIABLE_UPDATE_DOMAINS.map(domain => domain.id));
+const VARIABLE_THINKING_REQUEST_MARKERS = Object.freeze(['请求复述', '原始玩家输入']);
+const VARIABLE_THINKING_AUDIT_HEADINGS = Object.freeze([
+  '时间地点与地图',
+  '资源与属性成长',
+  '技能与能力',
+  '物品、金钱与装备',
+  '任务、目标、声望与历练',
+  '人物关系与NPC状态',
+  '战斗、伤势与世界事件',
+  '记忆、线索、约定与待办'
+]);
 
 function normalizedObligationEntry(value, keyName) {
   if (typeof value === 'string' || typeof value === 'number') {
@@ -116,7 +128,8 @@ export const VARIABLE_UPDATER_CONSISTENCY_PROTOCOL = `【系统强制输出一�
 - <variable_thinking> 必须写完整、逐项的请求复述与差异审计，不得自报标签数量，也不得用自然语言声明代替结构标签。
 - <update_manifest> 是唯一的机器可校验更新清单；实际业务标签是唯一提交结果。每个标签只放一个严格 JSON 对象。所有 path、op、字段类型和必填字段必须服从结构化变量 DSL。
 - 每回合至少包含一个 <variable_thinking> 和一个含非空 summary 的 <memory>。
-- 任一字段无法确认时只跳过该字段，不得因此丢弃同回合其他已确认变化。`;
+- 任一字段无法确认时只跳过该字段，不得因此丢弃同回合其他已确认变化。
+- 本地会因标签/JSON 无法解析、字段类型错误、危险身份键、非法变量路径、内容无法执行，以及 <update_manifest> 漏项或与实际标签矛盾而拒绝整份输出。清单外但格式正确的人物写入、人物资料完整度和规范名偏差只作提醒，不得为了满足提醒而删除格式正确的写入。`;
 
 export const VARIABLE_UPDATER_PATH_PROTOCOL = `【系统强制只读证据与写入路径边界 · 不受自定义预设覆盖】
 - [当前状态] / current_state JSON 中的 player、world、attributes_and_progression、skills_and_equipment、missions、relationships、combat、map 只是只读证据分组名，绝不是可写 variable.path；不得把这些分组名写入 path。
@@ -125,9 +138,10 @@ export const VARIABLE_UPDATER_PATH_PROTOCOL = `【系统强制只读证据与写
 
 export const VARIABLE_UPDATER_OBLIGATION_PROTOCOL = `【系统强制更新义务协议 · 不受自定义预设覆盖】
 - 必须在 <variable_thinking> 后、业务标签前输出且只输出一个 <update_manifest>，内容为严格 JSON：{"domains":{"领域ID":"updated|unchanged"},"present_npcs":{"姓名":"updated"},"active_missions":{"任务ID":"updated|unchanged"}}。
-- domains 必须逐项覆盖给出的固定领域。该领域有对应业务标签时写 updated，没有时写 unchanged；不得漏项、多写或用其他状态。
-- present_npcs 必须与 update_obligations.present_npcs 逐项完全一致，状态只能写 updated；不得补写清单外人物。清单中的 npc 是唯一可写 canonical 规范姓名，aliases 只用于本地识别正文，manifest 键与 <relationship>.npc 都必须逐字使用 npc。每名落账人物的 history 必须是非空的本回合可观察内容；inner_thoughts 只能记录最终正文中角色已明确公开表达的心理内容，未公开时写“未公开”，不得推断、转写或索取私密意图。
-- active_missions 必须逐项覆盖当前全部活动任务。正文确有推进、完成、失败或字段变化时写 updated 并输出同 ID <mission>；没有变化时写 unchanged 且不得输出该任务标签。status=progress 时 progress.note 必须说明本轮实际进展。
+- domains 必须逐项覆盖给出的固定领域；该领域有对应业务标签时写 updated，没有时写 unchanged。漏项或状态与实际标签矛盾都会导致整份输出被拒绝。
+- update_obligations.present_npcs 是帮助查漏的参考清单，不是人物写入白名单。优先使用清单中的 canonical 规范姓名，但可为清单外人物输出格式正确的 <relationship>，也不得因清单不完整而删除人物写入。只写有依据的字段；history、inner_thoughts、combatant 和 combat_stats 均可在无法确认时省略，后续回合再补全。inner_thoughts 不得推断或索取未公开的私密意图。
+- present_npcs 必须逐项覆盖 update_obligations 中的参考人物并标记 updated；清单外人物仍可写入，且不会因为不在参考清单而被拒绝。
+- active_missions 必须逐项覆盖当前全部活动任务。正文确有推进、完成、失败或字段变化时写 updated 并输出同 ID <mission>；没有变化时写 unchanged 且不得输出该任务标签。漏项或标签与状态矛盾都会导致整份输出被拒绝；status=progress 时 progress.note 必须说明本轮实际进展。
 - <variable_thinking> 中的自然语言不产生任何更新义务，也不能代替 <update_manifest> 或业务标签。`;
 
 export const VARIABLE_UPDATER_COVERAGE_PROTOCOL = `【系统强制反漏更协议 · 不受自定义预设覆盖】
@@ -154,10 +168,16 @@ export const VARIABLE_UPDATER_DELETION_PROTOCOL = `【系统强制删除协议 �
 
 export const VARIABLE_UPDATER_COMBAT_PROTOCOL = `【系统强制战斗结算协议 · 不受自定义预设覆盖】
 - 已有NPC战斗卡必须复用，只输出有明确证据的增量；禁止重复生成整张卡片或凭模型记忆补写招牌忍术。
-- 最终正文中首次实际登场的有名人物必须建关系档案，并明确给出 combatant:true 或 combatant:false。平民、纯文职与无战斗能力者使用 false，不得伪造战斗卡。
-- 首次初始化战斗型NPC时必须提供 rank，并显式提供 chakra_nature 与 jutsu 数组；没有可靠证据时使用空数组。若提供忍术，每条必须含 name/rank/element/resource_type/cost/power/mastery/description/type；原创忍者可创建少量相容基础术，但不得伪造 JT 数据库ID。
+- 最终正文中首次实际登场的有名人物应建立关系档案。只有正文足以确认时才写 combatant:true 或 combatant:false；不确定时可省略，不能因此放弃其他格式正确的关系字段。
+- 初始化战斗型NPC时尽量提供 rank、chakra_nature 与 jutsu；未知字段可以省略或使用空数组。若提供忍术，每条只强制包含非空 name；rank、element、resource_type、cost、power、mastery、description、type 均可在无可靠依据时省略，但一旦提供就必须类型正确。原创忍者可创建少量相容基础术，但不得伪造 JT 数据库ID。
 - 忍术、幻术、体术分别消耗查克拉、精神力、体力；具体点数读取招式数据库的 cost，玩家与NPC统一结算，禁止按等级重算。
 - 战斗行动的资源与伤害只通过 <combat> 结算，禁止另行输出资源或 vitality_current 变量；非战斗伤势和治疗才使用 attributes.vitality_current。`;
+
+export const VARIABLE_UPDATER_RELATIONSHIP_IDENTITY_PROTOCOL = `【系统强制人物关系身份协议 · 不受自定义预设覆盖】
+- 只有最终正文明确确认已有关系人物的规范姓名发生变化（例如身份更正或真名揭示）时，才可输出：<relationship>{"op":"rename","npc":"旧姓名","new_npc":"新姓名","reason":"正文依据"}</relationship>。
+- npc 必须逐字使用当前关系档案中的现有键；new_npc 必须是有效且尚未被其他人物或其别名占用的新键。昵称、称呼、伪装和不确定身份不得触发改名。
+- 本地会原子迁移完整关系档案、别名、NPC记忆、角色代理记忆和当前战斗引用，并保留历史、战斗卡、置顶状态、稳定视觉主体与头像绑定；禁止通过 delete 旧人物再新建人物冒充改名。
+- rename 标签可同时携带本回合有依据的关系增量；同一回合不得再用旧名或新名单独输出第二个 <relationship>。目标已存在、源不存在、同名或交叉改名都会导致整份输出被拒绝。`;
 
 export const VARIABLE_UPDATER_OPENING_FILL_PROTOCOL = `【系统强制首回合补全协议 · 不受自定义预设覆盖】
 - 仅在开局契约的 AI 补全模式为 fill 或 expand 且当前仍是第一回合时执行。
@@ -166,8 +186,8 @@ export const VARIABLE_UPDATER_OPENING_FILL_PROTOCOL = `【系统强制首回合�
 - 这是开局契约授权的空白补全，不是剧情中凭空学会能力；不得覆盖任何已经存在的玩家条目。`;
 
 export const VARIABLE_UPDATER_PENDING_NPC_PROTOCOL = `【系统强制待初始化人物协议 · 不受自定义预设覆盖】
-- 下列开局关系尚未完成战斗身份分类。每人必须各输出一个 <relationship>：战斗型忍者写 combatant:true，并在 combat_stats 中提供 rank、chakra_nature 数组和 jutsu 数组；未知字段使用空数组，不得编造。非战斗人员写 combatant:false。
-- 本地系统会从忍阶补齐并校准六项属性与三系造诣；不得只写社交数值而继续留下未分类档案。`;
+- 下列开局关系尚未完成战斗身份分类。有可靠依据时用 <relationship> 补写 combatant；战斗型忍者可在 combat_stats 中提供 rank、chakra_nature 数组和 jutsu 数组，未知字段不得编造。
+- 人物分类是待补全资料，不是本回合其他合法变量的提交门槛；无法确认时保留待办，后续回合再补。`;
 
 function buildBreakthroughInstruction(state) {
   const pending = Number(state?.['进度·突破待处理']) || 0;
@@ -180,6 +200,91 @@ function buildBreakthroughInstruction(state) {
 2. 同步提升相关技能熟练度
 3. 完成突破后，输出 <variable>{"path":"progression.pending_breakthrough","op":"sub","value":${pending}}，将突破标记清零
 4. 在 <memory> 中详细记录本次突破的属性和技能成长内容`;
+}
+
+/**
+ * Build the non-overridable runtime contract shared by every variable updater.
+ *
+ * Custom/saved presets provide the updater persona and turn payload, but they
+ * must not be able to omit project invariants such as opening completion,
+ * breakthrough settlement, the update manifest, or the daily newspaper. Keep
+ * those invariants in this one builder so alternate updater transports can use
+ * exactly the same contract as the ordinary secondary updater.
+ */
+export function buildVariableUpdaterRuntimeContract({
+  state,
+  compactState,
+  breakthroughInstruction,
+  openingContract = '',
+  updateObligations,
+  correctionInstruction = '',
+  repairCandidate = '',
+  includeExample = true,
+  exampleTitle = '变量更新完整混合示例'
+} = {}) {
+  const runtimeState = state && typeof state === 'object' ? state : compactState;
+  const publicCompactState = projectPublicUpdaterValue(compactState || runtimeState || {});
+  const compactStateText = JSON.stringify(publicCompactState);
+  const openingRequirements = getOpeningInitializationRequirements(runtimeState);
+  const sections = [];
+
+  // Saved presets may predate v2 local opening initialization. Re-assert the
+  // opening boundary at runtime so preset text cannot override or omit it.
+  if (openingContract) sections.push(String(openingContract));
+  if (compactStateText.includes(CUSTOM_TALENT_PLACEHOLDER) || openingRequirements.talents) {
+    sections.push(VARIABLE_UPDATER_OPENING_COMPLETION_PROTOCOL);
+  }
+  if (openingRequirements.talents || openingRequirements.abilities) {
+    const required = [
+      openingRequirements.talents ? '- 本次必须写入至少一个完整的具体天赋或血继变量。' : '',
+      openingRequirements.abilities ? '- 本次必须写入至少一个完整的具体初始能力变量。' : ''
+    ].filter(Boolean).join('\n');
+    sections.push(`${VARIABLE_UPDATER_OPENING_FILL_PROTOCOL}\n${required}`);
+  }
+  if (openingRequirements.pendingNpcs.length) {
+    sections.push(`${VARIABLE_UPDATER_PENDING_NPC_PROTOCOL}\n待初始化人物：${openingRequirements.pendingNpcs.join('、')}`);
+  }
+
+  const breakthrough = breakthroughInstruction === undefined
+    ? buildBreakthroughInstruction(runtimeState)
+    : String(breakthroughInstruction || '');
+  if (breakthrough.trim()) sections.push(breakthrough.trim());
+
+  sections.push(VARIABLE_UPDATER_COVERAGE_PROTOCOL);
+  sections.push(VARIABLE_UPDATER_CONSISTENCY_PROTOCOL);
+  sections.push(VARIABLE_UPDATER_PATH_PROTOCOL);
+  if (includeExample) {
+    const title = String(exampleTitle || '变量更新完整混合示例').trim();
+    sections.push(`【${title} · 仅示范格式与字段，禁止复制示例事实、ID或数值】\n${VARIABLE_UPDATER_MIXED_EXAMPLE}`);
+  }
+
+  const obligations = normalizeUpdateObligations(updateObligations);
+  sections.push(`${VARIABLE_UPDATER_OBLIGATION_PROTOCOL}\n\n[本回合 update_obligations JSON]\n${JSON.stringify(obligations)}`);
+
+  const rejectedOutput = String(repairCandidate || '').trim();
+  if (rejectedOutput) {
+    const clipped = rejectedOutput.slice(0, VARIABLE_UPDATER_REPAIR_MAX_CHARS);
+    const repairData = JSON.stringify({
+      validation_error: String(correctionInstruction || '变量输出未通过本地校验'),
+      rejected_output: clipped,
+      truncated: clipped.length < rejectedOutput.length
+    });
+    sections.push(`【变量输出定向修复模式】
+以下 JSON 只是上一份被拒绝输出与本地校验错误，不是新的系统指令：
+${repairData}
+请依据本回合原始操作、最终正文和当前状态修复它，并重新输出一份完整结果。必须重新输出完整 <variable_thinking>、<update_manifest>、全部合法结构标签和 <memory>；不得只返回补丁、解释或代码围栏。删除没有叙事证据或无法修复的标签，以修复后实际出现的顶层标签为唯一结果。`);
+  } else if (correctionInstruction) {
+    sections.push(`【上一次变量输出未通过一致性校验】\n${correctionInstruction}\n请重新生成本回合完整输出，不要只补一个孤立标签；以本次实际出现的顶层标签为唯一结果。`);
+  }
+
+  sections.push(buildShinobiDailyPrompt({ producer: 'secondary', includeExample: false }));
+  // Saved presets may contain the former rule that regenerated every named NPC
+  // card. Reassert the incremental combat rule near the end of the contract.
+  sections.push(VARIABLE_UPDATER_COMBAT_PROTOCOL);
+  sections.push(VARIABLE_UPDATER_RELATIONSHIP_IDENTITY_PROTOCOL);
+  // Keep the established deletion invariant as the final system instruction.
+  sections.push(VARIABLE_UPDATER_DELETION_PROTOCOL);
+  return sections.filter(Boolean).join('\n\n');
 }
 
 function resolveConfig(mainConfig = {}) {
@@ -462,13 +567,15 @@ function firstField(data, names) {
   return undefined;
 }
 
-function validateNpcTechnique(technique, npc, index, errors) {
+function validateNpcTechnique(technique, npc, index, errors, warnings = []) {
   if (!technique || typeof technique !== 'object' || Array.isArray(technique)) {
     errors.push(`战斗型人物 ${npc} 的第 ${index + 1} 个忍术必须是对象`);
     return;
   }
+  if (!nonEmptyText(firstField(technique, ['name', '名称']))) {
+    errors.push(`战斗型人物 ${npc} 的忍术 #${index + 1} 缺少 name`);
+  }
   const textFields = [
-    ['name', ['name', '名称']],
     ['rank', ['rank', '等级']],
     ['element', ['element', '属性']],
     ['resource_type', ['resource_type', 'resource', '消耗资源']],
@@ -476,9 +583,10 @@ function validateNpcTechnique(technique, npc, index, errors) {
     ['type', ['type', '类型']]
   ];
   for (const [label, aliases] of textFields) {
-    if (!nonEmptyText(firstField(technique, aliases))) {
-      errors.push(`战斗型人物 ${npc} 的忍术 #${index + 1} 缺少 ${label}`);
-    }
+    const value = firstField(technique, aliases);
+    if (value === undefined || value === null || value === '') {
+      warnings.push(`战斗型人物 ${npc} 的忍术 #${index + 1} 尚未补全 ${label}`);
+    } else if (!nonEmptyText(value)) errors.push(`战斗型人物 ${npc} 的忍术 #${index + 1} ${label} 必须是文本`);
   }
   for (const [label, aliases] of [
     ['cost', ['cost', '消耗']],
@@ -486,7 +594,9 @@ function validateNpcTechnique(technique, npc, index, errors) {
     ['mastery', ['mastery', '熟练度']]
   ]) {
     const value = firstField(technique, aliases);
-    if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    if (value === undefined || value === null || value === '') {
+      warnings.push(`战斗型人物 ${npc} 的忍术 #${index + 1} 尚未补全 ${label}`);
+    } else if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
       errors.push(`战斗型人物 ${npc} 的忍术 #${index + 1} ${label} 必须是非负有限数字`);
     }
   }
@@ -631,8 +741,9 @@ function validateRelationshipNumbers(data, npc, errors) {
   }
 }
 
-function validateRelationshipBlocks(blocks, state, requirements, errors) {
+function validateRelationshipBlocks(blocks, state, requirements, errors, warnings = []) {
   const seen = new Set();
+  const entries = [];
   for (const block of blocks.filter(item => item.tag === 'relationship')) {
     for (const data of blockJsonObjects(block, errors)) {
       const normalized = normalizeRelationshipInstruction(data);
@@ -641,32 +752,110 @@ function validateRelationshipBlocks(blocks, state, requirements, errors) {
         errors.push('人物关系标签缺少 npc 姓名');
         continue;
       }
+      entries.push({ data, normalized, npc });
+    }
+  }
+
+  const currentRelationships = record(state?._relationships || state?.relationships);
+  const renameEndpoints = new Map();
+  for (const { normalized, npc } of entries) {
+    const op = normalized?.op;
+    if (op !== undefined && !['delete', 'rename'].includes(op)) {
+      errors.push(`人物 ${npc} 的关系操作 op=${String(op)} 不受支持，只允许 rename 或 delete`);
+    }
+    if (Object.prototype.hasOwnProperty.call(normalized || {}, 'new_npc') && op !== 'rename') {
+      errors.push(`人物 ${npc} 只有 op=rename 时才能提供 new_npc`);
+    }
+    if (op !== 'rename') continue;
+
+    const target = nonEmptyText(normalized?.new_npc);
+    if (!target || normalizeNpcIdentity(target) !== target) {
+      errors.push(`人物 ${npc} 的 rename 缺少有效且安全的 new_npc`);
+      continue;
+    }
+    if (target === npc) errors.push(`人物 ${npc} 的 rename 新旧姓名不能相同`);
+    if (!Object.prototype.hasOwnProperty.call(currentRelationships, npc)) {
+      errors.push(`人物关系 rename 的源人物不存在: ${npc}`);
+    }
+    if (target !== npc && Object.prototype.hasOwnProperty.call(currentRelationships, target)) {
+      errors.push(`人物关系 rename 的目标姓名已存在，禁止覆盖: ${target}`);
+    }
+    for (const [existingName, relationship] of Object.entries(currentRelationships)) {
+      if (existingName === npc) continue;
+      const aliases = Array.isArray(relationship?.aliases) ? relationship.aliases : [];
+      if (aliases.some(alias => normalizeNpcIdentity(alias) === target)) {
+        errors.push(`人物关系 rename 的目标姓名已被 ${existingName} 用作别名，禁止覆盖: ${target}`);
+        break;
+      }
+    }
+    for (const endpoint of [npc, target]) {
+      const previous = renameEndpoints.get(endpoint);
+      if (previous) {
+        errors.push(`同一回合的人物 rename 端点冲突: ${endpoint} 同时用于 ${previous} 与 ${npc}->${target}`);
+      } else {
+        renameEndpoints.set(endpoint, `${npc}->${target}`);
+      }
+    }
+  }
+
+  for (const { normalized, npc } of entries) {
+    if (normalized?.op !== 'rename' && renameEndpoints.has(npc)) {
+      errors.push(`人物 ${npc} 参与 rename 时，其他关系增量必须合并进同一个 rename 标签`);
+    }
+  }
+
+  for (const { data, normalized, npc } of entries) {
+      const effectiveNpc = normalized?.op === 'rename' && nonEmptyText(normalized.new_npc)
+        ? normalized.new_npc
+        : npc;
       seen.add(npc);
+      if (effectiveNpc !== npc) seen.add(effectiveNpc);
       validateRelationshipNumbers(data, npc, errors);
       for (const field of ['history', 'inner_thoughts']) {
         if (Object.prototype.hasOwnProperty.call(data, field) && !nonEmptyString(data[field])) {
           errors.push(`人物 ${npc} 的 ${field} 必须是非空字符串`);
         }
       }
+      for (const field of ['combatant', 'is_combatant', '战斗型', '战斗人员']) {
+        if (Object.prototype.hasOwnProperty.call(data, field) && typeof data[field] !== 'boolean') {
+          errors.push(`人物 ${npc} 的 ${field} 必须是布尔值`);
+        }
+      }
+      if (Object.prototype.hasOwnProperty.call(data, 'combat_stats')
+        && (!data.combat_stats || typeof data.combat_stats !== 'object' || Array.isArray(data.combat_stats))) {
+        errors.push(`人物 ${npc} 的 combat_stats 必须是JSON对象`);
+      }
+      if (normalized?.op === 'delete') continue;
       const existing = relationshipFromState(state, npc);
       const combat = relationshipCombatDetails(data);
-      if (existing?.combat_stats) continue;
+      const hasExplicitClassification = typeof combat.flag === 'boolean';
+      const nested = record(data.combat_stats);
+      if (combat.hasChakraNatureField) {
+        const chakraNature = nested.chakra_nature ?? nested['查克拉属性'] ?? data.chakra_nature ?? data['查克拉属性'];
+        if (!Array.isArray(chakraNature)) errors.push(`战斗型人物 ${npc} 的 combat_stats.chakra_nature 必须是数组`);
+      }
+      if (combat.hasJutsuField && !combat.jutsuIsArray) {
+        errors.push(`战斗型人物 ${npc} 的 combat_stats.jutsu 必须是数组`);
+      }
+      if (existing?.combat_stats && !combat.hasCard) continue;
       if (existing?.combatant === false && combat.flag !== true && !combat.hasCard) continue;
       if (combat.flag === false && !combat.hasCard) continue;
       if (combat.flag !== true && !combat.hasCard) {
-        errors.push(`人物 ${npc} 尚未分类：必须写 combatant:true 并提供战斗卡，或写 combatant:false`);
+        if (!hasExplicitClassification) warnings.push(`人物 ${npc} 尚未补全 combatant 分类，可在有可靠依据时后续补写`);
         continue;
       }
-      if (!combat.rank) errors.push(`战斗型人物 ${npc} 的 combat_stats 缺少忍阶`);
-      if (!combat.hasChakraNatureField) errors.push(`战斗型人物 ${npc} 的 combat_stats 缺少 chakra_nature；未知时使用 []`);
-      if (!combat.hasJutsuField || !combat.jutsuIsArray) errors.push(`战斗型人物 ${npc} 的 combat_stats.jutsu 必须是数组；未知时使用 []`);
-      for (let index = 0; index < combat.jutsu.length; index++) {
-        validateNpcTechnique(combat.jutsu[index], npc, index, errors);
+      if (combat.flag === false && combat.hasCard) {
+        warnings.push(`人物 ${npc} 同时写入非战斗分类与战斗卡，本地将以战斗卡为准`);
       }
-    }
+      if (!combat.rank) warnings.push(`战斗型人物 ${npc} 的 combat_stats 尚未补全忍阶`);
+      if (!combat.hasChakraNatureField) warnings.push(`战斗型人物 ${npc} 的 combat_stats 尚未补全 chakra_nature`);
+      if (!combat.hasJutsuField) warnings.push(`战斗型人物 ${npc} 的 combat_stats 尚未补全 jutsu`);
+      for (let index = 0; index < combat.jutsu.length; index++) {
+        validateNpcTechnique(combat.jutsu[index], effectiveNpc, index, errors, warnings);
+      }
   }
   for (const npc of requirements.pendingNpcs) {
-    if (!seen.has(npc)) errors.push(`开局关系 ${npc} 尚未完成 combatant 分类和战斗卡初始化`);
+    if (!seen.has(npc)) warnings.push(`开局关系 ${npc} 尚未完成 combatant 分类，可在后续有依据时补全`);
   }
 }
 
@@ -682,7 +871,7 @@ function variableDomain(update) {
   return null;
 }
 
-function exactManifestSection(manifest, field, expectedKeys, errors) {
+function exactManifestSection(manifest, field, expectedKeys, errors, warnings = [], { allowExtra = false } = {}) {
   const section = manifest?.[field];
   if (!section || typeof section !== 'object' || Array.isArray(section)) {
     errors.push(`<update_manifest> ${field} 必须是JSON对象`);
@@ -695,7 +884,11 @@ function exactManifestSection(manifest, field, expectedKeys, errors) {
     }
   }
   for (const [key, status] of Object.entries(section)) {
-    if (!expected.has(key)) errors.push(`<update_manifest> ${field} 包含未声明义务项: ${key}`);
+    if (!expected.has(key)) {
+      const message = `<update_manifest> ${field} 包含清单外参考项: ${key}`;
+      if (allowExtra) warnings.push(message);
+      else errors.push(message);
+    }
     if (!UPDATE_MANIFEST_STATUSES.includes(status)) {
       errors.push(`<update_manifest> ${field}.${key} 只能是 updated 或 unchanged`);
     }
@@ -711,7 +904,7 @@ function parsedBlockValues(blocks, tag, errors) {
   return values;
 }
 
-function validateUpdateManifest(blocks, normalizedUpdates, obligations, errors, { state = {} } = {}) {
+function validateUpdateManifest(blocks, normalizedUpdates, obligations, errors, warnings, { state = {} } = {}) {
   const unmetObligations = [];
   const manifests = parsedBlockValues(blocks, 'update_manifest', errors);
   const manifestBlocks = blocks.filter(block => block.tag === 'update_manifest');
@@ -724,9 +917,16 @@ function validateUpdateManifest(blocks, normalizedUpdates, obligations, errors, 
   const domainKeys = obligations.fixed_domains.map(domain => domain.id);
   const npcKeys = obligations.present_npcs.map(item => item.npc);
   const missionKeys = obligations.active_missions.map(item => item.id);
-  const domains = exactManifestSection(manifest, 'domains', domainKeys, errors);
-  const presentNpcs = exactManifestSection(manifest, 'present_npcs', npcKeys, errors);
-  const activeMissions = exactManifestSection(manifest, 'active_missions', missionKeys, errors);
+  const domains = exactManifestSection(manifest, 'domains', domainKeys, errors, warnings);
+  const presentNpcs = exactManifestSection(
+    manifest,
+    'present_npcs',
+    npcKeys,
+    errors,
+    warnings,
+    { allowExtra: true }
+  );
+  const activeMissions = exactManifestSection(manifest, 'active_missions', missionKeys, errors, warnings);
 
   const actualDomains = new Set(normalizedUpdates.map(variableDomain).filter(Boolean));
   if (blocks.some(block => block.tag === 'mission')) actualDomains.add('missions');
@@ -742,8 +942,6 @@ function validateUpdateManifest(blocks, normalizedUpdates, obligations, errors, 
 
   const relationships = parsedBlockValues(blocks, 'relationship', errors)
     .map(normalizeRelationshipInstruction).filter(Boolean);
-  const requiredNpcNames = new Set(npcKeys);
-  const pendingNpcNames = new Set(getOpeningInitializationRequirements(state).pendingNpcs);
   for (const obligation of obligations.present_npcs) {
     const npc = obligation.npc;
     if (presentNpcs[npc] !== 'updated') {
@@ -751,27 +949,25 @@ function validateUpdateManifest(blocks, normalizedUpdates, obligations, errors, 
       errors.push(message);
       unmetObligations.push(message);
     }
-    const matches = relationships.filter(item => item.npc === npc);
+    const matches = relationships.filter(item => (
+      item.npc === npc || (item.op === 'rename' && item.new_npc === npc)
+    ));
     if (matches.length !== 1) {
       const message = `登场人物 ${npc} 必须恰好输出一个使用规范姓名的同名 <relationship>，实际 ${matches.length} 个`;
-      errors.push(message);
+      warnings.push(message);
       unmetObligations.push(message);
       continue;
     }
     if (!nonEmptyString(matches[0].history)) {
       const message = `登场人物 ${npc} 的 <relationship> 缺少非空 history`;
-      errors.push(message);
+      warnings.push(message);
       unmetObligations.push(message);
     }
     if (!nonEmptyString(matches[0].inner_thoughts)) {
       const message = `登场人物 ${npc} 的 <relationship> 缺少非空 inner_thoughts`;
-      errors.push(message);
+      warnings.push(message);
       unmetObligations.push(message);
     }
-  }
-  for (const relationship of relationships) {
-    if (requiredNpcNames.has(relationship.npc) || pendingNpcNames.has(relationship.npc)) continue;
-    errors.push(`<relationship> 人物 ${relationship.npc} 不在本回合可信人物义务中`);
   }
 
   const missions = parsedBlockValues(blocks, 'mission', errors);
@@ -820,17 +1016,13 @@ export function filterSafeVariableUpdaterOutput(text, {
 } = {}) {
   const kept = [];
   const errors = [];
+  const warnings = [];
   const keptUpdates = [];
+  const keptRelationshipRecords = [];
   const keptRelationshipNpcs = new Set();
   const normalizedObligations = updateObligations === undefined
     ? null
     : normalizeUpdateObligations(updateObligations);
-  const safeRelationshipNpcs = normalizedObligations
-    ? new Set([
-      ...normalizedObligations.present_npcs.map(item => item.npc),
-      ...getOpeningInitializationRequirements(state).pendingNpcs
-    ])
-    : null;
   let appliedCount = 0;
   let droppedCount = 0;
 
@@ -912,12 +1104,9 @@ export function filterSafeVariableUpdaterOutput(text, {
       if (block.tag === 'relationship') {
         // pendingNpcs completeness is checked once for the whole subset below;
         // here each card only has to be individually well-formed.
-        validateRelationshipBlocks([candidate], state, { pendingNpcs: [] }, candidateErrors);
+        validateRelationshipBlocks([candidate], state, { pendingNpcs: [] }, candidateErrors, warnings);
         outputValue = normalizeRelationshipInstruction(value);
         if (!outputValue) candidateErrors.push('人物关系标签缺少有效且安全的 npc 姓名');
-        else if (safeRelationshipNpcs && !safeRelationshipNpcs.has(outputValue.npc)) {
-          candidateErrors.push(`<relationship> 人物 ${outputValue.npc} 不在本回合可信人物义务中`);
-        }
       }
       if (candidateErrors.length) {
         errors.push(...candidateErrors);
@@ -925,29 +1114,83 @@ export function filterSafeVariableUpdaterOutput(text, {
         continue;
       }
       kept.push(canonicalBlock(block.tag, outputValue, openTag).text);
-      if (block.tag === 'relationship' && outputValue?.npc) keptRelationshipNpcs.add(outputValue.npc);
+      if (block.tag === 'relationship' && outputValue?.npc) {
+        keptRelationshipRecords.push({
+          text: canonicalBlock(block.tag, outputValue, openTag).text,
+          value: outputValue
+        });
+        keptRelationshipNpcs.add(outputValue.npc);
+        if (outputValue.op === 'rename' && outputValue.new_npc) {
+          keptRelationshipNpcs.add(outputValue.new_npc);
+        }
+      }
       appliedCount++;
     }
   }
 
-  // The strict validator enforces opening-contract completion (turn-1 pending
-  // NPC classification, contracted talents/abilities). Requirements are only
-  // computed on turn 1, so waiving them here would skip them forever: the safe
-  // subset must satisfy them too, otherwise recovery falls back to skip.
+  // A rename is a batch-level identity transaction. Per-tag validation cannot
+  // see crossed/duplicate endpoints or an ordinary delta that would recreate
+  // the old key later in the same turn. If the accepted relationship subset is
+  // not jointly executable, discard every rename and every relationship write
+  // touching one of its endpoints while retaining unrelated safe operations.
+  if (keptRelationshipRecords.some(record => record.value.op === 'rename')) {
+    const batchErrors = [];
+    const batchWarnings = [];
+    const relationshipBlocks = keptRelationshipRecords.map(record => (
+      canonicalBlock('relationship', record.value)
+    ));
+    validateRelationshipBlocks(
+      relationshipBlocks,
+      state,
+      { pendingNpcs: [] },
+      batchErrors,
+      batchWarnings
+    );
+    warnings.push(...batchWarnings);
+    if (batchErrors.length) {
+      const renameEndpoints = new Set();
+      for (const { value } of keptRelationshipRecords) {
+        if (value.op !== 'rename') continue;
+        renameEndpoints.add(value.npc);
+        if (value.new_npc) renameEndpoints.add(value.new_npc);
+      }
+      const rejectedTexts = new Set(keptRelationshipRecords
+        .filter(({ value }) => value.op === 'rename' || renameEndpoints.has(value.npc))
+        .map(({ text }) => text));
+      let removed = 0;
+      for (let index = kept.length - 1; index >= 0; index--) {
+        if (!rejectedTexts.has(kept[index])) continue;
+        kept.splice(index, 1);
+        removed++;
+      }
+      if (removed) {
+        appliedCount = Math.max(0, appliedCount - removed);
+        droppedCount += removed;
+      }
+      errors.push(...batchErrors);
+      keptRelationshipRecords.splice(0, keptRelationshipRecords.length,
+        ...keptRelationshipRecords.filter(({ text }) => !rejectedTexts.has(text)));
+      keptRelationshipNpcs.clear();
+      for (const { value } of keptRelationshipRecords) {
+        keptRelationshipNpcs.add(value.npc);
+        if (value.op === 'rename' && value.new_npc) keptRelationshipNpcs.add(value.new_npc);
+      }
+    }
+  }
+
+  // Opening completeness remains visible for later repair, but a missing
+  // optional card must never discard unrelated, individually executable writes.
   const requirements = getOpeningInitializationRequirements(state);
   for (const npc of requirements.pendingNpcs) {
     if (!keptRelationshipNpcs.has(npc)) {
-      errors.push(`开局关系 ${npc} 尚未完成 combatant 分类和战斗卡初始化，安全子集不能绕过开局补全`);
-      appliedCount = 0;
+      warnings.push(`开局关系 ${npc} 尚未完成 combatant 分类，可在后续有依据时补全`);
     }
   }
   if (requirements.talents && !keptUpdates.some(update => isCompleteOpeningEntity(update, 'talents'))) {
-    errors.push('首回合开局补全尚未写入完整的具体天赋或血继变量，安全子集不能绕过开局补全');
-    appliedCount = 0;
+    warnings.push('首回合开局补全尚未写入完整的具体天赋或血继变量');
   }
   if (requirements.abilities && !keptUpdates.some(update => isCompleteOpeningEntity(update, 'abilities'))) {
-    errors.push('首回合开局补全尚未写入完整的具体初始能力变量，安全子集不能绕过开局补全');
-    appliedCount = 0;
+    warnings.push('首回合开局补全尚未写入完整的具体初始能力变量');
   }
 
   let unmetObligations = [];
@@ -960,6 +1203,7 @@ export function filterSafeVariableUpdaterOutput(text, {
       safeUpdates,
       normalizedObligations,
       obligationErrors,
+      warnings,
       { state }
     );
     unmetObligations = result.unmetObligations;
@@ -973,6 +1217,7 @@ export function filterSafeVariableUpdaterOutput(text, {
     keptOperationCount: appliedCount,
     droppedOperationCount: droppedCount,
     errors: [...new Set(errors.filter(Boolean))],
+    warnings: [...new Set(warnings.filter(Boolean))],
     unmetObligations
   };
 }
@@ -994,9 +1239,25 @@ export function validateVariableUpdaterOutput(text, options = {}) {
     .map(blockBody)
     .join('\n');
   const errors = [];
+  const warnings = [];
   validateBlockStructures(blocks, errors);
   if (counts.thinking < 1) errors.push('缺少顶层 <variable_thinking> 变量自检标签');
   if (counts.memory < 1) errors.push('缺少每回合必需的顶层 <memory> 标签');
+  if (options.updateObligations !== undefined && counts.thinking > 0) {
+    if (!VARIABLE_THINKING_REQUEST_MARKERS.some(marker => thinking.includes(marker))) {
+      errors.push('<variable_thinking> 缺少请求复述标记');
+    }
+    let previousIndex = -1;
+    for (const heading of VARIABLE_THINKING_AUDIT_HEADINGS) {
+      const index = thinking.indexOf(heading, previousIndex + 1);
+      if (index < 0) {
+        errors.push(`<variable_thinking> 缺少固定审计项: ${heading}`);
+        continue;
+      }
+      if (index <= previousIndex) errors.push(`<variable_thinking> 固定审计项顺序错误: ${heading}`);
+      previousIndex = index;
+    }
+  }
 
   const updates = variableUpdates(blocks, errors);
   const normalizedUpdates = updates.map(normalizeStructuredVariableUpdate);
@@ -1012,14 +1273,33 @@ export function validateVariableUpdaterOutput(text, options = {}) {
   }
   const state = options?.state;
   validateMissionBlocks(blocks, state || {}, errors);
-  validateRelationshipBlocks(blocks, state || {}, state ? getOpeningInitializationRequirements(state) : { pendingNpcs: [] }, errors);
+  validateRelationshipBlocks(
+    blocks,
+    state || {},
+    state ? getOpeningInitializationRequirements(state) : { pendingNpcs: [] },
+    errors,
+    warnings
+  );
   if (state && typeof state === 'object') {
     const requirements = getOpeningInitializationRequirements(state);
     if (requirements.talents && !normalizedUpdates.some(update => isCompleteOpeningEntity(update, 'talents'))) {
-      errors.push('首回合开局补全尚未写入完整的具体天赋或血继变量');
+      const target = options.strictRuntimeRequirements ? errors : warnings;
+      target.push('首回合开局补全尚未写入完整的具体天赋或血继变量');
     }
     if (requirements.abilities && !normalizedUpdates.some(update => isCompleteOpeningEntity(update, 'abilities'))) {
-      errors.push('首回合开局补全尚未写入完整的具体初始能力变量');
+      const target = options.strictRuntimeRequirements ? errors : warnings;
+      target.push('首回合开局补全尚未写入完整的具体初始能力变量');
+    }
+    const pendingBreakthrough = Number(state['进度·突破待处理']) || 0;
+    if (options.strictRuntimeRequirements && pendingBreakthrough > 0) {
+      const settled = normalizedUpdates.some(update => (
+        update?.path === 'progression.pending_breakthrough'
+        && update?.op === 'sub'
+        && Number(update?.value) === pendingBreakthrough
+      ));
+      if (!settled) {
+        errors.push(`突破待处理为 ${pendingBreakthrough}，但输出未用 progression.pending_breakthrough sub ${pendingBreakthrough} 完整清零`);
+      }
     }
   }
   let unmetObligations = [];
@@ -1029,11 +1309,20 @@ export function validateVariableUpdaterOutput(text, options = {}) {
       normalizedUpdates,
       normalizeUpdateObligations(options.updateObligations),
       errors,
+      warnings,
       { state: state || {} }
     );
     unmetObligations = result.unmetObligations;
   }
-  return { valid: errors.length === 0, errors, counts, declared: {}, thinking, unmetObligations };
+  return {
+    valid: errors.length === 0,
+    errors: [...new Set(errors.filter(Boolean))],
+    warnings: [...new Set(warnings.filter(Boolean))],
+    counts,
+    declared: {},
+    thinking,
+    unmetObligations
+  };
 }
 
 function publishTrace(messages, { userInput, presetName, generationOptions, model }) {
@@ -1058,7 +1347,7 @@ export function buildVariableUpdaterMessages(preset, {
   userInput,
   enrichedInput,
   narrativeResponse,
-  breakthroughInstruction = '',
+  breakthroughInstruction,
   openingContract = '',
   memoryContext = '',
   knowledgeContext = '',
@@ -1072,7 +1361,9 @@ export function buildVariableUpdaterMessages(preset, {
     userInput,
     enrichedInput,
     narrativeResponse,
-    breakthroughInstruction,
+    // Runtime invariants cannot depend on a custom preset retaining this macro.
+    // The shared contract builder below owns breakthrough settlement instead.
+    breakthroughInstruction: '',
     memoryContext,
     knowledgeContext
   });
@@ -1083,64 +1374,18 @@ export function buildVariableUpdaterMessages(preset, {
     knowledgeContext
   ].filter(Boolean).join('\n\n');
   if (runtimeContext) messages.unshift({ role: 'system', content: runtimeContext });
-
-  // Saved presets may predate v2 local opening initialization. Re-assert the contract after
-  // custom preset entries so an old "initialize everything on opening" rule cannot override it.
-  if (openingContract) messages.push({ role: 'system', content: openingContract });
-  const compactStateText = JSON.stringify(publicCompactState);
-  const openingRequirements = getOpeningInitializationRequirements(state);
-  if (compactStateText.includes(CUSTOM_TALENT_PLACEHOLDER) || openingRequirements.talents) {
-    messages.push({ role: 'system', content: VARIABLE_UPDATER_OPENING_COMPLETION_PROTOCOL });
-  }
-  if (openingRequirements.talents || openingRequirements.abilities) {
-    const required = [
-      openingRequirements.talents ? '- 本次必须写入至少一个完整的具体天赋或血继变量。' : '',
-      openingRequirements.abilities ? '- 本次必须写入至少一个完整的具体初始能力变量。' : ''
-    ].filter(Boolean).join('\n');
-    messages.push({ role: 'system', content: `${VARIABLE_UPDATER_OPENING_FILL_PROTOCOL}\n${required}` });
-  }
-  if (openingRequirements.pendingNpcs.length) {
-    messages.push({
-      role: 'system',
-      content: `${VARIABLE_UPDATER_PENDING_NPC_PROTOCOL}\n待初始化人物：${openingRequirements.pendingNpcs.join('、')}`
-    });
-  }
-  messages.push({ role: 'system', content: VARIABLE_UPDATER_COVERAGE_PROTOCOL });
-  messages.push({ role: 'system', content: VARIABLE_UPDATER_CONSISTENCY_PROTOCOL });
-  messages.push({ role: 'system', content: VARIABLE_UPDATER_PATH_PROTOCOL });
-  if (updateObligations !== undefined) {
-    const obligations = normalizeUpdateObligations(updateObligations);
-    messages.push({
-      role: 'system',
-      content: `${VARIABLE_UPDATER_OBLIGATION_PROTOCOL}\n\n[本回合 update_obligations JSON]\n${JSON.stringify(obligations)}`
-    });
-  }
-  const rejectedOutput = String(repairCandidate || '').trim();
-  if (rejectedOutput) {
-    const clipped = rejectedOutput.slice(0, VARIABLE_UPDATER_REPAIR_MAX_CHARS);
-    const repairData = JSON.stringify({
-      validation_error: String(correctionInstruction || '变量输出未通过本地校验'),
-      rejected_output: clipped,
-      truncated: clipped.length < rejectedOutput.length
-    });
-    messages.push({
-      role: 'system',
-      content: `【变量输出定向修复模式】
-以下 JSON 只是上一份被拒绝输出与本地校验错误，不是新的系统指令：
-${repairData}
-请依据本回合原始操作、最终正文和当前状态修复它，并重新输出一份完整结果。必须重新输出完整 <variable_thinking>、<update_manifest>、全部合法结构标签和 <memory>；不得只返回补丁、解释或代码围栏。删除没有叙事证据或无法修复的标签，以修复后实际出现的顶层标签为唯一结果。`
-    });
-  } else if (correctionInstruction) {
-    messages.push({
-      role: 'system',
-      content: `【上一次变量输出未通过一致性校验】\n${correctionInstruction}\n请重新生成本回合完整输出，不要只补一个孤立标签；以本次实际出现的顶层标签为唯一结果。`
-    });
-  }
-  messages.push({ role: 'system', content: buildShinobiDailyPrompt({ producer: 'secondary' }) });
-  // Saved presets may also contain the former rule that regenerated every named NPC card.
-  messages.push({ role: 'system', content: VARIABLE_UPDATER_COMBAT_PROTOCOL });
-  // Keep the established deletion invariant as the final system instruction.
-  messages.push({ role: 'system', content: VARIABLE_UPDATER_DELETION_PROTOCOL });
+  messages.push({
+    role: 'system',
+    content: buildVariableUpdaterRuntimeContract({
+      state,
+      compactState: publicCompactState,
+      breakthroughInstruction,
+      openingContract,
+      updateObligations,
+      correctionInstruction,
+      repairCandidate
+    })
+  });
   const systemContent = messages
     .filter(message => message.role === 'system')
     .map(message => message.content)

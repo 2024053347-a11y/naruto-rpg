@@ -70,7 +70,7 @@ function actionState(manager) {
     branchId: String(state?._meta?.active_branch || state['系统·当前分支'] || 'branch_main'),
     turn: Number(state['系统·回合数']) || 0,
     combatActive: state?._combat?.is_active === true,
-    playerDead: state['玩家·是否死亡'] === true
+    playerDead: state['玩家·存活'] === '否' || state['玩家·是否死亡'] === true
   };
 }
 

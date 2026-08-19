@@ -1,4 +1,4 @@
-export const DEFAULT_MAIN_PRESET_VERSION = '20260811-single-call-contract-v16';
+export const DEFAULT_MAIN_PRESET_VERSION = '20260817-relationship-rename-v18';
 export const MAIN_PRESET_STORAGE_KEY = 'naruto_main_preset';
 export const MAIN_PRESET_BACKUP_PREFIX = 'naruto_main_preset_backup_';
 
@@ -282,16 +282,17 @@ export const DEFAULT_MAIN_PRESET = {
     {
       id: 'main_builtin_var_off_tags', name: '21 · 变量模型关闭：结构标签与NPC卡', enabled: true, role: 'system', activation: 'variable_updater_disabled',
       content: `复杂数据使用JSON结构标签：
-- 关系变化：<relationship>{"npc":"姓名","affection_change":0,"trust_change":0,"respect_change":0,"reason":"依据","inner_thoughts":"本回合","history":"本回合摘要"}</relationship>
-- 任务 status 只允许 active|progress|completed|failed|abandoned。新任务：<mission>{"id":"稳定ID","status":"active","title":"任务名","rank":"D|C|B|A|S","objective":"明确目标"}</mission>；已有任务只写真实变化。
+- 关系变化：<relationship>{"npc":"海野伊鲁卡","affection_change":1,"trust_change":1,"respect_change":0,"reason":"认可玩家妥善完成训练","history":"海野伊鲁卡确认玩家已掌握基础要领"}</relationship>
+- 已有关系人物改名：<relationship>{"op":"rename","npc":"旧姓名","new_npc":"新姓名","reason":"正文明确确认的身份更正或真名揭示"}</relationship>。npc 必须是当前档案键，new_npc 不得已被其他人物或其别名占用；本地会迁移完整档案，禁止 delete + 新建。
+- 任务 status 只允许 active|progress|completed|failed|abandoned。新任务：<mission>{"id":"M-寻找走失忍猫","status":"active","title":"寻找走失忍猫","rank":"D","objective":"在木叶东区找到并安全带回忍猫"}</mission>；已有任务只写真实变化。
 - 记忆摘要：<memory>{"summary":"本回合事实与待办","facts":[],"clues":[],"pins":[],"remove_pins":[],"npc_notes":{}}</memory>
-- 开战：<combat state="start">{"enemy_name":"姓名","enemy_rank":"忍阶"}</combat>
-- 玩家行动：<combat state="player_turn">{"actor":"player","action_name":"准确技能名","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_enemy":数值,"log":"结果"}</combat>
-- NPC行动：<combat state="enemy_turn">{"actor":"enemy","action_name":"准确技能名","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_player":数值,"log":"结果"}</combat>
-- 战斗结束：<combat state="victory|defeat|retreat">{"log":"胜负依据"}</combat>
-- 世界事件创建或推进：<event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"结果"}</event>；普通事件结束状态使用 completed|resolved|ended|failed|cancelled。
+- 开战：<combat state="start">{"enemy_name":"山贼首领","enemy_rank":"下忍"}</combat>
+- 玩家行动：<combat state="player_turn">{"actor":"player","action_name":"火遁·豪火球之术","action_rank":"C","action_type":"忍术","resource_type":"查克拉","damage_to_enemy":24,"log":"火球命中并迫使敌人后退"}</combat>
+- NPC行动：<combat state="enemy_turn">{"actor":"enemy","action_name":"木叶旋风","action_rank":"C","action_type":"体术","resource_type":"体力","damage_to_player":16,"log":"踢击擦中玩家肩部"}</combat>
+- 战斗结束：<combat state="victory">{"log":"敌人失去继续战斗能力，玩家一方取得胜利"}</combat>
+- 世界事件创建或推进：<event>{"id":"EV-EAST-GATE-ALARM","status":"triggered","description":"木叶东门因发现可疑踪迹提高警戒"}</event>；普通事件结束状态使用 completed|resolved|ended|failed|cancelled。
 
-已有NPC战斗卡只输出真实增量，不重建整卡。最终正文中新实际登场的有名人物必须建档并明确分类：非战斗人员写 combatant:false；战斗人员写 combatant:true 和 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}。没有可靠属性或招式证据时保留空数组，禁止凭预训练知识添加招牌忍术；若提供忍术，每条必须完整包含 name/rank/element/resource_type/cost/power/mastery/description/type。`
+已有NPC战斗卡只输出真实增量，不重建整卡。最终正文中新实际登场的有名人物应建立 <relationship>；只写有可靠依据的字段，无法确认 combatant、history、inner_thoughts 或战斗资料时允许省略，不得因此放弃其他合法关系变化。已确认非战斗人员时写 combatant:false；已确认战斗人员时可渐进补写 combatant:true 和 {"combat_stats":{"rank":"忍阶","chakra_nature":[],"jutsu":[]}}。已提供的 combatant、combat_stats、chakra_nature、jutsu 和关系数值必须使用正确类型；禁止凭预训练知识添加招牌忍术或伪造资料。只有正文明确确认规范姓名改变时才使用 op:"rename"；昵称或不确定身份不得改名，同回合增量合并进 rename 标签。`
     },
     {
       id: 'main_builtin_output', name: '22 · 最终输出顺序：变量模型关闭', enabled: true, role: 'system', activation: 'variable_updater_disabled',
@@ -329,37 +330,152 @@ function activationMatches(entry, context) {
   return true;
 }
 
-export function resolvePresetMacros(entries, context = {}) {
-  const vars = {};
+function macroValue(vars, name) {
+  return Object.prototype.hasOwnProperty.call(vars, name) ? String(vars[name]) : '';
+}
+
+function randomString(length) {
+  const size = Math.max(1, Math.min(128, Number(length) || 10));
+  const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let value = '';
+  for (let index = 0; index < size; index++) {
+    value += alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+  return value;
+}
+
+function resolveCommonPresetMacros(text, vars, context) {
   const playerName = context.playerName || '玩家';
   const charName = context.charName || '';
   const lastUserMsg = context.lastUserMessage || '';
   const lastChatMsg = context.lastChatMessage || '';
+  let value = String(text || '');
+  for (let pass = 0; pass < 4; pass++) {
+    const next = value
+      .replace(/\{\{\s*get(?:global)?var::([^{}]+?)\s*\}\}/gi, (_, name) => macroValue(vars, name.trim()))
+      .replace(/\{\{\s*random::([\s\S]*?)\}\}/gi, (_, choices) => {
+        const values = String(choices).split('::');
+        return values.length ? values[Math.floor(Math.random() * values.length)] : '';
+      })
+      .replace(/\{\{\s*roll\s+(\d+)d(\d+)\s*\}\}/gi, (_, countValue, sidesValue) => {
+        const count = Math.max(1, Math.min(100, Number(countValue) || 1));
+        const sides = Math.max(1, Math.min(1_000_000_000, Number(sidesValue) || 1));
+        let total = 0;
+        for (let index = 0; index < count; index++) total += Math.floor(Math.random() * sides) + 1;
+        return String(total);
+      })
+      .replace(/\{\{\s*random_string_(\d+)\s*\}\}/gi, (_, length) => randomString(length))
+      .replace(/\{\{\s*random_number_(\d+)\s*\}\}/gi, (_, length) => {
+        const size = Math.max(1, Math.min(128, Number(length) || 10));
+        let result = '';
+        for (let index = 0; index < size; index++) result += String(Math.floor(Math.random() * 10));
+        return result;
+      })
+      .replace(/\{\{\s*user\s*\}\}/gi, playerName)
+      .replace(/\{\{\s*char(?:IfNotGroup)?\s*\}\}/gi, charName)
+      .replace(/\{\{\s*lastUserMessage\s*\}\}/gi, lastUserMsg)
+      .replace(/\{\{\s*lastChatMessage\s*\}\}/gi, lastChatMsg)
+      .replace(/\{\{\s*date\s*\}\}/gi, () => new Date().toLocaleDateString('zh-CN'))
+      .replace(/\{\{\s*time\s*\}\}/gi, () => new Date().toLocaleTimeString('zh-CN', { hour12: false }))
+      .replace(/\{\{\s*MEMORY\s*\}\}/g, String(context.memory || ''))
+      .replace(/\{\{\s*trim\s*\}\}/gi, '')
+      .replace(/\{\{\s*(?:压缩相邻消息::[^{}]*|MINIMUM_WORD_COUNT\s+\d+)\s*\}\}/gi, '')
+      .replace(/\{\{\s*\/\/[\s\S]*?\}\}/g, '')
+      // Upper-case <User> is a legacy name macro. Lower-case <user> is a
+      // common XML output wrapper and must remain intact for imported presets.
+      .replace(/<User>/g, playerName);
+    if (next === value) break;
+    value = next;
+  }
+  return value;
+}
+
+function consumePresetVariableMacros(text, vars, context) {
+  const source = String(text || '');
+  let output = '';
+  let cursor = 0;
+  while (cursor < source.length) {
+    const opening = source.indexOf('{{', cursor);
+    if (opening < 0) {
+      output += source.slice(cursor);
+      break;
+    }
+    output += source.slice(cursor, opening);
+    const header = source.slice(opening + 2).match(/^\s*(setvar|addvar)::/i);
+    if (!header) {
+      output += '{{';
+      cursor = opening + 2;
+      continue;
+    }
+
+    const operation = header[1].toLowerCase();
+    const nameStart = opening + 2 + header[0].length;
+    const nameEnd = source.indexOf('::', nameStart);
+    if (nameEnd < 0) {
+      output += source.slice(opening);
+      break;
+    }
+
+    let depth = 1;
+    let scan = nameEnd + 2;
+    let closing = -1;
+    while (scan < source.length - 1) {
+      const pair = source.slice(scan, scan + 2);
+      if (pair === '{{') {
+        depth++;
+        scan += 2;
+        continue;
+      }
+      if (pair === '}}') {
+        depth--;
+        if (depth === 0) {
+          closing = scan;
+          break;
+        }
+        scan += 2;
+        continue;
+      }
+      scan++;
+    }
+    if (closing < 0) {
+      output += source.slice(opening);
+      break;
+    }
+
+    const name = source.slice(nameStart, nameEnd).trim();
+    const rawValue = source.slice(nameEnd + 2, closing);
+    if (name) {
+      const nextValue = resolveCommonPresetMacros(rawValue, vars, context);
+      if (operation === 'setvar') {
+        vars[name] = nextValue;
+      } else {
+        const previous = macroValue(vars, name);
+        const numeric = /^-?(?:\d+\.?\d*|\.\d+)$/.test(previous.trim())
+          && /^-?(?:\d+\.?\d*|\.\d+)$/.test(nextValue.trim());
+        vars[name] = numeric ? String(Number(previous) + Number(nextValue)) : `${previous}${nextValue}`;
+      }
+    }
+    cursor = closing + 2;
+  }
+  return output;
+}
+
+export function resolvePresetMacros(entries, context = {}) {
+  const vars = {};
   const resolvedEntries = [];
 
   for (const entry of entries || []) {
-    if (!entry?.enabled || entry.isMarker || !activationMatches(entry, context)) continue;
+    if (!entry || entry.enabled === false || entry.isMarker || !activationMatches(entry, context)) continue;
     let text = String(entry.content || '');
     if (!text.trim()) continue;
-    const setvarRegex = /\{\{setvar::(\w+)::([\s\S]*?)\}\}/g;
-    let match;
-    while ((match = setvarRegex.exec(text)) !== null) vars[match[1]] = match[2];
-    text = text.replace(setvarRegex, '');
+    text = consumePresetVariableMacros(text, vars, context);
     resolvedEntries.push({ ...entry, content: text });
   }
 
   for (const entry of resolvedEntries) {
-    entry.content = entry.content
-      .replace(/\{\{getvar::(\w+)\}\}/g, (_, name) => vars[name] || '')
-      .replace(/\{\{user\}\}/g, playerName)
-      .replace(/\{\{char\}\}/g, charName)
-      .replace(/\{\{charIfNotGroup\}\}/g, charName)
-      .replace(/\{\{lastUserMessage\}\}/g, lastUserMsg)
-      .replace(/\{\{lastChatMessage\}\}/g, lastChatMsg)
-      .replace(/<User>|<user>/g, playerName)
-      .trim();
+    entry.content = resolveCommonPresetMacros(entry.content, vars, context);
   }
-  return resolvedEntries.filter(entry => entry.content);
+  return resolvedEntries.filter(entry => entry.content.trim());
 }
 
 let _mainPresetCache = null;
@@ -386,6 +502,14 @@ function backupPreset(raw) {
 }
 
 export function migrateMainPreset(storedPreset) {
+  if (storedPreset?._importMode === 'replace') {
+    return {
+      ...clone(storedPreset),
+      entries: Array.isArray(storedPreset.entries) ? storedPreset.entries.map(clone) : [],
+      regexScripts: Array.isArray(storedPreset.regexScripts) ? storedPreset.regexScripts.map(clone) : [],
+      _version: DEFAULT_MAIN_PRESET_VERSION
+    };
+  }
   const customEntries = Array.isArray(storedPreset?.entries)
     ? storedPreset.entries.filter(entry => !isBuiltInEntry(entry)).map(clone)
     : [];

@@ -24,6 +24,7 @@ import { migrateStorage } from './core/storage-migrations.js';
 import { imageFeatureIntegration } from './core/image-studio/integration.js';
 import { resolveAICallPolicy } from './core/ai-call-policy.js';
 import { TIMELINE_FILE_ACCEPT, decodeTimelineSaveFile } from './core/timeline-file-codec.js';
+import { inspectRuntimeBuild, showStaleBuildNotice } from './utils/build-version.js';
 
 import { appShell } from './ui/app-shell.js';
 import { atmosphereManager } from './ui/atmosphere-manager.js';
@@ -75,6 +76,7 @@ class NarutoRPGApp {
     this._musicPlayerStateCleanup ||= bindMusicFloatingPlayer(musicPlayback);
 
     appShell.init(container);
+    void this._checkRuntimeBuild();
     if (!container.querySelector('lingxi-companion')) {
       container.appendChild(document.createElement('lingxi-companion'));
     }
@@ -195,7 +197,6 @@ class NarutoRPGApp {
       try {
         const state = stateManager.get();
         const contract = state._opening_contract || payload.contract || resolveOpeningContract(state);
-        stateManager.update([{ key: '系统·回合数', op: '=', value: 1 }]);
         const apiCfg = stateManager.getAPIConfig() || {};
         const updaterEnabled = resolveAICallPolicy({ apiConfig: apiCfg }).features.variableUpdater;
         const startPrompt = buildOpeningPrompt({ state, contract, updaterEnabled });
@@ -311,24 +312,18 @@ class NarutoRPGApp {
     });
 
     eventBus.on('timeline:view-node', async ({ node }) => {
-      if (node) {
-        if (node.state_snapshot) {
-          stateManager.restore(node.state_snapshot);
-        } else {
-          try {
-            await timelineSystem._replayStateFromAncestor(node);
-          } catch (err) {
-            this._sendSystemMessage(err.message);
-            return;
-          }
-        }
-        const meta = stateManager.getSub('_meta');
-        meta.current_node_id = node.id;
-        meta.active_branch = node.branch_id || 'branch_main';
-        stateManager.setSub('_meta', meta);
-        const history = await timelineSystem._reconstructChatHistory(node);
+      if (!node?.id) return;
+      try {
+        await timelineSystem.jumpToNode(node.id);
+        const current = await timelineSystem.getCurrentNode();
+        const history = await timelineSystem._reconstructChatHistory(current);
         this.pipeline?.setHistory(history);
-        appShell.renderSinglePage(node.clean_response || node.ai_response_summary || '此处记忆残缺...', { timelineNodeId: node.id });
+        appShell.renderSinglePage(
+          current?.clean_response || current?.ai_response_summary || '此处记忆残缺...',
+          { timelineNodeId: current?.id }
+        );
+      } catch (err) {
+        this._sendSystemMessage(err.message);
       }
     });
 
@@ -537,11 +532,12 @@ class NarutoRPGApp {
   async _checkSavedGame() {
     const meta = await stateManager.dbGet('timeline_meta', 'root');
     if (meta?.value?.current_id) {
-      const currentNode = await stateManager.dbGet('timeline_nodes', meta.value.current_id);
+      const currentNode = await timelineSystem.getCurrentNode()
+        || await timelineSystem._hydratePersistedNode(meta.value.current_id);
       if (currentNode) {
         try {
           if (currentNode.state_snapshot) {
-            stateManager.restore(currentNode.state_snapshot);
+            stateManager.commitPreparedRestore(timelineSystem._prepareNodeRestore(currentNode));
           } else {
             await timelineSystem._replayStateFromAncestor(currentNode);
           }
@@ -574,10 +570,11 @@ class NarutoRPGApp {
         const allNodes = await stateManager.dbGetAll('timeline_nodes');
         if (allNodes && allNodes.length > 0) {
           console.log('[NarutoRPG] Attempting recovery using fallback node...');
-          const fallbackNode = allNodes.sort((a, b) => (b.turn_number || 0) - (a.turn_number || 0))[0];
+          const fallbackRaw = allNodes.sort((a, b) => (b.turn_number || 0) - (a.turn_number || 0))[0];
           try {
+            const fallbackNode = await timelineSystem._hydratePersistedNode(fallbackRaw.id) || fallbackRaw;
             if (!fallbackNode.state_snapshot) throw new Error('备用节点缺少完整状态快照');
-            stateManager.restore(fallbackNode.state_snapshot);
+            stateManager.commitPreparedRestore(timelineSystem._prepareNodeRestore(fallbackNode));
             const history = await timelineSystem._reconstructChatHistory(fallbackNode);
             this.pipeline?.setHistory(history);
             const mObj = stateManager.getSub('_meta');
@@ -604,6 +601,17 @@ class NarutoRPGApp {
 
   _sendSystemMessage(text) {
     appShell.addSystemMessage?.(text);
+  }
+
+  async _checkRuntimeBuild() {
+    try {
+      const result = await inspectRuntimeBuild();
+      globalThis.__NARUTO_BUILD_DIAGNOSTIC__ = result;
+      console.info(`[Build] loaded=${result.loadedBuild || 'dev'} latest=${result.latestBuild || 'unknown'} stale=${result.stale}`);
+      if (result.stale) showStaleBuildNotice(result);
+    } catch (error) {
+      console.warn('[Build] version.json check failed:', error.message);
+    }
   }
 
   _registerServiceWorker() {

@@ -3,7 +3,7 @@ import { getStructuredVariableContractPrompt } from './var-schema.js';
 
 export const VARIABLE_UPDATER_PRESET_STORAGE_KEY = 'naruto_variable_updater_preset';
 export const VARIABLE_UPDATER_PRESET_BACKUP_PREFIX = 'naruto_variable_updater_preset_backup_';
-export const DEFAULT_VARIABLE_UPDATER_PRESET_VERSION = 15;
+export const DEFAULT_VARIABLE_UPDATER_PRESET_VERSION = 18;
 
 export const VARIABLE_UPDATER_MACROS = Object.freeze([
   { key: 'state_json', label: '当前状态 JSON' },
@@ -14,7 +14,7 @@ export const VARIABLE_UPDATER_MACROS = Object.freeze([
 ]);
 
 export const DEFAULT_VARIABLE_UPDATER_PRESET = Object.freeze({
-  name: '证据链变量更新预设 v15 · 义务清单与完整审计',
+  name: '证据链变量更新预设 v18 · 人物身份迁移',
   version: DEFAULT_VARIABLE_UPDATER_PRESET_VERSION,
   entries: [
     {
@@ -57,9 +57,10 @@ ${getStructuredVariableContractPrompt()}
 【结构标签契约】
 - 新任务：<mission>{"id":"稳定ID","status":"active","title":"任务名","rank":"D|C|B|A|S","objective":"目标"}</mission>。
 - 任务进度：<mission>{"id":"稳定ID","status":"progress","progress":{"current_step":1,"total_steps":3,"steps":["步骤一","步骤二","步骤三"],"note":"本轮进展"}}</mission>。结束状态使用 completed、failed 或 abandoned。
-- 新人物必须明确分类。非战斗人员：<relationship>{"npc":"姓名","combatant":false,"role":"身份","history":"本轮互动","inner_thoughts":"本轮心声"}</relationship>。
-- 战斗型人物：<relationship>{"npc":"姓名","combatant":true,"combat_stats":{"rank":"中忍","chakra_nature":[],"jutsu":[]},"history":"本轮互动","inner_thoughts":"本轮心声"}</relationship>。没有可靠属性或招式证据时使用空数组，不得猜测。
-- NPC已有战斗卡时只输出真实增量，禁止重复生成整张战斗卡。新增的每个 NPC 忍术都必须完整提供 name/rank/element/resource_type/cost/power/mastery/description/type；原创忍者可创建与身份相容的基础术，但不得伪造 JT ID。
+- 新人物只写本回合有可靠依据的字段。最小合法结构为 <relationship>{"npc":"姓名"}</relationship>；已确认非战斗人员时可写 combatant:false，已确认战斗人员时可写 combatant:true。无法确认分类、history、inner_thoughts 或战斗资料时允许省略，不得因此放弃其他合法关系变化。
+- 已有人物只有在正文明确确认规范姓名改变时才可原位改名：<relationship>{"op":"rename","npc":"旧姓名","new_npc":"新姓名","reason":"正文依据"}</relationship>。npc 必须是当前关系档案键，new_npc 不得已被其他人物或其别名占用；禁止用删除旧人物再新建人物冒充改名，同回合其他关系增量应合并进这一个标签。
+- 战斗资料可按证据渐进补全：<relationship>{"npc":"姓名","combatant":true,"combat_stats":{"rank":"中忍","chakra_nature":[],"jutsu":[]}}</relationship>。NPC已有战斗卡时只输出真实增量，禁止重复生成整张战斗卡；原创忍者不得伪造 JT ID。
+- 已提供的字段必须类型正确：combatant 是布尔值，combat_stats 是对象，chakra_nature 与 jutsu 是数组，关系数值是有限数字。若输出忍术条目，至少提供 name；其余资料可后续补全。
 - 关系增量使用 affection_change/trust_change/respect_change，并可写 reason/history/inner_thoughts/promises/debts/known_secrets；不要回写旧的绝对分数。
 - 记忆：<memory>{"summary":"本轮事实、直接结果与下一轮待办","facts":[],"clues":[],"pins":[],"remove_pins":[],"npc_notes":{}}</memory>。可选集合没有内容时使用空数组或空对象。
 - 普通事件创建或更新：<event>{"id":"稳定ID","status":"triggered|occurred|altered|skipped|postponed","description":"事实"}</event>；关闭普通事件使用 completed/resolved/ended/failed/cancelled。
@@ -228,6 +229,9 @@ export function saveVariableUpdaterPreset(preset) {
   if (!enabledContent.includes('{{narrative_response}}')) {
     throw new Error('变量更新预设必须保留 {{narrative_response}}（已确认的最终正文）宏');
   }
+  if (!enabledContent.includes('{{user_input}}')) {
+    throw new Error('变量更新预设必须保留 {{user_input}}（原始玩家输入）宏');
+  }
   localStorage.setItem(VARIABLE_UPDATER_PRESET_STORAGE_KEY, JSON.stringify(normalized));
   eventBus.emit('variable-updater-preset:edited', clone(normalized));
   return normalized;
@@ -248,11 +252,17 @@ export function resolveVariableUpdaterPreset(preset, context = {}) {
     narrative_response: String(context.narrativeResponse || ''),
     breakthrough_instruction: String(context.breakthroughInstruction || '')
   };
-  return normalizeVariableUpdaterPreset(preset).entries
+  const resolved = normalizeVariableUpdaterPreset(preset).entries
     .filter(entry => entry.enabled !== false && entry.content.trim())
     .map(entry => {
       let content = entry.content;
       for (const [key, value] of Object.entries(values)) content = content.split(`{{${key}}}`).join(value);
       return { role: normalizeRole(entry.role), content };
     });
+  const hasRawInputMacro = normalizeVariableUpdaterPreset(preset).entries
+    .some(entry => entry.enabled !== false && entry.content.includes('{{user_input}}'));
+  if (!hasRawInputMacro) {
+    resolved.push({ role: 'user', content: `[原始玩家输入]\n${values.user_input}` });
+  }
+  return resolved;
 }

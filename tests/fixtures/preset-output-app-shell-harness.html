@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Preset output app shell harness</title>
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <style>
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, body, #app { width: 100%; min-height: 100%; margin: 0; background: #070a0e; }
+    #app-shell { min-height: 700px; }
+    /* layout.css initializes messages at opacity:0 and relies on fadeUp to
+       reveal them. This fixture disables animation, so restore the completed
+       state explicitly; an opacity-zero OOPIF does not receive real pointer
+       input in Chromium even though locator hit-testing still finds it. */
+    .chat-message { opacity: 1 !important; transform: none !important; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-shell" id="app-shell">
+      <main class="app-center" id="app-center">
+        <div class="chat-container"><div class="chat-messages" id="chat-messages"></div></div>
+        <div class="chat-input-area" id="chat-input-area">
+          <div class="input-wrapper"><textarea id="chat-input" rows="1"></textarea></div>
+        </div>
+      </main>
+      <span id="status-location"></span><span id="status-time"></span><span id="status-weather"></span>
+      <span id="status-turn"></span><span id="status-version">v.test</span>
+    </div>
+  </div>
+  <script type="module">
+    const mode = new URLSearchParams(location.search).get('mode') || 'fallback';
+    const { DEFAULT_MAIN_PRESET_VERSION } = await import('../../js/data/default-preset.js');
+    const regexScripts = mode === 'sandbox'
+      ? [{
+          id: 'sandbox-fixture', name: 'Sandbox fixture', enabled: true,
+          placement: [2], markdownOnly: true, promptOnly: false,
+          findRegex: '/<story_scene>[\\s\\S]*?<\\/story_scene>/',
+          replaceString: '```html\n<section><div id="beautified">\u72d0\u7eb9\u7f8e\u5316</div><button id="preset-action" data-action="\u5411\u5317\u6f5c\u884c">\u9009\u62e9\u884c\u52a8</button></section>\n```'
+        }]
+      : mode === 'markdown'
+        ? [{
+            id: 'markdown-fixture', name: 'Markdown fixture', enabled: true,
+            placement: [2], markdownOnly: true, promptOnly: false,
+            findRegex: '/<story_scene>([\\s\\S]*?)<\\/story_scene>/',
+            replaceString: '**\u5377\u8f74\u7f8e\u5316**\n$1'
+          }]
+        : [];
+    localStorage.setItem('naruto_main_preset', JSON.stringify({
+      name: `Preset output ${mode}`,
+      _version: DEFAULT_MAIN_PRESET_VERSION,
+      _importMode: 'replace',
+      entries: [{ id: 'fixture', name: 'fixture', enabled: true, role: 'system', content: 'fixture' }],
+      regexScripts
+    }));
+
+    const [{ appShell }, { eventBus }, { recordImportedPresetDebugFailure }] = await Promise.all([
+      import('../../js/ui/app-shell.js'),
+      import('../../js/core/event-bus.js'),
+      import('../../js/core/imported-preset-debug-log.js')
+    ]);
+    appShell.element = document.querySelector('#app-shell');
+    appShell._turnUpdates = [];
+    appShell._lastSubmittedInput = '上一回合行动';
+    appShell._bindEvents();
+    let submitCount = 0;
+    eventBus.on('user:submit', () => { submitCount += 1; });
+
+    const prepareStreaming = () => {
+      const messages = document.querySelector('#chat-messages');
+      messages.replaceChildren();
+      const message = document.createElement('div');
+      message.className = 'chat-message chat-message--ai is-streaming';
+      message.innerHTML = '<div class="chat-content"></div><span class="typing-cursor"></span>';
+      messages.appendChild(message);
+      appShell._streamingEl = message;
+      return message;
+    };
+
+    window.__PRESET_OUTPUT_HARNESS__ = {
+      setPreset(preset) {
+        localStorage.setItem('naruto_main_preset', JSON.stringify({
+          ...preset,
+          _version: DEFAULT_MAIN_PRESET_VERSION,
+          _importMode: 'replace'
+        }));
+        // Bust default-preset.js' in-memory cache without reloading the page.
+        localStorage.setItem('naruto_main_preset_version', `harness-${Date.now()}-${Math.random()}`);
+      },
+      complete(raw, clean = '安全正文') {
+        prepareStreaming();
+        appShell._finalizeMessage(clean, raw, '', false, false, null, null);
+      },
+      restore(clean = '历史安全正文', history = []) {
+        appShell.restoreChatHistory(history, clean);
+      },
+      failImportedPreset(raw) {
+        const failure = new Error('测试用导入预设结构错误');
+        failure.code = 'IMPORTED_PRESET_OUTPUT_INCOMPLETE';
+        failure.details = { errors: ['<think> 测试交叉闭合'] };
+        recordImportedPresetDebugFailure({
+          build: 'ui-test',
+          adapterId: 'dream-whale-v4',
+          stage: 'initial-envelope',
+          error: failure,
+          rawResponse: raw,
+          projectedResponse: raw,
+          validationResponse: raw
+        });
+        eventBus.emit('pipeline:error', {
+          error: failure.message,
+          code: failure.code,
+          lastUserInput: '继续检查预设'
+        });
+      },
+      get submitCount() { return submitCount; }
+    };
+    window.__PRESET_OUTPUT_HARNESS_READY__ = true;
+  </script>
+</body>
+</html>

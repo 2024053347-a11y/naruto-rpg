@@ -26,6 +26,33 @@ function test(name, fn) {
   console.log(`PASS ${name}`);
 }
 
+test('variable JSON aliases write the canonical flat keys', () => {
+  const parsed = instructionParser.parse('<variable>{"key":"查克拉","op":"=","value":7}</variable>');
+  assert.deepEqual(parsed.variables, [{ key: '属性·当前查克拉', op: '=', value: 7 }]);
+  stateManager.update(parsed.variables);
+  assert.equal(stateManager.get('属性·当前查克拉'), 7);
+  assert.equal(Object.prototype.hasOwnProperty.call(stateManager.state, '查克拉'), false);
+});
+
+test('status aliases resolve when written through StateManager', () => {
+  stateManager.update([{ key: '状态·生命力', op: '=', value: 12 }]);
+  assert.equal(stateManager.get('属性·当前生命力'), 12);
+  assert.equal(Object.prototype.hasOwnProperty.call(stateManager.state, '状态·生命力'), false);
+});
+
+test('reducing item quantity to zero removes leftover item fields', () => {
+  stateManager.update([
+    { key: '物品·消耗品·绷带·数量', op: '=', value: 1 },
+    { key: '物品·消耗品·绷带·品质', op: '=', value: '普通' },
+    { key: '物品·消耗品·绷带·描述', op: '=', value: '旧绷带' }
+  ]);
+  stateManager.update([{ key: '物品·消耗品·绷带·数量', op: '-', value: 1 }]);
+  assert.deepEqual(
+    Object.keys(stateManager.state).filter(key => key.startsWith('物品·消耗品·绷带')),
+    []
+  );
+});
+
 test('discarding all equipment removes every stored field', () => {
   stateManager.update([
     { key: '物品·武器·测试刀·数量', op: '=', value: 3 },
@@ -351,12 +378,21 @@ test('runtime deletion protocol also upgrades saved legacy updater presets', () 
   assert.match(prompt, /系统强制删除协议/);
   assert.match(prompt, /equipment\.分类[\s\S]*"op":"remove"/);
   assert.match(prompt, /skills\.分类[\s\S]*"op":"remove"/);
-  assert.equal(messages.at(-1).role, 'system');
+  assert.equal(messages[0].role, 'system');
+  assert.match(messages[0].content, /系统强制删除协议[\s\S]*不得合并或遗漏。\s*$/);
+  assert.ok(messages.slice(1).every(message => message.role !== 'system'));
 });
 
-test('runtime deletion protocol does not hide an empty updater preset', () => {
-  const messages = buildVariableUpdaterMessages({ name: '空预设', entries: [] }, {});
-  assert.deepEqual(messages, []);
+test('empty legacy updater presets still receive raw input and runtime protocols', () => {
+  const messages = buildVariableUpdaterMessages(
+    { name: '空预设', entries: [] },
+    { userInput: '丢掉最后一卷绷带' }
+  );
+  assert.equal(messages[0].role, 'system');
+  assert.match(messages[0].content, /系统强制删除协议/);
+  assert.match(messages[0].content, /变量更新完整混合示例/);
+  assert.equal(messages.at(-1).role, 'user');
+  assert.match(messages.at(-1).content, /\[原始玩家输入\][\s\S]*丢掉最后一卷绷带/);
 });
 
 test('new player canon technique replaces AI fields but keeps mastery', () => {

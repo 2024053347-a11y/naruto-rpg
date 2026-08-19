@@ -15,6 +15,15 @@ import {
 } from './agent-contracts.js';
 import { createNarrativeArtifact } from './narrative-artifact.js';
 import { CANON_DATABASE, normalizeCanonDate } from '../data/canon-database.js';
+import { parseShinobiDailyContract } from './shinobi-daily.js';
+import { validateVariableUpdaterOutput } from './variable-updater.js';
+import { buildUpdaterObligations } from './turn-evidence.js';
+import {
+  IMPORTED_PRESET_OUTPUT_COMPATIBILITY_PROMPT,
+  attachImportedAssistantPrefill,
+  buildImportedPresetOutputCompatibilityPrompt,
+  insertProjectMachineTail
+} from './main-preset-compatibility.js';
 
 export const CHARACTER_MEMORY_DELTA_SCHEMA = 'naruto.character-memory-delta/v1';
 export const AGENT_PIPELINE_REVISION = 'writing-outline-before-final-v1';
@@ -811,6 +820,12 @@ class AgentPipeline {
       characterInputs,
       mainMessages
     );
+    finalText = attachImportedAssistantPrefill(
+      finalText,
+      this.pipeline?._lastImportedPresetProfile?.active
+        ? this.pipeline?._lastAssistantPrefill
+        : ''
+    );
     timings.final_write = Date.now() - finalWriteStartedAt;
     this._checkAbort();
 
@@ -1394,20 +1409,55 @@ class AgentPipeline {
     try {
       const constraint = this.runner._buildWriterConstraint(writerExtraContext, state);
       const inheritedMessages = Array.isArray(mainMessages) ? mainMessages : [];
+      const compatibilityText = this.pipeline?._lastImportedPresetProfile?.active
+        ? buildImportedPresetOutputCompatibilityPrompt(this.pipeline._lastImportedPresetProfile)
+        : IMPORTED_PRESET_OUTPUT_COMPATIBILITY_PROMPT;
+      const importedPreset = inheritedMessages.some(message => (
+        message?.content === compatibilityText
+      ));
+      const importedPrefill = importedPreset
+        ? String(this.pipeline?._lastAssistantPrefill || '')
+        : '';
+      const inheritedWithoutCompatibility = inheritedMessages.filter(message => (
+        message.content !== compatibilityText
+      ));
+      let prefillMessage = null;
+      if (importedPrefill) {
+        for (let index = inheritedWithoutCompatibility.length - 1; index >= 0; index--) {
+          const message = inheritedWithoutCompatibility[index];
+          if (message?.role === 'assistant' && message.content === importedPrefill) {
+            prefillMessage = inheritedWithoutCompatibility.splice(index, 1)[0];
+            break;
+          }
+        }
+      }
+      // Imported Tavern prompts rely on the compiled cross-role order. Native
+      // prompts retain the stable system/history prefix before volatile rules.
+      const writerMessages = importedPreset
+        ? [
+            ...inheritedWithoutCompatibility,
+            { role: 'system', content: constraint },
+            { role: 'system', content: npcAuthorityConstraint },
+            {
+              role: 'user',
+              content: `详细写作大纲已经通过最终审查。现在才生成本回合完整正文；严格按详纲和 CharacterDecision 写作，不得再改变剧情结构。变量与记忆标签由后续连续性更新器负责。\n${npcAuthorityConstraint}`
+            },
+            { role: 'system', content: compatibilityText },
+            ...(prefillMessage ? [prefillMessage] : [])
+          ]
+        : [
+            ...inheritedWithoutCompatibility.filter(message => message.role === 'system'),
+            ...inheritedWithoutCompatibility.filter(message => message.role !== 'system'),
+            { role: 'system', content: constraint },
+            { role: 'system', content: npcAuthorityConstraint },
+            {
+              role: 'user',
+              content: `详细写作大纲已经通过最终审查。现在才生成本回合完整正文；严格按详纲和 CharacterDecision 写作，不得再改变剧情结构。变量与记忆标签由后续连续性更新器负责。\n${npcAuthorityConstraint}`
+            }
+          ];
       const result = await runtime.runAgent({
         definition: { id: 'final-writer', instructions: resolveAgentSystemPrompt('WRITER') },
-        messages: [
-          // 稳定前缀在前：继承的系统消息 + 对话历史(非 system)。
-          // 易变约束(场景/大纲/审查/角色决策)放历史之后，避免打断缓存前缀。
-          ...inheritedMessages.filter(message => message.role === 'system'),
-          ...inheritedMessages.filter(message => message.role !== 'system'),
-          { role: 'system', content: constraint },
-          { role: 'system', content: npcAuthorityConstraint },
-          {
-            role: 'user',
-            content: `详细写作大纲已经通过最终审查。现在才生成本回合完整正文；严格按详纲和 CharacterDecision 写作，不得再改变剧情结构。变量与记忆标签由后续连续性更新器负责。\n${npcAuthorityConstraint}`
-          }
-        ],
+        messages: writerMessages,
         tools,
         budget: { maxSteps: 10, maxOutputTokens: 8192, temperature: 0.82 },
         state,
@@ -1415,8 +1465,9 @@ class AgentPipeline {
         audience: 'writer'
       });
       if (result.text?.trim()) {
-        eventBus.emit('agent:stream', { agent: 'final-writer', chunk: result.text });
-        return result.text;
+        const projected = attachImportedAssistantPrefill(result.text, importedPrefill);
+        eventBus.emit('agent:stream', { agent: 'final-writer', chunk: projected });
+        return projected;
       }
       throw new Error('Tool final-writer returned empty text');
     } catch (error) {
@@ -1427,18 +1478,30 @@ class AgentPipeline {
       this._releaseToolRuntime(runtime);
     }
 
+    const importedPrefill = this.pipeline?._lastImportedPresetProfile?.active
+      ? String(this.pipeline?._lastAssistantPrefill || '')
+      : '';
     const result = await this.runner.run('final-writer', {
       state,
       userInput,
       taskPrompt: `详细写作大纲已通过最终审查。现在输出一次最终叙事正文；不得改变详纲结构，变量与记忆标签交给后续连续性更新器。\n${npcAuthorityConstraint}`,
       extraContext: writerExtraContext,
       options: { temperature: 0.85, max_tokens: 8192 },
-      onChunk: (chunk) => eventBus.emit('agent:stream', { agent: 'final-writer', chunk })
+      onChunk: importedPrefill
+        ? () => {}
+        : (chunk) => eventBus.emit('agent:stream', { agent: 'final-writer', chunk })
     });
 
-    if (typeof result === 'string') return result;
-    if (result?._raw) return result._raw;
-    if (result?.text) return result.text;
+    const rawResult = typeof result === 'string'
+      ? result
+      : (result?._raw || result?.text || '');
+    if (rawResult) {
+      const projected = attachImportedAssistantPrefill(rawResult, importedPrefill);
+      if (importedPrefill) {
+        eventBus.emit('agent:stream', { agent: 'final-writer', chunk: projected });
+      }
+      return projected;
+    }
     throw new Error('Final writer 未能生成有效正文');
   }
 
@@ -1697,11 +1760,54 @@ class AgentPipeline {
   // 运行连续性更新代理并把产出的结构标签追加到正文末尾；失败/无标签时原样返回。
   async _appendContinuityUpdates(state, userInput, finalText, involvedNPCs, sceneBrief) {
     try {
-      const updaterTags = await this._runContinuityUpdater(state, userInput, finalText, involvedNPCs, sceneBrief);
-      if (updaterTags && /<(?:var|variable|relationship|memory|shinobi_daily)\b/i.test(updaterTags)) {
+      // The updater is a public-fact consumer. Imported presets may wrap their
+      // visible prose in private planning/driver blocks, so never let the raw
+      // writer envelope become evidence or updater prompt material.
+      const safeNarrative = String(createNarrativeArtifact(finalText).displayText || '').trim();
+      const characterMemoryDelta = buildCharacterMemoryDelta(this._characterDecisions.map(decision => ({
+        npcName: decision.npc,
+        ...decision.observable
+      })), { turn: state?.['系统·回合数'] || 0 });
+      const preliminaryObligations = buildUpdaterObligations({
+        state,
+        narrativeResponse: safeNarrative,
+        evidencePacket: this.pipeline?._lastTurnEvidencePacket || null,
+        characterMemoryDelta
+      });
+      const evidenceView = this.pipeline?._compileUpdaterEvidence?.({
+        state,
+        userInput,
+        narrativeResponse: safeNarrative,
+        updateObligations: preliminaryObligations
+      }) || this.pipeline?.getTurnEvidenceView?.('updater', { state, userInput }) || null;
+      const obligations = evidenceView?.update_obligations || preliminaryObligations;
+      const updaterTags = await this._runContinuityUpdater(
+        state,
+        userInput,
+        safeNarrative,
+        involvedNPCs,
+        sceneBrief,
+        evidenceView,
+        obligations
+      );
+      const validation = validateVariableUpdaterOutput(updaterTags, {
+        state,
+        updateObligations: obligations,
+        narrativeResponse: safeNarrative,
+        strictRuntimeRequirements: true
+      });
+      const dailyResult = parseShinobiDailyContract(updaterTags, { required: true });
+      if (validation.valid && dailyResult.valid) {
+        const enrichedText = insertProjectMachineTail(
+          finalText,
+          updaterTags,
+          this.pipeline?._lastImportedPresetProfile
+        );
         this._agentSelfUpdater = true;
-        return `${finalText}\n\n${updaterTags}`;
+        return enrichedText;
       }
+      const issues = [...validation.errors, ...dailyResult.errors];
+      console.warn('[AgentPipeline] Continuity updater rejected, falling back to pipeline updater:', issues.join('；'));
     } catch (error) {
       console.warn('[AgentPipeline] Continuity updater failed, falling back to pipeline updater:', error?.message);
     }
@@ -1710,7 +1816,15 @@ class AgentPipeline {
 
   // 连续性更新代理：根据最终正文 + 角色记忆增量 + 当前关系，产出 <var>/<relationship>/<memory> 标签，
   // 替代主流水线的二次变量系统。失败由调用方降级。
-  async _runContinuityUpdater(state, userInput, finalText, involvedNPCs, sceneBrief) {
+  async _runContinuityUpdater(
+    state,
+    userInput,
+    finalText,
+    involvedNPCs,
+    sceneBrief,
+    evidenceView = null,
+    updateObligations = null
+  ) {
     const characterInputs = (involvedNPCs || []).map(npcName => {
       const relationship = state?._relationships?.[npcName] || {};
       const history = Array.isArray(relationship.history) ? relationship.history : [];
@@ -1728,11 +1842,13 @@ class AgentPipeline {
     const result = await this.runner.run('continuity-updater', {
       state,
       userInput,
-      taskPrompt: `根据最终正文与角色记忆增量，输出本回合的 <var>、<relationship>(含 inner_thoughts 心理与 history 历史) 与唯一一个 <memory> 标签。在场已认识 NPC：${(involvedNPCs || []).join('、') || '(无)'}`,
+      taskPrompt: `根据最终正文与角色记忆增量，输出本回合完整的 <variable_thinking>、<update_manifest>、必要业务标签、唯一 <memory> 和唯一 <shinobi_daily>。人物只写有可靠依据的字段；在场已认识 NPC：${(involvedNPCs || []).join('、') || '(无)'}`,
       extraContext: {
         sceneBrief,
         draft: finalText,
         characterInputs,
+        evidenceView,
+        updateObligations,
         _pipeline: this.pipeline
       },
       options: { temperature: 0.4, max_tokens: 4096 },

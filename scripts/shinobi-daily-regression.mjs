@@ -21,7 +21,10 @@ import {
   buildNarrativeReviewMessages,
   parseNarrativeReviewPreview
 } from '../js/core/narrative-review.js';
-import { buildVariableUpdaterMessages } from '../js/core/variable-updater.js';
+import {
+  buildVariableUpdaterMessages,
+  validateVariableUpdaterOutput
+} from '../js/core/variable-updater.js';
 import {
   DEFAULT_MAIN_PRESET,
   DEFAULT_MAIN_PRESET_VERSION,
@@ -29,6 +32,11 @@ import {
   invalidateMainPresetCache
 } from '../js/data/default-preset.js';
 import { DEFAULT_VARIABLE_UPDATER_PRESET } from '../js/data/variable-updater-preset.js';
+import {
+  FEW_SHOT_EXAMPLES,
+  MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE,
+  VARIABLE_UPDATER_MIXED_EXAMPLE
+} from '../js/data/prompts.js';
 
 if (!globalThis.localStorage) {
   const values = new Map();
@@ -47,6 +55,20 @@ async function test(name, fn) {
 }
 
 const contract = value => `<shinobi_daily>${JSON.stringify(value)}</shinobi_daily>`;
+const dailyJson = JSON.stringify(SHINOBI_DAILY_EXAMPLE);
+
+function countOccurrences(source, needle) {
+  return String(source || '').split(needle).length - 1;
+}
+
+function assertTaggedJsonIsStrict(source) {
+  const pattern = /<(state_update|variable|mission|relationship|combat|event|memory|update_manifest|shinobi_daily)(?:\s+[^>]*)?>([\s\S]*?)<\/\1>/g;
+  const matches = [...String(source || '').matchAll(pattern)];
+  assert.ok(matches.length > 0, 'fixture must contain tagged JSON');
+  for (const match of matches) {
+    assert.doesNotThrow(() => JSON.parse(match[2].trim()), `<${match[1]}> must contain strict JSON`);
+  }
+}
 
 await test('the canonical example passes the exact daily schema', () => {
   const result = validateShinobiDaily(SHINOBI_DAILY_EXAMPLE);
@@ -56,6 +78,38 @@ await test('the canonical example passes the exact daily schema', () => {
   assert.equal(result.daily.flavor.length, 3);
   assert.deepEqual(result.daily.missions.map(item => item.rank), ['D', 'C', 'B', 'A']);
   assert.equal(Object.isFrozen(result.daily), true);
+});
+
+await test('few-shot outputs are complete and pass the production contracts', () => {
+  assert.equal(FEW_SHOT_EXAMPLES.length, 2);
+
+  const mainArtifact = createNarrativeArtifact(MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE);
+  const mainDaily = parseShinobiDailyContract(MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE, { required: true });
+  const mainValidation = validateMainOutputContract({ artifact: mainArtifact, dailyResult: mainDaily });
+  assert.equal(mainValidation.valid, true, mainValidation.errors.join('\n'));
+  assert.equal(mainValidation.changed, false);
+
+  const updateObligations = {
+    fixed_domains: [],
+    present_npcs: [{ npc: '海野伊鲁卡' }],
+    active_missions: [{ id: 'M-护送药材' }]
+  };
+  const updaterValidation = validateVariableUpdaterOutput(VARIABLE_UPDATER_MIXED_EXAMPLE, {
+    state: {
+      _missions: { active: { 'M-护送药材': { id: 'M-护送药材', status: 'active' } } },
+      _relationships: {}
+    },
+    updateObligations
+  });
+  assert.equal(updaterValidation.valid, true, updaterValidation.errors.join('\n'));
+  assert.equal(parseShinobiDailyContract(VARIABLE_UPDATER_MIXED_EXAMPLE, { required: true }).valid, true);
+  assert.match(VARIABLE_UPDATER_MIXED_EXAMPLE, /"path":"progression\.exp"/);
+  assert.doesNotMatch(VARIABLE_UPDATER_MIXED_EXAMPLE, /"exp_reward"/);
+
+  for (const example of FEW_SHOT_EXAMPLES) {
+    assertTaggedJsonIsStrict(example);
+    assert.equal(countOccurrences(example, dailyJson), 1, 'each full example must reuse one canonical daily JSON');
+  }
 });
 
 await test('the tagged contract parses exactly once and normalizes whitespace', () => {
@@ -308,6 +362,7 @@ await test('assembled single-call prompt keeps the hard delivery checklist after
 await test('main and secondary prompts enforce one fixed data-only renderer contract', () => {
   const main = buildShinobiDailyPrompt({ producer: 'main' });
   const secondary = buildShinobiDailyPrompt({ producer: 'secondary' });
+  const withoutExample = buildShinobiDailyPrompt({ producer: 'secondary', includeExample: false });
   for (const prompt of [main, secondary]) {
     assert.match(prompt, /固定前端数据源/);
     assert.match(prompt, /world 恰好 4 条/);
@@ -318,7 +373,17 @@ await test('main and secondary prompts enforce one fixed data-only renderer cont
   assert.match(main, /完成可见正文/);
   assert.match(main, /只有绘图契约可以紧随日报之后/);
   assert.match(secondary, /完成全部变量标签后/);
+  assert.doesNotMatch(withoutExample, /规范示例/);
+  assert.equal(countOccurrences(withoutExample, dailyJson), 0);
   assert.match(SHINOBI_DAILY_DELEGATION_PROMPT, /由二次变量模型独立生成/);
+});
+
+await test('main single-call request receives its validated full example exactly once', () => {
+  const pipeline = new MessagePipeline({});
+  const messages = pipeline._buildPrompt('查看公告', {}, '查看公告', { updaterEnabled: false });
+  const prompt = messages.map(message => message.content).join('\n\n');
+  assert.ok(messages.some(message => message.content.includes(MAIN_SINGLE_CALL_NO_CHANGE_EXAMPLE)));
+  assert.equal(countOccurrences(prompt, dailyJson), 1);
 });
 
 await test('secondary updater always receives the daily contract after custom preset content', () => {
@@ -330,6 +395,8 @@ await test('secondary updater always receives the daily contract after custom pr
   assert.match(prompt, /忍界日报结构契约/);
   assert.match(prompt, /完成全部变量标签后/);
   assert.match(prompt, /naruto\.shinobi-daily\/v1/);
+  assert.ok(prompt.includes(VARIABLE_UPDATER_MIXED_EXAMPLE));
+  assert.equal(countOccurrences(prompt, dailyJson), 1);
 });
 
 await test('narrative review is told to preserve a valid daily as a machine contract', () => {

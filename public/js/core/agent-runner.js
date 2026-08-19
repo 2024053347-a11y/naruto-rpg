@@ -9,11 +9,17 @@ import { generateMainVarInstructions } from '../data/var-schema.js';
 import { formatOpeningContractPrompt, resolveOpeningContract } from '../systems/opening-contract.js';
 import { publishPromptTrace } from './prompt-trace.js';
 import { TurnEvidenceCompiler, renderEvidenceView } from './turn-evidence.js';
+import {
+  IMPORTED_PRESET_OUTPUT_COMPATIBILITY_PROMPT,
+  buildImportedPresetOutputCompatibilityPrompt
+} from './main-preset-compatibility.js';
+import { buildVariableUpdaterRuntimeContract } from './variable-updater.js';
 
 export function evidenceAudienceForAgent(agentType) {
   if (agentType === 'character') return 'npc';
   if (agentType.startsWith('critic-')) return 'reviewer';
   if (agentType === 'story-planner' || agentType === 'brainstormer') return 'planner';
+  if (agentType === 'continuity-updater') return 'updater';
   return 'writer';
 }
 
@@ -297,10 +303,42 @@ class AgentRunner {
       const baseMessages = extraContext._mainMessages;
       const constraint = this._buildWriterConstraint(extraContext, state);
       const persona = resolveAgentSystemPrompt(manifest.systemPromptKey);
+      const importedProfile = extraContext.importedPresetProfile
+        || extraContext._pipeline?._lastImportedPresetProfile
+        || this._pipeline?._lastImportedPresetProfile;
+      const compatibilityText = importedProfile?.active
+        ? buildImportedPresetOutputCompatibilityPrompt(importedProfile)
+        : IMPORTED_PRESET_OUTPUT_COMPATIBILITY_PROMPT;
+      const importedCompatibility = baseMessages.some(message => (
+        message?.content === compatibilityText
+      ))
+        ? [{ role: 'system', content: compatibilityText }]
+        : [];
+      const inherited = baseMessages.filter(message => (
+        message?.content !== compatibilityText
+      ));
+      let importedPrefill = null;
+      const expectedPrefill = importedCompatibility.length
+        ? String(
+            this._pipeline?._lastAssistantPrefill
+            || (baseMessages.at(-1)?.role === 'assistant' ? baseMessages.at(-1)?.content : '')
+            || ''
+          )
+        : '';
+      if (expectedPrefill) {
+        for (let index = inherited.length - 1; index >= 0; index--) {
+          if (inherited[index]?.role === 'assistant' && inherited[index].content === expectedPrefill) {
+            importedPrefill = inherited.splice(index, 1)[0];
+            break;
+          }
+        }
+      }
       return [
-        ...baseMessages,
+        ...inherited,
         ...(persona ? [{ role: 'system', content: persona }] : []),
-        { role: 'system', content: constraint }
+        { role: 'system', content: constraint },
+        ...importedCompatibility,
+        ...(importedPrefill ? [importedPrefill] : [])
       ];
     }
 
@@ -312,6 +350,16 @@ class AgentRunner {
 
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });
+    }
+    if (agentType === 'continuity-updater') {
+      messages.push({
+        role: 'system',
+        content: buildVariableUpdaterRuntimeContract({
+          state,
+          updateObligations: extraContext.updateObligations,
+          exampleTitle: '连续性更新完整混合示例'
+        })
+      });
     }
 
     const evidenceAudience = evidenceAudienceForAgent(agentType);
@@ -542,14 +590,29 @@ class AgentRunner {
       constraint += '## 初稿正文\n```\n' + extraContext.draft.slice(0, 6000) + '\n```\n\n';
     }
 
-    // 6. 变量标签策略：Agent 模式下变量/记忆/日报统一由后续二次变量更新产出，
-    // writer 只输出正文 + <reasoning>，禁止直接附结构标签。
-    constraint += generateMainVarInstructions(true) + '\n\n';
+    // 6. 变量标签策略：Agent 模式下变量/记忆/日报统一由后续二次变量更新产出。
+    // Imported presets keep their own reasoning wrapper instead of inheriting
+    // the built-in fixed <reasoning> checklist.
+    const importedProfile = extraContext.importedPresetProfile
+      || extraContext._pipeline?._lastImportedPresetProfile
+      || this._pipeline?._lastImportedPresetProfile;
+    if (importedProfile?.active) {
+      const wrappers = (importedProfile.privateWrappers || [])
+        .map(tag => `<${tag}>...</${tag}>`)
+        .join('、');
+      constraint += `【用户导入预设 · Agent Writer 职责】完整沿用导入预设自己的思考、正文、选项和展示 wrapper${wrappers ? `（已检测：${wrappers}）` : ''}，所有容器必须成对闭合；不要额外生成项目默认 <reasoning>。变量、记忆和忍界日报由后续连续性更新器负责，本阶段禁止输出 <var>、<variable>、<combat>、<mission>、<relationship>、<event>、<state_update>、<memory> 或 <shinobi_daily>。\n\n`;
+    } else {
+      constraint += generateMainVarInstructions(true) + '\n\n';
+    }
 
-    // 7. 字数与文风：正文 900-1500 字，文风严格遵循预设条目内容。
-    constraint += '【字数要求】正文可见部分 900-1500 个汉字；不足 900 字需充实场景、动作与对话，超出 1500 字需精简冗余描写。\n';
-    constraint += '【文风要求】正文必须严格遵循预设条目的叙事风格与口吻：具体克制、以动作/对话/环境反馈驱动，不写设定讲义、总结报告或华丽空话；对话符合人物年龄、身份与关系；避免机械重复模板句。\n\n';
-    constraint += '【任务】基于以上约束，输出 900-1500 字的高质量叙事正文。';
+    // 7. 篇幅与文风：导入预设完全接管这两项；只有内置模式使用项目默认限制。
+    if (importedProfile?.active) {
+      constraint += '【任务】基于以上事实与结构约束生成叙事正文；篇幅、文风与输出格式完全遵循用户导入预设。';
+    } else {
+      constraint += '【字数要求】正文可见部分 900-1500 个汉字；不足 900 字需充实场景、动作与对话，超出 1500 字需精简冗余描写。\n';
+      constraint += '【文风要求】正文必须严格遵循预设条目的叙事风格与口吻：具体克制、以动作/对话/环境反馈驱动，不写设定讲义、总结报告或华丽空话；对话符合人物年龄、身份与关系；避免机械重复模板句。\n\n';
+      constraint += '【任务】基于以上约束，输出 900-1500 字的高质量叙事正文。';
+    }
     return constraint;
   }
 

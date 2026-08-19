@@ -7,6 +7,7 @@ import {
   isKnownKey,
   isNumeric,
   normalizeStructuredVariableUpdate,
+  resolveAlias,
   STRUCTURED_SCALAR_PATH_MAP,
   validate,
   VAR_SCHEMA
@@ -334,8 +335,9 @@ class StateManager {
     const applied = [];
     const oldValues = {};
 
-    for (const v of vars) {
-      if (!v || !v.key) continue;
+    for (const raw of vars) {
+      if (!raw || !raw.key) continue;
+      const v = { ...raw, key: resolveAlias(raw.key) };
       const key = v.key;
 
       // B-01: 拒绝原型污染路径（__proto__/prototype/constructor）
@@ -726,6 +728,31 @@ class StateManager {
     this.state[key] = value;
     this._stateVersion++;
     eventBus.emit('state:changed', { key, value });
+  }
+
+  // Atomically expose several internal substates before any listener runs.
+  // Domain systems use this when one logical operation spans related stores
+  // (for example, an NPC rename touches relationships, memories and combat).
+  setSubBatch(changes) {
+    if (!changes || typeof changes !== 'object' || Array.isArray(changes)) {
+      throw new TypeError('setSubBatch changes 必须是对象');
+    }
+    const entries = Object.entries(changes);
+    if (!entries.length) return;
+    for (const [key] of entries) {
+      if (!isSafePathKey(key) || !key.startsWith('_')) {
+        throw new TypeError(`setSubBatch 拒绝非内部状态键: ${key}`);
+      }
+    }
+    for (const [key, value] of entries) this.state[key] = value;
+    this._stateVersion++;
+    for (const [key, value] of entries) {
+      eventBus.emit('state:changed', { key, value, batched: true });
+    }
+    eventBus.emit('state:sub-batch-changed', {
+      keys: entries.map(([key]) => key),
+      changes: Object.fromEntries(entries)
+    });
   }
 
   // B-12: 浅 patch 顶层 sub 对象，避免多写入路径互相覆盖
@@ -1146,7 +1173,11 @@ class StateManager {
     for (const key of Object.keys(s)) {
       if (key.startsWith('物品·') && key.endsWith('·数量')) {
         clamp(key, 0, 99);
-        if (s[key] <= 0) delete s[key];
+        if (s[key] > 0) continue;
+        const prefix = key.slice(0, -'·数量'.length);
+        for (const sibling of Object.keys(s)) {
+          if (sibling === prefix || sibling === key || sibling.startsWith(`${prefix}·`)) delete s[sibling];
+        }
       }
       if (key.startsWith('技能·') && key.endsWith('·熟练度')) {
         clamp(key, 0, 100);

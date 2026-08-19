@@ -1,5 +1,74 @@
 import { test, expect } from '@playwright/test';
 
+test('importing a Tavern main preset switches immediately and survives reload', async ({ page }) => {
+  await page.goto('/tests/fixtures/preset-editors-harness.html?editor=main&preserve=1');
+  await page.waitForFunction(() => window.__PRESET_EDITOR_HARNESS_READY__ === true);
+
+  const importedSource = {
+    presetName: 'Imported persistence fixture',
+    prompts: [
+      { identifier: 'main', name: 'Imported main', role: 'system', content: 'IMPORTED_RUNTIME_PROMPT' },
+      { identifier: 'chatHistory', name: 'Chat history', marker: true, content: '' },
+      { identifier: 'prefill', name: 'Imported prefill', role: 'assistant', content: '<fixture_think>' }
+    ],
+    prompt_order: [{ order: [
+      { identifier: 'main', enabled: true },
+      { identifier: 'chatHistory', enabled: true },
+      { identifier: 'prefill', enabled: true }
+    ] }],
+    assistant_prefill: 'FIXTURE_CONTINUATION',
+    extensions: { regex_scripts: [{
+      id: 'fixture-regex',
+      scriptName: 'Fixture regex',
+      findRegex: '/<fixture>([\\s\\S]*?)<\\/fixture>/g',
+      replaceString: '$1',
+      placement: [2],
+      disabled: false
+    }] }
+  };
+
+  await page.locator('main-preset-editor #mpe-import-file').setInputFiles({
+    name: 'imported-persistence.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(importedSource), 'utf8')
+  });
+
+  await expect(page.locator('main-preset-editor #mpe-preset-name'))
+    .toHaveValue('Imported persistence fixture');
+  await expect(page.locator('main-preset-editor .mpe-item-name').first())
+    .toHaveText('Imported main');
+
+  const firstRuntime = await page.evaluate(async () => {
+    const { getMainPreset } = await import('/js/data/default-preset.js');
+    const preset = getMainPreset();
+    return {
+      name: preset.name,
+      sourceFormat: preset._sourceFormat,
+      importMode: preset._importMode,
+      prompt: preset.entries.find(entry => entry.id === 'main')?.content,
+      prefill: preset.assistantPrefill,
+      regex: preset.regexScripts?.[0]?.findRegex
+    };
+  });
+  expect(firstRuntime).toEqual({
+    name: 'Imported persistence fixture',
+    sourceFormat: 'sillytavern',
+    importMode: 'replace',
+    prompt: 'IMPORTED_RUNTIME_PROMPT',
+    prefill: 'FIXTURE_CONTINUATION',
+    regex: '/<fixture>([\\s\\S]*?)<\\/fixture>/g'
+  });
+
+  const savedBeforeReload = await page.evaluate(() => localStorage.getItem('naruto_main_preset'));
+  await page.reload();
+  await page.waitForFunction(() => window.__PRESET_EDITOR_HARNESS_READY__ === true);
+
+  await expect(page.locator('main-preset-editor #mpe-preset-name'))
+    .toHaveValue('Imported persistence fixture');
+  expect(await page.evaluate(() => localStorage.getItem('naruto_main_preset')))
+    .toBe(savedBeforeReload);
+});
+
 test('expanding a main preset entry keeps the long list in place', async ({ page }) => {
   await page.goto('/tests/fixtures/preset-editors-harness.html?editor=main');
   await page.waitForFunction(() => window.__PRESET_EDITOR_HARNESS_READY__ === true);

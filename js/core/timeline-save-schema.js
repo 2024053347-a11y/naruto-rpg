@@ -26,6 +26,7 @@ const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const SUPPORTED_SNAPSHOT_VERSIONS = new Set(['3.0', '4.0', '5.0']);
 const OMIT_PERSISTED_VALUE = Symbol('omit-persisted-value');
 const FORBIDDEN_IMAGE_REFERENCE = /(?:data:image\/[^,\s;]+(?:;[^,\s]*)*;base64,|blob:)/i;
+export const TIMELINE_NODE_PAYLOAD_ENCODING = 'gzip-json-v1';
 
 function isBinaryValue(value) {
   if (!value || typeof value !== 'object') return false;
@@ -78,6 +79,34 @@ export function sanitizeTimelinePersistenceValue(value, path = 'timeline') {
   return sanitized === OMIT_PERSISTED_VALUE ? null : sanitized;
 }
 
+function clonePayloadBytes(value) {
+  if (!value) return null;
+  if (value instanceof Uint8Array) return value.slice();
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) return new Uint8Array(value.slice(0));
+  if (ArrayBuffer.isView(value)) {
+    return new Uint8Array(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength));
+  }
+  return null;
+}
+
+export function sanitizeTimelineNode(node, path = 'timeline_node') {
+  if (!isRecord(node)) return sanitizeTimelinePersistenceValue(node, path);
+  const encoding = node.payload_encoding;
+  const payload = Object.prototype.hasOwnProperty.call(node, 'payload') ? node.payload : undefined;
+  const withoutPayload = { ...node };
+  delete withoutPayload.payload;
+  const sanitized = sanitizeTimelinePersistenceValue(withoutPayload, path);
+  if (!isRecord(sanitized)) return sanitized;
+  if (encoding === TIMELINE_NODE_PAYLOAD_ENCODING && payload != null) {
+    const bytes = clonePayloadBytes(payload);
+    if (bytes) {
+      sanitized.payload_encoding = TIMELINE_NODE_PAYLOAD_ENCODING;
+      sanitized.payload = bytes;
+    }
+  }
+  return sanitized;
+}
+
 export function sanitizeTimelineSnapshot(snapshot) {
   if (!isRecord(snapshot)) throw new TypeError('状态快照必须是 JSON 对象');
   const sanitized = sanitizeTimelinePersistenceValue(snapshot, 'state_snapshot');
@@ -101,6 +130,7 @@ export function findForbiddenTimelineMedia(value, rootPath = 'timeline') {
       current.value.forEach((item, index) => stack.push({ value: item, path: `${current.path}[${index}]` }));
     } else {
       for (const [key, item] of Object.entries(current.value)) {
+        if (key === 'payload' && current.value.payload_encoding === TIMELINE_NODE_PAYLOAD_ENCODING) continue;
         stack.push({ value: item, path: `${current.path}.${key}` });
       }
     }
@@ -193,6 +223,9 @@ function inspectTimelineSaveInternal(data) {
       if (!dailyResult.valid) {
         errors.push(`${node.id}: shinobi_daily 忍界日报无效 (${dailyResult.errors.slice(0, 3).join('; ')})`);
       }
+    }
+    if (node.payload_encoding != null || Object.prototype.hasOwnProperty.call(node, 'payload')) {
+      errors.push(`${node.id}: 存档文件不能包含本地 gzip 载荷，导出前必须先解压`);
     }
     if (node.state_snapshot != null && !isRecord(node.state_snapshot)) {
       errors.push(`${node.id}: state_snapshot 状态快照必须是 JSON 对象或 null`);

@@ -11,7 +11,7 @@ globalThis.localStorage = new MemoryStorage();
 globalThis.customElements ||= { get: () => null };
 
 const [
-  { AgentRunner },
+  { AgentRunner, evidenceAudienceForAgent },
   { AgentPipeline, AGENT_PIPELINE_REVISION, normalizeWritingOutlineResult },
   agentManifestModule,
   { MessagePipeline },
@@ -25,6 +25,45 @@ const [
   import('../js/core/ai-client.js'),
   import('../js/core/state-manager.js')
 ]);
+
+const { SHINOBI_DAILY_EXAMPLE } = await import('../js/core/shinobi-daily.js');
+const { VARIABLE_UPDATER_MIXED_EXAMPLE } = await import('../js/data/prompts.js');
+
+function updaterThinking(userInput = '继续') {
+  return `<variable_thinking>请求复述：${userInput}
+1. 时间地点与地图：旧值 -> 最终正文事实 -> 新值；已核对。
+2. 资源与属性成长：旧值 -> 最终正文事实 -> 新值；已核对。
+3. 技能与能力：旧值 -> 最终正文事实 -> 新值；已核对。
+4. 物品、金钱与装备：旧值 -> 最终正文事实 -> 新值；已核对。
+5. 任务、目标、声望与历练：旧值 -> 最终正文事实 -> 新值；已核对。
+6. 人物关系与NPC状态：旧值 -> 最终正文事实 -> 新值；已核对。
+7. 战斗、伤势与世界事件：旧值 -> 最终正文事实 -> 新值；已核对。
+8. 记忆、线索、约定与待办：旧值 -> 最终正文事实 -> 新值；已核对。</variable_thinking>`;
+}
+
+function updaterManifest({ relationships = false } = {}) {
+  return `<update_manifest>${JSON.stringify({
+    domains: {
+      world: 'unchanged', attributes: 'unchanged', skills: 'unchanged', equipment: 'unchanged',
+      missions: 'unchanged', relationships: relationships ? 'updated' : 'unchanged',
+      combat: 'unchanged', events: 'unchanged'
+    },
+    present_npcs: relationships ? { 旗木卡卡西: 'updated' } : {},
+    active_missions: {}
+  })}</update_manifest>`;
+}
+
+function completeUpdaterOutput({ relationship = false } = {}) {
+  return [
+    updaterThinking(),
+    updaterManifest({ relationships: relationship }),
+    relationship
+      ? '<relationship>{"npc":"旗木卡卡西","history":"愿意继续指导玩家。"}</relationship>'
+      : '',
+    '<memory>{"summary":"本回合连续性已经核对。"}</memory>',
+    `<shinobi_daily>${JSON.stringify(SHINOBI_DAILY_EXAMPLE)}</shinobi_daily>`
+  ].filter(Boolean).join('\n');
+}
 
 const failures = [];
 let passed = 0;
@@ -69,6 +108,106 @@ await test('agent stages run without an internal deadline', async () => {
   assert.equal(receivedOptions.timeout, 0, '0 is the explicit no-timeout contract');
   assert.equal(receivedOptions.max_tokens, 0, '0 tells compatible providers to omit an Agent output cap');
   assert.equal(cancelCalls, 0);
+});
+
+await test('continuity updater receives updater evidence rather than writer evidence', () => {
+  assert.equal(evidenceAudienceForAgent('continuity-updater'), 'updater');
+  let requestedAudience = '';
+  const runner = new AgentRunner({
+    pipeline: {
+      getTurnEvidenceView: audience => {
+        requestedAudience = audience;
+        return {
+          audience,
+          current_state: {},
+          update_obligations: { fixed_domains: [], present_npcs: [], active_missions: [] }
+        };
+      }
+    }
+  });
+  const messages = runner._buildMessages('continuity-updater', agentManifestModule.AGENT_MANIFESTS['continuity-updater'], {
+    state: {}, userInput: '继续', taskPrompt: '更新连续性', extraContext: {}
+  });
+  assert.equal(requestedAudience, 'updater');
+  const prompt = messages.map(message => message.content).join('\n');
+  assert.match(prompt, /audience=updater|update_obligations|本回合更新义务/);
+  assert.ok(prompt.includes(VARIABLE_UPDATER_MIXED_EXAMPLE));
+  assert.match(prompt, /忍界日报结构契约/);
+  assert.equal(prompt.split(JSON.stringify(SHINOBI_DAILY_EXAMPLE)).length - 1, 1);
+});
+
+await test('continuity updater call receives final-narrative update obligations', async () => {
+  let compileArgs = null;
+  let runnerParams = null;
+  const evidenceView = {
+    audience: 'updater', current_state: {},
+    update_obligations: {
+      fixed_domains: [],
+      present_npcs: [{ npc: '旗木卡卡西' }],
+      active_missions: []
+    }
+  };
+  const pipeline = new AgentPipeline({
+    pipeline: {
+      _lastTurnEvidencePacket: { current_plot: null },
+      _compileUpdaterEvidence: args => {
+        compileArgs = args;
+        return evidenceView;
+      }
+    },
+    memorySystem: null
+  });
+  pipeline.runner.run = async (_agentType, params) => {
+    runnerParams = params;
+    return completeUpdaterOutput({ relationship: true });
+  };
+  const text = await pipeline._appendContinuityUpdates(
+    { _relationships: { 旗木卡卡西: { combatant: false } } },
+    '继续',
+    '旗木卡卡西继续指导玩家。',
+    ['旗木卡卡西'],
+    { participants: ['旗木卡卡西'] }
+  );
+  assert.match(text, /<update_manifest>/);
+  assert.equal(compileArgs.narrativeResponse, '旗木卡卡西继续指导玩家。');
+  assert.equal(runnerParams.extraContext.evidenceView, evidenceView);
+  assert.deepEqual(runnerParams.extraContext.updateObligations, evidenceView.update_obligations);
+});
+
+await test('continuity updater only receives visible narrative facts', async () => {
+  let compileArgs = null;
+  let runnerParams = null;
+  const pipeline = new AgentPipeline({
+    pipeline: {
+      _compileUpdaterEvidence: args => {
+        compileArgs = args;
+        return {
+          audience: 'updater',
+          current_state: {},
+          update_obligations: {
+            fixed_domains: [], present_npcs: [], active_missions: []
+          }
+        };
+      }
+    },
+    memorySystem: null
+  });
+  pipeline.runner.run = async (_agentType, params) => {
+    runnerParams = params;
+    return completeUpdaterOutput();
+  };
+  const raw = '<reasoning>NPC 私密计划：今夜背叛。</reasoning><final>公开正文：他点头告别。</final>';
+  const result = await pipeline._appendContinuityUpdates({}, '继续', raw, [], null);
+
+  assert.equal(compileArgs.narrativeResponse, '公开正文：他点头告别。');
+  assert.equal(runnerParams.extraContext.draft, '公开正文：他点头告别。');
+  assert.doesNotMatch([
+    runnerParams.taskPrompt,
+    runnerParams.extraContext.draft,
+    JSON.stringify(runnerParams.extraContext.evidenceView),
+    JSON.stringify(runnerParams.extraContext.updateObligations)
+  ].join('\n'), /今夜背叛|私密计划/);
+  assert.match(result, /<memory>/);
 });
 
 await test('manual cancellation still aborts an unbounded agent stage', async () => {
@@ -245,6 +384,208 @@ await test('message pipeline never calls direct generation for an empty agent re
     else localStorage.setItem('naruto_agent_config', previousAgentConfig);
     if (previousApiConfig === null) localStorage.removeItem('naruto_api_config');
     else localStorage.setItem('naruto_api_config', previousApiConfig);
+  }
+});
+
+await test('agent fallback commits through the main transport and agent model when the updater is disabled', async () => {
+  const storageKeys = [
+    'naruto_agent_config',
+    'naruto_api_config',
+    'naruto_memory_config',
+    'naruto_rpg_image_settings_v1'
+  ];
+  const previousStorage = new Map(storageKeys.map(key => [key, localStorage.getItem(key)]));
+  const previousState = structuredClone(stateManager.state);
+  const originalExecute = AgentPipeline.prototype.execute;
+  const originalGenerateRaw = globalThis.generateRaw;
+  const requestedModels = [];
+
+  localStorage.setItem('naruto_agent_config', JSON.stringify({
+    enabled: true,
+    mode: 'standard',
+    agentModel: 'agent-continuity-fallback-model'
+  }));
+  localStorage.setItem('naruto_api_config', JSON.stringify({
+    backend: 'tavern',
+    model: 'main-transport-model',
+    aiCallPolicy: { strictSingleCall: false },
+    variableUpdater: {
+      enabled: false,
+      backend: 'openai',
+      apiUrl: 'https://stale-updater.invalid/v1',
+      apiKey: 'stale-updater-key',
+      model: 'stale-updater-model',
+      temperature: 0.2,
+      maxTokens: 8192,
+      streaming: false
+    },
+    narrativeReview: { enabled: false }
+  }));
+  localStorage.setItem('naruto_memory_config', JSON.stringify({
+    aiCompressionEnabled: false,
+    deepEnabled: false,
+    npcSummaryEnabled: false,
+    recallEnabled: false
+  }));
+  localStorage.setItem('naruto_rpg_image_settings_v1', JSON.stringify({ enabled: false }));
+
+  const state = stateManager.getDefaultState();
+  state['玩家·姓名'] = 'Agent兜底测试者';
+  state['系统·回合数'] = 7;
+  state._missions = { active: {}, available: {}, completed: {}, failed: {}, log: {}, stats: {} };
+  state._relationships = {};
+  stateManager.state = state;
+  stateManager._stateVersion++;
+  stateManager._apiConfigCache = null;
+
+  AgentPipeline.prototype.execute = async function () {
+    this._agentSelfUpdater = false;
+    return '训练场的风吹过空旷地面，玩家收好忍具。\n<memory>不是JSON</memory>';
+  };
+  globalThis.generateRaw = async options => {
+    requestedModels.push(options?.custom_api?.model || '');
+    return completeUpdaterOutput();
+  };
+
+  const host = new MessagePipeline({
+    knowledgeBase: { invalidateCache() {} },
+    timelineSystem: null,
+    memorySystem: null
+  });
+  host._rollDice = () => ({ d20: 10 });
+  host._preprocessInput = input => input;
+  host._formatDiceBlock = () => '';
+
+  try {
+    const result = await host.process('继续');
+    assert.deepEqual(requestedModels, ['agent-continuity-fallback-model']);
+    assert.match(result.cleanResponse, /玩家收好忍具/);
+    assert.doesNotMatch(result.cleanResponse, /<memory>|不是JSON/);
+    assert.deepEqual(result.shinobiDaily, SHINOBI_DAILY_EXAMPLE);
+    assert.equal(stateManager.get('系统·回合数'), 8, '标准 updater 兜底完成后回合必须提交');
+  } finally {
+    AgentPipeline.prototype.execute = originalExecute;
+    if (originalGenerateRaw === undefined) delete globalThis.generateRaw;
+    else globalThis.generateRaw = originalGenerateRaw;
+    stateManager.state = previousState;
+    stateManager._stateVersion++;
+    stateManager._apiConfigCache = null;
+    for (const [key, value] of previousStorage) {
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    }
+  }
+});
+
+await test('post-cleanup imported envelope guard rejects a truncated machine tail before commit', async () => {
+  const {
+    MAIN_PRESET_STORAGE_KEY,
+    invalidateMainPresetCache
+  } = await import('../js/data/default-preset.js');
+  const storageKeys = [
+    MAIN_PRESET_STORAGE_KEY,
+    'naruto_agent_config',
+    'naruto_api_config',
+    'naruto_memory_config',
+    'naruto_rpg_image_settings_v1'
+  ];
+  const previousStorage = new Map(storageKeys.map(key => [key, localStorage.getItem(key)]));
+  const previousState = structuredClone(stateManager.state);
+  const previousAiConfig = aiClient.getConfig();
+  const originalGenerateRaw = globalThis.generateRaw;
+  let generationCalls = 0;
+  const rawModelResponse = `<dream_plot>
+<dream_body>安全正文。</dream_body>
+<dream_after_format>
+<memory>{"summary":"未闭合的记忆尾部"}
+</dream_after_format>
+</dream_plot>`;
+
+  localStorage.setItem(MAIN_PRESET_STORAGE_KEY, JSON.stringify({
+    name: 'Dream single-root guard fixture',
+    _version: 1,
+    _sourceFormat: 'sillytavern',
+    _importMode: 'replace',
+    entries: [{
+      id: 'dream-envelope',
+      name: '单根输出格式',
+      enabled: true,
+      role: 'system',
+      content: `整份输出的根节点必须是 <dream_plot>。
+<dream_plot>
+<dream_body>正文</dream_body>
+<dream_after_format>展示尾部</dream_after_format>
+</dream_plot>`
+    }]
+  }));
+  invalidateMainPresetCache();
+  localStorage.setItem('naruto_agent_config', JSON.stringify({ enabled: false, mode: 'off' }));
+  localStorage.setItem('naruto_api_config', JSON.stringify({
+    backend: 'tavern',
+    model: 'dream-main-model',
+    aiCallPolicy: { strictSingleCall: false },
+    variableUpdater: { enabled: true, backend: 'inherit', model: 'dream-updater-model', streaming: false },
+    narrativeReview: { enabled: false }
+  }));
+  localStorage.setItem('naruto_memory_config', JSON.stringify({
+    aiCompressionEnabled: false,
+    deepEnabled: false,
+    npcSummaryEnabled: false,
+    recallEnabled: false
+  }));
+  localStorage.setItem('naruto_rpg_image_settings_v1', JSON.stringify({ enabled: false }));
+
+  const state = stateManager.getDefaultState();
+  state['玩家·姓名'] = '单根校验测试者';
+  state['系统·回合数'] = 7;
+  state._missions = { active: {}, available: {}, completed: {}, failed: {}, log: {}, stats: {} };
+  state._relationships = {};
+  stateManager.state = state;
+  stateManager._stateVersion++;
+  stateManager._apiConfigCache = null;
+  aiClient.configure(stateManager.getAPIConfig());
+
+  globalThis.generateRaw = async () => {
+    generationCalls++;
+    return rawModelResponse;
+  };
+
+  const host = new MessagePipeline({
+    knowledgeBase: { invalidateCache() {} },
+    timelineSystem: null,
+    memorySystem: null
+  });
+  host._rollDice = () => ({ d20: 10 });
+  host._preprocessInput = input => input;
+  host._formatDiceBlock = () => '';
+
+  try {
+    const outcome = await host.process('继续').then(() => null, error => error);
+    assert.ok(outcome instanceof Error, '根节点闭合被清理吞掉时必须拒绝回合');
+    assert.equal(outcome.code, 'IMPORTED_PRESET_OUTPUT_INCOMPLETE');
+    assert.match(outcome.message, /dream_plot|dream_after_format/);
+    assert.equal(generationCalls, 1, '失败应发生在二次 updater 请求之前');
+    assert.equal(stateManager.get('系统·回合数'), 7, '不完整 envelope 不得提交任何状态');
+    assert.equal(globalThis.__NARUTO_PRESET_DEBUG__?.rawResponse, rawModelResponse,
+      '失败诊断必须保留模型返回的逐字完整原文');
+    assert.equal(globalThis.__NARUTO_PRESET_DEBUG__?.stage, 'post-machine-processing');
+    assert.equal(host.chatHistory.length, 0, '诊断原文不得进入聊天历史');
+  } finally {
+    if (originalGenerateRaw === undefined) delete globalThis.generateRaw;
+    else globalThis.generateRaw = originalGenerateRaw;
+    stateManager.state = previousState;
+    stateManager._stateVersion++;
+    stateManager._apiConfigCache = null;
+    if (previousAiConfig) aiClient.configure(previousAiConfig);
+    else {
+      aiClient.adapter = null;
+      aiClient._config = null;
+    }
+    for (const [key, value] of previousStorage) {
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    }
+    invalidateMainPresetCache();
   }
 });
 
@@ -738,14 +1079,71 @@ await test('continuity updater tags are appended and mark agent-self-update', as
     pipeline: { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) },
     memorySystem: null
   });
-  pipeline._runContinuityUpdater = async () => (
-    '<relationship>{"npc":"旗木卡卡西","affection_change":1,"trust_change":2,"inner_thoughts":"认可","history":"愿意多指导一招。"}</relationship>\n<memory>回合小结。</memory>'
-  );
+  pipeline._runContinuityUpdater = async () => completeUpdaterOutput({ relationship: true });
   const text = await pipeline._appendContinuityUpdates({}, '继续', '正文内容', ['旗木卡卡西'], { participants: ['旗木卡卡西'] });
   assert.ok(text.includes('<relationship>'), 'relationship tag must be appended');
-  assert.ok(text.includes('inner_thoughts'), 'relationship must carry psychology');
-  assert.ok(text.includes('回合小结'), 'memory tag must be appended');
+  assert.ok(text.includes('history'), 'relationship must carry the observable turn history');
+  assert.ok(text.includes('本回合连续性已经核对'), 'memory tag must be appended');
   assert.equal(pipeline.didAgentProduceUpdaterTags(), true, 'agent self-updater flag must be set');
+
+  const dreamPipeline = new AgentPipeline({
+    pipeline: {
+      getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }),
+      _lastImportedPresetProfile: {
+        active: true,
+        rootWrapper: 'dream_plot',
+        requiredDisplayWrappers: ['dream_body', 'dream_after_format'],
+        machineTailContainer: 'dream_after_format'
+      }
+    },
+    memorySystem: null
+  });
+  dreamPipeline._runContinuityUpdater = async () => completeUpdaterOutput();
+  const dream = '<dream_plot>\n<dream_body>正文内容</dream_body>\n<dream_after_format>\n<dream_done/>\n</dream_after_format>\n</dream_plot>';
+  const dreamResult = await dreamPipeline._appendContinuityUpdates({}, '继续', dream, [], null);
+  assert.ok(dreamResult.indexOf('<variable_thinking>') < dreamResult.indexOf('</dream_after_format>'));
+  assert.ok(dreamResult.indexOf('</dream_after_format>') < dreamResult.indexOf('</dream_plot>'));
+  assert.equal(dreamResult.trim().endsWith('</dream_plot>'), true,
+    'single-root imported XML must remain the outer response envelope');
+});
+
+await test('continuity updater marks ownership only after machine-tail insertion succeeds', async () => {
+  const pipeline = new AgentPipeline({
+    pipeline: {
+      getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }),
+      _lastImportedPresetProfile: {
+        active: true,
+        rootWrapper: 'dream_plot',
+        requiredDisplayWrappers: ['dream_body', 'dream_after_format'],
+        machineTailContainer: 'dream_after_format'
+      }
+    },
+    memorySystem: null
+  });
+  pipeline._runContinuityUpdater = async () => completeUpdaterOutput();
+  const incomplete = '<dream_plot><dream_body>正文</dream_body></dream_plot>';
+  const result = await pipeline._appendContinuityUpdates({}, '继续', incomplete, [], null);
+
+  assert.equal(result, incomplete);
+  assert.equal(pipeline.didAgentProduceUpdaterTags(), false);
+});
+
+await test('continuity updater cannot suppress the standard updater with malformed or incomplete output', async () => {
+  const cases = [
+    '<var path="当前状态·查克拉">35</var><memory>{"summary":"旧格式。"}</memory>',
+    `${updaterThinking()}\n${updaterManifest()}\n<memory>不是JSON</memory>\n<shinobi_daily>${JSON.stringify(SHINOBI_DAILY_EXAMPLE)}</shinobi_daily>`,
+    `${updaterThinking()}\n${updaterManifest()}\n<memory>{"summary":"缺少日报。"}</memory>`
+  ];
+  for (const candidate of cases) {
+    const pipeline = new AgentPipeline({
+      pipeline: { getTurnEvidenceView: () => ({ current_state: {}, evidence: [] }) },
+      memorySystem: null
+    });
+    pipeline._runContinuityUpdater = async () => candidate;
+    const text = await pipeline._appendContinuityUpdates({}, '继续', '正文内容', [], null);
+    assert.equal(text, '正文内容');
+    assert.equal(pipeline.didAgentProduceUpdaterTags(), false);
+  }
 });
 
 await test('stage cache persists across pipeline instances and clears on success', () => {

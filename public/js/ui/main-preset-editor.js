@@ -1,5 +1,6 @@
 import { eventBus } from '../core/event-bus.js';
 import { DEFAULT_MAIN_PRESET, DEFAULT_MAIN_PRESET_VERSION, PRESET_ACTIVATIONS, getMainPreset, invalidateMainPresetCache } from '../data/default-preset.js';
+import { compileMainPresetImport, summarizeMainPresetImport } from '../data/main-preset-import.js';
 import { escHtml, escAttr } from '../utils/format.js';
 import GameModal from './modal.js';
 import { bindCustomSelects } from './custom-select.js';
@@ -22,12 +23,16 @@ class MainPresetEditor extends HTMLElement {
     this._preset = JSON.parse(JSON.stringify(getMainPreset()));
   }
 
-  _save() {
+  _save(message = '主预设已保存') {
     try {
       localStorage.setItem('naruto_main_preset', JSON.stringify(this._preset));
       invalidateMainPresetCache();
-      eventBus.emit('app:toast', '主预设已保存');
-    } catch (e) { eventBus.emit('app:toast', '保存失败: ' + e.message); }
+      eventBus.emit('app:toast', message);
+      return true;
+    } catch (e) {
+      eventBus.emit('app:toast', '保存失败: ' + e.message);
+      return false;
+    }
   }
 
   _render() {
@@ -233,7 +238,10 @@ class MainPresetEditor extends HTMLElement {
     const root = this.shadowRoot;
 
     root.querySelector('#mpe-close')?.addEventListener('click', () => this.remove());
-    root.querySelector('#mpe-save')?.addEventListener('click', () => { this._syncAll(); this._save(); this.remove(); });
+    root.querySelector('#mpe-save')?.addEventListener('click', () => {
+      this._syncAll();
+      if (this._save()) this.remove();
+    });
 
     root.querySelector('#mpe-reset-default')?.addEventListener('click', () => {
       if (confirm('恢复为默认 Narutomech 预设？当前修改将丢失。')) {
@@ -262,12 +270,13 @@ class MainPresetEditor extends HTMLElement {
       reader.onload = () => {
         try {
           const raw = JSON.parse(reader.result);
-          if (raw.entries && Array.isArray(raw.entries)) {
-            this._preset = raw;
-          } else {
-            const { entries, regexScripts } = this._parseTavernPreset(raw);
-            this._preset = { name: raw.presetName || file.name.replace('.json', ''), entries, regexScripts };
-          }
+          const imported = compileMainPresetImport(raw, { fileName: file.name });
+          const summary = summarizeMainPresetImport(imported);
+          this._preset = imported;
+          const saved = this._save(
+            `预设已导入并启用：${summary.enabledPromptCount}/${summary.promptCount} 条提示词，${summary.enabledRegexCount}/${summary.regexCount} 条正则`
+          );
+          if (!saved) throw new Error('浏览器存储空间不足，原运行预设未能切换');
           this._expandedIdx = -1;
           this._render();
         } catch (err) { GameModal.alert({ title: '解析失败', message: err.message }); }
@@ -502,65 +511,6 @@ class MainPresetEditor extends HTMLElement {
       const idx = parseInt(sel.dataset.idx);
       if (this._preset.entries[idx]) this._preset.entries[idx].activation = sel.value;
     });
-  }
-
-  _parseTavernPreset(raw) {
-    const entries = [];
-    let regexScripts = [];
-
-    if (raw.regex_scripts && Array.isArray(raw.regex_scripts)) {
-      regexScripts = raw.regex_scripts.filter(r => r && r.findRegex).map(r => ({
-        id: r.id || `regex_${regexScripts.length}`,
-        name: r.scriptName || `正则 ${regexScripts.length + 1}`,
-        enabled: r.disabled === false,
-        findRegex: r.findRegex,
-        replaceString: r.replaceString || '',
-        placement: Array.isArray(r.placement) ? r.placement : [r.placement || 2],
-        substituteRegex: r.substituteRegex || 0,
-        markdownOnly: r.markdownOnly || false
-      }));
-    }
-    if (raw.extensions?.regex_scripts && Array.isArray(raw.extensions.regex_scripts)) {
-      const ext = raw.extensions.regex_scripts.filter(r => r && r.findRegex).map(r => ({
-        id: r.id || `regex_${regexScripts.length}`,
-        name: r.scriptName || `正则 ${regexScripts.length + 1}`,
-        enabled: r.disabled === false,
-        findRegex: r.findRegex,
-        replaceString: r.replaceString || '',
-        placement: Array.isArray(r.placement) ? r.placement : [r.placement || 2],
-        substituteRegex: r.substituteRegex || 0,
-        markdownOnly: r.markdownOnly || false
-      }));
-      regexScripts = [...regexScripts, ...ext];
-    }
-
-    if (raw.prompts && Array.isArray(raw.prompts)) {
-      for (const p of raw.prompts) {
-        entries.push({
-          id: p.identifier || `entry_${entries.length}`,
-          name: p.name || `条目 ${entries.length + 1}`,
-          enabled: p.enabled !== false,
-          role: p.role || 'system',
-          content: (p.content || '').trim(),
-          order: entries.length
-        });
-      }
-    }
-    if (entries.length === 0) {
-      for (const [key, value] of Object.entries(raw)) {
-        if (typeof value === 'string' && value.length > 50) {
-          entries.push({
-            id: `entry_${entries.length}`,
-            name: key,
-            enabled: true,
-            role: 'system',
-            content: value.trim(),
-            order: entries.length
-          });
-        }
-      }
-    }
-    return { entries, regexScripts };
   }
 
   _esc(text) {

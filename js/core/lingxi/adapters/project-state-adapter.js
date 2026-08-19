@@ -1,3 +1,5 @@
+import { isCompressedTimelineNode } from '../../timeline-node-codec.js';
+
 const DEFAULT_LIMIT = 12;
 const MAX_LIMIT = 40;
 
@@ -201,6 +203,7 @@ function nodeTimestamp(node = {}) {
 
 function publicTimelineNode(node = {}, currentNodeId = '') {
   if (!node || typeof node !== 'object' || Array.isArray(node)) node = {};
+  const compressed = isCompressedTimelineNode(node);
   return {
     id: cleanText(node.id, 200),
     parentId: cleanText(node.parent_id, 200) || null,
@@ -210,6 +213,7 @@ function publicTimelineNode(node = {}, currentNodeId = '') {
     summary: cleanText(node.ai_response_summary || node.summary || node.clean_response, 900),
     createdAt: nodeTimestamp(node) || null,
     archived: node.archived === true,
+    compressed,
     current: cleanText(node.id, 200) === currentNodeId
   };
 }
@@ -356,7 +360,7 @@ export class LingXiProjectStateAdapter {
       const needle = cleanText(query, 160).toLocaleLowerCase('zh-CN');
       const allNodes = listValues(nodesRaw);
       const filtered = allNodes.filter(node => {
-        if (!includeArchived && node?.archived === true) return false;
+        if (!includeArchived && node?.archived === true && !isCompressedTimelineNode(node)) return false;
         if (normalizedBranch && cleanText(node?.branch_id, 200) !== normalizedBranch) return false;
         if (!needle) return true;
         return `${node?.id || ''} ${node?.player_input || ''} ${node?.ai_response_summary || node?.summary || ''}`

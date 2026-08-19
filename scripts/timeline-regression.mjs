@@ -3,6 +3,11 @@ import { readFile } from 'node:fs/promises';
 
 import { stateManager } from '../js/core/state-manager.js';
 import { findForbiddenTimelineMedia, inspectTimelineSave } from '../js/core/timeline-save-schema.js';
+import {
+  compressTimelineNode,
+  decompressTimelineNode,
+  isCompressedTimelineNode
+} from '../js/core/timeline-node-codec.js';
 import { timelineSystem } from '../js/systems/timeline-system.js';
 
 let passed = 0;
@@ -20,7 +25,7 @@ globalThis.localStorage = {
   removeItem: key => storage.delete(String(key))
 };
 
-async function withTimelineDb(seed, fn, { failReplace = false, failCreate = false } = {}) {
+async function withTimelineDb(seed, fn, { failReplace = false, failCreate = false, archive = false } = {}) {
   const stores = {
     timeline_nodes: new Map((seed.nodes || []).map(item => [item.id, clone(item)])),
     timeline_branches: new Map((seed.branches || []).map(item => [item.id, clone(item)])),
@@ -100,8 +105,10 @@ async function withTimelineDb(seed, fn, { failReplace = false, failCreate = fals
   timelineSystem._nodeCache.clear();
   timelineSystem._initialized = false;
   timelineSystem._pendingBranchFrom = null;
+  timelineSystem._archiveRunning = false;
+  timelineSystem._archiveQueue = Promise.resolve();
   const originalMaybeArchive = timelineSystem._maybeArchive;
-  timelineSystem._maybeArchive = async () => 0;
+  if (!archive) timelineSystem._maybeArchive = async () => 0;
   stateManager.reset();
   try {
     return await fn(stores, stats);
@@ -111,6 +118,8 @@ async function withTimelineDb(seed, fn, { failReplace = false, failCreate = fals
     timelineSystem._nodeCache.clear();
     timelineSystem._initialized = false;
     timelineSystem._pendingBranchFrom = null;
+    timelineSystem._archiveRunning = false;
+    timelineSystem._archiveQueue = Promise.resolve();
   }
 }
 
@@ -927,8 +936,8 @@ await test('merge import rebases turn numbers after the attachment node', async 
     const mergedBranch = [...stores.timeline_branches.values()].find(branch => branch.id === mergedRoot.branch_id);
     assert.equal(mergedRoot.turn_number, 101);
     assert.equal(mergedChild.turn_number, 103);
-    assert.equal(mergedRoot.state_snapshot['系统·回合数'], 102);
-    assert.equal(mergedChild.state_snapshot['系统·回合数'], 104);
+    assert.equal(mergedRoot.state_snapshot['系统·回合数'], 101);
+    assert.equal(mergedChild.state_snapshot['系统·回合数'], 103);
     assert.equal(mergedBranch.diverged_at_turn, 100);
     assert.ok(mergedRoot.turn_number > attachment.turn_number);
   });
@@ -1920,6 +1929,209 @@ await test('authoritative cloud bindings reconcile timeline and portrait revisio
     } finally {
       integration.dispose();
     }
+  });
+});
+
+await test('restoring a node aligns live turn count to the node turn, not the next turn', async () => {
+  const parent = {
+    ...rootNode,
+    turn_number: 1,
+    children_ids: ['node_child'],
+    state_snapshot: { ...snapshot('parent'), '系统·回合数': 2 }
+  };
+  const child = {
+    ...rootNode,
+    id: 'node_child',
+    parent_id: 'node_root',
+    turn_number: 2,
+    children_ids: [],
+    state_snapshot: { ...snapshot('child'), '系统·回合数': 3 }
+  };
+  await withTimelineDb({
+    nodes: [parent, child],
+    branches: [{ ...mainBranch, head_node_id: 'node_child', node_count: 2 }],
+    meta: [{ key: 'root', value: { ...rootMeta.value, current_id: 'node_child', total_nodes: 2 } }]
+  }, async () => {
+    stateManager.restore({ ...snapshot('live'), '系统·回合数': 3 });
+    await timelineSystem.jumpToNode('node_root');
+    assert.equal(stateManager.get('系统·回合数'), 1);
+    assert.equal(stateManager.snapshot().marker, 'parent');
+  });
+});
+
+await test('gzip-compressed cold nodes restore on jump and export without payload', async () => {
+  const old = {
+    ...rootNode,
+    id: 'node_old',
+    parent_id: 'node_root',
+    turn_number: 1,
+    children_ids: [],
+    chat_history_delta: [{ role: 'user', content: 'keep-me' }],
+    state_snapshot: snapshot('compressed-old'),
+    archived: true
+  };
+  const compressed = await compressTimelineNode(old);
+  assert.equal(isCompressedTimelineNode(compressed), true);
+  assert.equal(compressed.state_snapshot, undefined);
+  assert.deepEqual(compressed.chat_history_delta, old.chat_history_delta);
+
+  const parent = { ...rootNode, children_ids: ['node_old'] };
+  await withTimelineDb({
+    nodes: [parent, compressed],
+    branches: [{ ...mainBranch, head_node_id: 'node_old', node_count: 2 }],
+    meta: [{ key: 'root', value: { ...rootMeta.value, current_id: 'node_root', total_nodes: 2 } }]
+  }, async stores => {
+    await timelineSystem.jumpToNode('node_old');
+    assert.equal(stateManager.snapshot().marker, 'compressed-old');
+    const stored = stores.timeline_nodes.get('node_old');
+    assert.equal(isCompressedTimelineNode(stored), false);
+    assert.equal(stored.state_snapshot.marker, 'compressed-old');
+    assert.equal(stored.archived, false);
+    assert.deepEqual(stored.chat_history_delta, old.chat_history_delta);
+
+    stores.timeline_nodes.set('node_old', clone(compressed));
+    const exported = await timelineSystem.getExportData({ includeArchive: true });
+    assert.equal(exported.nodes.find(node => node.id === 'node_old').state_snapshot.marker, 'compressed-old');
+    assert.equal(Object.hasOwn(exported.nodes.find(node => node.id === 'node_old'), 'payload'), false);
+    assert.deepEqual(inspectTimelineSave(exported), { valid: true, errors: [] });
+  });
+});
+
+await test('cold window gzip keeps the latest 20 nodes uncompressed', async () => {
+  const nodes = [];
+  for (let index = 0; index < 25; index++) {
+    nodes.push({
+      id: `node_${index}`,
+      parent_id: index === 0 ? null : `node_${index - 1}`,
+      children_ids: index === 24 ? [] : [`node_${index + 1}`],
+      branch_id: 'branch_main',
+      turn_number: index,
+      chat_history_delta: [{ role: 'user', content: `turn-${index}` }],
+      state_snapshot: snapshot(`turn-${index}`),
+      archived: false
+    });
+  }
+  await withTimelineDb({
+    nodes,
+    branches: [{ ...mainBranch, head_node_id: 'node_24', node_count: 25 }],
+    meta: [{ key: 'root', value: { root_id: 'node_0', current_id: 'node_24', active_branch: 'branch_main', total_nodes: 25 } }]
+  }, async stores => {
+    const result = await timelineSystem._compressColdNodes();
+    assert.equal(result.compressed, 5);
+    for (let index = 0; index < 5; index++) {
+      const node = stores.timeline_nodes.get(`node_${index}`);
+      assert.equal(isCompressedTimelineNode(node), true);
+      assert.equal(node.archived, true);
+      assert.deepEqual(node.chat_history_delta, [{ role: 'user', content: `turn-${index}` }]);
+    }
+    for (let index = 5; index < 25; index++) {
+      const node = stores.timeline_nodes.get(`node_${index}`);
+      assert.equal(isCompressedTimelineNode(node), false);
+      assert.equal(node.state_snapshot.marker, `turn-${index}`);
+      assert.equal(node.archived, false);
+    }
+
+    await timelineSystem.jumpToNode('node_0');
+    assert.equal(stateManager.snapshot().marker, 'turn-0');
+    await timelineSystem._compressColdNodes();
+    assert.equal(isCompressedTimelineNode(stores.timeline_nodes.get('node_0')), false);
+    assert.equal(stores.timeline_nodes.get('node_0').state_snapshot.marker, 'turn-0');
+    assert.equal(isCompressedTimelineNode(stores.timeline_nodes.get('node_24')), true);
+  });
+});
+
+await test('merge import hydrates gzip-compressed existing nodes before validation', async () => {
+  const compressedRoot = await compressTimelineNode({
+    ...rootNode,
+    state_snapshot: snapshot('root')
+  });
+  assert.equal(isCompressedTimelineNode(compressedRoot), true);
+  await withTimelineDb({
+    nodes: [compressedRoot],
+    branches: [mainBranch],
+    meta: [rootMeta]
+  }, async stores => {
+    stateManager.setSub('_meta', { current_node_id: 'node_root', active_branch: 'branch_main' });
+    const incoming = {
+      nodes: [{ ...rootNode, state_snapshot: snapshot('imported') }],
+      branches: [{ ...mainBranch }],
+      meta: clone(rootMeta)
+    };
+    await timelineSystem.importTimeline(incoming, { mode: 'merge' });
+    const storedRoot = stores.timeline_nodes.get('node_root');
+    assert.equal(isCompressedTimelineNode(storedRoot), false);
+    assert.equal(storedRoot.state_snapshot.marker, 'root');
+    assert.equal(storedRoot.children_ids.length, 1);
+  });
+});
+
+await test('queued archive after jump keeps the new current node uncompressed', async () => {
+  const nodes = [];
+  for (let index = 0; index < 25; index++) {
+    nodes.push({
+      id: `node_${index}`,
+      parent_id: index === 0 ? null : `node_${index - 1}`,
+      children_ids: index === 24 ? [] : [`node_${index + 1}`],
+      branch_id: 'branch_main',
+      turn_number: index,
+      state_snapshot: snapshot(`turn-${index}`),
+      archived: false
+    });
+  }
+  await withTimelineDb({
+    nodes,
+    branches: [{ ...mainBranch, head_node_id: 'node_24', node_count: 25 }],
+    meta: [{ key: 'root', value: { root_id: 'node_0', current_id: 'node_24', active_branch: 'branch_main', total_nodes: 25 } }]
+  }, async stores => {
+    await timelineSystem._compressColdNodes();
+    let release;
+    const gate = new Promise(resolve => { release = resolve; });
+    const originalCompress = timelineSystem._compressColdNodes.bind(timelineSystem);
+    let started = 0;
+    timelineSystem._compressColdNodes = async () => {
+      started += 1;
+      if (started === 1) await gate;
+      return originalCompress();
+    };
+    try {
+      const first = timelineSystem._maybeArchive();
+      await timelineSystem.jumpToNode('node_0');
+      const second = timelineSystem._maybeArchive();
+      release();
+      await Promise.all([first, second]);
+    } finally {
+      timelineSystem._compressColdNodes = originalCompress;
+    }
+    assert.equal(isCompressedTimelineNode(stores.timeline_nodes.get('node_0')), false);
+    assert.equal(stores.timeline_nodes.get('node_0').state_snapshot.marker, 'turn-0');
+  }, { archive: true });
+});
+
+await test('createNode hydrates a compressed current parent before appending', async () => {
+  const compressed = await compressTimelineNode({
+    ...rootNode,
+    state_snapshot: snapshot('root')
+  });
+  await withTimelineDb({
+    nodes: [compressed],
+    branches: [mainBranch],
+    meta: [rootMeta]
+  }, async stores => {
+    stateManager.restore({
+      ...snapshot('root'),
+      _meta: { current_node_id: 'node_root', active_branch: 'branch_main' }
+    });
+    const created = await timelineSystem.createNode({
+      turnNumber: 1,
+      playerInput: '继续前进',
+      aiResponse: '道路向前延伸。',
+      stateSnapshot: snapshot('child'),
+      chatHistory: []
+    });
+    assert.equal(isCompressedTimelineNode(stores.timeline_nodes.get('node_root')), false);
+    assert.equal(stores.timeline_nodes.get('node_root').state_snapshot.marker, 'root');
+    assert.equal(created.state_snapshot.marker, 'child');
+    assert.ok(Array.isArray(created.continuity_delta));
   });
 });
 

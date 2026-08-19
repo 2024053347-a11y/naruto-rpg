@@ -13,6 +13,7 @@ import {
   DEFAULT_VARIABLE_UPDATER_PRESET,
   DEFAULT_VARIABLE_UPDATER_PRESET_VERSION,
   migrateVariableUpdaterPreset,
+  resolveVariableUpdaterPreset,
   saveVariableUpdaterPreset
 } from '../js/data/variable-updater-preset.js';
 import {
@@ -24,6 +25,7 @@ import {
 import { MessagePipeline } from '../js/core/pipeline.js';
 import {
   buildVariableUpdaterMessages,
+  buildVariableUpdaterRuntimeContract,
   sanitizeVariableUpdaterOutput,
   validateVariableUpdaterOutput,
   VARIABLE_UPDATER_COVERAGE_PROTOCOL
@@ -237,6 +239,53 @@ test('main-model fallback tags match the executable updater contracts', () => {
   }
 });
 
+test('NPC rename contract reaches every built-in and legacy updater path', () => {
+  const renamePattern = /<relationship>\s*\{[^\n]*"op":"rename"[^\n]*"npc":"旧姓名"[^\n]*"new_npc":"新姓名"/;
+  const mainPresetText = DEFAULT_MAIN_PRESET.entries.map(entry => entry.content).join('\n');
+  const mainSingleModelText = generateMainVarInstructions(false);
+  const updaterPresetText = DEFAULT_VARIABLE_UPDATER_PRESET.entries.map(entry => entry.content).join('\n');
+  for (const [label, text] of [
+    ['default main preset', mainPresetText],
+    ['generated single-model instructions', mainSingleModelText],
+    ['default updater preset', updaterPresetText]
+  ]) {
+    assert.match(text, renamePattern, label);
+    assert.match(text, /禁止[^\n]*(?:delete|删除)[^\n]*(?:新建|创建)|不得删除旧档再新建/, label);
+  }
+
+  const legacyRuntime = buildVariableUpdaterMessages({
+    name: '旧自定义变量预设',
+    version: 1,
+    entries: [{
+      id: 'legacy_custom', name: '用户旧规则', enabled: true, role: 'user',
+      content: '[已确认的最终正文]\n{{narrative_response}}'
+    }]
+  }, {
+    state: {
+      '系统·回合数': 3,
+      _relationships: { 无名暗部: { aliases: ['暗部甲'], trust: 10 } },
+      _missions: { active: {} }
+    },
+    compactState: { turn: 3 },
+    userInput: '听他说出真名',
+    narrativeResponse: '无名暗部摘下面具，确认自己的真名是天藏。'
+  }).map(message => message.content).join('\n');
+  assert.match(legacyRuntime, /系统强制人物关系身份协议/);
+  assert.match(legacyRuntime, renamePattern);
+  assert.match(legacyRuntime, /原子迁移完整关系档案/);
+
+  const customRule = { id: 'rename_custom_rule', name: '用户补充', role: 'system', content: '必须保留我' };
+  const migrated = migrateVariableUpdaterPreset({
+    name: '旧变量预设', version: 1,
+    entries: [{ id: 'variable_updater_system', role: 'system', content: '旧内置' }, customRule]
+  });
+  assert.match(migrated.entries.find(entry => entry.id === 'variable_updater_system').content, renamePattern);
+  assert.deepEqual(migrated.entries.find(entry => entry.id === customRule.id), {
+    ...customRule,
+    enabled: true
+  });
+});
+
 test('variable updater sanitizer preserves both supported self-check tags', () => {
   const cleaned = sanitizeVariableUpdaterOutput([
     '不应保留的普通前言',
@@ -393,7 +442,7 @@ test('generated variable DSL documents canonical paths without legacy aliases', 
   assert.doesNotMatch(contract, /\breplace\b|\bupdate\b|\bappend\b/);
 });
 
-test('variable updater requires executable mission event and npc records', () => {
+test('variable updater rejects structurally non-executable mission event and npc records', () => {
   const wrap = (manifest, tag) => sanitizeVariableUpdaterOutput([
     `<variable_thinking>七、差异复检：输出清单：${manifest}。</variable_thinking>`,
     '<memory>{"summary":"结构记录检查。"}</memory>',
@@ -404,7 +453,7 @@ test('variable updater requires executable mission event and npc records', () =>
     wrap('variable=0, mission=1, relationship=0, memory=1, combat=0, event=0', '<mission>{"status":"active","title":"护送"}</mission>'),
     wrap('variable=0, mission=1, relationship=0, memory=1, combat=0, event=0', '<mission>{"id":"M1","status":"active","title":"护送"}</mission>'),
     wrap('variable=0, mission=0, relationship=0, memory=1, combat=0, event=1', '<event>{"status":"occurred","description":"事件发生"}</event>'),
-    wrap('variable=0, mission=0, relationship=1, memory=1, combat=0, event=0', '<relationship>{"npc":"甲","combatant":true,"combat_stats":{"rank":"下忍","jutsu":[{"name":"分身术"}]}}</relationship>'),
+    wrap('variable=0, mission=0, relationship=1, memory=1, combat=0, event=0', '<relationship>{"npc":"甲","combatant":true,"combat_stats":{"jutsu":{}}}</relationship>'),
     wrap('variable=0, mission=0, relationship=0, memory=1, combat=1, event=0', '<combat state="teleport">{}</combat>')
   ];
   for (const output of invalid) {
@@ -479,15 +528,15 @@ test('free-form audit prose cannot invent a missing relationship requirement', (
   assert.equal(result.valid, true, result.errors.join('\n'));
 });
 
-test('variable updater rejects an unclassified ninja card but permits explicit unknown arrays', () => {
+test('variable updater permits incomplete NPC combat data and reports it as advisory', () => {
   const cleaned = sanitizeVariableUpdaterOutput([
     '<variable_thinking>新人物需要建立战斗型人物档案。</variable_thinking>',
     '<relationship>{"npc":"雾隐追忍","combatant":true,"role":"追忍"}</relationship>',
     '<memory>{"summary":"雾隐追忍拦住了玩家。"}</memory>'
   ].join('\n'));
   const result = validateVariableUpdaterOutput(cleaned, { state: { _relationships: {} } });
-  assert.equal(result.valid, false);
-  assert.match(result.errors.join('\n'), /忍阶|jutsu|chakra_nature|战斗卡/);
+  assert.equal(result.valid, true, result.errors.join('\n'));
+  assert.match(result.warnings.join('\n'), /忍阶|jutsu|chakra_nature|战斗/);
 
   const explicitUnknown = sanitizeVariableUpdaterOutput([
     '<variable_thinking>该忍者已确认忍阶，但没有可靠的属性或招式证据。</variable_thinking>',
@@ -495,6 +544,71 @@ test('variable updater rejects an unclassified ninja card but permits explicit u
     '<memory>{"summary":"雾隐追忍拦住了玩家，能力细节仍未知。"}</memory>'
   ].join('\n'));
   assert.equal(validateVariableUpdaterOutput(explicitUnknown, { state: { _relationships: {} } }).valid, true);
+});
+
+test('prompt examples use concrete strict values instead of schema placeholders', () => {
+  const text = [
+    DEFAULT_MAIN_PRESET.entries.map(entry => entry.content).join('\n'),
+    getStructuredVariableContractPrompt()
+  ].join('\n');
+  assert.doesNotMatch(text, /damage_to_(?:enemy|player)":数值/);
+  assert.doesNotMatch(text, /state="victory\|defeat\|retreat"/);
+  assert.doesNotMatch(text, /"(?:x|y)":坐标数字/);
+  assert.doesNotMatch(text, /"\.\.\."|,\s*\.\.\./);
+  assert.doesNotMatch(text, /"action_type":"忍术\|幻术\|体术\|支援"/);
+  assert.doesNotMatch(text, /"resource_type":"查克拉\|精神力\|体力"/);
+});
+
+test('variable updater preset cannot discard the raw player input macro', () => {
+  const previousStorage = globalThis.localStorage;
+  globalThis.localStorage = createStorage();
+  try {
+    assert.throws(() => saveVariableUpdaterPreset({
+      name: '缺少玩家原文的预设',
+      version: DEFAULT_VARIABLE_UPDATER_PRESET_VERSION,
+      entries: [{
+        id: 'custom', name: '只有正文', enabled: true, role: 'user',
+        content: '[已确认的最终正文]\n{{narrative_response}}'
+      }]
+    }), /user_input|原始玩家输入/);
+  } finally {
+    if (previousStorage === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = previousStorage;
+  }
+});
+
+test('legacy updater presets receive raw player input at runtime', () => {
+  const messages = resolveVariableUpdaterPreset({
+    name: '旧预设', version: 1,
+    entries: [{
+      id: 'legacy', name: '旧条目', enabled: true, role: 'user',
+      content: '[已确认的最终正文]\n{{narrative_response}}'
+    }]
+  }, {
+    userInput: '保留这句原始输入',
+    narrativeResponse: '正文内容'
+  });
+  const prompt = messages.map(message => message.content).join('\n');
+  assert.match(prompt, /\[原始玩家输入\][\s\S]*保留这句原始输入/);
+  assert.match(prompt, /正文内容/);
+});
+
+test('variable updater still rejects malformed fields on an otherwise partial relationship', () => {
+  const wrap = relationship => sanitizeVariableUpdaterOutput([
+    '<variable_thinking>只写有依据的人物字段。</variable_thinking>',
+    relationship,
+    '<memory>{"summary":"人物资料发生变化。"}</memory>'
+  ].join('\n'));
+  for (const relationship of [
+    '<relationship>{"npc":"旅人","combatant":"unknown"}</relationship>',
+    '<relationship>{"npc":"旅人","combat_stats":[]}</relationship>',
+    '<relationship>{"npc":"旅人","combatant":true,"combat_stats":{"chakra_nature":"水"}}</relationship>',
+    '<relationship>{"npc":"旅人","combatant":true,"combat_stats":{"jutsu":{}}}</relationship>',
+    '<relationship>{"npc":"旅人","trust_change":"NaN"}</relationship>'
+  ]) {
+    const result = validateVariableUpdaterOutput(wrap(relationship), { state: { _relationships: {} } });
+    assert.equal(result.valid, false, relationship);
+  }
 });
 
 test('variable updater accepts a complete nested combat card or an explicit civilian classification', () => {
@@ -561,7 +675,80 @@ test('runtime updater prompt is deduplicated and ordered system before user data
   assert.equal(prompt.split(opening).length - 1, 1, 'opening contract must appear once');
 });
 
-test('first-turn fill mode must materialize blank talent and ability categories', () => {
+test('shared variable updater runtime contract covers every project invariant exactly once', () => {
+  const state = {
+    '系统·回合数': 1,
+    '进度·突破待处理': 3,
+    skills: {
+      talents: {
+        自定义天赋组合: {
+          name: '自定义天赋组合', rank: '待生成', mastery: 0, description: '由 AI 补全。'
+        }
+      },
+      kekkei_genkai: {}, jutsu: {}, taijutsu: {}, genjutsu: {}, support: {}
+    },
+    _opening_contract: {
+      version: 3,
+      completion_policy: { mode: 'fill' },
+      raw: { talents: ['自定义天赋组合'], abilities: [] }
+    },
+    _relationships: { 千鹤: { role: '旧搭档', affection: 10 } }
+  };
+  const updateObligations = {
+    present_npcs: [{ npc: '千鹤' }],
+    active_missions: [{ id: 'M-RUNTIME', title: '护送卷轴', status: 'active' }]
+  };
+  const contract = buildVariableUpdaterRuntimeContract({
+    state,
+    compactState: state,
+    openingContract: 'OPENING_RUNTIME_CONTRACT_MARKER',
+    updateObligations
+  });
+  for (const marker of [
+    'OPENING_RUNTIME_CONTRACT_MARKER',
+    '系统强制开局待补全协议',
+    '系统强制首回合补全协议',
+    '系统强制待初始化人物协议',
+    '突破指令——本回合必须执行',
+    '系统强制反漏更协议',
+    '系统强制输出一致性协议',
+    '系统强制只读证据与写入路径边界',
+    '变量更新完整混合示例',
+    '系统强制更新义务协议',
+    '忍界日报结构契约',
+    '系统强制战斗结算协议',
+    '系统强制删除协议'
+  ]) {
+    assert.equal(contract.split(marker).length - 1, 1, `${marker} must appear exactly once`);
+  }
+  assert.match(contract, /待初始化人物：千鹤/);
+  assert.match(contract, /当前突破待处理 = 3/);
+  assert.match(contract, /"active_missions":\[\{"id":"M-RUNTIME","title":"护送卷轴","status":"active"\}\]/u);
+  assert.match(contract, /"present_npcs":\[\{"npc":"千鹤"\}\]/u);
+  assert.ok(contract.endsWith('同回合删除多个物品或技能时，每个对象分别输出一个 <variable>，不得合并或遗漏。'));
+
+  const customPreset = {
+    name: '保留旧突破宏的自定义预设',
+    version: 1,
+    entries: [{
+      id: 'custom-turn', name: '本回合', enabled: true, role: 'user',
+      content: '[原始玩家输入]\n{{user_input}}\n[最终正文]\n{{narrative_response}}\n{{breakthrough_instruction}}'
+    }]
+  };
+  const messages = buildVariableUpdaterMessages(customPreset, {
+    state,
+    compactState: state,
+    userInput: '继续修行',
+    narrativeResponse: '修行告一段落。',
+    updateObligations
+  });
+  const prompt = messages.map(message => message.content).join('\n');
+  assert.equal(prompt.split('突破指令——本回合必须执行').length - 1, 1);
+  assert.equal(prompt.split('变量更新完整混合示例').length - 1, 1);
+  assert.equal(prompt.split('忍界日报结构契约').length - 1, 1);
+});
+
+test('first-turn fill omissions are advisory and complete entries still validate', () => {
   const state = {
     '系统·回合数': 1,
     skills: { talents: {}, kekkei_genkai: {}, jutsu: {}, taijutsu: {}, genjutsu: {}, support: {} },
@@ -572,7 +759,9 @@ test('first-turn fill mode must materialize blank talent and ability categories'
     '<variable_thinking>四、技能物品：开局类别仍为空，但本轮不写入。\n七、差异复检：输出清单：variable=0, mission=0, relationship=0, memory=1, combat=0, event=0。</variable_thinking>',
     '<memory>{"summary":"开场完成。"}</memory>'
   ].join('\n'));
-  assert.equal(validateVariableUpdaterOutput(missing, { state }).valid, false);
+  const missingResult = validateVariableUpdaterOutput(missing, { state });
+  assert.equal(missingResult.valid, true, missingResult.errors.join('\n'));
+  assert.match(missingResult.warnings.join('\n'), /天赋|血继|初始能力/);
 
   const complete = sanitizeVariableUpdaterOutput([
     '<variable_thinking>四、技能物品：补全开局天赋与初始忍术。\n七、差异复检：输出清单：variable=2, mission=0, relationship=0, memory=1, combat=0, event=0。</variable_thinking>',
@@ -583,7 +772,29 @@ test('first-turn fill mode must materialize blank talent and ability categories'
   assert.equal(validateVariableUpdaterOutput(complete, { state }).valid, true);
 });
 
-test('first turn requires every unresolved opening relationship to be classified', () => {
+test('agent continuity gate strictly rejects unresolved opening and breakthrough requirements', () => {
+  const state = {
+    '系统·回合数': 1,
+    '进度·突破待处理': 2,
+    skills: { talents: {}, kekkei_genkai: {}, jutsu: {}, taijutsu: {}, genjutsu: {}, support: {} },
+    _opening_contract: { version: 3, completion_policy: { mode: 'fill' }, raw: { talents: [], abilities: [] } },
+    _relationships: {}
+  };
+  const base = [
+    '<variable_thinking>开局与突破待办尚未完成。</variable_thinking>',
+    '<memory>{"summary":"本回合待办已核对。"}</memory>'
+  ].join('\n');
+  const advisory = validateVariableUpdaterOutput(base, { state });
+  assert.equal(advisory.valid, true, advisory.errors.join('\n'));
+
+  const strict = validateVariableUpdaterOutput(base, { state, strictRuntimeRequirements: true });
+  assert.equal(strict.valid, false);
+  assert.match(strict.errors.join('\n'), /天赋|血继/);
+  assert.match(strict.errors.join('\n'), /初始能力/);
+  assert.match(strict.errors.join('\n'), /突破待处理.*清零/);
+});
+
+test('first-turn unresolved relationship classification is advisory', () => {
   const state = {
     '系统·回合数': 1,
     _opening_contract: { version: 3, completion_policy: { mode: 'strict' }, raw: {} },
@@ -595,8 +806,8 @@ test('first turn requires every unresolved opening relationship to be classified
     '<memory>{"summary":"千鹤在开场出现。"}</memory>'
   ].join('\n'));
   const missingResult = validateVariableUpdaterOutput(missing, { state });
-  assert.equal(missingResult.valid, false);
-  assert.match(missingResult.errors.join('\n'), /千鹤.*(?:初始化|分类)/);
+  assert.equal(missingResult.valid, true, missingResult.errors.join('\n'));
+  assert.match(missingResult.warnings.join('\n'), /千鹤.*分类/);
 
   const classified = sanitizeVariableUpdaterOutput([
     '<variable_thinking>三、人物关系：千鹤是非战斗联络人。\n七、差异复检：输出清单：variable=0, mission=0, relationship=1, memory=1, combat=0, event=0。</variable_thinking>',
@@ -609,9 +820,11 @@ test('first turn requires every unresolved opening relationship to be classified
 test('agent writer prompts preserve the visible main reasoning contract', () => {
   const prompts = readFileSync(new URL('../js/core/agent-prompts.js', import.meta.url), 'utf8');
   assert.match(prompts, /WRITER:[\s\S]*<reasoning>/);
-  assert.match(prompts, /WRITER:[\s\S]*固定八项[^\n]*不得合并、改写或省略/);
+  assert.match(prompts, /WRITER:[\s\S]*内置主预设使用 <reasoning> 固定八项/);
+  assert.match(prompts, /WRITER:[\s\S]*用户导入替换预设[^\n]*原生思考 wrapper/);
+  assert.match(prompts, /WRITER:[\s\S]*开始与结束标签都不得缺失/);
   assert.match(prompts, /WRITER_POLISH:[\s\S]*保留[^\n]*<reasoning>/);
-  assert.match(prompts, /WRITER_POLISH:[\s\S]*本轮请求原文[^\n]*逐字保持不动/);
+  assert.match(prompts, /WRITER_POLISH:[\s\S]*用户导入替换预设[^\n]*原生思考 wrapper/);
 });
 
 test('secondary updater mode gives all structured tags to the updater', () => {

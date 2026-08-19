@@ -29,6 +29,7 @@ server/db/*.db-wal
 
 # 包含服务器地址的本地部署配置与旧脚本
 /deploy.sh
+/deploy.local.env
 /deploy.local.psd1
 /一键打包.bat
 

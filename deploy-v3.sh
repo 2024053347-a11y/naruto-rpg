@@ -152,7 +152,11 @@ fi
 log "STEP 2/6: 生成版本信息..."
 
 cd "$PROJECT_DIR"
-node scripts/generate-version.mjs --out "$PROJECT_DIR/public/version.json" || fail "版本信息生成失败"
+node scripts/generate-version.mjs \
+  --out "$PROJECT_DIR/public/version.json" \
+  --build "$BUILD_ID" \
+  --environment production \
+  || fail "版本信息生成失败"
 ok "version.json 已生成"
 cat "$PROJECT_DIR/public/version.json"
 

@@ -132,23 +132,21 @@ export const AGENT_PROMPTS = {
 输出严格JSON，不要附加任何额外文字：
 {"approved":true或false,"issues":[{"severity":"error|warning","dimension":"时间|记忆|合理性","description":"...","suggestion":"..."}],"summary":"整体评价..."}`,
 
-  CONTINUITY_UPDATER: `你是火影忍者TRPG的连续性更新代理。根据最终正文、角色记忆增量和当前状态，产出本回合的变量、人物关系（含心理与历史）与记忆更新。
+  CONTINUITY_UPDATER: `你是火影忍者TRPG的连续性更新代理。根据最终正文、角色记忆增量、当前状态和本回合更新义务，产出一份可由变量更新器直接提交的完整结果。
 
 任务：基于给定「最终正文」「角色记忆增量」「当前状态」精确记账，只写正文有依据的变更，不编造、不推断私密意图。
 
-输出要求（标签必须逐字符合下列 schema，正文之外只允许这些标签）：
-1. 变量更新：状态/进度/资源/时间等确有变化时输出 <var>，如 <var path="当前状态·查克拉">35</var>；没有变化就不写。
-2. 人物关系：对每个「在场已认识」NPC 输出一个 <relationship> JSON 标签，必须包含：
-   - npc：使用给定的规范姓名
-   - affection_change / trust_change / respect_change：正文有依据的数值变化（可为 0，但每个在场 NPC 都至少输出一个）
-   - inner_thoughts（心理内省）：只记录正文中该角色已明确公开表达的心理内容；未公开就写“未公开”，绝不推断或转写角色代理的私密意图
-   - history（历史）：本回合可观察的动作/对话/关系变化，一句话；将被追加进该 NPC 的关系历史
-   - 例：<relationship>{"npc":"旗木卡卡西","affection_change":1,"trust_change":2,"respect_change":0,"inner_thoughts":"感到认可，但仍保持距离。","history":"认可玩家的成长，愿意多指导一招。"}</relationship>
-3. 记忆：输出唯一一个含非空 summary 的 <memory>，记录本回合关键事实/玩家决策/待办。
-4. 不得输出普通叙事正文、解释文字、Markdown 或代码围栏。
+输出要求（顺序固定，标签必须逐字符合下列 schema）：
+1. 先输出一个 <variable_thinking>：以“请求复述”开头，并按顺序逐项写出时间地点与地图、资源与属性成长、技能与能力、物品金钱与装备、任务目标声望与历练、人物关系与NPC状态、战斗伤势与世界事件、记忆线索约定与待办八项审计。
+2. 随后输出一个 <update_manifest> 严格 JSON，完整覆盖证据视图中的 fixed_domains、present_npcs 与 active_missions；领域和任务状态必须与实际标签一致。
+3. 变量使用 <variable>{"path":"progression.exp","op":"add","value":2}</variable>。任务、人物关系、战斗、事件分别使用 <mission>、<relationship>、<combat>、<event>；每个标签只放一个严格 JSON 对象。
+4. 人物关系至少包含 npc；history、inner_thoughts、combatant 和 combat_stats 只在有可靠依据时输出。忍术条目至少包含 name，其他字段可省略，但一旦提供必须类型正确。
+5. 正文明确确认已有关系人物规范姓名改变时，使用 <relationship>{"op":"rename","npc":"旧姓名","new_npc":"新姓名","reason":"正文依据"}</relationship>；不得删除旧档再新建。
+6. 输出唯一一个含非空 summary 的严格 JSON <memory>，最后输出唯一一个符合系统日报契约的 <shinobi_daily>。
+7. 不得输出普通叙事正文、解释文字、Markdown、代码围栏、旧式带 path 属性的 <var> 或非 JSON memory。
 
 输出约束：
-- 数量尽量少而准；每名在场 NPC 只输出一个 <relationship>。
+- 数量尽量少而准；每名实际落账 NPC 只输出一个 <relationship>。
 - 历史与时间线延续既有事实，不覆盖、不矛盾。
 - 正文未提及的 NPC 不输出 <relationship>。`,
 
@@ -229,8 +227,8 @@ export const AGENT_PROMPTS = {
   · 不允许仅"提到"NPC名字而不具体演出其档案内容
   · 不得新增未提供 CharacterDecision 的命名 NPC，也不得替任何 NPC 新增、替换或扩写未授权的行动、台词、姿态或反应
 - 继承主系统的全部叙事铁律（沉浸/数值禁词/篇幅/生命值保护/卦协议），无需重复
-- 必须完整输出主系统要求的 <reasoning> 请求复述与构思核对表：固定八项标题、顺序和逐字复述的玩家原文都不得合并、改写或省略；除该块外不要额外输出其他思考标签或 <status_query />
-- 正文末尾必须按主系统要求输出 3 条“[行动] 具体行动”；它们只是非穷尽建议，不代表替玩家执行
+- 必须完整输出主系统当前模式要求的思考容器：内置主预设使用 <reasoning> 固定八项；用户导入替换预设时改用导入预设自己的原生思考 wrapper，不得再额外套项目 <reasoning>。无论哪种模式，开始与结束标签都不得缺失
+- 正文末尾遵循当前主预设的行动选项格式；内置主预设默认输出 3 条“[行动] 具体行动”，用户导入替换预设则保留其原生选项 wrapper 与数量。选项只是非穷尽建议，不代表替玩家执行
 - 是否输出 <var> 由主系统的[系统指令]决定（二次模型开启时不输出）`,
 
   WRITER_POLISH: `你是火影忍者TRPG的文字润色师。你将接收主系统的完整上下文，加上[Writer硬约束]块中的初稿和审查建议。
@@ -244,7 +242,7 @@ export const AGENT_PROMPTS = {
 - 节奏调整：过长段落拆分、过碎段落合并、对话与描写均衡
 - 数值泄漏（value_leak）类问题最高优先，必须清除
 - 保留所有结构标签和“[行动]”选项不动
-- 保留初稿和主系统要求的 <reasoning> 请求复述与构思核对表；“本轮请求原文”必须逐字保持不动，固定八项的标题、顺序和数量不得合并或省略，只修正其余项目中与最终正文不一致的核对结论
+- 保留初稿和主系统当前要求的思考容器；内置预设的 <reasoning> 仍须保留固定八项，用户导入替换预设则保留其原生思考 wrapper、名称与闭合结构，不得换成项目默认标签
 - 继承主系统的全部叙事铁律，无需重复
 
 直接输出润色后完整正文（含原有标签），不要 JSON 包裹。`,
